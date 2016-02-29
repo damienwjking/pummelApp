@@ -5,8 +5,12 @@
 //  Created by Damien King on 21/02/2016.
 //  Copyright © 2016 pummel. All rights reserved.
 //
+//  Required Cocoapods
+//
+
 
 import UIKit
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
