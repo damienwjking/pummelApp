@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gvo-rD-sYg">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <scenes>
+        <!--Get Started View Controller-->
+        <scene sceneID="94P-az-hrg">
+            <objects>
+                <viewController id="gvo-rD-sYg" customClass="GetStartedViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tET-Ey-Kzt"/>
+                        <viewControllerLayoutGuide type="bottom" id="cpG-8b-F0r"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5U6-Ds-WSk">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nuA-t5-YnW">
+                                <rect key="frame" x="251" y="285" width="99" height="30"/>
+                                <state key="normal" title="GET STARTED"/>
+                                <connections>
+                                    <segue destination="KQD-dZ-Lw2" kind="show" id="MrO-ud-gvX"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p0P-kk-N2O" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="343" y="272"/>
+        </scene>
+        <!--Get Started2 View Controller-->
+        <scene sceneID="brX-k5-67l">
+            <objects>
+                <viewController id="KQD-dZ-Lw2" customClass="GetStarted2ViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="VSl-ff-fu3"/>
+                        <viewControllerLayoutGuide type="bottom" id="ztM-sv-oZc"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="k91-zm-kbd">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXZ-Rc-GFO">
+                                <rect key="frame" x="244" y="458" width="112" height="30"/>
+                                <state key="normal" title="GET STARTED 2"/>
+                                <connections>
+                                    <segue destination="pQd-De-Zqp" kind="show" id="uly-aU-qYL"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RrP-kP-6Eq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1235" y="240"/>
+        </scene>
+        <!--Get Started2 View Controller-->
+        <scene sceneID="Q1p-qO-NPo">
+            <objects>
+                <viewController id="pQd-De-Zqp" customClass="GetStarted2ViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4yP-JC-4jy"/>
+                        <viewControllerLayoutGuide type="bottom" id="kEK-pt-4LA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0Gw-9f-FI7">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Nn-XW-wnw">
+                                <rect key="frame" x="244" y="458" width="112" height="30"/>
+                                <state key="normal" title="GET STARTED 3"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.58269530970000005" green="0.71456849300000003" blue="0.89879168519999997" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IfS-oo-HpD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1931" y="258"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+</document>

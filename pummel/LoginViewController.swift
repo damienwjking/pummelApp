@@ -7,36 +7,33 @@
 //
 
 import UIKit
+import Alamofire
 
 class LoginViewController: UIViewController {
     
     @IBOutlet weak var EmailTextField: UITextField!
     @IBOutlet weak var PasswordTextField: UITextField!
     
-     /*
+ 
     @IBAction func LoginButton(sender: UIButton) {
      
-        BackendUtilities.sharedInstance.clientRepo.userByLoginWithEmail(EmailTextField.text, password: PasswordTextField.text, success: { (LBUser client) -> Void in
-            NSLog("Successfully logged in.");
-            
-            // Display login confirmation
-            let alertController = UIAlertController(title: "Login", message:
-                "Successfully logged in", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-            self.presentViewController(alertController, animated: true, completion: nil)
-            }) { (error: NSError!) -> Void in
-                NSLog("Error logging in.")
+        let userEmail = EmailTextField.text
+        let userPassword = PasswordTextField.text
+        
+        Alamofire.request(.POST, "http://52.8.5.161/api/", parameters: [userEmail!:userPassword!])
+            .responseJSON { response in
+                print(response.request)  // original URL request
+                print(response.response) // URL response
+                print(response.data)     // server data
+                print(response.result)   // result of response serialization
                 
-                // Display error alert
-                let alertController = UIAlertController(title: "Login", message:
-                    "Login failed", preferredStyle: UIAlertControllerStyle.Alert)
-                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-                self.presentViewController(alertController, animated: true, completion: nil)
+                if let JSON = response.result.value {
+                    print("JSON: \(JSON)")
+                }
         }
         
     }
-
-        
+    
     override func viewDidLoad() {
         
     }
@@ -46,6 +43,6 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
- */
+
         
 }
