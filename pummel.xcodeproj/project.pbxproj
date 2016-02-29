@@ -20,6 +20,7 @@
 		9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543C1C793B280083E47B /* FindViewController.swift */; };
 		9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543E1C793D070083E47B /* SettingsViewController.swift */; };
 		9C1C54411C84561F0083E47B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54401C84561F0083E47B /* LoginViewController.swift */; };
+		9C1C54431C845A2C0083E47B /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54421C845A2C0083E47B /* RegisterViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		9C1C543C1C793B280083E47B /* FindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindViewController.swift; sourceTree = "<group>"; };
 		9C1C543E1C793D070083E47B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9C1C54401C84561F0083E47B /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		9C1C54421C845A2C0083E47B /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				9C1C54041C7938070083E47B /* AppDelegate.swift */,
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
 				9C1C54401C84561F0083E47B /* LoginViewController.swift */,
+				9C1C54421C845A2C0083E47B /* RegisterViewController.swift */,
 				9C1C54361C793AA70083E47B /* ProgressViewController.swift */,
 				9C1C54381C793AD00083E47B /* MessagesViewController.swift */,
 				9C1C543A1C793AF30083E47B /* SessionsViewController.swift */,
@@ -274,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C1C54431C845A2C0083E47B /* RegisterViewController.swift in Sources */,
 				9C1C54391C793AD00083E47B /* MessagesViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
