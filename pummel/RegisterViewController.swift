@@ -14,6 +14,16 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        
+        self.navigationController?.navigationBarHidden = true
+        
+        let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
+        backgroundImage.image = UIImage(named: "signup")
+        self.view.insertSubview(backgroundImage, atIndex:0)
+       
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
