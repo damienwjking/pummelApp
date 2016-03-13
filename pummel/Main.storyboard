@@ -53,12 +53,12 @@
             <objects>
                 <viewController id="gWZ-pR-c1U" customClass="LoginViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
-                        <segue destination="Xlp-A4-eR3" kind="presentation" identifier="segueForgottenPassword" modalTransitionStyle="coverVertical" id="cbf-BP-HhI"/>
+                        <segue destination="zz3-xY-Sa9" kind="show" identifier="registerSegue" id="rdP-qe-aAc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tuK-iN-hVF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1969" y="1691"/>
+            <point key="canvasLocation" x="2051" y="1691"/>
         </scene>
         <!--Forgotten Password Controller-->
         <scene sceneID="UUy-q0-DJ5">
@@ -80,7 +80,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7A9-Y4-Xq7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3549" y="1701"/>
+            <point key="canvasLocation" x="1141" y="1691"/>
         </scene>
         <!--Get Started2 View Controller-->
         <scene sceneID="brX-k5-67l">
@@ -109,7 +109,7 @@
         <!--Get Started3 View Controller-->
         <scene sceneID="Q1p-qO-NPo">
             <objects>
-                <viewController id="pQd-De-Zqp" customClass="GetStarted3ViewController" sceneMemberID="viewController">
+                <viewController id="pQd-De-Zqp" customClass="GetStarted3ViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4yP-JC-4jy"/>
                         <viewControllerLayoutGuide type="bottom" id="kEK-pt-4LA"/>
@@ -154,7 +154,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UsQ-0u-LBA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2737" y="1019"/>
+            <point key="canvasLocation" x="2821" y="1691"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="I2K-Fl-pg5">
@@ -174,26 +174,9 @@
             </objects>
             <point key="canvasLocation" x="343" y="272"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="0hp-Ps-6mR">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Xlp-A4-eR3" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fMy-BH-Sd4">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="MgW-aR-1s5" kind="relationship" relationship="rootViewController" id="Mef-XS-ygt"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cfE-w3-Q84" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2737" y="1701"/>
-        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="eFM-cK-VDq"/>
+        <segue reference="rdP-qe-aAc"/>
     </inferredMetricsTieBreakers>
 </document>

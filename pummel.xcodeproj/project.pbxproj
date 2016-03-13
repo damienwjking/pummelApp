@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		441DEA9C1DFEC76E67369901 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCCEA7F5D261E683CC1283C2 /* Pods.framework */; };
+		9C05013B1C9534E100F02B3B /* GetStarted3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05013A1C9534E100F02B3B /* GetStarted3ViewController.swift */; };
 		9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54041C7938070083E47B /* AppDelegate.swift */; };
 		9C1C540E1C7938070083E47B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C1C540D1C7938070083E47B /* Assets.xcassets */; };
 		9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C1C540F1C7938070083E47B /* LaunchScreen.storyboard */; };
@@ -21,6 +22,7 @@
 		9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543E1C793D070083E47B /* SettingsViewController.swift */; };
 		9C1C54411C84561F0083E47B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54401C84561F0083E47B /* LoginViewController.swift */; };
 		9C1C54431C845A2C0083E47B /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54421C845A2C0083E47B /* RegisterViewController.swift */; };
+		9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */; };
 		9C8FF40E1C84728400449A54 /* TransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8FF40D1C84728400449A54 /* TransitionManager.swift */; };
 		9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8FF40F1C84751A00449A54 /* GetStarted2ViewController.swift */; };
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
@@ -46,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		6EF72CC25D427D33F8929D28 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		9C05013A1C9534E100F02B3B /* GetStarted3ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStarted3ViewController.swift; sourceTree = "<group>"; };
 		9C1C54011C7938060083E47B /* pummel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pummel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C1C54041C7938070083E47B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C1C540D1C7938070083E47B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,6 +68,7 @@
 		9C1C543E1C793D070083E47B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9C1C54401C84561F0083E47B /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		9C1C54421C845A2C0083E47B /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgottenPasswordController.swift; sourceTree = "<group>"; };
 		9C8FF40D1C84728400449A54 /* TransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionManager.swift; sourceTree = "<group>"; };
 		9C8FF40F1C84751A00449A54 /* GetStarted2ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStarted2ViewController.swift; sourceTree = "<group>"; };
 		9C8FF4111C8476C800449A54 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -152,10 +156,12 @@
 				9C8FF40D1C84728400449A54 /* TransitionManager.swift */,
 				9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */,
 				9C8FF40F1C84751A00449A54 /* GetStarted2ViewController.swift */,
+				9C05013A1C9534E100F02B3B /* GetStarted3ViewController.swift */,
 				9C1C543E1C793D070083E47B /* SettingsViewController.swift */,
 				9C1C540D1C7938070083E47B /* Assets.xcassets */,
 				9C1C540F1C7938070083E47B /* LaunchScreen.storyboard */,
 				9C8FF4111C8476C800449A54 /* Main.storyboard */,
+				9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */,
 				9C1C54121C7938070083E47B /* Info.plist */,
 			);
 			path = pummel;
@@ -362,12 +368,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C1C54431C845A2C0083E47B /* RegisterViewController.swift in Sources */,
+				9C05013B1C9534E100F02B3B /* GetStarted3ViewController.swift in Sources */,
 				9C1C54391C793AD00083E47B /* MessagesViewController.swift in Sources */,
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
 				9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */,
 				9C1C54411C84561F0083E47B /* LoginViewController.swift in Sources */,
+				9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */,
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
 				9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */,
@@ -512,6 +520,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pum.pummel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -525,6 +534,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pum.pummel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

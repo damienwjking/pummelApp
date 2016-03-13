@@ -11,7 +11,7 @@ import UIKit
 
 class GetStarted3ViewController: UIViewController {
     
-    override func viewDidLoad() {
+        override func viewDidLoad() {
         super.viewDidLoad()
         
         // hide back button word\

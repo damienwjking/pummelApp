@@ -29,13 +29,13 @@ class ForgottenPasswordController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         
-        self.navigationController?.navigationBarHidden = false
-        
         // background image
         
         // let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
         // backgroundImage.image = UIImage(named: "getStarted")
         // self.view.insertSubview(backgroundImage, atIndex:0)
+        
+        self.view.backgroundColor = UIColor.grayColor()
         
         // Add submit button
         let buttoncolour = UIColor(red:0.75, green:0.84, blue:0.83, alpha:1.0)

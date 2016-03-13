@@ -16,6 +16,9 @@ class LoginViewController: UIViewController {
     let PasswordTextField = UITextField(frame: CGRectMake(10, 100, 250, 40))
     let forgottenPasswordButton:UIButton = UIButton(frame: CGRectMake(10, 640, 200, 50))
 
+    //todo
+    // register button for registerSegue
+    
     
     override func viewDidLoad() {
         
@@ -26,6 +29,9 @@ class LoginViewController: UIViewController {
        // let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
        // backgroundImage.image = UIImage(named: "getStarted")
        // self.view.insertSubview(backgroundImage, atIndex:0)
+        
+        self.view.backgroundColor = UIColor.grayColor()
+        
         
         // Add submit button
         let buttoncolour = UIColor(red:0.75, green:0.84, blue:0.83, alpha:1.0)
