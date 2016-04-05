@@ -23,7 +23,8 @@ class GetStarted3ViewController: UIViewController {
         backgroundImage.image = UIImage(named: "getStarted2")
         self.view.insertSubview(backgroundImage, atIndex:0)
         */
-        self.view.backgroundColor = UIColor.redColor()
+        self.view.backgroundColor = UIColor.grayColor()
+            
         
         
         

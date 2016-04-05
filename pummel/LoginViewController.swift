@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.navigationBarHidden = false
         
         // background image
         
@@ -114,7 +114,7 @@ class LoginViewController: UIViewController {
         print("forgoten password clicked")
         if btnsendtag.tag == 02 {
         
-            performSegueWithIdentifier("segueForgottenPassword", sender: nil)
+            performSegueWithIdentifier("forgottenPasswordSegue", sender: nil)
         } else {
             print("forgoten password clicked")
         }
