@@ -29,6 +29,9 @@
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
 		9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */; };
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
+		F9827E971CB81F9E00841BF1 /* BuildNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */; };
+		F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */; };
+		F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +82,9 @@
 		9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		CCCEA7F5D261E683CC1283C2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C7E67A805132CD6DFF37CF /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildNumberController.swift; sourceTree = "<group>"; };
+		F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +168,9 @@
 				9C8FF40F1C84751A00449A54 /* GetStarted2ViewController.swift */,
 				9C05013A1C9534E100F02B3B /* GetStarted3ViewController.swift */,
 				9C1C543E1C793D070083E47B /* SettingsViewController.swift */,
+				F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */,
+				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
+				F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */,
 				9C1C540D1C7938070083E47B /* Assets.xcassets */,
 				9C1C540F1C7938070083E47B /* LaunchScreen.storyboard */,
 				9C8FF4111C8476C800449A54 /* Main.storyboard */,
@@ -375,6 +384,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */,
 				9C1C54431C845A2C0083E47B /* RegisterViewController.swift in Sources */,
 				9C05013B1C9534E100F02B3B /* GetStarted3ViewController.swift in Sources */,
 				9C1C54391C793AD00083E47B /* MessagesViewController.swift in Sources */,
@@ -385,7 +395,9 @@
 				9C1C54411C84561F0083E47B /* LoginViewController.swift in Sources */,
 				9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */,
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
+				F9827E971CB81F9E00841BF1 /* BuildNumberController.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
+				F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */,
 				9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */,
 				9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */,
 				9C8FF40E1C84728400449A54 /* TransitionManager.swift in Sources */,
