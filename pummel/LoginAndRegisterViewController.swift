@@ -23,6 +23,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBOutlet var logoIMV: UIImageView!
     @IBOutlet var profileIMV: UIImageView!
     @IBOutlet var addProfileIMV : UIImageView!
+    @IBOutlet var addProfileIconIMV : UIImageView!
     @IBOutlet var addProfilePhototLB : UILabel!
     
     let imagePicker = UIImagePickerController()
@@ -98,6 +99,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             self.profileIMV.hidden = false
             self.logoIMV.hidden = true
             self.addProfileIMV.hidden = false
+            self.addProfileIconIMV.hidden = false
         } else {
             signupVC.view.hidden = true
             loginVC.view.hidden = false
@@ -107,6 +109,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             self.profileIMV.hidden = true
             self.logoIMV.hidden = false
             self.addProfileIMV.hidden = true
+            self.addProfileIconIMV.hidden = true
         }
     }
 
@@ -172,7 +175,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     print("JSON: \(JSON)")
                     
                 } else {
-                    let alertController = UIAlertController(title: "Regist Issues", message: "Please do it again", preferredStyle: .Alert)
+                    let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)
                     
                     
                     let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in

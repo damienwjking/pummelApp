@@ -432,6 +432,25 @@
                                     </mask>
                                 </variation>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add.png" translatesAutoresizingMaskIntoConstraints="NO" id="P7x-il-7by">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="13" id="fxW-61-zQ8"/>
+                                    <constraint firstAttribute="width" constant="13" id="hup-cS-s19"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="fxW-61-zQ8"/>
+                                        <exclude reference="hup-cS-s19"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="fxW-61-zQ8"/>
+                                        <include reference="hup-cS-s19"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.23921568627450981" green="0.22352941176470589" blue="0.21568627450980393" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -455,6 +474,7 @@
                             <constraint firstItem="DOQ-jo-HBb" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="P8B-5x-1Vp"/>
                             <constraint firstItem="ISR-QQ-1qP" firstAttribute="centerX" secondItem="JSh-z5-Jfd" secondAttribute="centerX" id="QQQ-aV-oVm"/>
                             <constraint firstItem="ZkP-P1-uee" firstAttribute="leading" secondItem="BCX-5u-4da" secondAttribute="leadingMargin" constant="-20" id="Qrz-qC-AOH"/>
+                            <constraint firstItem="P7x-il-7by" firstAttribute="top" secondItem="Spc-f9-kKC" secondAttribute="bottom" constant="63" id="S0m-RS-nfC"/>
                             <constraint firstItem="ZkP-P1-uee" firstAttribute="centerX" secondItem="38S-cu-gcD" secondAttribute="centerX" id="T2w-sp-Uca"/>
                             <constraint firstItem="ZkP-P1-uee" firstAttribute="top" secondItem="38S-cu-gcD" secondAttribute="bottom" id="V25-Yf-NQz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ISR-QQ-1qP" secondAttribute="trailing" constant="-20" id="YJu-iA-ZJw"/>
@@ -465,6 +485,9 @@
                             <constraint firstItem="Ds2-sh-qIW" firstAttribute="top" secondItem="ISR-QQ-1qP" secondAttribute="bottom" id="i3I-T3-pv6"/>
                             <constraint firstItem="38S-cu-gcD" firstAttribute="leading" secondItem="BCX-5u-4da" secondAttribute="leadingMargin" id="kq9-ln-yhl"/>
                             <constraint firstItem="JSh-z5-Jfd" firstAttribute="trailing" secondItem="BCX-5u-4da" secondAttribute="trailingMargin" id="pcU-Bg-x4v"/>
+                            <constraint firstItem="P7x-il-7by" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="qdv-63-zkv">
+                                <variation key="widthClass=compact" constant="36"/>
+                            </constraint>
                             <constraint firstItem="flB-0z-fKB" firstAttribute="top" secondItem="Spc-f9-kKC" secondAttribute="bottom" constant="59.5" id="woB-FU-weU"/>
                             <constraint firstItem="flB-0z-fKB" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="wtg-U6-Qwr"/>
                             <constraint firstItem="ZkP-P1-uee" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="ybU-rN-xFw">
@@ -483,6 +506,7 @@
                                 <exclude reference="Ds2-sh-qIW"/>
                                 <exclude reference="38S-cu-gcD"/>
                                 <exclude reference="qSM-W4-NTq"/>
+                                <exclude reference="P7x-il-7by"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="CEO-Ck-RxE"/>
@@ -499,6 +523,8 @@
                                 <exclude reference="ZJ3-HF-zA6"/>
                                 <exclude reference="5n8-qx-tGG"/>
                                 <exclude reference="5nk-ML-40Z"/>
+                                <exclude reference="S0m-RS-nfC"/>
+                                <exclude reference="qdv-63-zkv"/>
                                 <exclude reference="Qrz-qC-AOH"/>
                                 <exclude reference="T2w-sp-Uca"/>
                                 <exclude reference="V25-Yf-NQz"/>
@@ -526,6 +552,7 @@
                                 <include reference="Ds2-sh-qIW"/>
                                 <include reference="38S-cu-gcD"/>
                                 <include reference="qSM-W4-NTq"/>
+                                <include reference="P7x-il-7by"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="CEO-Ck-RxE"/>
@@ -542,6 +569,8 @@
                                 <include reference="ZJ3-HF-zA6"/>
                                 <include reference="5n8-qx-tGG"/>
                                 <include reference="5nk-ML-40Z"/>
+                                <include reference="S0m-RS-nfC"/>
+                                <include reference="qdv-63-zkv"/>
                                 <include reference="Qrz-qC-AOH"/>
                                 <include reference="T2w-sp-Uca"/>
                                 <include reference="V25-Yf-NQz"/>
@@ -562,6 +591,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="addProfileIMV" destination="qSM-W4-NTq" id="bbP-ZX-NbU"/>
+                        <outlet property="addProfileIconIMV" destination="P7x-il-7by" id="Laj-HH-jHN"/>
                         <outlet property="addProfilePhototLB" destination="Qmr-zs-WX2" id="UNY-dd-uBT"/>
                         <outlet property="loginBT" destination="38S-cu-gcD" id="gNk-rc-Fch"/>
                         <outlet property="loginRegisterUnderLineV" destination="Ds2-sh-qIW" id="Lr2-ok-WWI"/>
@@ -580,6 +610,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="add.png" width="13" height="13"/>
         <image name="back.png" width="9" height="15"/>
         <image name="pummelLogo.png" width="90" height="90"/>
     </resources>
