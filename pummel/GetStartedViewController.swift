@@ -22,14 +22,14 @@ class GetStartedViewController: UIViewController {
         let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
         backgroundImage.image = UIImage(named: "getStarted")
         self.view.insertSubview(backgroundImage, atIndex:0)
-        
-        
-        
-        
-        
     }
     
-    // Add get started button
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "showLoginSeque") {
+            let svc = segue.destinationViewController as! LoginAndRegisterViewController
+            svc.isShowLogin = true
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

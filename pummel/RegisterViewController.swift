@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class RegisterViewController: UIViewController {
     
     override func viewDidLoad() {
@@ -18,9 +17,9 @@ class RegisterViewController: UIViewController {
         
         self.navigationController?.navigationBarHidden = true
         
-        let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
-        backgroundImage.image = UIImage(named: "signup")
-        self.view.insertSubview(backgroundImage, atIndex:0)
+//        let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
+//        backgroundImage.image = UIImage(named: "signup")
+//        self.view.insertSubview(backgroundImage, atIndex:0)
        
         
         

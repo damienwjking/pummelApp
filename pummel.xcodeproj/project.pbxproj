@@ -21,7 +21,6 @@
 		9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543A1C793AF30083E47B /* SessionsViewController.swift */; };
 		9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543C1C793B280083E47B /* FindViewController.swift */; };
 		9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543E1C793D070083E47B /* SettingsViewController.swift */; };
-		9C1C54411C84561F0083E47B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54401C84561F0083E47B /* LoginViewController.swift */; };
 		9C1C54431C845A2C0083E47B /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54421C845A2C0083E47B /* RegisterViewController.swift */; };
 		9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */; };
 		9C8FF40E1C84728400449A54 /* TransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8FF40D1C84728400449A54 /* TransitionManager.swift */; };
@@ -32,6 +31,36 @@
 		F9827E971CB81F9E00841BF1 /* BuildNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */; };
 		F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */; };
 		F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */; };
+		F9827EBB1CBBF46B00841BF1 /* pummelLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827EB81CBBF46B00841BF1 /* pummelLogo.png */; };
+		F9827EBC1CBBF46B00841BF1 /* pummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827EB91CBBF46B00841BF1 /* pummelLogo@2x.png */; };
+		F9827EBD1CBBF46B00841BF1 /* pummelLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827EBA1CBBF46B00841BF1 /* pummelLogo@3x.png */; };
+		F9827EC11CBC27CF00841BF1 /* LoginAndRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827EC01CBC27CF00841BF1 /* LoginAndRegisterViewController.swift */; };
+		F9827F0B1CBC751500841BF1 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F081CBC751500841BF1 /* back.png */; };
+		F9827F0C1CBC751500841BF1 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F091CBC751500841BF1 /* back@2x.png */; };
+		F9827F0D1CBC751500841BF1 /* back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F0A1CBC751500841BF1 /* back@3x.png */; };
+		F9827F111CBC752E00841BF1 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F0E1CBC752E00841BF1 /* add.png */; };
+		F9827F121CBC752E00841BF1 /* add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F0F1CBC752E00841BF1 /* add@2x.png */; };
+		F9827F131CBC752E00841BF1 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F101CBC752E00841BF1 /* add@3x.png */; };
+		F9827F171CBC754900841BF1 /* gender.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F141CBC754900841BF1 /* gender.png */; };
+		F9827F181CBC754900841BF1 /* gender@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F151CBC754900841BF1 /* gender@2x.png */; };
+		F9827F191CBC754900841BF1 /* gender@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F161CBC754900841BF1 /* gender@3x.png */; };
+		F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F1A1CBC755B00841BF1 /* birthday.png */; };
+		F9827F1E1CBC755B00841BF1 /* birthday@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F1B1CBC755B00841BF1 /* birthday@2x.png */; };
+		F9827F1F1CBC755B00841BF1 /* birthday@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F1C1CBC755B00841BF1 /* birthday@3x.png */; };
+		F9827F231CBC757600841BF1 /* password.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F201CBC757600841BF1 /* password.png */; };
+		F9827F241CBC757600841BF1 /* password@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F211CBC757600841BF1 /* password@2x.png */; };
+		F9827F251CBC757600841BF1 /* password@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F221CBC757600841BF1 /* password@3x.png */; };
+		F9827F291CBC758A00841BF1 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F261CBC758A00841BF1 /* email.png */; };
+		F9827F2A1CBC758A00841BF1 /* email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F271CBC758A00841BF1 /* email@2x.png */; };
+		F9827F2B1CBC758A00841BF1 /* email@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F281CBC758A00841BF1 /* email@3x.png */; };
+		F9827F2F1CBC759D00841BF1 /* name.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F2C1CBC759D00841BF1 /* name.png */; };
+		F9827F301CBC759D00841BF1 /* name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F2D1CBC759D00841BF1 /* name@2x.png */; };
+		F9827F311CBC759D00841BF1 /* name@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F2E1CBC759D00841BF1 /* name@3x.png */; };
+		F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F9827F351CBCCF7600841BF1 /* Montserrat-Regular.otf */; };
+		F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827F421CBD231D00841BF1 /* SignupViewController.swift */; };
+		F9827F451CBD231D00841BF1 /* SignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9827F431CBD231D00841BF1 /* SignupViewController.xib */; };
+		F9827F481CBD242900841BF1 /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827F461CBD242900841BF1 /* SigninViewController.swift */; };
+		F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9827F471CBD242900841BF1 /* SigninViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +101,6 @@
 		9C1C543A1C793AF30083E47B /* SessionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionsViewController.swift; sourceTree = "<group>"; };
 		9C1C543C1C793B280083E47B /* FindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindViewController.swift; sourceTree = "<group>"; };
 		9C1C543E1C793D070083E47B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		9C1C54401C84561F0083E47B /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		9C1C54421C845A2C0083E47B /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgottenPasswordController.swift; sourceTree = "<group>"; };
 		9C8FF40D1C84728400449A54 /* TransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionManager.swift; sourceTree = "<group>"; };
@@ -85,6 +113,36 @@
 		F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildNumberController.swift; sourceTree = "<group>"; };
 		F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturedViewController.swift; sourceTree = "<group>"; };
+		F9827EB81CBBF46B00841BF1 /* pummelLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pummelLogo.png; sourceTree = "<group>"; };
+		F9827EB91CBBF46B00841BF1 /* pummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pummelLogo@2x.png"; sourceTree = "<group>"; };
+		F9827EBA1CBBF46B00841BF1 /* pummelLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pummelLogo@3x.png"; sourceTree = "<group>"; };
+		F9827EC01CBC27CF00841BF1 /* LoginAndRegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginAndRegisterViewController.swift; sourceTree = "<group>"; };
+		F9827F081CBC751500841BF1 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
+		F9827F091CBC751500841BF1 /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
+		F9827F0A1CBC751500841BF1 /* back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@3x.png"; sourceTree = "<group>"; };
+		F9827F0E1CBC752E00841BF1 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
+		F9827F0F1CBC752E00841BF1 /* add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@2x.png"; sourceTree = "<group>"; };
+		F9827F101CBC752E00841BF1 /* add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@3x.png"; sourceTree = "<group>"; };
+		F9827F141CBC754900841BF1 /* gender.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gender.png; sourceTree = "<group>"; };
+		F9827F151CBC754900841BF1 /* gender@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gender@2x.png"; sourceTree = "<group>"; };
+		F9827F161CBC754900841BF1 /* gender@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gender@3x.png"; sourceTree = "<group>"; };
+		F9827F1A1CBC755B00841BF1 /* birthday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = birthday.png; sourceTree = "<group>"; };
+		F9827F1B1CBC755B00841BF1 /* birthday@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "birthday@2x.png"; sourceTree = "<group>"; };
+		F9827F1C1CBC755B00841BF1 /* birthday@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "birthday@3x.png"; sourceTree = "<group>"; };
+		F9827F201CBC757600841BF1 /* password.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = password.png; sourceTree = "<group>"; };
+		F9827F211CBC757600841BF1 /* password@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "password@2x.png"; sourceTree = "<group>"; };
+		F9827F221CBC757600841BF1 /* password@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "password@3x.png"; sourceTree = "<group>"; };
+		F9827F261CBC758A00841BF1 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
+		F9827F271CBC758A00841BF1 /* email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "email@2x.png"; sourceTree = "<group>"; };
+		F9827F281CBC758A00841BF1 /* email@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "email@3x.png"; sourceTree = "<group>"; };
+		F9827F2C1CBC759D00841BF1 /* name.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = name.png; sourceTree = "<group>"; };
+		F9827F2D1CBC759D00841BF1 /* name@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "name@2x.png"; sourceTree = "<group>"; };
+		F9827F2E1CBC759D00841BF1 /* name@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "name@3x.png"; sourceTree = "<group>"; };
+		F9827F351CBCCF7600841BF1 /* Montserrat-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.otf"; sourceTree = "<group>"; };
+		F9827F421CBD231D00841BF1 /* SignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		F9827F431CBD231D00841BF1 /* SignupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignupViewController.xib; sourceTree = "<group>"; };
+		F9827F461CBD242900841BF1 /* SigninViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
+		F9827F471CBD242900841BF1 /* SigninViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SigninViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,10 +213,12 @@
 		9C1C54031C7938070083E47B /* pummel */ = {
 			isa = PBXGroup;
 			children = (
+				F9827F3D1CBD224F00841BF1 /* xib */,
+				F9827EB71CBBF31600841BF1 /* Resource */,
 				9C1C54041C7938070083E47B /* AppDelegate.swift */,
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
-				9C1C54401C84561F0083E47B /* LoginViewController.swift */,
 				9C1C54421C845A2C0083E47B /* RegisterViewController.swift */,
+				F9827EC01CBC27CF00841BF1 /* LoginAndRegisterViewController.swift */,
 				9C1C54361C793AA70083E47B /* ProgressViewController.swift */,
 				9C1C54381C793AD00083E47B /* MessagesViewController.swift */,
 				9C1C543A1C793AF30083E47B /* SessionsViewController.swift */,
@@ -171,13 +231,15 @@
 				F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */,
 				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
 				F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */,
+				F9827F421CBD231D00841BF1 /* SignupViewController.swift */,
+				F9827F461CBD242900841BF1 /* SigninViewController.swift */,
 				9C1C540D1C7938070083E47B /* Assets.xcassets */,
+				9C1C54121C7938070083E47B /* Info.plist */,
 				9C1C540F1C7938070083E47B /* LaunchScreen.storyboard */,
 				9C8FF4111C8476C800449A54 /* Main.storyboard */,
 				9C0F5D5A1CABA4C5009A9A2C /* Register.storyboard */,
 				9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */,
 				9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */,
-				9C1C54121C7938070083E47B /* Info.plist */,
 			);
 			path = pummel;
 			sourceTree = "<group>";
@@ -198,6 +260,55 @@
 				9C1C54281C7938070083E47B /* Info.plist */,
 			);
 			path = pummelUITests;
+			sourceTree = "<group>";
+		};
+		F9827EB71CBBF31600841BF1 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				F9827F341CBCCF6900841BF1 /* Font */,
+				F9827F2C1CBC759D00841BF1 /* name.png */,
+				F9827F2D1CBC759D00841BF1 /* name@2x.png */,
+				F9827F2E1CBC759D00841BF1 /* name@3x.png */,
+				F9827F261CBC758A00841BF1 /* email.png */,
+				F9827F271CBC758A00841BF1 /* email@2x.png */,
+				F9827F281CBC758A00841BF1 /* email@3x.png */,
+				F9827F201CBC757600841BF1 /* password.png */,
+				F9827F211CBC757600841BF1 /* password@2x.png */,
+				F9827F221CBC757600841BF1 /* password@3x.png */,
+				F9827F1A1CBC755B00841BF1 /* birthday.png */,
+				F9827F1B1CBC755B00841BF1 /* birthday@2x.png */,
+				F9827F1C1CBC755B00841BF1 /* birthday@3x.png */,
+				F9827F141CBC754900841BF1 /* gender.png */,
+				F9827F151CBC754900841BF1 /* gender@2x.png */,
+				F9827F161CBC754900841BF1 /* gender@3x.png */,
+				F9827F0E1CBC752E00841BF1 /* add.png */,
+				F9827F0F1CBC752E00841BF1 /* add@2x.png */,
+				F9827F101CBC752E00841BF1 /* add@3x.png */,
+				F9827F081CBC751500841BF1 /* back.png */,
+				F9827F091CBC751500841BF1 /* back@2x.png */,
+				F9827F0A1CBC751500841BF1 /* back@3x.png */,
+				F9827EB81CBBF46B00841BF1 /* pummelLogo.png */,
+				F9827EB91CBBF46B00841BF1 /* pummelLogo@2x.png */,
+				F9827EBA1CBBF46B00841BF1 /* pummelLogo@3x.png */,
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
+		F9827F341CBCCF6900841BF1 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				F9827F351CBCCF7600841BF1 /* Montserrat-Regular.otf */,
+			);
+			name = Font;
+			sourceTree = "<group>";
+		};
+		F9827F3D1CBD224F00841BF1 /* xib */ = {
+			isa = PBXGroup;
+			children = (
+				F9827F471CBD242900841BF1 /* SigninViewController.xib */,
+				F9827F431CBD231D00841BF1 /* SignupViewController.xib */,
+			);
+			name = xib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,11 +418,38 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9827F231CBC757600841BF1 /* password.png in Resources */,
+				F9827F241CBC757600841BF1 /* password@2x.png in Resources */,
+				F9827F2F1CBC759D00841BF1 /* name.png in Resources */,
+				F9827F191CBC754900841BF1 /* gender@3x.png in Resources */,
+				F9827EBD1CBBF46B00841BF1 /* pummelLogo@3x.png in Resources */,
+				F9827F2A1CBC758A00841BF1 /* email@2x.png in Resources */,
+				F9827F131CBC752E00841BF1 /* add@3x.png in Resources */,
+				F9827EBC1CBBF46B00841BF1 /* pummelLogo@2x.png in Resources */,
+				F9827F0B1CBC751500841BF1 /* back.png in Resources */,
+				F9827F1E1CBC755B00841BF1 /* birthday@2x.png in Resources */,
+				F9827F311CBC759D00841BF1 /* name@3x.png in Resources */,
+				F9827F111CBC752E00841BF1 /* add.png in Resources */,
+				F9827F0D1CBC751500841BF1 /* back@3x.png in Resources */,
+				F9827F1F1CBC755B00841BF1 /* birthday@3x.png in Resources */,
 				9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */,
+				F9827F171CBC754900841BF1 /* gender.png in Resources */,
+				F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */,
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
+				F9827EBB1CBBF46B00841BF1 /* pummelLogo.png in Resources */,
 				9C1C540E1C7938070083E47B /* Assets.xcassets in Resources */,
+				F9827F0C1CBC751500841BF1 /* back@2x.png in Resources */,
+				F9827F121CBC752E00841BF1 /* add@2x.png in Resources */,
 				9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */,
+				F9827F301CBC759D00841BF1 /* name@2x.png in Resources */,
+				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
 				9C0F5D5B1CABA4C5009A9A2C /* Register.storyboard in Resources */,
+				F9827F291CBC758A00841BF1 /* email.png in Resources */,
+				F9827F2B1CBC758A00841BF1 /* email@3x.png in Resources */,
+				F9827F251CBC757600841BF1 /* password@3x.png in Resources */,
+				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
+				F9827F451CBD231D00841BF1 /* SignupViewController.xib in Resources */,
+				F9827F181CBC754900841BF1 /* gender@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,8 +529,10 @@
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
+				F9827EC11CBC27CF00841BF1 /* LoginAndRegisterViewController.swift in Sources */,
+				F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */,
 				9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */,
-				9C1C54411C84561F0083E47B /* LoginViewController.swift in Sources */,
+				F9827F481CBD242900841BF1 /* SigninViewController.swift in Sources */,
 				9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */,
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
 				F9827E971CB81F9E00841BF1 /* BuildNumberController.swift in Sources */,

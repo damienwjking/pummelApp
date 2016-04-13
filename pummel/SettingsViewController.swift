@@ -126,7 +126,16 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func logOut() {
-        let alertController = UIAlertController(title: "logout", message: "Implement later logout()", preferredStyle: .Alert)
+        // Remove cookie
+        let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        for cookie in storage.cookies! {
+            storage.deleteCookie(cookie)
+        }
+        NSUserDefaults.standardUserDefaults().synchronize()
+        // Remove token
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.token = ""
+        let alertController = UIAlertController(title: "logout", message: "Removed cookie & erase token, now navigate to ...", preferredStyle: .Alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alertController, animated: true) { }
     }
