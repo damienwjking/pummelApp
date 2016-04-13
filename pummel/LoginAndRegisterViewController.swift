@@ -164,8 +164,21 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         let userPassword = self.signupVC.passwordTF.text
         let dob = self.signupVC.dobTF.text
         let gender = self.signupVC.genderTF.text
+
+        let fullNameArr = name!.characters.split{$0 == " "}.map(String.init)
+        let firstname = fullNameArr[0]
+        var lastname = ""
+        if fullNameArr.count >= 2 {
+            for var i = 1; i < fullNameArr.count; i++ {
+                lastname.appendContentsOf(fullNameArr[i])
+                lastname.appendContentsOf(" ")
+            }
+        }
         
-        Alamofire.request(.POST, "http://52.8.5.161:3000/api/register", parameters: ["email":userEmail!, "password":userPassword!, "firstname":name!, "lastname":name!, "dob":dob!, "gender":gender!])
+        print(firstname)
+        print(lastname)
+        
+        Alamofire.request(.POST, "http://52.8.5.161:3000/api/register", parameters: ["email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
             .responseJSON { response in
                 print("REQUEST-- \(response.request)")  // original URL request
                 print("RESPONSE-- \(response.response)") // URL response
