@@ -11,6 +11,7 @@
                 <outlet property="forgotPasswordBT" destination="9j8-qV-BSW" id="fM5-JJ-bwE"/>
                 <outlet property="passwordTF" destination="wVR-LN-U0o" id="1D7-ss-ORU"/>
                 <outlet property="signinBT" destination="8rr-aU-EtC" id="bqn-zM-VUj"/>
+                <outlet property="signinDistantCT" destination="hEm-KL-IId" id="LEJ-mO-UeU"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

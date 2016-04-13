@@ -16,6 +16,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var dobTF : UITextField!
     @IBOutlet var genderTF : UITextField!
     @IBOutlet var signupBT : UIButton!
+    @IBOutlet var signinDistantCT: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +42,16 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.signupBT.layer.borderColor = UIColor.whiteColor().CGColor
         self.signupBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
         
-        
+        self.updateUI()
+    }
+    
+    func updateUI() {
+        let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
+        let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
+        let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 736.0) {
+            self.signinDistantCT.constant = 142
+        }
     }
 
     override func didReceiveMemoryWarning() {

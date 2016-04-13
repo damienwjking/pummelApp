@@ -12,6 +12,7 @@
                 <outlet property="genderTF" destination="Uza-Ak-uxH" id="AcH-OG-HaX"/>
                 <outlet property="nameTF" destination="hge-uf-O3X" id="AZI-pV-1V4"/>
                 <outlet property="passwordTF" destination="Q18-UZ-nmI" id="vch-3U-aO9"/>
+                <outlet property="signinDistantCT" destination="FSQ-jr-s9p" id="Ss8-Vk-SoE"/>
                 <outlet property="signupBT" destination="QVm-7a-cXo" id="8Wc-72-Tp2"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
