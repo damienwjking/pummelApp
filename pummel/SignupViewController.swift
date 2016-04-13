@@ -47,6 +47,10 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.passwordAttentionIM.hidden = true
         self.emailAttentionIM.hidden = true
         
+        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:("dismissKeyboard"))
+        self.view.userInteractionEnabled = true
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+        
         self.updateUI()
     }
     
@@ -79,7 +83,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         }
         if textField.isEqual(self.passwordTF) == true {
             // TODO: Show left icon
-            if (self.passwordTF.text?.characters.count <= 8) {
+            if (self.passwordTF.text?.characters.count < 8) {
                 self.passwordAttentionIM.hidden = false
             } else {
                 self.passwordAttentionIM.hidden = true
@@ -131,5 +135,9 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         alertController.addAction(UIAlertAction(title: "Female", style: UIAlertActionStyle.Default, handler: selectFemale))
         
         self.presentViewController(alertController, animated: true) { }
+    }
+    
+    func dismissKeyboard() {
+        self.dobTF.resignFirstResponder()
     }
 }
