@@ -8,9 +8,11 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SignupViewController" customModule="pummel" customModuleProvider="target">
             <connections>
                 <outlet property="dobTF" destination="BGb-1R-bwA" id="SGn-NB-KZS"/>
+                <outlet property="emailAttentionIM" destination="5ya-Yy-kwa" id="cRV-zi-Yxo"/>
                 <outlet property="emailTF" destination="z9v-dF-aNO" id="y7z-vy-i1r"/>
                 <outlet property="genderTF" destination="Uza-Ak-uxH" id="AcH-OG-HaX"/>
                 <outlet property="nameTF" destination="hge-uf-O3X" id="AZI-pV-1V4"/>
+                <outlet property="passwordAttentionIM" destination="qiP-eQ-knh" id="qCM-Nj-Mpi"/>
                 <outlet property="passwordTF" destination="Q18-UZ-nmI" id="vch-3U-aO9"/>
                 <outlet property="signinDistantCT" destination="FSQ-jr-s9p" id="Ss8-Vk-SoE"/>
                 <outlet property="signupBT" destination="QVm-7a-cXo" id="8Wc-72-Tp2"/>
@@ -89,43 +91,82 @@
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="email.png" translatesAutoresizingMaskIntoConstraints="NO" id="KoL-Ea-C6p">
                             <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                            <variation key="widthClass=compact" fixedFrame="YES">
-                                <rect key="frame" x="15" y="17" width="20" height="17"/>
-                            </variation>
                         </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="EMAIL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="z9v-dF-aNO">
                             <rect key="frame" x="-25" y="-30" width="97" height="30"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
-                            <variation key="widthClass=compact" fixedFrame="YES">
-                                <rect key="frame" x="50" y="10" width="300" height="30"/>
-                            </variation>
                             <connections>
                                 <outlet property="delegate" destination="-1" id="6gm-g4-qCh"/>
                             </connections>
                         </textField>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="attention.png" translatesAutoresizingMaskIntoConstraints="NO" id="5ya-Yy-kwa">
+                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="23" id="rqF-Nk-zXM"/>
+                                <constraint firstAttribute="width" constant="23" id="tgf-TP-QmQ"/>
+                            </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="rqF-Nk-zXM"/>
+                                    <exclude reference="tgf-TP-QmQ"/>
+                                </mask>
+                            </variation>
+                            <variation key="widthClass=compact">
+                                <mask key="constraints">
+                                    <include reference="rqF-Nk-zXM"/>
+                                    <include reference="tgf-TP-QmQ"/>
+                                </mask>
+                            </variation>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="5ya-Yy-kwa" firstAttribute="leading" secondItem="z9v-dF-aNO" secondAttribute="trailing" constant="12" id="3VQ-qZ-tSu"/>
+                        <constraint firstItem="z9v-dF-aNO" firstAttribute="centerY" secondItem="KoL-Ea-C6p" secondAttribute="centerY" id="8AW-op-upA"/>
                         <constraint firstAttribute="height" constant="50" id="Fh7-Cx-1mS"/>
+                        <constraint firstItem="z9v-dF-aNO" firstAttribute="centerY" secondItem="hNj-l6-QAQ" secondAttribute="centerY" id="Hzg-kz-af7"/>
+                        <constraint firstItem="z9v-dF-aNO" firstAttribute="centerY" secondItem="5ya-Yy-kwa" secondAttribute="centerY" id="IDv-eW-O8r"/>
+                        <constraint firstAttribute="trailing" secondItem="5ya-Yy-kwa" secondAttribute="trailing" constant="15" id="Mgj-D8-EdP"/>
+                        <constraint firstItem="z9v-dF-aNO" firstAttribute="leading" secondItem="KoL-Ea-C6p" secondAttribute="trailing" constant="15" id="hns-bh-dyW"/>
+                        <constraint firstItem="z9v-dF-aNO" firstAttribute="centerX" secondItem="hNj-l6-QAQ" secondAttribute="centerX" id="lFP-yx-eEe"/>
+                        <constraint firstItem="z9v-dF-aNO" firstAttribute="top" secondItem="hNj-l6-QAQ" secondAttribute="top" constant="10" id="s7Y-gI-qXw"/>
                     </constraints>
                     <variation key="default">
                         <mask key="subviews">
                             <exclude reference="KoL-Ea-C6p"/>
                             <exclude reference="z9v-dF-aNO"/>
+                            <exclude reference="5ya-Yy-kwa"/>
                         </mask>
                         <mask key="constraints">
                             <exclude reference="Fh7-Cx-1mS"/>
+                            <exclude reference="8AW-op-upA"/>
+                            <exclude reference="Hzg-kz-af7"/>
+                            <exclude reference="IDv-eW-O8r"/>
+                            <exclude reference="hns-bh-dyW"/>
+                            <exclude reference="lFP-yx-eEe"/>
+                            <exclude reference="s7Y-gI-qXw"/>
+                            <exclude reference="3VQ-qZ-tSu"/>
+                            <exclude reference="Mgj-D8-EdP"/>
                         </mask>
                     </variation>
                     <variation key="widthClass=compact">
                         <mask key="subviews">
                             <include reference="KoL-Ea-C6p"/>
                             <include reference="z9v-dF-aNO"/>
+                            <include reference="5ya-Yy-kwa"/>
                         </mask>
                         <mask key="constraints">
                             <include reference="Fh7-Cx-1mS"/>
+                            <include reference="8AW-op-upA"/>
+                            <include reference="Hzg-kz-af7"/>
+                            <include reference="IDv-eW-O8r"/>
+                            <include reference="hns-bh-dyW"/>
+                            <include reference="lFP-yx-eEe"/>
+                            <include reference="s7Y-gI-qXw"/>
+                            <include reference="3VQ-qZ-tSu"/>
+                            <include reference="Mgj-D8-EdP"/>
                         </mask>
                     </variation>
                 </view>
@@ -151,8 +192,24 @@
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="password.png" translatesAutoresizingMaskIntoConstraints="NO" id="yB5-XG-ldz">
                             <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                            <variation key="widthClass=compact" fixedFrame="YES">
-                                <rect key="frame" x="15" y="14" width="20" height="23"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="attention.png" translatesAutoresizingMaskIntoConstraints="NO" id="qiP-eQ-knh">
+                            <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="23" id="cNz-6L-q6w"/>
+                                <constraint firstAttribute="height" constant="23" id="cRX-Wk-leb"/>
+                            </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="cNz-6L-q6w"/>
+                                    <exclude reference="cRX-Wk-leb"/>
+                                </mask>
+                            </variation>
+                            <variation key="widthClass=compact">
+                                <mask key="constraints">
+                                    <include reference="cNz-6L-q6w"/>
+                                    <include reference="cRX-Wk-leb"/>
+                                </mask>
                             </variation>
                         </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="PASSWORD" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Q18-UZ-nmI">
@@ -160,9 +217,6 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
-                            <variation key="widthClass=compact" fixedFrame="YES">
-                                <rect key="frame" x="50" y="10" width="300" height="30"/>
-                            </variation>
                             <connections>
                                 <outlet property="delegate" destination="-1" id="HxR-Xi-ur4"/>
                             </connections>
@@ -170,25 +224,54 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="qiP-eQ-knh" firstAttribute="top" secondItem="6DA-AO-JHW" secondAttribute="top" constant="14" id="0Zu-d2-UgY"/>
+                        <constraint firstItem="yB5-XG-ldz" firstAttribute="centerY" secondItem="6DA-AO-JHW" secondAttribute="centerY" id="CpT-14-NW5"/>
+                        <constraint firstItem="Q18-UZ-nmI" firstAttribute="centerY" secondItem="qiP-eQ-knh" secondAttribute="centerY" id="DEw-tv-4OT"/>
                         <constraint firstAttribute="height" constant="50" id="EN1-m1-hUl"/>
+                        <constraint firstItem="qiP-eQ-knh" firstAttribute="leading" secondItem="Q18-UZ-nmI" secondAttribute="trailing" constant="12" id="Fk6-Eh-ha7"/>
+                        <constraint firstAttribute="trailing" secondItem="qiP-eQ-knh" secondAttribute="trailing" constant="15" id="bYj-xK-Xty"/>
+                        <constraint firstItem="Q18-UZ-nmI" firstAttribute="leading" secondItem="yB5-XG-ldz" secondAttribute="trailing" constant="15" id="dmh-VG-K9r"/>
+                        <constraint firstAttribute="bottom" secondItem="qiP-eQ-knh" secondAttribute="bottom" constant="13" id="elm-z7-P8t"/>
+                        <constraint firstItem="Q18-UZ-nmI" firstAttribute="top" secondItem="6DA-AO-JHW" secondAttribute="top" constant="11" id="lbP-0u-tYh"/>
+                        <constraint firstItem="Q18-UZ-nmI" firstAttribute="centerX" secondItem="6DA-AO-JHW" secondAttribute="centerX" id="syu-TL-cHS"/>
                     </constraints>
                     <variation key="default">
                         <mask key="subviews">
                             <exclude reference="yB5-XG-ldz"/>
+                            <exclude reference="qiP-eQ-knh"/>
                             <exclude reference="Q18-UZ-nmI"/>
                         </mask>
                         <mask key="constraints">
                             <exclude reference="EN1-m1-hUl"/>
+                            <exclude reference="CpT-14-NW5"/>
+                            <exclude reference="DEw-tv-4OT"/>
+                            <exclude reference="dmh-VG-K9r"/>
+                            <exclude reference="lbP-0u-tYh"/>
+                            <exclude reference="syu-TL-cHS"/>
+                            <exclude reference="0Zu-d2-UgY"/>
+                            <exclude reference="Fk6-Eh-ha7"/>
+                            <exclude reference="bYj-xK-Xty"/>
+                            <exclude reference="elm-z7-P8t"/>
                         </mask>
                     </variation>
                     <variation key="widthClass=compact" misplaced="YES">
                         <rect key="frame" x="0.0" y="121" width="400" height="50"/>
                         <mask key="subviews">
                             <include reference="yB5-XG-ldz"/>
+                            <include reference="qiP-eQ-knh"/>
                             <include reference="Q18-UZ-nmI"/>
                         </mask>
                         <mask key="constraints">
                             <include reference="EN1-m1-hUl"/>
+                            <include reference="CpT-14-NW5"/>
+                            <include reference="DEw-tv-4OT"/>
+                            <include reference="dmh-VG-K9r"/>
+                            <include reference="lbP-0u-tYh"/>
+                            <include reference="syu-TL-cHS"/>
+                            <include reference="0Zu-d2-UgY"/>
+                            <include reference="Fk6-Eh-ha7"/>
+                            <include reference="bYj-xK-Xty"/>
+                            <include reference="elm-z7-P8t"/>
                         </mask>
                     </variation>
                 </view>
@@ -202,10 +285,10 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jWs-M6-mjt">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="password.png" translatesAutoresizingMaskIntoConstraints="NO" id="2yP-7f-aDh">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="birthday.png" translatesAutoresizingMaskIntoConstraints="NO" id="2yP-7f-aDh">
                             <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                             <variation key="widthClass=compact" fixedFrame="YES">
-                                <rect key="frame" x="15" y="15" width="21" height="21"/>
+                                <rect key="frame" x="15" y="14" width="21" height="21"/>
                             </variation>
                         </imageView>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="D.O.B" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BGb-1R-bwA">
@@ -217,6 +300,7 @@
                                 <rect key="frame" x="50" y="10" width="300" height="30"/>
                             </variation>
                             <connections>
+                                <action selector="textFieldEditing:" destination="-1" eventType="editingDidBegin" id="4SN-hc-xYl"/>
                                 <outlet property="delegate" destination="-1" id="EIY-JA-jeI"/>
                             </connections>
                         </textField>
@@ -279,6 +363,7 @@
                                 <rect key="frame" x="50" y="10" width="300" height="30"/>
                             </variation>
                             <connections>
+                                <action selector="showPopupToSelectGender:" destination="-1" eventType="touchDown" id="EMO-7m-6Jq"/>
                                 <outlet property="delegate" destination="-1" id="SYG-XN-pKb"/>
                             </connections>
                         </textField>
@@ -490,6 +575,8 @@
         </view>
     </objects>
     <resources>
+        <image name="attention.png" width="23" height="23"/>
+        <image name="birthday.png" width="21" height="21"/>
         <image name="email.png" width="20" height="17"/>
         <image name="gender.png" width="20" height="25"/>
         <image name="name.png" width="22" height="22"/>

@@ -24,9 +24,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBOutlet var profileIMV: UIImageView!
     @IBOutlet var addProfileIMV : UIImageView!
     @IBOutlet var addProfileIconIMV : UIImageView!
+    @IBOutlet var cameraProfileIconIMV : UIImageView!
     @IBOutlet var addProfilePhototLB : UILabel!
     
-    let imagePicker = UIImagePickerController()
+       let imagePicker = UIImagePickerController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,8 +61,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         profileIMV.clipsToBounds = true
         imagePicker.delegate = self
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:("imageTapped"))
-        self.profileIMV.userInteractionEnabled = true
-        self.profileIMV.addGestureRecognizer(tapGestureRecognizer)
         self.addProfileIMV.userInteractionEnabled = true
         self.addProfileIMV.addGestureRecognizer(tapGestureRecognizer)
         
@@ -100,6 +99,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             self.logoIMV.hidden = true
             self.addProfileIMV.hidden = false
             self.addProfileIconIMV.hidden = false
+            self.cameraProfileIconIMV.hidden = false
         } else {
             signupVC.view.hidden = true
             loginVC.view.hidden = false
@@ -110,6 +110,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             self.logoIMV.hidden = false
             self.addProfileIMV.hidden = true
             self.addProfileIconIMV.hidden = true
+            self.cameraProfileIconIMV.hidden = true
         }
     }
 
@@ -131,7 +132,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         let userEmail = self.loginVC.emailTF.text
         let userPassword = self.loginVC.passwordTF.text
         
-        Alamofire.request(.POST, "http://52.8.5.161/api/users/login", parameters: ["email":userEmail!, "password":userPassword!])
+        Alamofire.request(.POST, "http://52.8.5.161:3000/api/login", parameters: ["email":userEmail!, "password":userPassword!])
             .responseJSON { response in
                 print("REQUEST-- \(response.request)")  // original URL request
                 print("RESPONSE-- \(response.response)") // URL response
@@ -164,7 +165,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         let dob = self.signupVC.dobTF.text
         let gender = self.signupVC.genderTF.text
         
-        Alamofire.request(.POST, "http://52.8.5.161/api/users/register", parameters: ["email":userEmail!, "password":userPassword!, "firstname":name!, "lastname":name!, "dob":dob!, "gender":gender!])
+        Alamofire.request(.POST, "http://52.8.5.161:3000/api/register", parameters: ["email":userEmail!, "password":userPassword!, "firstname":name!, "lastname":name!, "dob":dob!, "gender":gender!])
             .responseJSON { response in
                 print("REQUEST-- \(response.request)")  // original URL request
                 print("RESPONSE-- \(response.response)") // URL response
@@ -217,6 +218,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.profileIMV.contentMode = .ScaleAspectFill
             self.profileIMV.image = pickedImage
+            self.cameraProfileIconIMV.hidden = true
         }
         
         dismissViewControllerAnimated(true, completion: nil)
@@ -229,11 +231,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     func keyboardWillShow(notification: NSNotification) {
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            if ( self.view.frame.origin.y != -keyboardSize.height && self.isShowLogin == false) {
+            if ( self.view.frame.origin.y == 0 && self.isShowLogin == false) {
                 self.view.frame.origin.y -= keyboardSize.height
             }
         }
-        
     }
     
     func keyboardWillHide(notification: NSNotification) {

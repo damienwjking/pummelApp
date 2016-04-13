@@ -61,6 +61,12 @@
 		F9827F451CBD231D00841BF1 /* SignupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9827F431CBD231D00841BF1 /* SignupViewController.xib */; };
 		F9827F481CBD242900841BF1 /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827F461CBD242900841BF1 /* SigninViewController.swift */; };
 		F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9827F471CBD242900841BF1 /* SigninViewController.xib */; };
+		F9827F511CBDEE3C00841BF1 /* attention.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4B1CBDEE3C00841BF1 /* attention.png */; };
+		F9827F521CBDEE3C00841BF1 /* attention@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4C1CBDEE3C00841BF1 /* attention@2x.png */; };
+		F9827F531CBDEE3C00841BF1 /* attention@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4D1CBDEE3C00841BF1 /* attention@3x.png */; };
+		F9827F541CBDEE3C00841BF1 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4E1CBDEE3C00841BF1 /* camera.png */; };
+		F9827F551CBDEE3C00841BF1 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */; };
+		F9827F561CBDEE3C00841BF1 /* camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F501CBDEE3C00841BF1 /* camera@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,6 +149,12 @@
 		F9827F431CBD231D00841BF1 /* SignupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignupViewController.xib; sourceTree = "<group>"; };
 		F9827F461CBD242900841BF1 /* SigninViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		F9827F471CBD242900841BF1 /* SigninViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SigninViewController.xib; sourceTree = "<group>"; };
+		F9827F4B1CBDEE3C00841BF1 /* attention.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = attention.png; sourceTree = "<group>"; };
+		F9827F4C1CBDEE3C00841BF1 /* attention@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attention@2x.png"; sourceTree = "<group>"; };
+		F9827F4D1CBDEE3C00841BF1 /* attention@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attention@3x.png"; sourceTree = "<group>"; };
+		F9827F4E1CBDEE3C00841BF1 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
+		F9827F501CBDEE3C00841BF1 /* camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,6 +302,12 @@
 				F9827EB81CBBF46B00841BF1 /* pummelLogo.png */,
 				F9827EB91CBBF46B00841BF1 /* pummelLogo@2x.png */,
 				F9827EBA1CBBF46B00841BF1 /* pummelLogo@3x.png */,
+				F9827F4B1CBDEE3C00841BF1 /* attention.png */,
+				F9827F4C1CBDEE3C00841BF1 /* attention@2x.png */,
+				F9827F4D1CBDEE3C00841BF1 /* attention@3x.png */,
+				F9827F4E1CBDEE3C00841BF1 /* camera.png */,
+				F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */,
+				F9827F501CBDEE3C00841BF1 /* camera@3x.png */,
 			);
 			name = Resource;
 			sourceTree = "<group>";
@@ -420,6 +438,7 @@
 			files = (
 				F9827F231CBC757600841BF1 /* password.png in Resources */,
 				F9827F241CBC757600841BF1 /* password@2x.png in Resources */,
+				F9827F561CBDEE3C00841BF1 /* camera@3x.png in Resources */,
 				F9827F2F1CBC759D00841BF1 /* name.png in Resources */,
 				F9827F191CBC754900841BF1 /* gender@3x.png in Resources */,
 				F9827EBD1CBBF46B00841BF1 /* pummelLogo@3x.png in Resources */,
@@ -433,20 +452,25 @@
 				F9827F0D1CBC751500841BF1 /* back@3x.png in Resources */,
 				F9827F1F1CBC755B00841BF1 /* birthday@3x.png in Resources */,
 				9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */,
+				F9827F521CBDEE3C00841BF1 /* attention@2x.png in Resources */,
 				F9827F171CBC754900841BF1 /* gender.png in Resources */,
 				F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */,
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
 				F9827EBB1CBBF46B00841BF1 /* pummelLogo.png in Resources */,
 				9C1C540E1C7938070083E47B /* Assets.xcassets in Resources */,
 				F9827F0C1CBC751500841BF1 /* back@2x.png in Resources */,
+				F9827F541CBDEE3C00841BF1 /* camera.png in Resources */,
 				F9827F121CBC752E00841BF1 /* add@2x.png in Resources */,
 				9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */,
 				F9827F301CBC759D00841BF1 /* name@2x.png in Resources */,
+				F9827F551CBDEE3C00841BF1 /* camera@2x.png in Resources */,
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
+				F9827F511CBDEE3C00841BF1 /* attention.png in Resources */,
 				9C0F5D5B1CABA4C5009A9A2C /* Register.storyboard in Resources */,
 				F9827F291CBC758A00841BF1 /* email.png in Resources */,
 				F9827F2B1CBC758A00841BF1 /* email@3x.png in Resources */,
 				F9827F251CBC757600841BF1 /* password@3x.png in Resources */,
+				F9827F531CBDEE3C00841BF1 /* attention@3x.png in Resources */,
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
 				F9827F451CBD231D00841BF1 /* SignupViewController.xib in Resources */,
 				F9827F181CBC754900841BF1 /* gender@2x.png in Resources */,

@@ -451,6 +451,25 @@
                                     </mask>
                                 </variation>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera.png" translatesAutoresizingMaskIntoConstraints="NO" id="L0o-l4-E3T">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="8JI-sO-160"/>
+                                    <constraint firstAttribute="width" constant="40" id="KRY-ou-5h0"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="8JI-sO-160"/>
+                                        <exclude reference="KRY-ou-5h0"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="8JI-sO-160"/>
+                                        <include reference="KRY-ou-5h0"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.23921568627450981" green="0.22352941176470589" blue="0.21568627450980393" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -473,6 +492,7 @@
                             <constraint firstItem="38S-cu-gcD" firstAttribute="top" secondItem="Qmr-zs-WX2" secondAttribute="bottom" constant="15.5" id="Ok2-pM-prv"/>
                             <constraint firstItem="DOQ-jo-HBb" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="P8B-5x-1Vp"/>
                             <constraint firstItem="ISR-QQ-1qP" firstAttribute="centerX" secondItem="JSh-z5-Jfd" secondAttribute="centerX" id="QQQ-aV-oVm"/>
+                            <constraint firstItem="L0o-l4-E3T" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="QpY-8l-5N6"/>
                             <constraint firstItem="ZkP-P1-uee" firstAttribute="leading" secondItem="BCX-5u-4da" secondAttribute="leadingMargin" constant="-20" id="Qrz-qC-AOH"/>
                             <constraint firstItem="P7x-il-7by" firstAttribute="top" secondItem="Spc-f9-kKC" secondAttribute="bottom" constant="63" id="S0m-RS-nfC"/>
                             <constraint firstItem="ZkP-P1-uee" firstAttribute="centerX" secondItem="38S-cu-gcD" secondAttribute="centerX" id="T2w-sp-Uca"/>
@@ -488,6 +508,7 @@
                             <constraint firstItem="P7x-il-7by" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="qdv-63-zkv">
                                 <variation key="widthClass=compact" constant="36"/>
                             </constraint>
+                            <constraint firstItem="L0o-l4-E3T" firstAttribute="top" secondItem="Spc-f9-kKC" secondAttribute="bottom" constant="89" id="qyb-bN-KVH"/>
                             <constraint firstItem="flB-0z-fKB" firstAttribute="top" secondItem="Spc-f9-kKC" secondAttribute="bottom" constant="59.5" id="woB-FU-weU"/>
                             <constraint firstItem="flB-0z-fKB" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="wtg-U6-Qwr"/>
                             <constraint firstItem="ZkP-P1-uee" firstAttribute="centerX" secondItem="BCX-5u-4da" secondAttribute="centerX" id="ybU-rN-xFw">
@@ -507,6 +528,7 @@
                                 <exclude reference="38S-cu-gcD"/>
                                 <exclude reference="qSM-W4-NTq"/>
                                 <exclude reference="P7x-il-7by"/>
+                                <exclude reference="L0o-l4-E3T"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="CEO-Ck-RxE"/>
@@ -517,6 +539,8 @@
                                 <exclude reference="wtg-U6-Qwr"/>
                                 <exclude reference="Ok2-pM-prv"/>
                                 <exclude reference="kq9-ln-yhl"/>
+                                <exclude reference="QpY-8l-5N6"/>
+                                <exclude reference="qyb-bN-KVH"/>
                                 <exclude reference="4Nk-OD-IUC"/>
                                 <exclude reference="IMQ-WY-z4v"/>
                                 <exclude reference="NKg-Ff-yIr"/>
@@ -553,6 +577,7 @@
                                 <include reference="38S-cu-gcD"/>
                                 <include reference="qSM-W4-NTq"/>
                                 <include reference="P7x-il-7by"/>
+                                <include reference="L0o-l4-E3T"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="CEO-Ck-RxE"/>
@@ -563,6 +588,8 @@
                                 <include reference="wtg-U6-Qwr"/>
                                 <include reference="Ok2-pM-prv"/>
                                 <include reference="kq9-ln-yhl"/>
+                                <include reference="QpY-8l-5N6"/>
+                                <include reference="qyb-bN-KVH"/>
                                 <include reference="4Nk-OD-IUC"/>
                                 <include reference="IMQ-WY-z4v"/>
                                 <include reference="NKg-Ff-yIr"/>
@@ -593,6 +620,7 @@
                         <outlet property="addProfileIMV" destination="qSM-W4-NTq" id="bbP-ZX-NbU"/>
                         <outlet property="addProfileIconIMV" destination="P7x-il-7by" id="Laj-HH-jHN"/>
                         <outlet property="addProfilePhototLB" destination="Qmr-zs-WX2" id="UNY-dd-uBT"/>
+                        <outlet property="cameraProfileIconIMV" destination="L0o-l4-E3T" id="Gyh-Jj-pqX"/>
                         <outlet property="loginBT" destination="38S-cu-gcD" id="gNk-rc-Fch"/>
                         <outlet property="loginRegisterUnderLineV" destination="Ds2-sh-qIW" id="Lr2-ok-WWI"/>
                         <outlet property="loginUnderLineV" destination="ZkP-P1-uee" id="qr5-hs-i0y"/>
@@ -612,6 +640,7 @@
     <resources>
         <image name="add.png" width="13" height="13"/>
         <image name="back.png" width="9" height="15"/>
+        <image name="camera.png" width="40" height="31"/>
         <image name="pummelLogo.png" width="90" height="90"/>
     </resources>
     <inferredMetricsTieBreakers>

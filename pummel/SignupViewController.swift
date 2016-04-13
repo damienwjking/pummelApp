@@ -17,6 +17,8 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var genderTF : UITextField!
     @IBOutlet var signupBT : UIButton!
     @IBOutlet var signinDistantCT: NSLayoutConstraint!
+    @IBOutlet var passwordAttentionIM: UIImageView!
+    @IBOutlet var emailAttentionIM: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +44,9 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.signupBT.layer.borderColor = UIColor.whiteColor().CGColor
         self.signupBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
         
+        self.passwordAttentionIM.hidden = true
+        self.emailAttentionIM.hidden = true
+        
         self.updateUI()
     }
     
@@ -61,28 +66,35 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        if (textField.isEqual(self.emailTF) == true) {
-            // TODO: Show left icon
+        if textField.isEqual(self.emailTF) == true {
             if (self.isValidEmail(self.emailTF.text!) == false) {
+                self.emailAttentionIM.hidden = false
                 self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
                     attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
             } else {
+                self.emailAttentionIM.hidden = true
                 self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
                     attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
             }
         }
-        if (textField.isEqual(self.passwordTF) == true) {
+        if textField.isEqual(self.passwordTF) == true {
             // TODO: Show left icon
             if (self.passwordTF.text?.characters.count <= 8) {
-                self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                self.passwordAttentionIM.hidden = false
             } else {
-                self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
+                self.passwordAttentionIM.hidden = true
             }
         }
 
         return true
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        if textField.isEqual(self.genderTF) == true {
+            return false
+        } else {
+            return true
+        }
     }
     
     func isValidEmail(testStr:String) -> Bool {
@@ -91,5 +103,33 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluateWithObject(testStr)
+    }
+    
+    @IBAction func textFieldEditing(sender: UITextField) {
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.datePickerMode = UIDatePickerMode.Date
+        sender.inputView = datePickerView
+        datePickerView.addTarget(self, action:"datePickerValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+    }
+    
+    func datePickerValueChanged(sender:UIDatePicker) {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        self.dobTF.text = dateFormatter.stringFromDate(sender.date)
+    }
+    
+    @IBAction func showPopupToSelectGender(sender:UIDatePicker) {
+        let selectMale = { (action:UIAlertAction!) -> Void in
+            self.genderTF.text = "Male"
+        }
+        let selectFemale = { (action:UIAlertAction!) -> Void in
+            self.genderTF.text = "Female"
+        }
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Male", style: UIAlertActionStyle.Default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: "Female", style: UIAlertActionStyle.Default, handler: selectFemale))
+        
+        self.presentViewController(alertController, animated: true) { }
     }
 }
