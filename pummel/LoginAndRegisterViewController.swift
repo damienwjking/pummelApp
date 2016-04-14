@@ -139,11 +139,14 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 print("DATA-- \(response.data)")     // server data
                 print("RESULT-- \(response.result)")   // result of response serialization
                 
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
-                    // TODO: save Token here
+                if response.response?.statusCode == 200 {
+                    //TODO: Save access token here
+                    let type = response.result.value?.objectForKey("user")?.objectForKey("type")
+                    if ((type?.isEqual("USER")) == true) {
+                        self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                    }
                     
-                } else {
+                }else {
                     let alertController = UIAlertController(title: "Sign In Issues", message: "Please check email and password", preferredStyle: .Alert)
                     
                     
@@ -185,8 +188,14 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 print("DATA-- \(response.data)")     // server data
                 print("RESULT-- \(response.result)")   // result of response serialization
                 
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
+                if response.response?.statusCode == 200 {
+//
+                    let JSON = response.result.value
+                     print("JSON: \(JSON)")
+                    if (JSON?.objectAtIndex(1).objectForKey("type"))! as! String == "USER"
+                    {
+                        
+                    }
                     
                 } else {
                     let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)
