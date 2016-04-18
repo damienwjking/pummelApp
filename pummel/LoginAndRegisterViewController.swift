@@ -181,21 +181,17 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         print(firstname)
         print(lastname)
         
-        Alamofire.request(.POST, "http://52.8.5.161:3000/api/register", parameters: ["email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
+        Alamofire.request(.POST, "http://52.8.5.161:3000/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
             .responseJSON { response in
                 print("REQUEST-- \(response.request)")  // original URL request
                 print("RESPONSE-- \(response.response)") // URL response
                 print("DATA-- \(response.data)")     // server data
                 print("RESULT-- \(response.result)")   // result of response serialization
-                
+                print("RESULT CODE -- \(response.response?.statusCode)")
                 if response.response?.statusCode == 200 {
 //
                     let JSON = response.result.value
                      print("JSON: \(JSON)")
-                    if (JSON?.objectAtIndex(1).objectForKey("type"))! as! String == "USER"
-                    {
-                        
-                    }
                     
                 } else {
                     let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)

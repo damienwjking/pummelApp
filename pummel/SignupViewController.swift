@@ -118,21 +118,20 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     func datePickerValueChanged(sender:UIDatePicker) {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
-        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        dateFormatter.dateFormat = "MM-dd-yyyy"
         self.dobTF.text = dateFormatter.stringFromDate(sender.date)
     }
     
     @IBAction func showPopupToSelectGender(sender:UIDatePicker) {
         let selectMale = { (action:UIAlertAction!) -> Void in
-            self.genderTF.text = "Male"
+            self.genderTF.text = "MALE"
         }
         let selectFemale = { (action:UIAlertAction!) -> Void in
-            self.genderTF.text = "Female"
+            self.genderTF.text = "FEMALE"
         }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Male", style: UIAlertActionStyle.Default, handler: selectMale))
-        alertController.addAction(UIAlertAction(title: "Female", style: UIAlertActionStyle.Default, handler: selectFemale))
+        alertController.addAction(UIAlertAction(title: "MALE", style: UIAlertActionStyle.Default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: "FEMALE", style: UIAlertActionStyle.Default, handler: selectFemale))
         
         self.presentViewController(alertController, animated: true) { }
     }
