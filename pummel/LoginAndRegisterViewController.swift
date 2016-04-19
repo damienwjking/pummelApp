@@ -189,24 +189,18 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 print("RESULT-- \(response.result)")   // result of response serialization
                 print("RESULT CODE -- \(response.response?.statusCode)")
                 if response.response?.statusCode == 200 {
-//
                     let JSON = response.result.value
                      print("JSON: \(JSON)")
-                    if (JSON?.objectAtIndex(1).objectForKey("type"))! as! String == "USER"
-                    {
-                        let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
-                        
-                        
-                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
-                            // ...
-                        }
-
-                    }
+                    let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
                     
+                    
+                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
                 } else {
                     let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)
                     

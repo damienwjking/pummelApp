@@ -19,6 +19,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var signinDistantCT: NSLayoutConstraint!
     @IBOutlet var passwordAttentionIM: UIImageView!
     @IBOutlet var emailAttentionIM: UIImageView!
+    @IBOutlet var dobAttentionIM: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +47,8 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         
         self.passwordAttentionIM.hidden = true
         self.emailAttentionIM.hidden = true
-        
+        self.dobAttentionIM.hidden = true
+
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:("dismissKeyboard"))
         self.view.userInteractionEnabled = true
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -89,7 +91,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
                 self.passwordAttentionIM.hidden = true
             }
         }
-
         return true
     }
     
@@ -118,8 +119,23 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     func datePickerValueChanged(sender:UIDatePicker) {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy"
+        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         self.dobTF.text = dateFormatter.stringFromDate(sender.date)
+        let dateDOB = dateFormatter.dateFromString(self.dobTF.text!)
+        
+        let date = NSDate()
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+        let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+        let year =  components.year
+        let yearDOB = componentsDOB.year
+        
+        if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
+            self.dobAttentionIM.hidden = true
+        } else {
+            self.dobAttentionIM.hidden = false
+        }
     }
     
     @IBAction func showPopupToSelectGender(sender:UIDatePicker) {
