@@ -135,9 +135,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         // Remove token
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.token = ""
-        let alertController = UIAlertController(title: "logout", message: "Removed cookie & erase token, now navigate to ...", preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(alertController, animated: true) { }
+        
+        self.performSegueWithIdentifier("backToRegister", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -145,6 +144,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         // Dispose of any resources that can be recreated.
     }
 }
+
+
 extension SettingsViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(controller:MFMailComposeViewController, didFinishWithResult result:MFMailComposeResult, error:NSError?) {
         self.dismissViewControllerAnimated(true, completion: nil)

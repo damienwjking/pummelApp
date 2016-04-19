@@ -133,12 +133,20 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         
         if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
             self.dobAttentionIM.hidden = true
+            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
         } else {
             self.dobAttentionIM.hidden = false
+            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
         }
     }
     
     @IBAction func showPopupToSelectGender(sender:UIDatePicker) {
+        self.dobTF.resignFirstResponder()
+        self.emailTF.resignFirstResponder()
+        self.passwordTF.resignFirstResponder()
+        self.nameTF.resignFirstResponder()
         let selectMale = { (action:UIAlertAction!) -> Void in
             self.genderTF.text = "MALE"
         }

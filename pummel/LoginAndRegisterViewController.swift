@@ -141,6 +141,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 
                 if response.response?.statusCode == 200 {
                     //TODO: Save access token here
+                    let JSON = response.result.value
+                    print("JSON: \(JSON)")
                     let type = response.result.value?.objectForKey("user")?.objectForKey("type")
                     if ((type?.isEqual("USER")) == true) {
                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
@@ -190,7 +192,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 print("RESULT CODE -- \(response.response?.statusCode)")
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value
-                     print("JSON: \(JSON)")
+                    print("JSON: \(JSON)")
                     let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
                     
                     
@@ -258,7 +260,14 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             if ( self.view.frame.origin.y == 0 && self.isShowLogin == false) {
-                self.view.frame.origin.y -= keyboardSize.height
+                let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
+                let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
+                let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
+                if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 667.0) {
+                    self.view.frame.origin.y -= keyboardSize.height - 10
+                } else {
+                    self.view.frame.origin.y -= keyboardSize.height
+                }
             }
         }
     }
