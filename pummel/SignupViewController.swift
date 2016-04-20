@@ -121,6 +121,8 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func textFieldEditing(sender: UITextField) {
         let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.backgroundColor = UIColor.blackColor()
+        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         datePickerView.datePickerMode = UIDatePickerMode.Date
         sender.inputView = datePickerView
         datePickerView.addTarget(self, action:"datePickerValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
