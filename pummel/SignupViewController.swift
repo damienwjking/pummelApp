@@ -54,6 +54,11 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.view.addGestureRecognizer(tapGestureRecognizer)
         
         self.updateUI()
+        
+        self.nameTF.keyboardAppearance = .Dark
+        self.passwordTF.keyboardAppearance = .Dark
+        self.emailTF.keyboardAppearance = .Dark
+        
     }
     
     func updateUI() {

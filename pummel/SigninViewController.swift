@@ -31,6 +31,8 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         self.signinBT.layer.borderColor = UIColor.whiteColor().CGColor
         self.signinBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.updateUI()
+        self.emailTF.keyboardAppearance = .Dark
+        self.passwordTF.keyboardAppearance = .Dark
     }
     
     func updateUI() {
