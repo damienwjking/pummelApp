@@ -92,8 +92,12 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             // TODO: Show left icon
             if (self.passwordTF.text?.characters.count < 8) {
                 self.passwordAttentionIM.hidden = false
+                self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
+                    attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
             } else {
                 self.passwordAttentionIM.hidden = true
+                self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
+                    attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
             }
         }
         return true
