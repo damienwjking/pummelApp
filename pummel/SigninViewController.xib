@@ -218,23 +218,23 @@
                     <exclude reference="9j8-qV-BSW"/>
                 </mask>
                 <mask key="constraints">
-                    <exclude reference="Csj-pb-1nm"/>
-                    <exclude reference="KaJ-dm-sgC"/>
-                    <exclude reference="obG-Gd-s6t"/>
-                    <exclude reference="61A-ET-GvG"/>
-                    <exclude reference="g5C-QM-ykR"/>
-                    <exclude reference="hHg-Nn-8Zu"/>
-                    <exclude reference="2PM-rQ-cC8"/>
-                    <exclude reference="pyz-Z3-WwF"/>
-                    <exclude reference="qOa-Gx-NKw"/>
-                    <exclude reference="FeU-DO-9lf"/>
-                    <exclude reference="fZF-CH-7lq"/>
-                    <exclude reference="rGV-SV-IUk"/>
-                    <exclude reference="Xh1-MC-Qp2"/>
-                    <exclude reference="m6F-p9-oEw"/>
                     <exclude reference="Fj0-iV-SCW"/>
                     <exclude reference="hEm-KL-IId"/>
                     <exclude reference="nm6-z6-ded"/>
+                    <exclude reference="Xh1-MC-Qp2"/>
+                    <exclude reference="m6F-p9-oEw"/>
+                    <exclude reference="FeU-DO-9lf"/>
+                    <exclude reference="fZF-CH-7lq"/>
+                    <exclude reference="rGV-SV-IUk"/>
+                    <exclude reference="2PM-rQ-cC8"/>
+                    <exclude reference="pyz-Z3-WwF"/>
+                    <exclude reference="qOa-Gx-NKw"/>
+                    <exclude reference="61A-ET-GvG"/>
+                    <exclude reference="g5C-QM-ykR"/>
+                    <exclude reference="hHg-Nn-8Zu"/>
+                    <exclude reference="Csj-pb-1nm"/>
+                    <exclude reference="KaJ-dm-sgC"/>
+                    <exclude reference="obG-Gd-s6t"/>
                 </mask>
             </variation>
             <variation key="widthClass=compact">
@@ -247,23 +247,23 @@
                     <include reference="9j8-qV-BSW"/>
                 </mask>
                 <mask key="constraints">
-                    <include reference="Csj-pb-1nm"/>
-                    <include reference="KaJ-dm-sgC"/>
-                    <include reference="obG-Gd-s6t"/>
-                    <include reference="61A-ET-GvG"/>
-                    <include reference="g5C-QM-ykR"/>
-                    <include reference="hHg-Nn-8Zu"/>
-                    <include reference="2PM-rQ-cC8"/>
-                    <include reference="pyz-Z3-WwF"/>
-                    <include reference="qOa-Gx-NKw"/>
-                    <include reference="FeU-DO-9lf"/>
-                    <include reference="fZF-CH-7lq"/>
-                    <include reference="rGV-SV-IUk"/>
-                    <include reference="Xh1-MC-Qp2"/>
-                    <include reference="m6F-p9-oEw"/>
                     <include reference="Fj0-iV-SCW"/>
                     <include reference="hEm-KL-IId"/>
                     <include reference="nm6-z6-ded"/>
+                    <include reference="Xh1-MC-Qp2"/>
+                    <include reference="m6F-p9-oEw"/>
+                    <include reference="FeU-DO-9lf"/>
+                    <include reference="fZF-CH-7lq"/>
+                    <include reference="rGV-SV-IUk"/>
+                    <include reference="2PM-rQ-cC8"/>
+                    <include reference="pyz-Z3-WwF"/>
+                    <include reference="qOa-Gx-NKw"/>
+                    <include reference="61A-ET-GvG"/>
+                    <include reference="g5C-QM-ykR"/>
+                    <include reference="hHg-Nn-8Zu"/>
+                    <include reference="Csj-pb-1nm"/>
+                    <include reference="KaJ-dm-sgC"/>
+                    <include reference="obG-Gd-s6t"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="221" y="164"/>

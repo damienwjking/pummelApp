@@ -11,52 +11,29 @@ import UIKit
 
 class GetStarted2ViewController: UIViewController {
     
-        override func viewDidLoad() {
+    @IBOutlet var yourPersonalTF : UILabel!
+    @IBOutlet var matchedToYouTF : UILabel!
+    @IBOutlet var imInBT : UIButton!
+    @IBOutlet var backgroundV : UIView!
+    
+    override func viewDidLoad() {
         super.viewDidLoad()
         
-        // hide back button word\
-        self.navigationController?.navigationBarHidden = false
-       
-        // set background image
-        /*
-        let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
-        backgroundImage.image = UIImage(named: "getStarted2")
-        self.view.insertSubview(backgroundImage, atIndex:0)
-        */
-        self.view.backgroundColor = UIColor.grayColor()
-            
-            
+        self.navigationController?.navigationBarHidden = true
+        self.backgroundV.backgroundColor = UIColor(white: 32.0/255.0, alpha: 0.7)
+        self.yourPersonalTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 42)
+        self.matchedToYouTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
         
-        // create getStarted Button
-        let getStarted:UIButton = UIButton(frame: CGRectMake(10, 600, 380, 50))
-        let buttoncolour = UIColor(red:0.75, green:0.84, blue:0.83, alpha:1.0)
-        
-        getStarted.backgroundColor = buttoncolour
-        getStarted.setTitle("COOL, SHOW ME MORE", forState: UIControlState.Normal)
-        getStarted.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        getStarted.tag = 01;
-        self.view.addSubview(getStarted)
-        
-        
+        self.imInBT.layer.cornerRadius = 2
+        self.imInBT.layer.borderWidth = 0.5
+        self.imInBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.imInBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
     }
-    
-    
-    // Button Action
-    
-    func buttonAction(sender:UIButton!) {
-        
-        let btnsendtag:UIButton = sender
-        
-        if btnsendtag.tag == 01 {
-            
-            //button pushed.
-            
-            performSegueWithIdentifier("getStarted2Segue", sender: nil)
 
-        }
+    
+    @IBAction func backToFirstScreenTour(sender:UIButton!) {
+        self.navigationController?.popViewControllerAnimated(true)
     }
-    
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

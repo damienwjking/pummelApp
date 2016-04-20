@@ -10,54 +10,41 @@
 import UIKit
 
 class GetStarted3ViewController: UIViewController {
+   
+    @IBOutlet var reachTF : UILabel!
+    @IBOutlet var shareTF : UILabel!
+    @IBOutlet var letSetItBT : UIButton!
+    @IBOutlet var backgroundV : UIView!
     
-        override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBarHidden = true
+        self.backgroundV.backgroundColor = UIColor(white: 32.0/255.0, alpha: 0.7)
+        self.reachTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 42)
+        self.shareTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
         
-        // hide back button word\
-        self.navigationController?.navigationBarHidden = false
-        
-        // set background image
-        /*
-        let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
-        backgroundImage.image = UIImage(named: "getStarted2")
-        self.view.insertSubview(backgroundImage, atIndex:0)
-        */
-        self.view.backgroundColor = UIColor.grayColor()
-            
-        
-        
-        
-        // create getStarted Button
-        let getStarted2:UIButton = UIButton(frame: CGRectMake(10, 600, 380, 50))
-        let buttoncolour = UIColor(red:0.75, green:0.84, blue:0.83, alpha:1.0)
-        
-        getStarted2.backgroundColor = buttoncolour
-        getStarted2.setTitle("NICE, LETS DO IT", forState: UIControlState.Normal)
-        getStarted2.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        getStarted2.tag = 02;
-        self.view.addSubview(getStarted2)
-        
-        
+        self.letSetItBT.layer.cornerRadius = 2
+        self.letSetItBT.layer.borderWidth = 0.5
+        self.letSetItBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.letSetItBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+    }
+
+    // Button Action
+    @IBAction func buttonAction(sender:UIButton!) {
+        performSegueWithIdentifier("toRegister", sender: nil)
     }
     
-    
-    // Button Action
-    
-    func buttonAction(sender:UIButton!) {
-        
-        let btnsendtag:UIButton = sender
-        
-        if btnsendtag.tag == 02 {
-            
-            //button pushed.
-            
-            performSegueWithIdentifier("getStarted3Segue", sender: nil)
-            
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == "toRegister")
+        {
+            let destinationVC = segue.destinationViewController as! LoginAndRegisterViewController
+            destinationVC.isShowLogin = false
         }
     }
-    
-    
+
+    @IBAction func backToFirstScreenTour(sender:UIButton!) {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

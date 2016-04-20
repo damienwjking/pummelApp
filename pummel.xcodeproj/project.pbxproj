@@ -67,6 +67,10 @@
 		F9827F541CBDEE3C00841BF1 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4E1CBDEE3C00841BF1 /* camera.png */; };
 		F9827F551CBDEE3C00841BF1 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */; };
 		F9827F561CBDEE3C00841BF1 /* camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F501CBDEE3C00841BF1 /* camera@3x.png */; };
+		F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */; };
+		F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */; };
+		F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */; };
+		F9F57D4A1CC7BECA00B04F07 /* PlayfairDisplay-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F9F57D491CC7BECA00B04F07 /* PlayfairDisplay-Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -155,6 +159,10 @@
 		F9827F4E1CBDEE3C00841BF1 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		F9827F501CBDEE3C00841BF1 /* camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@3x.png"; sourceTree = "<group>"; };
+		F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour1@3x.jpg"; sourceTree = "<group>"; };
+		F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour2@3x.jpg"; sourceTree = "<group>"; };
+		F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour3@3x.jpg"; sourceTree = "<group>"; };
+		F9F57D491CC7BECA00B04F07 /* PlayfairDisplay-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlayfairDisplay-Regular.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -308,6 +316,9 @@
 				F9827F4E1CBDEE3C00841BF1 /* camera.png */,
 				F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */,
 				F9827F501CBDEE3C00841BF1 /* camera@3x.png */,
+				F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */,
+				F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */,
+				F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */,
 			);
 			name = Resource;
 			sourceTree = "<group>";
@@ -315,6 +326,7 @@
 		F9827F341CBCCF6900841BF1 /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				F9F57D491CC7BECA00B04F07 /* PlayfairDisplay-Regular.otf */,
 				F9827F351CBCCF7600841BF1 /* Montserrat-Regular.otf */,
 			);
 			name = Font;
@@ -453,6 +465,7 @@
 				F9827F1F1CBC755B00841BF1 /* birthday@3x.png in Resources */,
 				9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */,
 				F9827F521CBDEE3C00841BF1 /* attention@2x.png in Resources */,
+				F9F57D4A1CC7BECA00B04F07 /* PlayfairDisplay-Regular.otf in Resources */,
 				F9827F171CBC754900841BF1 /* gender.png in Resources */,
 				F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */,
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
@@ -460,8 +473,10 @@
 				9C1C540E1C7938070083E47B /* Assets.xcassets in Resources */,
 				F9827F0C1CBC751500841BF1 /* back@2x.png in Resources */,
 				F9827F541CBDEE3C00841BF1 /* camera.png in Resources */,
+				F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */,
 				F9827F121CBC752E00841BF1 /* add@2x.png in Resources */,
 				9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */,
+				F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */,
 				F9827F301CBC759D00841BF1 /* name@2x.png in Resources */,
 				F9827F551CBDEE3C00841BF1 /* camera@2x.png in Resources */,
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
@@ -469,6 +484,7 @@
 				9C0F5D5B1CABA4C5009A9A2C /* Register.storyboard in Resources */,
 				F9827F291CBC758A00841BF1 /* email.png in Resources */,
 				F9827F2B1CBC758A00841BF1 /* email@3x.png in Resources */,
+				F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */,
 				F9827F251CBC757600841BF1 /* password@3x.png in Resources */,
 				F9827F531CBDEE3C00841BF1 /* attention@3x.png in Resources */,
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
