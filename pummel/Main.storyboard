@@ -232,6 +232,7 @@
                         <outlet property="getStartedBT" destination="ify-AG-SAg" id="bht-y2-zxb"/>
                         <outlet property="imNewBT" destination="nuA-t5-YnW" id="YTl-Ot-rlT"/>
                         <outlet property="imNewWidthCT" destination="cVU-tC-fDP" id="Uzr-MU-jDW"/>
+                        <outlet property="mainTextDistantCT" destination="V1b-cY-zj3" id="LYB-2j-1nK"/>
                         <outlet property="reachYourGoalsTF" destination="Xc7-cd-nLp" id="Gxd-tu-DBu"/>
                         <segue destination="syr-Jg-EOc" kind="show" identifier="toSignin" id="kai-YL-km3"/>
                     </connections>
@@ -403,8 +404,8 @@
                             <constraint firstItem="wdN-kB-sUz" firstAttribute="leading" secondItem="k91-zm-kbd" secondAttribute="leadingMargin" constant="-20" id="Mhb-pW-PCb"/>
                             <constraint firstItem="SyS-py-tIo" firstAttribute="leading" secondItem="k91-zm-kbd" secondAttribute="leadingMargin" constant="-20" id="Qj6-U3-KOn"/>
                             <constraint firstAttribute="trailingMargin" secondItem="SyS-py-tIo" secondAttribute="trailing" constant="-20" id="Rmi-4k-u1D"/>
-                            <constraint firstItem="bsX-JX-VJM" firstAttribute="top" secondItem="nfc-Uz-kXc" secondAttribute="bottom" constant="80" id="T9l-dz-0V5"/>
                             <constraint firstAttribute="trailingMargin" secondItem="SyS-py-tIo" secondAttribute="trailing" constant="-20" id="XjA-Xo-P43"/>
+                            <constraint firstItem="bsX-JX-VJM" firstAttribute="top" secondItem="nfc-Uz-kXc" secondAttribute="bottom" constant="80" id="aZU-ga-eMG"/>
                             <constraint firstItem="SyS-py-tIo" firstAttribute="top" secondItem="k91-zm-kbd" secondAttribute="topMargin" id="atq-wy-CxQ"/>
                             <constraint firstItem="0MT-Lt-LNp" firstAttribute="leading" secondItem="k91-zm-kbd" secondAttribute="leadingMargin" constant="-7" id="bIk-W5-G9l"/>
                             <constraint firstItem="cIQ-SL-jkY" firstAttribute="top" secondItem="bsX-JX-VJM" secondAttribute="bottom" constant="20" id="bP2-UR-RmG"/>
@@ -424,21 +425,21 @@
                                 <exclude reference="bsX-JX-VJM"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="GyJ-CZ-CLk"/>
+                                <exclude reference="MdA-Ae-h49"/>
+                                <exclude reference="tXp-AJ-d3s"/>
+                                <exclude reference="xfB-1y-lzu"/>
                                 <exclude reference="G0d-Ud-Rqr"/>
                                 <exclude reference="LdB-yL-Pev"/>
                                 <exclude reference="Qj6-U3-KOn"/>
                                 <exclude reference="Rmi-4k-u1D"/>
                                 <exclude reference="XjA-Xo-P43"/>
                                 <exclude reference="atq-wy-CxQ"/>
-                                <exclude reference="GyJ-CZ-CLk"/>
-                                <exclude reference="MdA-Ae-h49"/>
-                                <exclude reference="tXp-AJ-d3s"/>
-                                <exclude reference="xfB-1y-lzu"/>
                                 <exclude reference="7DI-Ce-2ke"/>
                                 <exclude reference="Mhb-pW-PCb"/>
                                 <exclude reference="6o2-Q0-LOh"/>
                                 <exclude reference="HYJ-Wl-6ca"/>
-                                <exclude reference="T9l-dz-0V5"/>
+                                <exclude reference="aZU-ga-eMG"/>
                                 <exclude reference="m6W-YV-1aW"/>
                                 <exclude reference="6Wn-0e-3bX"/>
                                 <exclude reference="bP2-UR-RmG"/>
@@ -460,21 +461,21 @@
                                 <include reference="bsX-JX-VJM"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="GyJ-CZ-CLk"/>
+                                <include reference="MdA-Ae-h49"/>
+                                <include reference="tXp-AJ-d3s"/>
+                                <include reference="xfB-1y-lzu"/>
                                 <include reference="G0d-Ud-Rqr"/>
                                 <include reference="LdB-yL-Pev"/>
                                 <include reference="Qj6-U3-KOn"/>
                                 <include reference="Rmi-4k-u1D"/>
                                 <include reference="XjA-Xo-P43"/>
                                 <include reference="atq-wy-CxQ"/>
-                                <include reference="GyJ-CZ-CLk"/>
-                                <include reference="MdA-Ae-h49"/>
-                                <include reference="tXp-AJ-d3s"/>
-                                <include reference="xfB-1y-lzu"/>
                                 <include reference="7DI-Ce-2ke"/>
                                 <include reference="Mhb-pW-PCb"/>
                                 <include reference="6o2-Q0-LOh"/>
                                 <include reference="HYJ-Wl-6ca"/>
-                                <include reference="T9l-dz-0V5"/>
+                                <include reference="aZU-ga-eMG"/>
                                 <include reference="m6W-YV-1aW"/>
                                 <include reference="6Wn-0e-3bX"/>
                                 <include reference="bP2-UR-RmG"/>
@@ -491,6 +492,7 @@
                     <connections>
                         <outlet property="backgroundV" destination="AWj-nI-Xpx" id="tcZ-RV-gpS"/>
                         <outlet property="imInBT" destination="0MT-Lt-LNp" id="VZo-Bi-mMy"/>
+                        <outlet property="mainTextDistantCT" destination="aZU-ga-eMG" id="XH6-ZH-dT4"/>
                         <outlet property="matchedToYouTF" destination="cIQ-SL-jkY" id="DCv-Ge-0AR"/>
                         <outlet property="yourPersonalTF" destination="bsX-JX-VJM" id="uzL-qT-twx"/>
                     </connections>
@@ -521,7 +523,6 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5vU-YJ-FS1">
                                 <rect key="frame" x="368" y="459" width="54" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="375" id="NaI-BE-vmT"/>
                                     <constraint firstAttribute="height" constant="50" id="cqM-9k-E4I"/>
                                 </constraints>
                                 <state key="normal" title="LET'S SET IT UP">
@@ -529,13 +530,11 @@
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="NaI-BE-vmT"/>
                                         <exclude reference="cqM-9k-E4I"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
                                     <mask key="constraints">
-                                        <include reference="NaI-BE-vmT"/>
                                         <include reference="cqM-9k-E4I"/>
                                     </mask>
                                 </variation>
@@ -724,6 +723,7 @@
                     <connections>
                         <outlet property="backgroundV" destination="POm-ye-D4W" id="1Id-Ue-ICm"/>
                         <outlet property="letSetItBT" destination="5vU-YJ-FS1" id="wbb-YX-qin"/>
+                        <outlet property="mainTextDistantCT" destination="ob5-eG-Grg" id="Ts1-CL-6sN"/>
                         <outlet property="reachTF" destination="D1f-96-bUA" id="Y5G-0I-K80"/>
                         <outlet property="shareTF" destination="h2e-Ky-PXZ" id="QKf-Iu-LlC"/>
                         <segue destination="syr-Jg-EOc" kind="show" identifier="toRegister" id="hgM-zf-owO"/>
@@ -1237,6 +1237,6 @@
         <image name="tour3.jpg" width="375" height="667"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kai-YL-km3"/>
+        <segue reference="hgM-zf-owO"/>
     </inferredMetricsTieBreakers>
 </document>

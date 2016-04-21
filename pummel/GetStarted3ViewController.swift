@@ -15,6 +15,7 @@ class GetStarted3ViewController: UIViewController {
     @IBOutlet var shareTF : UILabel!
     @IBOutlet var letSetItBT : UIButton!
     @IBOutlet var backgroundV : UIView!
+    @IBOutlet var mainTextDistantCT: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,7 @@ class GetStarted3ViewController: UIViewController {
         self.letSetItBT.layer.borderWidth = 0.5
         self.letSetItBT.layer.borderColor = UIColor.whiteColor().CGColor
         self.letSetItBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.updateUI()
     }
 
     // Button Action
@@ -51,5 +53,13 @@ class GetStarted3ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func updateUI() {
+        let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
+        let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
+        let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            self.mainTextDistantCT.constant = 40
+        }
+    }
     
 }

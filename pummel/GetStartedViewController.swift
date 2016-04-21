@@ -18,6 +18,7 @@ class GetStartedViewController: UIViewController {
     @IBOutlet var backgroundV : UIView!
     @IBOutlet var imNewWidthCT: NSLayoutConstraint!
     @IBOutlet var getStartWidthCT: NSLayoutConstraint!
+    @IBOutlet var mainTextDistantCT: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,12 +68,12 @@ class GetStartedViewController: UIViewController {
         if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
             self.imNewWidthCT.constant = 137.0
             self.getStartWidthCT.constant = 138.0
+            self.mainTextDistantCT.constant = 50
         }
         if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 736.0) {
             self.imNewWidthCT.constant = 180.0
             self.getStartWidthCT.constant = 180.0
+            self.mainTextDistantCT.constant = 50
         }
     }
-    
-    
 }
