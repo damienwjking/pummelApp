@@ -228,8 +228,10 @@
                     <connections>
                         <outlet property="backgroundV" destination="0By-A2-eel" id="AbJ-UQ-rXn"/>
                         <outlet property="betterTogetherTF" destination="PGb-t0-pqv" id="LZm-8n-SdK"/>
+                        <outlet property="getStartWidthCT" destination="VIx-Vo-zAs" id="5fg-xb-hFM"/>
                         <outlet property="getStartedBT" destination="ify-AG-SAg" id="bht-y2-zxb"/>
                         <outlet property="imNewBT" destination="nuA-t5-YnW" id="YTl-Ot-rlT"/>
+                        <outlet property="imNewWidthCT" destination="cVU-tC-fDP" id="Uzr-MU-jDW"/>
                         <outlet property="reachYourGoalsTF" destination="Xc7-cd-nLp" id="Gxd-tu-DBu"/>
                         <segue destination="syr-Jg-EOc" kind="show" identifier="toSignin" id="kai-YL-km3"/>
                     </connections>
@@ -1235,6 +1237,6 @@
         <image name="tour3.jpg" width="375" height="667"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hgM-zf-owO"/>
+        <segue reference="kai-YL-km3"/>
     </inferredMetricsTieBreakers>
 </document>
