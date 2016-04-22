@@ -171,7 +171,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         let gender = self.signupVC.genderTF.text
 
         let fullNameArr = name!.characters.split{$0 == " "}.map(String.init)
-        let firstname = fullNameArr[0]
+        var firstname = ""
+        if (fullNameArr.count > 0) {
+              firstname = fullNameArr[0]
+        }
         var lastname = ""
         if fullNameArr.count >= 2 {
             for var i = 1; i < fullNameArr.count; i++ {
