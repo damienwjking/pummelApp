@@ -164,60 +164,63 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     }
     
     @IBAction func clickSignupAction(sender:UIButton!) {
-        let name = self.signupVC.nameTF.text
-        let userEmail = self.signupVC.emailTF.text
-        let userPassword = self.signupVC.passwordTF.text
-        let dob = self.signupVC.dobTF.text
-        let gender = self.signupVC.genderTF.text
-
-        let fullNameArr = name!.characters.split{$0 == " "}.map(String.init)
-        var firstname = ""
-        if (fullNameArr.count > 0) {
-              firstname = fullNameArr[0]
-        }
-        var lastname = ""
-        if fullNameArr.count >= 2 {
-            for var i = 1; i < fullNameArr.count; i++ {
-                lastname.appendContentsOf(fullNameArr[i])
-                lastname.appendContentsOf(" ")
+        if !(self.checkRuleInputData())
+        {
+            let name = self.signupVC.nameTF.text
+            let userEmail = self.signupVC.emailTF.text
+            let userPassword = self.signupVC.passwordTF.text
+            let dob = self.signupVC.dobTF.text
+            let gender = self.signupVC.genderTF.text
+            
+            let fullNameArr = name!.characters.split{$0 == " "}.map(String.init)
+            var firstname = ""
+            if (fullNameArr.count > 0) {
+                firstname = fullNameArr[0]
             }
-        }
-        
-        print(firstname)
-        print(lastname)
-        
-        Alamofire.request(.POST, "http://52.8.5.161:3000/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
-            .responseJSON { response in
-                print("REQUEST-- \(response.request)")  // original URL request
-                print("RESPONSE-- \(response.response)") // URL response
-                print("DATA-- \(response.data)")     // server data
-                print("RESULT-- \(response.result)")   // result of response serialization
-                print("RESULT CODE -- \(response.response?.statusCode)")
-                if response.response?.statusCode == 200 {
-                    let JSON = response.result.value
-                    print("JSON: \(JSON)")
-                    let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                } else {
-                    let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
+            var lastname = ""
+            if fullNameArr.count >= 2 {
+                for var i = 1; i < fullNameArr.count; i++ {
+                    lastname.appendContentsOf(fullNameArr[i])
+                    lastname.appendContentsOf(" ")
                 }
+            }
+            
+            print(firstname)
+            print(lastname)
+            
+            Alamofire.request(.POST, "http://52.8.5.161:3000/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
+                .responseJSON { response in
+                    print("REQUEST-- \(response.request)")  // original URL request
+                    print("RESPONSE-- \(response.response)") // URL response
+                    print("DATA-- \(response.data)")     // server data
+                    print("RESULT-- \(response.result)")   // result of response serialization
+                    print("RESULT CODE -- \(response.response?.statusCode)")
+                    if response.response?.statusCode == 200 {
+                        let JSON = response.result.value
+                        print("JSON: \(JSON)")
+                        let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
+                        
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    } else {
+                        let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)
+                        
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    }
+            }
         }
     }
     
@@ -278,6 +281,82 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     func keyboardWillHide(notification: NSNotification) {
         if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 0
+        }
+    }
+    
+    func checkRuleInputData() -> Bool {
+        var returnValue  = false
+        if !(self.isValidEmail(signupVC.emailTF.text!)) {
+            returnValue = true
+            signupVC.emailAttentionIM.hidden = false
+            signupVC.emailTF.attributedText = NSAttributedString(string:signupVC.emailTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+        } else {
+            signupVC.emailAttentionIM.hidden = true
+            signupVC.dobTF.attributedText = NSAttributedString(string:signupVC.dobTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
+        }
+        if !(self.checkDateChanged(signupVC.dobTF.text!)) {
+            returnValue = true
+            signupVC.dobAttentionIM.hidden = false
+            signupVC.dobTF.attributedText = NSAttributedString(string:signupVC.dobTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+        } else {
+            signupVC.dobAttentionIM.hidden = true
+            signupVC.dobTF.attributedText = NSAttributedString(string:signupVC.dobTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
+        }
+        if !(self.checkPassword(signupVC.passwordTF.text!)) {
+            returnValue = true
+            signupVC.passwordAttentionIM.hidden = false
+            signupVC.passwordTF.attributedText = NSAttributedString(string:signupVC.passwordTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+        } else {
+            signupVC.passwordAttentionIM.hidden = true
+            signupVC.passwordTF.attributedText = NSAttributedString(string:signupVC.passwordTF.text!,
+                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
+        }
+        return returnValue
+    }
+    
+    
+    func isValidEmail(testStr:String) -> Bool {
+        // println("validate calendar: \(testStr)")
+        let emailRegEx = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+        
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluateWithObject(testStr)
+    }
+    
+    func checkDateChanged(testStr:String) -> Bool {
+        if (testStr == "") {
+            return false
+        } else {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
+            dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+            let dateDOB = dateFormatter.dateFromString(testStr)
+            
+            let date = NSDate()
+            let calendar = NSCalendar.currentCalendar()
+            let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+            let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+            let year =  components.year
+            let yearDOB = componentsDOB.year
+            
+            if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    
+    func checkPassword(testStr:String) -> Bool {
+        if (testStr.characters.count < 8) {
+            return false
+        } else {
+            return true
         }
     }
 }
