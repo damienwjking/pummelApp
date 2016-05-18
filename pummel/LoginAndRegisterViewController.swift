@@ -132,7 +132,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         let userEmail = self.loginVC.emailTF.text
         let userPassword = self.loginVC.passwordTF.text
         
-        Alamofire.request(.POST, "http://pummel-au-loadbalancer-636421050.ap-southeast-2.elb.amazonaws.com/api/login", parameters: ["email":userEmail!, "password":userPassword!])
+        Alamofire.request(.POST, "http://api.pummel.fit/api/login", parameters: ["email":userEmail!, "password":userPassword!])
             .responseJSON { response in
                 print("REQUEST-- \(response.request)")  // original URL request
                 print("RESPONSE-- \(response.response)") // URL response
@@ -188,7 +188,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             print(firstname)
             print(lastname)
             
-            Alamofire.request(.POST, "http://pummel-au-loadbalancer-636421050.ap-southeast-2.elb.amazonaws.com/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
+            Alamofire.request(.POST, "http://api.pummel.fit/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
                 .responseJSON { response in
                     print("REQUEST-- \(response.request)")  // original URL request
                     print("RESPONSE-- \(response.response)") // URL response
