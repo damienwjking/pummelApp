@@ -20,6 +20,8 @@ class ProgressViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         self.tabBarController?.title = "Progress"
+        let selectedImage = UIImage(named: "sessionsPressed")
+        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
     }
     
     override func didReceiveMemoryWarning() {

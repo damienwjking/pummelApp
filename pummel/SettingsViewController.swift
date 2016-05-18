@@ -10,6 +10,7 @@ import UIKit
 import MessageUI
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     let numberOfSection = 4
     let rowArray: [String] = ["Report a problem", "Terms and conditions", "Testing"]
     let rowArrayFinalSession: [String] = ["Rate this App", "Logout"]

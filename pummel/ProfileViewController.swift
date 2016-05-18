@@ -22,6 +22,8 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         self.tabBarController?.title = "Profile"
         self.navigationController!.navigationBar.translucent = false;
+        let selectedImage = UIImage(named: "profilePressed")
+        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
     }
     
     override func didReceiveMemoryWarning() {

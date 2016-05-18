@@ -31,11 +31,12 @@
 	<array>
 		<string>Montserrat-Regular.otf</string>
 		<string>PlayfairDisplay-Regular.otf</string>
+		<string>Montserrat-Light.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
+	<string>Client</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
