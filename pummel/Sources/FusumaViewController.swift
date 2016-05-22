@@ -130,11 +130,8 @@ public enum FusumaModeOrder {
     }
 
     override public func prefersStatusBarHidden() -> Bool {
-        if modeOrder == .CameraFirst {
-            return true
-        } else {
             return false
-        }
+
     }
     
     @IBAction func closeButtonPressed(sender: UIButton) {

@@ -82,7 +82,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             destinationVC.user2 = false
             destinationVC.user3 = false
             destinationVC.user4 = true
-            
         }
     }
 

@@ -7,12 +7,12 @@
 //
 
 import UIKit
+import RSKGrowingTextView
 
-
-class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaDelegate, UITableViewDataSource, UITableViewDelegate {
+class ChatMessageViewController : UIViewController, UITableViewDataSource, UITableViewDelegate {
     var nameChatUser : NSString!
     
-    @IBOutlet var textBox: UITextField!
+    @IBOutlet var textBox: RSKGrowingTextView!
     @IBOutlet var backButton: UIButton!
     @IBOutlet var chatTB: UITableView!
     @IBOutlet var chatTBDistantCT: NSLayoutConstraint!
@@ -30,10 +30,9 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         self.navigationItem.title = nameChatUser as String
         
-        self.textBox.attributedPlaceholder = NSAttributedString(string:"START A CONVERSATION",
-            attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor.blackColor()]))
-        self.textBox.font = UIFont(name: "Montserrat-Regular", size: 13)
-        self.textBox.delegate = self
+      // self.textBox.attributedPlaceholder = NSAttributedString(string:"START A CONVERSATION",           attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor.blackColor()]))
+       // self.textBox.delegate = self
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
@@ -59,51 +58,6 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
-    }
-    
-    @IBAction func showCameraRoll(sender:UIButton!) {
-        let fusuma = FusumaViewController()
-        fusuma.delegate = self
-        fusuma.defaultMode = .Camera
-        fusuma.modeOrder = .CameraFirst
-        self.presentViewController(fusuma, animated: true, completion: nil)
-    }
-    
-    // Fusuma delegate
-    func fusumaImageSelected(image: UIImage) {
-        
-        print("Image selected")
-    }
-    
-    func fusumaDismissedWithImage(image: UIImage) {
-        
-        print("Called just after dismissed FusumaViewController")
-    }
-    
-    func fusumaCameraRollUnauthorized() {
-        
-        print("Camera roll unauthorized")
-        
-        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .Alert)
-        
-        alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
-            
-            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(url)
-            }
-            
-        }))
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action) -> Void in
-            
-        }))
-        
-        self.presentViewController(alert, animated: true, completion: nil)
-    }
-    
-    func fusumaClosed() {
-        
-        print("Called when the close button is pressed")
     }
     
     
@@ -133,6 +87,7 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
                 cell.timeLB.hidden = true
                 chatTBDistantCT.constant = self.view.frame.size.height/2 - 64 - 49
             }
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         } else {
             if indexPath.row == 1 {
@@ -189,6 +144,11 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
     func cancel() {
         self.navigationController?.popViewControllerAnimated(true)
     }
+    
+    @IBAction func goPhoto(sender:UIButton!) {
+        performSegueWithIdentifier("sendPhoto", sender: nil)
+    }
+    
 
 }
 
