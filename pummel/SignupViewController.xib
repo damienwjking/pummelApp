@@ -255,8 +255,7 @@
                             <exclude reference="CpT-14-NW5"/>
                         </mask>
                     </variation>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="0.0" y="121" width="400" height="50"/>
+                    <variation key="widthClass=compact">
                         <mask key="subviews">
                             <include reference="yB5-XG-ldz"/>
                             <include reference="qiP-eQ-knh"/>
@@ -279,9 +278,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gn0-cd-UWB">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <color key="backgroundColor" red="0.2901960784" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="0.0" y="171" width="400" height="1"/>
-                    </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jWs-M6-mjt">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
@@ -294,9 +290,6 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
-                            <variation key="widthClass=compact" misplaced="YES">
-                                <rect key="frame" x="50" y="10" width="300" height="30"/>
-                            </variation>
                             <connections>
                                 <action selector="textFieldEditing:" destination="-1" eventType="editingDidBegin" id="4SN-hc-xYl"/>
                                 <outlet property="delegate" destination="-1" id="EIY-JA-jeI"/>
@@ -310,14 +303,14 @@
                             </constraints>
                             <variation key="default">
                                 <mask key="constraints">
-                                    <exclude reference="hyW-UQ-M2s"/>
                                     <exclude reference="ebU-th-J1z"/>
+                                    <exclude reference="hyW-UQ-M2s"/>
                                 </mask>
                             </variation>
                             <variation key="widthClass=compact">
                                 <mask key="constraints">
-                                    <include reference="hyW-UQ-M2s"/>
                                     <include reference="ebU-th-J1z"/>
+                                    <include reference="hyW-UQ-M2s"/>
                                 </mask>
                             </variation>
                         </imageView>
@@ -341,8 +334,8 @@
                         </mask>
                         <mask key="constraints">
                             <exclude reference="QAe-qm-U9b"/>
-                            <exclude reference="gr1-vk-tlY"/>
                             <exclude reference="RFB-V9-5UL"/>
+                            <exclude reference="gr1-vk-tlY"/>
                             <exclude reference="M1s-6Q-0as"/>
                             <exclude reference="OAv-Uu-DsA"/>
                             <exclude reference="bGo-7u-M2l"/>
@@ -358,8 +351,8 @@
                         </mask>
                         <mask key="constraints">
                             <include reference="QAe-qm-U9b"/>
-                            <include reference="gr1-vk-tlY"/>
                             <include reference="RFB-V9-5UL"/>
+                            <include reference="gr1-vk-tlY"/>
                             <include reference="M1s-6Q-0as"/>
                             <include reference="OAv-Uu-DsA"/>
                             <include reference="bGo-7u-M2l"/>
@@ -421,8 +414,7 @@
                             <exclude reference="Meg-pK-4Si"/>
                         </mask>
                     </variation>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="0.0" y="222" width="400" height="50"/>
+                    <variation key="widthClass=compact">
                         <mask key="subviews">
                             <include reference="8OG-05-vox"/>
                             <include reference="Uza-Ak-uxH"/>
@@ -443,8 +435,7 @@
                             <exclude reference="Q3u-3D-r4V"/>
                         </mask>
                     </variation>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="0.0" y="272" width="400" height="1"/>
+                    <variation key="widthClass=compact">
                         <mask key="constraints">
                             <include reference="Q3u-3D-r4V"/>
                         </mask>
@@ -464,8 +455,7 @@
                             <exclude reference="KDe-ga-hgl"/>
                         </mask>
                     </variation>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="15" y="351" width="370" height="50"/>
+                    <variation key="widthClass=compact">
                         <mask key="constraints">
                             <include reference="KDe-ga-hgl"/>
                         </mask>

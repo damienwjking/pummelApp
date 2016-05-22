@@ -11,17 +11,11 @@ import UIKit
 
 class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaDelegate, UITableViewDataSource, UITableViewDelegate {
     var nameChatUser : NSString!
-    @IBOutlet var connectToLB : UILabel!
-    @IBOutlet var nameChatUserLB : UILabel!
-    @IBOutlet var startConversation : UILabel!
-    @IBOutlet var justNowLB : UILabel!
-    @IBOutlet var avatarIMV : UIImageView!
+    
     @IBOutlet var textBox: UITextField!
     @IBOutlet var backButton: UIButton!
     @IBOutlet var chatTB: UITableView!
-    
-    @IBOutlet weak var chatTBToTop: NSLayoutConstraint!
-    @IBOutlet weak var avatarToTop: NSLayoutConstraint!
+    @IBOutlet var chatTBDistantCT: NSLayoutConstraint!
     var user1: Bool!
     var user2: Bool!
     var user3: Bool!
@@ -35,16 +29,11 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
         self.navigationController!.navigationBar.translucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         self.navigationItem.title = nameChatUser as String
-        self.connectToLB.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.nameChatUserLB.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.startConversation.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.avatarIMV.layer.cornerRadius = 40
-        self.avatarIMV.clipsToBounds = true
+        
         self.textBox.attributedPlaceholder = NSAttributedString(string:"START A CONVERSATION",
             attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor.blackColor()]))
         self.textBox.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.textBox.delegate = self
-        self.avatarIMV.image = UIImage(named: "kate.jpg")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
@@ -52,12 +41,6 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
         self.chatTB.delegate = self
         self.chatTB.dataSource = self
         self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.None
-        if (user1 == true) {
-           self.chatTB.hidden = true
-           self.justNowLB.hidden = true
-        } else {
-           self.updateUI()
-        }
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -126,42 +109,65 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
     
     // Table Delegate
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        if (indexPath.row == 0) {
+            return 197
+        } else {
+            return UITableViewAutomaticDimension
+        }
     }
     
     func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        if (indexPath.row == 0) {
+            return 197
+        } else {
+            return UITableViewAutomaticDimension
+        }
+        
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageTableViewCell", forIndexPath: indexPath) as! ChatMessageTableViewCell
-        if indexPath.row == 0 {
-            if (user4 == true)
-            {
-                cell.avatarIMV.image = UIImage(named: "kate.jpg")
-                cell.nameLB.text = message.user.name as String
-                cell.messageLB.text = message.message as String
-            } else {
-                cell.avatarIMV.image = UIImage(named: "kate.jpg")
-                cell.nameLB.text = "KATE" as String
-                cell.messageLB.text = "A lorum is a male genital piercing, placed horizontally on the underside of the penis at its base, where the penis meets the scrotum.Are your height constraints for the cell(s) setup correctly, i have not seen any issues with this in the wild using the Xcode 6.3 version. Even have a sample project on github with this working." as String
+        if (indexPath.row == 0) {
+            let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageHeaderTableViewCell", forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell
+            cell.avatarIMV.image = UIImage(named: "Kate.jpg")
+            if (user1 == true) {
+                cell.timeLB.hidden = true
+                chatTBDistantCT.constant = self.view.frame.size.height/2 - 64 - 49
             }
+            return cell
         } else {
-            cell.avatarIMV.image = UIImage(named: "kate.jpg")
-            cell.nameLB.text = "KATE" as String
-            cell.messageLB.text = "Hey Adam, Thanks for connecting with me! If you could please let me know what you’re looking to improve with a personal trainer and I can get to helping you out." as String
+            if indexPath.row == 1 {
+                 let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageWithoutImageTableViewCell", forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
+                if (user4 == true)
+                {
+                    cell.avatarIMV.image = UIImage(named: "kate.jpg")
+                    cell.nameLB.text = message.user.name as String
+                    cell.messageLB.text = message.message as String
+                } else {
+                    cell.avatarIMV.image = UIImage(named: "kate.jpg")
+                    cell.nameLB.text = "KATE" as String
+                    cell.messageLB.text = "A lorum is a male genital piercing, placed horizontally on the underside of the penis at its base, where the penis meets the scrotum.Are your height constraints for the cell(s) setup correctly, i have not seen any issues with this in the wild using the Xcode 6.3 version. Even have a sample project on github with this working." as String
+                }
+                return cell
+            } else {
+                let cellImage = tableView.dequeueReusableCellWithIdentifier("ChatMessageImageTableViewCell", forIndexPath: indexPath) as! ChatMessageImageTableViewCell
+                cellImage.avatarIMV.image = UIImage(named: "kate.jpg")
+                cellImage.nameLB.text = "KATE" as String
+                cellImage.messageLB.text = "Hey Adam, Thanks for connecting with me! If you could please let me know what you’re looking to improve with a personal trainer and I can get to helping you out." as String
+                cellImage.photoIMW.image = UIImage(named: "kate.jpg")
+                return cellImage
+            }
+            
+            
         }
-       
-        return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (user1 == true) {
-            return 0
-        } else if (user2 == true || user4 == true) {
             return 1
-        } else {
+        } else if (user2 == true || user4 == true) {
             return 2
+        } else {
+            return 3
         }
         
     }
@@ -179,12 +185,6 @@ class ChatMessageViewController : UIViewController, UITextFieldDelegate, FusumaD
             destinationVC.nameChatUser = sender as! NSString
         }
     }
-    
-    func updateUI() {
-        self.avatarToTop.constant -= self.avatarIMV.frame.origin.y - 15
-        self.chatTBToTop.constant += self.avatarIMV.frame.origin.y -  self.avatarIMV.frame.size.height
-    }
-    
     
     func cancel() {
         self.navigationController?.popViewControllerAnimated(true)
