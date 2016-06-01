@@ -6,7 +6,7 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 import UIKit
-
+import Alamofire
 
 class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDelegate {
     
@@ -24,15 +24,41 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDele
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:"close")
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.Plain, target: self, action: "post")
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
-        self.avatarIMV.image = UIImage(named: "kate.jpg")
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
+        self.setAvatar()
         
         self.commentPhotoTF.attributedPlaceholder = NSAttributedString(string:"ADD A COMMENT...",
             attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]))
         self.commentPhotoTF.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.commentPhotoTF.delegate = self
-
+        self.commentPhotoTF.keyboardAppearance = .Dark
+    }
+    
+    func setAvatar() {
+        var prefix = "http://api.pummel.fit/api/users/" as String
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        prefix.appendContentsOf(appDelegate.currentUserId)
+        prefix.appendContentsOf("/photos")
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                let listPhoto = JSON as! NSArray
+                if (listPhoto.count >= 1) {
+                    let photo = listPhoto[0] as! NSDictionary
+                    var link = photo.objectForKey("url") as! String
+                    link.appendContentsOf("?width=80&height=80")
+                    print(link)
+                    Alamofire.request(.GET, link)
+                        .responseImage { response in
+                            let imageRes = response.result.value! as UIImage
+                            self.avatarIMV.image = imageRes
+                    }
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
     }
     
     func close() {

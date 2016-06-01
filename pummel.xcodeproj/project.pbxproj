@@ -65,6 +65,8 @@
 		F9827F541CBDEE3C00841BF1 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4E1CBDEE3C00841BF1 /* camera.png */; };
 		F9827F551CBDEE3C00841BF1 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */; };
 		F9827F561CBDEE3C00841BF1 /* camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F501CBDEE3C00841BF1 /* camera@3x.png */; };
+		F983C2A01CFDA6C2002DA578 /* pro-per.png in Resources */ = {isa = PBXBuildFile; fileRef = F983C29F1CFDA6C2002DA578 /* pro-per.png */; };
+		F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F983C2A11CFF952B002DA578 /* BaseTabBarController.swift */; };
 		F98C40A61CF2524600ECC66E /* ChatMessageImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */; };
 		F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */; };
 		F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98C40A91CF2586100ECC66E /* SendPhotoViewController.swift */; };
@@ -105,6 +107,9 @@
 		F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */; };
 		F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */; };
 		F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */; };
+		F9CDEEF01CF6BA65003DB0B6 /* closewhite.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */; };
+		F9CDEEF11CF6BA65003DB0B6 /* closewhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */; };
+		F9CDEEF21CF6BA65003DB0B6 /* closewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEEF1CF6BA65003DB0B6 /* closewhite@3x.png */; };
 		F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CBFC1CE1CA49007F68A5 /* Assets.xcassets */; };
 		F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CBFE1CE1CA49007F68A5 /* LaunchScreen.storyboard */; };
 		F9F3CC3B1CE1EC66007F68A5 /* newmessage.png in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CC381CE1EC66007F68A5 /* newmessage.png */; };
@@ -222,6 +227,8 @@
 		F9827F4E1CBDEE3C00841BF1 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		F9827F4F1CBDEE3C00841BF1 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		F9827F501CBDEE3C00841BF1 /* camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@3x.png"; sourceTree = "<group>"; };
+		F983C29F1CFDA6C2002DA578 /* pro-per.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pro-per.png"; sourceTree = "<group>"; };
+		F983C2A11CFF952B002DA578 /* BaseTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
 		F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageImageTableViewCell.swift; sourceTree = "<group>"; };
 		F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageWithoutImageTableViewCell.swift; sourceTree = "<group>"; };
 		F98C40A91CF2586100ECC66E /* SendPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPhotoViewController.swift; sourceTree = "<group>"; };
@@ -263,6 +270,9 @@
 		F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour1@3x.jpg"; sourceTree = "<group>"; };
 		F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour2@3x.jpg"; sourceTree = "<group>"; };
 		F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour3@3x.jpg"; sourceTree = "<group>"; };
+		F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closewhite.png; sourceTree = "<group>"; };
+		F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closewhite@2x.png"; sourceTree = "<group>"; };
+		F9CDEEEF1CF6BA65003DB0B6 /* closewhite@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closewhite@3x.png"; sourceTree = "<group>"; };
 		F9F3CBFC1CE1CA49007F68A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F9F3CBFF1CE1CA49007F68A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F9F3CC381CE1EC66007F68A5 /* newmessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newmessage.png; sourceTree = "<group>"; };
@@ -367,6 +377,7 @@
 				F9827F3D1CBD224F00841BF1 /* xib */,
 				F9827EB71CBBF31600841BF1 /* Resource */,
 				9C1C54041C7938070083E47B /* AppDelegate.swift */,
+				F983C2A11CFF952B002DA578 /* BaseTabBarController.swift */,
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
 				9C1C54361C793AA70083E47B /* ProgressViewController.swift */,
 				9C1C543C1C793B280083E47B /* FindViewController.swift */,
@@ -434,6 +445,10 @@
 		F9827EB71CBBF31600841BF1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				F983C29F1CFDA6C2002DA578 /* pro-per.png */,
+				F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */,
+				F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */,
+				F9CDEEEF1CF6BA65003DB0B6 /* closewhite@3x.png */,
 				F98C40AB1CF25C5F00ECC66E /* Assets.xcassets */,
 				F98C40AC1CF25C5F00ECC66E /* Base.lproj */,
 				F98C41AA1CF264CE00ECC66E /* cameraBig.png */,
@@ -713,6 +728,7 @@
 				F98C419D1CF25F6500ECC66E /* profile@3x.png in Resources */,
 				F9FE14601CEBD29B004ABE34 /* rotatecamera@2x.png in Resources */,
 				F9F3CC3B1CE1EC66007F68A5 /* newmessage.png in Resources */,
+				F9CDEEF01CF6BA65003DB0B6 /* closewhite.png in Resources */,
 				F98C41941CF25F6500ECC66E /* feedPressed@3x.png in Resources */,
 				F9827F241CBC757600841BF1 /* password@2x.png in Resources */,
 				F9827F561CBDEE3C00841BF1 /* camera@3x.png in Resources */,
@@ -721,6 +737,7 @@
 				F98C41961CF25F6500ECC66E /* messages@2x.png in Resources */,
 				F98C41A81CF25F6500ECC66E /* sessionsPressed@2x.png in Resources */,
 				F9827F2F1CBC759D00841BF1 /* name.png in Resources */,
+				F983C2A01CFDA6C2002DA578 /* pro-per.png in Resources */,
 				F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */,
 				F9FE13CC1CEB1B3E004ABE34 /* Montserrat-Light.ttf in Resources */,
 				F9F3CC481CE7D4A4007F68A5 /* cameraIcon@2x.png in Resources */,
@@ -784,7 +801,9 @@
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
 				F98C41B51CF2650F00ECC66E /* close@3x.png in Resources */,
 				F9827F511CBDEE3C00841BF1 /* attention.png in Resources */,
+				F9CDEEF11CF6BA65003DB0B6 /* closewhite@2x.png in Resources */,
 				F9827F291CBC758A00841BF1 /* email.png in Resources */,
+				F9CDEEF21CF6BA65003DB0B6 /* closewhite@3x.png in Resources */,
 				F9F3CC471CE7D4A4007F68A5 /* cameraIcon.png in Resources */,
 				F98C41A01CF25F6500ECC66E /* profilePressed@3x.png in Resources */,
 				F98C41A51CF25F6500ECC66E /* sessions@2x.png in Resources */,
@@ -879,6 +898,7 @@
 				9C1C54391C793AD00083E47B /* MessagesViewController.swift in Sources */,
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
+				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				F9FE13C81CEAF5F9004ABE34 /* MessageTableViewCell.swift in Sources */,
 				F9F3CC431CE7C6AC007F68A5 /* ChatMessageViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Alamofire
 
 class EditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var imageViewProfile: UIImageView!
@@ -54,6 +55,20 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageViewProfile.contentMode = .ScaleAspectFill
             imageViewProfile.image = pickedImage
+            print("UPLOAD PROFILE")
+            var prefix = "http://api.pummel.fit/api/users/:userId/photos" as String
+                print(prefix)
+            Alamofire.request(.POST, prefix, parameters: ["userId":37, "file":UIImageJPEGRepresentation(pickedImage, 0.8)!])
+                .responseJSON { response in
+                    print("REQUEST-- \(response.request)")  // original URL request
+                    print("RESPONSE-- \(response.response)") // URL response
+                    print("DATA-- \(response.data)")     // server data
+                    print("RESULT-- \(response.result)")   // result of response serialization
+                    print("STATUS CODE-- \(response.response?.statusCode)")
+                    print("ERROR-- \(response.result.error)")
+            }
+
+
         }
         
         dismissViewControllerAnimated(true, completion: nil)

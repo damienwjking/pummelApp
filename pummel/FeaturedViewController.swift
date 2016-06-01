@@ -17,7 +17,7 @@ class FeaturedViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         self.tabBarController?.title = "Featured"
-        let selectedImage = UIImage(named: "FeedPressed")
+        let selectedImage = UIImage(named: "feedPressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
     }
     

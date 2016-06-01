@@ -36,9 +36,9 @@
                         <constraint firstAttribute="height" id="ef6-hG-yx4"/>
                     </constraints>
                     <inset key="contentEdgeInsets" minX="2" minY="2" maxX="2" maxY="2"/>
-                    <state key="normal" image="4289CE11-50DC-4CAE-8D07-0EE69BA12C22"/>
-                    <state key="selected" image="4289CE11-50DC-4CAE-8D07-0EE69BA12C22"/>
-                    <state key="highlighted" image="4289CE11-50DC-4CAE-8D07-0EE69BA12C22"/>
+                    <state key="normal" image="803FBD90-1B0C-4D89-98E2-A522367849BD"/>
+                    <state key="selected" image="803FBD90-1B0C-4D89-98E2-A522367849BD"/>
+                    <state key="highlighted" image="803FBD90-1B0C-4D89-98E2-A522367849BD"/>
                     <connections>
                         <action selector="libraryButtonPressed:" destination="-1" eventType="touchUpInside" id="4H9-TH-qO3"/>
                     </connections>
@@ -49,9 +49,9 @@
                         <constraint firstAttribute="height" id="7VV-4q-BRr"/>
                     </constraints>
                     <inset key="imageEdgeInsets" minX="2" minY="3" maxX="2" maxY="2"/>
-                    <state key="normal" image="6C96DB53-E2CF-4F92-9E23-8000C29D3F40"/>
-                    <state key="selected" image="6C96DB53-E2CF-4F92-9E23-8000C29D3F40"/>
-                    <state key="highlighted" image="6C96DB53-E2CF-4F92-9E23-8000C29D3F40"/>
+                    <state key="normal" image="CAD2E232-E51A-45F5-AC00-67D80A029DAE"/>
+                    <state key="selected" image="CAD2E232-E51A-45F5-AC00-67D80A029DAE"/>
+                    <state key="highlighted" image="CAD2E232-E51A-45F5-AC00-67D80A029DAE"/>
                     <connections>
                         <action selector="photoButtonPressed:" destination="-1" eventType="touchUpInside" id="798-LR-edY"/>
                     </connections>
@@ -67,7 +67,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8ba-kc-jlJ" userLabel="Menu View">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="70"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dx0-Tt-oZs">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dx0-Tt-oZs">
                             <rect key="frame" x="7" y="25" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="PQP-9C-4h0"/>
@@ -75,7 +75,7 @@
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <inset key="contentEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                            <state key="normal" image="close.png">
+                            <state key="normal" image="closewhite.png">
                                 <color key="titleColor" red="0.98431372549019602" green="0.2627450980392157" blue="0.062745098039215685" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
@@ -115,13 +115,13 @@
                     </subviews>
                     <color key="backgroundColor" red="0.2666666667" green="0.69411764710000001" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstItem="Dx0-Tt-oZs" firstAttribute="leading" secondItem="8ba-kc-jlJ" secondAttribute="leading" constant="8" id="51K-wb-k3T"/>
+                        <constraint firstItem="Dx0-Tt-oZs" firstAttribute="leading" secondItem="8ba-kc-jlJ" secondAttribute="leading" constant="7" id="51K-wb-k3T"/>
                         <constraint firstAttribute="height" constant="70" id="5ZE-04-Fz1"/>
                         <constraint firstAttribute="bottom" secondItem="5iB-Jh-kTh" secondAttribute="bottom" constant="2" id="8zM-II-acu"/>
                         <constraint firstAttribute="bottom" secondItem="cxN-Q8-Lgd" secondAttribute="bottom" constant="11" id="B4P-q2-iaH"/>
                         <constraint firstAttribute="trailing" secondItem="5iB-Jh-kTh" secondAttribute="trailing" id="CsQ-ni-3OY"/>
-                        <constraint firstItem="5iB-Jh-kTh" firstAttribute="leading" secondItem="cxN-Q8-Lgd" secondAttribute="trailing" constant="64" id="InH-Sz-8gz"/>
-                        <constraint firstAttribute="bottom" secondItem="Dx0-Tt-oZs" secondAttribute="bottom" constant="2" id="ZaW-SQ-cOz"/>
+                        <constraint firstItem="5iB-Jh-kTh" firstAttribute="leading" secondItem="cxN-Q8-Lgd" secondAttribute="trailing" constant="66" id="InH-Sz-8gz"/>
+                        <constraint firstAttribute="bottom" secondItem="Dx0-Tt-oZs" secondAttribute="bottom" constant="5" id="ZaW-SQ-cOz"/>
                     </constraints>
                 </view>
             </subviews>
@@ -159,7 +159,7 @@
         </view>
     </objects>
     <resources>
-        <image name="4289CE11-50DC-4CAE-8D07-0EE69BA12C22" width="36" height="36">
+        <image name="803FBD90-1B0C-4D89-98E2-A522367849BD" width="36" height="36">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -293,7 +293,7 @@ lACWAJgAnQCgAKIApACmAKgArQDEAMYAyB0KHQ8dGh0jHTYdOh1FHU4dUx1bHV4dYx1yHXYdfR2FHZId
 lx2ZHZsdoB2oHasdsB24HbsdzR3QHdUAAAAAAAACAQAAAAAAAAA+AAAAAAAAAAAAAAAAAAAd1w
 </mutableData>
         </image>
-        <image name="6C96DB53-E2CF-4F92-9E23-8000C29D3F40" width="36" height="36">
+        <image name="CAD2E232-E51A-45F5-AC00-67D80A029DAE" width="36" height="36">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -427,6 +427,6 @@ lACWAJgAnQCgAKIApACmAKgArQDEAMYAyB0KHQ8dGh0jHTYdOh1FHU4dUx1bHV4dYx1yHXYdfR2FHZId
 lx2ZHZsdoB2oHasdsB24HbsdzR3QHdUAAAAAAAACAQAAAAAAAAA+AAAAAAAAAAAAAAAAAAAd1w
 </mutableData>
         </image>
-        <image name="close.png" width="11" height="11"/>
+        <image name="closewhite.png" width="11" height="11"/>
     </resources>
 </document>

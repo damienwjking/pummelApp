@@ -7,13 +7,16 @@
 //
 
 import UIKit
-
+import Alamofire
+import AlamofireImage
 
 class NewMessageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var listUserTB: UITableView!
     @IBOutlet var toLB : UILabel!
     @IBOutlet var toUserTF : UITextField!
+    var arrayListUser: NSArray!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController!.navigationBar.translucent = false;
@@ -29,12 +32,25 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         self.listUserTB.dataSource = self
         self.listUserTB.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.listUserTB.separatorStyle = UITableViewCellSeparatorStyle.None
+        self.getListUser()
     }
     
     func cancel() {
         self.navigationController?.popViewControllerAnimated(true)
     }
     
+    func getListUser() {
+        Alamofire.request(.GET, "http://api.pummel.fit/api/users")
+            .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    print(JSON)
+                    self.arrayListUser = JSON as! NSArray
+                    self.listUserTB.reloadData()
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+            }
+        }
+    }
     override func viewWillAppear(animated: Bool) {
         
     }
@@ -45,50 +61,59 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("UserTableViewCell", forIndexPath: indexPath) as! UserTableViewCell
-        if (indexPath.row == 0) {
-            cell.nameLB.text = "USER 1" as String
-        } else if (indexPath.row == 1) {
-            cell.nameLB.text =  "USER 2" as String
-        } else {
-            cell.nameLB.text =  "USER 3" as String
+        let user = arrayListUser[indexPath.row] as! NSDictionary
+        var name = user.objectForKey("firstname") as! String
+        name.appendContentsOf(" ")
+        name.appendContentsOf(user.objectForKey("lastname") as! String)
+        cell.nameLB.text = name
+        let idSender = String(format:"%0.f",user.objectForKey("id")!.doubleValue)
+        print(idSender)
+        var prefix = "http://api.pummel.fit/api/users/" as String
+        prefix.appendContentsOf(idSender)
+        prefix.appendContentsOf("/photos")
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                let listPhoto = JSON as! NSArray
+                if (listPhoto.count >= 1) {
+                    let photo = listPhoto[0] as! NSDictionary
+                    var link = photo.objectForKey("url") as! String
+                    link.appendContentsOf("?width=80&height=80")
+                    print(link)
+                    Alamofire.request(.GET, link)
+                        .responseImage { response in
+                            let imageRes = response.result.value! as UIImage
+                            cell.avatarIMV.image = imageRes
+                    }
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+            }
         }
-        cell.avatarIMV.image = UIImage(named: "kate.jpg")
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        if (arrayListUser == nil) {
+            return 0
+        } else {
+            return arrayListUser.count
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! UserTableViewCell
-        performSegueWithIdentifier("chatMessage", sender: cell.nameLB.text)
+        performSegueWithIdentifier("chatMessage", sender: indexPath.row)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "chatMessage")
         {
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
-            destinationVC.nameChatUser = sender as! NSString
-            if (destinationVC.nameChatUser.isEqualToString("USER 1")) {
-                destinationVC.user1 = true
-                destinationVC.user2 = false
-                destinationVC.user3 = false
-                destinationVC.user4 = false
-            } else if (destinationVC.nameChatUser.isEqualToString("USER 2")) {
-                destinationVC.user1 = false
-                destinationVC.user2 = true
-                destinationVC.user3 = false
-                destinationVC.user4 = false
-            } else {
-                destinationVC.user1 = false
-                destinationVC.user2 = false
-                destinationVC.user3 = true
-                destinationVC.user4 = false
-            }
+            destinationVC.nameChatUser = "USER 1"
+            let indexPathRow = sender as! Int
+            let user = arrayListUser[indexPathRow] as! NSDictionary
+            destinationVC.userIdTarget = String(format:"%f", user["id"]!.doubleValue)
         }
     }
-
-    
 }

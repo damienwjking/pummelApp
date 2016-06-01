@@ -14,7 +14,7 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SZ8-Sp-jjd">
                     <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="SZ8-Sp-jjd" secondAttribute="height" multiplier="1:1" id="dsr-FI-2Hq"/>
                     </constraints>
@@ -72,7 +72,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="o8l-Ld-Oon" firstAttribute="centerX" secondItem="oUi-qP-Neb" secondAttribute="centerX" id="2uy-UJ-fI0"/>
                         <constraint firstItem="WHi-m4-COn" firstAttribute="centerX" secondItem="oUi-qP-Neb" secondAttribute="centerX" id="5Nk-1M-DXZ"/>

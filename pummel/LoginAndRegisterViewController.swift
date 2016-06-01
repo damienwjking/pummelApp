@@ -131,6 +131,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBAction func clickSigninAction(sender:UIButton!) {
         let userEmail = self.loginVC.emailTF.text
         let userPassword = self.loginVC.passwordTF.text
+        //let userEmail = "thong@pummel.me" as! String
+        //let userPassword = "12345678" as! String
         
         Alamofire.request(.POST, "http://api.pummel.fit/api/login", parameters: ["email":userEmail!, "password":userPassword!])
             .responseJSON { response in
@@ -143,6 +145,12 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     //TODO: Save access token here
                     let JSON = response.result.value
                     print("JSON: \(JSON)")
+                    print("SAVE COOKIE")
+                    self.updateCookies(response)
+                    let userInfo = JSON!.objectForKey("user")
+                    let currentId = String(format:"%0.f",userInfo!.objectForKey("id")!.doubleValue)
+                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                    appDelegate.currentUserId = currentId
                     let type = response.result.value?.objectForKey("user")?.objectForKey("type")
                     if ((type?.isEqual("USER")) == true) {
                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
@@ -160,6 +168,17 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                         // ...
                     }
                 }
+        }
+    }
+    
+    func updateCookies(response: Response<AnyObject, NSError>) {
+        if let
+            headerFields = response.response?.allHeaderFields as? [String: String],
+            URL = response.request?.URL {
+                let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: URL)
+                //print(cookies)
+                // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
+                Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
         }
     }
     

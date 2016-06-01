@@ -62,8 +62,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         
         collectionView.registerNib(UINib(nibName: "FSAlbumViewCell", bundle: NSBundle(forClass: self.classForCoder)), forCellWithReuseIdentifier: "FSAlbumViewCell")
-		collectionView.backgroundColor = fusumaBackgroundColor
-		
+		collectionView.backgroundColor = UIColor.whiteColor()
         // Never load photos Unless the user allows to access to photo album
         checkPhotoAuth()
         
