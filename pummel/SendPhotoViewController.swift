@@ -40,9 +40,11 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDele
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         prefix.appendContentsOf(appDelegate.currentUserId)
         prefix.appendContentsOf("/photos")
+        print(prefix)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
+                print(JSON)
                 let listPhoto = JSON as! NSArray
                 if (listPhoto.count >= 1) {
                     let photo = listPhoto[0] as! NSDictionary

@@ -38,7 +38,13 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         self.chatTB.delegate = self
         self.chatTB.dataSource = self
         self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.None
+        let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+        self.chatTB.addGestureRecognizer(recognizer)
         self.getArrayChat()
+    }
+    
+    func handleTap(recognizer: UITapGestureRecognizer) {
+        self.textBox.resignFirstResponder()
     }
     
     func getArrayChat() {
@@ -253,33 +259,47 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         performSegueWithIdentifier("sendPhoto", sender: nil)
     }
     
-    @IBAction func sendMessage() {
-        let values = [userIdTarget as String]
-        Alamofire.request(.POST, "http://api.pummel.fit/api/user/conversations", parameters: ["title":"hello there again", "userIds":values])
+    func sendMessage() {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let values = [userIdTarget as String, appDelegate.currentUserId]
+        Alamofire.request(.POST, "http://api.pummel.fit/api/user/conversations/", parameters: ["userIds":values])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
-                    self.getArrayChat()
-                    self.textBox.text = ""
+                    let JSON = response.result.value
+                    print("JSON: \(JSON)")
+                    let conversationId = String(format:"%0.f",JSON!.objectForKey("id")!.doubleValue)
+
+                    //Add message to converstaton
+                    self.messageId = conversationId
+                    self.addMessageToExistConverstation()
                 }
-            }
-    }
-    
-    @IBAction func addMessage() {
-        var prefix = "http://api.pummel.fit/api/user/conversations/" as String
-        if (messageId != nil) {
-            prefix.appendContentsOf(self.messageId as String)
-            prefix.appendContentsOf("/messages")
-            print(prefix)
-            Alamofire.request(.POST, prefix, parameters: ["conversationId":"hello there again", "text":"this is add message"])
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        self.getArrayChat()
-                        self.textBox.text = ""
-                    }
-            }
         }
     }
     
+    func addMessageToExistConverstation(){
+        var prefix = "http://api.pummel.fit/api/user/conversations/" as String
+        prefix.appendContentsOf(self.messageId as String)
+        prefix.appendContentsOf("/messages")
+        print(prefix)
+        Alamofire.request(.POST, prefix, parameters: ["conversationId":self.messageId, "text":textBox.text])
+            .responseJSON { response in
+                print(response.response?.statusCode)
+                if response.response?.statusCode == 200 {
+                    self.getArrayChat()
+                    self.textBox.text = ""
+                    self.textBox.resignFirstResponder()
+                }
+        }
+    }
+    
+    @IBAction func clickOnSendButton() {
+        if (self.messageId != nil) {
+            self.addMessageToExistConverstation()
+        } else {
+            self.sendMessage()
+        }
+    }
+
     func stringArrayToNSData(array: [String]) -> NSData {
         let data = NSMutableData()
         let terminator = [0]

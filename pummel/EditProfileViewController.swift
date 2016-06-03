@@ -54,21 +54,36 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageViewProfile.contentMode = .ScaleAspectFill
-            imageViewProfile.image = pickedImage
-            print("UPLOAD PROFILE")
-            var prefix = "http://api.pummel.fit/api/users/:userId/photos" as String
-                print(prefix)
-            Alamofire.request(.POST, prefix, parameters: ["userId":37, "file":UIImageJPEGRepresentation(pickedImage, 0.8)!])
-                .responseJSON { response in
-                    print("REQUEST-- \(response.request)")  // original URL request
-                    print("RESPONSE-- \(response.response)") // URL response
-                    print("DATA-- \(response.data)")     // server data
-                    print("RESULT-- \(response.result)")   // result of response serialization
-                    print("STATUS CODE-- \(response.response?.statusCode)")
-                    print("ERROR-- \(response.result.error)")
+            var imageData : NSData!
+            let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
+            print(assetPath.absoluteString)
+            if assetPath.absoluteString.hasSuffix("JPG") {
+                imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+            } else {
+                imageData = UIImagePNGRepresentation(pickedImage)
             }
-
-
+            
+            var prefix = "http://api.pummel.fit/api/users/"
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            prefix.appendContentsOf(appDelegate.currentUserId as String)
+            prefix.appendContentsOf("/photos")
+            print(prefix)
+            Alamofire.request(.POST, prefix, parameters: ["userId":37,"file":imageData])
+                .responseJSON { response in
+                    if (response.response?.statusCode != 200) {
+                        let alertController = UIAlertController(title: "Upload Issue", message: "The size of picture too big, please choose another image", preferredStyle: .Alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    } else {
+                         self.imageViewProfile.image = pickedImage
+                    }
+            }
         }
         
         dismissViewControllerAnimated(true, completion: nil)

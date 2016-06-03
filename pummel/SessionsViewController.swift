@@ -48,6 +48,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 print(JSON)
                 self.arrayMessages = JSON as! NSArray
                 self.listMessageTB.reloadData()
+                let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                appDelegate.lastUpdateMessage = NSDate()
             case .Failure(let error):
                 print("Request failed with error: \(error)")
             }
@@ -111,6 +113,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         dateFormatter.timeZone = NSTimeZone(name: "UTC")
         let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
         cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
+        
         return cell
     }
     

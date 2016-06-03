@@ -394,10 +394,10 @@
                                 </variation>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvm-bf-rUb">
-                                <rect key="frame" x="0.0" y="515" width="600" height="85"/>
+                                <rect key="frame" x="0.0" y="521" width="600" height="79"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dOz-Jq-gPC">
-                                        <rect key="frame" x="15" y="35" width="3" height="30"/>
+                                        <rect key="frame" x="15" y="29" width="3" height="30"/>
                                         <color key="backgroundColor" red="0.98431372549019602" green="0.2627450980392157" blue="0.062745098039215685" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="UH5-Lp-qU1"/>
@@ -405,7 +405,7 @@
                                         </constraints>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5AI-BW-0p4" customClass="RSKGrowingTextView" customModule="RSKGrowingTextView">
-                                        <rect key="frame" x="33" y="32" width="513" height="33"/>
+                                        <rect key="frame" x="33" y="26" width="513" height="33"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ghP-IV-gr1"/>
@@ -420,7 +420,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </textView>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sKq-ET-ZcT">
-                                        <rect key="frame" x="562" y="38" width="24" height="24"/>
+                                        <rect key="frame" x="562" y="48" width="24" height="24"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="24" id="3kr-2h-rOF"/>
                                             <constraint firstAttribute="height" constant="24" id="SER-rZ-iEf"/>
@@ -430,17 +430,33 @@
                                             <action selector="goPhoto:" destination="t5Z-3o-3zT" eventType="touchUpInside" id="99k-g9-lpl"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rW7-Bz-gJI">
+                                        <rect key="frame" x="551" y="14" width="45" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="28" id="afO-Qs-xd8"/>
+                                            <constraint firstAttribute="width" constant="45" id="jk5-Rk-32N"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                        <state key="normal" title="Send">
+                                            <color key="titleColor" red="0.98431372549019602" green="0.30980392156862746" blue="0.12156862745098039" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="clickOnSendButton" destination="t5Z-3o-3zT" eventType="touchUpInside" id="RbA-Nm-vgU"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="dOz-Jq-gPC" firstAttribute="leading" secondItem="cvm-bf-rUb" secondAttribute="leading" constant="15" id="5iw-CW-0IC"/>
+                                    <constraint firstItem="rW7-Bz-gJI" firstAttribute="leading" secondItem="sKq-ET-ZcT" secondAttribute="leading" constant="-11" id="7nW-2L-rFe"/>
                                     <constraint firstAttribute="trailing" secondItem="sKq-ET-ZcT" secondAttribute="trailing" constant="15" id="Dea-ld-Iwu"/>
                                     <constraint firstItem="sKq-ET-ZcT" firstAttribute="leading" secondItem="5AI-BW-0p4" secondAttribute="trailing" constant="15" id="Z3z-iO-hQa"/>
                                     <constraint firstAttribute="bottom" secondItem="dOz-Jq-gPC" secondAttribute="bottom" constant="20" id="aAY-mE-mHu"/>
-                                    <constraint firstAttribute="bottom" secondItem="sKq-ET-ZcT" secondAttribute="bottom" constant="23" id="h4Z-Xh-BkT"/>
+                                    <constraint firstAttribute="bottom" secondItem="sKq-ET-ZcT" secondAttribute="bottom" constant="17" id="h4Z-Xh-BkT"/>
                                     <constraint firstItem="5AI-BW-0p4" firstAttribute="leading" secondItem="dOz-Jq-gPC" secondAttribute="trailing" constant="15" id="hf8-Ad-f7i"/>
                                     <constraint firstItem="5AI-BW-0p4" firstAttribute="top" secondItem="dOz-Jq-gPC" secondAttribute="top" constant="-3" id="k1V-LZ-SEi"/>
                                     <constraint firstAttribute="bottom" secondItem="5AI-BW-0p4" secondAttribute="bottom" constant="20" id="lXs-ie-18o"/>
+                                    <constraint firstItem="sKq-ET-ZcT" firstAttribute="top" secondItem="rW7-Bz-gJI" secondAttribute="bottom" constant="12" id="llJ-aF-XeG"/>
                                     <constraint firstItem="sKq-ET-ZcT" firstAttribute="top" secondItem="cvm-bf-rUb" secondAttribute="top" constant="38" id="myU-xE-XuQ"/>
                                 </constraints>
                             </view>
@@ -672,6 +688,7 @@ fasdfasdfasdfas
                             <constraint firstItem="cvm-bf-rUb" firstAttribute="bottom" secondItem="EpM-QZ-MJD" secondAttribute="bottomMargin" id="r97-Yy-u6Q"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="backButton" destination="qpd-zA-qSS" id="abc-U0-LpN"/>
                         <outlet property="chatTB" destination="J9J-m9-BrQ" id="26w-x3-eXd"/>

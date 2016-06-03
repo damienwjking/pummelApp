@@ -113,7 +113,7 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
             destinationVC.nameChatUser = "USER 1"
             let indexPathRow = sender as! Int
             let user = arrayListUser[indexPathRow] as! NSDictionary
-            destinationVC.userIdTarget = String(format:"%f", user["id"]!.doubleValue)
+            destinationVC.userIdTarget = String(format:"%0.f", user["id"]!.doubleValue)
         }
     }
 }
