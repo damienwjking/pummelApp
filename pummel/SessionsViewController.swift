@@ -48,8 +48,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 print(JSON)
                 self.arrayMessages = JSON as! NSArray
                 self.listMessageTB.reloadData()
-                let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                appDelegate.lastUpdateMessage = NSDate()
             case .Failure(let error):
                 print("Request failed with error: \(error)")
             }
@@ -125,8 +123,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 }
         }
         
-
-
         let timeAgo = message["updatedAt"] as! String
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
