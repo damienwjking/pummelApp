@@ -129,12 +129,12 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     }
     
     @IBAction func clickSigninAction(sender:UIButton!) {
-        let userEmail = self.loginVC.emailTF.text
-        let userPassword = self.loginVC.passwordTF.text
-        //let userEmail = "thong@pummel.me" as! String
-        //let userPassword = "12345678" as! String
+        let userEmail = self.loginVC.emailTF.text!
+        let userPassword = self.loginVC.passwordTF.text!
+       // let userEmail = "thong@pummel.me" as! String
+       // let userPassword = "12345678" as! String
         
-        Alamofire.request(.POST, "http://api.pummel.fit/api/login", parameters: ["email":userEmail!, "password":userPassword!])
+        Alamofire.request(.POST, "http://api.pummel.fit/api/login", parameters: ["email":userEmail, "password":userPassword])
             .responseJSON { response in
                 print("REQUEST-- \(response.request)")  // original URL request
                 print("RESPONSE-- \(response.response)") // URL response
@@ -157,6 +157,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     }
                     
                 }else {
+                    
                     let alertController = UIAlertController(title: "Sign In Issues", message: "Please check email and password", preferredStyle: .Alert)
                     
                     

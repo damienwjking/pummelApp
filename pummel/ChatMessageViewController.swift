@@ -211,7 +211,8 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                 case .Success(let JSON):
                     let listPhoto = JSON as! NSArray
                     if (listPhoto.count >= 1) {
-                        var link = listPhoto[0] as! String
+                        let photo = listPhoto[0] as! NSDictionary
+                        var link = photo["url"] as! String
                         link.appendContentsOf("?width=80&height=80")
                         Alamofire.request(.GET, link)
                             .responseImage { response in

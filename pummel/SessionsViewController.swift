@@ -20,9 +20,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewWillAppear(animated: Bool) {
         self.tabBarController?.title = "MESSAGES"
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
@@ -34,6 +31,9 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         self.listMessageTB.delegate = self
         self.listMessageTB.dataSource = self
         self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
+    }
+    
+    override func viewWillAppear(animated: Bool) {
         self.getMessage()
     }
     
@@ -94,7 +94,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             case .Success(let JSON):
                 let listPhoto = JSON as! NSArray
                 if (listPhoto.count >= 1) {
-                    var link = listPhoto[0] as! String
+                    let photo = listPhoto[0] as! NSDictionary
+                    var link = photo["url"] as! String
                     link.appendContentsOf("?width=80&height=80")
                     Alamofire.request(.GET, link)
                         .responseImage { response in
@@ -107,13 +108,29 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         let timeAgo = message["updatedAt"] as! String
-        print(timeAgo)
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")
         let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
         cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
-        
+        if (message["lastOpenedAt"] is NSNull) {
+            cell.nameLB.font = UIFont(name: "Montserrat-Regular", size: 16)
+            cell.messageLB.font = UIFont(name: "Montserrat-Regular", size: 16)
+            cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
+        } else {
+            let lastOpenAt =  message["lastOpenedAt"] as! String
+            let dayOpen = dateFormatter.dateFromString(lastOpenAt)
+            let dayCurrent = NSDate()
+            if (dayOpen!.compare(dayCurrent) == NSComparisonResult.OrderedDescending) {
+                cell.nameLB.font = UIFont(name: "Montserrat-Regular", size: 16)
+                cell.messageLB.font = UIFont(name: "Montserrat-Regular", size: 16)
+                cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
+            } else {
+                cell.nameLB.font = UIFont(name: "Montserrat-Light", size: 16)
+                cell.messageLB.font = UIFont(name: "Montserrat-Light", size: 16)
+                cell.timeLB.textColor = UIColor.blackColor()
+            }
+        }
         return cell
     }
     
@@ -127,7 +144,38 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
+        let message = arrayMessages[indexPath.row] as! NSDictionary
+        let messageId = String(format:"%0.f", message["id"]!.doubleValue)
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        dateFormatter.timeZone = NSTimeZone(name: "UTC")
+        let dayCurrent = dateFormatter.stringFromDate(NSDate())
+        print(dayCurrent)
+        var prefix = "http://api.pummel.fit/api/user/conversations/" as String
+        prefix.appendContentsOf(messageId)
+        print(prefix)
+        Alamofire.request(.PUT, prefix, parameters: ["conversationId":messageId, "lastOpenedAt":dayCurrent])
+            .responseJSON { response in
+                print("REQUEST-- \(response.request)")  // original URL request
+                print("RESPONSE-- \(response.response)") // URL response
+                print("DATA-- \(response.data)")     // server data
+                print("RESULT-- \(response.result)")   // result of response serialization
+                print("RESULT CODE -- \(response.response?.statusCode)")
+                if response.response?.statusCode == 200 {
+                     self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
+                } else {
+                    let alertController = UIAlertController(title: "Open Issues", message: "Please do it again", preferredStyle: .Alert)
+                    
+                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+        }
+       
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {

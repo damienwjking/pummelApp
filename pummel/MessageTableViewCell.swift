@@ -19,8 +19,6 @@ class MessageTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
-        self.nameLB.font = UIFont(name: "Montserrat-Light", size: 16)
-        self.messageLB.font = UIFont(name: "Montserrat-Light", size: 16)
         self.messageLB.numberOfLines = 2
         self.timeLB.font = UIFont(name: "Montserrat-Light", size: 16)
     }
