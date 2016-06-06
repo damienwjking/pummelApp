@@ -72,7 +72,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         let message = arrayMessages[indexPath.row] as! NSDictionary
         cell.messageLB.text = message["title"]  as? String
         let idSenderArray = message["userIds"] as! NSArray
-        let idSender = String(format:"%0.f", idSenderArray[0].doubleValue)
+        let idSender = String(format:"%0.f", idSenderArray[1].doubleValue)
+        let idTarget = String(format:"%0.f", idSenderArray[0].doubleValue)
         var prefix = "http://api.pummel.fit/api/users/" as String
         prefix.appendContentsOf(idSender)
         Alamofire.request(.GET, prefix)
@@ -80,15 +81,14 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             case .Success(let JSON):
                 print(JSON)
                 let userInfo = JSON as! NSDictionary
-                var name = userInfo.objectForKey("firstname") as! String
-                name.appendContentsOf(" ")
-                name.appendContentsOf(userInfo.objectForKey("lastname") as! String)
-                cell.nameLB.text = name
+                let name = userInfo.objectForKey("firstname") as! String
+                cell.nameLB.text = name.uppercaseString
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
         }
         prefix.appendContentsOf("/photos")
+        print(prefix)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -107,6 +107,26 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 print("Request failed with error: \(error)")
             }
         }
+        var prefixM = "http://api.pummel.fit/api/user/conversations/" as String
+        prefixM.appendContentsOf(String(format:"%0.f", message["id"]!.doubleValue))
+        prefixM.appendContentsOf("/messages")
+        prefixM.appendContentsOf("?limit=1")
+        print(prefixM)
+        Alamofire.request(.GET, prefixM)
+            .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    let arrayTemp = JSON as! NSArray
+                    if(arrayTemp.count > 0) {
+                        let messageTemp = arrayTemp.objectAtIndex(0) as! NSDictionary
+                        cell.messageLB.text = messageTemp.objectForKey("text") as? String
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                }
+        }
+        
+
+
         let timeAgo = message["updatedAt"] as! String
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"

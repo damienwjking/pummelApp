@@ -489,7 +489,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SARAH" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LeJ-1r-4FL">
-                                                    <rect key="frame" x="325" y="106" width="86" height="26"/>
+                                                    <rect key="frame" x="326" y="106" width="86" height="26"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="26" id="Rla-B2-Fjy"/>
                                                         <constraint firstAttribute="width" constant="86" id="c6a-OG-rar"/>
@@ -529,7 +529,7 @@
                                                 <constraint firstItem="OFA-gs-i9V" firstAttribute="top" secondItem="T4h-Rc-unp" secondAttribute="topMargin" constant="3" id="PBE-BR-Nck"/>
                                                 <constraint firstItem="Ozk-Rk-q58" firstAttribute="top" secondItem="2bz-5i-roK" secondAttribute="bottom" constant="27" id="cdw-MR-o9i"/>
                                                 <constraint firstItem="b7D-Mf-5ec" firstAttribute="top" secondItem="OFA-gs-i9V" secondAttribute="bottom" constant="15" id="dZi-ab-hGi"/>
-                                                <constraint firstItem="LeJ-1r-4FL" firstAttribute="centerX" secondItem="T4h-Rc-unp" secondAttribute="centerX" constant="68" id="pW0-u6-xHA"/>
+                                                <constraint firstItem="LeJ-1r-4FL" firstAttribute="centerX" secondItem="T4h-Rc-unp" secondAttribute="centerX" constant="69" id="pW0-u6-xHA"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

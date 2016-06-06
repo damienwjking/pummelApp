@@ -200,7 +200,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                     print(JSON)
                     let userInfo = JSON as! NSDictionary
                     let name = userInfo.objectForKey("firstname") as! String
-                    cell.nameLB.text = name
+                    cell.nameLB.text = name.uppercaseString
                 case .Failure(let error):
                     print("Request failed with error: \(error)")
                     }
@@ -241,8 +241,12 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
             return 1
         } else {
             if (self.arrayChat != nil) {
+                chatTBDistantCT.constant = 0
+                tableView.userInteractionEnabled = true
                 return self.arrayChat.count + 1
             } else {
+                chatTBDistantCT.constant = self.view.frame.size.height/2 - 64 - 49
+                tableView.userInteractionEnabled = false
                 return 1
             }
         }

@@ -65,7 +65,7 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         var name = user.objectForKey("firstname") as! String
         name.appendContentsOf(" ")
         name.appendContentsOf(user.objectForKey("lastname") as! String)
-        cell.nameLB.text = name
+        cell.nameLB.text = name.uppercaseString
         let idSender = String(format:"%0.f",user.objectForKey("id")!.doubleValue)
         print(idSender)
         var prefix = "http://api.pummel.fit/api/users/" as String
