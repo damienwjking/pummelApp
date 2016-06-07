@@ -19,7 +19,9 @@ class ProgressViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.title = "Progress"
+        self.tabBarController?.title = "PROGRESS"
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         let selectedImage = UIImage(named: "sessionsPressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
     }

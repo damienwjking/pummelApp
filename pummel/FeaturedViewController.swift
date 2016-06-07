@@ -16,7 +16,9 @@ class FeaturedViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.title = "Featured"
+        self.tabBarController?.title = "FEATURED"
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         let selectedImage = UIImage(named: "feedPressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
     }

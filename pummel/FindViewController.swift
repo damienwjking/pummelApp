@@ -19,7 +19,9 @@ class FindViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.title = "Find"
+        self.tabBarController?.title = "FIND"
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         let selectedImage = UIImage(named: "search")
         self.tabBarItem.image = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)

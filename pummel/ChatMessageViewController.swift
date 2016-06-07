@@ -27,7 +27,9 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         self.navigationController!.navigationBar.translucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         self.setNavigationTitle()
-      // self.textBox.attributedPlaceholder = NSAttributedString(string:"START A CONVERSATION",           attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor.blackColor()]))
+       
+        self.textBox.font = UIFont(name: "Montserrat-Regular", size: 13)!
+//      self.textBox.attributedPlaceholder = NSAttributedString(string:"START A CONVERSATION",           attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor.blackColor()]))
        // self.textBox.delegate = self
         self.textBox.delegate = self
 
