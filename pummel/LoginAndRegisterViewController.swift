@@ -26,8 +26,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBOutlet var addProfileIconIMV : UIImageView!
     @IBOutlet var cameraProfileIconIMV : UIImageView!
     @IBOutlet var addProfilePhototLB : UILabel!
-    
-       let imagePicker = UIImagePickerController()
+    var imageData : NSData!
+    var type : String!
+    var filename: String!
+    let imagePicker = UIImagePickerController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -131,8 +133,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBAction func clickSigninAction(sender:UIButton!) {
         let userEmail = self.loginVC.emailTF.text!
         let userPassword = self.loginVC.passwordTF.text!
-       // let userEmail = "thong@pummel.me" as! String
-       // let userPassword = "12345678" as! String
+        //let userEmail = "thongvivio@gmail.com" as! String
+        //let userPassword = "12345678" as! String
         
         Alamofire.request(.POST, "http://api.pummel.fit/api/login", parameters: ["email":userEmail, "password":userPassword])
             .responseJSON { response in
@@ -205,9 +207,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 }
             }
             
-            print(firstname)
-            print(lastname)
-            
             Alamofire.request(.POST, "http://api.pummel.fit/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
                 .responseJSON { response in
                     print("REQUEST-- \(response.request)")  // original URL request
@@ -218,6 +217,30 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     if response.response?.statusCode == 200 {
                         let JSON = response.result.value
                         print("JSON: \(JSON)")
+                        if (self.cameraProfileIconIMV.hidden) {
+                            var prefix = "http://api.pummel.fit/api/users/"
+                            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                            prefix.appendContentsOf(appDelegate.currentUserId as String)
+                            prefix.appendContentsOf("/photos")
+                            print(prefix)
+                            var parameters = [String:AnyObject]()
+                            parameters = ["userId":appDelegate.currentUserId]
+                            Alamofire.upload(.POST, prefix, multipartFormData: {
+                                multipartFormData in
+                                multipartFormData.appendBodyPart(data: self.imageData, name: "image", fileName: self.filename, mimeType:self.type)
+                                for (key, value) in parameters {
+                                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                                }
+                                }, encodingCompletion: {
+                                    encodingResult in
+                                    
+                                    switch encodingResult {
+                                    case .Success(let upload, _, _): break
+                                        
+                                    case .Failure(let encodingError): break
+                                    }
+                            })
+                        }
                         let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
                         
                         
@@ -273,6 +296,18 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             self.profileIMV.contentMode = .ScaleAspectFill
             self.profileIMV.image = pickedImage
             self.cameraProfileIconIMV.hidden = true
+           
+            let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
+            if assetPath.absoluteString.hasSuffix("JPG") {
+                type = "image/jpg"
+                filename = "file.jpg"
+                imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+            } else {
+                type = "image/png"
+                filename = "file.png"
+                imageData = UIImagePNGRepresentation(pickedImage)
+            }
+
         }
         
         dismissViewControllerAnimated(true, completion: nil)

@@ -76,7 +76,7 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
             case .Success(let JSON):
                 let listPhoto = JSON as! NSArray
                 if (listPhoto.count >= 1) {
-                    let photo = listPhoto[0] as! NSDictionary
+                    let photo = listPhoto.objectAtIndex(listPhoto.count - 1) as! NSDictionary
                     var link = photo.objectForKey("url") as! String
                     link.appendContentsOf("?width=80&height=80")
                     print(link)

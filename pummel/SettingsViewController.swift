@@ -8,6 +8,7 @@
 
 import UIKit
 import MessageUI
+import Alamofire
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -127,17 +128,29 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func logOut() {
-        // Remove cookie
-        let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        for cookie in storage.cookies! {
-            storage.deleteCookie(cookie)
+        Alamofire.request(.DELETE, "http://api.pummel.fit/api/logout").response { (req, res, data, error) -> Void in
+            print(res)
+            let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
+            if ((outputString?.containsString("Logout successful")) != nil) {
+                let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+                for cookie in storage.cookies! {
+                    storage.deleteCookie(cookie)
+                }
+                NSUserDefaults.standardUserDefaults().synchronize()
+                self.performSegueWithIdentifier("backToRegister", sender: nil)
+            } else {
+                let alertController = UIAlertController(title: "Logout Issues", message: "Please do it again", preferredStyle: .Alert)
+                
+                
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                    // ...
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+            }
         }
-        NSUserDefaults.standardUserDefaults().synchronize()
-        // Remove token
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.token = ""
-        
-        self.performSegueWithIdentifier("backToRegister", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {

@@ -57,9 +57,15 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             var imageData : NSData!
             let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
             print(assetPath.absoluteString)
+            var type : String
+            var filename: String
             if assetPath.absoluteString.hasSuffix("JPG") {
+                type = "image/jpg"
+                filename = "file.jpg"
                 imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
             } else {
+                type = "image/png"
+                filename = "file.png"
                 imageData = UIImagePNGRepresentation(pickedImage)
             }
             
@@ -68,22 +74,25 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             prefix.appendContentsOf(appDelegate.currentUserId as String)
             prefix.appendContentsOf("/photos")
             print(prefix)
-            Alamofire.request(.POST, prefix, parameters: ["userId":37,"file":imageData])
-                .responseJSON { response in
-                    if (response.response?.statusCode != 200) {
-                        let alertController = UIAlertController(title: "Upload Issue", message: "The size of picture too big, please choose another image", preferredStyle: .Alert)
-                        
-                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
-                            // ...
-                        }
-                    } else {
-                         self.imageViewProfile.image = pickedImage
+            var parameters = [String:AnyObject]()
+            parameters = ["userId":appDelegate.currentUserId]
+            Alamofire.upload(.POST, prefix, multipartFormData: {
+                multipartFormData in
+                    multipartFormData.appendBodyPart(data: imageData, name: "image", fileName: filename, mimeType:type)
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                }
+                }, encodingCompletion: {
+                    encodingResult in
+                    
+                    switch encodingResult {
+                    case .Success(let upload, _, _):
+                        self.imageViewProfile.image = pickedImage
+    
+                    case .Failure(let encodingError):
+                        print(encodingError)
                     }
-            }
+            })
         }
         
         dismissViewControllerAnimated(true, completion: nil)

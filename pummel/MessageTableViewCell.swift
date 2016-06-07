@@ -20,7 +20,7 @@ class MessageTableViewCell: UITableViewCell {
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
         self.messageLB.numberOfLines = 2
-        self.timeLB.font = UIFont(name: "Montserrat-Light", size: 16)
+        self.timeLB.font = UIFont(name: "Montserrat-Light", size: 13)
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

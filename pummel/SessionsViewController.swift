@@ -71,7 +71,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         cell.messageLB.text = message["title"]  as? String
         let idSenderArray = message["userIds"] as! NSArray
         let idSender = String(format:"%0.f", idSenderArray[1].doubleValue)
-        let idTarget = String(format:"%0.f", idSenderArray[0].doubleValue)
         var prefix = "http://api.pummel.fit/api/users/" as String
         prefix.appendContentsOf(idSender)
         Alamofire.request(.GET, prefix)
@@ -92,7 +91,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             case .Success(let JSON):
                 let listPhoto = JSON as! NSArray
                 if (listPhoto.count >= 1) {
-                    let photo = listPhoto[0] as! NSDictionary
+                    let photo = listPhoto.objectAtIndex(listPhoto.count - 1) as! NSDictionary
                     var link = photo["url"] as! String
                     link.appendContentsOf("?width=80&height=80")
                     Alamofire.request(.GET, link)
@@ -138,11 +137,11 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             let dayOpen = dateFormatter.dateFromString(lastOpenAt)
             let dayCurrent = NSDate()
             if (dayOpen!.compare(dayCurrent) == NSComparisonResult.OrderedDescending) {
-                cell.nameLB.font = UIFont(name: "Montserrat-Regular", size: 16)
+                cell.nameLB.font = UIFont(name: "Montserrat-Regular", size: 13)
                 cell.messageLB.font = UIFont(name: "Montserrat-Regular", size: 16)
                 cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
             } else {
-                cell.nameLB.font = UIFont(name: "Montserrat-Light", size: 16)
+                cell.nameLB.font = UIFont(name: "Montserrat-Light", size: 13)
                 cell.messageLB.font = UIFont(name: "Montserrat-Light", size: 16)
                 cell.timeLB.textColor = UIColor.blackColor()
             }
