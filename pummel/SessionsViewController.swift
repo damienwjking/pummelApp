@@ -20,6 +20,12 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.listMessageTB.delegate = self
+        self.listMessageTB.dataSource = self
+        self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
+    }
+    
+    override func viewWillAppear(animated: Bool) {
         self.tabBarController?.title = "MESSAGES"
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
@@ -27,13 +33,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:"newMessage")
         let selectedImage = UIImage(named: "messagesSelcted")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
-        
-        self.listMessageTB.delegate = self
-        self.listMessageTB.dataSource = self
-        self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
-    }
-    
-    override func viewWillAppear(animated: Bool) {
         self.getMessage()
     }
     
