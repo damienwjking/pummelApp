@@ -45,7 +45,19 @@ class GetStartedViewController: UIViewController {
     
     // Button Action
     @IBAction func gotSignin(sender:UIButton!) {
-        performSegueWithIdentifier("toSignin", sender: nil)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if (defaults.objectForKey("isLogined") == nil) {
+            performSegueWithIdentifier("toSignin", sender: nil)
+        } else if  (defaults.objectForKey("isLogined") as! Bool) {
+            let urlString = defaults.objectForKey("urlLastCookie")
+            let url = NSURL(string: urlString as! String)
+            let headerFields = defaults.objectForKey("headerFields") as! [String : String]
+            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: url!)
+            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: url!, mainDocumentURL: nil)
+            performSegueWithIdentifier("showClientWithoutLogin", sender: nil)
+        } else {
+            performSegueWithIdentifier("toSignin", sender: nil)
+        }
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {

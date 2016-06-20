@@ -25,6 +25,9 @@
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
 		9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */; };
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
+		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
+		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
+		F90D32F81D108DFD00E3C349 /* blackArrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */; };
 		F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */; };
 		F9827E971CB81F9E00841BF1 /* BuildNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */; };
 		F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */; };
@@ -67,6 +70,7 @@
 		F9827F561CBDEE3C00841BF1 /* camera@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9827F501CBDEE3C00841BF1 /* camera@3x.png */; };
 		F983C2A01CFDA6C2002DA578 /* pro-per.png in Resources */ = {isa = PBXBuildFile; fileRef = F983C29F1CFDA6C2002DA578 /* pro-per.png */; };
 		F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F983C2A11CFF952B002DA578 /* BaseTabBarController.swift */; };
+		F983C2A41D013779002DA578 /* avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = F983C2A31D013779002DA578 /* avatar.png */; };
 		F98C40A61CF2524600ECC66E /* ChatMessageImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */; };
 		F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */; };
 		F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98C40A91CF2586100ECC66E /* SendPhotoViewController.swift */; };
@@ -187,6 +191,9 @@
 		9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		CCCEA7F5D261E683CC1283C2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C7E67A805132CD6DFF37CF /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
+		F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@2x.png"; sourceTree = "<group>"; };
+		F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@3x.png"; sourceTree = "<group>"; };
 		F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildNumberController.swift; sourceTree = "<group>"; };
 		F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
@@ -229,6 +236,7 @@
 		F9827F501CBDEE3C00841BF1 /* camera@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@3x.png"; sourceTree = "<group>"; };
 		F983C29F1CFDA6C2002DA578 /* pro-per.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pro-per.png"; sourceTree = "<group>"; };
 		F983C2A11CFF952B002DA578 /* BaseTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
+		F983C2A31D013779002DA578 /* avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar.png; sourceTree = "<group>"; };
 		F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageImageTableViewCell.swift; sourceTree = "<group>"; };
 		F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageWithoutImageTableViewCell.swift; sourceTree = "<group>"; };
 		F98C40A91CF2586100ECC66E /* SendPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendPhotoViewController.swift; sourceTree = "<group>"; };
@@ -445,6 +453,10 @@
 		F9827EB71CBBF31600841BF1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				F90D32F31D108DFD00E3C349 /* blackArrow.png */,
+				F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */,
+				F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */,
+				F983C2A31D013779002DA578 /* avatar.png */,
 				F983C29F1CFDA6C2002DA578 /* pro-per.png */,
 				F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */,
 				F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */,
@@ -688,6 +700,7 @@
 				TargetAttributes = {
 					9C1C54001C7938060083E47B = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = 54A9E4XHA6;
 					};
 					9C1C54161C7938070083E47B = {
 						CreatedOnToolsVersion = 7.2;
@@ -727,10 +740,12 @@
 				F9827F231CBC757600841BF1 /* password.png in Resources */,
 				F98C419D1CF25F6500ECC66E /* profile@3x.png in Resources */,
 				F9FE14601CEBD29B004ABE34 /* rotatecamera@2x.png in Resources */,
+				F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */,
 				F9F3CC3B1CE1EC66007F68A5 /* newmessage.png in Resources */,
 				F9CDEEF01CF6BA65003DB0B6 /* closewhite.png in Resources */,
 				F98C41941CF25F6500ECC66E /* feedPressed@3x.png in Resources */,
 				F9827F241CBC757600841BF1 /* password@2x.png in Resources */,
+				F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */,
 				F9827F561CBDEE3C00841BF1 /* camera@3x.png in Resources */,
 				F98C41AE1CF264CE00ECC66E /* cameraBig@2x.png in Resources */,
 				F98C41981CF25F6500ECC66E /* messagesSelcted.png in Resources */,
@@ -784,6 +799,7 @@
 				F9827EBB1CBBF46B00841BF1 /* pummelLogo.png in Resources */,
 				F9827F0C1CBC751500841BF1 /* back@2x.png in Resources */,
 				F9827F541CBDEE3C00841BF1 /* camera.png in Resources */,
+				F983C2A41D013779002DA578 /* avatar.png in Resources */,
 				F9FE14581CEBD29B004ABE34 /* FSAlbumViewCell.xib in Resources */,
 				F9FE14611CEBD29B004ABE34 /* rotatecamera@3x.png in Resources */,
 				F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */,
@@ -798,6 +814,7 @@
 				F98C41AD1CF264CE00ECC66E /* cameraBig.png in Resources */,
 				F9827F551CBDEE3C00841BF1 /* camera@2x.png in Resources */,
 				F98C41A21CF25F6500ECC66E /* search@2x.png in Resources */,
+				F90D32F81D108DFD00E3C349 /* blackArrow@3x.png in Resources */,
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
 				F98C41B51CF2650F00ECC66E /* close@3x.png in Resources */,
 				F9827F511CBDEE3C00841BF1 /* attention.png in Resources */,
@@ -1248,7 +1265,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1270,6 +1288,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1293,7 +1312,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1308,6 +1328,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1318,11 +1339,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6EF72CC25D427D33F8929D28 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				INFOPLIST_FILE = pummel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = fit.pummel.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.navisg.lightout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1331,11 +1355,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D9C7E67A805132CD6DFF37CF /* Pods.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				INFOPLIST_FILE = pummel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = fit.pummel.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.navisg.lightout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

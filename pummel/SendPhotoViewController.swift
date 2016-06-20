@@ -12,7 +12,8 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDele
     
     @IBOutlet var avatarIMV : UIImageView!
     @IBOutlet var commentPhotoTF : UITextField!
-    @IBOutlet var imageSelected : UIImageView!
+    @IBOutlet var imageSelected : UIImageView?
+    var viewKeyboard: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,24 +22,38 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDele
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
          self.navigationItem.hidesBackButton = true;
         let image = UIImage(named: "close")!.imageWithRenderingMode(.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:"close")
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.Plain, target: self, action: "post")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(SendPhotoViewController.close))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SendPhotoViewController.post))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
         self.setAvatar()
-        
         self.commentPhotoTF.attributedPlaceholder = NSAttributedString(string:"ADD A COMMENT...",
             attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]))
         self.commentPhotoTF.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.commentPhotoTF.delegate = self
         self.commentPhotoTF.keyboardAppearance = .Dark
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        self.navigationItem.hidesBackButton = true;
+        viewKeyboard = UIView.init(frame:CGRect(x: 0, y: self.view.frame.height - 300, width: self.view.frame.width, height: 300))
+        viewKeyboard.backgroundColor = UIColor.blackColor()
+        viewKeyboard.hidden = true
+        self.view.addSubview(viewKeyboard)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+            self.viewKeyboard.hidden = false
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+          self.viewKeyboard.hidden = true
     }
     
     func setAvatar() {
         var prefix = "http://api.pummel.fit/api/users/" as String
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        prefix.appendContentsOf(appDelegate.currentUserId)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
         prefix.appendContentsOf("/photos")
         print(prefix)
         Alamofire.request(.GET, prefix)
@@ -53,7 +68,7 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDele
                     print(link)
                     Alamofire.request(.GET, link)
                         .responseImage { response in
-                            let imageRes = response.result.value! as UIImage
+                    let imageRes = response.result.value! as UIImage
                             self.avatarIMV.image = imageRes
                     }
                 }
@@ -79,16 +94,20 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDele
         self.presentViewController(fusuma, animated: true, completion: nil)
     }
     
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    
     // Fusuma delegate
     func fusumaImageSelected(image: UIImage) {
         
         print("Image selected")
-        self.imageSelected.image = image
-    }
-    
-    func fusumaDismissedWithImage(image: UIImage) {
+       
+        self.imageSelected!.image = image
+       
         
-        print("Called just after dismissed FusumaViewController")
     }
     
     func fusumaCameraRollUnauthorized() {
@@ -110,15 +129,5 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextFieldDele
         }))
         
         self.presentViewController(alert, animated: true, completion: nil)
-    }
-    
-    func fusumaClosed() {
-        
-        print("Called when the close button is pressed")
-    }
-
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
     }
 }

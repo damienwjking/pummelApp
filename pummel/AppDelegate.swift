@@ -18,10 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var token: NSString!
     var currentUserId: String!
-    
+    var isLogined : Bool?
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        
+        isLogined = false
         
         return true
     }

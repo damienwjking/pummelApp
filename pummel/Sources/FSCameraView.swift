@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import AssetsLibrary
+import Photos
 
 @objc protocol FSCameraViewDelegate: class {
     func cameraShotFinished(image: UIImage)
@@ -18,11 +19,11 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var previewViewContainer: UIView!
     @IBOutlet weak var shotButton: UIButton!
-    @IBOutlet weak var flashButton: UIButton!
+    var flashButton: UIButton!
     @IBOutlet weak var flipButton: UIButton!
     @IBOutlet weak var bigShotIMV: UIImageView!
     @IBOutlet weak var smallShotIMV: UIImageView!
-    @IBOutlet weak var cameraRollButton: UIButton!
+    var cameraRollButton: UIButton!
     @IBOutlet weak var goLibrary: UIButton!
     weak var delegate: FSCameraViewDelegate? = nil
     
@@ -94,7 +95,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             
         } catch {
             
-            
+            print(error)
         }
         
 		//flashButton.tintColor = fusumaBaseTintColor
@@ -104,18 +105,18 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         //let bundle = NSBundle(forClass: self.classForCoder)
         
         //let flashImage = UIImage(named: "ic_flash_off", inBundle: bundle, compatibleWithTraitCollection: nil)
-        let flipImage = UIImage(named: "rotateCamera")
+        //let flipImage = UIImage(named: "rotateCamera")
         //let shotImage = UIImage(named: "ic_radio_button_checked", inBundle: bundle, compatibleWithTraitCollection: nil)
 
         //flashButton.setImage(flashImage?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
-        flipButton.setImage(flipImage?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+       //flipButton.setImage(flipImage?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
         goLibrary.layer.cornerRadius = 3
         self.pickingTheLastImageFromThePhotoLibrary()
         bigShotIMV.layer.cornerRadius = 36
         bigShotIMV.clipsToBounds = true
         smallShotIMV.layer.cornerRadius = 24
         smallShotIMV.clipsToBounds = true
-        flashConfiguration()
+       // flashConfiguration()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForegroundNotification:", name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
@@ -140,36 +141,25 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
     }
     
     func pickingTheLastImageFromThePhotoLibrary() {
-        let assetsLibrary: ALAssetsLibrary = ALAssetsLibrary()
-        assetsLibrary.enumerateGroupsWithTypes(ALAssetsGroupSavedPhotos,
-            usingBlock: { (let group: ALAssetsGroup!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-                if (group != nil) {
-                    // Be sure to filter the group so you only get photos
-                    group.setAssetsFilter(ALAssetsFilter.allPhotos())
-                    
-                    group.enumerateAssetsWithOptions(NSEnumerationOptions.Reverse,
-                        usingBlock: { (let asset: ALAsset!,
-                            let index: Int,
-                            stop: UnsafeMutablePointer<ObjCBool>)
-                            -> Void in
-                            if(asset != nil) {
-                                
-                                /* Returns a thumbnail representation of the asset. */
-                                let myCGImage: CGImage! = asset.thumbnail().takeUnretainedValue()
-                                
-                                // Here we set the image included in the UIImageView
-                                let lastImage = UIImage(CGImage: myCGImage)
-                                self.goLibrary.setImage(lastImage, forState: UIControlState.Normal)
-
-                                stop.memory = ObjCBool(true)
-                            }
-                    })
-                }
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        
+        let fetchResult = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: fetchOptions)
+        
+        if let lastAsset: PHAsset = fetchResult.lastObject as? PHAsset {
+            let manager = PHImageManager.defaultManager()
+            let imageRequestOptions = PHImageRequestOptions()
+            
+            manager.requestImageDataForAsset(lastAsset, options: imageRequestOptions) {
+                (let imageData: NSData?, let dataUTI: String?,
+                let orientation: UIImageOrientation,
+                let info: [NSObject : AnyObject]?) -> Void in
                 
-                stop.memory = ObjCBool(false)
-            })
-            { (let error: NSError!) -> Void in
-                print("A problem occurred: \(error.localizedDescription)")
+                if let imageDataUnwrapped = imageData, lastImageRetrieved = UIImage(data: imageDataUnwrapped) {
+                    // do stuff with image
+                        self.goLibrary.setBackgroundImage(lastImageRetrieved, forState: UIControlState.Normal) 
+                }
+            }
         }
     }
     

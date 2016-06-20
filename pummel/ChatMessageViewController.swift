@@ -22,10 +22,9 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     var arrayChat: NSArray!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "CANCEL", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel")
-        var image = UIImage(named: "back")
+        var image = UIImage(named: "blackArrow")
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: "cancel")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatMessageViewController.cancel))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
         self.navigationController!.navigationBar.translucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
@@ -36,14 +35,14 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
        // self.textBox.delegate = self
         self.textBox.delegate = self
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
         
         self.chatTB.delegate = self
         self.chatTB.dataSource = self
         self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.None
-        let recognizer = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+        let recognizer = UITapGestureRecognizer(target: self, action:#selector(ChatMessageViewController.handleTap(_:)))
         self.chatTB.addGestureRecognizer(recognizer)
         self.getArrayChat()
     }
@@ -138,7 +137,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                         case .Success(let JSON):
                             let listPhoto = JSON as! NSArray
                             if (listPhoto.count >= 1) {
-                                let photo = listPhoto[0] as! NSDictionary
+                                let photo = listPhoto[listPhoto.count - 1] as! NSDictionary
                                 var link = photo.objectForKey("url") as! String
                                 link.appendContentsOf("?width=80&height=80")
                                 print(link)
@@ -270,8 +269,8 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func sendMessage() {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let values = [userIdTarget as String, appDelegate.currentUserId]
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let values = [userIdTarget as String, defaults.objectForKey("currentId") as! String]
         Alamofire.request(.POST, "http://api.pummel.fit/api/user/conversations/", parameters: ["userIds":values])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {

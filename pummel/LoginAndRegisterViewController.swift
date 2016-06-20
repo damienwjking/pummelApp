@@ -151,8 +151,9 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     self.updateCookies(response)
                     let userInfo = JSON!.objectForKey("user")
                     let currentId = String(format:"%0.f",userInfo!.objectForKey("id")!.doubleValue)
-                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                    appDelegate.currentUserId = currentId
+                    let defaults = NSUserDefaults.standardUserDefaults()
+                    defaults.setObject(true, forKey: "isLogined")
+                    defaults.setObject(currentId, forKey: "currentId")
                     let type = response.result.value?.objectForKey("user")?.objectForKey("type")
                     if ((type?.isEqual("USER")) == true) {
                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
@@ -179,9 +180,13 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             headerFields = response.response?.allHeaderFields as? [String: String],
             URL = response.request?.URL {
                 let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: URL)
+            
                 //print(cookies)
                 // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
                 Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
+                let defaults = NSUserDefaults.standardUserDefaults()
+                defaults.setObject(headerFields, forKey: "headerFields")
+                defaults.setObject(URL.absoluteString, forKey: "urlLastCookie")
         }
     }
     
@@ -205,6 +210,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     lastname.appendContentsOf(fullNameArr[i])
                     lastname.appendContentsOf(" ")
                 }
+            } else {
+                lastname = " "
             }
             
             Alamofire.request(.POST, "http://api.pummel.fit/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
@@ -214,17 +221,19 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     print("DATA-- \(response.data)")     // server data
                     print("RESULT-- \(response.result)")   // result of response serialization
                     print("RESULT CODE -- \(response.response?.statusCode)")
+                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
                     if response.response?.statusCode == 200 {
                         let JSON = response.result.value
+                        let accessToken = JSON!.objectForKey("accessToken") as! NSDictionary
+                        let currentId = String(format:"%0.f",accessToken.objectForKey("id")!.doubleValue)
                         print("JSON: \(JSON)")
                         if (self.cameraProfileIconIMV.hidden) {
                             var prefix = "http://api.pummel.fit/api/users/"
-                            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                            prefix.appendContentsOf(appDelegate.currentUserId as String)
+                            prefix.appendContentsOf(currentId)
                             prefix.appendContentsOf("/photos")
                             print(prefix)
                             var parameters = [String:AnyObject]()
-                            parameters = ["userId":appDelegate.currentUserId]
+                            parameters = ["userId":currentId]
                             Alamofire.upload(.POST, prefix, multipartFormData: {
                                 multipartFormData in
                                 multipartFormData.appendBodyPart(data: self.imageData, name: "image", fileName: self.filename, mimeType:self.type)
@@ -235,21 +244,41 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                     encodingResult in
                                     
                                     switch encodingResult {
-                                    case .Success(let upload, _, _): break
+                                    case .Success(let upload, _, _):
+                                        let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
                                         
-                                    case .Failure(let encodingError): break
+                                        
+                                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                            // ...
+                                        }
+                                        alertController.addAction(OKAction)
+                                        self.presentViewController(alertController, animated: true) {
+                                            // ...
+                                        }
+                                    case .Failure(let encodingError):
+                                        let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully, but image profile isn't updated, let do it later", preferredStyle: .Alert)
+                                        
+                                        
+                                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                            // ...
+                                        }
+                                        alertController.addAction(OKAction)
+                                        self.presentViewController(alertController, animated: true) {
+                                            // ...
+                                        }
                                     }
                             })
-                        }
-                        let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
-                        
-                        
-                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
-                            // ...
+                        } else {
+                            let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
+                            
+                            
+                            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                // ...
+                            }
+                            alertController.addAction(OKAction)
+                            self.presentViewController(alertController, animated: true) {
+                                // ...
+                            }
                         }
                     } else {
                         let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)

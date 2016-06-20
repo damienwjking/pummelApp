@@ -69,7 +69,11 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         let message = arrayMessages[indexPath.row] as! NSDictionary
         cell.messageLB.text = message["title"]  as? String
         let idSenderArray = message["userIds"] as! NSArray
-        let idSender = String(format:"%0.f", idSenderArray[1].doubleValue)
+        var idSender = String(format:"%0.f", idSenderArray[0].doubleValue)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if (idSender == defaults.objectForKey("currentId") as! String) {
+            idSender = String(format:"%0.f", idSenderArray[1].doubleValue)
+        }
         var prefix = "http://api.pummel.fit/api/users/" as String
         prefix.appendContentsOf(idSender)
         Alamofire.request(.GET, prefix)

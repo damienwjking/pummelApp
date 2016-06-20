@@ -132,6 +132,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             print(res)
             let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
             if ((outputString?.containsString("Logout successful")) != nil) {
+                let defaults = NSUserDefaults.standardUserDefaults()
+                defaults.setObject(false, forKey: "isLogined")
                 let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
                 for cookie in storage.cookies! {
                     storage.deleteCookie(cookie)

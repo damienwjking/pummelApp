@@ -79,7 +79,9 @@ public enum FusumaModeOrder {
         doneButton.titleLabel?.font = UIFont(name: "Montserrat-Light", size: 13)!
 
         menuView.backgroundColor = fusumaBackgroundColor
-        menuView.addBottomBorder(UIColor.blackColor(), width: 1.0)
+        menuView.layer.shadowColor = UIColor.blackColor().CGColor;
+        menuView.layer.shadowOffset = CGSizeMake(0.0, 3);
+        menuView.layer.shadowOpacity = 0.25;
         
 		libraryButton.tintColor = fusumaTintColor
 		
@@ -113,6 +115,7 @@ public enum FusumaModeOrder {
     override public func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
          self.view.backgroundColor = fusumaBackgroundColor
+       
         
     }
 

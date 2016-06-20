@@ -235,6 +235,7 @@
                         <outlet property="mainTextDistantCT" destination="V1b-cY-zj3" id="LYB-2j-1nK"/>
                         <outlet property="reachYourGoalsTF" destination="Xc7-cd-nLp" id="Gxd-tu-DBu"/>
                         <segue destination="syr-Jg-EOc" kind="show" identifier="toSignin" id="kai-YL-km3"/>
+                        <segue destination="ITn-La-CW1" kind="show" identifier="showClientWithoutLogin" id="yEe-tR-VD7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p0P-kk-N2O" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1237,6 +1238,7 @@
         <image name="tour3.jpg" width="375" height="667"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hgM-zf-owO"/>
+        <segue reference="kai-YL-km3"/>
+        <segue reference="eh9-yR-QNQ"/>
     </inferredMetricsTieBreakers>
 </document>

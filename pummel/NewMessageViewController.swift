@@ -23,7 +23,9 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         self.navigationItem.title = "NEW MESSAGE"
         self.navigationItem.setHidesBackButton(true, animated: false)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "CANCEL", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel")
+        var image = UIImage(named: "blackArrow")
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NewMessageViewController.cancel))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
         self.toLB.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.toUserTF.attributedPlaceholder = NSAttributedString(string:"|",
@@ -67,7 +69,6 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         name.appendContentsOf(user.objectForKey("lastname") as! String)
         cell.nameLB.text = name.uppercaseString
         let idSender = String(format:"%0.f",user.objectForKey("id")!.doubleValue)
-        print(idSender)
         var prefix = "http://api.pummel.fit/api/users/" as String
         prefix.appendContentsOf(idSender)
         prefix.appendContentsOf("/photos")
@@ -79,7 +80,6 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
                     let photo = listPhoto.objectAtIndex(listPhoto.count - 1) as! NSDictionary
                     var link = photo.objectForKey("url") as! String
                     link.appendContentsOf("?width=80&height=80")
-                    print(link)
                     Alamofire.request(.GET, link)
                         .responseImage { response in
                             let imageRes = response.result.value! as UIImage

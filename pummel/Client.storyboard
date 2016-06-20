@@ -735,10 +735,10 @@ fasdfasdfasdfas
                                         <rect key="frame" x="0.0" y="0.0" width="373" height="373"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8VO-pm-H5p">
-                                        <rect key="frame" x="162" y="163" width="48" height="48"/>
+                                        <rect key="frame" x="162" y="168" width="48" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="48" id="J7v-HI-nD6"/>
-                                            <constraint firstAttribute="height" constant="48" id="awR-SS-ono"/>
+                                            <constraint firstAttribute="height" constant="38" id="awR-SS-ono"/>
                                         </constraints>
                                         <state key="normal" backgroundImage="cameraBig"/>
                                         <connections>
@@ -773,6 +773,7 @@ fasdfasdfasdfas
                     <connections>
                         <outlet property="avatarIMV" destination="TIz-X5-eeJ" id="OFm-p4-KeM"/>
                         <outlet property="commentPhotoTF" destination="CNd-qy-pgv" id="wem-3a-sO6"/>
+                        <outlet property="imageSelected" destination="iJf-Cu-aiK" id="bAq-J5-0Hw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HbI-2F-3mM" userLabel="First Responder" sceneMemberID="firstResponder"/>

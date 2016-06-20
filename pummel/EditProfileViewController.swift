@@ -70,12 +70,12 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             }
             
             var prefix = "http://api.pummel.fit/api/users/"
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            prefix.appendContentsOf(appDelegate.currentUserId as String)
+            let defaults = NSUserDefaults.standardUserDefaults()
+            prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
             prefix.appendContentsOf("/photos")
             print(prefix)
             var parameters = [String:AnyObject]()
-            parameters = ["userId":appDelegate.currentUserId]
+            parameters = ["userId":defaults.objectForKey("currentId") as! String]
             Alamofire.upload(.POST, prefix, multipartFormData: {
                 multipartFormData in
                     multipartFormData.appendBodyPart(data: imageData, name: "image", fileName: filename, mimeType:type)
