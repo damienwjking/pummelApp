@@ -74,26 +74,44 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
             prefix.appendContentsOf("/photos")
             print(prefix)
-            var parameters = [String:AnyObject]()
-            parameters = ["userId":defaults.objectForKey("currentId") as! String]
-            Alamofire.upload(.POST, prefix, multipartFormData: {
-                multipartFormData in
-                    multipartFormData.appendBodyPart(data: imageData, name: "image", fileName: filename, mimeType:type)
-                for (key, value) in parameters {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                }
-                }, encodingCompletion: {
-                    encodingResult in
-                    
+            Alamofire.upload(
+                .POST,
+                prefix,
+                multipartFormData: { multipartFormData in
+                    multipartFormData.appendBodyPart(data: imageData, name: "imageFile",
+                        fileName:filename, mimeType:type)
+                },
+                encodingCompletion: { encodingResult in
                     switch encodingResult {
                     case .Success(let upload, _, _):
-                        self.imageViewProfile.image = pickedImage
-    
+                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                            dispatch_async(dispatch_get_main_queue()) {
+                                let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                                //progress(percent: percent)
+                                print(percent)
+                            }
+                        }
+                        upload.validate()
+                        upload.responseJSON { response in
+                            if response.result.error != nil {
+                                // failure
+                                
+                            } else {
+                                self.imageViewProfile.image = pickedImage
+                                
+                            }
+                            
+                        }
+                        
                     case .Failure(let encodingError):
                         print(encodingError)
+                        //failure
                     }
-            })
+                }
+            )
+            
         }
+    
         
         dismissViewControllerAnimated(true, completion: nil)
     }
