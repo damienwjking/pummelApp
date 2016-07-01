@@ -44,15 +44,15 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         self.addChildViewController(loginVC)
         loginVC.didMoveToParentViewController(self)
         loginVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width, loginVC.view.frame.size.height)
-        loginVC.forgotPasswordBT.addTarget(self, action:"forgotAction:", forControlEvents:UIControlEvents.TouchUpInside)
-        loginVC.signinBT.addTarget(self, action:"clickSigninAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        loginVC.forgotPasswordBT.addTarget(self, action:#selector(LoginAndRegisterViewController.forgotAction(_:)), forControlEvents:UIControlEvents.TouchUpInside)
+        loginVC.signinBT.addTarget(self, action:#selector(LoginAndRegisterViewController.clickSigninAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginVC.view)
 
         // Add registerVC and hidden it for initial
         self.addChildViewController(signupVC)
         signupVC.didMoveToParentViewController(self)
         signupVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width, signupVC.view.frame.size.height)
-        signupVC.signupBT.addTarget(self, action:"clickSignupAction:", forControlEvents:UIControlEvents.TouchUpInside)
+        signupVC.signupBT.addTarget(self, action:#selector(LoginAndRegisterViewController.clickSignupAction(_:)), forControlEvents:UIControlEvents.TouchUpInside)
         self.view.addSubview(signupVC.view)
         
         self.updateUI()
@@ -62,12 +62,12 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         self.addProfileIMV.clipsToBounds = true
         profileIMV.clipsToBounds = true
         imagePicker.delegate = self
-        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:("imageTapped"))
+        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(LoginAndRegisterViewController.imageTapped)))
         self.addProfileIMV.userInteractionEnabled = true
         self.addProfileIMV.addGestureRecognizer(tapGestureRecognizer)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {

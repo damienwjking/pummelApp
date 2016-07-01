@@ -29,6 +29,8 @@
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
 		F90D32F81D108DFD00E3C349 /* blackArrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */; };
 		F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */; };
+		F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F964FEC01D215E33008F7C94 /* SearchingViewController.swift */; };
+		F964FEC31D21E049008F7C94 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F964FEC21D21E049008F7C94 /* Images.xcassets */; };
 		F9827E971CB81F9E00841BF1 /* BuildNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */; };
 		F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */; };
 		F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */; };
@@ -111,6 +113,14 @@
 		F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */; };
 		F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */; };
 		F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */; };
+		F9CA4A001D20F80600E8A585 /* emptyImage.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CA49FD1D20F80600E8A585 /* emptyImage.png */; };
+		F9CA4A011D20F80600E8A585 /* emptyImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CA49FE1D20F80600E8A585 /* emptyImage@2x.png */; };
+		F9CA4A021D20F80600E8A585 /* emptyImage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CA49FF1D20F80600E8A585 /* emptyImage@3x.png */; };
+		F9CA4A051D21021D00E8A585 /* LetUsHelpViewConntroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */; };
+		F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A071D21466600E8A585 /* FlowLayout.swift */; };
+		F9CA4A0B1D21466600E8A585 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A081D21466600E8A585 /* Tag.swift */; };
+		F9CA4A0C1D21466600E8A585 /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A091D21466600E8A585 /* TagCell.swift */; };
+		F9CA4A101D2153CE00E8A585 /* TagCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9CA4A0F1D2153CE00E8A585 /* TagCell.xib */; };
 		F9CDEEF01CF6BA65003DB0B6 /* closewhite.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */; };
 		F9CDEEF11CF6BA65003DB0B6 /* closewhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */; };
 		F9CDEEF21CF6BA65003DB0B6 /* closewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEEF1CF6BA65003DB0B6 /* closewhite@3x.png */; };
@@ -195,6 +205,8 @@
 		F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@2x.png"; sourceTree = "<group>"; };
 		F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@3x.png"; sourceTree = "<group>"; };
 		F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		F964FEC01D215E33008F7C94 /* SearchingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingViewController.swift; sourceTree = "<group>"; };
+		F964FEC21D21E049008F7C94 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildNumberController.swift; sourceTree = "<group>"; };
 		F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturedViewController.swift; sourceTree = "<group>"; };
@@ -278,6 +290,14 @@
 		F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour1@3x.jpg"; sourceTree = "<group>"; };
 		F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour2@3x.jpg"; sourceTree = "<group>"; };
 		F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour3@3x.jpg"; sourceTree = "<group>"; };
+		F9CA49FD1D20F80600E8A585 /* emptyImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emptyImage.png; sourceTree = "<group>"; };
+		F9CA49FE1D20F80600E8A585 /* emptyImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emptyImage@2x.png"; sourceTree = "<group>"; };
+		F9CA49FF1D20F80600E8A585 /* emptyImage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emptyImage@3x.png"; sourceTree = "<group>"; };
+		F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetUsHelpViewConntroller.swift; sourceTree = "<group>"; };
+		F9CA4A071D21466600E8A585 /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		F9CA4A081D21466600E8A585 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		F9CA4A091D21466600E8A585 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
+		F9CA4A0F1D2153CE00E8A585 /* TagCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCell.xib; sourceTree = "<group>"; };
 		F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closewhite.png; sourceTree = "<group>"; };
 		F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closewhite@2x.png"; sourceTree = "<group>"; };
 		F9CDEEEF1CF6BA65003DB0B6 /* closewhite@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closewhite@3x.png"; sourceTree = "<group>"; };
@@ -381,14 +401,14 @@
 		9C1C54031C7938070083E47B /* pummel */ = {
 			isa = PBXGroup;
 			children = (
+				F9CA4A031D21011500E8A585 /* Search */,
+				F9CA49FC1D20F62E00E8A585 /* Session */,
 				F9FE13C21CEAD7CE004ABE34 /* Model */,
 				F9827F3D1CBD224F00841BF1 /* xib */,
 				F9827EB71CBBF31600841BF1 /* Resource */,
 				9C1C54041C7938070083E47B /* AppDelegate.swift */,
 				F983C2A11CFF952B002DA578 /* BaseTabBarController.swift */,
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
-				9C1C54361C793AA70083E47B /* ProgressViewController.swift */,
-				9C1C543C1C793B280083E47B /* FindViewController.swift */,
 				9C8FF40D1C84728400449A54 /* TransitionManager.swift */,
 				9C1C543E1C793D070083E47B /* SettingsViewController.swift */,
 				F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */,
@@ -404,6 +424,7 @@
 				9C1C540F1C7938070083E47B /* LaunchScreen.storyboard */,
 				9C8FF4111C8476C800449A54 /* Main.storyboard */,
 				9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */,
+				F964FEC21D21E049008F7C94 /* Images.xcassets */,
 			);
 			path = pummel;
 			sourceTree = "<group>";
@@ -441,9 +462,9 @@
 		F92041691CED7F2E00CC6876 /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				9C1C54381C793AD00083E47B /* MessagesViewController.swift */,
 				9C1C543A1C793AF30083E47B /* SessionsViewController.swift */,
 				F9F3CC3E1CE1F386007F68A5 /* NewMessageViewController.swift */,
+				9C1C54381C793AD00083E47B /* MessagesViewController.swift */,
 				F9F3CC421CE7C6AC007F68A5 /* ChatMessageViewController.swift */,
 				F98C40A91CF2586100ECC66E /* SendPhotoViewController.swift */,
 			);
@@ -453,6 +474,9 @@
 		F9827EB71CBBF31600841BF1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				F9CA49FD1D20F80600E8A585 /* emptyImage.png */,
+				F9CA49FE1D20F80600E8A585 /* emptyImage@2x.png */,
+				F9CA49FF1D20F80600E8A585 /* emptyImage@3x.png */,
 				F90D32F31D108DFD00E3C349 /* blackArrow.png */,
 				F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */,
 				F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */,
@@ -589,6 +613,36 @@
 				9C05013A1C9534E100F02B3B /* GetStarted3ViewController.swift */,
 			);
 			name = GetStarted;
+			sourceTree = "<group>";
+		};
+		F9CA49FC1D20F62E00E8A585 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				9C1C54361C793AA70083E47B /* ProgressViewController.swift */,
+			);
+			name = Session;
+			sourceTree = "<group>";
+		};
+		F9CA4A031D21011500E8A585 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				F9CA4A061D21464D00E8A585 /* TagList */,
+				9C1C543C1C793B280083E47B /* FindViewController.swift */,
+				F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */,
+				F964FEC01D215E33008F7C94 /* SearchingViewController.swift */,
+			);
+			name = Search;
+			sourceTree = "<group>";
+		};
+		F9CA4A061D21464D00E8A585 /* TagList */ = {
+			isa = PBXGroup;
+			children = (
+				F9CA4A0F1D2153CE00E8A585 /* TagCell.xib */,
+				F9CA4A071D21466600E8A585 /* FlowLayout.swift */,
+				F9CA4A081D21466600E8A585 /* Tag.swift */,
+				F9CA4A091D21466600E8A585 /* TagCell.swift */,
+			);
+			name = TagList;
 			sourceTree = "<group>";
 		};
 		F9F3CBFD1CE1CA49007F68A5 /* Base.lproj */ = {
@@ -755,7 +809,9 @@
 				F983C2A01CFDA6C2002DA578 /* pro-per.png in Resources */,
 				F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */,
 				F9FE13CC1CEB1B3E004ABE34 /* Montserrat-Light.ttf in Resources */,
+				F9CA4A101D2153CE00E8A585 /* TagCell.xib in Resources */,
 				F9F3CC481CE7D4A4007F68A5 /* cameraIcon@2x.png in Resources */,
+				F9CA4A001D20F80600E8A585 /* emptyImage.png in Resources */,
 				F98C41AF1CF264CE00ECC66E /* cameraBig@3x.png in Resources */,
 				F9827F191CBC754900841BF1 /* gender@3x.png in Resources */,
 				F9827EBD1CBBF46B00841BF1 /* pummelLogo@3x.png in Resources */,
@@ -763,6 +819,7 @@
 				F9FE13CA1CEAFD12004ABE34 /* kate.jpg in Resources */,
 				F98C41A11CF25F6500ECC66E /* search.png in Resources */,
 				F98C419C1CF25F6500ECC66E /* profile@2x.png in Resources */,
+				F9CA4A011D20F80600E8A585 /* emptyImage@2x.png in Resources */,
 				F9827F131CBC752E00841BF1 /* add@3x.png in Resources */,
 				F9827EBC1CBBF46B00841BF1 /* pummelLogo@2x.png in Resources */,
 				F9827F0B1CBC751500841BF1 /* back.png in Resources */,
@@ -780,6 +837,7 @@
 				F9827F1F1CBC755B00841BF1 /* birthday@3x.png in Resources */,
 				F98C41971CF25F6500ECC66E /* messages@3x.png in Resources */,
 				F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */,
+				F9CA4A021D20F80600E8A585 /* emptyImage@3x.png in Resources */,
 				F98C41A31CF25F6500ECC66E /* search@3x.png in Resources */,
 				F98C419B1CF25F6500ECC66E /* profile.png in Resources */,
 				9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */,
@@ -814,6 +872,7 @@
 				F98C41AD1CF264CE00ECC66E /* cameraBig.png in Resources */,
 				F9827F551CBDEE3C00841BF1 /* camera@2x.png in Resources */,
 				F98C41A21CF25F6500ECC66E /* search@2x.png in Resources */,
+				F964FEC31D21E049008F7C94 /* Images.xcassets in Resources */,
 				F90D32F81D108DFD00E3C349 /* blackArrow@3x.png in Resources */,
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
 				F98C41B51CF2650F00ECC66E /* close@3x.png in Resources */,
@@ -916,9 +975,11 @@
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
+				F9CA4A0C1D21466600E8A585 /* TagCell.swift in Sources */,
 				F9FE13C81CEAF5F9004ABE34 /* MessageTableViewCell.swift in Sources */,
 				F9F3CC431CE7C6AC007F68A5 /* ChatMessageViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
+				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
 				F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
@@ -928,6 +989,7 @@
 				F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */,
 				9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */,
 				F98C40A61CF2524600ECC66E /* ChatMessageImageTableViewCell.swift in Sources */,
+				F9CA4A051D21021D00E8A585 /* LetUsHelpViewConntroller.swift in Sources */,
 				F9827F481CBD242900841BF1 /* SigninViewController.swift in Sources */,
 				9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */,
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
@@ -936,9 +998,11 @@
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
 				F9FE14551CEBD29B004ABE34 /* FSAlbumView.swift in Sources */,
+				F9CA4A0B1D21466600E8A585 /* Tag.swift in Sources */,
 				F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */,
 				9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */,
 				9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */,
+				F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */,
 				F9FE145C1CEBD29B004ABE34 /* FSImageCropView.swift in Sources */,
 				F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */,
 				F9FE145B1CEBD29B004ABE34 /* FSConstants.swift in Sources */,
@@ -1288,7 +1352,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
+				PROVISIONING_PROFILE = "eaea402a-f739-42ee-ba26-28d841a9e984";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1328,7 +1392,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
+				PROVISIONING_PROFILE = "eaea402a-f739-42ee-ba26-28d841a9e984";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1339,6 +1403,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6EF72CC25D427D33F8929D28 /* Pods.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				INFOPLIST_FILE = pummel/Info.plist;
@@ -1346,7 +1412,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.navisg.lightout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
+				PROVISIONING_PROFILE = "eaea402a-f739-42ee-ba26-28d841a9e984";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1355,6 +1421,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D9C7E67A805132CD6DFF37CF /* Pods.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nguyen Lieu (46P4P5JLUN)";
 				INFOPLIST_FILE = pummel/Info.plist;
@@ -1362,7 +1430,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.navisg.lightout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c4147fb1-10b1-4860-816d-4129395c9614";
+				PROVISIONING_PROFILE = "eaea402a-f739-42ee-ba26-28d841a9e984";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

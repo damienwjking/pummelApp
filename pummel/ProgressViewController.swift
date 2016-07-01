@@ -12,6 +12,8 @@ import UIKit
 
 
 class ProgressViewController: UIViewController {
+    @IBOutlet var comingSoonTF : UILabel!
+    @IBOutlet var comingSoonDetailTF : UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,11 +21,15 @@ class ProgressViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.title = "PROGRESS"
+        self.tabBarController?.title = "SESSIONS"
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
         let selectedImage = UIImage(named: "sessionsPressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
+        
+        self.comingSoonTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 33)
+        self.comingSoonDetailTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
+        self.comingSoonDetailTF.layer.opacity = 0.69
     }
     
     override func didReceiveMemoryWarning() {
