@@ -111,7 +111,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         self.medIndicatorView.alpha = 0.1
         self.smallIndicatorView.alpha = 0.15
         
-        self.bigIndicatorView.layer.cornerRadius = 374/2
+        self.bigIndicatorView.layer.cornerRadius = 344/2
         self.medIndicatorView.layer.cornerRadius = 130
         self.smallIndicatorView.layer.cornerRadius = 176/2
         
@@ -141,10 +141,25 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         }
         
         self.animationIndicator()
+        
+        let seconds = 9.0
+        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            self.stopAnimation = true
+            
+            let presentingViewController = self.presentingViewController
+            self.dismissViewControllerAnimated(false, completion: {
+                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
+                let findVC = tabbarVC.viewControllers![2] as! FindViewController
+                findVC.showLetUsHelp = false
+                presentingViewController!.dismissViewControllerAnimated(true, completion: {})
+            })
+        })
     }
     
     func animationIndicator() {
-        
+        print("start animation")
         self.smallIndicatorView.hidden = false
         let seconds = 0.5
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
@@ -174,7 +189,9 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                     let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
                     
                     dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                        self.animationIndicator()
+                        if (self.stopAnimation != true) {
+                             self.animationIndicator()
+                        }
                     })
 
                 })

@@ -38,7 +38,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         self.toHelpUsWithTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
         self.helpMeReachTheCoachBT.layer.cornerRadius = 2
         self.helpMeReachTheCoachBT.layer.borderWidth = 0.5
-        self.helpMeReachTheCoachBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.helpMeReachTheCoachBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 11)
         self.helpMeReachTheCoachBT.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         self.helpMeReachTheCoachBT.backgroundColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)
         self.collectionView.delegate = self
@@ -112,4 +112,5 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         //cell.tagName.textColor = tag.selected ? UIColor.whiteColor() : UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
        // cell.backgroundColor = tag.selected ? UIColor(red: 0, green: 1, blue: 0, alpha: 1) : UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
     }
+    
 }

@@ -42,7 +42,7 @@ class ForgottenPasswordController: UIViewController {
         
         loginButton.backgroundColor = buttoncolour
         loginButton.setTitle("Reset Password", forState: UIControlState.Normal)
-        loginButton.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        loginButton.addTarget(self, action: #selector(ForgottenPasswordController.buttonAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginButton)
         
         

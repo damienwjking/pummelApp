@@ -31,6 +31,18 @@
 		F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */; };
 		F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F964FEC01D215E33008F7C94 /* SearchingViewController.swift */; };
 		F964FEC31D21E049008F7C94 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F964FEC21D21E049008F7C94 /* Images.xcassets */; };
+		F970A2A51D26384400932BFC /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A11D26384400932BFC /* Direction.swift */; };
+		F970A2A61D26384400932BFC /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A21D26384400932BFC /* Scheduler.swift */; };
+		F970A2A71D26384400932BFC /* ViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A31D26384400932BFC /* ViewManager.swift */; };
+		F970A2A81D26384400932BFC /* ZLSwipeableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A41D26384400932BFC /* ZLSwipeableView.swift */; };
+		F970A2AC1D26393F00932BFC /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2AB1D26393F00932BFC /* CardView.swift */; };
+		F970A2B01D26463000932BFC /* CardContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F970A2AF1D26463000932BFC /* CardContentView.xib */; };
+		F970A2B41D2646A900932BFC /* connect.png in Resources */ = {isa = PBXBuildFile; fileRef = F970A2B11D2646A900932BFC /* connect.png */; };
+		F970A2B51D2646A900932BFC /* connect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F970A2B21D2646A900932BFC /* connect@2x.png */; };
+		F970A2B61D2646A900932BFC /* connect@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F970A2B31D2646A900932BFC /* connect@3x.png */; };
+		F970A2BC1D264D9B00932BFC /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = F970A2B91D264D9B00932BFC /* pin.png */; };
+		F970A2BD1D264D9B00932BFC /* pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F970A2BA1D264D9B00932BFC /* pin@2x.png */; };
+		F970A2BE1D264D9B00932BFC /* pin@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F970A2BB1D264D9B00932BFC /* pin@3x.png */; };
 		F9827E971CB81F9E00841BF1 /* BuildNumberController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */; };
 		F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */; };
 		F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */; };
@@ -124,6 +136,12 @@
 		F9CDEEF01CF6BA65003DB0B6 /* closewhite.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */; };
 		F9CDEEF11CF6BA65003DB0B6 /* closewhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */; };
 		F9CDEEF21CF6BA65003DB0B6 /* closewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CDEEEF1CF6BA65003DB0B6 /* closewhite@3x.png */; };
+		F9D35AB41D2663E400F47709 /* kateupon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9D35AB31D2663E400F47709 /* kateupon.jpg */; };
+		F9D35AB61D266C6C00F47709 /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */; };
+		F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */; };
+		F9D35ABC1D26822400F47709 /* pinGray.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D35AB91D26822400F47709 /* pinGray.png */; };
+		F9D35ABD1D26822400F47709 /* pinGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D35ABA1D26822400F47709 /* pinGray@2x.png */; };
+		F9D35ABE1D26822400F47709 /* pinGray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9D35ABB1D26822400F47709 /* pinGray@3x.png */; };
 		F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CBFC1CE1CA49007F68A5 /* Assets.xcassets */; };
 		F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CBFE1CE1CA49007F68A5 /* LaunchScreen.storyboard */; };
 		F9F3CC3B1CE1EC66007F68A5 /* newmessage.png in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CC381CE1EC66007F68A5 /* newmessage.png */; };
@@ -207,6 +225,18 @@
 		F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		F964FEC01D215E33008F7C94 /* SearchingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingViewController.swift; sourceTree = "<group>"; };
 		F964FEC21D21E049008F7C94 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F970A2A11D26384400932BFC /* Direction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
+		F970A2A21D26384400932BFC /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
+		F970A2A31D26384400932BFC /* ViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewManager.swift; sourceTree = "<group>"; };
+		F970A2A41D26384400932BFC /* ZLSwipeableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLSwipeableView.swift; sourceTree = "<group>"; };
+		F970A2AB1D26393F00932BFC /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		F970A2AF1D26463000932BFC /* CardContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardContentView.xib; sourceTree = "<group>"; };
+		F970A2B11D2646A900932BFC /* connect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connect.png; sourceTree = "<group>"; };
+		F970A2B21D2646A900932BFC /* connect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connect@2x.png"; sourceTree = "<group>"; };
+		F970A2B31D2646A900932BFC /* connect@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connect@3x.png"; sourceTree = "<group>"; };
+		F970A2B91D264D9B00932BFC /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
+		F970A2BA1D264D9B00932BFC /* pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin@2x.png"; sourceTree = "<group>"; };
+		F970A2BB1D264D9B00932BFC /* pin@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin@3x.png"; sourceTree = "<group>"; };
 		F9827E941CB81F9E00841BF1 /* BuildNumberController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildNumberController.swift; sourceTree = "<group>"; };
 		F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		F9827E961CB81F9E00841BF1 /* FeaturedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturedViewController.swift; sourceTree = "<group>"; };
@@ -301,6 +331,12 @@
 		F9CDEEED1CF6BA65003DB0B6 /* closewhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closewhite.png; sourceTree = "<group>"; };
 		F9CDEEEE1CF6BA65003DB0B6 /* closewhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closewhite@2x.png"; sourceTree = "<group>"; };
 		F9CDEEEF1CF6BA65003DB0B6 /* closewhite@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closewhite@3x.png"; sourceTree = "<group>"; };
+		F9D35AB31D2663E400F47709 /* kateupon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kateupon.jpg; sourceTree = "<group>"; };
+		F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
+		F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoachProfileViewController.swift; sourceTree = "<group>"; };
+		F9D35AB91D26822400F47709 /* pinGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinGray.png; sourceTree = "<group>"; };
+		F9D35ABA1D26822400F47709 /* pinGray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinGray@2x.png"; sourceTree = "<group>"; };
+		F9D35ABB1D26822400F47709 /* pinGray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinGray@3x.png"; sourceTree = "<group>"; };
 		F9F3CBFC1CE1CA49007F68A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F9F3CBFF1CE1CA49007F68A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F9F3CC381CE1EC66007F68A5 /* newmessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newmessage.png; sourceTree = "<group>"; };
@@ -471,9 +507,32 @@
 			name = Message;
 			sourceTree = "<group>";
 		};
+		F970A2A01D26382B00932BFC /* ZLSV */ = {
+			isa = PBXGroup;
+			children = (
+				F970A2A11D26384400932BFC /* Direction.swift */,
+				F970A2A21D26384400932BFC /* Scheduler.swift */,
+				F970A2A31D26384400932BFC /* ViewManager.swift */,
+				F970A2A41D26384400932BFC /* ZLSwipeableView.swift */,
+				F970A2AB1D26393F00932BFC /* CardView.swift */,
+				F970A2AF1D26463000932BFC /* CardContentView.xib */,
+			);
+			name = ZLSV;
+			sourceTree = "<group>";
+		};
 		F9827EB71CBBF31600841BF1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				F9D35AB91D26822400F47709 /* pinGray.png */,
+				F9D35ABA1D26822400F47709 /* pinGray@2x.png */,
+				F9D35ABB1D26822400F47709 /* pinGray@3x.png */,
+				F9D35AB31D2663E400F47709 /* kateupon.jpg */,
+				F970A2B91D264D9B00932BFC /* pin.png */,
+				F970A2BA1D264D9B00932BFC /* pin@2x.png */,
+				F970A2BB1D264D9B00932BFC /* pin@3x.png */,
+				F970A2B11D2646A900932BFC /* connect.png */,
+				F970A2B21D2646A900932BFC /* connect@2x.png */,
+				F970A2B31D2646A900932BFC /* connect@3x.png */,
 				F9CA49FD1D20F80600E8A585 /* emptyImage.png */,
 				F9CA49FE1D20F80600E8A585 /* emptyImage@2x.png */,
 				F9CA49FF1D20F80600E8A585 /* emptyImage@3x.png */,
@@ -626,10 +685,13 @@
 		F9CA4A031D21011500E8A585 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				F970A2A01D26382B00932BFC /* ZLSV */,
 				F9CA4A061D21464D00E8A585 /* TagList */,
 				9C1C543C1C793B280083E47B /* FindViewController.swift */,
 				F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */,
 				F964FEC01D215E33008F7C94 /* SearchingViewController.swift */,
+				F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */,
+				F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -812,6 +874,7 @@
 				F9CA4A101D2153CE00E8A585 /* TagCell.xib in Resources */,
 				F9F3CC481CE7D4A4007F68A5 /* cameraIcon@2x.png in Resources */,
 				F9CA4A001D20F80600E8A585 /* emptyImage.png in Resources */,
+				F9D35ABD1D26822400F47709 /* pinGray@2x.png in Resources */,
 				F98C41AF1CF264CE00ECC66E /* cameraBig@3x.png in Resources */,
 				F9827F191CBC754900841BF1 /* gender@3x.png in Resources */,
 				F9827EBD1CBBF46B00841BF1 /* pummelLogo@3x.png in Resources */,
@@ -829,6 +892,7 @@
 				F9827F311CBC759D00841BF1 /* name@3x.png in Resources */,
 				F98C41991CF25F6500ECC66E /* messagesSelcted@2x.png in Resources */,
 				F9827F111CBC752E00841BF1 /* add.png in Resources */,
+				F970A2B41D2646A900932BFC /* connect.png in Resources */,
 				F9827F0D1CBC751500841BF1 /* back@3x.png in Resources */,
 				F9FE145A1CEBD29B004ABE34 /* FSCameraView.xib in Resources */,
 				F98C41A61CF25F6500ECC66E /* sessions@3x.png in Resources */,
@@ -842,6 +906,7 @@
 				F98C419B1CF25F6500ECC66E /* profile.png in Resources */,
 				9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */,
 				F9827F521CBDEE3C00841BF1 /* attention@2x.png in Resources */,
+				F970A2B01D26463000932BFC /* CardContentView.xib in Resources */,
 				F98C41A71CF25F6500ECC66E /* sessionsPressed.png in Resources */,
 				F9FE145E1CEBD29B004ABE34 /* FusumaViewController.xib in Resources */,
 				F98C41B31CF2650F00ECC66E /* close.png in Resources */,
@@ -849,8 +914,11 @@
 				F98C41901CF25F6500ECC66E /* feed@2x.png in Resources */,
 				F9827F171CBC754900841BF1 /* gender.png in Resources */,
 				F98C419E1CF25F6500ECC66E /* profilePressed.png in Resources */,
+				F9D35ABC1D26822400F47709 /* pinGray.png in Resources */,
 				F98C419A1CF25F6500ECC66E /* messagesSelcted@3x.png in Resources */,
+				F970A2BD1D264D9B00932BFC /* pin@2x.png in Resources */,
 				F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */,
+				F970A2B61D2646A900932BFC /* connect@3x.png in Resources */,
 				F98C41921CF25F6500ECC66E /* feedPressed.png in Resources */,
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
 				F98C41B41CF2650F00ECC66E /* close@2x.png in Resources */,
@@ -860,13 +928,16 @@
 				F983C2A41D013779002DA578 /* avatar.png in Resources */,
 				F9FE14581CEBD29B004ABE34 /* FSAlbumViewCell.xib in Resources */,
 				F9FE14611CEBD29B004ABE34 /* rotatecamera@3x.png in Resources */,
+				F970A2BC1D264D9B00932BFC /* pin.png in Resources */,
 				F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */,
 				F9827F121CBC752E00841BF1 /* add@2x.png in Resources */,
 				9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */,
 				F98C41411CF25C5F00ECC66E /* LaunchScreen.storyboard in Resources */,
+				F970A2BE1D264D9B00932BFC /* pin@3x.png in Resources */,
 				F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */,
 				F9827F301CBC759D00841BF1 /* name@2x.png in Resources */,
 				F9FE145F1CEBD29B004ABE34 /* rotatecamera.png in Resources */,
+				F9D35ABE1D26822400F47709 /* pinGray@3x.png in Resources */,
 				F98C41931CF25F6500ECC66E /* feedPressed@2x.png in Resources */,
 				F98C41951CF25F6500ECC66E /* messages.png in Resources */,
 				F98C41AD1CF264CE00ECC66E /* cameraBig.png in Resources */,
@@ -883,7 +954,9 @@
 				F9F3CC471CE7D4A4007F68A5 /* cameraIcon.png in Resources */,
 				F98C41A01CF25F6500ECC66E /* profilePressed@3x.png in Resources */,
 				F98C41A51CF25F6500ECC66E /* sessions@2x.png in Resources */,
+				F9D35AB41D2663E400F47709 /* kateupon.jpg in Resources */,
 				F9827F2B1CBC758A00841BF1 /* email@3x.png in Resources */,
+				F970A2B51D2646A900932BFC /* connect@2x.png in Resources */,
 				F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */,
 				F9827F251CBC757600841BF1 /* password@3x.png in Resources */,
 				F9827F531CBDEE3C00841BF1 /* attention@3x.png in Resources */,
@@ -975,21 +1048,27 @@
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
+				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9CA4A0C1D21466600E8A585 /* TagCell.swift in Sources */,
 				F9FE13C81CEAF5F9004ABE34 /* MessageTableViewCell.swift in Sources */,
 				F9F3CC431CE7C6AC007F68A5 /* ChatMessageViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
+				F970A2A61D26384400932BFC /* Scheduler.swift in Sources */,
+				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
 				F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
 				F9827EC11CBC27CF00841BF1 /* LoginAndRegisterViewController.swift in Sources */,
+				F970A2AC1D26393F00932BFC /* CardView.swift in Sources */,
 				F9FE13C41CEAD7DC004ABE34 /* User.swift in Sources */,
 				F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */,
+				F970A2A71D26384400932BFC /* ViewManager.swift in Sources */,
 				F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */,
 				9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */,
 				F98C40A61CF2524600ECC66E /* ChatMessageImageTableViewCell.swift in Sources */,
 				F9CA4A051D21021D00E8A585 /* LetUsHelpViewConntroller.swift in Sources */,
+				F9D35AB61D266C6C00F47709 /* ConnectViewController.swift in Sources */,
 				F9827F481CBD242900841BF1 /* SigninViewController.swift in Sources */,
 				9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */,
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
@@ -1001,6 +1080,7 @@
 				F9CA4A0B1D21466600E8A585 /* Tag.swift in Sources */,
 				F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */,
 				9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */,
+				F970A2A81D26384400932BFC /* ZLSwipeableView.swift in Sources */,
 				9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */,
 				F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */,
 				F9FE145C1CEBD29B004ABE34 /* FSImageCropView.swift in Sources */,
