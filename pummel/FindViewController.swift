@@ -18,7 +18,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     var swipeableView: ZLSwipeableView!
     var loadCardsFromXib = true
     
-    let TAGS = ["Tech", "Design", "Humor"]
+   let TAGS = ["Running", "Nutrition", "Weight Training"]
     var sizingCell: TagCell?
     var tags = [Tag]()
 
@@ -81,14 +81,13 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             let contentView = NSBundle.mainBundle().loadNibNamed("CardContentView", owner: self, options: nil).first! as! CardView
             contentView.translatesAutoresizingMaskIntoConstraints = false
             contentView.backgroundColor = cardView.backgroundColor
-            cardView.addSubview(contentView)
             contentView.connectV.layer.cornerRadius = 55/2
             contentView.connectV.clipsToBounds = true
             contentView.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
             contentView.nameLB.font = UIFont(name: "PlayfairDisplay-Regular", size: 24)
             contentView.address.font = UIFont(name: "PlayfairDisplay-Regular", size: 11)
             
-            
+            contentView.avatarIMV.layer.cornerRadius = 50.0
             //TagList
             contentView.collectionView.delegate = self
             contentView.collectionView.dataSource = self
@@ -99,7 +98,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             contentView.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
             
             contentView.connectBT.addTarget(self, action: #selector(FindViewController.goConnect(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-            
+            cardView.addSubview(contentView)
             // This is important:
             // https://github.com/zhxnlai/ZLSwipeableView/issues/9
             /*// Alternative:

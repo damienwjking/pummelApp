@@ -39,6 +39,12 @@
                     <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.55686274509803924" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kate.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="RUj-UG-UIb">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="RUj-UG-UIb" secondAttribute="height" multiplier="1:1" id="7EC-QN-v0Y"/>
+                    </constraints>
+                </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v05-1Q-9Ex">
                     <rect key="frame" x="525" y="571" width="55" height="55"/>
                     <subviews>
@@ -62,12 +68,6 @@
                     <collectionViewLayout key="collectionViewLayout" id="8Oo-Xl-BbH" customClass="FlowLayout" customModule="pummel" customModuleProvider="target"/>
                     <cells/>
                 </collectionView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kate.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="RUj-UG-UIb">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="RUj-UG-UIb" secondAttribute="height" multiplier="1:1" id="7EC-QN-v0Y"/>
-                    </constraints>
-                </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>

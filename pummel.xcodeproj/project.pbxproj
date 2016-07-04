@@ -125,6 +125,7 @@
 		F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */; };
 		F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */; };
 		F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */; };
+		F9AF9DFA1D29C9410065F2D2 /* AboutCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */; };
 		F9CA4A001D20F80600E8A585 /* emptyImage.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CA49FD1D20F80600E8A585 /* emptyImage.png */; };
 		F9CA4A011D20F80600E8A585 /* emptyImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CA49FE1D20F80600E8A585 /* emptyImage@2x.png */; };
 		F9CA4A021D20F80600E8A585 /* emptyImage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9CA49FF1D20F80600E8A585 /* emptyImage@3x.png */; };
@@ -320,6 +321,7 @@
 		F9ADEFD81CBF868D00991D68 /* tour1@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour1@3x.jpg"; sourceTree = "<group>"; };
 		F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour2@3x.jpg"; sourceTree = "<group>"; };
 		F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour3@3x.jpg"; sourceTree = "<group>"; };
+		F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutCollectionViewCell.swift; sourceTree = "<group>"; };
 		F9CA49FD1D20F80600E8A585 /* emptyImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emptyImage.png; sourceTree = "<group>"; };
 		F9CA49FE1D20F80600E8A585 /* emptyImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emptyImage@2x.png"; sourceTree = "<group>"; };
 		F9CA49FF1D20F80600E8A585 /* emptyImage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emptyImage@3x.png"; sourceTree = "<group>"; };
@@ -674,6 +676,14 @@
 			name = GetStarted;
 			sourceTree = "<group>";
 		};
+		F9AF9DF41D29C8810065F2D2 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
 		F9CA49FC1D20F62E00E8A585 /* Session */ = {
 			isa = PBXGroup;
 			children = (
@@ -685,6 +695,7 @@
 		F9CA4A031D21011500E8A585 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				F9AF9DF41D29C8810065F2D2 /* Cell */,
 				F970A2A01D26382B00932BFC /* ZLSV */,
 				F9CA4A061D21464D00E8A585 /* TagList */,
 				9C1C543C1C793B280083E47B /* FindViewController.swift */,
@@ -1050,6 +1061,7 @@
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9CA4A0C1D21466600E8A585 /* TagCell.swift in Sources */,
+				F9AF9DFA1D29C9410065F2D2 /* AboutCollectionViewCell.swift in Sources */,
 				F9FE13C81CEAF5F9004ABE34 /* MessageTableViewCell.swift in Sources */,
 				F9F3CC431CE7C6AC007F68A5 /* ChatMessageViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,

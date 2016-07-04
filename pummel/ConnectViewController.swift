@@ -31,7 +31,6 @@ class ConnectViewController: UIViewController {
     @IBOutlet weak var fourthConnectingIconV: UIView!
     @IBOutlet var meAvatarDT: NSLayoutConstraint!
     @IBOutlet var youAvatarDT: NSLayoutConstraint!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.titleConnectLB.font = UIFont(name: "PlayfairDisplay-Regular", size: 32)
