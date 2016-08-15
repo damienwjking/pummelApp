@@ -33,6 +33,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(SessionsViewController.newMessage))
         let selectedImage = UIImage(named: "messagesSelcted")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
+        self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.getMessage()
     }
     
@@ -41,7 +42,11 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func getMessage() {
-        Alamofire.request(.GET, "http://api.pummel.fit/api/user/conversations")
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+        prefix.appendContentsOf("/conversations")
+        Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 print(JSON)
@@ -67,19 +72,49 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MessageTableViewCell", forIndexPath: indexPath) as! MessageTableViewCell
         let message = arrayMessages[indexPath.row] as! NSDictionary
-        cell.messageLB.text = message["title"]  as? String
-        let idSenderArray = message["userIds"] as! NSArray
-        var idSender = String(format:"%0.f", idSenderArray[0].doubleValue)
+        //Get Text 
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
         let defaults = NSUserDefaults.standardUserDefaults()
-        if (idSender == defaults.objectForKey("currentId") as! String) {
-            idSender = String(format:"%0.f", idSenderArray[1].doubleValue)
-        }
-        var prefix = "http://api.pummel.fit/api/users/" as String
-        prefix.appendContentsOf(idSender)
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+        prefix.appendContentsOf("/conversations/")
+        prefix.appendContentsOf(String(format:"%0.f", message["conversationId"]!.doubleValue))
+        prefix.appendContentsOf("/messages")
+        prefix.appendContentsOf("?limit=1")
         Alamofire.request(.GET, prefix)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    let arrayMessageThisConverId = JSON as! NSArray
+                    if (arrayMessageThisConverId.count != 0) {
+                        let messageDetail = arrayMessageThisConverId[0]
+                        if (!(messageDetail["text"] is NSNull)) {
+                            cell.messageLB.text = messageDetail["text"]  as? String
+                        } else {
+                            if (!(messageDetail["imageUrl"] is NSNull)) {
+                                cell.messageLB.text = "Sent you a image"
+                            } else if (!(messageDetail["videoUrl"] is NSNull)) {
+                                cell.messageLB.text = "Sent you a video"
+                            } else
+                            {
+                                cell.messageLB.text = ""
+                            }
+                        }
+                    } else {
+                        cell.messageLB.text = ""
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+        }
+      
+        let conversations = message["conversation"] as! NSDictionary
+        let conversationUsers = conversations["conversationUsers"] as! NSArray
+        let targetUser = conversationUsers[0] as! NSDictionary
+        let targetUserId = String(format:"%0.f", targetUser["userId"]!.doubleValue)
+        var prefixUser = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        prefixUser.appendContentsOf(targetUserId)
+        Alamofire.request(.GET, prefixUser)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                print(JSON)
                 let userInfo = JSON as! NSDictionary
                 let name = userInfo.objectForKey("firstname") as! String
                 cell.nameLB.text = name.uppercaseString
@@ -87,15 +122,17 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 print("Request failed with error: \(error)")
                 }
         }
-        prefix.appendContentsOf("/photos")
-        print(prefix)
-        Alamofire.request(.GET, prefix)
+       
+        prefixUser.appendContentsOf("/photos")
+        Alamofire.request(.GET, prefixUser)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 let listPhoto = JSON as! NSArray
                 if (listPhoto.count >= 1) {
-                    let photo = listPhoto.objectAtIndex(listPhoto.count - 1) as! NSDictionary
-                    var link = photo["url"] as! String
+                    let photo = listPhoto.objectAtIndex(0) as! NSDictionary
+                    print(photo)
+                    var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+                    link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
                     link.appendContentsOf("?width=80&height=80")
                     Alamofire.request(.GET, link)
                         .responseImage { response in
@@ -106,23 +143,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 case .Failure(let error):
                 print("Request failed with error: \(error)")
             }
-        }
-        var prefixM = "http://api.pummel.fit/api/user/conversations/" as String
-        prefixM.appendContentsOf(String(format:"%0.f", message["id"]!.doubleValue))
-        prefixM.appendContentsOf("/messages")
-        prefixM.appendContentsOf("?limit=1")
-        print(prefixM)
-        Alamofire.request(.GET, prefixM)
-            .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let arrayTemp = JSON as! NSArray
-                    if(arrayTemp.count > 0) {
-                        let messageTemp = arrayTemp.objectAtIndex(0) as! NSDictionary
-                        cell.messageLB.text = messageTemp.objectForKey("text") as? String
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                }
         }
         
         let timeAgo = message["updatedAt"] as! String
@@ -163,22 +183,18 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         let message = arrayMessages[indexPath.row] as! NSDictionary
-        let messageId = String(format:"%0.f", message["id"]!.doubleValue)
+        let messageId = String(format:"%0.f", message["conversationId"]!.doubleValue)
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")
         let dayCurrent = dateFormatter.stringFromDate(NSDate())
-        print(dayCurrent)
-        var prefix = "http://api.pummel.fit/api/user/conversations/" as String
-        prefix.appendContentsOf(messageId)
-        print(prefix)
-        Alamofire.request(.PUT, prefix, parameters: ["conversationId":messageId, "lastOpenedAt":dayCurrent])
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+        prefix.appendContentsOf("/conversations/")
+        prefix.appendContentsOf(String(format:"%0.f", message["conversationId"]!.doubleValue))
+        Alamofire.request(.PUT, prefix, parameters: ["conversationId":messageId, "lastOpenedAt":dayCurrent, "userId": defaults.objectForKey("currentId") as! String])
             .responseJSON { response in
-                print("REQUEST-- \(response.request)")  // original URL request
-                print("RESPONSE-- \(response.response)") // URL response
-                print("DATA-- \(response.data)")     // server data
-                print("RESULT-- \(response.result)")   // result of response serialization
-                print("RESULT CODE -- \(response.response?.statusCode)")
                 if response.response?.statusCode == 200 {
                      self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
                 } else {
@@ -202,10 +218,12 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
             let message = arrayMessages[indexPathRow] as! NSDictionary
-            let idSenderArray = message["userIds"] as! NSArray
-            let idSender = String(format:"%0.f", idSenderArray[0].doubleValue)
-            destinationVC.userIdTarget = idSender
-            destinationVC.messageId = String(format:"%0.f", message["id"]!.doubleValue)
+            let conversations = message["conversation"] as! NSDictionary
+            let conversationUsers = conversations["conversationUsers"] as! NSArray
+            let targetUser = conversationUsers[0] as! NSDictionary
+            let targetUserId = String(format:"%0.f", targetUser["userId"]!.doubleValue)
+            destinationVC.userIdTarget = targetUserId
+            destinationVC.messageId = String(format:"%0.f", message["conversationId"]!.doubleValue)
         }
     }
 

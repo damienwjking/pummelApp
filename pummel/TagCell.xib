@@ -7,10 +7,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TagCell" customModule="pummel" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TagCell" customModule="Pummel" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="301" height="62"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fPd-JB-vL4">
+                    <rect key="frame" x="0.0" y="0.0" width="301" height="62"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TagName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0WB-Hv-N2j">
                     <rect key="frame" x="25" y="8" width="268" height="46"/>
                     <constraints>
@@ -32,18 +36,24 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="0WB-Hv-N2j" firstAttribute="leading" secondItem="aUH-Df-SVU" secondAttribute="trailing" constant="8" id="6u3-ER-nC2"/>
+                <constraint firstAttribute="bottom" secondItem="fPd-JB-vL4" secondAttribute="bottom" id="80g-aQ-zt4"/>
                 <constraint firstItem="0WB-Hv-N2j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="25" id="Gna-79-cFb"/>
+                <constraint firstItem="fPd-JB-vL4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="JRP-kG-coO"/>
+                <constraint firstItem="fPd-JB-vL4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="N8f-8e-tqy"/>
                 <constraint firstItem="aUH-Df-SVU" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="26" id="YnP-N9-29g"/>
                 <constraint firstItem="aUH-Df-SVU" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="c8o-bL-hVF"/>
                 <constraint firstAttribute="bottom" secondItem="0WB-Hv-N2j" secondAttribute="bottom" constant="8" id="fv7-7u-Q1j"/>
                 <constraint firstAttribute="trailing" secondItem="0WB-Hv-N2j" secondAttribute="trailing" constant="8" id="hDi-Hu-PZP"/>
                 <constraint firstItem="0WB-Hv-N2j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="hWZ-EW-TMW"/>
+                <constraint firstAttribute="trailing" secondItem="fPd-JB-vL4" secondAttribute="trailing" id="jUZ-Rv-UFN"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="tagBackgroundV" destination="fPd-JB-vL4" id="R1c-XV-S0W"/>
                 <outlet property="tagImage" destination="aUH-Df-SVU" id="GW4-zG-W64"/>
                 <outlet property="tagImageConstraint" destination="YnP-N9-29g" id="tIJ-DP-cxR"/>
                 <outlet property="tagName" destination="0WB-Hv-N2j" id="2n7-Ph-jgD"/>
+                <outlet property="tagNameLeftMarginConstraint" destination="Gna-79-cFb" id="CPZ-M5-4Oh"/>
                 <outlet property="tagNameMaxWidthConstraint" destination="XaI-tN-IrP" id="Qkq-2p-r9X"/>
             </connections>
             <point key="canvasLocation" x="181.5" y="136"/>

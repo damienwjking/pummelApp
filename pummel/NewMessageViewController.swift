@@ -42,7 +42,7 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func getListUser() {
-        Alamofire.request(.GET, "http://api.pummel.fit/api/users")
+        Alamofire.request(.GET, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users")
             .responseJSON { response in switch response.result {
                 case .Success(let JSON):
                     print(JSON)
@@ -69,7 +69,7 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         name.appendContentsOf(user.objectForKey("lastname") as! String)
         cell.nameLB.text = name.uppercaseString
         let idSender = String(format:"%0.f",user.objectForKey("id")!.doubleValue)
-        var prefix = "http://api.pummel.fit/api/users/" as String
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
         prefix.appendContentsOf(idSender)
         prefix.appendContentsOf("/photos")
         Alamofire.request(.GET, prefix)
@@ -78,12 +78,19 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
                 let listPhoto = JSON as! NSArray
                 if (listPhoto.count >= 1) {
                     let photo = listPhoto.objectAtIndex(listPhoto.count - 1) as! NSDictionary
-                    var link = photo.objectForKey("url") as! String
+                    var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+                    link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
                     link.appendContentsOf("?width=80&height=80")
-                    Alamofire.request(.GET, link)
-                        .responseImage { response in
-                            let imageRes = response.result.value! as UIImage
-                            cell.avatarIMV.image = imageRes
+                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                        cell.avatarIMV.image = imageRes
+                    } else {
+                        Alamofire.request(.GET, link)
+                            .responseImage { response in
+                                let imageRes = response.result.value! as UIImage
+                                cell.avatarIMV.image = imageRes
+                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                        }
                     }
                 }
             case .Failure(let error):
@@ -110,9 +117,9 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         if (segue.identifier == "chatMessage")
         {
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
-            destinationVC.nameChatUser = "USER 1"
             let indexPathRow = sender as! Int
             let user = arrayListUser[indexPathRow] as! NSDictionary
+            destinationVC.nameChatUser = (user.objectForKey("firstname") as! String).uppercaseString
             destinationVC.userIdTarget = String(format:"%0.f", user["id"]!.doubleValue)
         }
     }

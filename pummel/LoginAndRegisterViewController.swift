@@ -136,7 +136,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         //let userEmail = "thongvivio@gmail.com" as! String
         //let userPassword = "12345678" as! String
         
-        Alamofire.request(.POST, "http://api.pummel.fit/api/login", parameters: ["email":userEmail, "password":userPassword])
+        Alamofire.request(.POST, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/login", parameters: ["email":userEmail, "password":userPassword])
             .responseJSON { response in
                 print("REQUEST-- \(response.request)")  // original URL request
                 print("RESPONSE-- \(response.response)") // URL response
@@ -149,16 +149,12 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     print("JSON: \(JSON)")
                     print("SAVE COOKIE")
                     self.updateCookies(response)
-                    let userInfo = JSON!.objectForKey("user")
-                    let currentId = String(format:"%0.f",userInfo!.objectForKey("id")!.doubleValue)
+                    let currentId = String(format:"%0.f",JSON!.objectForKey("userId")!.doubleValue)
                     let defaults = NSUserDefaults.standardUserDefaults()
                     defaults.setObject(true, forKey: "isLogined")
                     defaults.setObject(currentId, forKey: "currentId")
-                    let type = response.result.value?.objectForKey("user")?.objectForKey("type")
-                    if ((type?.isEqual("USER")) == true) {
-                        self.performSegueWithIdentifier("showClientSegue", sender: nil)
-                    }
-                    
+                    self.performSegueWithIdentifier("showClientSegue", sender: nil)
+        
                 }else {
                     
                     let alertController = UIAlertController(title: "Sign In Issues", message: "Please check email and password", preferredStyle: .Alert)
@@ -193,6 +189,11 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBAction func clickSignupAction(sender:UIButton!) {
         if !(self.checkRuleInputData())
         {
+            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            activityView.center = self.view.center
+            activityView.startAnimating()
+            self.view.addSubview(activityView)
+            
             let name = self.signupVC.nameTF.text
             let userEmail = self.signupVC.emailTF.text
             let userPassword = self.signupVC.passwordTF.text
@@ -206,7 +207,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             }
             var lastname = ""
             if fullNameArr.count >= 2 {
-                for var i = 1; i < fullNameArr.count; i++ {
+                for i in 1 ..< fullNameArr.count {
                     lastname.appendContentsOf(fullNameArr[i])
                     lastname.appendContentsOf(" ")
                 }
@@ -214,73 +215,137 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 lastname = " "
             }
             
-            Alamofire.request(.POST, "http://api.pummel.fit/api/register", parameters: ["type":"USER", "email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
+            Alamofire.request(.POST, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/register", parameters: ["email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
                 .responseJSON { response in
                     print("REQUEST-- \(response.request)")  // original URL request
                     print("RESPONSE-- \(response.response)") // URL response
                     print("DATA-- \(response.data)")     // server data
                     print("RESULT-- \(response.result)")   // result of response serialization
                     print("RESULT CODE -- \(response.response?.statusCode)")
-                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
                     if response.response?.statusCode == 200 {
                         let JSON = response.result.value
-                        let accessToken = JSON!.objectForKey("accessToken") as! NSDictionary
-                        let currentId = String(format:"%0.f",accessToken.objectForKey("id")!.doubleValue)
-                        print("JSON: \(JSON)")
-                        if (self.cameraProfileIconIMV.hidden) {
-                            var prefix = "http://api.pummel.fit/api/users/"
-                            prefix.appendContentsOf(currentId)
-                            prefix.appendContentsOf("/photos")
-                            print(prefix)
-                            var parameters = [String:AnyObject]()
-                            parameters = ["userId":currentId]
-                            Alamofire.upload(.POST, prefix, multipartFormData: {
-                                multipartFormData in
-                                multipartFormData.appendBodyPart(data: self.imageData, name: "image", fileName: self.filename, mimeType:self.type)
-                                for (key, value) in parameters {
-                                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                                }
-                                }, encodingCompletion: {
-                                    encodingResult in
+                        
+                        
+                        //LOGIN
+                        
+                        Alamofire.request(.POST, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/login", parameters: ["email":userEmail!, "password":userPassword!])
+                            .responseJSON { response in
+                                print("REQUEST-- \(response.request)")  // original URL request
+                                print("RESPONSE-- \(response.response)") // URL response
+                                print("DATA-- \(response.data)")     // server data
+                                print("RESULT-- \(response.result)")   // result of response serialization
+                                
+                                if response.response?.statusCode == 200 {
+                                    //TODO: Save access token here
+                                    let JSON = response.result.value
+                                    print("JSON: \(JSON)")
+                                    print("SAVE COOKIE")
+                                    self.updateCookies(response)
+                                    let currentId = String(format:"%0.f",JSON!.objectForKey("userId")!.doubleValue)
+                                    let defaults = NSUserDefaults.standardUserDefaults()
+                                    defaults.setObject(true, forKey: "isLogined")
+                                    defaults.setObject(currentId, forKey: "currentId")
                                     
-                                    switch encodingResult {
-                                    case .Success(let upload, _, _):
-                                        let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
-                                        
-                                        
-                                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                                            // ...
-                                        }
-                                        alertController.addAction(OKAction)
-                                        self.presentViewController(alertController, animated: true) {
-                                            // ...
-                                        }
-                                    case .Failure(let encodingError):
-                                        let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully, but image profile isn't updated, let do it later", preferredStyle: .Alert)
-                                        
-                                        
-                                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                                            // ...
-                                        }
-                                        alertController.addAction(OKAction)
-                                        self.presentViewController(alertController, animated: true) {
-                                            // ...
-                                        }
+                                    
+                                    if (self.cameraProfileIconIMV.hidden) {
+                                        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+                                        let defaults = NSUserDefaults.standardUserDefaults()
+                                        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+                                        prefix.appendContentsOf("/photos")
+                                        var parameters = [String:AnyObject]()
+                                        parameters = ["userId":defaults.objectForKey("currentId") as! String, "profilePic": "0"]
+                                        Alamofire.upload(
+                                            .POST,
+                                            prefix,
+                                            multipartFormData: { multipartFormData in
+                                                multipartFormData.appendBodyPart(data: self.imageData, name: "file",
+                                                    fileName:self.filename, mimeType:self.type)
+                                                for (key, value) in parameters {
+                                                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                                                }
+                                            },
+                                            encodingCompletion: { encodingResult in
+                                                switch encodingResult {
+                                                case .Success(let upload, _, _):
+                                                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                                                        dispatch_async(dispatch_get_main_queue()) {
+                                                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                                                            //progress(percent: percent)
+                                                            print(percent)
+                                                        }
+                                                    }
+                                                    upload.validate()
+                                                    upload.responseJSON { response in
+                                                        if response.result.error != nil {
+                                                            activityView.stopAnimating()
+                                                            activityView.removeFromSuperview()
+                                                            let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully, but image profile isn't updated, let do it later", preferredStyle: .Alert)
+                                                            
+                                                            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                                                self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                                                            }
+                                                            alertController.addAction(OKAction)
+                                                            self.presentViewController(alertController, animated: true) {
+                                                                // ...
+                                                            }
+                                                        } else {
+                                                            activityView.stopAnimating()
+                                                            activityView.removeFromSuperview()
+                                                            self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                                                        }
+                                                    }
+                                                    
+                                                case .Failure(let encodingError):
+                                                    
+                                                    print(encodingError)
+                                                    activityView.stopAnimating()
+                                                    activityView.removeFromSuperview()
+                                                    let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully, but image profile isn't updated, let do it later", preferredStyle: .Alert)
+                                                    
+                                                    
+                                                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                                        // ...
+                                                        self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                                                    }
+                                                    alertController.addAction(OKAction)
+                                                    self.presentViewController(alertController, animated: true) {
+                                                        // ...
+                                                    }
+                                                }
+                                            }
+                                        )
+                                    } else {
+                                        // REGISTER OK, SIGNIN OK
+                                        activityView.stopAnimating()
+                                        activityView.removeFromSuperview()
+
+                                        self.updateCookies(response)
+                                        let currentId = String(format:"%0.f",JSON!.objectForKey("userId")!.doubleValue)
+                                        let defaults = NSUserDefaults.standardUserDefaults()
+                                        defaults.setObject(true, forKey: "isLogined")
+                                        defaults.setObject(currentId, forKey: "currentId")
+                                        self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                     }
-                            })
-                        } else {
-                            let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully", preferredStyle: .Alert)
-                            
-                            
-                            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                                // ...
-                            }
-                            alertController.addAction(OKAction)
-                            self.presentViewController(alertController, animated: true) {
-                                // ...
-                            }
+                                }else {
+                                    // REGISTER OK, BUT CAN'T SIGN IN
+                                    let alertController = UIAlertController(title: "Sign In Issues", message: "Register sucessfully, but can't sign it automatically. Please sign in again", preferredStyle: .Alert)
+                                    
+                                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                        activityView.stopAnimating()
+                                        activityView.removeFromSuperview()
+                                        self.isShowLogin = true
+                                        self.updateUI()
+                                    }
+                                    alertController.addAction(OKAction)
+                                    self.presentViewController(alertController, animated: true) {
+                                        // ...
+                                    }
+                                }
                         }
+                       
                     } else {
+                        activityView.stopAnimating()
+                        activityView.removeFromSuperview()
                         let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)
                         
                         
@@ -324,19 +389,34 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.profileIMV.contentMode = .ScaleAspectFill
             self.profileIMV.image = pickedImage
-            self.cameraProfileIconIMV.hidden = true
+            
            
             let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
             if assetPath.absoluteString.hasSuffix("JPG") {
-                type = "image/jpg"
-                filename = "file.jpg"
+                type = "image/jpeg"
+                filename = "imagefile.jpeg"
                 imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
-            } else {
+                self.cameraProfileIconIMV.hidden = true
+            } else if assetPath.absoluteString.hasSuffix("PNG") {
                 type = "image/png"
-                filename = "file.png"
+                filename = "imagefile.png"
                 imageData = UIImagePNGRepresentation(pickedImage)
+                self.cameraProfileIconIMV.hidden = true
+            } else {
+                dispatch_async(dispatch_get_main_queue(),{
+                    //Your main thread code goes in here
+                    let alertController = UIAlertController(title: "Upload message issue", message: "Please choose jpeg or png file", preferredStyle: .Alert)
+                    
+                    
+                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                })
             }
-
         }
         
         dismissViewControllerAnimated(true, completion: nil)
@@ -365,6 +445,9 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     func keyboardWillHide(notification: NSNotification) {
         if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 0
+        }
+        if (self.isShowLogin == true && self.loginVC.emailTF.text != "" && self.loginVC.passwordTF.text != "") {
+            self.clickSigninAction(self.loginBT)
         }
     }
     

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class CoachProfileViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
@@ -14,7 +15,8 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var medIndicatorView: UIView!
     @IBOutlet weak var bigIndicatorView: UIView!
     @IBOutlet weak var bigBigIndicatorView: UIView!
-    
+    @IBOutlet weak var scrollView: UIScrollView!
+
     @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var connectV : UIView!
     @IBOutlet weak var connectBT : UIView!
@@ -28,6 +30,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var aboutFlowLayout: FlowLayout!
     @IBOutlet var aboutHeightDT: NSLayoutConstraint!
     @IBOutlet var interestHeightDT: NSLayoutConstraint!
+    @IBOutlet var scrollHeightConstraint: NSLayoutConstraint!
     @IBOutlet var backBTDT: NSLayoutConstraint!
     @IBOutlet var aboutShowBTDT: NSLayoutConstraint!
     @IBOutlet weak var aboutV: UIView!
@@ -37,15 +40,14 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var aboutShowBT: UIButton!
     @IBOutlet weak var titleAboutLB: UILabel!
     @IBOutlet weak var backBT: UIButton!
-    
     var oldPositionAboutV: CGFloat!
     var statusBarDefault: Bool!
-
+    var coachDetail: NSDictionary!
    
-    let TAGS = ["Running", "Nutrition", "Weight Training"]
     var sizingCell: TagCell?
     var tags = [Tag]()
 
+    var arrayPhotos: NSArray = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,26 +75,61 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.aboutLB.font = UIFont(name: "Montserrat-Regular", size: 11)
         self.aboutNameLB.font = UIFont(name: "Montserrat-Regular", size: 11)
         self.titleAboutLB.font = UIFont(name: "Montserrat-Regular", size: 13)
-        self.titleAboutLB.hidden = true
+        self.titleAboutLB.text = (self.coachDetail["firstname"] as! String).uppercaseString
         self.avatarIMV.layer.cornerRadius = 125/2
         self.avatarIMV.clipsToBounds = true
-        for name in TAGS {
+        let imageLink = coachDetail["imageUrl"] as! String
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+        prefix.appendContentsOf(imageLink)
+        let postfix = "?width=".stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString("&height=").stringByAppendingString(avatarIMV.frame.size.width.description)
+        prefix.appendContentsOf(postfix)
+        Alamofire.request(.GET, prefix)
+            .responseImage { response in
+                let imageRes = response.result.value! as UIImage
+                self.avatarIMV.image = imageRes
+        }
+
+        let coachListTags = coachDetail["tags"] as! NSArray
+        self.tags.removeAll()
+        for i in 0 ..< coachListTags.count {
+            let tagContent = coachListTags[i] as! NSDictionary
             let tag = Tag()
-            tag.name = name
+            tag.name = tagContent["title"] as? String
             self.tags.append(tag)
         }
         
         self.interestCollectionView.delegate = self
         self.interestCollectionView.dataSource = self
+        let flow = interestCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        flow.minimumInteritemSpacing = 0
+        flow.minimumLineSpacing = 0
         let cellNib = UINib(nibName: "TagCell", bundle: nil)
         self.interestCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: "TagCell")
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
         self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
         self.interestCollectionView.backgroundColor = UIColor.clearColor()
         self.aboutCollectionView.backgroundColor = UIColor.clearColor()
-        self.aboutCollectionView.delegate = self
-        self.aboutCollectionView.dataSource = self
         self.statusBarDefault = false
+        
+        getListImage()
+    }
+    
+    func getListImage() {
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        prefix.appendContentsOf(String(format:"%0.f", coachDetail["id"]!.doubleValue))
+        prefix.appendContentsOf("/photos")
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                print(JSON)
+                self.arrayPhotos = JSON as! NSArray
+                self.aboutCollectionView.delegate = self
+                self.aboutCollectionView.dataSource = self
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -100,7 +137,14 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        aboutHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + aboutHeightDT.constant)
+        self.scrollView.scrollEnabled = true
+    }
+    
+    
     @IBAction func goBackToResult(sender:UIButton) {
         self.dismissViewControllerAnimated(true) { 
             print("goBackToResult")
@@ -109,6 +153,15 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     
     @IBAction func goConnection(sender:UIButton) {
         self.performSegueWithIdentifier("goConnect", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == "goConnect")
+        {
+            let destimation = segue.destinationViewController as! ConnectViewController
+            destimation.coachDetail = coachDetail
+            destimation.isFromProfile = true
+        }
     }
 
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -122,8 +175,12 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBAction func expandInterest(sender:UIButton) {
         if (self.interestHeightDT.constant == 50) {
             self.interestHeightDT.constant = 128
+            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + aboutHeightDT.constant)
+
         } else {
             self.interestHeightDT.constant = 50
+            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + aboutHeightDT.constant)
+
         }
     }
     
@@ -150,6 +207,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
             self.titleAboutLB.hidden = false
             self.statusBarDefault = true
             self.setNeedsStatusBarAppearanceUpdate()
+            
         } else {
             self.statusBarDefault = false
             self.setNeedsStatusBarAppearanceUpdate()
@@ -171,7 +229,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         if (collectionView == self.interestCollectionView) {
             return tags.count
         } else {
-            return 10
+            return arrayPhotos.count
         }
     }
     
@@ -213,7 +271,16 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-       cell.imageCell.image = UIImage(named: "kateupon.jpg")
+            var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+            let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
+            let postfix = "?width=".stringByAppendingString((self.view.frame.size.width/2).description).stringByAppendingString("&height=").stringByAppendingString((self.view.frame.size.width/2).description)
+            var link = photo.objectForKey("imageUrl") as! String
+            link.appendContentsOf(postfix)
+            prefix.appendContentsOf(link)
+            Alamofire.request(.GET, prefix)
+                .responseImage { response in
+                    let imageRes = response.result.value! as UIImage
+                    cell.imageCell.image = imageRes
+            }
     }
-
 }

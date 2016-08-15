@@ -19,6 +19,8 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.emailTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
+
         self.passwordTF.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])

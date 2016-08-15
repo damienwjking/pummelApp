@@ -11,14 +11,21 @@ import RSKGrowingTextView
 import Alamofire
 
 class ChatMessageViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, RSKGrowingTextViewDelegate {
-    var nameChatUser : NSString!
+    var nameChatUser : String!
     
     @IBOutlet var textBox: RSKGrowingTextView!
     @IBOutlet var backButton: UIButton!
     @IBOutlet var chatTB: UITableView!
+    @IBOutlet var cursorView: UIView!
+    @IBOutlet var leftMarginLeftChatCT: NSLayoutConstraint!
     @IBOutlet var chatTBDistantCT: NSLayoutConstraint!
-    var userIdTarget: NSString!
-    var messageId: NSString!
+    @IBOutlet var avatarTextBox: UIImageView!
+    
+    var typeCoach : Bool = false
+    var coachName: String!
+    var coachId: String!
+    var userIdTarget: String!
+    var messageId: String!
     var arrayChat: NSArray!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +51,52 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.None
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(ChatMessageViewController.handleTap(_:)))
         self.chatTB.addGestureRecognizer(recognizer)
-        self.getArrayChat()
+        avatarTextBox.layer.cornerRadius = 20
+        avatarTextBox.clipsToBounds = true
+        avatarTextBox.hidden = true
+        self.getImageAvatarTextBox()
+       
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+         self.getArrayChat()
+    }
+    
+    func getImageAvatarTextBox() {
+        
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+        prefix.appendContentsOf("/photos")
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                print(JSON)
+                let listPhoto = JSON as! NSArray
+                if (listPhoto.count >= 1) {
+                    let photo = listPhoto[0] as! NSDictionary
+                    var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+                    link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
+                    link.appendContentsOf("?width=80&height=80")
+                    
+                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                        self.avatarTextBox.image = imageRes
+                    } else {
+                        Alamofire.request(.GET, link)
+                            .responseImage { response in
+                                let imageRes = response.result.value! as UIImage
+                                self.avatarTextBox.image = imageRes
+                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                        }
+                    }
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
+
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
@@ -52,11 +104,13 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func getArrayChat() {
-        var prefix = "http://api.pummel.fit/api/user/conversations/" as String
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+        prefix.appendContentsOf("/conversations/")
         if (messageId != nil) {
             prefix.appendContentsOf(self.messageId as String)
             prefix.appendContentsOf("/messages")
-            print(prefix)
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -72,19 +126,24 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func setNavigationTitle() {
-        var prefix = "http://api.pummel.fit/api/users/" as String
-        prefix.appendContentsOf(self.userIdTarget as String)
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                print(JSON)
-                let userInfo = JSON as! NSDictionary
-                var name = userInfo.objectForKey("firstname") as! String
-                name.appendContentsOf(" ")
-                name.appendContentsOf(userInfo.objectForKey("lastname") as! String)
-                self.navigationItem.title = name.uppercaseString
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
+        if (self.typeCoach == true) {
+            self.navigationItem.title = coachName
+        } else {
+            if (nameChatUser != nil) {
+                self.navigationItem.title = nameChatUser
+            } else {
+                var prefixUser = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+                prefixUser.appendContentsOf(userIdTarget)
+                Alamofire.request(.GET, prefixUser)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let userInfo = JSON as! NSDictionary
+                        let name = userInfo.objectForKey("firstname") as! String
+                        self.navigationItem.title = name.uppercaseString
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
             }
         }
     }
@@ -100,6 +159,11 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y += keyboardSize.height
         }
+        if (self.textBox.text == "") {
+            self.cursorView.hidden = false
+            self.avatarTextBox.hidden = true
+            self.leftMarginLeftChatCT.constant = 15
+        }
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -108,6 +172,11 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         return true
     }
     
+    func textViewDidBeginEditing(textView: UITextView) {
+        self.cursorView.hidden = true
+        self.avatarTextBox.hidden = false
+        self.leftMarginLeftChatCT.constant = 40
+    }
     
     // Table Delegate
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -129,7 +198,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
             let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageHeaderTableViewCell", forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell
-                var prefix = "http://api.pummel.fit/api/users/" as String
+                var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
                 prefix.appendContentsOf(userIdTarget as String)
                 prefix.appendContentsOf("/photos")
                 Alamofire.request(.GET, prefix)
@@ -138,103 +207,169 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                             let listPhoto = JSON as! NSArray
                             if (listPhoto.count >= 1) {
                                 let photo = listPhoto[listPhoto.count - 1] as! NSDictionary
-                                var link = photo.objectForKey("url") as! String
+                                var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+                                link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
                                 link.appendContentsOf("?width=80&height=80")
-                                print(link)
-                                Alamofire.request(.GET, link)
-                                    .responseImage { response in
-                                        let imageRes = response.result.value! as UIImage
-                                        cell.avatarIMV.image = imageRes
+                                if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                                    let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                                    cell.avatarIMV.image = imageRes
+                                } else {
+                                    Alamofire.request(.GET, link)
+                                        .responseImage { response in
+                                            let imageRes = response.result.value! as UIImage
+                                            cell.avatarIMV.image = imageRes
+                                            NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                    }
                                 }
+                                
                         }
                     case .Failure(let error):
                         print("Request failed with error: \(error)")
                     }
             }
-            var prefixName = "http://api.pummel.fit/api/users/" as String
-            prefixName.appendContentsOf(self.userIdTarget as String)
-            Alamofire.request(.GET, prefixName)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    print(JSON)
-                    let userInfo = JSON as! NSDictionary
-                    let name = userInfo.objectForKey("firstname") as! String
-                    cell.nameChatUserLB.text = name.uppercaseString
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
+            if (typeCoach == true) {
+                cell.nameChatUserLB.text = coachName
+            } else {
+                if (nameChatUser != nil) {
+                    cell.nameChatUserLB.text = nameChatUser
+                } else {
+                    var prefixUser = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+                    prefixUser.appendContentsOf(userIdTarget)
+                    Alamofire.request(.GET, prefixUser)
+                        .responseJSON { response in switch response.result {
+                        case .Success(let JSON):
+                            let userInfo = JSON as! NSDictionary
+                            let name = userInfo.objectForKey("firstname") as! String
+                            cell.nameChatUserLB.text = name.uppercaseString
+                        case .Failure(let error):
+                            print("Request failed with error: \(error)")
+                            }
                     }
+                }
+
             }
+            
             cell.timeLB.hidden = true
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             return cell
         } else {
-//            if indexPath.row == 1 {
-//                 let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageWithoutImageTableViewCell", forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
-//                if (user4 == true)
-//                {
-//                    cell.avatarIMV.image = UIImage(named: "kate.jpg")
-//                    cell.nameLB.text = message.user.name as String
-//                    cell.messageLB.text = message.message as String
-//                } else {
-//                    cell.avatarIMV.image = UIImage(named: "kate.jpg")
-//                    cell.nameLB.text = "KATE" as String
-//                    cell.messageLB.text = "A lorum is a male genital piercing, placed horizontally on the underside of the penis at its base, where the penis meets the scrotum.Are your height constraints for the cell(s) setup correctly, i have not seen any issues with this in the wild using the Xcode 6.3 version. Even have a sample project on github with this working." as String
-//                }
-//                return cell
-//            } else {
-//                let cellImage = tableView.dequeueReusableCellWithIdentifier("ChatMessageImageTableViewCell", forIndexPath: indexPath) as! ChatMessageImageTableViewCell
-//                cellImage.avatarIMV.image = UIImage(named: "kate.jpg")
-//                cellImage.nameLB.text = "KATE" as String
-//                cellImage.messageLB.text = "Hey Adam, Thanks for connecting with me! If you could please let me know what you’re looking to improve with a personal trainer and I can get to helping you out." as String
-//                cellImage.photoIMW.image = UIImage(named: "kate.jpg")
-//                return cellImage
-//            }
-//            
-           let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageWithoutImageTableViewCell", forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
             let num = arrayChat.count
             let message = arrayChat[num-indexPath.row] as! NSDictionary
-            let userId =  String(format:"%0.f",message.objectForKey("userId")!.doubleValue)
-            var prefix = "http://api.pummel.fit/api/users/" as String
-            prefix.appendContentsOf(userId)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    print(prefix)
-                    
-                    print(JSON)
-                    let userInfo = JSON as! NSDictionary
-                    let name = userInfo.objectForKey("firstname") as! String
-                    cell.nameLB.text = name.uppercaseString
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
+            print (message)
+            if (message["imageUrl"] is NSNull) {
+                let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageWithoutImageTableViewCell", forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
+                
+                
+                var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+                prefix.appendContentsOf(String(format:"%0.f",message["userId"]!.doubleValue))
+                Alamofire.request(.GET, prefix)
+                        .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                            let userInfo = JSON as! NSDictionary
+                            let name = userInfo.objectForKey("firstname") as! String
+                            cell.nameLB.text = name.uppercaseString
+                    case .Failure(let error):
+                            print("Request failed with error: \(error)")
                     }
-            }
-            prefix.appendContentsOf("/photos")
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let listPhoto = JSON as! NSArray
-                    if (listPhoto.count >= 1) {
-                        let photo = listPhoto[0] as! NSDictionary
-                        var link = photo["url"] as! String
-                        link.appendContentsOf("?width=80&height=80")
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
+                }
+            
+                
+                prefix.appendContentsOf("/photos")
+                Alamofire.request(.GET, prefix)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let listPhoto = JSON as! NSArray
+                        if (listPhoto.count >= 1) {
+                            let photo = listPhoto[0] as! NSDictionary
+                            var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+                            link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
+                            link.appendContentsOf("?width=80&height=80")
+                            if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                                let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
                                 cell.avatarIMV.image = imageRes
+                            } else {
+                                Alamofire.request(.GET, link)
+                                    .responseImage { response in
+                                        let imageRes = response.result.value! as UIImage
+                                        cell.avatarIMV.image = imageRes
+                                        NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                }
+                            }
                         }
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
-            }
-            if (message.objectForKey("text") == nil) {
-                cell.messageLB.text = ""
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
+                
+                if (message.objectForKey("text") == nil) {
+                    cell.messageLB.text = ""
+                } else {
+                    cell.messageLB.text = message.objectForKey("text") as? String
+                }
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                return cell
             } else {
-                cell.messageLB.text = message.objectForKey("text") as? String
+                let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageImageTableViewCell", forIndexPath: indexPath) as! ChatMessageImageTableViewCell
+                
+                var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+                link.appendContentsOf(message.objectForKey("imageUrl") as! String)
+                link.appendContentsOf("?width=320&height=320")
+                print(link)
+                Alamofire.request(.GET, link)
+                    .responseImage { response in
+                        let imageRes = response.result.value! as UIImage
+                       cell.photoIMW.image = imageRes
+                }
+
+                
+                var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+                prefix.appendContentsOf(String(format:"%0.f",message["userId"]!.doubleValue))
+                Alamofire.request(.GET, prefix)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let userInfo = JSON as! NSDictionary
+                        let name = userInfo.objectForKey("firstname") as! String
+                        cell.nameLB.text = name.uppercaseString
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
+                
+                prefix.appendContentsOf("/photos")
+                Alamofire.request(.GET, prefix)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let listPhoto = JSON as! NSArray
+                        if (listPhoto.count >= 1) {
+                            let photo = listPhoto[0] as! NSDictionary
+                            var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+                            link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
+                            link.appendContentsOf("?width=80&height=80")
+                            if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                                let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                                cell.avatarIMV.image = imageRes
+                            } else {
+                                Alamofire.request(.GET, link)
+                                    .responseImage { response in
+                                        let imageRes = response.result.value! as UIImage
+                                        cell.avatarIMV.image = imageRes
+                                        NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                }
+                            }
+                        }
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
+
+                if (message.objectForKey("text") == nil) {
+                    cell.messageLB.text = ""
+                } else {
+                    cell.messageLB.text = message.objectForKey("text") as? String
+                }
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                return cell
             }
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-            return cell
         }
     }
     
@@ -268,10 +403,32 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         performSegueWithIdentifier("sendPhoto", sender: nil)
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == "sendPhoto")
+        {
+            let destinationVC = segue.destinationViewController as! SendPhotoViewController
+            destinationVC.messageId = self.messageId
+            destinationVC.typeCoach = self.typeCoach
+            destinationVC.coachId = self.coachId
+            destinationVC.userIdTarget = self.userIdTarget
+        }
+    }
+    
     func sendMessage() {
+        
         let defaults = NSUserDefaults.standardUserDefaults()
-        let values = [userIdTarget as String, defaults.objectForKey("currentId") as! String]
-        Alamofire.request(.POST, "http://api.pummel.fit/api/user/conversations/", parameters: ["userIds":values])
+        let values : [String]
+        
+        if (self.typeCoach == true) {
+            values = [coachId]
+        } else {
+            values = [userIdTarget as String]
+        }
+        
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+        prefix.appendContentsOf("/conversations/")
+        Alamofire.request(.POST, prefix, parameters: ["userId":defaults.objectForKey("currentId") as! String, "userIds":values])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value
@@ -281,16 +438,21 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                     //Add message to converstaton
                     self.messageId = conversationId
                     self.addMessageToExistConverstation()
+                } else {
+                    print(response.response?.statusCode)
                 }
         }
+        
     }
     
     func addMessageToExistConverstation(){
-        var prefix = "http://api.pummel.fit/api/user/conversations/" as String
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
+        prefix.appendContentsOf("/conversations/")
         prefix.appendContentsOf(self.messageId as String)
         prefix.appendContentsOf("/messages")
-        print(prefix)
-        Alamofire.request(.POST, prefix, parameters: ["conversationId":self.messageId, "text":textBox.text])
+        Alamofire.request(.POST, prefix, parameters: ["conversationId":self.messageId, "text":textBox.text, "file":"nodata".dataUsingEncoding(NSUTF8StringEncoding)!])
             .responseJSON { response in
                 print(response.response?.statusCode)
                 if response.response?.statusCode == 200 {
@@ -323,6 +485,5 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         }
         return data
     }
-
 }
 

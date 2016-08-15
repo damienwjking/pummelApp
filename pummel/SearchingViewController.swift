@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import Alamofire
 
 class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -40,9 +41,10 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     
     @IBOutlet var map: MKMapView!
     
+    var gender: String!
+    var tagIdsArray: NSArray!
     var locationManager: CLLocationManager!
     var stopAnimation: Bool!
-    
     let orangeColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)
     
     @IBOutlet var backgroundLogo : UIImageView!
@@ -140,22 +142,35 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             locationManager.startUpdatingLocation()
         }
         
+        self.stopAnimation = false
+        
         self.animationIndicator()
         
         let seconds = 9.0
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-            self.stopAnimation = true
-            
-            let presentingViewController = self.presentingViewController
-            self.dismissViewControllerAnimated(false, completion: {
-                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-                let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                findVC.showLetUsHelp = false
-                presentingViewController!.dismissViewControllerAnimated(true, completion: {})
-            })
+                self.stopAnimation = true
         })
+        let secondsLocation = 6.0
+        let delayLocation = secondsLocation * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+        let dispatchTimeLocation = dispatch_time(DISPATCH_TIME_NOW, Int64(delayLocation))
+        dispatch_after(dispatchTimeLocation, dispatch_get_main_queue(), {
+            if (Int(arc4random_uniform(3) + 1) == 1) {
+                self.firstLocationView.hidden = false
+                self.thirdLocationView.hidden = false
+            } else if (Int(arc4random_uniform(3) + 1) == 2) {
+                self.secondLocationView.hidden = false
+                self.thirdLocationView.hidden = false
+            } else {
+                self.firstLocationView.hidden = false
+                self.thirdLocationView.hidden = false
+                self.fourthLocationView.hidden = false
+                self.secondLocationView.hidden = false
+            }
+        })
+        
+        self.search()
     }
     
     func animationIndicator() {
@@ -212,10 +227,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.005))
         
         self.map.setRegion(region, animated: true)
-        firstLocationView.hidden = false
-        secondLocationView.hidden = false
-        thirdLocationView.hidden = false
-        fourthLocationView.hidden = false
+        
     }
     
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
@@ -226,5 +238,49 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+    }
+    
+    func search() {
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/coaches/search"
+        prefix.appendContentsOf("?gender=".stringByAppendingString(gender))
+        for id in tagIdsArray {
+            prefix.appendContentsOf("&tagIds=".stringByAppendingString(id as! String))
+        }
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in
+                print (response.result.value)
+                if response.response?.statusCode == 200 {
+                    if (self.stopAnimation == true) {
+                        let presentingViewController = self.presentingViewController
+                        self.dismissViewControllerAnimated(false, completion: {
+                            let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
+                            let findVC = tabbarVC.viewControllers![2] as! FindViewController
+                            findVC.arrayResult = response.result.value as! NSArray
+                            findVC.viewDidLayoutSubviews()
+                            findVC.showLetUsHelp = false
+                             findVC.viewDidLayoutSubviews()
+                            presentingViewController!.dismissViewControllerAnimated(true, completion: {})
+                        })
+                    } else {
+                        let secondsWait = 6.0
+                        let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+                        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                            let presentingViewController = self.presentingViewController
+                            self.dismissViewControllerAnimated(false, completion: {
+                                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
+                                let findVC = tabbarVC.viewControllers![2] as! FindViewController
+                                findVC.arrayResult = response.result.value as! NSArray
+                                findVC.showLetUsHelp = false
+                                findVC.viewDidLayoutSubviews()
+                                presentingViewController!.dismissViewControllerAnimated(true, completion: {})
+                            })
+                        })
+                        
+                    }
+                } else {
+                    print(response)
+                }
+        }
     }
 }

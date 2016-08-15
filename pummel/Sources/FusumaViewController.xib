@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FusumaViewController" customModule="pummel" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FusumaViewController" customModule="Pummel" customModuleProvider="target">
             <connections>
                 <outlet property="cameraButton" destination="sCN-QB-mCu" id="tC3-i4-xpG"/>
                 <outlet property="cameraShotContainer" destination="CFH-FU-LPW" id="gvI-wh-cln"/>
@@ -36,9 +36,9 @@
                         <constraint firstAttribute="height" id="ef6-hG-yx4"/>
                     </constraints>
                     <inset key="contentEdgeInsets" minX="2" minY="2" maxX="2" maxY="2"/>
-                    <state key="normal" image="7ACECCBF-1CA5-4521-9E63-68964103257E"/>
-                    <state key="selected" image="7ACECCBF-1CA5-4521-9E63-68964103257E"/>
-                    <state key="highlighted" image="7ACECCBF-1CA5-4521-9E63-68964103257E"/>
+                    <state key="normal" image="6F2E9FFB-4F00-444D-9517-F89C3AB5F4CC"/>
+                    <state key="selected" image="6F2E9FFB-4F00-444D-9517-F89C3AB5F4CC"/>
+                    <state key="highlighted" image="6F2E9FFB-4F00-444D-9517-F89C3AB5F4CC"/>
                     <connections>
                         <action selector="libraryButtonPressed:" destination="-1" eventType="touchUpInside" id="4H9-TH-qO3"/>
                     </connections>
@@ -49,9 +49,9 @@
                         <constraint firstAttribute="height" id="7VV-4q-BRr"/>
                     </constraints>
                     <inset key="imageEdgeInsets" minX="2" minY="3" maxX="2" maxY="2"/>
-                    <state key="normal" image="8E735D1E-B697-40AD-805D-A753BDB0439A"/>
-                    <state key="selected" image="8E735D1E-B697-40AD-805D-A753BDB0439A"/>
-                    <state key="highlighted" image="8E735D1E-B697-40AD-805D-A753BDB0439A"/>
+                    <state key="normal" image="68315236-74A2-4EDA-AF4E-7893FE415BF5"/>
+                    <state key="selected" image="68315236-74A2-4EDA-AF4E-7893FE415BF5"/>
+                    <state key="highlighted" image="68315236-74A2-4EDA-AF4E-7893FE415BF5"/>
                     <connections>
                         <action selector="photoButtonPressed:" destination="-1" eventType="touchUpInside" id="798-LR-edY"/>
                     </connections>
@@ -90,7 +90,7 @@
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                            <state key="normal" title="CANCEL">
+                            <state key="normal" title="DONE">
                                 <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
@@ -159,7 +159,7 @@
         </view>
     </objects>
     <resources>
-        <image name="7ACECCBF-1CA5-4521-9E63-68964103257E" width="36" height="36">
+        <image name="68315236-74A2-4EDA-AF4E-7893FE415BF5" width="36" height="36">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -168,46 +168,46 @@ RkZSZXByZXNlbnRhdGlvboAGgAdPERw+TU0AKgAACigAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wH/Tv99/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A
-/4D/gP+A/4D/gP+A/4D/gP9+/07/AQAAAAAAAAAAAAAAAAAAAAAAAP8B/6//////////////////////
-////////////////////////////////////////////r/8BAAAAAAAAAAAAAAAAAAAAAP9O////////
-//////////////////////////////////////////////////////////////9NAAAAAAAAAAAAAAAA
-AAAAAP99//////////////////////////////////////////////////////////////////////99
-AAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////////////////////
-//////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////
-//////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////
-//////////////////////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////
-//////////////////////////////////////////////////////////////+AAAAAAAAAAAAAAAAA
-AAAAAP+A//////////////////////////////////////////////////////////////////////+A
-AAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////////////////////
-//////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////
-//////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////
-//////////////////////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////
-//////////////////////////////////////////////////////////////+AAAAAAAAAAAAAAAAA
-AAAAAP+A//////////////////////////////////////////////////////////////////////+A
-AAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////////Zv/V////////
-//////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////
-/5QAAP8q//X///////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////of/q
-///////////////H/wYAAAAA/2D///////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////
-/////////8L/BP88//n/////////6v8cAAAAAAAAAAD/oP////////////////+AAAAAAAAAAAAAAAAA
-AAAAAP+A///////////////m/xgAAAAA/2D///////z/QgAAAAAAAAAAAAD/Cv/V//////////////+A
-AAAAAAAAAAAAAAAAAAAAAP+A////////////+/88AAAAAAAAAAD/i////3gAAAAAAAAAAAAAAAAAAP8q
-//X///////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////cQAAAAAAAAAAAAD/Av9w/wEAAAAA
-AAAAAAAAAAAAAAAA/2D///////////+AAAAAAAAAAAAAAAAAAAAAAP+A/////////6oAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/oP////////+AAAAAAAAAAAAAAAAAAAAAAP+A///////W
-/wwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/Cv/V//////+AAAAAAAAAAAAAAAAA
-AAAAAP+A//////////////////////////////////////////////////////////////////////+A
-AAAAAAAAAAAAAAAAAAAAAP9+////////////////////////////////////////////////////////
-//////////////99AAAAAAAAAAAAAAAAAAAAAP9O////////////////////////////////////////
-//////////////////////////////9MAAAAAAAAAAAAAAAAAAAAAP8B/6//////////////////////
-////////////////////////////////////////////q/8BAAAAAAAAAAAAAAAAAAAAAAAA/wH/Tf99
-/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP99/0z/AQAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgEAAAMAAAABACQAAAEB
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/GP/d///////////////////////d/xf/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/w//0P//////////////////
+/////////8//Dv8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8I/8L/////
+////////////////////////////v/8H/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/B/+R/+//////
+////////////////////////////////////////////////////////////8f+R/wb/AP8A/wD/AP8A
+/wD/kf//////////////////////////////////////////////////////////////////////////
+/5H/AP8A/wD/AP8A/wD/7///////////////////////////////////////////////////////////
+/////////////////+//AP8A/wD/AP8A/wD/////////////////////////////////////////////
+////////////////////////////////////AP8A/wD/AP8A/wD/////////////////////////////
+////7/+r/4z/hv+o/+v/////////////////////////////////AP8A/wD/AP8A/wD/////////////
+///////////////q/2X/Bf8A/wD/AP8A/wX/Yf/p////////////////////////////AP8A/wD/AP8A
+/wD/////////////////////////1P8e/wD/AP8A/wD/AP8A/wD/AP8a/9P/////////////////////
+////AP8A/wD/AP8A/wD//////////////////////+r/Hv8A/wD/JP+R/8f/x/+Q/yL/AP8A/xv/6v//
+////////////////////AP8A/wD/AP8A/wD//////////////////////2X/AP8A/1H/9///////////
+//b/Tf8A/wD/Y///////////////////////AP8A/wD/AP8A/wD////////////////////v/wX/AP8k
+//f/////////////////9f8f/wD/Bf/r////////////////////AP8A/wD/AP8A/wD/////////////
+//////+r/wD/AP+R//////////////////////+L/wD/AP+q////////////////////AP8A/wD/AP8A
+/wD///////////////////+M/wD/AP/H///////////////////////C/wD/AP+H////////////////
+////AP8A/wD/AP8A/wD///////////////////+G/wD/AP/H///////////////////////C/wD/AP+I
+////////////////////AP8A/wD/AP8A/wD///////////////////+o/wD/AP+Q////////////////
+//////+J/wD/AP+r////////////////////AP8A/wD/AP8A/wD////////////////////r/wX/AP8i
+//b/////////////////8/8d/wD/Bf/s////////////////////AP8A/wD/AP8A/wD/////////////
+/////////2H/AP8A/03/9f////////////P/Sf8A/wD/Zf//////////////////////AP8A/wD/AP8A
+/wD//////////////////////+n/Gv8A/wD/H/+L/8L/wv+J/x3/AP8A/xz/6///////////////////
+////AP8A/wD/AP8A/wD/////////////////////////0/8b/wD/AP8A/wD/AP8A/wD/AP8c/9X/////
+////////////////////AP8A/wD/AP8A/wD////////////////////////////q/2P/Bf8A/wD/AP8A
+/wX/Zf/r////////////////////////////AP8A/wD/AP8A/wD/////////////////////////////
+////6/+q/4f/iP+r/+z/////////////////////////////////AP8A/wD/AP8A/wD/////////////
+////////////////////////////////////////////////////////////////////AP8A/wD/AP8A
+/wD/8f//////////////////////////////////////////////////////////////////////////
+/+//AP8A/wD/AP8A/wD/kf//////////////////////////////////////////////////////////
+/////////////////47/AP8A/wD/AP8A/wD/Bv+R/+//////////////////////////////////////
+////////////////////////////7/+O/wb/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
+/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wAADgEAAAMAAAABACQAAAEB
 AAMAAAABACQAAAECAAMAAAACAAgACAEDAAMAAAABAAEAAAEGAAMAAAABAAEAAAERAAQAAAABAAAACAES
 AAMAAAABAAEAAAEVAAMAAAABAAIAAAEWAAMAAAABACQAAAEXAAQAAAABAAAKIAEcAAMAAAABAAEAAAFS
 AAMAAAABAAIAAAFTAAMAAAACAAEAAYdzAAcAABFoAAAK1gAAAAAAABFoYXBwbAIAAABtbnRyR1JBWVhZ
@@ -293,7 +293,7 @@ lACWAJgAnQCgAKIApACmAKgArQDEAMYAyB0KHQ8dGh0jHTYdOh1FHU4dUx1bHV4dYx1yHXYdfR2FHZId
 lx2ZHZsdoB2oHasdsB24HbsdzR3QHdUAAAAAAAACAQAAAAAAAAA+AAAAAAAAAAAAAAAAAAAd1w
 </mutableData>
         </image>
-        <image name="8E735D1E-B697-40AD-805D-A753BDB0439A" width="36" height="36">
+        <image name="6F2E9FFB-4F00-444D-9517-F89C3AB5F4CC" width="36" height="36">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -302,46 +302,46 @@ RkZSZXByZXNlbnRhdGlvboAGgAdPERw+TU0AKgAACigAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/GP/d///////////////////////d/xf/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/w//0P//////////////////
-/////////8//Dv8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8I/8L/////
-////////////////////////////v/8H/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/B/+R/+//////
-////////////////////////////////////////////////////////////8f+R/wb/AP8A/wD/AP8A
-/wD/kf//////////////////////////////////////////////////////////////////////////
-/5H/AP8A/wD/AP8A/wD/7///////////////////////////////////////////////////////////
-/////////////////+//AP8A/wD/AP8A/wD/////////////////////////////////////////////
-////////////////////////////////////AP8A/wD/AP8A/wD/////////////////////////////
-////7/+r/4z/hv+o/+v/////////////////////////////////AP8A/wD/AP8A/wD/////////////
-///////////////q/2X/Bf8A/wD/AP8A/wX/Yf/p////////////////////////////AP8A/wD/AP8A
-/wD/////////////////////////1P8e/wD/AP8A/wD/AP8A/wD/AP8a/9P/////////////////////
-////AP8A/wD/AP8A/wD//////////////////////+r/Hv8A/wD/JP+R/8f/x/+Q/yL/AP8A/xv/6v//
-////////////////////AP8A/wD/AP8A/wD//////////////////////2X/AP8A/1H/9///////////
-//b/Tf8A/wD/Y///////////////////////AP8A/wD/AP8A/wD////////////////////v/wX/AP8k
-//f/////////////////9f8f/wD/Bf/r////////////////////AP8A/wD/AP8A/wD/////////////
-//////+r/wD/AP+R//////////////////////+L/wD/AP+q////////////////////AP8A/wD/AP8A
-/wD///////////////////+M/wD/AP/H///////////////////////C/wD/AP+H////////////////
-////AP8A/wD/AP8A/wD///////////////////+G/wD/AP/H///////////////////////C/wD/AP+I
-////////////////////AP8A/wD/AP8A/wD///////////////////+o/wD/AP+Q////////////////
-//////+J/wD/AP+r////////////////////AP8A/wD/AP8A/wD////////////////////r/wX/AP8i
-//b/////////////////8/8d/wD/Bf/s////////////////////AP8A/wD/AP8A/wD/////////////
-/////////2H/AP8A/03/9f////////////P/Sf8A/wD/Zf//////////////////////AP8A/wD/AP8A
-/wD//////////////////////+n/Gv8A/wD/H/+L/8L/wv+J/x3/AP8A/xz/6///////////////////
-////AP8A/wD/AP8A/wD/////////////////////////0/8b/wD/AP8A/wD/AP8A/wD/AP8c/9X/////
-////////////////////AP8A/wD/AP8A/wD////////////////////////////q/2P/Bf8A/wD/AP8A
-/wX/Zf/r////////////////////////////AP8A/wD/AP8A/wD/////////////////////////////
-////6/+q/4f/iP+r/+z/////////////////////////////////AP8A/wD/AP8A/wD/////////////
-////////////////////////////////////////////////////////////////////AP8A/wD/AP8A
-/wD/8f//////////////////////////////////////////////////////////////////////////
-/+//AP8A/wD/AP8A/wD/kf//////////////////////////////////////////////////////////
-/////////////////47/AP8A/wD/AP8A/wD/Bv+R/+//////////////////////////////////////
-////////////////////////////7/+O/wb/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A
-/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wAADgEAAAMAAAABACQAAAEB
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wH/Tv99/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A
+/4D/gP+A/4D/gP+A/4D/gP9+/07/AQAAAAAAAAAAAAAAAAAAAAAAAP8B/6//////////////////////
+////////////////////////////////////////////r/8BAAAAAAAAAAAAAAAAAAAAAP9O////////
+//////////////////////////////////////////////////////////////9NAAAAAAAAAAAAAAAA
+AAAAAP99//////////////////////////////////////////////////////////////////////99
+AAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////////////////////
+//////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////
+//////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////
+//////////////////////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////
+//////////////////////////////////////////////////////////////+AAAAAAAAAAAAAAAAA
+AAAAAP+A//////////////////////////////////////////////////////////////////////+A
+AAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////////////////////
+//////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////
+//////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////
+//////////////////////////////////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////
+//////////////////////////////////////////////////////////////+AAAAAAAAAAAAAAAAA
+AAAAAP+A//////////////////////////////////////////////////////////////////////+A
+AAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////////Zv/V////////
+//////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////////////////////////
+/5QAAP8q//X///////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////////////of/q
+///////////////H/wYAAAAA/2D///////////////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////
+/////////8L/BP88//n/////////6v8cAAAAAAAAAAD/oP////////////////+AAAAAAAAAAAAAAAAA
+AAAAAP+A///////////////m/xgAAAAA/2D///////z/QgAAAAAAAAAAAAD/Cv/V//////////////+A
+AAAAAAAAAAAAAAAAAAAAAP+A////////////+/88AAAAAAAAAAD/i////3gAAAAAAAAAAAAAAAAAAP8q
+//X///////////+AAAAAAAAAAAAAAAAAAAAAAP+A////////////cQAAAAAAAAAAAAD/Av9w/wEAAAAA
+AAAAAAAAAAAAAAAA/2D///////////+AAAAAAAAAAAAAAAAAAAAAAP+A/////////6oAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/oP////////+AAAAAAAAAAAAAAAAAAAAAAP+A///////W
+/wwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/Cv/V//////+AAAAAAAAAAAAAAAAA
+AAAAAP+A//////////////////////////////////////////////////////////////////////+A
+AAAAAAAAAAAAAAAAAAAAAP9+////////////////////////////////////////////////////////
+//////////////99AAAAAAAAAAAAAAAAAAAAAP9O////////////////////////////////////////
+//////////////////////////////9MAAAAAAAAAAAAAAAAAAAAAP8B/6//////////////////////
+////////////////////////////////////////////q/8BAAAAAAAAAAAAAAAAAAAAAAAA/wH/Tf99
+/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP+A/4D/gP99/0z/AQAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgEAAAMAAAABACQAAAEB
 AAMAAAABACQAAAECAAMAAAACAAgACAEDAAMAAAABAAEAAAEGAAMAAAABAAEAAAERAAQAAAABAAAACAES
 AAMAAAABAAEAAAEVAAMAAAABAAIAAAEWAAMAAAABACQAAAEXAAQAAAABAAAKIAEcAAMAAAABAAEAAAFS
 AAMAAAABAAIAAAFTAAMAAAACAAEAAYdzAAcAABFoAAAK1gAAAAAAABFoYXBwbAIAAABtbnRyR1JBWVhZ

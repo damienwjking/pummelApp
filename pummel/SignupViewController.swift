@@ -16,6 +16,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var dobTF : UITextField!
     @IBOutlet var genderTF : UITextField!
     @IBOutlet var signupBT : UIButton!
+    @IBOutlet var continuingLB : UILabel!
     @IBOutlet var signinDistantCT: NSLayoutConstraint!
     @IBOutlet var passwordAttentionIM: UIImageView!
     @IBOutlet var emailAttentionIM: UIImageView!
@@ -24,10 +25,13 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.nameTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.nameTF.autocorrectionType = UITextAutocorrectionType.No
         self.emailTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
         self.passwordTF.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.dobTF.font = UIFont(name: "Montserrat-Regular", size: 13)
         self.genderTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.continuingLB.font = UIFont(name: "Montserrat-Regular", size: 10)
        
         self.nameTF.attributedPlaceholder = NSAttributedString(string:"NAME",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
@@ -49,7 +53,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.emailAttentionIM.hidden = true
         self.dobAttentionIM.hidden = true
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:("dismissKeyboard"))
+        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(SignupViewController.dismissKeyboard)))
         self.view.userInteractionEnabled = true
         self.view.addGestureRecognizer(tapGestureRecognizer)
         
@@ -94,6 +98,16 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
                 self.passwordAttentionIM.hidden = false
                 self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
                     attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                let alertController = UIAlertController(title: "Password is weak", message: " Please try a combination of numbers and letters", preferredStyle: .Alert)
+                
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                    // ...
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+                
             } else {
                 self.passwordAttentionIM.hidden = true
                 self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
@@ -125,7 +139,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         datePickerView.datePickerMode = UIDatePickerMode.Date
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:"datePickerValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        datePickerView.addTarget(self, action:#selector(SignupViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
     }
     
     func datePickerValueChanged(sender:UIDatePicker) {

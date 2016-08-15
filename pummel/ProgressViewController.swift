@@ -30,7 +30,10 @@ class ProgressViewController: UIViewController {
         self.comingSoonTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 33)
         self.comingSoonDetailTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
         self.comingSoonDetailTF.layer.opacity = 0.69
+        self.tabBarController?.navigationItem.rightBarButtonItem = nil
+        self.tabBarController?.navigationItem.leftBarButtonItem = nil
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

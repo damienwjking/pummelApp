@@ -10,7 +10,7 @@
         <!--Get Started View Controller-->
         <scene sceneID="94P-az-hrg">
             <objects>
-                <viewController id="gvo-rD-sYg" customClass="GetStartedViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="gvo-rD-sYg" customClass="GetStartedViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="tET-Ey-Kzt"/>
                         <viewControllerLayoutGuide type="bottom" id="cpG-8b-F0r"/>
@@ -45,11 +45,13 @@
                                     </mask>
                                 </variation>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reach your goals with personal coach" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xc7-cd-nLp">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reach your goals with your own personal coach" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xc7-cd-nLp">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="305" id="I7i-bM-Mor"/>
-                                    <constraint firstAttribute="height" constant="20" id="sjH-jg-uJ1"/>
+                                    <constraint firstAttribute="height" constant="20" id="sjH-jg-uJ1">
+                                        <variation key="widthClass=compact" constant="50"/>
+                                    </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -245,7 +247,7 @@
         <!--Forgotten Password Controller-->
         <scene sceneID="UUy-q0-DJ5">
             <objects>
-                <viewController id="MgW-aR-1s5" customClass="ForgottenPasswordController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="MgW-aR-1s5" customClass="ForgottenPasswordController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="KN7-Su-uMB"/>
                         <viewControllerLayoutGuide type="bottom" id="7J2-Tl-ufE"/>
@@ -264,7 +266,7 @@
         <!--Get Started2 View Controller-->
         <scene sceneID="brX-k5-67l">
             <objects>
-                <viewController id="KQD-dZ-Lw2" customClass="GetStarted2ViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="KQD-dZ-Lw2" customClass="GetStarted2ViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="VSl-ff-fu3"/>
                         <viewControllerLayoutGuide type="bottom" id="ztM-sv-oZc"/>
@@ -344,11 +346,13 @@
                                     <segue destination="pQd-De-Zqp" kind="show" id="RUP-4r-3NB"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Matched to you, right on your area" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cIQ-SL-jkY">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Matched to you, based on your goals and location" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cIQ-SL-jkY">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="305" id="5ER-P9-M37"/>
-                                    <constraint firstAttribute="height" constant="20" id="LVo-gs-lYP"/>
+                                    <constraint firstAttribute="height" constant="20" id="LVo-gs-lYP">
+                                        <variation key="widthClass=compact" constant="50"/>
+                                    </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -505,7 +509,7 @@
         <!--Get Started3 View Controller-->
         <scene sceneID="Q1p-qO-NPo">
             <objects>
-                <viewController id="pQd-De-Zqp" customClass="GetStarted3ViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="pQd-De-Zqp" customClass="GetStarted3ViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4yP-JC-4jy"/>
                         <viewControllerLayoutGuide type="bottom" id="kEK-pt-4LA"/>
@@ -809,7 +813,7 @@
         <!--Login And Register View Controller-->
         <scene sceneID="jNA-Is-lGL">
             <objects>
-                <viewController id="syr-Jg-EOc" customClass="LoginAndRegisterViewController" customModule="pummel" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="syr-Jg-EOc" customClass="LoginAndRegisterViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Spc-f9-kKC"/>
                         <viewControllerLayoutGuide type="bottom" id="SkA-tq-xeG"/>
@@ -1238,7 +1242,7 @@
         <image name="tour3.jpg" width="375" height="667"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="yEe-tR-VD7"/>
         <segue reference="kai-YL-km3"/>
-        <segue reference="eh9-yR-QNQ"/>
     </inferredMetricsTieBreakers>
 </document>

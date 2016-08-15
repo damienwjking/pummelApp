@@ -5,8 +5,9 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SignupViewController" customModule="pummel" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SignupViewController" customModule="Pummel" customModuleProvider="target">
             <connections>
+                <outlet property="continuingLB" destination="tVn-Iw-j0A" id="3JF-xH-kgG"/>
                 <outlet property="dobAttentionIM" destination="Klh-28-tYm" id="i7f-dt-4DT"/>
                 <outlet property="dobTF" destination="BGb-1R-bwA" id="SGn-NB-KZS"/>
                 <outlet property="emailAttentionIM" destination="5ya-Yy-kwa" id="cRV-zi-Yxo"/>
@@ -38,7 +39,7 @@
                             <rect key="frame" x="-25" y="-30" width="97" height="30"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             <variation key="widthClass=compact" fixedFrame="YES">
                                 <rect key="frame" x="50" y="10" width="300" height="30"/>
                             </variation>
@@ -461,10 +462,30 @@
                         </mask>
                     </variation>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By continuing you accept our Terms of Service and Privacy Policy." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tVn-Iw-j0A">
+                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="43.5" id="se7-Ob-Rsu"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="se7-Ob-Rsu"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="se7-Ob-Rsu"/>
+                        </mask>
+                    </variation>
+                </label>
             </subviews>
             <color key="backgroundColor" red="0.17254901959999999" green="0.15686274510000001" blue="0.1529411765" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="AVJ-OF-n1J" secondAttribute="trailing" id="06x-WN-6bN"/>
+                <constraint firstItem="tVn-Iw-j0A" firstAttribute="top" secondItem="GBg-lN-fQE" secondAttribute="bottom" constant="5" id="1ms-pX-3fN"/>
                 <constraint firstItem="hNj-l6-QAQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="2iX-hI-fA4"/>
                 <constraint firstItem="fpJ-lf-ra8" firstAttribute="top" secondItem="hNj-l6-QAQ" secondAttribute="bottom" id="3XR-sP-CtR"/>
                 <constraint firstAttribute="trailing" secondItem="9qN-qL-FvK" secondAttribute="trailing" id="47A-j2-qQa"/>
@@ -485,8 +506,10 @@
                 <constraint firstAttribute="trailing" secondItem="J9c-Vw-SvK" secondAttribute="trailing" id="SDH-qr-TJ8"/>
                 <constraint firstItem="UKV-nB-zn6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="U17-7i-HnL"/>
                 <constraint firstAttribute="trailing" secondItem="hNj-l6-QAQ" secondAttribute="trailing" id="UdB-dY-KWZ"/>
+                <constraint firstAttribute="trailing" secondItem="tVn-Iw-j0A" secondAttribute="trailing" constant="30" id="Urd-fk-Gxy"/>
                 <constraint firstAttribute="trailing" secondItem="6DA-AO-JHW" secondAttribute="trailing" id="YLG-NJ-9z4"/>
                 <constraint firstItem="Gn0-cd-UWB" firstAttribute="top" secondItem="6DA-AO-JHW" secondAttribute="bottom" id="eQC-d2-blY"/>
+                <constraint firstItem="tVn-Iw-j0A" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="icm-NU-Rvk"/>
                 <constraint firstItem="9qN-qL-FvK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="it2-Ju-HtY"/>
                 <constraint firstItem="Gn0-cd-UWB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="jCV-Zh-iRK"/>
                 <constraint firstItem="6DA-AO-JHW" firstAttribute="top" secondItem="fpJ-lf-ra8" secondAttribute="bottom" id="jMv-mg-PQK"/>
@@ -512,11 +535,15 @@
                     <exclude reference="UKV-nB-zn6"/>
                     <exclude reference="GBg-lN-fQE"/>
                     <exclude reference="QVm-7a-cXo"/>
+                    <exclude reference="tVn-Iw-j0A"/>
                 </mask>
                 <mask key="constraints">
                     <exclude reference="FSQ-jr-s9p"/>
                     <exclude reference="H4Y-ic-iOb"/>
                     <exclude reference="l3p-Y9-phe"/>
+                    <exclude reference="1ms-pX-3fN"/>
+                    <exclude reference="Urd-fk-Gxy"/>
+                    <exclude reference="icm-NU-Rvk"/>
                     <exclude reference="KO3-bu-CU8"/>
                     <exclude reference="YLG-NJ-9z4"/>
                     <exclude reference="jMv-mg-PQK"/>
@@ -563,11 +590,15 @@
                     <include reference="UKV-nB-zn6"/>
                     <include reference="GBg-lN-fQE"/>
                     <include reference="QVm-7a-cXo"/>
+                    <include reference="tVn-Iw-j0A"/>
                 </mask>
                 <mask key="constraints">
                     <include reference="FSQ-jr-s9p"/>
                     <include reference="H4Y-ic-iOb"/>
                     <include reference="l3p-Y9-phe"/>
+                    <include reference="1ms-pX-3fN"/>
+                    <include reference="Urd-fk-Gxy"/>
+                    <include reference="icm-NU-Rvk"/>
                     <include reference="KO3-bu-CU8"/>
                     <include reference="YLG-NJ-9z4"/>
                     <include reference="jMv-mg-PQK"/>

@@ -129,7 +129,7 @@ public enum FusumaModeOrder {
         
         albumView.initialize()
         cameraView.initialize()
-        cameraView.goLibrary.addTarget(self, action:"libraryButtonPressed:", forControlEvents:UIControlEvents.TouchUpInside)
+        cameraView.goLibrary.addTarget(self, action:#selector(FusumaViewController.libraryButtonPressed(_:)), forControlEvents:UIControlEvents.TouchUpInside)
     }
 
     override public func prefersStatusBarHidden() -> Bool {
