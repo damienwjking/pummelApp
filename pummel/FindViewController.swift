@@ -19,11 +19,14 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     var swipeableView: ZLSwipeableView!
     var loadCardsFromXib = true
     var resultIndex = 0
+    var resultPage : Int = 0
     var sizingCell: TagCell?
     var tags = [Tag]()
     var coachDetail: NSDictionary!
-    var arrayResult : NSArray = []
+    var arrayResult : [NSDictionary] = []
     var arrayTags : NSArray!
+    var stopSearch: Bool = false
+    var firstLoad: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.showLetUsHelp = true
@@ -49,7 +52,9 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             self.performSegueWithIdentifier("goProfile", sender: self)
         }
         swipeableView.didDisappear = { view in
-            print("Did disappear swiping view")
+            if (self.resultIndex == self.arrayResult.count && self.resultIndex > 0 && self.stopSearch != true ) {
+                self.searchNextPage()
+            }
         }
         constrain(swipeableView, view) { view1, view2 in
             view1.left == view2.left + 20
@@ -57,7 +62,49 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             view1.top == view2.top + 20
             view1.bottom == view2.bottom - 80
         }
-        
+        firstLoad = false
+    }
+    
+    func searchNextPage() {
+        self.resultPage+=3
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        self.view.addSubview(activityView)
+
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let aVariable = appDelegate.searchDetail as NSDictionary
+        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/coaches/search"
+        if ((aVariable["gender"] as! String) != "Dont care"){
+            prefix.appendContentsOf("?gender=".stringByAppendingString((aVariable["gender"] as! String)).stringByAppendingString("&"))
+        } else {
+            prefix.appendContentsOf("?")
+        }
+        let tagIdsArray = aVariable["tagIds"] as! NSArray
+        for id in tagIdsArray {
+            prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
+        }
+        prefix.appendContentsOf("&limit=5")
+        prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
+        print(prefix)
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in
+                print (response.result.value)
+                if response.response?.statusCode == 200 {
+                            if ((response.result.value as! NSArray).count == 0) {
+                                self.stopSearch = true
+                            } else {
+                                let rArray = response.result.value as! [NSDictionary]
+                                self.arrayResult += rArray
+                            }
+                } else {
+                    print(response)
+                }
+                
+                activityView.stopAnimating()
+                activityView.removeFromSuperview()
+        }
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -66,15 +113,16 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             swipeableView.nextView = {
                 return self.nextCardView()
             }
+            
         }
+        
     }
     
     // MARK: ()
     func nextCardView() -> UIView? {
-        if resultIndex >= arrayResult.count {
+        if resultIndex >= arrayResult.count  {
             resultIndex = 0
         }
-        
         let resultItemDetail = arrayResult[resultIndex]
         coachDetail = resultItemDetail["user"] as! NSDictionary
         let coachListTags = coachDetail["tags"] as! NSArray
@@ -86,11 +134,14 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             self.tags.append(tag)
         }
         
+        resultIndex += 1
+    
+        
         let imageLink = coachDetail["imageUrl"] as! String
         var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
         prefix.appendContentsOf(imageLink)
         
-        resultIndex += 1
+        
         let cardView = CardView(frame: swipeableView.bounds)
         cardView.backgroundColor = UIColor.whiteColor()
         
@@ -106,14 +157,18 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             contentView.address.font = UIFont(name: "PlayfairDisplay-Regular", size: 11)
             contentView.address.text = "Waiting for address"
             let postfix = "?width=".stringByAppendingString(contentView.frame.size.width.description).stringByAppendingString("&height=").stringByAppendingString(contentView.frame.size.width.description)
-            print(postfix)
             prefix.appendContentsOf(postfix)
-            print(link)
-            Alamofire.request(.GET, prefix)
-                .responseImage { response in
-                    let imageRes = response.result.value! as UIImage
-                    contentView.avatarIMV.image = imageRes
+            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                contentView.avatarIMV.image = imageRes
+            } else {
+                Alamofire.request(.GET, prefix)
+                    .responseImage { response in
+                        let imageRes = response.result.value! as UIImage
+                        contentView.avatarIMV.image = imageRes
+                }
             }
+            
             //TagList
             contentView.collectionView.delegate = self
             contentView.collectionView.dataSource = self
@@ -123,8 +178,6 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
             
             contentView.connectBT.addTarget(self, action: #selector(FindViewController.goConnect(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-            // Border
-          //  contentView.avatarIMV.layer.cornerRadius = 5
             let maskLayer = CAShapeLayer()
             maskLayer.path = UIBezierPath(roundedRect: contentView.avatarIMV.bounds, byRoundingCorners: UIRectCorner.TopRight, cornerRadii: CGSizeMake(0, 0)).CGPath
             contentView.avatarIMV.layer.mask = maskLayer
@@ -149,6 +202,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
                 view1.height == cardView.bounds.height
             }
         }
+        
         return cardView
     }
     
@@ -171,7 +225,40 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
         self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"REFINE", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.refind))
          self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
-        
+        if (self.arrayResult.count == 0 && firstLoad == false ) {
+            swipeableView.removeFromSuperview()
+            swipeableView = ZLSwipeableView()
+            view.addSubview(swipeableView)
+            swipeableView.didStart = {view, location in
+                print("Did start swiping view at location: \(location)")
+            }
+            swipeableView.swiping = {view, location, translation in
+                print("Swiping at view location: \(location) translation: \(translation)")
+            }
+            swipeableView.didEnd = {view, location in
+                print("Did end swiping view at location: \(location)")
+            }
+            swipeableView.didSwipe = {view, direction, vector in
+                print("Did swipe view in direction: \(direction), vector: \(vector)")
+            }
+            swipeableView.didCancel = {view in
+                print("Did cancel swiping view")
+            }
+            swipeableView.didTap = {view, location in
+                self.performSegueWithIdentifier("goProfile", sender: self)
+            }
+            swipeableView.didDisappear = { view in
+                if (self.resultIndex == self.arrayResult.count && self.resultIndex > 0 && self.stopSearch != true ) {
+                    self.searchNextPage()
+                }
+            }
+            constrain(swipeableView, view) { view1, view2 in
+                view1.left == view2.left + 20
+                view1.right == view2.right - 20
+                view1.top == view2.top + 20
+                view1.bottom == view2.bottom - 80
+            }
+        }
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -194,6 +281,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
 
     func refind() {
+        self.resultIndex = 0
           performSegueWithIdentifier("letUsHelp", sender: nil)
     }
     

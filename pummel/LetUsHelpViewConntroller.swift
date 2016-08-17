@@ -101,7 +101,13 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         {
             let destimation = segue.destinationViewController as! SearchingViewController
             destimation.tagIdsArray = tagIdsArray.objectEnumerator().allObjects as? [String]
-            destimation.gender = (self.genderResultTF.text ==  "MALE") ? "Male" : "Female"
+            if (self.genderResultTF.text ==  "MALE") {
+                 destimation.gender = "Male"
+            } else if (self.genderResultTF.text ==  "FEMALE") {
+                destimation.gender = "Female"
+            } else {
+                destimation.gender = "Dont care"
+            }
         }
     }
     
