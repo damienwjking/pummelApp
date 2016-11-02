@@ -6,4 +6,8 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class SettingDiscoveryHeaderTableViewCell: UITableViewCell {
+    @IBOutlet weak var discoveryLB: UILabel!
+}

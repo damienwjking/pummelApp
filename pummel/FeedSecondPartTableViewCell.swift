@@ -10,13 +10,15 @@ import UIKit
 
 class FeedSecondPartTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var shareBT: UIButton!
+
     @IBOutlet weak var likeLB: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.likeLB.font = .pmmMonReg13()
         // Initialization code
     }
+    
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

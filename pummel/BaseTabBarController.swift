@@ -14,5 +14,17 @@ class BaseTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedIndex = defaultIndex
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showBadgeForMessage), name: k_PM_SHOW_BADGE, object: nil)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
+    func showBadgeForMessage() {
+        let tabarItem = self.tabBar.items![3]
+        tabarItem.badgeValue = String(UIApplication.sharedApplication().applicationIconBadgeNumber)
+        
     }
 }

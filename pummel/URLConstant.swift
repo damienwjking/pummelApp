@@ -7,3 +7,28 @@
 //
 
 import Foundation
+
+let kPMAPI = "http://api.pummel.fit"
+let kPMAPIUSER = "http://api.pummel.fit/api/users/"
+let kPMAPIUSER_OFFSET = "http://api.pummel.fit/api/users?offset="
+let kPMAPICOACH = "http://api.pummel.fit/api/coaches/"
+let kPMAPICOACH_SEARCH = "http://api.pummel.fit/api/coaches/search"
+let kPMAPI_LOGOUT = "http://api.pummel.fit/api/logout"
+let kPMAPI_LIKE = "http://api.pummel.fit/api/likes/"
+let kPMAPI_POST = "http://api.pummel.fit/api/posts/"
+let kPMAPI_POST_OFFSET = "http://api.pummel.fit/api/posts/?offset="
+let kPMAPI_LOGIN = "http://api.pummel.fit/api/login"
+let kPMAPI_REGISTER = "http://api.pummel.fit/api/register"
+let kPMAPI_TAG_OFFSET = "http://api.pummel.fit/api/tags?offset="
+let kPM_TERM = "http://pummel.fit/terms/"
+let kPM_PRIVACY = "http://pummel.fit/privacy/"
+let kPM = "http://pummel.fit"
+let kPMSUPPORT_EMAIL = "support@pummel.fit"
+let kPMHELLO_EMAIL = "hello@pummel.fit"
+let kPM_PATH_PHOTO = "/photos"
+let kPM_PATH_CONVERSATION = "/conversations"
+let kPM_PATH_DEVICES =  "/devices"
+let kPM_PARTH_MESSAGE = "/messages"
+let kPM_PATH_LIKE = "/likes"
+let kPM_PATH_COMMENT_OFFSET = "/comments?offset="
+let kPM_PATH_COMMENT_LIMIT = "/comments?limit="

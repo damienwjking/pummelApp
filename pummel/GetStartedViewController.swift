@@ -1,3 +1,4 @@
+
 //
 //  GetStartedViewController.swift
 //  pummel
@@ -24,34 +25,47 @@ class GetStartedViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.navigationController?.navigationBarHidden = true
-        self.backgroundV.backgroundColor = UIColor(white: 32.0/255.0, alpha: 0.7)
+        self.backgroundV.backgroundColor = .pmmWhite07Color()
         
-        self.betterTogetherTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 42)
-        self.reachYourGoalsTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
+        self.betterTogetherTF.font = .pmmPlayFairReg42()
+        self.reachYourGoalsTF.font = .pmmPlayFairReg15()
         
         self.getStartedBT.layer.cornerRadius = 2
         self.getStartedBT.layer.borderWidth = 0.5
         self.getStartedBT.layer.borderColor = UIColor.whiteColor().CGColor
-        self.getStartedBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.getStartedBT.titleLabel?.font = .pmmMonReg13()
         
         self.imNewBT.layer.cornerRadius = 2
         self.imNewBT.layer.borderWidth = 0.5
-        self.imNewBT.layer.borderColor = UIColor(red:1, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0).CGColor
-        self.imNewBT.layer.backgroundColor = UIColor(red:1, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0).CGColor
-        self.imNewBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.imNewBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.imNewBT.layer.backgroundColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.imNewBT.titleLabel?.font = .pmmMonReg13()
         
         self.updateUI()
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if (defaults.objectForKey(k_PM_IS_LOGINED) == nil) {
+            performSegueWithIdentifier("toSignin", sender: nil)
+        } else if  (defaults.objectForKey(k_PM_IS_LOGINED) as! Bool) {
+            let urlString = defaults.objectForKey(k_PM_URL_LAST_COOKIE)
+            let url = NSURL(string: urlString as! String)
+            let headerFields = defaults.objectForKey(k_PM_HEADER_FILEDS) as! [String : String]
+            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: url!)
+            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: url!, mainDocumentURL: nil)
+            performSegueWithIdentifier("showClientWithoutLogin", sender: nil)
+        } else {
+            performSegueWithIdentifier("toSignin", sender: nil)
+        }
     }
     
     // Button Action
     @IBAction func gotSignin(sender:UIButton!) {
         let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.objectForKey("isLogined") == nil) {
+        if (defaults.objectForKey(k_PM_IS_LOGINED) == nil) {
             performSegueWithIdentifier("toSignin", sender: nil)
-        } else if  (defaults.objectForKey("isLogined") as! Bool) {
-            let urlString = defaults.objectForKey("urlLastCookie")
+        } else if  (defaults.objectForKey(k_PM_IS_LOGINED) as! Bool) {
+            let urlString = defaults.objectForKey(k_PM_URL_LAST_COOKIE)
             let url = NSURL(string: urlString as! String)
-            let headerFields = defaults.objectForKey("headerFields") as! [String : String]
+            let headerFields = defaults.objectForKey(k_PM_HEADER_FILEDS) as! [String : String]
             let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: url!)
             Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: url!, mainDocumentURL: nil)
             performSegueWithIdentifier("showClientWithoutLogin", sender: nil)

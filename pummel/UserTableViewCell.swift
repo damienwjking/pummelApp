@@ -17,7 +17,8 @@ class UserTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
-        self.nameLB.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.nameLB.font = .pmmMonReg13()
+        
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

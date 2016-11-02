@@ -13,18 +13,14 @@ import UIKit
 
 class HorizontalCell: UITableViewCell {
 
-    @IBOutlet weak var firstLab: UILabel!
+    @IBOutlet weak var name: UILabel!
     
-    @IBOutlet weak var secondLab: UILabel!
-    
-    @IBOutlet weak var threeLab: UILabel!
-    
-    @IBOutlet weak var firthLab: UILabel!
-    
-    @IBOutlet weak var fifveLab: UILabel!
-    
+    @IBOutlet weak var imageV: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
+        imageV.layer.cornerRadius = 35
+        imageV.clipsToBounds = true
+        name.font = .pmmMonReg13()
         // Initialization code
     }
 

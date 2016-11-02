@@ -2,8 +2,8 @@
 //  FlowLayout.swift
 //  TagFlowLayout
 //
-//  Created by Diep Nguyen Hoang on 7/30/15.
-//  Copyright (c) 2015 CodenTrick. All rights reserved.
+//  Created by Bear Daddy on 6/27/16.
+//  Copyright © 2016 pummel. All rights reserved.
 //
 
 import UIKit
@@ -34,6 +34,7 @@ class FlowLayout: UICollectionViewFlowLayout {
             if (attributes.frame.origin.y != 0 && smaller == true) {
                 attributes.frame.origin.y -= 8
             }
+            
             newAttributesForElementsInRect.append(attributes)
         }
         

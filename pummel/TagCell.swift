@@ -1,7 +1,10 @@
 //
 //  TagCell.swift
 //  TagFlowLayout
-
+//
+//  Created by Bear Daddy on 6/27/16.
+//  Copyright © 2016 pummel. All rights reserved.
+//
 
 import UIKit
 
@@ -23,7 +26,7 @@ class TagCell: UICollectionViewCell {
         self.tagName.font = UIFont(name: "Montserrat-Light", size: 14)
         self.layer.cornerRadius = 2
         
-        self.tagNameMaxWidthConstraint.constant = UIScreen.mainScreen().bounds.width - 8 * 2 
+        self.tagNameMaxWidthConstraint.constant = UIScreen.mainScreen().bounds.width - 9
         self.tagImageConstraint.constant = self.frame.height/2 - 18
         self.tagImage.layer.cornerRadius = 5
         self.tagImage.backgroundColor = self.getRandomColor()

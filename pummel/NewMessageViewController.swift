@@ -15,21 +15,22 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet var listUserTB: UITableView!
     @IBOutlet var toLB : UILabel!
     @IBOutlet var toUserTF : UITextField!
-    var arrayListUser: NSArray!
+    var arrayListUser: [NSDictionary] = []
+    var isStopLoad: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController!.navigationBar.translucent = false;
-        self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
-        self.navigationItem.title = "NEW MESSAGE"
+        self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        self.navigationItem.title = kNavNewMessage
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NewMessageViewController.cancel))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
-        self.toLB.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.toLB.font = .pmmMonReg13()
         self.toUserTF.attributedPlaceholder = NSAttributedString(string:"|",
-            attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)]))
+            attributes:([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()]))
         self.listUserTB.delegate = self
         self.listUserTB.dataSource = self
         self.listUserTB.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
@@ -37,24 +38,32 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         self.getListUser()
     }
     
+    
     func cancel() {
         self.navigationController?.popViewControllerAnimated(true)
     }
     
     func getListUser() {
-        Alamofire.request(.GET, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users")
-            .responseJSON { response in switch response.result {
+        if (self.isStopLoad == false) {
+            var prefix = kPMAPIUSER_OFFSET
+            let offset = self.arrayListUser.count
+            prefix.appendContentsOf(String(offset))
+            Alamofire.request(.GET, prefix)
+                .responseJSON { response in switch response.result {
                 case .Success(let JSON):
                     print(JSON)
-                    self.arrayListUser = JSON as! NSArray
-                    self.listUserTB.reloadData()
+                    let resultArr = JSON as! [NSDictionary]
+                    if (resultArr.count == 0) {
+                        self.isStopLoad = true
+                    } else {
+                        self.arrayListUser += resultArr
+                        self.listUserTB.reloadData()
+                    }
                 case .Failure(let error):
                     print("Request failed with error: \(error)")
+                    }
             }
         }
-    }
-    override func viewWillAppear(animated: Bool) {
-        
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -62,25 +71,26 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("UserTableViewCell", forIndexPath: indexPath) as! UserTableViewCell
-        let user = arrayListUser[indexPath.row] as! NSDictionary
-        var name = user.objectForKey("firstname") as! String
+        let cell = tableView.dequeueReusableCellWithIdentifier(kUserTableViewCell, forIndexPath: indexPath) as! UserTableViewCell
+        cell.tag = indexPath.row
+        cell.avatarIMV.image = nil
+        let user = arrayListUser[indexPath.row]
+        var name = user.objectForKey(kFirstname) as! String
         name.appendContentsOf(" ")
-        name.appendContentsOf(user.objectForKey("lastname") as! String)
+        name.appendContentsOf(user.objectForKey(kLastName) as! String)
         cell.nameLB.text = name.uppercaseString
-        let idSender = String(format:"%0.f",user.objectForKey("id")!.doubleValue)
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
+        var prefix = kPMAPIUSER
         prefix.appendContentsOf(idSender)
-        prefix.appendContentsOf("/photos")
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                let listPhoto = JSON as! NSArray
-                if (listPhoto.count >= 1) {
-                    let photo = listPhoto.objectAtIndex(listPhoto.count - 1) as! NSDictionary
-                    var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-                    link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
-                    link.appendContentsOf("?width=80&height=80")
+                let userDetail = JSON as! NSDictionary
+                if !(userDetail[kImageUrl] is NSNull) {
+                    var link = kPMAPI
+                    link.appendContentsOf(userDetail[kImageUrl] as! String)
+                    link.appendContentsOf(widthHeight160)
+                    
                     if (NSCache.sharedInstance.objectForKey(link) != nil) {
                         let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
                         cell.avatarIMV.image = imageRes
@@ -95,17 +105,16 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
                 }
             case .Failure(let error):
                 print("Request failed with error: \(error)")
-            }
+                }
+        }
+        if (indexPath.row == arrayListUser.count - 1) {
+            self.getListUser()
         }
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (arrayListUser == nil) {
-            return 0
-        } else {
-            return arrayListUser.count
-        }
+        return arrayListUser.count
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -118,9 +127,9 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         {
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
-            let user = arrayListUser[indexPathRow] as! NSDictionary
-            destinationVC.nameChatUser = (user.objectForKey("firstname") as! String).uppercaseString
-            destinationVC.userIdTarget = String(format:"%0.f", user["id"]!.doubleValue)
+            let user = arrayListUser[indexPathRow]
+            destinationVC.nameChatUser = (user.objectForKey(kFirstname) as! String).uppercaseString
+            destinationVC.userIdTarget = String(format:"%0.f", user[kId]!.doubleValue)
         }
     }
 }

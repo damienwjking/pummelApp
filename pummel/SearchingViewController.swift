@@ -45,7 +45,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     var tagIdsArray: NSArray!
     var locationManager: CLLocationManager!
     var stopAnimation: Bool!
-    let orangeColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)
+    let orangeColor = UIColor.pmmBrightOrangeColor()
     
     @IBOutlet var backgroundLogo : UIImageView!
 
@@ -131,7 +131,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         ovlay.canReplaceMapContent = true
         self.map.addOverlay(ovlay)
         overlayView.alpha = 0.7
-        self.findFinessTF.font = UIFont(name: "Montserrat-Regular", size: 11)
+        self.findFinessTF.font = .pmmMonReg11()
         
         if (CLLocationManager.locationServicesEnabled())
         {
@@ -174,7 +174,6 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     }
     
     func animationIndicator() {
-        print("start animation")
         self.smallIndicatorView.hidden = false
         let seconds = 0.5
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
@@ -241,8 +240,8 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     }
     
     func search() {
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/coaches/search"
-        if (gender != "Dont care") {
+        var prefix = kPMAPICOACH_SEARCH
+        if (gender != kDontCare) {
            prefix.appendContentsOf("?gender=".stringByAppendingString(gender).stringByAppendingString("&"))
         } else {
             prefix.appendContentsOf("?")
@@ -252,9 +251,9 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
         }
         
-        prefix.appendContentsOf("&limit=5&offset=0")
+        prefix.appendContentsOf("&limit=6&offset=0")
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.searchDetail = ["gender":self.gender, "tagIds":self.tagIdsArray]
+        appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray]
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 print (response.result.value)
@@ -264,11 +263,13 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                         self.dismissViewControllerAnimated(false, completion: {
                             let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
                             let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                            findVC.arrayResult = response.result.value as! NSArray as! [NSDictionary]
+                            findVC.arrayResult.removeAll()
+                            findVC.refined = true
+                            findVC.arrayResult = response.result.value  as! [NSDictionary]
                             findVC.viewDidLayoutSubviews()
                             findVC.showLetUsHelp = false
-                             findVC.viewDidLayoutSubviews()
-                            
+                            findVC.viewDidLayoutSubviews()
+        
                             presentingViewController!.dismissViewControllerAnimated(true, completion: {})
                         })
                     } else {
@@ -280,7 +281,9 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                             self.dismissViewControllerAnimated(false, completion: {
                                 let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
                                 let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                                findVC.arrayResult = response.result.value as! NSArray as! [NSDictionary]
+                                findVC.arrayResult.removeAll()
+                                findVC.refined = true
+                                findVC.arrayResult = response.result.value as! [NSDictionary]
                                 findVC.showLetUsHelp = false
                                 findVC.viewDidLayoutSubviews()
                                 presentingViewController!.dismissViewControllerAnimated(true, completion: {})

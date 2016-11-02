@@ -27,63 +27,82 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     var sizingCell: TagCell?
     
     var tags = [Tag]()
-    var arrayTags : NSArray = []
+    var arrayTags : [NSDictionary] = []
     var tagIdsArray : NSMutableArray = []
+    var offset: Int = 0
+    var isStopGetListTag : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        self.letUsHelpTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 33)
-        self.letUsHelpDetailTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
-        self.genderTF.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.genderResultTF.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.locationTF.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.locationResultTF.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.toHelpUsWithTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
+        self.letUsHelpTF.font = .pmmPlayFairReg33()
+        self.letUsHelpDetailTF.font = .pmmPlayFairReg15()
+        self.genderTF.font = .pmmMonReg11()
+        self.genderResultTF.font = .pmmMonReg11()
+        self.locationTF.font = .pmmMonReg11()
+        self.locationResultTF.font = .pmmMonReg11()
+        self.toHelpUsWithTF.font = .pmmPlayFairReg15()
         self.helpMeReachTheCoachBT.layer.cornerRadius = 2
         self.helpMeReachTheCoachBT.layer.borderWidth = 0.5
-        self.helpMeReachTheCoachBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.helpMeReachTheCoachBT.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        self.helpMeReachTheCoachBT.backgroundColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)
-        let cellNib = UINib(nibName: "TagCell", bundle: nil)
-        self.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: "TagCell")
+        self.helpMeReachTheCoachBT.titleLabel?.font = .pmmMonReg11()
+        self.helpMeReachTheCoachBT.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        self.helpMeReachTheCoachBT.backgroundColor = .pmmBrightOrangeColor()
+        let cellNib = UINib(nibName: kTagCell, bundle: nil)
+        self.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
         self.collectionView.backgroundColor = UIColor.clearColor()
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
         self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
-       
-        self .getListTags()
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        offset = 0
+        isStopGetListTag = false
+        self.getListTags()
     }
     
     func getListTags() {
-        let listTagsLink = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/tags"
-        Alamofire.request(.GET, listTagsLink)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                self.arrayTags = JSON as! NSArray
-                for i in 0 ..< self.arrayTags.count {
-                    let tagContent = self.arrayTags[i] as! NSDictionary
-                    let tag = Tag()
-                    tag.name = tagContent["title"] as? String
-                    tag.tagId = String(format:"%0.f", tagContent["id"]!.doubleValue)
-                    self.tags.append(tag)
-                }
-                self.collectionView.delegate = self
-                self.collectionView.dataSource = self
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
+        if (isStopGetListTag == false) {
+            var listTagsLink = kPMAPI_TAG_OFFSET
+            listTagsLink.appendContentsOf(String(offset))
+            Alamofire.request(.GET, listTagsLink)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    print (JSON)
+                    self.arrayTags = JSON as! [NSDictionary]
+                    if (self.arrayTags.count > 0) {
+                        for i in 0 ..< self.arrayTags.count {
+                            let tagContent = self.arrayTags[i]
+                            let tag = Tag()
+                            tag.name = tagContent[kTitle] as? String
+                            tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
+                            self.tags.append(tag)
+                        }
+                        self.offset += 10
+                        self.collectionView.reloadData({ 
+                            self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize().height
+                            self.scrollHeightConstraint.constant = self.collectionView.frame.origin.y + self.tagHeightConstraint.constant
+                        })
+                    } else {
+                        self.isStopGetListTag = true
+                    }
+                    
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+            }
+        } else
+        {
+            self.isStopGetListTag = true
         }
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        tagHeightConstraint.constant = collectionView.collectionViewLayout.collectionViewContentSize().height
-        scrollHeightConstraint.constant = collectionView.frame.origin.y + tagHeightConstraint.constant
+        
     }
-    
-    
-    
-    
+
     @IBAction func closeLetUsHelp(sender:UIButton!) {
         let tabbarVC = self.presentingViewController?.childViewControllers[0] as! BaseTabBarController
         let findVC = tabbarVC.viewControllers![2] as! FindViewController
@@ -101,12 +120,12 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         {
             let destimation = segue.destinationViewController as! SearchingViewController
             destimation.tagIdsArray = tagIdsArray.objectEnumerator().allObjects as? [String]
-            if (self.genderResultTF.text ==  "MALE") {
-                 destimation.gender = "Male"
-            } else if (self.genderResultTF.text ==  "FEMALE") {
-                destimation.gender = "Female"
+            if (self.genderResultTF.text ==  kMALEU) {
+                 destimation.gender = kMale
+            } else if (self.genderResultTF.text ==  kFemaleU) {
+                destimation.gender = kFemale
             } else {
-                destimation.gender = "Dont care"
+                destimation.gender = kDontCare
             }
         }
     }
@@ -121,8 +140,11 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TagCell", forIndexPath: indexPath) as! TagCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
         self.configureCell(cell, forIndexPath: indexPath)
+        if (indexPath.row == tags.count - 1) {
+            self.getListTags()
+        }
         return cell
     }
     
@@ -140,8 +162,9 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         } else {
             tagIdsArray.removeObject(tag.tagId!)
         }
-        print(tagIdsArray)
+        let contentOffset = self.scrollView.contentOffset 
         self.collectionView.reloadData()
+        scrollView.setContentOffset(contentOffset, animated: false)
     }
     
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
@@ -155,59 +178,72 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     
     @IBAction func clickOnGender(sender: UIButton) {
         let selectMale = { (action:UIAlertAction!) -> Void in
-            self.genderResultTF.text = "MALE"
+            self.genderResultTF.text = kMALEU
         }
         let selectFemale = { (action:UIAlertAction!) -> Void in
-            self.genderResultTF.text = "FEMALE"
+            self.genderResultTF.text = kFemaleU
         }
         let selectDontCare = { (action:UIAlertAction!) -> Void in
-            self.genderResultTF.text = "DON'T CARE"
+            self.genderResultTF.text = kDontCareUp
         }
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "MALE", style: UIAlertActionStyle.Default, handler: selectMale))
-        alertController.addAction(UIAlertAction(title: "FEMALE", style: UIAlertActionStyle.Default, handler: selectFemale))
-        alertController.addAction(UIAlertAction(title: "DON'T CARE", style: UIAlertActionStyle.Default, handler: selectDontCare))
+        alertController.addAction(UIAlertAction(title: kMALEU, style: UIAlertActionStyle.Default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: kFemaleU, style: UIAlertActionStyle.Default, handler: selectFemale))
+        alertController.addAction(UIAlertAction(title: kDontCareUp, style: UIAlertActionStyle.Default, handler: selectDontCare))
         
         self.presentViewController(alertController, animated: true) { }
     }
     
     @IBAction func clickOnLocation(sender: UIButton) {
         let selectGym = { (action:UIAlertAction!) -> Void in
-            self.locationResultTF.text = "GYM"
+            self.locationResultTF.text = kGYM
         }
         let selectSmall = { (action:UIAlertAction!) -> Void in
-            self.locationResultTF.text = "SMALL GROUP TRAINING"
+            self.locationResultTF.text = kSMALLGROUPTRAINING
         }
         let selectBootcamp = { (action:UIAlertAction!) -> Void in
-            self.locationResultTF.text = "BOOTCAMP"
+            self.locationResultTF.text = kBOOTCAMP
         }
         let selectMobile = { (action:UIAlertAction!) -> Void in
-            self.locationResultTF.text = "MOBILE"
+            self.locationResultTF.text = kMOBILE
         }
         let selectOutdoor = { (action:UIAlertAction!) -> Void in
-            self.locationResultTF.text = "OUTDOOR"
+            self.locationResultTF.text = kOUTDOOR
         }
         let selectAnywhere = { (action:UIAlertAction!) -> Void in
-            self.locationResultTF.text = "ANYWHERE"
+            self.locationResultTF.text = kANYWHERE
         }
         let selectPrivateStudio = { (action:UIAlertAction!) -> Void in
-            self.locationResultTF.text = "PRIVATE SUTDIO"
+            self.locationResultTF.text = kPRIVATESTUDIO
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "GYM", style: UIAlertActionStyle.Default, handler: selectGym))
-        alertController.addAction(UIAlertAction(title: "SMALL GROUP TRAINING", style: UIAlertActionStyle.Default, handler: selectSmall))
-        alertController.addAction(UIAlertAction(title: "BOOTCAMP", style: UIAlertActionStyle.Default, handler: selectBootcamp))
-        alertController.addAction(UIAlertAction(title: "MOBILE", style: UIAlertActionStyle.Default, handler: selectMobile))
-        alertController.addAction(UIAlertAction(title: "OUTDOOR", style: UIAlertActionStyle.Default, handler: selectOutdoor))
-        alertController.addAction(UIAlertAction(title: "PRIVATE STUDIO", style: UIAlertActionStyle.Default, handler: selectPrivateStudio))
-        alertController.addAction(UIAlertAction(title: "ANYWHERE", style: UIAlertActionStyle.Default, handler: selectAnywhere))
+        alertController.addAction(UIAlertAction(title: kGYM, style: UIAlertActionStyle.Default, handler: selectGym))
+        alertController.addAction(UIAlertAction(title: kSMALLGROUPTRAINING, style: UIAlertActionStyle.Default, handler: selectSmall))
+        alertController.addAction(UIAlertAction(title: kBOOTCAMP, style: UIAlertActionStyle.Default, handler: selectBootcamp))
+        alertController.addAction(UIAlertAction(title: kMOBILE, style: UIAlertActionStyle.Default, handler: selectMobile))
+        alertController.addAction(UIAlertAction(title: kOUTDOOR, style: UIAlertActionStyle.Default, handler: selectOutdoor))
+        alertController.addAction(UIAlertAction(title: kPRIVATESTUDIO, style: UIAlertActionStyle.Default, handler: selectPrivateStudio))
+        alertController.addAction(UIAlertAction(title: kANYWHERE, style: UIAlertActionStyle.Default, handler: selectAnywhere))
         self.presentViewController(alertController, animated: true) { }
     }
 
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
     }
-    
+}
+
+extension UICollectionView {
+    func reloadData(completion: ()->()) {
+        UIView.animateWithDuration(0, animations: { self.reloadData() })
+        { _ in completion() }
+    }
+}
+
+extension UITableView {
+    func reloadData(completion: ()->()) {
+        UIView.animateWithDuration(0, animations: { self.reloadData() })
+        { _ in completion() }
+    }
 }

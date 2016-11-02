@@ -19,55 +19,27 @@ import Alamofire
 
 class ForgottenPasswordController: UIViewController {
     
-    let loginButton:UIButton = UIButton(frame: CGRectMake(10, 600, 380, 50))
-    let EmailTextField = UITextField(frame: CGRectMake(10, 100, 250, 40))
-    
-    
+    @IBOutlet var doneBT:UIButton!
+    @IBOutlet var emailTF: UITextField!
+    @IBOutlet var titleLB: UILabel!
+    @IBOutlet var doneBTDT: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
+        self.emailTF.font = .pmmMonReg10()
+        self.titleLB.font = .pmmMonReg13()
+        self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
+                                                                 attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
         
-        // background image
-        
-        // let backgroundImage = UIImageView(frame: UIScreen.mainScreen().bounds)
-        // backgroundImage.image = UIImage(named: "getStarted")
-        // self.view.insertSubview(backgroundImage, atIndex:0)
-        
-        self.view.backgroundColor = UIColor.grayColor()
-        
-        // Add submit button
-        let buttoncolour = UIColor(red:0.75, green:0.84, blue:0.83, alpha:1.0)
-        
-        loginButton.backgroundColor = buttoncolour
-        loginButton.setTitle("Reset Password", forState: UIControlState.Normal)
-        loginButton.addTarget(self, action: #selector(ForgottenPasswordController.buttonAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(loginButton)
-        
-        
-        // Email and password fields
-        EmailTextField.placeholder = "Email Address"
-        EmailTextField.backgroundColor = UIColor.whiteColor()
-        EmailTextField.font = UIFont.systemFontOfSize(18)
-        EmailTextField.borderStyle = UITextBorderStyle.Line
-        EmailTextField.keyboardType = UIKeyboardType.Default
-        EmailTextField.returnKeyType = UIReturnKeyType.Done
-        EmailTextField.center = CGPointMake(160, 300)
-        EmailTextField.clearButtonMode = UITextFieldViewMode.WhileEditing;
-        
-        self.view.addSubview(EmailTextField)
+        self.doneBT.layer.cornerRadius = 2
+        self.doneBT.layer.borderWidth = 0.5
+        self.doneBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.doneBT.titleLabel?.font = .pmmMonReg13()
+        self.emailTF.keyboardAppearance = .Dark
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
 
-        //label
-        var passwordLabel : UILabel!
-        passwordLabel = UILabel(frame: CGRectMake(10, 100, 250, 40))
-        passwordLabel.text = "An email will be sent to you to reset your password"
-        passwordLabel.textColor = UIColor.whiteColor()
-        passwordLabel.center = CGPointMake(160, 354)
-        view.addSubview(passwordLabel)
-
-        
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -75,22 +47,43 @@ class ForgottenPasswordController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func goBackWithSender() {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
     
-    func buttonAction(sender:UIButton!) {
+    func keyboardWillShow(notification: NSNotification) {
+        
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.doneBTDT.constant = keyboardSize.height + 15
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.doneBTDT.constant = 15
+        }
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
+    
+    
+    @IBAction func buttonActionWithSender() {
         
         
-        let userEmail = EmailTextField.text
+        let userEmail = emailTF.text
         
         // check if field empty
         
         if(userEmail!.isEmpty) {
         
-                self.EmailTextField.highlighted = true
+                self.emailTF.highlighted = true
                 
                 let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .Alert)
                 
                 
-                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                     // ...
                 }
                 alertController.addAction(OKAction)
@@ -99,31 +92,30 @@ class ForgottenPasswordController: UIViewController {
                 }
 
         } else {
-            Alamofire.request(.POST, "http://52.8.5.161/api/request-password-rest", parameters: ["email":userEmail!])
-                .responseJSON { response in
-                    print("REQUEST-- \(response.request)")  // original URL request
-                    print("RESPONSE-- \(response.response)") // URL response
-                    print("DATA-- \(response.data)")     // server data
-                    print("RESULT-- \(response.result)")   // result of response serialization
-                    
-                    
-                    
-                    if let JSON = response.result.value {
-                        print("JSON: \(JSON)")
-
-                    }
-                }
-            // Thanks you
-            // hide buttons
-            
-            self.loginButton.setTitle("Return to Sign In", forState: UIControlState.Normal)
-            self.EmailTextField.hidden = true
-            self.EmailTextField.borderStyle = UITextBorderStyle.None
-            self.EmailTextField.placeholder = "Thank you, an email has been sent to your password."
-            
-            // to do segueReturnForgottenPassword
-            
-            
+//            Alamofire.request(.POST, "http://52.8.5.161/api/request-password-rest", parameters: [kEmail:userEmail!])
+//                .responseJSON { response in
+//                    print("REQUEST-- \(response.request)")  // original URL request
+//                    print("RESPONSE-- \(response.response)") // URL response
+//                    print("DATA-- \(response.data)")     // server data
+//                    print("RESULT-- \(response.result)")   // result of response serialization
+//                    
+//                    
+//                    
+//                    if let JSON = response.result.value {
+//                        print("JSON: \(JSON)")
+//
+//                    }
+//                }
+//            // Thanks you
+//            // hide buttons
+//            
+//            self.loginButton.setTitle("Return to Sign In", forState: .Normal)
+//            self.EmailTextField.hidden = true
+//            self.EmailTextField.borderStyle = UITextBorderStyle.None
+//            self.EmailTextField.placeholder = "Thank you, an email has been sent to your password."
+//            
+//            // to do segueReturnForgottenPassword
+//
         }
     }
 }

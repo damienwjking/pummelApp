@@ -89,7 +89,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             
             // Focus View
             self.focusView         = UIView(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
-            let tapRecognizer      = UITapGestureRecognizer(target: self, action:"focus:")
+            let tapRecognizer      = UITapGestureRecognizer(target: self, action:#selector(FSCameraView.focus(_:)))
             tapRecognizer.delegate = self
             self.previewViewContainer.addGestureRecognizer(tapRecognizer)
             
@@ -118,7 +118,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         smallShotIMV.clipsToBounds = true
        // flashConfiguration()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForegroundNotification:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FSCameraView.willEnterForegroundNotification(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
     
     deinit {
@@ -157,7 +157,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
                 
                 if let imageDataUnwrapped = imageData, lastImageRetrieved = UIImage(data: imageDataUnwrapped) {
                     // do stuff with image
-                        self.goLibrary.setBackgroundImage(lastImageRetrieved, forState: UIControlState.Normal) 
+                        self.goLibrary.setBackgroundImage(lastImageRetrieved, forState: .Normal) 
                 }
             }
         }
@@ -192,7 +192,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
                     // The center coordinate along Y axis
                     let rcy = ih*0.5
 
-                    let imageRef = CGImageCreateWithImageInRect(image.CGImage, CGRect(x: rcy-iw*0.5, y: 0 , width: iw, height: iw))
+                    let imageRef = CGImageCreateWithImageInRect(image.CGImage!, CGRect(x: rcy-iw*0.5, y: 0 , width: iw, height: iw))
                     
                     let resizedImage = UIImage(CGImage: imageRef!, scale: sw/iw, orientation: image.imageOrientation)
                                         

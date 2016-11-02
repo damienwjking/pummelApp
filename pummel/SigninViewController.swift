@@ -18,20 +18,21 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var signinDistantCT: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.emailTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.setNeedsStatusBarAppearanceUpdate()
+        self.emailTF.font = .pmmMonReg13()
         self.emailTF.autocorrectionType = UITextAutocorrectionType.No
 
-        self.passwordTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.passwordTF.font = .pmmMonReg13()
         self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
         self.passwordTF.attributedPlaceholder = NSAttributedString(string:"PASSWORD",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
         
-        self.forgotPasswordBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.forgotPasswordBT.titleLabel?.font = .pmmMonReg13()
         self.signinBT.layer.cornerRadius = 2
         self.signinBT.layer.borderWidth = 0.5
         self.signinBT.layer.borderColor = UIColor.whiteColor().CGColor
-        self.signinBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.signinBT.titleLabel?.font = .pmmMonReg13()
         self.updateUI()
         self.emailTF.keyboardAppearance = .Dark
         self.passwordTF.keyboardAppearance = .Dark

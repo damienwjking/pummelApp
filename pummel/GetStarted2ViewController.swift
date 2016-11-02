@@ -21,14 +21,14 @@ class GetStarted2ViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.navigationBarHidden = true
-        self.backgroundV.backgroundColor = UIColor(white: 32.0/255.0, alpha: 0.7)
-        self.yourPersonalTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 42)
-        self.matchedToYouTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
+        self.backgroundV.backgroundColor = .pmmWhite07Color()
+        self.yourPersonalTF.font = .pmmPlayFairReg42()
+        self.matchedToYouTF.font = .pmmPlayFairReg15()
         
         self.imInBT.layer.cornerRadius = 2
         self.imInBT.layer.borderWidth = 0.5
         self.imInBT.layer.borderColor = UIColor.whiteColor().CGColor
-        self.imInBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.imInBT.titleLabel?.font = .pmmMonReg13()
         self.updateUI()
     }
 

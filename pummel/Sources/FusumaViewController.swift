@@ -75,8 +75,8 @@ public enum FusumaModeOrder {
         
         cameraView.delegate = self
         albumView.delegate  = self
-        titleLabel.font = UIFont(name: "Montserrat-Regular", size: 13)
-        doneButton.titleLabel?.font = UIFont(name: "Montserrat-Light", size: 13)!
+        titleLabel.font = .pmmMonReg13()
+        doneButton.titleLabel?.font = .pmmMonLight13()
 
         menuView.backgroundColor = fusumaBackgroundColor
         menuView.layer.shadowColor = UIColor.blackColor().CGColor;
@@ -197,9 +197,9 @@ private extension FusumaViewController {
         
         if mode == FusumaMode.Library {
             titleLabel.text = NSLocalizedString("CAMERA ROLL", comment: "CAMERA ROLL")
-            titleLabel.font = UIFont(name: "Montserrat-Regular", size: 13)
+            titleLabel.font = .pmmMonReg13()
             doneButton.hidden = false
-            doneButton.titleLabel?.font = UIFont(name: "Montserrat-Light", size: 13)!
+            doneButton.titleLabel?.font = .pmmMonLight13()
             self.menuHeighConstraint.constant = 70
             self.menuView.backgroundColor = UIColor.whiteColor()
             titleLabel.hidden = false

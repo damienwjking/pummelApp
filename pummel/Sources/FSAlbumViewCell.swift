@@ -28,7 +28,7 @@ final class FSAlbumViewCell: UICollectionViewCell {
     
     override var selected : Bool {
         didSet {
-            self.layer.borderColor = selected ? UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0).CGColor : UIColor.clearColor().CGColor
+            self.layer.borderColor = selected ? UIColor.pmmBrightOrangeColor().CGColor : UIColor.clearColor().CGColor
             self.layer.borderWidth = selected ? 2 : 0
         }
     }

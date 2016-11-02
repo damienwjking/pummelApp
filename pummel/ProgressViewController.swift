@@ -10,30 +10,26 @@
 
 import UIKit
 
-
 class ProgressViewController: UIViewController {
     @IBOutlet var comingSoonTF : UILabel!
     @IBOutlet var comingSoonDetailTF : UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.title = "SESSIONS"
+        self.tabBarController?.title = kNavSession
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         let selectedImage = UIImage(named: "sessionsPressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
-        
-        self.comingSoonTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 33)
-        self.comingSoonDetailTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
+        self.comingSoonTF.font = .pmmPlayFairReg33()
+        self.comingSoonDetailTF.font = .pmmPlayFairReg15()
         self.comingSoonDetailTF.layer.opacity = 0.69
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

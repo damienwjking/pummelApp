@@ -1,7 +1,131 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--Find View Controller-->
+        <scene sceneID="3Du-ok-hlg">
+            <objects>
+                <viewController id="cAI-GB-clN" customClass="FindViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ClG-gm-zz0"/>
+                        <viewControllerLayoutGuide type="bottom" id="4av-ME-Ejz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="6nh-WZ-7Pc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Result" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="JzR-NU-LUG"/>
+                                    <constraint firstAttribute="width" constant="276" id="t14-4Q-9rc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine your search by selecting different tags, location or gender." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBM-8q-Zjj">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="T5X-xp-sak"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sQF-5a-42b">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="141" id="9rc-rd-VII"/>
+                                    <constraint firstAttribute="width" constant="165" id="OQi-XN-kN0"/>
+                                </constraints>
+                                <state key="normal" image="cardEmpty.png"/>
+                                <connections>
+                                    <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="odJ-wo-GMz"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WNF-6o-ajD">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="23" id="EhX-qx-4Sl"/>
+                                    <constraint firstAttribute="width" constant="276" id="u8c-rw-5Tw"/>
+                                </constraints>
+                                <state key="normal" title="REFINE SEARCH">
+                                    <color key="titleColor" red="1" green="0.25882352939999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="8JI-Eu-Ee6"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6fy-ix-Oz7" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="4Xy-SD-xNq"/>
+                            <constraint firstItem="WNF-6o-ajD" firstAttribute="top" secondItem="SBM-8q-Zjj" secondAttribute="bottom" constant="18" id="FeZ-b8-crW"/>
+                            <constraint firstItem="sQF-5a-42b" firstAttribute="top" secondItem="ClG-gm-zz0" secondAttribute="bottom" constant="200" id="hO6-UX-tIE"/>
+                            <constraint firstItem="SBM-8q-Zjj" firstAttribute="top" secondItem="6fy-ix-Oz7" secondAttribute="bottom" constant="10" id="ir2-dL-Xbz"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="SBM-8q-Zjj" secondAttribute="trailing" constant="66" id="jrT-5n-ccE"/>
+                            <constraint firstItem="WNF-6o-ajD" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="l6d-NM-q6X"/>
+                            <constraint firstItem="SBM-8q-Zjj" firstAttribute="leading" secondItem="6nh-WZ-7Pc" secondAttribute="leadingMargin" constant="66" id="q89-MB-kd3"/>
+                            <constraint firstItem="sQF-5a-42b" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="rZQ-nC-F7M"/>
+                            <constraint firstItem="6fy-ix-Oz7" firstAttribute="top" secondItem="sQF-5a-42b" secondAttribute="bottom" constant="20" id="ykR-xf-tzZ"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="" image="search.png" id="v25-eT-K06">
+                        <inset key="imageInsets" minX="0.0" minY="8" maxX="0.0" maxY="-8"/>
+                    </tabBarItem>
+                    <connections>
+                        <outlet property="noResultContentLB" destination="SBM-8q-Zjj" id="YIf-m5-9Gi"/>
+                        <outlet property="noResultLB" destination="6fy-ix-Oz7" id="92d-m1-8I4"/>
+                        <outlet property="refineSearchBT" destination="WNF-6o-ajD" id="OLf-54-7Gy"/>
+                        <segue destination="BUG-Xk-HUI" kind="show" identifier="sendMessageConnection" id="fFs-Lu-LYL"/>
+                        <segue destination="VVc-lb-yt4" kind="presentation" identifier="goConnect" id="LTK-hm-JXL"/>
+                        <segue destination="REY-5g-p4Z" kind="presentation" identifier="goProfile" id="tGO-Rx-XKv"/>
+                        <segue destination="RcJ-86-YBS" kind="presentation" identifier="letUsHelp" id="Z6O-y3-8EI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wEG-D9-yU7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4839" y="1026"/>
+        </scene>
+        <!--Chat-->
+        <scene sceneID="ToG-Hm-h9W">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" id="BUG-Xk-HUI" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="8Vr-Cf-W5l"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8jI-ec-h3n" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3866" y="703"/>
+        </scene>
+        <!--Connection-->
+        <scene sceneID="5Fl-nL-Zft">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Connection" id="VVc-lb-yt4" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zqE-hi-K4j" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3867" y="1136"/>
+        </scene>
+        <!--CoachProfile-->
+        <scene sceneID="hob-RH-XXc">
+            <objects>
+                <viewControllerPlaceholder storyboardName="CoachProfile" id="REY-5g-p4Z" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yNl-My-VR5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3851" y="1264"/>
+        </scene>
+        <!--Search-->
+        <scene sceneID="SxD-BH-aac">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Search" id="RcJ-86-YBS" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O9s-ju-dzQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3866" y="961"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cardEmpty.png" width="166" height="142"/>
+        <image name="search.png" width="45" height="45"/>
+    </resources>
 </document>

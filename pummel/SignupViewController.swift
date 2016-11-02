@@ -24,14 +24,14 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.nameTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.nameTF.font = .pmmMonReg13()
         self.nameTF.autocorrectionType = UITextAutocorrectionType.No
-        self.emailTF.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.emailTF.font = .pmmMonReg13()
         self.emailTF.autocorrectionType = UITextAutocorrectionType.No
-        self.passwordTF.font = UIFont(name: "Montserrat-Regular", size: 13)
-        self.dobTF.font = UIFont(name: "Montserrat-Regular", size: 13)
-        self.genderTF.font = UIFont(name: "Montserrat-Regular", size: 13)
-        self.continuingLB.font = UIFont(name: "Montserrat-Regular", size: 10)
+        self.passwordTF.font = .pmmMonReg13()
+        self.dobTF.font = .pmmMonReg13()
+        self.genderTF.font = .pmmMonReg13()
+        self.continuingLB.font = .pmmMonReg10()
        
         self.nameTF.attributedPlaceholder = NSAttributedString(string:"NAME",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
@@ -47,7 +47,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.signupBT.layer.cornerRadius = 2
         self.signupBT.layer.borderWidth = 0.5
         self.signupBT.layer.borderColor = UIColor.whiteColor().CGColor
-        self.signupBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.signupBT.titleLabel?.font = .pmmMonReg13()
         
         self.passwordAttentionIM.hidden = true
         self.emailAttentionIM.hidden = true
@@ -98,9 +98,8 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
                 self.passwordAttentionIM.hidden = false
                 self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
                     attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-                let alertController = UIAlertController(title: "Password is weak", message: " Please try a combination of numbers and letters", preferredStyle: .Alert)
-                
-                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                let alertController = UIAlertController(title: pmmNotice, message: passwordNotice, preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                     // ...
                 }
                 alertController.addAction(OKAction)
@@ -126,10 +125,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     }
     
     func isValidEmail(testStr:String) -> Bool {
-        // println("validate calendar: \(testStr)")
-        let emailRegEx = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-        
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
         return emailTest.evaluateWithObject(testStr)
     }
     
@@ -153,18 +149,18 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components([.Day , .Month , .Year], fromDate: date)
         let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
-        let year =  components.year
-        let yearDOB = componentsDOB.year
+        _ =  components.year
+        _ = componentsDOB.year
         
-        if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
-            self.dobAttentionIM.hidden = true
-            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
-                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
-        } else {
-            self.dobAttentionIM.hidden = false
-            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
-                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-        }
+//        if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
+//            self.dobAttentionIM.hidden = true
+//            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
+//                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
+//        } else {
+//            self.dobAttentionIM.hidden = false
+//            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
+//                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+//        }
     }
     
     @IBAction func showPopupToSelectGender(sender:UIDatePicker) {
@@ -173,14 +169,14 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.passwordTF.resignFirstResponder()
         self.nameTF.resignFirstResponder()
         let selectMale = { (action:UIAlertAction!) -> Void in
-            self.genderTF.text = "MALE"
+            self.genderTF.text = kMALEU
         }
         let selectFemale = { (action:UIAlertAction!) -> Void in
-            self.genderTF.text = "FEMALE"
+            self.genderTF.text = kFemaleU
         }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "MALE", style: UIAlertActionStyle.Default, handler: selectMale))
-        alertController.addAction(UIAlertAction(title: "FEMALE", style: UIAlertActionStyle.Default, handler: selectFemale))
+        alertController.addAction(UIAlertAction(title: kMALEU, style: UIAlertActionStyle.Default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: kFemaleU, style: UIAlertActionStyle.Default, handler: selectFemale))
         
         self.presentViewController(alertController, animated: true) { }
     }

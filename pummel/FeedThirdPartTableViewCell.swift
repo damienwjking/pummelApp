@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FirstThirdPartTableViewCell: UITableViewCell {
+class FeedThirdPartTableViewCell: UITableViewCell {
 
     @IBOutlet weak var userCommentLB: UILabel!
     @IBOutlet weak var contentCommentLB: UILabel!
@@ -17,6 +17,8 @@ class FirstThirdPartTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        self.userCommentLB.font = .pmmMonLight13()
+        self.contentCommentLB.font = .pmmMonLight16()
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

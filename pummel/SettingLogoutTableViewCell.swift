@@ -6,4 +6,8 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class SettingLogoutTableViewCell: UITableViewCell {
+    @IBOutlet weak var logoutLB: UILabel!
+}

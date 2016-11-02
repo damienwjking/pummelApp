@@ -12,7 +12,7 @@ class CardView: UIView {
    
     @IBOutlet var connectV : UIView!
     @IBOutlet var nameLB: UILabel!
-    @IBOutlet var address: UILabel!
+    @IBOutlet var addressLB: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: FlowLayout!
     @IBOutlet weak var avatarIMV : UIImageView!
@@ -38,6 +38,6 @@ class CardView: UIView {
         layer.rasterizationScale = UIScreen.mainScreen().scale
         
         // Corner Radius
-        layer.cornerRadius = 5.0;
+        //layer.cornerRadius = 5.0;
     }
 }

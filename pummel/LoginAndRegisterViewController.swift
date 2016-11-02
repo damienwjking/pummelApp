@@ -30,15 +30,16 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     var type : String!
     var filename: String!
     let imagePicker = UIImagePickerController()
-
+    let defaults = NSUserDefaults.standardUserDefaults()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Hidden navigation bar
         self.navigationController?.navigationBar.hidden = true
         self.setNeedsStatusBarAppearanceUpdate()
-        loginBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
-        signupBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
-        addProfilePhototLB.font = UIFont(name: "Montserrat-Regular", size: 10)
+        loginBT.titleLabel?.font = .pmmMonReg13()
+        signupBT.titleLabel?.font = .pmmMonReg13()
+        addProfilePhototLB.font = .pmmMonReg10()
         
         // Add loginVC
         self.addChildViewController(loginVC)
@@ -56,7 +57,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         self.view.addSubview(signupVC.view)
         
         self.updateUI()
-        
         self.profileIMV.layer.cornerRadius = 45
         self.addProfileIMV.layer.cornerRadius = 15
         self.addProfileIMV.clipsToBounds = true
@@ -133,34 +133,50 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBAction func clickSigninAction(sender:UIButton!) {
         let userEmail = self.loginVC.emailTF.text!
         let userPassword = self.loginVC.passwordTF.text!
-        //let userEmail = "thongvivio@gmail.com" as! String
-        //let userPassword = "12345678" as! String
-        
-        Alamofire.request(.POST, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/login", parameters: ["email":userEmail, "password":userPassword])
+        Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
             .responseJSON { response in
-                print("REQUEST-- \(response.request)")  // original URL request
-                print("RESPONSE-- \(response.response)") // URL response
-                print("DATA-- \(response.data)")     // server data
-                print("RESULT-- \(response.result)")   // result of response serialization
-                
                 if response.response?.statusCode == 200 {
                     //TODO: Save access token here
                     let JSON = response.result.value
-                    print("JSON: \(JSON)")
-                    print("SAVE COOKIE")
                     self.updateCookies(response)
-                    let currentId = String(format:"%0.f",JSON!.objectForKey("userId")!.doubleValue)
-                    let defaults = NSUserDefaults.standardUserDefaults()
-                    defaults.setObject(true, forKey: "isLogined")
-                    defaults.setObject(currentId, forKey: "currentId")
+                    let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
+                    
+                    self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
+                    self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
+                    // Check Coach
+                    var coachLink  = kPMAPICOACH
+                    let coachId = currentId
+                    coachLink.appendContentsOf(coachId)
+                    Alamofire.request(.GET, coachLink)
+                        .responseJSON { response in
+                            print (response.result.value)
+                            if response.response?.statusCode == 200 {
+                                self.defaults.setObject(true, forKey: k_PM_IS_COACH)
+                            } else {
+                                self.defaults.setObject(false, forKey: k_PM_IS_COACH)
+                            }
+                    }
+                    
+                    // Send token
+                    let tokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN)
+                    var linkPostNotif = kPMAPIUSER
+                    linkPostNotif.appendContentsOf(currentId)
+                    linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
+                    Alamofire.request(.POST, linkPostNotif, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProtocol:"APNS", kToken: tokenString!])
+                        .responseJSON { response in
+                            if response.response?.statusCode == 200 {
+                                print("Already push tokenString")
+                            } else {
+                                print("Can't push tokenString")
+                            }
+                    }
+
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
         
                 }else {
                     
-                    let alertController = UIAlertController(title: "Sign In Issues", message: "Please check email and password", preferredStyle: .Alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                    let alertController = UIAlertController(title: pmmNotice, message: signInNotice, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
@@ -174,15 +190,12 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     func updateCookies(response: Response<AnyObject, NSError>) {
         if let
             headerFields = response.response?.allHeaderFields as? [String: String],
-            URL = response.request?.URL {
+            let URL = response.request?.URL {
                 let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: URL)
-            
-                //print(cookies)
                 // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
                 Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
-                let defaults = NSUserDefaults.standardUserDefaults()
-                defaults.setObject(headerFields, forKey: "headerFields")
-                defaults.setObject(URL.absoluteString, forKey: "urlLastCookie")
+                defaults.setObject(headerFields, forKey: k_PM_HEADER_FILEDS)
+                defaults.setObject(URL.absoluteString, forKey: k_PM_URL_LAST_COOKIE)
         }
     }
     
@@ -198,62 +211,56 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             let userEmail = self.signupVC.emailTF.text
             let userPassword = self.signupVC.passwordTF.text
             let dob = self.signupVC.dobTF.text
-            let gender = self.signupVC.genderTF.text
+            var gender = self.signupVC.genderTF.text
             
             let fullNameArr = name!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
             if (fullNameArr.count > 0) {
                 firstname = fullNameArr[0]
             }
-            var lastname = ""
-            if fullNameArr.count >= 2 {
-                for i in 1 ..< fullNameArr.count {
-                    lastname.appendContentsOf(fullNameArr[i])
-                    lastname.appendContentsOf(" ")
-                }
-            } else {
-                lastname = " "
+
+            if (gender == "") {
+                gender = kDontCare
             }
             
-            Alamofire.request(.POST, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/register", parameters: ["email":userEmail!, "password":userPassword!, "firstname":firstname, "lastname":lastname, "dob":dob!, "gender":gender!])
+            var para : [String: AnyObject]!
+            para =  (dob == "") ? [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kGender:gender!] : [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kDob:dob!, kGender:gender!]
+            
+            Alamofire.request(.POST, kPMAPI_REGISTER, parameters: para)
                 .responseJSON { response in
-                    print("REQUEST-- \(response.request)")  // original URL request
-                    print("RESPONSE-- \(response.response)") // URL response
-                    print("DATA-- \(response.data)")     // server data
-                    print("RESULT-- \(response.result)")   // result of response serialization
-                    print("RESULT CODE -- \(response.response?.statusCode)")
                     if response.response?.statusCode == 200 {
-                        let JSON = response.result.value
-                        
-                        
                         //LOGIN
-                        
-                        Alamofire.request(.POST, "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/login", parameters: ["email":userEmail!, "password":userPassword!])
+                        Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail!, kPassword:userPassword!])
                             .responseJSON { response in
-                                print("REQUEST-- \(response.request)")  // original URL request
-                                print("RESPONSE-- \(response.response)") // URL response
-                                print("DATA-- \(response.data)")     // server data
-                                print("RESULT-- \(response.result)")   // result of response serialization
-                                
                                 if response.response?.statusCode == 200 {
                                     //TODO: Save access token here
                                     let JSON = response.result.value
-                                    print("JSON: \(JSON)")
-                                    print("SAVE COOKIE")
                                     self.updateCookies(response)
-                                    let currentId = String(format:"%0.f",JSON!.objectForKey("userId")!.doubleValue)
-                                    let defaults = NSUserDefaults.standardUserDefaults()
-                                    defaults.setObject(true, forKey: "isLogined")
-                                    defaults.setObject(currentId, forKey: "currentId")
-                                    
+                                    let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
+                                    self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
+                                    self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
+                                   
+                                    // Send token
+                                    let tokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN)
+                                    var linkPostNotif = kPMAPIUSER
+                                    linkPostNotif.appendContentsOf(currentId)
+                                    linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
+                                    Alamofire.request(.POST, linkPostNotif, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProtocol:"APNS", kToken: tokenString!])
+                                        .responseJSON { response in
+                                            if response.response?.statusCode == 200 {
+                                                print("Already push tokenString")
+                                            } else {
+                                                print("Can't push tokenString")
+                                            }
+                                    }
+
                                     
                                     if (self.cameraProfileIconIMV.hidden) {
-                                        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
-                                        let defaults = NSUserDefaults.standardUserDefaults()
-                                        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-                                        prefix.appendContentsOf("/photos")
+                                        var prefix = kPMAPIUSER
+                                        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                                        prefix.appendContentsOf(kPM_PATH_PHOTO)
                                         var parameters = [String:AnyObject]()
-                                        parameters = ["userId":defaults.objectForKey("currentId") as! String, "profilePic": "0"]
+                                        parameters = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
                                         Alamofire.upload(
                                             .POST,
                                             prefix,
@@ -269,9 +276,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                 case .Success(let upload, _, _):
                                                     upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
                                                         dispatch_async(dispatch_get_main_queue()) {
-                                                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                                                            //progress(percent: percent)
-                                                            print(percent)
+                                                            //Print percent here
                                                         }
                                                     }
                                                     upload.validate()
@@ -279,9 +284,9 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                         if response.result.error != nil {
                                                             activityView.stopAnimating()
                                                             activityView.removeFromSuperview()
-                                                            let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully, but image profile isn't updated, let do it later", preferredStyle: .Alert)
+                                                            let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .Alert)
                                                             
-                                                            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                                                 self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                                             }
                                                             alertController.addAction(OKAction)
@@ -300,10 +305,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                     print(encodingError)
                                                     activityView.stopAnimating()
                                                     activityView.removeFromSuperview()
-                                                    let alertController = UIAlertController(title: "Register status", message: "Resgister sucessfully, but image profile isn't updated, let do it later", preferredStyle: .Alert)
+                                                    let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .Alert)
                                                     
                                                     
-                                                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                                         // ...
                                                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                                     }
@@ -320,17 +325,16 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                         activityView.removeFromSuperview()
 
                                         self.updateCookies(response)
-                                        let currentId = String(format:"%0.f",JSON!.objectForKey("userId")!.doubleValue)
-                                        let defaults = NSUserDefaults.standardUserDefaults()
-                                        defaults.setObject(true, forKey: "isLogined")
-                                        defaults.setObject(currentId, forKey: "currentId")
+                                        let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
+                                        self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
+                                        self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
                                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                     }
                                 }else {
                                     // REGISTER OK, BUT CAN'T SIGN IN
-                                    let alertController = UIAlertController(title: "Sign In Issues", message: "Register sucessfully, but can't sign it automatically. Please sign in again", preferredStyle: .Alert)
+                                    let alertController = UIAlertController(title: pmmNotice, message:registerNoticeSuccessButCantSignAutomatic, preferredStyle: .Alert)
                                     
-                                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                         activityView.stopAnimating()
                                         activityView.removeFromSuperview()
                                         self.isShowLogin = true
@@ -346,10 +350,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     } else {
                         activityView.stopAnimating()
                         activityView.removeFromSuperview()
-                        let alertController = UIAlertController(title: "Register Issues", message: "Please do it again", preferredStyle: .Alert)
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                         
                         
-                        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
@@ -373,9 +377,9 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             self.presentViewController(self.imagePicker, animated: true, completion: nil)
         }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Select From Library", style: UIAlertActionStyle.Default, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: "Take Photo", style: UIAlertActionStyle.Default, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Default, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Default, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
     }
@@ -389,34 +393,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.profileIMV.contentMode = .ScaleAspectFill
             self.profileIMV.image = pickedImage
-            
-           
-            let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
-            if assetPath.absoluteString.hasSuffix("JPG") {
-                type = "image/jpeg"
-                filename = "imagefile.jpeg"
+                type = imageJpeg
+                filename = jpgeFile
                 imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
                 self.cameraProfileIconIMV.hidden = true
-            } else if assetPath.absoluteString.hasSuffix("PNG") {
-                type = "image/png"
-                filename = "imagefile.png"
-                imageData = UIImagePNGRepresentation(pickedImage)
-                self.cameraProfileIconIMV.hidden = true
-            } else {
-                dispatch_async(dispatch_get_main_queue(),{
-                    //Your main thread code goes in here
-                    let alertController = UIAlertController(title: "Upload message issue", message: "Please choose jpeg or png file", preferredStyle: .Alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                })
-            }
         }
         
         dismissViewControllerAnimated(true, completion: nil)
@@ -460,17 +440,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                 attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
         } else {
             signupVC.emailAttentionIM.hidden = true
-            signupVC.dobTF.attributedText = NSAttributedString(string:signupVC.dobTF.text!,
-                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
-        }
-        if !(self.checkDateChanged(signupVC.dobTF.text!)) {
-            returnValue = true
-            signupVC.dobAttentionIM.hidden = false
-            signupVC.dobTF.attributedText = NSAttributedString(string:signupVC.dobTF.text!,
-                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-        } else {
-            signupVC.dobAttentionIM.hidden = true
-            signupVC.dobTF.attributedText = NSAttributedString(string:signupVC.dobTF.text!,
+            signupVC.emailTF.attributedText = NSAttributedString(string:signupVC.emailTF.text!,
                 attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
         }
         if !(self.checkPassword(signupVC.passwordTF.text!)) {
@@ -488,10 +458,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     
     
     func isValidEmail(testStr:String) -> Bool {
-        // println("validate calendar: \(testStr)")
-        let emailRegEx = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-        
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
         return emailTest.evaluateWithObject(testStr)
     }
     
@@ -511,7 +478,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             let year =  components.year
             let yearDOB = componentsDOB.year
             
-            if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
+            if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
                 return true
             } else {
                 return false

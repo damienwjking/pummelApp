@@ -11,43 +11,79 @@ import Alamofire
 
 class CoachProfileViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
+    @IBOutlet weak var titleCoachLB: UILabel!
     @IBOutlet weak var smallIndicatorView: UIView!
     @IBOutlet weak var medIndicatorView: UIView!
     @IBOutlet weak var bigIndicatorView: UIView!
     @IBOutlet weak var bigBigIndicatorView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
-
     @IBOutlet weak var avatarIMV: UIImageView!
+    @IBOutlet weak var coachBorderV: UIView!
+    @IBOutlet weak var coachBorderBackgroundV: UIView!
     @IBOutlet weak var connectV : UIView!
     @IBOutlet weak var connectBT : UIView!
-    @IBOutlet var addressLB: UILabel!
+    @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var interestLB: UILabel!
+    @IBOutlet weak var specialitiesLB: UILabel!
     @IBOutlet weak var aboutLB: UILabel!
-    @IBOutlet weak var aboutNameLB: UILabel!
+    @IBOutlet weak var qualificaitonLB: UILabel!
+    @IBOutlet weak var socailLB: UILabel!
+    @IBOutlet weak var postLB: UILabel!
     @IBOutlet weak var interestCollectionView: UICollectionView!
     @IBOutlet weak var interestFlowLayout: FlowLayout!
     @IBOutlet weak var aboutCollectionView: UICollectionView!
     @IBOutlet weak var aboutFlowLayout: FlowLayout!
-    @IBOutlet var aboutHeightDT: NSLayoutConstraint!
-    @IBOutlet var interestHeightDT: NSLayoutConstraint!
-    @IBOutlet var scrollHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var backBTDT: NSLayoutConstraint!
-    @IBOutlet var aboutShowBTDT: NSLayoutConstraint!
-    @IBOutlet weak var aboutV: UIView!
+    @IBOutlet weak var postHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var interestHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var postV: UIView!
     @IBOutlet weak var imageV: UIView!
     @IBOutlet weak var detailV: UIView!
     @IBOutlet weak var interestV: UIView!
-    @IBOutlet weak var aboutShowBT: UIButton!
-    @IBOutlet weak var titleAboutLB: UILabel!
     @IBOutlet weak var backBT: UIButton!
+    @IBOutlet weak var aboutV: UIView!
+    @IBOutlet weak var aboutHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var qualificationV: UIView!
+    @IBOutlet weak var qualificationDT: NSLayoutConstraint!
+    @IBOutlet weak var achivementDT: NSLayoutConstraint!
+    @IBOutlet weak var socailV: UIView!
+    @IBOutlet weak var facebookV: UIView!
+    @IBOutlet weak var facebookBT: UIButton!
+    @IBOutlet weak var twiterV: UIView!
+    @IBOutlet weak var twiterBT: UIButton!
+    @IBOutlet weak var instagramV: UIView!
+    @IBOutlet weak var instagramBT: UIButton!
+    @IBOutlet weak var facebookDT: NSLayoutConstraint!
+    @IBOutlet weak var twiterDT: NSLayoutConstraint!
+    @IBOutlet weak var instagramDT: NSLayoutConstraint!
+    @IBOutlet weak var socalDT: NSLayoutConstraint!
+    @IBOutlet weak var aboutTV: UITextView!
+    @IBOutlet weak var aboutTVHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var qualificationTV: UITextView!
+    @IBOutlet weak var qualificationTVHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var achivementTV: UITextView!
+    @IBOutlet weak var achivementTVHeightDT: NSLayoutConstraint!
+    
+    @IBOutlet weak var ratingLB: UILabel!
+    @IBOutlet weak var ratingContentLB: UILabel!
+    
+    @IBOutlet weak var connectionLB: UILabel!
+    @IBOutlet weak var connectionContentLB: UILabel!
+    
+    @IBOutlet weak var postNumberLB: UILabel!
+    @IBOutlet weak var postNumberContentLB: UILabel!
+    
+
+    var instagramLink: String? = ""
+    var twitterLink: String? = ""
+    var facebookLink: String? = ""
     var oldPositionAboutV: CGFloat!
     var statusBarDefault: Bool!
     var coachDetail: NSDictionary!
-   
+    var coachTotalDetail: NSDictionary!
     var sizingCell: TagCell?
     var tags = [Tag]()
-
     var arrayPhotos: NSArray = []
+    var isFromFeed: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,70 +103,265 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.medIndicatorView.clipsToBounds = true
         self.smallIndicatorView.clipsToBounds = true
 
+        self.titleCoachLB.font = .pmmMonReg13()
+        self.titleCoachLB.text = (coachDetail[kFirstname] as! String).uppercaseString
+        
         self.connectV.layer.cornerRadius = 55/2
         self.connectV.clipsToBounds = true
         self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
-        self.addressLB.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.interestLB.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.aboutLB.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.aboutNameLB.font = UIFont(name: "Montserrat-Regular", size: 11)
-        self.titleAboutLB.font = UIFont(name: "Montserrat-Regular", size: 13)
-        self.titleAboutLB.text = (self.coachDetail["firstname"] as! String).uppercaseString
+        self.addressLB.font = .pmmMonReg11()
+        self.interestLB.font = .pmmMonReg11()
+        self.specialitiesLB.font = .pmmMonLight11()
+        self.qualificationTV.font = .pmmMonLight13()
+        self.socailLB.font = .pmmMonLight11()
+        self.postLB.font = .pmmMonLight11()
+        self.aboutLB.font = .pmmMonLight11()
+        self.aboutTV.backgroundColor = .clearColor()
+        self.aboutTV.font = .pmmMonLight13()
+        self.aboutTV.scrollEnabled = false
+        self.qualificationTV.backgroundColor = .clearColor()
+        self.qualificationTV.font = .pmmMonLight13()
+        self.qualificationTV.scrollEnabled = false
+        self.facebookBT.titleLabel?.font = .pmmMonReg11()
+        self.twiterBT.titleLabel?.font = .pmmMonReg11()
+        self.instagramBT.titleLabel?.font = .pmmMonReg11()
         self.avatarIMV.layer.cornerRadius = 125/2
+        self.coachBorderV.layer.cornerRadius = 135/2
+        self.coachBorderBackgroundV.layer.cornerRadius = 129/2
         self.avatarIMV.clipsToBounds = true
-        let imageLink = coachDetail["imageUrl"] as! String
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-        prefix.appendContentsOf(imageLink)
-        let postfix = "?width=".stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString("&height=").stringByAppendingString(avatarIMV.frame.size.width.description)
-        prefix.appendContentsOf(postfix)
-        Alamofire.request(.GET, prefix)
-            .responseImage { response in
-                let imageRes = response.result.value! as UIImage
-                self.avatarIMV.image = imageRes
-        }
-
-        let coachListTags = coachDetail["tags"] as! NSArray
-        self.tags.removeAll()
-        for i in 0 ..< coachListTags.count {
-            let tagContent = coachListTags[i] as! NSDictionary
-            let tag = Tag()
-            tag.name = tagContent["title"] as? String
-            self.tags.append(tag)
-        }
-        
+        self.coachBorderBackgroundV.hidden = true
+        self.coachBorderV.hidden = true
+        self.scrollView.scrollsToTop = false
         self.interestCollectionView.delegate = self
         self.interestCollectionView.dataSource = self
-        let flow = interestCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        flow.minimumInteritemSpacing = 0
-        flow.minimumLineSpacing = 0
-        let cellNib = UINib(nibName: "TagCell", bundle: nil)
-        self.interestCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: "TagCell")
+        if !(coachDetail[kImageUrl] is NSNull) {
+            let imageLink = coachDetail[kImageUrl] as! String
+            var prefix = kPMAPI
+            prefix.appendContentsOf(imageLink)
+            let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
+            prefix.appendContentsOf(postfix)
+            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                self.avatarIMV.image = imageRes
+                self.coachBorderBackgroundV.hidden = false
+                self.coachBorderV.hidden = false
+            } else {
+                Alamofire.request(.GET, prefix)
+                    .responseImage { response in
+                        if (response.response?.statusCode == 200) {
+                            let imageRes = response.result.value! as UIImage
+                            self.avatarIMV.image = imageRes
+                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                            self.coachBorderBackgroundV.hidden = false
+                            self.coachBorderV.hidden = false
+                        }
+                }
+            }
+        }
+        
+
+        if (coachDetail[kTags] == nil) {
+            let feedId = String(format:"%0.f", coachDetail[kId]!.doubleValue)
+            var tagLink = kPMAPIUSER
+            tagLink.appendContentsOf(feedId)
+            tagLink.appendContentsOf("/tags")
+            Alamofire.request(.GET, tagLink)
+                .responseJSON { response in
+                    if (response.response?.statusCode == 200) {
+                        let tagArr = response.result.value as! [NSDictionary]
+                        self.tags.removeAll()
+                        for i in 0 ..< tagArr.count {
+                            let tagContent = tagArr[i]
+                            let tag = Tag()
+                            tag.name = tagContent[kTitle] as? String
+                            self.tags.append(tag)
+                        }
+                        self.interestCollectionView.reloadData()
+                    }
+            }
+        } else {
+            let coachListTags = coachDetail[kTags] as! NSArray
+            self.tags.removeAll()
+            for i in 0 ..< coachListTags.count {
+                let tagContent = coachListTags[i] as! NSDictionary
+                let tag = Tag()
+                tag.name = tagContent[kTitle] as? String
+                self.tags.append(tag)
+            }
+            self.interestCollectionView.reloadData()
+        }
+
+        self.interestFlowLayout.smaller = true
+        let cellNib = UINib(nibName: kTagCell, bundle: nil)
+        self.interestCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
         self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
         self.interestCollectionView.backgroundColor = UIColor.clearColor()
         self.aboutCollectionView.backgroundColor = UIColor.clearColor()
         self.statusBarDefault = false
-        
+        self.aboutCollectionView.delegate = self
+        self.aboutCollectionView.dataSource = self
+        self.ratingLB.font = .pmmMonLight10()
+        self.ratingContentLB.font = .pmmMonReg16()
+        self.connectionLB.font = .pmmMonLight10()
+        self.connectionLB.text = "CLIENTS"
+        self.connectionContentLB.font = .pmmMonReg16()
+        self.postNumberLB.font = .pmmMonLight10()
+        self.postNumberContentLB.font = .pmmMonReg16()
+        self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
         getListImage()
+        self.updateUI()
     }
     
     func getListImage() {
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
-        prefix.appendContentsOf(String(format:"%0.f", coachDetail["id"]!.doubleValue))
-        prefix.appendContentsOf("/photos")
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
+        prefix.appendContentsOf(kPM_PATH_PHOTO)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                print(JSON)
                 self.arrayPhotos = JSON as! NSArray
-                self.aboutCollectionView.delegate = self
-                self.aboutCollectionView.dataSource = self
+                self.aboutCollectionView.reloadData()
+                self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+                self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
+                self.scrollView.scrollEnabled = true
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
         }
-
     }
+    
+    func updateUI() {
+        var prefix = kPMAPICOACH
+        prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                let coachInformationTotal = JSON as! NSDictionary
+                let coachInformation = coachInformationTotal[kUser] as! NSDictionary
+                if (coachInformation[kRating] is NSNull) {
+                     self.ratingContentLB.text = "0%"
+                } else {
+                    var rating = coachInformation[kRating] as! Double
+                    rating = rating * 100
+                    self.ratingContentLB.text = String(format:"%0.f", rating).stringByAppendingString("%")
+                }
+                
+                if (coachInformation[kConnectionCount] is NSNull) {
+                    self.connectionContentLB.text = "0"
+                } else {
+                    self.connectionContentLB.text = String(format:"%0.f", coachInformation[kConnectionCount]!.doubleValue)
+                }
+                
+                if (coachInformation[kPostCount] is NSNull) {
+                     self.postNumberContentLB.text  = "0"
+                } else {
+                    self.postNumberContentLB.text = String(format:"%0.f", coachInformation[kPostCount]!.doubleValue)
+                }
+                
+                if !(coachInformationTotal[kServiceArea] is NSNull) {
+                    self.addressLB.text = coachInformationTotal[kServiceArea] as? String
+                }
+                
+                if !(coachInformation[kBio] is NSNull) {
+                    self.aboutTV.text = coachInformation[kBio] as! String
+                }
+                
+                let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
+                self.aboutTVHeightDT.constant = sizeAboutTV.height
+                self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+                
+                if !(coachInformationTotal[kQualification] is NSNull) {
+                    let qualificationText = coachInformationTotal[kQualification] as! String
+                    self.qualificationTV.text = qualificationText
+                    let sizeQualificationTV = self.qualificationTV.sizeThatFits(self.qualificationTV.frame.size)
+                    self.qualificationTVHeightDT.constant = sizeQualificationTV.height + 10
+                    self.qualificationDT.constant = self.qualificationTV.frame.origin.y + sizeQualificationTV.height
+                } else {
+                    self.qualificationTV.text = " "
+                    self.qualificationDT.constant = 0
+                }
+                
+                if !(coachInformationTotal[kAchievement] is NSNull) {
+                    let achivementText = coachInformationTotal[kAchievement] as! String
+                    self.achivementTV.text = achivementText
+                    let sizeAchivementTV = self.achivementTV.sizeThatFits(self.achivementTV.frame.size)
+                    self.achivementTVHeightDT.constant = sizeAchivementTV.height + 10
+                    self.achivementDT.constant = self.qualificationTV.frame.origin.y + sizeAchivementTV.height
+                } else {
+                    self.achivementTV.text = " "
+                    self.achivementDT.constant = 0
+                }
+                
+                if !(coachInformation[kInstagramUrl] is NSNull) {
+                    self.instagramLink = coachInformation[kInstagramUrl] as? String
+                }
+                if !(coachInformation[kFacebookUrl] is NSNull) {
+                    self.facebookLink = coachInformation[kFacebookUrl] as? String
+                }
+                if !(coachInformation[kTwitterUrl] is NSNull) {
+                    self.twitterLink = coachInformation[kTwitterUrl] as? String
+                }
+                
+                if (self.instagramLink == "") {
+                    if (self.facebookLink == "") {
+                        if (self.twitterLink == "") {
+                            self.facebookDT.constant = 0
+                            self.twiterDT.constant = 0
+                            self.instagramDT.constant = 0
+                            self.socalDT.constant = 0
+                            self.socailLB.text = ""
+                            var frame = self.aboutCollectionView.frame
+                            frame.origin.y -= 20
+                            self.aboutCollectionView.frame = frame
+                            
+                        } else {
+                            self.facebookDT.constant = 0
+                            self.twiterDT.constant = self.view.frame.size.width
+                            self.instagramDT.constant = 0
+                        }
+                    } else {
+                        if (self.twitterLink == "") {
+                            self.facebookDT.constant = 0
+                            self.twiterDT.constant = 0
+                            self.instagramDT.constant = self.view.frame.size.width
+                        } else {
+                            self.facebookDT.constant = 0
+                            self.twiterDT.constant = self.view.frame.size.width/2
+                            self.instagramDT.constant = self.view.frame.size.width/2
+                        }
+                    }
+                } else {
+                    if (self.facebookLink == "") {
+                        if (self.twitterLink == "") {
+                            self.facebookDT.constant = 0
+                            self.twiterDT.constant = 0
+                            self.instagramDT.constant = self.view.frame.size.width
+                        } else {
+                            self.facebookDT.constant = 0
+                            self.twiterDT.constant = self.view.frame.size.width/2
+                            self.instagramDT.constant = self.view.frame.size.width/2
+                        }
+                    } else {
+                        if (self.twitterLink == "") {
+                            self.facebookDT.constant = self.view.frame.size.width/2
+                            self.twiterDT.constant = 0
+                            self.instagramDT.constant = self.view.frame.size.width/2
+                        } else {
+                            self.facebookDT.constant = self.view.frame.size.width/3
+                            self.twiterDT.constant = self.view.frame.size.width/3
+                            self.instagramDT.constant = self.view.frame.size.width/3
+                        }
+                    }
+                }
+                
+
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+            }
+        }
+        
+           }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -139,28 +370,28 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        aboutHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + aboutHeightDT.constant)
+        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
         self.scrollView.scrollEnabled = true
     }
     
     
-    @IBAction func goBackToResult(sender:UIButton) {
+    @IBAction func goBackToResult() {
         self.dismissViewControllerAnimated(true) { 
-            print("goBackToResult")
         }
     }
     
-    @IBAction func goConnection(sender:UIButton) {
-        self.performSegueWithIdentifier("goConnect", sender: self)
+    @IBAction func goConnection() {
+        self.performSegueWithIdentifier(kGoConnect, sender: self)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "goConnect")
+        if (segue.identifier == kGoConnect)
         {
             let destimation = segue.destinationViewController as! ConnectViewController
             destimation.coachDetail = coachDetail
             destimation.isFromProfile = true
+            destimation.isFromFeed = false
         }
     }
 
@@ -175,53 +406,44 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBAction func expandInterest(sender:UIButton) {
         if (self.interestHeightDT.constant == 50) {
             self.interestHeightDT.constant = 128
-            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + aboutHeightDT.constant)
+            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
 
         } else {
             self.interestHeightDT.constant = 50
-            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + aboutHeightDT.constant)
+            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
 
         }
     }
     
     @IBAction func expandAboutDetail(sender: UIButton) {
-        if (self.aboutHeightDT.constant == 50) {
-            self.aboutHeightDT.constant = 70
+        if (self.postHeightDT.constant == 50) {
+            self.postHeightDT.constant = 70
         } else {
-            self.aboutHeightDT.constant = 50
+            self.postHeightDT.constant = 50
         }
         if (self.view.frame.origin.y == 0.0) {
-            self.oldPositionAboutV = self.view.frame.size.height - (self.aboutV.frame.size.height +
+            self.oldPositionAboutV = self.view.frame.size.height - (self.postV.frame.size.height +
                 self.aboutCollectionView.frame.size.height)
             var frameV : CGRect!
             frameV = self.view.frame
-            frameV.origin.y = -self.aboutV.frame.origin.y
+            frameV.origin.y = -self.postV.frame.origin.y
             frameV.size.height += self.oldPositionAboutV
             self.view.frame = frameV
-            self.aboutNameLB.hidden = true
             self.aboutLB.hidden = true
-            self.backBTDT.constant = 10
-            self.aboutShowBTDT.constant = 20
-            self.backBT.setImage(UIImage(named:"blackArrow"), forState: UIControlState.Normal)
-            self.titleAboutLB.text = "SARAH"
-            self.titleAboutLB.hidden = false
+            self.backBT.setImage(UIImage(named:"blackArrow"), forState: .Normal)
             self.statusBarDefault = true
             self.setNeedsStatusBarAppearanceUpdate()
             
         } else {
             self.statusBarDefault = false
             self.setNeedsStatusBarAppearanceUpdate()
-            self.titleAboutLB.hidden = true
-            self.aboutNameLB.hidden = false
             self.aboutLB.hidden = false
             var frameV : CGRect!
             frameV = self.view.frame
             frameV.origin.y = 0
             frameV.size.height -= self.oldPositionAboutV
             self.view.frame = frameV
-            self.backBTDT.constant = 0
-            self.aboutShowBTDT.constant = 0
-            self.backBT.setImage(UIImage(named:"back"), forState: UIControlState.Normal)
+            self.backBT.setImage(UIImage(named:"back"), forState: .Normal)
         }
     }
     
@@ -235,11 +457,11 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         if (collectionView == self.interestCollectionView) {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TagCell", forIndexPath: indexPath) as! TagCell
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
             self.configureCell(cell, forIndexPath: indexPath)
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("AboutCollectionViewCell", forIndexPath: indexPath) as! AboutCollectionViewCell
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
             self.configureAboutCell(cell, forIndexPath: indexPath)
             return cell
         }
@@ -271,10 +493,10 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-            var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
+            var prefix = kPMAPI
             let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-            let postfix = "?width=".stringByAppendingString((self.view.frame.size.width/2).description).stringByAppendingString("&height=").stringByAppendingString((self.view.frame.size.width/2).description)
-            var link = photo.objectForKey("imageUrl") as! String
+            let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width/2).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width/2).description)
+            var link = photo.objectForKey(kImageUrl) as! String
             link.appendContentsOf(postfix)
             prefix.appendContentsOf(link)
             Alamofire.request(.GET, prefix)
@@ -282,5 +504,47 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                     let imageRes = response.result.value! as UIImage
                     cell.imageCell.image = imageRes
             }
+    }
+    
+    @IBAction func clickOnFacebook() {
+        if (self.facebookLink != "") {
+            let facebookUrl = NSURL(string: self.facebookLink!)
+            if UIApplication.sharedApplication().canOpenURL(facebookUrl!)
+            {
+                UIApplication.sharedApplication().openURL(facebookUrl!)
+                
+            } else {
+                //redirect to safari because the user doesn't have Instagram
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://facebook.com/")!)
+            }
+        }
+    }
+    
+    @IBAction func clickOnTwitter() {
+        if (self.twitterLink != "") {
+            let twitterUrl = NSURL(string: self.twitterLink!)
+            if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
+            {
+                UIApplication.sharedApplication().openURL(twitterUrl!)
+                
+            } else {
+                //redirect to safari because the user doesn't have Instagram
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://twitter.com/")!)
+            }
+        }
+    }
+    
+    @IBAction func clickOnInstagram() {
+        if (self.facebookLink != "") {
+            let instagramUrl = NSURL(string: self.instagramLink!)
+            if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
+            {
+                UIApplication.sharedApplication().openURL(instagramUrl!)
+                
+            } else {
+                //redirect to safari because the user doesn't have Instagram
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!)
+            }
+        }
     }
 }

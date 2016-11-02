@@ -27,19 +27,18 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     var userIdTarget: String!
     var messageId: String!
     var arrayChat: NSArray!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         var image = UIImage(named: "blackArrow")
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatMessageViewController.cancel))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationController!.navigationBar.translucent = false;
-        self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
+        self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.setNavigationTitle()
        
-        self.textBox.font = UIFont(name: "Montserrat-Regular", size: 13)!
-//      self.textBox.attributedPlaceholder = NSAttributedString(string:"START A CONVERSATION",           attributes:([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor.blackColor()]))
-       // self.textBox.delegate = self
+        self.textBox.font = .pmmMonReg13()
         self.textBox.delegate = self
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
@@ -64,21 +63,17 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func getImageAvatarTextBox() {
-        
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-        prefix.appendContentsOf("/photos")
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                print(JSON)
-                let listPhoto = JSON as! NSArray
-                if (listPhoto.count >= 1) {
-                    let photo = listPhoto[0] as! NSDictionary
-                    var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-                    link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
-                    link.appendContentsOf("?width=80&height=80")
+                let userDetail = JSON as! NSDictionary
+                if !(userDetail[kImageUrl] is NSNull) {
+                    var link = kPMAPI
+                    link.appendContentsOf(userDetail[kImageUrl] as! String)
+                    link.appendContentsOf(widthHeight80)
                     
                     if (NSCache.sharedInstance.objectForKey(link) != nil) {
                         let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -91,12 +86,13 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                                 NSCache.sharedInstance.setObject(imageRes, forKey: link)
                         }
                     }
+                } else {
+                    self.avatarTextBox.image = UIImage(named: "display-empty.jpg")
                 }
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
         }
-
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
@@ -104,13 +100,14 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func getArrayChat() {
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-        prefix.appendContentsOf("/conversations/")
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
+        prefix.appendContentsOf("/")
         if (messageId != nil) {
             prefix.appendContentsOf(self.messageId as String)
-            prefix.appendContentsOf("/messages")
+            prefix.appendContentsOf(kPM_PARTH_MESSAGE)
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -132,24 +129,23 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
             if (nameChatUser != nil) {
                 self.navigationItem.title = nameChatUser
             } else {
-                var prefixUser = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+                var prefixUser = kPMAPIUSER
                 prefixUser.appendContentsOf(userIdTarget)
                 Alamofire.request(.GET, prefixUser)
                     .responseJSON { response in switch response.result {
                     case .Success(let JSON):
                         let userInfo = JSON as! NSDictionary
-                        let name = userInfo.objectForKey("firstname") as! String
+                        let name = userInfo.objectForKey(kFirstname) as! String
                         self.navigationItem.title = name.uppercaseString
                     case .Failure(let error):
                         print("Request failed with error: \(error)")
-                        }
+                    }
                 }
             }
         }
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y -= keyboardSize.height
         }
@@ -197,53 +193,55 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
-            let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageHeaderTableViewCell", forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell
-                var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
-                prefix.appendContentsOf(userIdTarget as String)
-                prefix.appendContentsOf("/photos")
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                        case .Success(let JSON):
-                            let listPhoto = JSON as! NSArray
-                            if (listPhoto.count >= 1) {
-                                let photo = listPhoto[listPhoto.count - 1] as! NSDictionary
-                                var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-                                link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
-                                link.appendContentsOf("?width=80&height=80")
-                                if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                                    let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+            let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageHeaderTableViewCell, forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell
+            
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(userIdTarget as String)
+            Alamofire.request(.GET, prefix)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    let userDetail = JSON as! NSDictionary
+                    if !(userDetail[kImageUrl] is NSNull) {
+                        var link = kPMAPI
+                        link.appendContentsOf(userDetail[kImageUrl] as! String)
+                        link.appendContentsOf(widthHeight160)
+                        
+                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                            cell.avatarIMV.image = imageRes
+                        } else {
+                            Alamofire.request(.GET, link)
+                                .responseImage { response in
+                                    let imageRes = response.result.value! as UIImage
                                     cell.avatarIMV.image = imageRes
-                                } else {
-                                    Alamofire.request(.GET, link)
-                                        .responseImage { response in
-                                            let imageRes = response.result.value! as UIImage
-                                            cell.avatarIMV.image = imageRes
-                                            NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                    }
-                                }
-                                
+                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                            }
                         }
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
+                    } else {
+                        cell.avatarIMV.image = UIImage(named: "display-empty.jpg")
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
                     }
             }
+            
             if (typeCoach == true) {
                 cell.nameChatUserLB.text = coachName
             } else {
                 if (nameChatUser != nil) {
                     cell.nameChatUserLB.text = nameChatUser
                 } else {
-                    var prefixUser = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+                    var prefixUser = kPMAPIUSER
                     prefixUser.appendContentsOf(userIdTarget)
                     Alamofire.request(.GET, prefixUser)
                         .responseJSON { response in switch response.result {
                         case .Success(let JSON):
                             let userInfo = JSON as! NSDictionary
-                            let name = userInfo.objectForKey("firstname") as! String
+                            let name = userInfo.objectForKey(kFirstname) as! String
                             cell.nameChatUserLB.text = name.uppercaseString
                         case .Failure(let error):
                             print("Request failed with error: \(error)")
-                            }
+                        }
                     }
                 }
 
@@ -255,96 +253,68 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         } else {
             let num = arrayChat.count
             let message = arrayChat[num-indexPath.row] as! NSDictionary
-            print (message)
-            if (message["imageUrl"] is NSNull) {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageWithoutImageTableViewCell", forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
-                
-                
-                var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
-                prefix.appendContentsOf(String(format:"%0.f",message["userId"]!.doubleValue))
+            if (message[kImageUrl] is NSNull) {
+                let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageWithoutImageTableViewCell, forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
+                var prefix = kPMAPIUSER
+                prefix.appendContentsOf(String(format:"%0.f",message[kUserId]!.doubleValue))
                 Alamofire.request(.GET, prefix)
                         .responseJSON { response in switch response.result {
                     case .Success(let JSON):
                             let userInfo = JSON as! NSDictionary
-                            let name = userInfo.objectForKey("firstname") as! String
+                            let name = userInfo.objectForKey(kFirstname) as! String
                             cell.nameLB.text = name.uppercaseString
+                            if !(userInfo[kImageUrl] is NSNull) {
+                                var link = kPMAPI
+                                link.appendContentsOf(userInfo[kImageUrl] as! String)
+                                link.appendContentsOf(widthHeight80)
+                                
+                                if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                                    let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                                    cell.avatarIMV.image = imageRes
+                                } else {
+                                    Alamofire.request(.GET, link)
+                                        .responseImage { response in
+                                            let imageRes = response.result.value! as UIImage
+                                            cell.avatarIMV.image = imageRes
+                                            NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                    }
+                                }
+                            }
                     case .Failure(let error):
                             print("Request failed with error: \(error)")
                     }
                 }
-            
                 
-                prefix.appendContentsOf("/photos")
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let listPhoto = JSON as! NSArray
-                        if (listPhoto.count >= 1) {
-                            let photo = listPhoto[0] as! NSDictionary
-                            var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-                            link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
-                            link.appendContentsOf("?width=80&height=80")
-                            if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                                let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                                cell.avatarIMV.image = imageRes
-                            } else {
-                                Alamofire.request(.GET, link)
-                                    .responseImage { response in
-                                        let imageRes = response.result.value! as UIImage
-                                        cell.avatarIMV.image = imageRes
-                                        NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                }
-                            }
-                        }
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
-                        }
-                }
-                
-                if (message.objectForKey("text") == nil) {
+                if (message.objectForKey(kText) == nil) {
                     cell.messageLB.text = ""
                 } else {
-                    cell.messageLB.text = message.objectForKey("text") as? String
+                    cell.messageLB.text = message.objectForKey(kText) as? String
                 }
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ChatMessageImageTableViewCell", forIndexPath: indexPath) as! ChatMessageImageTableViewCell
-                
-                var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-                link.appendContentsOf(message.objectForKey("imageUrl") as! String)
-                link.appendContentsOf("?width=320&height=320")
-                print(link)
+                let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageImageTableViewCell, forIndexPath: indexPath) as! ChatMessageImageTableViewCell
+                var link = kPMAPI
+                link.appendContentsOf(message.objectForKey(kImageUrl) as! String)
+                link.appendContentsOf(widthHeight320)
                 Alamofire.request(.GET, link)
                     .responseImage { response in
                         let imageRes = response.result.value! as UIImage
                        cell.photoIMW.image = imageRes
                 }
-
-                
-                var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
-                prefix.appendContentsOf(String(format:"%0.f",message["userId"]!.doubleValue))
+                var prefix = kPMAPIUSER
+                prefix.appendContentsOf(String(format:"%0.f",message[kUserId]!.doubleValue))
                 Alamofire.request(.GET, prefix)
                     .responseJSON { response in switch response.result {
                     case .Success(let JSON):
                         let userInfo = JSON as! NSDictionary
-                        let name = userInfo.objectForKey("firstname") as! String
+                        let name = userInfo.objectForKey(kFirstname) as! String
                         cell.nameLB.text = name.uppercaseString
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
-                        }
-                }
-                
-                prefix.appendContentsOf("/photos")
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let listPhoto = JSON as! NSArray
-                        if (listPhoto.count >= 1) {
-                            let photo = listPhoto[0] as! NSDictionary
-                            var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-                            link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
-                            link.appendContentsOf("?width=80&height=80")
+                        if !(userInfo[kImageUrl] is NSNull) {
+                            var link = kPMAPI
+                            link.appendContentsOf(userInfo[kImageUrl] as! String)
+                            link.appendContentsOf(widthHeight80)
+                            
                             if (NSCache.sharedInstance.objectForKey(link) != nil) {
                                 let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
                                 cell.avatarIMV.image = imageRes
@@ -359,14 +329,10 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                         }
                     case .Failure(let error):
                         print("Request failed with error: \(error)")
-                        }
+                    }
                 }
-
-                if (message.objectForKey("text") == nil) {
-                    cell.messageLB.text = ""
-                } else {
-                    cell.messageLB.text = message.objectForKey("text") as? String
-                }
+                
+                cell.messageLB.text = (message.objectForKey(kText) == nil) ? "" :  message.objectForKey(kText) as? String
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 return cell
             }
@@ -406,6 +372,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "sendPhoto")
         {
+            self.textBox.resignFirstResponder()
             let destinationVC = segue.destinationViewController as! SendPhotoViewController
             destinationVC.messageId = self.messageId
             destinationVC.typeCoach = self.typeCoach
@@ -415,46 +382,38 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func sendMessage() {
-        
         let defaults = NSUserDefaults.standardUserDefaults()
         let values : [String]
         
-        if (self.typeCoach == true) {
-            values = [coachId]
-        } else {
-            values = [userIdTarget as String]
-        }
+        values = (self.typeCoach == true) ? [coachId] : [userIdTarget as String]
         
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
-        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-        prefix.appendContentsOf("/conversations/")
-        Alamofire.request(.POST, prefix, parameters: ["userId":defaults.objectForKey("currentId") as! String, "userIds":values])
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
+        prefix.appendContentsOf("/")
+        Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIds:values])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value
-                    print("JSON: \(JSON)")
-                    let conversationId = String(format:"%0.f",JSON!.objectForKey("id")!.doubleValue)
-
+                    let conversationId = String(format:"%0.f",JSON!.objectForKey(kId)!.doubleValue)
                     //Add message to converstaton
                     self.messageId = conversationId
                     self.addMessageToExistConverstation()
-                } else {
-                    print(response.response?.statusCode)
                 }
         }
         
     }
     
     func addMessageToExistConverstation(){
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-        prefix.appendContentsOf("/conversations/")
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
+        prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)
-        prefix.appendContentsOf("/messages")
-        Alamofire.request(.POST, prefix, parameters: ["conversationId":self.messageId, "text":textBox.text, "file":"nodata".dataUsingEncoding(NSUTF8StringEncoding)!])
+        prefix.appendContentsOf(kPM_PARTH_MESSAGE)
+        Alamofire.request(.POST, prefix, parameters: [kConversationId:self.messageId, kText:textBox.text, "file":"nodata".dataUsingEncoding(NSUTF8StringEncoding)!])
             .responseJSON { response in
-                print(response.response?.statusCode)
                 if response.response?.statusCode == 200 {
                     self.getArrayChat()
                     self.textBox.text = ""
@@ -478,9 +437,6 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
             if let encodedString = string.dataUsingEncoding(NSUTF8StringEncoding) {
                 data.appendData(encodedString)
                 data.appendBytes(terminator, length: 1)
-            }
-            else {
-                NSLog("Cannot encode string \"\(string)\"")
             }
         }
         return data

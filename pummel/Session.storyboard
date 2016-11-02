@@ -1,7 +1,71 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qs5-cm-a3y">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--Progress View Controller-->
+        <scene sceneID="jYk-OI-MLR">
+            <objects>
+                <viewController id="qs5-cm-a3y" customClass="ProgressViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Rf3-bP-72M"/>
+                        <viewControllerLayoutGuide type="bottom" id="Tyf-hD-e6F"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Umf-9n-9ro">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptyImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="L5Y-dN-x0c"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coming Soon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdK-tz-bDv">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="YIK-vA-Ycl"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="33"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See your individual workouts and when your next session is scheduled for here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ji7-8m-TdZ">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="51" id="StX-So-tFm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="L5Y-dN-x0c" firstAttribute="leading" secondItem="Umf-9n-9ro" secondAttribute="leading" id="77j-aa-GdE"/>
+                            <constraint firstItem="kdK-tz-bDv" firstAttribute="top" secondItem="Rf3-bP-72M" secondAttribute="bottom" constant="226.5" id="8aK-Pc-dTJ"/>
+                            <constraint firstAttribute="trailing" secondItem="L5Y-dN-x0c" secondAttribute="trailing" id="KUo-XD-nqb"/>
+                            <constraint firstItem="L5Y-dN-x0c" firstAttribute="top" secondItem="Rf3-bP-72M" secondAttribute="bottom" id="MyF-lc-wb3"/>
+                            <constraint firstItem="kdK-tz-bDv" firstAttribute="leading" secondItem="Umf-9n-9ro" secondAttribute="leadingMargin" constant="23.5" id="YDN-ve-Oqc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ji7-8m-TdZ" secondAttribute="trailing" constant="15" id="bLZ-sl-6Hq"/>
+                            <constraint firstItem="Tyf-hD-e6F" firstAttribute="top" secondItem="L5Y-dN-x0c" secondAttribute="bottom" id="dek-AY-L7G"/>
+                            <constraint firstItem="ji7-8m-TdZ" firstAttribute="top" secondItem="kdK-tz-bDv" secondAttribute="bottom" constant="8" id="p0F-Tg-I1b"/>
+                            <constraint firstItem="ji7-8m-TdZ" firstAttribute="leading" secondItem="Umf-9n-9ro" secondAttribute="leadingMargin" constant="15" id="sdB-ph-NG0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="kdK-tz-bDv" secondAttribute="trailing" constant="24.5" id="w1D-Xd-JP8"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="" image="sessions.png" id="tNg-dI-hPk">
+                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-6"/>
+                    </tabBarItem>
+                    <connections>
+                        <outlet property="comingSoonDetailTF" destination="ji7-8m-TdZ" id="eJ6-jI-2tM"/>
+                        <outlet property="comingSoonTF" destination="kdK-tz-bDv" id="Uge-PO-CdB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IHS-OD-2Fq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1262" y="2054"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="emptyImage.png" width="375" height="552"/>
+        <image name="sessions.png" width="19" height="22"/>
+    </resources>
 </document>

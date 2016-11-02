@@ -20,14 +20,14 @@ class GetStarted3ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBarHidden = true
-        self.backgroundV.backgroundColor = UIColor(white: 32.0/255.0, alpha: 0.7)
-        self.reachTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 42)
-        self.shareTF.font = UIFont(name: "PlayfairDisplay-Regular", size: 15)
+        self.backgroundV.backgroundColor = .pmmWhite07Color()
+        self.reachTF.font = .pmmPlayFairReg42()
+        self.shareTF.font = .pmmPlayFairReg15()
         
         self.letSetItBT.layer.cornerRadius = 2
         self.letSetItBT.layer.borderWidth = 0.5
         self.letSetItBT.layer.borderColor = UIColor.whiteColor().CGColor
-        self.letSetItBT.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 13)
+        self.letSetItBT.titleLabel?.font = .pmmMonReg13()
         self.updateUI()
     }
 

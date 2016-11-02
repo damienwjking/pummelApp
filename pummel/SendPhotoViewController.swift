@@ -9,11 +9,13 @@
 import UIKit
 import Alamofire
 
-class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDelegate {
+class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    @IBOutlet var avatarIMV : UIImageView!
-    @IBOutlet var commentPhotoTV : UITextView!
-    @IBOutlet var imageSelected : UIImageView?
+    @IBOutlet weak var avatarIMV : UIImageView!
+    @IBOutlet weak var commentPhotoTV : UITextView!
+    @IBOutlet weak var imageSelected : UIImageView?
+    @IBOutlet weak var imageScrolView : UIScrollView!
+    
     var typeCoach : Bool = false
     var coachId: String!
     var userIdTarget: NSString!
@@ -21,29 +23,31 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     var arrayChat: NSArray!
     var otherKeyboardView: UIView!
     var viewKeyboard: UIView!
+    let imagePicker = UIImagePickerController()
+    var selectFromLibrary : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         self.navigationItem.title = "SEND PHOTO"
+        self.navigationItem.title = kNavSendPhoto
         self.navigationController!.navigationBar.translucent = false;
-        self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!]
+        self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
          self.navigationItem.hidesBackButton = true;
         let image = UIImage(named: "close")!.imageWithRenderingMode(.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(SendPhotoViewController.close))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SendPhotoViewController.post))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont(name: "Montserrat-Regular", size: 13)!, NSForegroundColorAttributeName:UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1.0)], forState: UIControlState.Normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
         self.setAvatar()
-        self.commentPhotoTV.text = "ADD A COMMENT..."
+        self.commentPhotoTV.text = addAComment
         self.commentPhotoTV.keyboardAppearance = .Dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
         self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
-       
+        self.imagePicker.delegate = self
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -74,20 +78,17 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     }
     
     func setAvatar() {
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-        prefix.appendContentsOf("/photos")
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                print(JSON)
-                let listPhoto = JSON as! NSArray
-                if (listPhoto.count >= 1) {
-                    let photo = listPhoto[0] as! NSDictionary
-                    var link = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001"
-                    link.appendContentsOf(photo.objectForKey("imageUrl") as! String)
-                    link.appendContentsOf("?width=80&height=80")
+                let userDetail = JSON as! NSDictionary
+                if !(userDetail[kImageUrl] is NSNull) {
+                    var link = kPMAPI
+                    link.appendContentsOf(userDetail[kImageUrl] as! String)
+                    link.appendContentsOf(widthHeight80)
                     
                     if (NSCache.sharedInstance.objectForKey(link) != nil) {
                         let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -100,7 +101,7 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                                 NSCache.sharedInstance.setObject(imageRes, forKey: link)
                         }
                     }
-                                    }
+                }
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
@@ -121,32 +122,31 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     
     func sendMessage() {
         self.commentPhotoTV.resignFirstResponder()
-//        let defaults = NSUserDefaults.standardUserDefaults()
-//        let values : [String]
-//        
-//        if (self.typeCoach == true) {
-//            values = [coachId]
-//        } else {
-//            values = [userIdTarget as String]
-//        }
-//        
-//        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
-//        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-//        prefix.appendContentsOf("/conversations/")
-//        Alamofire.request(.POST, prefix, parameters: ["userId":defaults.objectForKey("currentId") as! String, "userIds":values])
-//            .responseJSON { response in
-//                if response.response?.statusCode == 200 {
-//                    let JSON = response.result.value
-//                    print("JSON: \(JSON)")
-//                    let conversationId = String(format:"%0.f",JSON!.objectForKey("id")!.doubleValue)
-//                    
-//                    //Add message to converstaton
-//                    self.messageId = conversationId
-//                    self.addMessageToExistConverstation()
-//                } else {
-//                    print(response.response?.statusCode)
-//                }
-//        }
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let values : [String]
+        
+        if (self.typeCoach == true) {
+            values = [coachId]
+        } else {
+            values = [userIdTarget as String]
+        }
+        
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
+        prefix.appendContentsOf("/")
+        Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIds:values])
+            .responseJSON { response in
+                if response.response?.statusCode == 200 {
+                    let JSON = response.result.value
+                    let conversationId = String(format:"%0.f",JSON!.objectForKey(kId)!.doubleValue)
+                    
+                    self.messageId = conversationId
+                    self.addMessageToExistConverstation()
+                } else {
+                    print(response.response?.statusCode)
+                }
+        }
         
     }
     
@@ -155,26 +155,24 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
         activityView.center = self.view.center
         activityView.startAnimating()
         self.view.addSubview(activityView)
-        var prefix = "http://ec2-52-63-160-162.ap-southeast-2.compute.amazonaws.com:3001/api/users/"
+        var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey("currentId") as! String)
-        prefix.appendContentsOf("/conversations/")
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
+        prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)
-        prefix.appendContentsOf("/messages")
+        prefix.appendContentsOf(kPM_PARTH_MESSAGE)
         
         imageSelected?.image?.CGImage
         var imageData : NSData!
         let type : String!
         let filename : String!
-        imageData = UIImageJPEGRepresentation(imageSelected!.image!, 0.2)
-        type = "image/jpeg"
-        filename = "imagefile.jpeg"
-       
-
-        let textPost = (commentPhotoTV.text == nil) ? "" : commentPhotoTV.text
-        
+        imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+        type = imageJpeg
+        filename = jpgeFile
+        let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "" : commentPhotoTV.text
         var parameters = [String:AnyObject]()
-        parameters = ["conversationId":self.messageId as String, "text": textPost]
+        parameters = [kConversationId:self.messageId as String, kText: textPost]
         Alamofire.upload(
             .POST,
             prefix,
@@ -189,11 +187,6 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                 switch encodingResult {
                 case .Success(let upload, _, _):
                     upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                        dispatch_async(dispatch_get_main_queue()) {
-                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                            //progress(percent: percent)
-                            print(percent)
-                        }
                     }
                     upload.validate()
                     upload.responseJSON { response in
@@ -201,10 +194,8 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                         if response.result.error != nil {
                             activityView.stopAnimating()
                             activityView.removeFromSuperview()
-                            let alertController = UIAlertController(title: "Send Photo Issues", message: "Please do it again", preferredStyle: .Alert)
-                            
-                            
-                            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                 // ...
                             }
                             alertController.addAction(OKAction)
@@ -222,11 +213,8 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                     print(encodingError)
                     activityView.stopAnimating()
                     activityView.removeFromSuperview()
-
-                    let alertController = UIAlertController(title: "Send Photo Issues", message: "Please do it again", preferredStyle: .Alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
@@ -238,8 +226,27 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
         )
     }
     
+    @IBAction func showPopupToSelectImageWithSender() {
+        let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
+            self.imagePicker.allowsEditing = false
+            self.imagePicker.sourceType = .PhotoLibrary
+            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+        }
+        
+        let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
+            self.showCameraRoll()
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Default, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Default, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        
+        self.presentViewController(alertController, animated: true) { }
+    }
     
-    @IBAction func showCameraRoll(sender:UIButton!) {
+    
+    func showCameraRoll() {
         let fusuma = FusumaViewController()
         fusuma.delegate = self
         fusuma.defaultMode = .Camera
@@ -255,61 +262,57 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     
     // Fusuma delegate
     func fusumaImageSelected(image: UIImage) {
-        
-        print("Image selected")
-       
         self.imageSelected!.image = image
-       
-        
+        if (self.selectFromLibrary == true) {
+            self.imageScrolView.hidden = true
+            self.imageSelected?.hidden = false
+        } else {
+            for(subview) in self.imageScrolView.subviews {
+                subview.removeFromSuperview()
+            }
+            let height =  self.view.frame.size.width*image.size.height/image.size.width
+            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let imageViewScrollView = UIImageView.init(frame: frameT)
+            imageViewScrollView.image = image
+            self.imageScrolView.addSubview(imageViewScrollView)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
+            self.imageSelected?.hidden = true
+            self.imageScrolView?.hidden = false
+        }
     }
     
     func fusumaCameraRollUnauthorized() {
-        
         print("Camera roll unauthorized")
-        
-        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .Alert)
+        let alert = UIAlertController(title: accessRequested, message: savingImageNeedsToAccessYourPhotoAlbum, preferredStyle: .Alert)
         
         alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
-            
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
                 UIApplication.sharedApplication().openURL(url)
             }
             
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action) -> Void in
-            
+        alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
         }))
         
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        
-        // Combine the textView text and the replacement text to
-        // create the updated text string
         let currentText:NSString = textView.text
         let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
-        
-        // If updated text view will be empty, add the placeholder
-        // and set the cursor to the beginning of the text view
         if updatedText.isEmpty {
             
-            textView.text = "ADD A COMMENT..."
+            textView.text = addAComment
             textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
             
             textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
             
             return false
         }
-            
-            // Else if the text view's placeholder is showing and the
-            // length of the replacement string is greater than 0, clear
-            // the text view and set its color to black to prepare for
-            // the user's entry
         else if textView.textColor == UIColor(white:204.0/255.0, alpha: 1.0) && !text.isEmpty {
             textView.text = nil
-            textView.textColor = UIColor(white: 151.0 / 255.0, alpha: 1.0)
+            textView.textColor = UIColor.pmmWarmGreyTwoColor()
         }
         
         return true
@@ -321,6 +324,40 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                 textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
             }
         }
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            for(subview) in self.imageScrolView.subviews {
+                subview.removeFromSuperview()
+            }
+            self.imageSelected!.image = pickedImage
+            let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
+            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let imageViewScrollView = UIImageView.init(frame: frameT)
+            imageViewScrollView.image = pickedImage
+            self.imageScrolView.addSubview(imageViewScrollView)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
+            self.imageSelected?.hidden = true
+            self.imageScrolView?.hidden = false
+        }
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func cropAndSave() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        let offset = imageScrolView.contentOffset
+        
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
+        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        return image!
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
 }
@@ -336,7 +373,6 @@ extension NSData {
         c.withUnsafeMutableBufferPointer { buffer in
             getBytes(buffer.baseAddress, length: 1)
         }
-        
         // Identify data type
         switch (c[0]) {
         case 0xFF:
