@@ -33,6 +33,8 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var interestFlowLayout: FlowLayout!
     @IBOutlet weak var aboutCollectionView: UICollectionView!
     @IBOutlet weak var aboutFlowLayout: FlowLayout!
+    @IBOutlet weak var aboutLeftDT: NSLayoutConstraint!
+    @IBOutlet weak var businessIMV: UIImageView!
     @IBOutlet weak var postHeightDT: NSLayoutConstraint!
     @IBOutlet weak var interestHeightDT: NSLayoutConstraint!
     @IBOutlet weak var postV: UIView!
@@ -56,8 +58,12 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var twiterDT: NSLayoutConstraint!
     @IBOutlet weak var instagramDT: NSLayoutConstraint!
     @IBOutlet weak var socalDT: NSLayoutConstraint!
+    @IBOutlet weak var socalBTDT: NSLayoutConstraint!
     @IBOutlet weak var aboutTV: UITextView!
     @IBOutlet weak var aboutTVHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var webTV: UITextView!
+    @IBOutlet weak var webTVHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var webHeightDT: NSLayoutConstraint!
     @IBOutlet weak var qualificationTV: UITextView!
     @IBOutlet weak var qualificationTVHeightDT: NSLayoutConstraint!
     @IBOutlet weak var achivementTV: UITextView!
@@ -158,6 +164,49 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                 }
             }
         }
+        
+        self.businessIMV.hidden = true
+        self.aboutLeftDT.constant = 10
+        self.businessIMV.layer.cornerRadius = 50
+        self.businessIMV.clipsToBounds = true
+        if !(coachDetail[kBusinessId] is NSNull) {
+            if (coachDetail[kBusinessId] != nil) {
+                let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+                var linkBusinessId = kPMAPI_BUSINESS
+                linkBusinessId.appendContentsOf(businessId)
+                Alamofire.request(.GET, linkBusinessId)
+                    .responseJSON { response in
+                        if response.response?.statusCode == 200 {
+                            
+                            let jsonBusiness = response.result.value as! NSDictionary
+                            if !(jsonBusiness[kImageUrl] is NSNull) {
+                                let businessLogoUrl = jsonBusiness[kImageUrl] as! String
+                                var prefixLogo = kPMAPI
+                                prefixLogo.appendContentsOf(businessLogoUrl)
+                                prefixLogo.appendContentsOf(widthHeight120)
+                                if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
+                                    self.businessIMV.hidden = false
+                                    let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
+                                    self.businessIMV.image = imageRes
+                                    self.aboutLeftDT.constant = 120
+                                } else {
+                                    Alamofire.request(.GET, prefixLogo)
+                                        .responseImage { response in
+                                            if (response.response?.statusCode == 200) {
+                                                self.businessIMV.hidden = false
+                                                let imageRes = response.result.value! as UIImage
+                                                self.businessIMV.image = imageRes
+                                                self.aboutLeftDT.constant = 120
+                                                NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+        }
+
         
 
         if (coachDetail[kTags] == nil) {
@@ -293,6 +342,17 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                     self.achivementDT.constant = 0
                 }
                 
+                if !(coachInformationTotal[kWebsiteUrl] is NSNull) {
+                    let achivementText = coachInformationTotal[kWebsiteUrl] as! String
+                    self.webTV.text = achivementText
+                    let sizeWebTV = self.webTV.sizeThatFits(self.webTV.frame.size)
+                    self.webTVHeightDT.constant = sizeWebTV.height + 10
+                    self.webHeightDT.constant = self.webTV.frame.origin.y + sizeWebTV.height
+                } else {
+                    self.webTV.text = " "
+                    self.webHeightDT.constant = 0
+                }
+                
                 if !(coachInformation[kInstagramUrl] is NSNull) {
                     self.instagramLink = coachInformation[kInstagramUrl] as? String
                 }
@@ -309,12 +369,9 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                             self.facebookDT.constant = 0
                             self.twiterDT.constant = 0
                             self.instagramDT.constant = 0
+                            self.socalBTDT.constant = 0
                             self.socalDT.constant = 0
                             self.socailLB.text = ""
-                            var frame = self.aboutCollectionView.frame
-                            frame.origin.y -= 20
-                            self.aboutCollectionView.frame = frame
-                            
                         } else {
                             self.facebookDT.constant = 0
                             self.twiterDT.constant = self.view.frame.size.width

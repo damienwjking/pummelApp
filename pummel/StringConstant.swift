@@ -10,10 +10,12 @@ import Foundation
 
 // String Code
 let widthHeight80 = "?width=80&height=80"
+let widthHeight120 = "?width=120&height=120"
 let widthHeight160 = "?width=160&height=160"
 let widthHeight320 = "?width=320&height=320"
 let widthHeight250 = "?width=250&height=250"
 let widthHeight100 = "?width=100&height=100"
+let widthHeight236 = "?width=236&height=236"
 let widthEqual = "?width="
 let heighEqual = "&height="
 
@@ -86,10 +88,12 @@ let kInstagramUrl = "instagramUrl"
 let kFacebookUrl = "facebookUrl"
 let kTwitterUrl = "twitterUrl"
 let kAchievement = "achievements"
+let kWebsiteUrl = "websiteUrl"
 let kQualification = "qualifications"
 let kCreateAt = "createdAt"
 let kCount = "count"
 let kPostId = "postId"
+let kBusinessId = "businessId"
 
 // String
 let kLogoutSuccess = "Logout successful"

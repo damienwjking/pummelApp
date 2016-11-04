@@ -42,40 +42,37 @@
                         <constraint firstAttribute="width" secondItem="RUj-UG-UIb" secondAttribute="height" multiplier="1:1" id="7EC-QN-v0Y"/>
                     </constraints>
                 </imageView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v05-1Q-9Ex">
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ByE-oU-4B6">
-                            <state key="normal" image="connect.png"/>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <constraints>
-                        <constraint firstItem="ByE-oU-4B6" firstAttribute="leading" secondItem="v05-1Q-9Ex" secondAttribute="leading" id="8En-Og-XCD"/>
-                        <constraint firstAttribute="trailing" secondItem="ByE-oU-4B6" secondAttribute="trailing" id="TYW-yS-U86"/>
-                        <constraint firstAttribute="height" constant="55" id="cvW-D3-0hu"/>
-                        <constraint firstItem="ByE-oU-4B6" firstAttribute="top" secondItem="v05-1Q-9Ex" secondAttribute="top" id="dI8-RC-QTb"/>
-                        <constraint firstAttribute="width" constant="55" id="hFr-ef-QkU"/>
-                        <constraint firstAttribute="bottom" secondItem="ByE-oU-4B6" secondAttribute="bottom" id="tWt-X5-Kuf"/>
-                    </constraints>
-                </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="IA4-bN-nIE">
                     <collectionViewLayout key="collectionViewLayout" id="8Oo-Xl-BbH" customClass="FlowLayout" customModule="Pummel" customModuleProvider="target"/>
                     <cells/>
                 </collectionView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v05-1Q-9Ex">
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="81B-bM-bsP">
+                            <frame key="frameInset" width="100" height="100"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="cvW-D3-0hu"/>
+                        <constraint firstAttribute="width" constant="100" id="hFr-ef-QkU"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="IA4-bN-nIE" secondAttribute="bottom" constant="15" id="0ZG-9b-B3i"/>
+                <constraint firstAttribute="bottom" secondItem="IA4-bN-nIE" secondAttribute="bottom" constant="20" id="0ZG-9b-B3i"/>
                 <constraint firstItem="MpF-Bd-Uvg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="0k7-aF-tdE"/>
                 <constraint firstItem="i20-wR-398" firstAttribute="leading" secondItem="MpF-Bd-Uvg" secondAttribute="trailing" constant="8" id="11q-Qj-SRu"/>
                 <constraint firstItem="RUj-UG-UIb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="9Ar-Ei-IYo"/>
                 <constraint firstItem="MpF-Bd-Uvg" firstAttribute="top" secondItem="5Ro-Rt-gdG" secondAttribute="bottom" constant="8" id="9r3-96-FTu"/>
                 <constraint firstItem="i20-wR-398" firstAttribute="top" secondItem="5Ro-Rt-gdG" secondAttribute="bottom" constant="6" id="ADR-Za-bkk"/>
-                <constraint firstAttribute="trailing" secondItem="IA4-bN-nIE" secondAttribute="trailing" constant="5" id="BCj-PF-59G"/>
+                <constraint firstAttribute="trailing" secondItem="IA4-bN-nIE" secondAttribute="trailing" id="BCj-PF-59G"/>
                 <constraint firstAttribute="trailing" secondItem="RUj-UG-UIb" secondAttribute="trailing" id="D15-GE-KNZ"/>
                 <constraint firstItem="5Ro-Rt-gdG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="ORn-5L-NzH"/>
                 <constraint firstItem="RUj-UG-UIb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="PJt-6b-vcA"/>
-                <constraint firstItem="v05-1Q-9Ex" firstAttribute="bottom" secondItem="RUj-UG-UIb" secondAttribute="bottom" constant="26" id="PZt-ha-1k0"/>
+                <constraint firstItem="v05-1Q-9Ex" firstAttribute="bottom" secondItem="RUj-UG-UIb" secondAttribute="bottom" constant="40" id="PZt-ha-1k0"/>
                 <constraint firstAttribute="trailing" secondItem="v05-1Q-9Ex" secondAttribute="trailing" constant="20" id="TrT-sm-l2l"/>
                 <constraint firstItem="IA4-bN-nIE" firstAttribute="top" secondItem="i20-wR-398" secondAttribute="bottom" constant="8" id="gFq-2A-f5o"/>
                 <constraint firstItem="IA4-bN-nIE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="hbX-4m-riy"/>
@@ -91,8 +88,8 @@
             <connections>
                 <outlet property="addressLB" destination="i20-wR-398" id="oay-Fo-hug"/>
                 <outlet property="avatarIMV" destination="RUj-UG-UIb" id="Da5-VR-clk"/>
+                <outlet property="businessIMV" destination="81B-bM-bsP" id="gVk-HF-p6e"/>
                 <outlet property="collectionView" destination="IA4-bN-nIE" id="g7d-fZ-SlT"/>
-                <outlet property="connectBT" destination="ByE-oU-4B6" id="byk-hC-AFY"/>
                 <outlet property="connectV" destination="v05-1Q-9Ex" id="fK6-YJ-bl6"/>
                 <outlet property="flowLayout" destination="8Oo-Xl-BbH" id="EMA-Gz-p9c"/>
                 <outlet property="nameLB" destination="5Ro-Rt-gdG" id="gCR-bV-def"/>
@@ -101,7 +98,6 @@
         </view>
     </objects>
     <resources>
-        <image name="connect.png" width="22" height="22"/>
         <image name="pin.png" width="5" height="9"/>
     </resources>
 </document>

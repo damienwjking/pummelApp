@@ -27,6 +27,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     var userIdTarget: String!
     var messageId: String!
     var arrayChat: NSArray!
+    var numberOfKeyboard : Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,12 +55,11 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         avatarTextBox.clipsToBounds = true
         avatarTextBox.hidden = true
         self.getImageAvatarTextBox()
-       
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-         self.getArrayChat()
+        self.getArrayChat()
     }
     
     func getImageAvatarTextBox() {
@@ -147,14 +147,16 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            self.view.frame.origin.y -= keyboardSize.height
+            self.view.frame.origin.y = 64 - keyboardSize.height
+            numberOfKeyboard += 1
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            self.view.frame.origin.y += keyboardSize.height
+        if (numberOfKeyboard == 1) {
+            self.view.frame.origin.y = 64
         }
+        numberOfKeyboard -= 1
         if (self.textBox.text == "") {
             self.cursorView.hidden = false
             self.avatarTextBox.hidden = true
@@ -279,6 +281,8 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                                             NSCache.sharedInstance.setObject(imageRes, forKey: link)
                                     }
                                 }
+                            } else {
+                                cell.avatarIMV.image = UIImage(named: "display-empty.jpg")
                             }
                     case .Failure(let error):
                             print("Request failed with error: \(error)")

@@ -10,6 +10,7 @@ import UIKit
 
 class FlowLayout: UICollectionViewFlowLayout {
     var smaller : Bool = false
+    var isSearch : Bool = false
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let attributesForElementsInRect = super.layoutAttributesForElementsInRect(rect)
         var newAttributesForElementsInRect = [UICollectionViewLayoutAttributes]()
@@ -25,7 +26,7 @@ class FlowLayout: UICollectionViewFlowLayout {
                 attributes.frame = newLeftAlignedFrame
             }
             
-            leftMargin += attributes.frame.size.width + 8
+            leftMargin += (isSearch) ? attributes.frame.size.width + 8 : attributes.frame.size.width
             if (leftMargin > self.collectionView?.frame.width) {
                 leftMargin = self.sectionInset.left
                 attributes.frame.origin.x = leftMargin

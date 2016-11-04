@@ -1869,9 +1869,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Damien King (474RUH95WB)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: damien@pummel.me (B4PZ8MEB29)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YW7P88KVE4;
 				INFOPLIST_FILE = pummel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1891,9 +1891,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Damien King (474RUH95WB)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: damien@pummel.me (B4PZ8MEB29)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YW7P88KVE4;
 				INFOPLIST_FILE = pummel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

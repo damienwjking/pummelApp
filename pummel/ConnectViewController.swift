@@ -102,8 +102,7 @@ class ConnectViewController: UIViewController {
                     var link = kPMAPI
                     if !(JSON[kImageUrl] is NSNull) {
                         link.appendContentsOf(JSON[kImageUrl] as! String)
-                        let postfix = widthEqual.stringByAppendingString(self.meAvatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.meAvatarIMV.frame.size.width.description)
-                        link.appendContentsOf(postfix)
+                        link.appendContentsOf(widthHeight236)
                         if (NSCache.sharedInstance.objectForKey(link) != nil) {
                             let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
                             self.meAvatarIMV.image = imageRes
@@ -123,8 +122,7 @@ class ConnectViewController: UIViewController {
             let imageLink = coachDetail[kImageUrl] as! String
             prefix = kPMAPI
             prefix.appendContentsOf(imageLink)
-            let postfix = widthEqual.stringByAppendingString(self.youAvatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.youAvatarIMV.frame.size.width.description)
-            prefix.appendContentsOf(postfix)
+            prefix.appendContentsOf(widthHeight236)
             Alamofire.request(.GET, prefix)
                 .responseImage { response in
                     let imageRes = response.result.value! as UIImage

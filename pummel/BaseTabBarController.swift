@@ -23,8 +23,9 @@ class BaseTabBarController: UITabBarController {
     }
     
     func showBadgeForMessage() {
-        let tabarItem = self.tabBar.items![3]
-        tabarItem.badgeValue = String(UIApplication.sharedApplication().applicationIconBadgeNumber)
-        
+        if (UIApplication.sharedApplication().applicationIconBadgeNumber != 0) {
+             let tabarItem = self.tabBar.items![3]
+             tabarItem.badgeValue = String(UIApplication.sharedApplication().applicationIconBadgeNumber)
+        }
     }
 }

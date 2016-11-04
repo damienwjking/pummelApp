@@ -51,6 +51,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         self.collectionView.backgroundColor = UIColor.clearColor()
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
         self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        self.flowLayout.isSearch = true
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
     }

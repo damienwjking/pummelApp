@@ -40,19 +40,14 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         swipeableView = ZLSwipeableView()
         view.addSubview(swipeableView)
         swipeableView.didStart = {view, location in
-            print("Did start swiping view at location: \(location)")
         }
         swipeableView.swiping = {view, location, translation in
-            print("Swiping at view location: \(location) translation: \(translation)")
         }
         swipeableView.didEnd = {view, location in
-            print("Did end swiping view at location: \(location)")
         }
         swipeableView.didSwipe = {view, direction, vector in
-            print("Did swipe view in direction: \(direction), vector: \(vector)")
         }
         swipeableView.didCancel = {view in
-            print("Did cancel swiping view")
         }
         swipeableView.didTap = {view, location in
             self.performSegueWithIdentifier(kGoProfile, sender: self)
@@ -90,10 +85,8 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             prefix.appendContentsOf("&limit=1")
             prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
-            print(prefix)
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
-                    print (response.result.value)
                     if response.response?.statusCode == 200 {
                         if ((response.result.value as! NSArray).count == 0) {
                             self.stopSearch = true
@@ -101,8 +94,6 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
                             let rArray = response.result.value as! [NSDictionary]
                             self.arrayResult += rArray
                         }
-                    } else {
-                        print(response)
                     }
             }
         } else {
@@ -139,9 +130,8 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             contentView.avatarIMV.image = nil
             contentView.translatesAutoresizingMaskIntoConstraints = false
             contentView.backgroundColor = cardView.backgroundColor
-            contentView.connectV.layer.cornerRadius = 55/2
+            contentView.connectV.layer.cornerRadius = 50
             contentView.connectV.clipsToBounds = true
-            contentView.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
             contentView.nameLB.font = .pmmPlayFairReg24()
             contentView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
             contentView.addressLB.font = .pmmPlayFairReg11()
@@ -176,11 +166,45 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             contentView.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
             contentView.collectionView.backgroundColor = UIColor.clearColor()
             self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
-            contentView.connectBT.tag = resultIndex
-            contentView.connectBT.addTarget(self, action: #selector(FindViewController.goConnect(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-            contentView.flowLayout.smaller = true
+           // contentView.flowLayout.smaller = true
             
-    
+            // Business ImageView
+            contentView.connectV.hidden = true
+            if !(coachDetail[kBusinessId] is NSNull) {
+                let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+                var linkBusinessId = kPMAPI_BUSINESS
+                linkBusinessId.appendContentsOf(businessId)
+                Alamofire.request(.GET, linkBusinessId)
+                    .responseJSON { response in
+                        if response.response?.statusCode == 200 {
+                            
+                            let jsonBusiness = response.result.value as! NSDictionary
+                            if !(jsonBusiness[kImageUrl] is NSNull) {
+                                let businessLogoUrl = jsonBusiness[kImageUrl] as! String
+                                var prefixLogo = kPMAPI
+                                prefixLogo.appendContentsOf(businessLogoUrl)
+                                prefixLogo.appendContentsOf(widthHeight120)
+                                if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
+                                    contentView.connectV.hidden = false
+                                    let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
+                                    contentView.businessIMV.image = imageRes
+                                } else {
+                                    Alamofire.request(.GET, prefixLogo)
+                                        .responseImage { response in
+                                            if (response.response?.statusCode == 200) {
+                                                contentView.connectV.hidden = false
+                                                let imageRes = response.result.value! as UIImage
+                                                contentView.businessIMV.image = imageRes
+                                                NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+            
+            
             cardView.addSubview(contentView)
             
             constrain(contentView, cardView) { view1, view2 in
@@ -232,19 +256,14 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             view.addSubview(swipeableView)
             
             swipeableView.didStart = {view, location in
-                print("Did start swiping view at location: \(location)")
             }
             swipeableView.swiping = {view, location, translation in
-                print("Swiping at view location: \(location) translation: \(translation)")
             }
             swipeableView.didEnd = {view, location in
-                print("Did end swiping view at location: \(location)")
             }
             swipeableView.didSwipe = {view, direction, vector in
-                print("Did swipe view in direction: \(direction), vector: \(vector)")
             }
             swipeableView.didCancel = {view in
-                print("Did cancel swiping view")
             }
             swipeableView.didTap = {view, location in
                 self.performSegueWithIdentifier(kGoProfile, sender: view)

@@ -79,25 +79,15 @@
                         <outlet property="noResultContentLB" destination="SBM-8q-Zjj" id="YIf-m5-9Gi"/>
                         <outlet property="noResultLB" destination="6fy-ix-Oz7" id="92d-m1-8I4"/>
                         <outlet property="refineSearchBT" destination="WNF-6o-ajD" id="OLf-54-7Gy"/>
-                        <segue destination="BUG-Xk-HUI" kind="show" identifier="sendMessageConnection" id="fFs-Lu-LYL"/>
                         <segue destination="VVc-lb-yt4" kind="presentation" identifier="goConnect" id="LTK-hm-JXL"/>
                         <segue destination="REY-5g-p4Z" kind="presentation" identifier="goProfile" id="tGO-Rx-XKv"/>
                         <segue destination="RcJ-86-YBS" kind="presentation" identifier="letUsHelp" id="Z6O-y3-8EI"/>
+                        <segue destination="gWf-bF-p9D" kind="show" identifier="sendMessageConnection" id="pOS-qP-4jl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wEG-D9-yU7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4839" y="1026"/>
-        </scene>
-        <!--Chat-->
-        <scene sceneID="ToG-Hm-h9W">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Chat" id="BUG-Xk-HUI" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="8Vr-Cf-W5l"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8jI-ec-h3n" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3866" y="703"/>
         </scene>
         <!--Connection-->
         <scene sceneID="5Fl-nL-Zft">
@@ -115,13 +105,21 @@
             </objects>
             <point key="canvasLocation" x="-3851" y="1264"/>
         </scene>
+        <!--Chat-->
+        <scene sceneID="bFs-Ms-e8m">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" id="gWf-bF-p9D" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ULk-3L-OBS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4009" y="662"/>
+        </scene>
         <!--Search-->
         <scene sceneID="SxD-BH-aac">
             <objects>
                 <viewControllerPlaceholder storyboardName="Search" id="RcJ-86-YBS" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O9s-ju-dzQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3866" y="961"/>
+            <point key="canvasLocation" x="-3866" y="739"/>
         </scene>
     </scenes>
     <resources>

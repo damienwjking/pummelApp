@@ -22,29 +22,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
     //    Mixpanel.initialize(token: "9007be62479ca54acb05b03991f1e56e")
-        if #available(iOS 10.0, *) {
-            let center  = UNUserNotificationCenter.currentNotificationCenter()
-            center.delegate = self
-            center.requestAuthorizationWithOptions([.Alert, .Badge, .Sound],completionHandler: { (granted, error) in
-                // Enable or disable features based on authorization
-            })
-
-        } else {
-            // Fallback on earlier versions
-        }
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
         let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
         return true
-    }
-    
-    func incrementBadgeNumberBy(badgeNumberIncrement: Int) {
-        let currentBadgeNumber = UIApplication.sharedApplication().applicationIconBadgeNumber
-        let updatedBadgeNumber = currentBadgeNumber + badgeNumberIncrement
-        if (updatedBadgeNumber > -1) {
-            UIApplication.sharedApplication().applicationIconBadgeNumber = updatedBadgeNumber
-        }
     }
 
     func applicationWillResignActive(application: UIApplication) {

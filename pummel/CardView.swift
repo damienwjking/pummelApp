@@ -16,7 +16,7 @@ class CardView: UIView {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: FlowLayout!
     @IBOutlet weak var avatarIMV : UIImageView!
-    @IBOutlet weak var connectBT : UIButton!
+    @IBOutlet weak var businessIMV : UIImageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,5 +39,8 @@ class CardView: UIView {
         
         // Corner Radius
         //layer.cornerRadius = 5.0;
+        
+      //  businessIMV.layer.cornerRadius = 60
+      //  businessIMV.clipsToBounds = true
     }
 }

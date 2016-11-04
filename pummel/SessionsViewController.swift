@@ -17,10 +17,13 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet var listMessageTB: UITableView!
     @IBOutlet var listMessageTBTopDistance : NSLayoutConstraint?
-    var arrayMessages: NSArray!
+    var arrayMessages: [NSDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
     var dataSourceArr : [NSDictionary] = []
     var scrollTableView : UITableView!
+    var offset : Int = -10
+    var isStopLoadMessage : Bool = false
+    var isLoadingMessage : Bool = false
     private struct Constants {
         static let ContentSize: CGSize = CGSize(width: 80, height: 96.0)
     }
@@ -45,7 +48,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         if (UIApplication.sharedApplication().applicationIconBadgeNumber != 0) {
             tabItem!.badgeValue = String(UIApplication.sharedApplication().applicationIconBadgeNumber)
         }
-        
+        offset += 10
         self.getMessage()
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             let connectionsLB : UILabel = UILabel.init(frame: CGRectMake(0, 15, self.view.frame.size.width, 14))
@@ -76,21 +79,34 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func getMessage() {
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                self.arrayMessages = JSON as! NSArray
-                self.listMessageTB.reloadData()
-                if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-                    self.scrollTableView.reloadData()
+        if (isStopLoadMessage == false) {
+            isLoadingMessage = true
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET)
+            prefix.appendContentsOf(String(offset))
+            Alamofire.request(.GET, prefix)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    let arrayMessageT = JSON as! [NSDictionary]
+                    if (arrayMessageT.count > 0) {
+                        self.arrayMessages += arrayMessageT
+                        self.isLoadingMessage = false
+                        self.listMessageTB.reloadData()
+                        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                            self.scrollTableView.reloadData()
+                        }
+                    } else {
+                        self.isLoadingMessage = false
+                        self.isStopLoadMessage = true
+                    }
+                case .Failure(let error):
+                    self.isLoadingMessage = false
+                    print("Request failed with error: \(error)")
                 }
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
             }
         }
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -111,7 +127,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (tableView == listMessageTB) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kMessageTableViewCell, forIndexPath: indexPath) as! MessageTableViewCell
-            let message = arrayMessages[indexPath.row] as! NSDictionary
+            let message = arrayMessages[indexPath.row]
             //Get Text
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -211,7 +227,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 cell = NSBundle.mainBundle().loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
                 cell!.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 2.0))
             }
-            let message = arrayMessages[indexPath.row] as! NSDictionary
+            let message = arrayMessages[indexPath.row]
             let conversations = message[kConversation] as! NSDictionary
             let conversationUsers = conversations[kConversationUser] as! NSArray
             var targetUser = conversationUsers[0] as! NSDictionary
@@ -238,6 +254,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                                 let imageRes = response.result.value! as UIImage
                                 cell!.imageV.image = imageRes
                         }
+                    } else {
+                        cell?.imageV.image = UIImage(named: "display-empty.jpg")
                     }
                     
                 case .Failure(let error):
@@ -253,7 +271,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func clickOnConnectionImage(sender: UIButton) {
-        let message = arrayMessages[sender.tag] as! NSDictionary
+        let message = arrayMessages[sender.tag]
         let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
@@ -282,8 +300,15 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
+        if (indexPath.row == self.arrayMessages.count - 1 && isLoadingMessage == false) {
+            offset += 10
+            self.getMessage()
+        }
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (self.arrayMessages == nil) {
+        if (self.arrayMessages == []) {
             return 0
         } else {
             return self.arrayMessages.count
@@ -292,7 +317,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let message = arrayMessages[indexPath.row] as! NSDictionary
+        let message = arrayMessages[indexPath.row]
         let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
@@ -327,7 +352,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         {
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
-            let message = arrayMessages[indexPathRow] as! NSDictionary
+            let message = arrayMessages[indexPathRow]
             let conversations = message[kConversation] as! NSDictionary
             let conversationUsers = conversations[kConversationUser] as! NSArray
             var targetUser = conversationUsers[0] as! NSDictionary

@@ -23,7 +23,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     @IBOutlet weak var connectWithCoachLB: UILabel!
     @IBOutlet weak var findCoaches: UIButton!
     var refreshControl: UIRefreshControl!
-    
+    var isLoading : Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController!.navigationBar.translucent = false
@@ -46,7 +46,9 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         self.tableFeed.estimatedRowHeight = 64.8
         self.tableFeed.rowHeight = UITableViewAutomaticDimension
         self.isStopFetch = false
-        self.refresh()
+        if (isLoading == false) {
+            self.refresh()
+        }
         self.noActivityYetLB.font = .pmmPlayFairReg18()
         self.connectWithCoachLB.font = .pmmMonLight13()
         self.findCoaches.titleLabel?.font = .pmmMonReg12()
@@ -62,6 +64,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     
     func getListFeeds() {
         if (self.isStopFetch == false) {
+            self.isLoading = true
             var prefix = kPMAPI_POST_OFFSET
             prefix.appendContentsOf(String(offset))
             Alamofire.request(.GET, prefix)
@@ -72,13 +75,15 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
                             self.arrayFeeds += arr
                             self.tableFeed.hidden = (self.arrayFeeds.count > 0) ?  false : true
                             self.offset += 10
-                            self.tableFeed.reloadData({ 
-                               // self.getListFeeds()
+                            self.isLoading = false
+                            self.tableFeed.reloadData({
                             })
                         } else {
+                            self.isLoading = false
                             self.isStopFetch = true
                         }
                     } else {
+                        self.isLoading = false
                         self.isStopFetch = true
                     }
             }
@@ -239,7 +244,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == self.arrayFeeds.count - 1) {
+        if (indexPath.row == self.arrayFeeds.count - 1 && isLoading == false) {
              self.getListFeeds()
         }
     }

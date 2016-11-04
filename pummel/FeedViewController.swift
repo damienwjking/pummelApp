@@ -25,6 +25,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var listComment : [NSDictionary] = []
     var stopGetListComment : Bool = false
     var offset: Int = 0
+    var numberOfKeyboard : Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -405,16 +406,17 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            self.view.frame.origin.y -= keyboardSize.height
+            self.view.frame.origin.y = 64 - keyboardSize.height
+            numberOfKeyboard += 1
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            self.view.frame.origin.y += keyboardSize.height
+        if (numberOfKeyboard == 1) {
+            self.view.frame.origin.y = 64
         }
+        numberOfKeyboard -= 1
         if (self.textBox.text == "") {
             self.cursorView.hidden = false
             self.avatarTextBox.hidden = true
