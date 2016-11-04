@@ -101,6 +101,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                         self.isStopLoadMessage = true
                     }
                 case .Failure(let error):
+                    self.offset -= 10
                     self.isLoadingMessage = false
                     print("Request failed with error: \(error)")
                 }

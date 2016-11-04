@@ -109,6 +109,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
+                        if (response.result.value == nil) {return}
                         self.userInfo = response.result.value as! NSDictionary
                         if !(self.userInfo[kLastName] is NSNull) {
                             self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))

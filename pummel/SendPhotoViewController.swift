@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
     
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var commentPhotoTV : UITextView!
@@ -48,6 +48,11 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
         self.imagePicker.delegate = self
+        
+        imageScrolView.delegate = self
+        imageScrolView.minimumZoomScale = 1
+        imageScrolView.maximumZoomScale = 4.0
+        imageScrolView.zoomScale = 1.0
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -106,6 +111,10 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                 print("Request failed with error: \(error)")
                 }
         }
+    }
+    
+    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews[0] as! UIImageView
     }
     
     func close() {

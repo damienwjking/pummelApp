@@ -379,13 +379,13 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                         }
                     } else {
                         if (self.twitterLink == "") {
-                            self.facebookDT.constant = 0
+                            self.facebookDT.constant = self.view.frame.size.width
                             self.twiterDT.constant = 0
-                            self.instagramDT.constant = self.view.frame.size.width
+                            self.instagramDT.constant = 0
                         } else {
-                            self.facebookDT.constant = 0
+                            self.facebookDT.constant =  self.view.frame.size.width/2
                             self.twiterDT.constant = self.view.frame.size.width/2
-                            self.instagramDT.constant = self.view.frame.size.width/2
+                            self.instagramDT.constant = 0
                         }
                     }
                 } else {
@@ -592,7 +592,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     @IBAction func clickOnInstagram() {
-        if (self.facebookLink != "") {
+        if (self.instagramLink  != "") {
             let instagramUrl = NSURL(string: self.instagramLink!)
             if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
             {

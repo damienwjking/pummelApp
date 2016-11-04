@@ -70,6 +70,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
+                        if (response.result.value == nil) {return}
                         let arr = response.result.value as! [NSDictionary]
                         if (arr.count > 0) {
                             self.arrayFeeds += arr

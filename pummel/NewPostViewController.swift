@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegate,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegate,  UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
 
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var commentPhotoTV : UITextView!
@@ -54,6 +54,12 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
         spinner = Spinner.init(frame: CGRectMake(self.view.frame.width/2 - 50, self.view.frame.height/2 + 50, 100, 100))
         spinner.Style = .Dark
         imagePicker.delegate = self
+        
+        imageScrolView.delegate = self
+        imageScrolView.minimumZoomScale = 1
+        imageScrolView.maximumZoomScale = 4.0
+        imageScrolView.zoomScale = 1.0
+        imageScrolView.autoresizingMask = [.FlexibleHeight , .FlexibleWidth]
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -228,6 +234,10 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
         
         self.presentViewController(alertController, animated: true) { }
     }
+    
+    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews[0] as! UIImageView
+    }
 
     
     @IBAction func showCameraRoll(sender:UIButton!) {
@@ -349,6 +359,7 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
             self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
+            
             self.imageSelected?.hidden = true
             self.imageScrolView?.hidden = false
         }

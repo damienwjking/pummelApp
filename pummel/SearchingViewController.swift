@@ -256,8 +256,8 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray]
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
-                print (response.result.value)
                 if response.response?.statusCode == 200 {
+                    if (response.result.value == nil) {return}
                     if (self.stopAnimation == true) {
                         let presentingViewController = self.presentingViewController
                         self.dismissViewControllerAnimated(false, completion: {
@@ -291,9 +291,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                         })
                         
                     }
-                } else {
-                    print(response)
-                }
+                } 
         }
     }
 }

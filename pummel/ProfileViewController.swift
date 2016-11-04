@@ -88,6 +88,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
+                    if (response.result.value == nil) {return}
                     self.userDetail = response.result.value as! NSDictionary
                     self.updateUI()
                 }
@@ -173,6 +174,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
                     } else {
                         Alamofire.request(.GET, link)
                             .responseImage { response in
+                                if (response.result.value == nil) {return}
                                 let imageRes = response.result.value! as UIImage
                                 self.avatarIMV.image = imageRes
                                 NSCache.sharedInstance.setObject(imageRes, forKey: link)
@@ -236,6 +238,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         prefix.appendContentsOf(link)
         Alamofire.request(.GET, prefix)
             .responseImage { response in
+                if (response.result.value == nil) {return}
                 let imageRes = response.result.value! as UIImage
                 cell.imageCell.image = imageRes
         }
