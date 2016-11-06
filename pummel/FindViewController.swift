@@ -19,7 +19,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     var swipeableView: ZLSwipeableView!
     var loadCardsFromXib = true
     var resultIndex = 0
-    var resultPage : Int = 0
+    var resultPage : Int = 6
     var sizingCell: TagCell?
     var tags = [Tag]()
     var coachTotalDetail: NSDictionary!
@@ -70,7 +70,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func searchNextPage() {
         if (self.stopSearch == false) {
-            self.resultPage+=6
+            self.resultPage += 1
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
             var prefix = kPMAPICOACH_SEARCH
@@ -83,8 +83,9 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             for id in tagIdsArray {
                 prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
             }
-            prefix.appendContentsOf("&limit=1")
+            prefix.appendContentsOf("limit=1")
             prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
+            print("resultPage: \(resultPage)")
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
@@ -249,7 +250,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         self.stopSearch = false
-        self.resultPage = 0
+        self.resultPage = 6
         if (swipeableView != nil && refined == true ) {
             swipeableView.removeFromSuperview()
             swipeableView = ZLSwipeableView()

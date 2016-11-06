@@ -260,7 +260,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                     if !(userDetail[kImageUrl] is NSNull) {
                         var link = kPMAPI
                         link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight100)
+                        link.appendContentsOf(widthHeight200)
                         
                         if (NSCache.sharedInstance.objectForKey(link) != nil) {
                             let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
