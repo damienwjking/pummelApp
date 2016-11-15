@@ -31,7 +31,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         super.viewDidLoad()
         self.navigationController!.navigationBar.translucent = false
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(FeaturedViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(FeaturedViewController.refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
         self.tableFeed.addSubview(refreshControl)
     }
     
@@ -48,8 +48,10 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         self.tableFeed.dataSource = self
         self.tableFeed.estimatedRowHeight = 64.8
         self.tableFeed.rowHeight = UITableViewAutomaticDimension
+       
         self.isStopFetch = false
         if (isLoading == false && isGoFeedDetail == false && isGoProfileDetail == false) {
+            self.tableFeed.hidden = true
             self.refresh()
         }
         self.noActivityYetLB.font = .pmmPlayFairReg18()
@@ -67,6 +69,12 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         }
     }
     
+    func refreshControlTable() {
+        if (isLoading == false) {
+            self.refresh()
+        }
+    }
+    
     func getListFeeds() {
         if (self.isStopFetch == false) {
             self.isLoading = true
@@ -75,29 +83,30 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
+                        
                         if (response.result.value == nil) {return}
                         let arr = response.result.value as! [NSDictionary]
                         if (arr.count > 0) {
                             self.arrayFeeds += arr
                             self.tableFeed.hidden = (self.arrayFeeds.count > 0) ?  false : true
-                           
                             self.offset += 10
                             self.isLoading = false
-                            self.tableFeed.reloadData()
+                            self.tableFeed.reloadData({ 
+                                self.tableFeed.hidden = false
+                            })
                         } else {
                             self.isLoading = false
                             self.isStopFetch = true
                         }
-                    }else if response.response?.statusCode == 401 {
+                    } else if response.response?.statusCode == 401 {
                         let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                            // ...
+                            // TODO: LOGOUT
                         }
                         alertController.addAction(OKAction)
                         self.presentViewController(alertController, animated: true) {
                             // ...
                         }
-                        
                     } else {
                         self.isLoading = false
                         self.isStopFetch = true
@@ -257,7 +266,6 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
             cell.avatarBT.tag = indexPath.row
             cell.avatarBT.addTarget(self, action: #selector(FeaturedViewController.goProfile(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             cell.likeBT.tag = indexPath.row
-            cell.likeBT.addTarget(self, action: #selector(FeaturedViewController.likeThisPost(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             cell.postId = String(format:"%0.f", feed[kId]!.doubleValue)
         return cell
     }
@@ -266,43 +274,6 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         if (indexPath.row == self.arrayFeeds.count - 1 && isLoading == false) {
              self.getListFeeds()
         }
-    }
-    
-    func likeThisPost(sender: UIButton!) {
-        let tag = sender.tag
-        let feedLikeDetail = arrayFeeds[tag]
-        //Post Likes
-        let cell = self.tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 0)) as! FeaturedFeedTableViewCell
-        cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
-        var likeLink  = kPMAPI_LIKE
-        likeLink.appendContentsOf(String(format:"%0.f", feedLikeDetail[kId]!.doubleValue))
-        likeLink.appendContentsOf(kPM_PATH_LIKE)
-        Alamofire.request(.POST, likeLink, parameters: [kPostId: String(format:"%0.f", feedLikeDetail[kId]!.doubleValue)])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    self.tableFeed.reloadData()
-                }
-        }
-    }
-    
-    func likeImageThisPost(sender: UIButton!) {
-        let tag = sender.tag
-        let feedLikeDetail = arrayFeeds[tag]
-        //Post Likes
-        let cell = self.tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 0)) as! FeaturedFeedTableViewCell
-        cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
-        var likeLink  = kPMAPI_LIKE
-        likeLink.appendContentsOf(String(format:"%0.f", feedLikeDetail[kId]!.doubleValue))
-        likeLink.appendContentsOf(kPM_PATH_LIKE)
-        Alamofire.request(.POST, likeLink, parameters: [kPostId: String(format:"%0.f", feedLikeDetail[kId]!.doubleValue)])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    self.tableFeed.reloadData()
-                } else {
-                    print("cant like")
-                }
-        }
-        
     }
     
     func sharePummel() {

@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import CoreLocation
 
 class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     @IBOutlet var letUsHelpTF : UILabel!
@@ -111,7 +112,33 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     @IBAction func goSearching(sender:UIButton!) {
-        performSegueWithIdentifier("searching", sender: nil)
+        if CLLocationManager.locationServicesEnabled() {
+            switch(CLLocationManager.authorizationStatus()) {
+            case .NotDetermined, .Restricted, .Denied:
+                let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
+                
+                
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+            case .AuthorizedAlways, .AuthorizedWhenInUse:
+               performSegueWithIdentifier("searching", sender: nil)
+            }
+        } else {
+            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
+            
+            
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
+        
     }
     
     

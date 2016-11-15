@@ -270,7 +270,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"REWIND", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.rightButtonClicked))
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.rightButtonClicked))
         self.updateRightBarButtonItem()
         self.tabBarController?.title = "RESULTS"
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()

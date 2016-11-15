@@ -49,6 +49,8 @@ class FeaturedFeedTableViewCell: UITableViewCell {
     }
     
     func onDoubleTap(sender: UITapGestureRecognizer) {
+        self.imageContentIMV.userInteractionEnabled = false
+        self.likeBT.userInteractionEnabled = false
         didDoubleTap = true
         self.likeImage?.hidden = false
         self.likeImage?.alpha = 1.0

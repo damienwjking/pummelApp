@@ -251,6 +251,9 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                         let messageDetail = arrayMessageThisConverId[0]
                         if (!(messageDetail[kText] is NSNull)) {
                             cell.messageLB.text = messageDetail[kText]  as? String
+                            if (messageDetail[kText] as! String == "") {
+                                cell.messageLB.text = "Media message"
+                            }
                         } else {
                             if (!(messageDetail[kImageUrl] is NSNull)) {
                                 cell.messageLB.text = sendYouAImage
@@ -258,7 +261,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                                 cell.messageLB.text = sendYouAVideo
                             } else
                             {
-                                cell.messageLB.text = ""
+                                cell.messageLB.text = "Media messge"
                             }
                         }
                     } else {

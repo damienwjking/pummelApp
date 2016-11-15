@@ -94,7 +94,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
                 }else if response.response?.statusCode == 401 {
                     let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
+                        // TODO: LOGOUT
                     }
                     alertController.addAction(OKAction)
                     self.presentViewController(alertController, animated: true) {
