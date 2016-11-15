@@ -122,7 +122,6 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
     }
     
     deinit {
-        
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     

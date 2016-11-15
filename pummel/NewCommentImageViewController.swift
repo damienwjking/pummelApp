@@ -20,6 +20,7 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
     var postId: String!
     var isPosting: Bool = false
     let imagePicker = UIImagePickerController()
+    var isComment : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,11 +40,20 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
         self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
         
         imagePicker.delegate = self
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidAppear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -51,11 +61,17 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
         let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardRectangle = keyboardFrame.CGRectValue()
         let keyboardHeight = keyboardRectangle.height
+        if  (self.viewKeyboard != nil) {
+            self.viewKeyboard.removeFromSuperview()
+        }
         viewKeyboard = UIView.init(frame:CGRect(x: 0, y: self.view.frame.height - keyboardHeight, width: self.view.frame.width, height: keyboardHeight))
         viewKeyboard.backgroundColor = UIColor.blackColor()
         viewKeyboard.hidden = true
         self.view.addSubview(viewKeyboard)
         self.viewKeyboard.hidden = false
+        if  (self.otherKeyboardView != nil) {
+            self.otherKeyboardView.removeFromSuperview()
+        }
         self.otherKeyboardView = UIView.init(frame:CGRect(x: 0, y: self.commentPhotoTV.frame.origin.y, width: self.view.frame.width, height: self.view.frame.size.height - self.commentPhotoTV.frame.origin.y))
         self.otherKeyboardView.backgroundColor = UIColor.clearColor()
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(SendPhotoViewController.handleTap(_:)))
@@ -70,7 +86,10 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
+        viewKeyboard.removeFromSuperview()
+        otherKeyboardView.removeFromSuperview()
         self.commentPhotoTV.resignFirstResponder()
+        
     }
     
     func keyboardWillHide(notification: NSNotification) {
@@ -149,7 +168,6 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
                         upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
                             dispatch_async(dispatch_get_main_queue()) {
                                 let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                                print(percent)
                             }
                         }
                         upload.validate()
@@ -177,7 +195,6 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
                         
                     case .Failure(let encodingError):
                         self.isPosting = false
-                        print(encodingError)
                         activityView.stopAnimating()
                         activityView.removeFromSuperview()
                         
@@ -234,7 +251,6 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
     
     // Fusuma delegate
     func fusumaImageSelected(image: UIImage) {
-        print("Image selected")
         self.imageSelected!.image = image
     }
     

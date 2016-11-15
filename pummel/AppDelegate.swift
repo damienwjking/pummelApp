@@ -11,6 +11,7 @@
 
 import UIKit
 import UserNotifications
+import RNNotificationView
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -41,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-         NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
+    //     NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -64,12 +65,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        if (UIApplication.sharedApplication().applicationState == .Active) {
+             UIApplication.sharedApplication().applicationIconBadgeNumber += 1
+             NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
+            // Using Singleton
+            RNNotificationView.show(withImage: UIImage(named: "pummelLogo"),
+                                    title: "Pummel",
+                                    message: "You have a message",
+                                    duration: 1,
+                                    onTap: {
+                                        NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
+                }
+            )
+            
+        } else {
+             NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
+        }
     }
 
     @available(iOS 10.0, *)
     internal func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
     }
 }
 

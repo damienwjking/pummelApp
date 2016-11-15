@@ -24,6 +24,9 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     @IBOutlet weak var findCoaches: UIButton!
     var refreshControl: UIRefreshControl!
     var isLoading : Bool = false
+    var isGoFeedDetail : Bool = false
+    var isGoProfileDetail : Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController!.navigationBar.translucent = false
@@ -46,7 +49,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         self.tableFeed.estimatedRowHeight = 64.8
         self.tableFeed.rowHeight = UITableViewAutomaticDimension
         self.isStopFetch = false
-        if (isLoading == false) {
+        if (isLoading == false && isGoFeedDetail == false && isGoProfileDetail == false) {
             self.refresh()
         }
         self.noActivityYetLB.font = .pmmPlayFairReg18()
@@ -56,10 +59,12 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     
     func refresh() {
         self.arrayFeeds.removeAll()
-        refreshControl.endRefreshing()
-        self.isStopFetch = false
-        self.offset = 0
-        self.getListFeeds()
+        self.tableFeed.reloadData { 
+            self.refreshControl.endRefreshing()
+            self.isStopFetch = false
+            self.offset = 0
+            self.getListFeeds()
+        }
     }
     
     func getListFeeds() {
@@ -75,14 +80,24 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
                         if (arr.count > 0) {
                             self.arrayFeeds += arr
                             self.tableFeed.hidden = (self.arrayFeeds.count > 0) ?  false : true
+                           
                             self.offset += 10
                             self.isLoading = false
-                            self.tableFeed.reloadData({
-                            })
+                            self.tableFeed.reloadData()
                         } else {
                             self.isLoading = false
                             self.isStopFetch = true
                         }
+                    }else if response.response?.statusCode == 401 {
+                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                        
                     } else {
                         self.isLoading = false
                         self.isStopFetch = true
@@ -193,8 +208,10 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
             }
         
             cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
+        
             //Get Likes
             cell.likeBT.userInteractionEnabled = true
+            cell.imageContentIMV.userInteractionEnabled = true
             var likeLink  = kPMAPI_LIKE
             likeLink.appendContentsOf(String(format:"%0.f", feed[kId]!.doubleValue))
             likeLink.appendContentsOf(kPM_PATH_LIKE)
@@ -215,6 +232,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
                                     if updateCell != nil {
                                         cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
                                         cell.likeBT.userInteractionEnabled = false
+                                        cell.imageContentIMV.userInteractionEnabled = false
                                     }
                                 })
                                 break
@@ -310,6 +328,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     
     
     func goToFeedDetail(sender: UIButton) {
+        self.isGoFeedDetail = true
         self.performSegueWithIdentifier("goToFeedDetail", sender: sender)
     }
     
@@ -332,6 +351,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     
     func goProfile(sender: UIButton) {
         let cell = tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 0)) as! FeaturedFeedTableViewCell
+        self.isGoProfileDetail = true
         if (cell.isCoach == true) {
             self.performSegueWithIdentifier(kGoProfile, sender:sender)
         } else {

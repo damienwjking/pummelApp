@@ -25,6 +25,7 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     var viewKeyboard: UIView!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +45,6 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
         self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
         self.imagePicker.delegate = self
         
@@ -55,16 +54,33 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
         imageScrolView.zoomScale = 1.0
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidAppear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     func keyboardWillShow(notification: NSNotification) {
         let userInfo:NSDictionary = notification.userInfo!
         let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardRectangle = keyboardFrame.CGRectValue()
         let keyboardHeight = keyboardRectangle.height
+        if  (self.viewKeyboard != nil) {
+            self.viewKeyboard.removeFromSuperview()
+        }
         viewKeyboard = UIView.init(frame:CGRect(x: 0, y: self.view.frame.height - keyboardHeight, width: self.view.frame.width, height: keyboardHeight))
         viewKeyboard.backgroundColor = UIColor.blackColor()
         viewKeyboard.hidden = true
         self.view.addSubview(viewKeyboard)
         self.viewKeyboard.hidden = false
+        if  (self.otherKeyboardView != nil) {
+            self.otherKeyboardView.removeFromSuperview()
+        }
         self.otherKeyboardView = UIView.init(frame:CGRect(x: 0, y: self.commentPhotoTV.frame.origin.y, width: self.view.frame.width, height: self.view.frame.size.height - self.commentPhotoTV.frame.origin.y))
         self.otherKeyboardView.backgroundColor = UIColor.clearColor()
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(SendPhotoViewController.handleTap(_:)))
@@ -74,6 +90,8 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
+        viewKeyboard.removeFromSuperview()
+        otherKeyboardView.removeFromSuperview()
         self.commentPhotoTV.resignFirstResponder()
     }
     
@@ -84,7 +102,6 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     
     func setAvatar() {
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -131,7 +148,6 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     
     func sendMessage() {
         self.commentPhotoTV.resignFirstResponder()
-        let defaults = NSUserDefaults.standardUserDefaults()
         let values : [String]
         
         if (self.typeCoach == true) {
@@ -152,9 +168,7 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                     
                     self.messageId = conversationId
                     self.addMessageToExistConverstation()
-                } else {
-                    print(response.response?.statusCode)
-                }
+                } 
         }
         
     }
@@ -165,7 +179,6 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
         activityView.startAnimating()
         self.view.addSubview(activityView)
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
@@ -214,6 +227,21 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                         } else {
                             activityView.stopAnimating()
                             activityView.removeFromSuperview()
+                            let dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = kFullDateFormat
+                            dateFormatter.timeZone = NSTimeZone(name: "UTC")
+                            let dayCurrent = dateFormatter.stringFromDate(NSDate())
+                            var prefixT = kPMAPIUSER
+                            prefixT.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                            prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
+                            prefixT.appendContentsOf("/")
+                            prefixT.appendContentsOf(self.messageId as String)
+                            Alamofire.request(.PUT, prefixT, parameters: [kConversationId:self.messageId as String, kLastOpenAt:dayCurrent, kUserId: self.defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+                                .responseJSON { response in
+                                    if response.response?.statusCode == 200 {
+                                        print ("Set lastOpenAt to New")
+                                    }
+                            }
                             self.navigationController?.popViewControllerAnimated(true)
                         }
                     }

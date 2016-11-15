@@ -57,7 +57,7 @@
                                                     <constraint firstAttribute="height" constant="125" id="dSc-TF-bhc"/>
                                                 </constraints>
                                             </imageView>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="4BDA98EE-001C-4FA7-943F-574F705A1B55" translatesAutoresizingMaskIntoConstraints="NO" id="LBo-yj-ltU">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="C37A2FCB-1630-4526-9AD1-E3E9DDF1D4ED" translatesAutoresizingMaskIntoConstraints="NO" id="LBo-yj-ltU">
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="9" id="Lpq-OY-NJY"/>
                                                     <constraint firstAttribute="width" constant="6" id="iVx-CN-Qmf"/>
@@ -690,11 +690,11 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingDiscoveryHeaderTableViewCell" rowHeight="49" id="clF-Iw-6Z6" customClass="SettingDiscoveryHeaderTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingDiscoveryHeaderTableViewCell" rowHeight="49" id="clF-Iw-6Z6" customClass="SettingDiscoveryHeaderTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="600" height="49"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="clF-Iw-6Z6" id="rtI-FC-R3X">
-                                            <frame key="frameInset" width="600" height="48.5"/>
+                                            <frame key="frameInset" width="600" height="48"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DISCOVERY SETTINGS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="buh-p1-EyN">
@@ -714,11 +714,11 @@
                                             <outlet property="discoveryLB" destination="buh-p1-EyN" id="0U5-Cl-5FO"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SettingLocationTableViewCell" rowHeight="71" id="rgs-mQ-AYM" customClass="SettingLocationTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SettingLocationTableViewCell" rowHeight="71" id="rgs-mQ-AYM" customClass="SettingLocationTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="77" width="600" height="71"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rgs-mQ-AYM" id="ffv-1c-exb">
-                                            <frame key="frameInset" width="567" height="70.5"/>
+                                            <frame key="frameInset" width="567" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LOCATION" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NcC-AZ-gLk">
@@ -776,11 +776,11 @@
                                             <outlet property="myCurrentLocationLB" destination="ppk-CI-zX0" id="wvO-Kc-wjM"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingMaxDistanceTableViewCell" rowHeight="100" id="XY6-4A-hn0" customClass="SettingMaxDistanceTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingMaxDistanceTableViewCell" rowHeight="100" id="XY6-4A-hn0" customClass="SettingMaxDistanceTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="148" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XY6-4A-hn0" id="hZq-Jd-tqQ">
-                                            <frame key="frameInset" width="600" height="99.5"/>
+                                            <frame key="frameInset" width="600" height="99"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MAX DISTANCE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ayr-v3-RRf">
@@ -826,11 +826,11 @@
                                             <outlet property="slider" destination="B5t-Ln-ig3" id="A7x-UN-OYP"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingNotificationHeaderTableViewCell" rowHeight="60" id="l8G-pv-xRh" customClass="SettingNotificationHeaderTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingNotificationHeaderTableViewCell" rowHeight="60" id="l8G-pv-xRh" customClass="SettingNotificationHeaderTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="248" width="600" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l8G-pv-xRh" id="ZEq-cG-qX4">
-                                            <frame key="frameInset" width="600" height="59.5"/>
+                                            <frame key="frameInset" width="600" height="59"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NOTIFICATIONS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kpr-FU-pBM">
@@ -852,11 +852,11 @@
                                             <outlet property="notificationLB" destination="kpr-FU-pBM" id="vPI-Vj-3et"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingHelpSupportTableViewCell" rowHeight="50" id="NBf-iR-8Of" customClass="SettingHelpSupportTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingHelpSupportTableViewCell" rowHeight="50" id="NBf-iR-8Of" customClass="SettingHelpSupportTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="308" width="600" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NBf-iR-8Of" id="afz-rv-QmK">
-                                            <frame key="frameInset" width="600" height="49.5"/>
+                                            <frame key="frameInset" width="600" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HELP &amp; SUPPORT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mH3-BG-64I">
@@ -878,11 +878,11 @@
                                             <outlet property="helpAndSupportLB" destination="mH3-BG-64I" id="QwD-Hc-i4g"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingNewConnectionsTableViewCell" rowHeight="50" id="mpg-rQ-fQY" customClass="SettingNewConnectionsTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingNewConnectionsTableViewCell" rowHeight="50" id="mpg-rQ-fQY" customClass="SettingNewConnectionsTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="358" width="600" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mpg-rQ-fQY" id="5Dl-JD-GrQ">
-                                            <frame key="frameInset" width="600" height="49.5"/>
+                                            <frame key="frameInset" width="600" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW CONNECTIONS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SIz-Oy-hZI">
@@ -914,11 +914,11 @@
                                             <outlet property="switchBT" destination="ThC-v6-Nlu" id="zS3-u1-xq0"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingLogoutTableViewCell" rowHeight="50" id="YUL-Kj-NwC" customClass="SettingLogoutTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingLogoutTableViewCell" rowHeight="50" id="YUL-Kj-NwC" customClass="SettingLogoutTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="408" width="600" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YUL-Kj-NwC" id="eRV-uE-4e7">
-                                            <frame key="frameInset" width="600" height="49.5"/>
+                                            <frame key="frameInset" width="600" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LOGOUT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb5-Bz-04c">
@@ -940,19 +940,19 @@
                                             <outlet property="logoutLB" destination="pb5-Bz-04c" id="0cW-4w-8Xu"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingSmallSeperateTableViewCell" rowHeight="10" id="yOY-hK-JD2" customClass="SettingSmallSeperateTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingSmallSeperateTableViewCell" rowHeight="10" id="yOY-hK-JD2" customClass="SettingSmallSeperateTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="458" width="600" height="10"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yOY-hK-JD2" id="ExX-DW-9s6">
-                                            <frame key="frameInset" width="600" height="9.5"/>
+                                            <frame key="frameInset" width="600" height="9"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingBigSeperateTableViewCell" rowHeight="30" id="vsj-Fg-iLp" customClass="SettingBigSeperateTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingBigSeperateTableViewCell" rowHeight="30" id="vsj-Fg-iLp" customClass="SettingBigSeperateTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="468" width="600" height="30"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vsj-Fg-iLp" id="xL6-07-Pbi">
-                                            <frame key="frameInset" width="600" height="29.5"/>
+                                            <frame key="frameInset" width="600" height="29"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -982,7 +982,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="4BDA98EE-001C-4FA7-943F-574F705A1B55" width="5" height="9">
+        <image name="C37A2FCB-1630-4526-9AD1-E3E9DDF1D4ED" width="5" height="9">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

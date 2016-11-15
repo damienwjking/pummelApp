@@ -24,7 +24,7 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
     var otherKeyboardView: UIView!
     var viewKeyboard: UIView!
     var spinner: Spinner!
-    
+    var isPosting : Bool = false
     let imagePicker = UIImagePickerController()
     
     var selectFromLibrary : Bool = false
@@ -48,8 +48,6 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
         self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewPostViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewPostViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
         spinner = Spinner.init(frame: CGRectMake(self.view.frame.width/2 - 50, self.view.frame.height/2 + 50, 100, 100))
         spinner.Style = .Dark
@@ -62,16 +60,33 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
         imageScrolView.autoresizingMask = [.FlexibleHeight , .FlexibleWidth]
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewPostViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewPostViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     func keyboardWillShow(notification: NSNotification) {
         let userInfo:NSDictionary = notification.userInfo!
         let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
         let keyboardRectangle = keyboardFrame.CGRectValue()
         let keyboardHeight = keyboardRectangle.height
+        if  (self.viewKeyboard != nil) {
+            self.viewKeyboard.removeFromSuperview()
+        }
         viewKeyboard = UIView.init(frame:CGRect(x: 0, y: self.view.frame.height - keyboardHeight, width: self.view.frame.width, height: keyboardHeight))
         viewKeyboard.backgroundColor = UIColor.blackColor()
         viewKeyboard.hidden = true
         self.view.addSubview(viewKeyboard)
         self.viewKeyboard.hidden = false
+        if  (self.otherKeyboardView != nil) {
+            self.otherKeyboardView.removeFromSuperview()
+        }
         self.otherKeyboardView = UIView.init(frame:CGRect(x: 0, y: self.commentPhotoTV.frame.origin.y, width: self.view.frame.width, height: self.view.frame.size.height - self.commentPhotoTV.frame.origin.y))
         self.otherKeyboardView.backgroundColor = UIColor.clearColor()
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(SendPhotoViewController.handleTap(_:)))
@@ -86,6 +101,8 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
+        viewKeyboard.removeFromSuperview()
+        otherKeyboardView.removeFromSuperview()
         self.commentPhotoTV.resignFirstResponder()
     }
     
@@ -130,7 +147,9 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
     }
     
     func post() {
+        if (self.isPosting == true) {return}
         if (self.imageSelected!.image != nil) {
+            self.isPosting = true
             self.navigationItem.rightBarButtonItem?.enabled = false
             self.view.addSubview(spinner)
             self.commentPhotoTV.resignFirstResponder()
@@ -164,16 +183,17 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
                 },
                 encodingCompletion: { encodingResult in
                     switch encodingResult {
+                       
                     case .Success(let upload, _, _):
                         upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
                             dispatch_async(dispatch_get_main_queue()) {
                                 let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                                print(percent)
                             }
                         }
                         upload.validate()
                         upload.responseJSON { response in
                             self.navigationItem.rightBarButtonItem?.enabled = true
+                             self.isPosting = false
                             if response.result.error != nil {
                                 self.spinner.removeFromSuperview()
                                 let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
@@ -194,6 +214,7 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
                         }
                         
                     case .Failure( _):
+                         self.isPosting = false
                         self.navigationItem.rightBarButtonItem?.enabled = true
                         self.spinner.removeFromSuperview()
                         

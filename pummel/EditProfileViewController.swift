@@ -88,10 +88,12 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.changeAvatarIMW.userInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
-        
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -131,6 +133,16 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                             self.mobileLB.text = thisIsYourMobile
                         }
 
+                    }else if response.response?.statusCode == 401 {
+                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                        
                     }
             }
         } else {
@@ -158,7 +170,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     
     func keyboardWillShow(notification: NSNotification) {
         
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
                 if (self.view.frame.origin.y >= 0) {
                     self.view.frame.origin.y -= keyboardSize.height
                 }
@@ -166,7 +178,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 64
         }
     }
@@ -323,7 +335,6 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             avatarIMW.contentMode = .ScaleAspectFill
             var imageData : NSData!
             let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
-            print(assetPath.absoluteString)
             var type : String!
             var filename: String!
             if assetPath.absoluteString!.hasSuffix("JPG") {

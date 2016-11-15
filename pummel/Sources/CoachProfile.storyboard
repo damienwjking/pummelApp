@@ -662,6 +662,7 @@
                         <outlet property="socalBTDT" destination="e0Y-Kf-BE9" id="aI6-ww-TVv"/>
                         <outlet property="socalDT" destination="Cnr-Jc-gwy" id="z5f-O5-F1I"/>
                         <outlet property="specialitiesLB" destination="pPt-HV-aTe" id="JXt-QI-B23"/>
+                        <outlet property="specifiesDT" destination="8JO-UX-yRk" id="G3X-Og-9aO"/>
                         <outlet property="titleCoachLB" destination="LY5-Ye-xHU" id="QkZ-Nb-pdu"/>
                         <outlet property="twiterBT" destination="2mX-yN-ZLt" id="WUJ-2J-zxP"/>
                         <outlet property="twiterDT" destination="bo4-xx-Zc8" id="Hde-Qk-d0B"/>

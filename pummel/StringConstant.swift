@@ -44,7 +44,7 @@ let passwordNotice = "Please try a combination of numbers and letters"
 let signInNotice = "Please check email and password"
 let registerNoticeSuccessWithoutImage = "Resgister sucessfully, but image profile isn't updated, let do it later"
 let registerNoticeSuccessButCantSignAutomatic =  "Register sucessfully, but can't sign it automatically. Please sign in again"
-
+let cookieExpiredNotice = "Your cookie was expired, please go to setting to logout and login again"
 // Key String
 let k_PM_IS_LOGINED = "isLogined"
 let k_PM_IS_COACH = "isCoach"
@@ -53,6 +53,8 @@ let k_PM_PUSH_TOKEN = "pushToken"
 let k_PM_URL_LAST_COOKIE = "urlLastCookie"
 let k_PM_HEADER_FILEDS = "headerFields"
 let k_PM_SHOW_BADGE = "showBadge"
+let k_PM_SELECTED_NOTIFI = "selectedNotify"
+let k_PM_REFRESH_MESSAGE = "refreshMessage"
 // Key Json
 let kConversationId = "conversationId"
 let kServiceArea = "serviceArea"

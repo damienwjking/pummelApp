@@ -25,7 +25,6 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var listComment : [NSDictionary] = []
     var stopGetListComment : Bool = false
     var offset: Int = 0
-    var numberOfKeyboard : Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +45,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         self.textBox.font = .pmmMonReg13()
         self.textBox.delegate = self
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    
         self.navigationItem.hidesBackButton = true;
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(FeedViewController.handleTap(_:)))
         self.tableView.addGestureRecognizer(recognizer)
@@ -58,7 +55,15 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.getImageAvatarTextBox()
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.listComment.removeAll()
         self.stopGetListComment = false
         self.offset = 0
@@ -114,6 +119,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @IBAction func goNewPost() {
+        self.textBox.resignFirstResponder()
         self.performSegueWithIdentifier("goNewPost", sender: nil)
     }
 
@@ -316,6 +322,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func goProfile(sender: UIButton) {
+        
         self.performSegueWithIdentifier(kGoProfile, sender:sender)
     }
     
@@ -406,17 +413,15 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        let bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height);
+        self.tableView.setContentOffset(bottomOffset, animated: false)
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 64 - keyboardSize.height
-            numberOfKeyboard += 1
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if (numberOfKeyboard == 1) {
             self.view.frame.origin.y = 64
-        }
-        numberOfKeyboard -= 1
         if (self.textBox.text == "") {
             self.cursorView.hidden = false
             self.avatarTextBox.hidden = true
@@ -500,6 +505,10 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
+        self.view.frame.origin.y = 64
+        self.cursorView.hidden = false
+        self.avatarTextBox.hidden = true
+        self.leftMarginLeftChatCT.constant = 15
         self.textBox.resignFirstResponder()
     }
     

@@ -96,7 +96,6 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
-                    print(JSON)
                     let resultArr = JSON as! [NSDictionary]
                     if (resultArr.count == 0) {
                         self.isLoading = false
@@ -121,7 +120,6 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         if (tableView == listUserTB) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kUserTableViewCell, forIndexPath: indexPath) as! UserTableViewCell
             cell.tag = indexPath.row
-            cell.avatarIMV.image = nil
             let user = arrayListUser[indexPath.row]
             var name = user.objectForKey(kFirstname) as! String
             name.appendContentsOf(" ")
@@ -130,6 +128,7 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
             let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(idSender)
+            cell.avatarIMV.image = nil
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -167,7 +166,6 @@ class NewMessageViewController: UIViewController, UITableViewDelegate, UITableVi
         } else {
             let cell = tableView.dequeueReusableCellWithIdentifier(kUserTableViewCell, forIndexPath: indexPath) as! UserTableViewCell
             cell.tag = indexPath.row
-            cell.avatarIMV.image = nil
             let user = arrayListUserResult[indexPath.row]
             var name = user.objectForKey(kFirstname) as! String
             name.appendContentsOf(" ")

@@ -70,6 +70,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
     }
@@ -149,7 +153,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     coachLink.appendContentsOf(coachId)
                     Alamofire.request(.GET, coachLink)
                         .responseJSON { response in
-                            print (response.result.value)
                             if response.response?.statusCode == 200 {
                                 self.defaults.setObject(true, forKey: k_PM_IS_COACH)
                             } else {
@@ -158,19 +161,21 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     }
                     
                     // Send token
-                    let tokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN)
-                    var linkPostNotif = kPMAPIUSER
-                    linkPostNotif.appendContentsOf(currentId)
-                    linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
-                    Alamofire.request(.POST, linkPostNotif, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProtocol:"APNS", kToken: tokenString!])
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                                print("Already push tokenString")
-                            } else {
-                                print("Can't push tokenString")
-                            }
+                    if !(self.defaults.objectForKey(k_PM_PUSH_TOKEN) is NSNull) {
+                        let tokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN) as! String
+                        var linkPostNotif = kPMAPIUSER
+                        linkPostNotif.appendContentsOf(currentId)
+                        linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
+                        Alamofire.request(.POST, linkPostNotif, parameters: [kUserId:currentId, kProtocol:"APNS", kToken: tokenString])
+                            .responseJSON { response in
+                                if response.response?.statusCode == 200 {
+                                    print("Already push tokenString")
+                                } else {
+                                    print("Can't push tokenString")
+                                }
+                        }
                     }
-
+                    
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
         
                 }else {
@@ -301,8 +306,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                     }
                                                     
                                                 case .Failure(let encodingError):
-                                                    
-                                                    print(encodingError)
                                                     activityView.stopAnimating()
                                                     activityView.removeFromSuperview()
                                                     let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .Alert)
@@ -408,7 +411,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     
     func keyboardWillShow(notification: NSNotification) {
         
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
             if ( self.view.frame.origin.y == 0 && self.isShowLogin == false) {
                 let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
                 let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
@@ -423,7 +426,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let _ = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 0
         }
         if (self.isShowLogin == true && self.loginVC.emailTF.text != "" && self.loginVC.passwordTF.text != "") {

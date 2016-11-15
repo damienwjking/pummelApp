@@ -430,9 +430,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 defaults.setObject(false, forKey: k_PM_IS_LOGINED)
                 let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
                 for cookie in storage.cookies! {
+                    Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
                     storage.deleteCookie(cookie)
                 }
                 NSUserDefaults.standardUserDefaults().synchronize()
+                
                 self.performSegueWithIdentifier("backToRegister", sender: nil)
             } else {
                 let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)

@@ -14,13 +14,14 @@ class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLB: UILabel!
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var messageLB: UILabel!
-    
+    var isNewMessage: Bool!
     override func awakeFromNib() {
         super.awakeFromNib()
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
         self.messageLB.numberOfLines = 2
         self.timeLB.font = .pmmMonLight13()
+        isNewMessage = false
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

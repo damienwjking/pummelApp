@@ -70,7 +70,6 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
             Alamofire.request(.GET, listTagsLink)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
-                    print (JSON)
                     self.arrayTags = JSON as! [NSDictionary]
                     if (self.arrayTags.count > 0) {
                         for i in 0 ..< self.arrayTags.count {

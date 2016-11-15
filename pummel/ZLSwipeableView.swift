@@ -45,7 +45,7 @@ public class ZLSwipeableView: UIView {
     public var previousView: PreviousViewHandler?
     // Rewinding
     public var history = [UIView]()
-    public var numberOfHistoryItem = UInt(10)
+    public var numberOfHistoryItem = UInt(100)
 
     // MARK: Customizable behavior
     public var animateView = ZLSwipeableView.defaultAnimateViewHandler()
@@ -327,7 +327,6 @@ extension ZLSwipeableView {
             return isDirectionAllowed() && areTranslationAndVelocityInTheSameDirection() && (isTranslationLargeEnough() || isVelocityLargeEnough())
         }
     }
-
 }
 
 // MARK: - Deprecated APIs

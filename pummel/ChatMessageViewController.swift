@@ -27,7 +27,10 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     var userIdTarget: String!
     var messageId: String!
     var arrayChat: NSArray!
-    var numberOfKeyboard : Int = 0
+    
+    var isSending: Bool = false
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,8 +45,6 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         self.textBox.font = .pmmMonReg13()
         self.textBox.delegate = self
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.navigationItem.hidesBackButton = true;
         
         self.chatTB.delegate = self
@@ -57,14 +58,19 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         self.getImageAvatarTextBox()
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         self.getArrayChat()
     }
     
     func getImageAvatarTextBox() {
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -97,11 +103,14 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     
     func handleTap(recognizer: UITapGestureRecognizer) {
         self.textBox.resignFirstResponder()
+        self.view.frame.origin.y = 64
+        self.cursorView.hidden = false
+        self.avatarTextBox.hidden = true
+        self.leftMarginLeftChatCT.constant = 15
     }
-    
+
     func getArrayChat() {
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
@@ -113,7 +122,10 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                 case .Success(let JSON):
                     self.arrayChat = JSON as! NSArray
                     if(self.arrayChat.count > 0) {
-                        self.chatTB.reloadData()
+                        self.chatTB.reloadData({ 
+                            let lastIndex = NSIndexPath(forRow: self.arrayChat.count, inSection: 0)
+                            self.chatTB.scrollToRowAtIndexPath(lastIndex, atScrollPosition: UITableViewScrollPosition.Bottom, animated: false)
+                        })
                     }
                 case .Failure(let error):
                     print("Request failed with error: \(error)")
@@ -146,17 +158,13 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 64 - keyboardSize.height
-            numberOfKeyboard += 1
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if (numberOfKeyboard == 1) {
-            self.view.frame.origin.y = 64
-        }
-        numberOfKeyboard -= 1
+        self.view.frame.origin.y = 64
         if (self.textBox.text == "") {
             self.cursorView.hidden = false
             self.avatarTextBox.hidden = true
@@ -196,9 +204,9 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageHeaderTableViewCell, forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell
-            
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(userIdTarget as String)
+            cell.avatarIMV.image = nil
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -214,9 +222,17 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                         } else {
                             Alamofire.request(.GET, link)
                                 .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    cell.avatarIMV.image = imageRes
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                    if (response.response?.statusCode == 200) {
+                                        let imageRes = response.result.value! as UIImage
+                                        NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                        let updateCell = tableView .cellForRowAtIndexPath(indexPath)
+                                        dispatch_async(dispatch_get_main_queue(),{
+                                            if updateCell != nil {
+                                                cell.avatarIMV.image = imageRes
+                                            }
+                                        })
+                                        
+                                    }
                             }
                         }
                     } else {
@@ -259,6 +275,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                 let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageWithoutImageTableViewCell, forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
                 var prefix = kPMAPIUSER
                 prefix.appendContentsOf(String(format:"%0.f",message[kUserId]!.doubleValue))
+                cell.avatarIMV.image = nil
                 Alamofire.request(.GET, prefix)
                         .responseJSON { response in switch response.result {
                     case .Success(let JSON):
@@ -268,7 +285,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                             if !(userInfo[kImageUrl] is NSNull) {
                                 var link = kPMAPI
                                 link.appendContentsOf(userInfo[kImageUrl] as! String)
-                                link.appendContentsOf(widthHeight80)
+                                link.appendContentsOf(widthHeight160)
                                 
                                 if (NSCache.sharedInstance.objectForKey(link) != nil) {
                                     let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -276,9 +293,17 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
                                 } else {
                                     Alamofire.request(.GET, link)
                                         .responseImage { response in
-                                            let imageRes = response.result.value! as UIImage
-                                            cell.avatarIMV.image = imageRes
-                                            NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                            if (response.response?.statusCode == 200) {
+                                                let imageRes = response.result.value! as UIImage
+                                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                                let updateCell = tableView .cellForRowAtIndexPath(indexPath)
+                                                dispatch_async(dispatch_get_main_queue(),{
+                                                    if updateCell != nil {
+                                                        cell.avatarIMV.image = imageRes
+                                                    }
+                                                })
+                                                
+                                            }
                                     }
                                 }
                             } else {
@@ -361,6 +386,8 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         }
     }
     
+    
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
@@ -386,7 +413,6 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     }
     
     func sendMessage() {
-        let defaults = NSUserDefaults.standardUserDefaults()
         let values : [String]
         
         values = (self.typeCoach == true) ? [coachId] : [userIdTarget as String]
@@ -410,7 +436,7 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     
     func addMessageToExistConverstation(){
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
+        
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
@@ -418,19 +444,39 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         prefix.appendContentsOf(kPM_PARTH_MESSAGE)
         Alamofire.request(.POST, prefix, parameters: [kConversationId:self.messageId, kText:textBox.text, "file":"nodata".dataUsingEncoding(NSUTF8StringEncoding)!])
             .responseJSON { response in
+                self.isSending = false
                 if response.response?.statusCode == 200 {
                     self.getArrayChat()
                     self.textBox.text = ""
                     self.textBox.resignFirstResponder()
+                    let dateFormatter = NSDateFormatter()
+                    dateFormatter.dateFormat = kFullDateFormat
+                    dateFormatter.timeZone = NSTimeZone(name: "UTC")
+                    let dayCurrent = dateFormatter.stringFromDate(NSDate())
+                    var prefixT = kPMAPIUSER
+                    prefixT.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                    prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
+                    prefixT.appendContentsOf("/")
+                    prefixT.appendContentsOf(self.messageId as String)
+                    
+                    Alamofire.request(.PUT, prefixT, parameters: [kConversationId:self.messageId as String, kLastOpenAt:dayCurrent, kUserId: self.defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+                        .responseJSON { response in
+                            if response.response?.statusCode == 200 {
+                                print("updated lastOpenAt")
+                            }
+                    }
                 }
         }
     }
     
     @IBAction func clickOnSendButton() {
-        if (self.messageId != nil) {
-            self.addMessageToExistConverstation()
-        } else {
-            self.sendMessage()
+        if !(self.textBox.text == "" && self.isSending == false) {
+            self.isSending = true
+            if (self.messageId != nil) {
+                self.addMessageToExistConverstation()
+            } else {
+                self.sendMessage()
+            }
         }
     }
 

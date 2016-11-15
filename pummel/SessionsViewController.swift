@@ -21,9 +21,13 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     let defaults = NSUserDefaults.standardUserDefaults()
     var dataSourceArr : [NSDictionary] = []
     var scrollTableView : UITableView!
-    var offset : Int = -10
+    var offset : Int = 0
     var isStopLoadMessage : Bool = false
     var isLoadingMessage : Bool = false
+    var saveIndexPath: NSIndexPath?
+    var isGoToMessageDetail : Bool = false
+    var saveIndexPathScrollView : NSIndexPath?
+    
     private struct Constants {
         static let ContentSize: CGSize = CGSize(width: 80, height: 96.0)
     }
@@ -33,6 +37,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         self.listMessageTB.delegate = self
         self.listMessageTB.dataSource = self
         self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(SessionsViewController.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -45,11 +50,19 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         let tabItem = self.tabBarController?.tabBar.items![3]
-        if (UIApplication.sharedApplication().applicationIconBadgeNumber != 0) {
-            tabItem!.badgeValue = String(UIApplication.sharedApplication().applicationIconBadgeNumber)
+        // Remove badge
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        tabItem!.badgeValue = nil
+        if (isGoToMessageDetail == false) {
+            arrayMessages.removeAll()
+            isStopLoadMessage = false
+            offset = 0
+            self.getMessage()
+        } else {
+            self.isGoToMessageDetail = false
+            self.getMessagetAtSaveIndexPathScrollView()
         }
-        offset += 10
-        self.getMessage()
+        
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             let connectionsLB : UILabel = UILabel.init(frame: CGRectMake(0, 15, self.view.frame.size.width, 14))
             connectionsLB.font = .pmmMonReg13()
@@ -60,7 +73,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             self.listMessageTBTopDistance!.constant = 180
             self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
             self.view.addSubview(scrollTableView)
-              self.scrollTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
+            self.scrollTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
             self.scrollTableView.separatorStyle = .None
             self.scrollTableView.delegate = self
             self.scrollTableView.dataSource = self
@@ -70,8 +83,48 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             sep.backgroundColor = UIColor.pmmWhiteColor()
             self.view.addSubview(sep)
         }
-        // Remove badge
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        
+        
+       
+    }
+    
+    func gotNewMessage() {
+        arrayMessages.removeAll()
+        self.listMessageTB.reloadData { 
+            self.isStopLoadMessage = false
+            self.offset = 0
+            self.getMessage()
+        }
+    }
+    
+    func gotNewNotificationShowBage() {
+        arrayMessages.removeAll()
+        self.listMessageTB.reloadData {
+            self.isStopLoadMessage = false
+            self.offset = 0
+            self.getMessage()
+        }
+    }
+    
+    func getMessagetAtSaveIndexPathScrollView() {
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET)
+        prefix.appendContentsOf(String((saveIndexPath!.row)))
+        prefix.appendContentsOf(kPM_PATH_LIMIT_ONE)
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                let arrayMessageT = JSON as! [NSDictionary]
+                if (arrayMessageT.count > 0) {
+                    self.arrayMessages.removeAtIndex((self.saveIndexPath?.row)!)
+                    self.arrayMessages.insert(arrayMessageT[0], atIndex: (self.saveIndexPath?.row)!)
+                    self.listMessageTB.reloadRowsAtIndexPaths([self.saveIndexPath!], withRowAnimation: .Left)
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
     }
     
     func newMessage() {
@@ -94,7 +147,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                         self.isLoadingMessage = false
                         self.listMessageTB.reloadData()
                         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-                            self.scrollTableView.reloadData()
+                            self.scrollTableView.reloadData({
+                            })
                         }
                     } else {
                         self.isLoadingMessage = false
@@ -129,6 +183,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         if (tableView == listMessageTB) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kMessageTableViewCell, forIndexPath: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
+            let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
             //Get Text
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -137,6 +192,57 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             prefix.appendContentsOf(String(format:"%0.f", message[kConversationId]!.doubleValue))
             prefix.appendContentsOf(kPM_PARTH_MESSAGE)
             prefix.appendContentsOf("?limit=1")
+            
+            let timeAgo = message["updatedAt"] as! String
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = kFullDateFormat
+            dateFormatter.timeZone = NSTimeZone(name: "UTC")
+            let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
+            cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
+            
+            if (message[kLastOpenAt] is NSNull) {
+                cell.nameLB.font = .pmmMonReg13()
+                cell.messageLB.font = .pmmMonReg16()
+                cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
+            } else {
+                let conversationUser = message["conversation"]!["conversationUsers"] as! NSArray
+                let firstUser = conversationUser[0] as! NSDictionary
+                let secondUser = conversationUser[1] as! NSDictionary
+                if (firstUser[kLastOpenAt] is NSNull) {
+                    cell.nameLB.font = .pmmMonLight13()
+                    cell.messageLB.font = .pmmMonLight16()
+                    cell.timeLB.textColor = UIColor.blackColor()
+                } else if (secondUser[kLastOpenAt] is NSNull) {
+                    cell.nameLB.font = .pmmMonLight13()
+                    cell.messageLB.font = .pmmMonLight16()
+                    cell.timeLB.textColor = UIColor.blackColor()
+                } else {
+                    let firstUserLOA =  firstUser[kLastOpenAt] as! String
+                    let secondUserLOA =  secondUser[kLastOpenAt] as! String
+                    let fistUserDayOpen : NSDate!
+                    let secondUserDayOpen : NSDate!
+                    if (String(format:"%0.f",firstUser[kUserId]!.doubleValue) == currentUserid) {
+                        fistUserDayOpen = dateFormatter.dateFromString(firstUserLOA)
+                        secondUserDayOpen = dateFormatter.dateFromString(secondUserLOA)
+                    } else {
+                        fistUserDayOpen = dateFormatter.dateFromString(secondUserLOA)
+                        secondUserDayOpen = dateFormatter.dateFromString(firstUserLOA)
+                    }
+                    
+                    if (fistUserDayOpen.compare(secondUserDayOpen) == NSComparisonResult.OrderedAscending) {
+                        cell.nameLB.font = .pmmMonReg13()
+                        cell.messageLB.font = .pmmMonReg16()
+                        cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
+                        cell.isNewMessage = true
+                    } else {
+                        cell.nameLB.font = .pmmMonLight13()
+                        cell.messageLB.font = .pmmMonLight16()
+                        cell.timeLB.textColor = UIColor.blackColor()
+                        cell.isNewMessage = false
+                    }
+                }
+            }
+            
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -166,7 +272,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             let conversations = message[kConversation] as! NSDictionary
             let conversationUsers = conversations[kConversationUser] as! NSArray
             var targetUser = conversationUsers[0] as! NSDictionary
-            let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+           
             var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
             if (currentUserid == targetUserId){
                 targetUser = conversationUsers[1] as! NSDictionary
@@ -203,6 +309,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                                     }
                             }
                         }
+                    } else {
+                        cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
                     }
                     
                 case .Failure(let error):
@@ -210,30 +318,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                     }
             }
             
-            let timeAgo = message["updatedAt"] as! String
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = kFullDateFormat
-            dateFormatter.timeZone = NSTimeZone(name: "UTC")
-            let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
-            cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
-            if (message[kLastOpenAt] is NSNull) {
-                cell.nameLB.font = .pmmMonReg16()
-                cell.messageLB.font = .pmmMonReg16()
-                cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
-            } else {
-                let lastOpenAt =  message[kLastOpenAt] as! String
-                let dayOpen = dateFormatter.dateFromString(lastOpenAt)
-                let dayCurrent = NSDate()
-                if (dayOpen!.compare(dayCurrent) == NSComparisonResult.OrderedDescending) {
-                    cell.nameLB.font = .pmmMonReg13()
-                    cell.messageLB.font = .pmmMonReg16()
-                    cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
-                } else {
-                    cell.nameLB.font = .pmmMonLight13()
-                    cell.messageLB.font = .pmmMonLight16()
-                    cell.timeLB.textColor = UIColor.blackColor()
-                }
-            }
+            
             return cell
         } else {
             let cellId = "HorizontalCell"
@@ -286,6 +371,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func clickOnConnectionImage(sender: UIButton) {
+        let indexPath = NSIndexPath.init(forRow: sender.tag, inSection: 0)
+        saveIndexPath = indexPath
         let message = arrayMessages[sender.tag]
         let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
         let dateFormatter = NSDateFormatter()
@@ -300,6 +387,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kLastOpenAt:dayCurrent, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
+                    self.isGoToMessageDetail = true
                     self.performSegueWithIdentifier("checkChatMessage", sender: sender.tag)
                 } else {
                     let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
@@ -331,34 +419,43 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.saveIndexPath = indexPath
+        self.isGoToMessageDetail = true
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let message = arrayMessages[indexPath.row]
-        let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = kFullDateFormat
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")
-        let dayCurrent = dateFormatter.stringFromDate(NSDate())
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-        prefix.appendContentsOf("/")
-        prefix.appendContentsOf(String(format:"%0.f", message[kConversationId]!.doubleValue))
-        Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kLastOpenAt:dayCurrent, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                     self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
-                } else {
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                    
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! MessageTableViewCell
+        if (cell.isNewMessage == true) {
+            let message = arrayMessages[indexPath.row]
+            let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = kFullDateFormat
+            dateFormatter.timeZone = NSTimeZone(name: "UTC")
+            let dayCurrent = dateFormatter.stringFromDate(NSDate())
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPM_PATH_CONVERSATION)
+            prefix.appendContentsOf("/")
+            prefix.appendContentsOf(String(format:"%0.f", message[kConversationId]!.doubleValue))
+            Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kLastOpenAt:dayCurrent, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+                .responseJSON { response in
+                    if response.response?.statusCode == 200 {
+                        self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
+                    } else {
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                        
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
                     }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                }
+            }
+
+        } else {
+            self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
         }
+        
     }
     
     

@@ -114,7 +114,6 @@ class ViewManager : NSObject {
         let location = recognizer.locationInView(containerView)
         let velocity = recognizer.velocityInView(containerView)
         let movement = Movement(location: location, translation: translation, velocity: velocity)
-        
         switch recognizer.state {
         case .Began:
             guard case .Snapping(_) = state else { return }

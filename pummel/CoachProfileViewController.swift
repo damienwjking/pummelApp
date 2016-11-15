@@ -68,6 +68,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var qualificationTVHeightDT: NSLayoutConstraint!
     @IBOutlet weak var achivementTV: UITextView!
     @IBOutlet weak var achivementTVHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var specifiesDT: NSLayoutConstraint!
     
     @IBOutlet weak var ratingLB: UILabel!
     @IBOutlet weak var ratingContentLB: UILabel!
@@ -78,7 +79,6 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var postNumberLB: UILabel!
     @IBOutlet weak var postNumberContentLB: UILabel!
     
-
     var instagramLink: String? = ""
     var twitterLink: String? = ""
     var facebookLink: String? = ""
@@ -225,7 +225,10 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                             tag.name = tagContent[kTitle] as? String
                             self.tags.append(tag)
                         }
-                        self.interestCollectionView.reloadData()
+                        self.interestCollectionView.reloadData({
+                            self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
+                            self.interestHeightDT.constant = ((self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50) < 128) ? 128 : (self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50)
+                        })
                     }
             }
         } else {
@@ -237,7 +240,10 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                 tag.name = tagContent[kTitle] as? String
                 self.tags.append(tag)
             }
-            self.interestCollectionView.reloadData()
+            self.interestCollectionView.reloadData({
+                self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
+                self.interestHeightDT.constant = (self.specifiesDT.constant + 50 < 128) ? 128 : (self.specifiesDT.constant + 50)
+            })
         }
 
         self.interestFlowLayout.smaller = true

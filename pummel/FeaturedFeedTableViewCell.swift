@@ -45,7 +45,7 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         self.imageContentIMV.userInteractionEnabled = true
         self.imageContentIMV.addGestureRecognizer(doubleTapGesture)
         self.likeImage?.hidden = true
-        self.likeBT.addTarget(self, action:  #selector(FeaturedFeedTableViewCell.onDoubleTap(_:)), forControlEvents: .TouchUpInside)
+        self.likeBT.addTarget(self, action:#selector(FeaturedFeedTableViewCell.onDoubleTap(_:)), forControlEvents: .TouchUpInside)
     }
     
     func onDoubleTap(sender: UITapGestureRecognizer) {
@@ -67,7 +67,6 @@ class FeaturedFeedTableViewCell: UITableViewCell {
                 }
                 self.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
                 self.likeBT.userInteractionEnabled = false
-                self.imageContentIMV.userInteractionEnabled = false
                 let sLikeArr = self.likeLB.text!.characters.split{$0 == " "}.map(String.init)
                 var sLike = ""
                 if (sLikeArr.count > 0) {

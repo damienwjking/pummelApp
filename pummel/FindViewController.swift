@@ -32,11 +32,13 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
     @IBOutlet weak var refineSearchBT: UIButton!
+    let rightBarButtonItemTitle = "BACK"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.showLetUsHelp = true
         self.navigationController!.navigationBar.translucent = false
+        
         swipeableView = ZLSwipeableView()
         view.addSubview(swipeableView)
         swipeableView.didStart = {view, location in
@@ -46,7 +48,9 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         swipeableView.didEnd = {view, location in
         }
         swipeableView.didSwipe = {view, direction, vector in
+            self.updateRightBarButtonItem()
         }
+        
         swipeableView.didCancel = {view in
         }
         swipeableView.didTap = {view, location in
@@ -62,10 +66,34 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             view1.bottom == view2.bottom - 80
         }
         
+        
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
         swipeableView.hidden = (self.arrayResult.count >= 1) ? false : true
+    }
+    
+    func rightButtonClicked() {
+        self.swipeableView.rewind()
+        self.updateRightBarButtonItem()
+    }
+
+    func updateRightBarButtonItem() {
+        let historyLength = self.swipeableView.history.count
+        let enabled = historyLength != 0
+        self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = enabled
+        if !enabled {
+            self.tabBarController?.navigationItem.rightBarButtonItem?.title = rightBarButtonItemTitle
+            self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmWarmGreyColor()], forState: .Normal)
+            return
+        }
+        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+    }
+    
+    func intRightBarButtonItem() {
+        self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = false
+        self.tabBarController?.navigationItem.rightBarButtonItem?.title = rightBarButtonItemTitle
+        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmWarmGreyColor()], forState: .Normal)
     }
     
     func searchNextPage() {
@@ -85,7 +113,6 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             prefix.appendContentsOf("limit=1")
             prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
-            print("resultPage: \(resultPage)")
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
@@ -235,8 +262,16 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         return UIColor.performSelector(Selector(selector)).takeUnretainedValue() as! UIColor
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.navigationItem.rightBarButtonItem = nil
+        super.viewWillAppear(animated)
+
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"REWIND", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.rightButtonClicked))
+        self.updateRightBarButtonItem()
         self.tabBarController?.title = "RESULTS"
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
@@ -251,11 +286,13 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         self.stopSearch = false
         self.resultPage = 6
+        
         if (swipeableView != nil && refined == true ) {
             swipeableView.removeFromSuperview()
             swipeableView = ZLSwipeableView()
+            swipeableView.history.removeAll()
             view.addSubview(swipeableView)
-            
+            self.updateRightBarButtonItem()
             swipeableView.didStart = {view, location in
             }
             swipeableView.swiping = {view, location, translation in
@@ -263,6 +300,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             swipeableView.didEnd = {view, location in
             }
             swipeableView.didSwipe = {view, direction, vector in
+                self.updateRightBarButtonItem()
             }
             swipeableView.didCancel = {view in
             }
@@ -281,7 +319,6 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             refined = false
             swipeableView.hidden = (self.arrayResult.count >= 1) ? false : true
         }
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -308,7 +345,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
 
     @IBAction func refind() {
         self.resultIndex = 0
-          performSegueWithIdentifier("letUsHelp", sender: nil)
+        performSegueWithIdentifier("letUsHelp", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
