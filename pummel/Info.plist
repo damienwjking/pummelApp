@@ -8,6 +8,8 @@
 	<string></string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>CFBundleIcons</key>
 	<dict/>
 	<key>CFBundleIcons~ipad</key>
@@ -24,6 +26,17 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>prefs</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>18</string>
 	<key>LSApplicationCategoryType</key>
@@ -38,9 +51,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Use came to take a pic as a profile</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>I need Location</string>
+	<string>Pummel uses your location to give you correct result</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>I need Location</string>
+	<string>Pummel uses your location to give you correct result</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Send photo as a message or comment</string>
 	<key>UIAppFonts</key>
@@ -85,6 +98,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>privacy - location usage description</key>
-	<string>I need Location</string>
+	<string>Pummel uses your location to give you correct result</string>
 </dict>
 </plist>

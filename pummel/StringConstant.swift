@@ -46,7 +46,7 @@ let registerNoticeSuccessWithoutImage = "Resgister sucessfully, but image profil
 let registerNoticeSuccessButCantSignAutomatic =  "Register sucessfully, but can't sign it automatically. Please sign in again"
 let cookieExpiredNotice = "Your cookie was expired, please go to setting to logout and login again"
 let turnOneLocationServiceApp = "Pummel need location service to search. Please go to Setting -> Pummel -> Turn on location service"
-let turnOneLocationServiceSystem = "Pummel need location service to search. Please go to Setting -> Location -> Turn on location service"
+let turnOneLocationServiceSystem = "Pummel need location service to search. Please go to Setting -> Priavcy -> Turn on location service"
 // Key String
 let k_PM_IS_LOGINED = "isLogined"
 let k_PM_IS_COACH = "isCoach"

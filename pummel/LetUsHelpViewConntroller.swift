@@ -112,32 +112,32 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     @IBAction func goSearching(sender:UIButton!) {
-        if CLLocationManager.locationServicesEnabled() {
-            switch(CLLocationManager.authorizationStatus()) {
-            case .NotDetermined, .Restricted, .Denied:
-                let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
-                
-                
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                }
-                alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
-                    // ...
-                }
-            case .AuthorizedAlways, .AuthorizedWhenInUse:
+//        if CLLocationManager.locationServicesEnabled() {
+//            switch(CLLocationManager.authorizationStatus()) {
+//            case .NotDetermined, .Restricted, .Denied:
+//                let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
+//                
+//                
+//                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+//                }
+//                alertController.addAction(OKAction)
+//                self.presentViewController(alertController, animated: true) {
+//                    // ...
+//                }
+//            case .AuthorizedAlways, .AuthorizedWhenInUse:
                performSegueWithIdentifier("searching", sender: nil)
-            }
-        } else {
-            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
-            
-            
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-            }
-            alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
-                // ...
-            }
-        }
+//            }
+//        } else {
+//            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
+//            
+//            
+//            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+//            }
+//            alertController.addAction(OKAction)
+//            self.presentViewController(alertController, animated: true) {
+//                // ...
+//            }
+//        }
         
     }
     

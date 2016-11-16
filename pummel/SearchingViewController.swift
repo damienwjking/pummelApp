@@ -52,7 +52,75 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    
+    
+    
+    
+    func animationIndicator() {
+        self.smallIndicatorView.hidden = false
+        let seconds = 0.5
+        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            
+            self.medIndicatorView.hidden = false
+            let seconds = 0.5
+            let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+            let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+
+            dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                
+                self.bigIndicatorView.hidden = false
+                let seconds = 0.5
+                let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+                let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+
+                dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                    
+                    self.smallIndicatorView.hidden = true
+                    self.medIndicatorView.hidden = true
+                    self.bigIndicatorView.hidden = true
+                    let seconds = 0.5
+                    let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                    
+                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                        if (self.stopAnimation != true) {
+                             self.animationIndicator()
+                        }
+                    })
+
+                })
+            })
+            
+        })
+        
+    }
+    
+    @IBAction func closeSearching(sender:UIButton!) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    {
+        let location = locations.last! as CLLocation
+        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.005))
+        
+        self.map.setRegion(region, animated: true)
+        
+    }
+    
+    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+           return MKTileOverlayRenderer.init(overlay: overlay)
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         bigCircleFirstIMV.layer.cornerRadius = 11
         bigCircleSecondIMV.layer.cornerRadius = 11
         bigCircleThirdIMV.layer.cornerRadius = 11
@@ -124,7 +192,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         self.bigIndicatorView.hidden = true
         self.medIndicatorView.hidden = true
         self.smallIndicatorView.hidden = true
-       
+        
         self.map.delegate = self
         let link = "http://tile.stamen.com/toner/{z}/{x}/{y}.png"
         let ovlay = MKTileOverlay.init(URLTemplate: link)
@@ -132,14 +200,41 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         self.map.addOverlay(ovlay)
         overlayView.alpha = 0.7
         self.findFinessTF.font = .pmmMonReg11()
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
         
         if (CLLocationManager.locationServicesEnabled())
         {
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.requestAlwaysAuthorization()
-            locationManager.startUpdatingLocation()
+            switch(CLLocationManager.authorizationStatus()) {
+                case .NotDetermined, .Restricted, .Denied:
+                    let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
+                                if let url = settingsUrl {
+                                    UIApplication.sharedApplication().openURL(url)
+                                }
+                        }
+                        alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                    // ...
+                    }
+                case .AuthorizedAlways, .AuthorizedWhenInUse: break
+            }
+        } else {
+            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                self.dismissViewControllerAnimated(false, completion: { 
+                    
+                })
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
         }
         
         self.stopAnimation = false
@@ -150,7 +245,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                self.stopAnimation = true
+            self.stopAnimation = true
         })
         let secondsLocation = 6.0
         let delayLocation = secondsLocation * Double(NSEC_PER_SEC)  // nanoseconds per seconds
@@ -171,72 +266,6 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         })
         
         self.search()
-    }
-    
-    func animationIndicator() {
-        self.smallIndicatorView.hidden = false
-        let seconds = 0.5
-        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-            
-            self.medIndicatorView.hidden = false
-            let seconds = 0.5
-            let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-            let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-
-            dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                
-                self.bigIndicatorView.hidden = false
-                let seconds = 0.5
-                let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-
-                dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                    
-                    self.smallIndicatorView.hidden = true
-                    self.medIndicatorView.hidden = true
-                    self.bigIndicatorView.hidden = true
-                    let seconds = 0.5
-                    let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                    
-                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                        if (self.stopAnimation != true) {
-                             self.animationIndicator()
-                        }
-                    })
-
-                })
-            })
-            
-        })
-        
-    }
-    
-    @IBAction func closeSearching(sender:UIButton!) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
-    {
-        let location = locations.last! as CLLocation
-        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.005))
-        
-        self.map.setRegion(region, animated: true)
-        
-    }
-    
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
-           return MKTileOverlayRenderer.init(overlay: overlay)
-        
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
     }
     
     func search() {
