@@ -18,7 +18,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var nameLB: UILabel!
     @IBOutlet weak var nameContentTF: UITextField!
     @IBOutlet weak var aboutLB: UILabel!
-    @IBOutlet weak var aboutContentTV: UITextView!
+    @IBOutlet weak var aboutContentTV: TextViewAutoHeight!
     @IBOutlet weak var aboutContentDT: NSLayoutConstraint!
     @IBOutlet weak var privateInformationLB: UILabel!
     @IBOutlet weak var emailLB: UILabel!
@@ -30,8 +30,9 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var mobileLB: UILabel!
     @IBOutlet weak var mobileContentTF: UITextField!
     @IBOutlet weak var aboutDT: NSLayoutConstraint!
-    var userInfo: NSDictionary!
-    
+    @IBOutlet weak var tapView: UIView!
+    var isFirstTVS : Bool = false
+     var userInfo: NSDictionary!
     let imagePicker = UIImagePickerController()
     
     override func viewDidLoad() {
@@ -72,15 +73,12 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.dobContentTF.font = .pmmMonLight13()
         self.mobileContentTF.font = .pmmMonLight13()
         
-        self.aboutContentTV.backgroundColor = UIColor.clearColor()
-        self.aboutContentTV.scrollEnabled = false
-        
         self.nameContentTF.delegate = self
-        self.aboutContentTV.delegate = self
         self.emailContentTF.delegate = self
         self.genderContentTF.delegate = self
         self.dobContentTF.delegate = self
         self.mobileContentTF.delegate = self
+        self.aboutContentTV.maxHeight = 100
         
         self.changeAvatarIMW.layer.cornerRadius = 15
         self.changeAvatarIMW.clipsToBounds = true
@@ -88,8 +86,20 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.changeAvatarIMW.userInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(EditProfileViewController.didTapView))
+        self.tapView.addGestureRecognizer(tap)
+        self.tapView.hidden = true
+    }
+    
+    func didTapView() {
+        self.aboutContentTV.resignFirstResponder()
+        self.emailContentTF.resignFirstResponder()
+        self.mobileContentTF.resignFirstResponder()
+        self.nameContentTF.resignFirstResponder()
+        self.dobContentTF.resignFirstResponder()
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -123,14 +133,18 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                         } else {
                             self.aboutContentTV.text = thisIsYourBio
                         }
+                        
+                        let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
+                        self.aboutContentDT.constant = sizeAboutTV.height + 20
+                        
                         self.genderContentTF.text = self.userInfo[kGender] as? String
                         self.emailContentTF.text = self.userInfo[kEmail] as? String
                         let stringDob = self.userInfo[kDob] as! String
                         self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
                         if !(self.userInfo[kMobile] is NSNull) {
-                            self.mobileLB.text = self.userInfo[kMobile] as? String
+                            self.mobileContentTF.text = self.userInfo[kMobile] as? String
                         } else {
-                            self.mobileLB.text = thisIsYourMobile
+                            self.mobileContentTF.text = thisIsYourMobile
                         }
 
                     }else if response.response?.statusCode == 401 {
@@ -169,7 +183,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        
+        self.tapView.hidden = false
+        if (self.isFirstTVS) {return}
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
                 if (self.view.frame.origin.y >= 0) {
                     self.view.frame.origin.y -= keyboardSize.height
@@ -178,6 +193,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     func keyboardWillHide(notification: NSNotification) {
+        self.tapView.hidden = true
+        self.isFirstTVS = false
         if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 64
         }
@@ -486,6 +503,9 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             self.aboutContentTV.resignFirstResponder()
             self.showPopupToSelectGender()
             return false
+        } else if (textField.isEqual(self.nameContentTF)){
+            isFirstTVS = true
+            return true
         } else {
             return true
         }

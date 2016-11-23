@@ -49,8 +49,8 @@ class FeaturedFeedTableViewCell: UITableViewCell {
     }
     
     func onDoubleTap(sender: UITapGestureRecognizer) {
-        self.imageContentIMV.userInteractionEnabled = false
-        self.likeBT.userInteractionEnabled = false
+//        self.imageContentIMV.userInteractionEnabled = false
+//        self.likeBT.userInteractionEnabled = false
         didDoubleTap = true
         self.likeImage?.hidden = false
         self.likeImage?.alpha = 1.0
@@ -68,7 +68,7 @@ class FeaturedFeedTableViewCell: UITableViewCell {
                         }
                 }
                 self.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
-                self.likeBT.userInteractionEnabled = false
+//                self.likeBT.userInteractionEnabled = false
                 let sLikeArr = self.likeLB.text!.characters.split{$0 == " "}.map(String.init)
                 var sLike = ""
                 if (sLikeArr.count > 0) {

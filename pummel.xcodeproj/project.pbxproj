@@ -162,6 +162,8 @@
 		F9991E2A1D2A0A0E009C7731 /* message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9991E271D2A0A0E009C7731 /* message@2x.png */; };
 		F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9991E281D2A0A0E009C7731 /* message@3x.png */; };
 		F9991E2F1D2A0C0D009C7731 /* kateupon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9991E2E1D2A0C0D009C7731 /* kateupon.jpg */; };
+		F99AE5BA1DDEADAF00B6ED4A /* EditCoachProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99AE5B91DDEADAF00B6ED4A /* EditCoachProfileViewController.swift */; };
+		F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9AA81101DDF147500C3B71B /* TextViewAutoHeight.swift */; };
 		F9ABEAD11DC21FA20084B70E /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9ABEAD01DC21FA20084B70E /* Profile.storyboard */; };
 		F9ABEAD51DC346250084B70E /* emptyImage.png in Resources */ = {isa = PBXBuildFile; fileRef = F9ABEAD21DC346250084B70E /* emptyImage.png */; };
 		F9ABEAD61DC346250084B70E /* emptyImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9ABEAD31DC346250084B70E /* emptyImage@2x.png */; };
@@ -434,6 +436,8 @@
 		F9991E271D2A0A0E009C7731 /* message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message@2x.png"; sourceTree = "<group>"; };
 		F9991E281D2A0A0E009C7731 /* message@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message@3x.png"; sourceTree = "<group>"; };
 		F9991E2E1D2A0C0D009C7731 /* kateupon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kateupon.jpg; sourceTree = "<group>"; };
+		F99AE5B91DDEADAF00B6ED4A /* EditCoachProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditCoachProfileViewController.swift; path = ../../../../Applications/EditCoachProfileViewController.swift; sourceTree = "<group>"; };
+		F9AA81101DDF147500C3B71B /* TextViewAutoHeight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewAutoHeight.swift; sourceTree = "<group>"; };
 		F9ABEAD01DC21FA20084B70E /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Profile.storyboard; path = ../Profile.storyboard; sourceTree = "<group>"; };
 		F9ABEAD21DC346250084B70E /* emptyImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emptyImage.png; sourceTree = "<group>"; };
 		F9ABEAD31DC346250084B70E /* emptyImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emptyImage@2x.png"; sourceTree = "<group>"; };
@@ -661,6 +665,7 @@
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
 				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
 				F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */,
+				F99AE5B91DDEADAF00B6ED4A /* EditCoachProfileViewController.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -846,6 +851,7 @@
 		F98BAF6B1D621789004BD41E /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				F9AA81101DDF147500C3B71B /* TextViewAutoHeight.swift */,
 				F9FE14411CEBD29B004ABE34 /* Camera roll lib */,
 				F98BAF6C1D6217A7004BD41E /* NSCache+Singleton.swift */,
 				F9EAE8F41D6FE86E00FD32BE /* NaviLazyTableView.swift */,
@@ -1407,6 +1413,7 @@
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
+				F99AE5BA1DDEADAF00B6ED4A /* EditCoachProfileViewController.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */,
@@ -1430,6 +1437,7 @@
 				F9827EC11CBC27CF00841BF1 /* LoginAndRegisterViewController.swift in Sources */,
 				F970A2AC1D26393F00932BFC /* CardView.swift in Sources */,
 				F98BAF6D1D6217A7004BD41E /* NSCache+Singleton.swift in Sources */,
+				F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */,
 				F9CF54D51D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift in Sources */,
 				F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */,
 				F9EAE8F71D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift in Sources */,

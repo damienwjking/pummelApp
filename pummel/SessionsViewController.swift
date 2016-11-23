@@ -27,6 +27,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     var saveIndexPath: NSIndexPath?
     var isGoToMessageDetail : Bool = false
     var saveIndexPathScrollView : NSIndexPath?
+    var connectionsLB : UILabel?
     
     private struct Constants {
         static let ContentSize: CGSize = CGSize(width: 80, height: 96.0)
@@ -64,12 +65,13 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-            let connectionsLB : UILabel = UILabel.init(frame: CGRectMake(0, 15, self.view.frame.size.width, 14))
-            connectionsLB.font = .pmmMonReg13()
-            connectionsLB.textColor = UIColor.pmmWarmGreyColor()
-            connectionsLB.textAlignment = .Center
-            connectionsLB.text = kNewConnections
-            self.view.addSubview(connectionsLB)
+            connectionsLB = UILabel.init(frame: CGRectMake(0, 15, self.view.frame.size.width, 14))
+            connectionsLB!.font = .pmmMonReg13()
+            connectionsLB!.textColor = UIColor.pmmWarmGreyColor()
+            connectionsLB!.textAlignment = .Center
+            connectionsLB!.text = kNewConnections
+            connectionsLB!.hidden = true
+            self.view.addSubview(connectionsLB!)
             self.listMessageTBTopDistance!.constant = 180
             self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
             self.view.addSubview(scrollTableView)
@@ -79,6 +81,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             self.scrollTableView.dataSource = self
             self.scrollTableView.rowHeight = 96
             self.scrollTableView.separatorStyle = .None
+            self.scrollTableView.hidden = true
             let sep : UIView = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
             sep.backgroundColor = UIColor.pmmWhiteColor()
             self.view.addSubview(sep)
@@ -147,8 +150,10 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                         self.isLoadingMessage = false
                         self.listMessageTB.reloadData()
                         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                            self.connectionsLB!.hidden = false
                             self.scrollTableView.reloadData({
                             })
+                            self.scrollTableView.hidden = false
                         }
                     } else {
                         self.isLoadingMessage = false
@@ -365,18 +370,14 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                     print("Request failed with error: \(error)")
                     }
             }
-            cell?.imageV.tag = indexPath.row
-            let recognizer = UITapGestureRecognizer(target: self, action:#selector(SessionsViewController.clickOnConnectionImage(_:)))
-            cell?.imageV.addGestureRecognizer(recognizer)
             cell!.selectionStyle = .None
             return cell!
         }
     }
     
-    func clickOnConnectionImage(sender: UIButton) {
-        let indexPath = NSIndexPath.init(forRow: sender.tag, inSection: 0)
+    func clickOnConnectionImage(indexPath: NSIndexPath) {
         saveIndexPath = indexPath
-        let message = arrayMessages[sender.tag]
+        let message = arrayMessages[indexPath.row]
         let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
@@ -391,7 +392,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     self.isGoToMessageDetail = true
-                    self.performSegueWithIdentifier("checkChatMessage", sender: sender.tag)
+                    self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
                 } else {
                     let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                     
@@ -406,26 +407,11 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == self.arrayMessages.count - 1 && isLoadingMessage == false) {
-            offset += 10
-            self.getMessage()
-        }
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (self.arrayMessages == []) {
-            return 0
-        } else {
-            return self.arrayMessages.count
-        }
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func clickOnRowMessage(indexPath: NSIndexPath) {
         self.saveIndexPath = indexPath
         self.isGoToMessageDetail = true
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! MessageTableViewCell
+        listMessageTB.deselectRowAtIndexPath(indexPath, animated: false)
+        let cell = listMessageTB.cellForRowAtIndexPath(indexPath) as! MessageTableViewCell
         if (cell.isNewMessage == true) {
             let message = arrayMessages[indexPath.row]
             let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
@@ -454,11 +440,33 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                         }
                     }
             }
-
+            
         } else {
             self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
         }
-        
+    }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
+        if (indexPath.row == self.arrayMessages.count - 1 && isLoadingMessage == false) {
+            offset += 10
+            self.getMessage()
+        }
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (self.arrayMessages == []) {
+            return 0
+        } else {
+            return self.arrayMessages.count
+        }
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if (tableView == listMessageTB) {
+            self.clickOnConnectionImage(indexPath)
+        }else {
+            self.clickOnRowMessage(indexPath)
+        }
     }
     
     

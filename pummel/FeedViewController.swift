@@ -242,7 +242,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             let cell = tableView.dequeueReusableCellWithIdentifier("FeedThirdPartTableViewCell", forIndexPath: indexPath) as! FeedThirdPartTableViewCell
             cell.userCommentLB.text = (userFeed[kFirstname] as! String).uppercaseString
             cell.contentCommentLB.text = feedDetail[kText] as? String
-            cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))!
+            cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))! + 20
             return cell
         } else {
             
@@ -261,7 +261,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 let userName = userCommentInfo[kFirstname] as! String
                                 cell.userCommentLB.text = userName.uppercaseString
                                 cell.contentCommentLB.text = text
-                                cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))!
+                                cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))! + 20
                             })
                         }
                 }
@@ -282,7 +282,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 let userName = userCommentInfo[kFirstname] as! String
                                 cell.userCommentLB.text = userName.uppercaseString
                                 cell.contentCommentLB.text = text
-                                cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))!
+                                cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))! + 20
                             })
                         }
                 }

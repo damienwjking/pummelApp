@@ -18,7 +18,6 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBOutlet var locationTF : UILabel!
     @IBOutlet var locationResultTF: UILabel!
     @IBOutlet var helpMeReachTheCoachBT : UIButton!
-    @IBOutlet var toHelpUsWithTF : UILabel!
     @IBOutlet var scrollView : UIScrollView!
     @IBOutlet weak var tagHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollHeightConstraint: NSLayoutConstraint!
@@ -41,7 +40,6 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         self.genderResultTF.font = .pmmMonReg11()
         self.locationTF.font = .pmmMonReg11()
         self.locationResultTF.font = .pmmMonReg11()
-        self.toHelpUsWithTF.font = .pmmPlayFairReg15()
         self.helpMeReachTheCoachBT.layer.cornerRadius = 2
         self.helpMeReachTheCoachBT.layer.borderWidth = 0.5
         self.helpMeReachTheCoachBT.titleLabel?.font = .pmmMonReg11()
@@ -51,6 +49,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         self.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
         self.collectionView.backgroundColor = UIColor.clearColor()
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
+        self.sizingCell?.isSearch = true
         self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
         self.flowLayout.isSearch = true
         self.collectionView.delegate = self
@@ -78,6 +77,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
                             let tag = Tag()
                             tag.name = tagContent[kTitle] as? String
                             tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
+                            tag.tagColor = self.getRandomColorString()
                             self.tags.append(tag)
                         }
                         self.offset += 10
@@ -112,33 +112,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     @IBAction func goSearching(sender:UIButton!) {
-//        if CLLocationManager.locationServicesEnabled() {
-//            switch(CLLocationManager.authorizationStatus()) {
-//            case .NotDetermined, .Restricted, .Denied:
-//                let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
-//                
-//                
-//                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-//                }
-//                alertController.addAction(OKAction)
-//                self.presentViewController(alertController, animated: true) {
-//                    // ...
-//                }
-//            case .AuthorizedAlways, .AuthorizedWhenInUse:
-               performSegueWithIdentifier("searching", sender: nil)
-//            }
-//        } else {
-//            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
-//            
-//            
-//            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-//            }
-//            alertController.addAction(OKAction)
-//            self.presentViewController(alertController, animated: true) {
-//                // ...
-//            }
-//        }
-        
+        performSegueWithIdentifier("searching", sender: nil)
     }
     
     
@@ -197,11 +171,11 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
-        cell.tagBackgroundV.backgroundColor = tag.selected ? cell.tagImage.backgroundColor : UIColor.clearColor()
-        //cell.tagName.textColor = tag.selected ? UIColor.whiteColor() : UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
-       // cell.backgroundColor = tag.selected ? UIColor(red: 0, green: 1, blue: 0, alpha: 1) : UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+        cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
         cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
     }
+    
     
     @IBAction func clickOnGender(sender: UIButton) {
         let selectMale = { (action:UIAlertAction!) -> Void in
@@ -259,6 +233,15 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
     }
+    
+    func getRandomColorString() -> String{
+        
+        let randomRed:CGFloat = CGFloat(drand48())
+        let randomGreen:CGFloat = CGFloat(drand48())
+        let randomBlue:CGFloat = CGFloat(drand48())
+        
+        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
 }
 
 extension UICollectionView {
@@ -274,3 +257,46 @@ extension UITableView {
         { _ in completion() }
     }
 }
+
+extension Array {
+    func randomElement() -> Element {
+        return self[Int(arc4random_uniform(UInt32(self.count)))]
+    }
+}
+
+extension UIColor {
+    public convenience init?(hexString: String) {
+        let r, g, b, a: CGFloat
+        
+        if hexString.hasPrefix("#") {
+            let start = hexString.startIndex.advancedBy(1)
+            let hexColor = hexString.substringFromIndex(start)
+            
+            if hexColor.characters.count == 8 {
+                let scanner = NSScanner(string: hexColor)
+                var hexNumber: UInt64 = 0
+                
+                if scanner.scanHexLongLong(&hexNumber) {
+                    r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
+                    g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
+                    b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
+                    a = CGFloat(hexNumber & 0x000000ff) / 255
+                    
+                    self.init(red: r, green: g, blue: b, alpha: a)
+                    return
+                }
+            }
+        }
+        
+        return nil
+    }
+    
+    func randomAString()-> String {
+        let randomRed:CGFloat = CGFloat(drand48())
+        let randomGreen:CGFloat = CGFloat(drand48())
+        let randomBlue:CGFloat = CGFloat(drand48())
+        
+        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
+}
+

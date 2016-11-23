@@ -91,6 +91,8 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     var arrayPhotos: NSArray = []
     var isFromFeed: Bool = false
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -424,7 +426,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
             }
         }
         
-           }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -540,13 +542,13 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         }
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if (collectionView == self.interestCollectionView) {
-            collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-            tags[indexPath.row].selected = !tags[indexPath.row].selected
-            collectionView.reloadData()
-        }
-    }
+//    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+//        if (collectionView == self.interestCollectionView) {
+//            collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+//            tags[indexPath.row].selected = !tags[indexPath.row].selected
+//            collectionView.reloadData()
+//        }
+//    }
     
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]

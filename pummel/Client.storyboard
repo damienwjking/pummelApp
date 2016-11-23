@@ -183,7 +183,7 @@
                                         <rect key="frame" x="0.0" y="28" width="600" height="896"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eFh-8c-NyH" id="YJM-S3-wH9">
-                                            <frame key="frameInset" width="600" height="895.5"/>
+                                            <frame key="frameInset" width="600" height="895"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kTd-pS-f1u">
@@ -240,8 +240,8 @@
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ySA-Ja-vJo"/>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="like-image.png" translatesAutoresizingMaskIntoConstraints="NO" id="pSR-7p-R0B">
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="60" id="jXt-ag-4NL"/>
-                                                                <constraint firstAttribute="height" constant="60" id="kYt-pp-RZP"/>
+                                                                <constraint firstAttribute="width" constant="120" id="jXt-ag-4NL"/>
+                                                                <constraint firstAttribute="height" constant="120" id="kYt-pp-RZP"/>
                                                             </constraints>
                                                         </imageView>
                                                     </subviews>

@@ -1,0 +1,34 @@
+PODS:
+  - Alamofire (3.5.1)
+  - AlamofireImage (2.3.1):
+    - Alamofire (~> 3.2)
+  - Cartography (0.7.0)
+  - ReactiveUI (0.0.3)
+  - RNNotificationView (1.0.0)
+  - RSKGrowingTextView (1.0.1):
+    - RSKPlaceholderTextView (= 1.0.0)
+  - RSKPlaceholderTextView (1.0.0)
+  - UIColor+FlatColors (0.0.2)
+
+DEPENDENCIES:
+  - Alamofire
+  - AlamofireImage
+  - Cartography
+  - ReactiveUI
+  - RNNotificationView
+  - RSKGrowingTextView
+  - UIColor+FlatColors
+
+SPEC CHECKSUMS:
+  Alamofire: 0dfba1184a543e2aa160f4e39cac4e8aba48d223
+  AlamofireImage: e52336282757bbe1644f075d6cb85f19c891f939
+  Cartography: dd6044b6fe352252f68b648df5bff47841e591cc
+  ReactiveUI: 05d1f5d884e5a2496a2cd2ac6c0ed35ab0218c02
+  RNNotificationView: 47911ecde1c2a8dccfd6b4a676ce0d48d3f975c6
+  RSKGrowingTextView: 585888654fb5007e13089a71923ce78e53a6f0d4
+  RSKPlaceholderTextView: a34174067f43aa176abe0fc4de9f6ce29f2306c7
+  UIColor+FlatColors: 6c699df7a575281794c688c64cee6c44fd1f93b4
+
+PODFILE CHECKSUM: 01f77fe96af6ebdc00a48ebe69a365af5bce4962
+
+COCOAPODS: 1.1.1

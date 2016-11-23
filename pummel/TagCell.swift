@@ -16,6 +16,7 @@ class TagCell: UICollectionViewCell {
     @IBOutlet weak var tagImageConstraint: NSLayoutConstraint!
     @IBOutlet weak var tagNameLeftMarginConstraint: NSLayoutConstraint!
     @IBOutlet weak var tagImage: UIImageView!
+    var isSearch: Bool = false
     override func awakeFromNib() {
         self.layer.borderColor = UIColor(white: 151.0/255.0, alpha: 1.0).CGColor
         self.layer.borderWidth = 0.5
@@ -29,7 +30,7 @@ class TagCell: UICollectionViewCell {
         self.tagNameMaxWidthConstraint.constant = UIScreen.mainScreen().bounds.width - 9
         self.tagImageConstraint.constant = self.frame.height/2 - 18
         self.tagImage.layer.cornerRadius = 5
-        self.tagImage.backgroundColor = self.getRandomColor()
+        if (isSearch ==  false) {self.tagImage.backgroundColor = self.getRandomColor()}
         self.tagImage.clipsToBounds = true
     }
     

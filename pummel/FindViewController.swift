@@ -75,7 +75,10 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func rightButtonClicked() {
         self.swipeableView.rewind()
+        coachTotalDetail = arrayResult[resultIndex - 1]
+        coachDetail = coachTotalDetail[kUser] as! NSDictionary
         self.updateRightBarButtonItem()
+        
     }
 
     func updateRightBarButtonItem() {

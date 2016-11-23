@@ -60,6 +60,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     func refresh() {
+        self.tableFeed.hidden = true
         self.arrayFeeds.removeAll()
         self.tableFeed.reloadData { 
             self.refreshControl.endRefreshing()
@@ -219,8 +220,8 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
             cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
         
             //Get Likes
-            cell.likeBT.userInteractionEnabled = true
-            cell.imageContentIMV.userInteractionEnabled = true
+//            cell.likeBT.userInteractionEnabled = true
+//            cell.imageContentIMV.userInteractionEnabled = true
             var likeLink  = kPMAPI_LIKE
             likeLink.appendContentsOf(String(format:"%0.f", feed[kId]!.doubleValue))
             likeLink.appendContentsOf(kPM_PATH_LIKE)
@@ -240,8 +241,8 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
                                 dispatch_async(dispatch_get_main_queue(),{
                                     if updateCell != nil {
                                         cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
-                                        cell.likeBT.userInteractionEnabled = false
-                                        cell.imageContentIMV.userInteractionEnabled = false
+//                                        cell.likeBT.userInteractionEnabled = false
+//                                        cell.imageContentIMV.userInteractionEnabled = false
                                     }
                                 })
                                 break
@@ -252,7 +253,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
             }
         
             cell.firstContentCommentLB.text = feed[kText] as? String
-            cell.firstContentCommentConstrant.constant = (cell.firstContentCommentLB.text?.heightWithConstrainedWidth(cell.firstContentCommentLB.frame.width, font: cell.firstContentCommentLB.font))!
+            cell.firstContentCommentConstrant.constant = (cell.firstContentCommentLB.text?.heightWithConstrainedWidth(cell.firstContentCommentLB.frame.width, font: cell.firstContentCommentLB.font))! + 10
             cell.firstUserCommentLB.text = firstname?.uppercaseString
             cell.viewAllBT.tag = indexPath.row
             cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)

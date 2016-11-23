@@ -32,10 +32,9 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="ian-6z-ehb" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="7bU-wY-yin"/>
+                    <constraint firstItem="ian-6z-ehb" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="5fi-Nn-YaW"/>
                     <constraint firstItem="q06-IC-HEs" firstAttribute="top" secondItem="ian-6z-ehb" secondAttribute="bottom" constant="10" id="MYb-FU-Ep7"/>
                     <constraint firstItem="q06-IC-HEs" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Obx-qh-TCv"/>
-                    <constraint firstAttribute="trailing" secondItem="ian-6z-ehb" secondAttribute="trailing" constant="10" id="Z1N-qG-YFn"/>
                     <constraint firstItem="ian-6z-ehb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="b0K-sj-toZ"/>
                     <constraint firstItem="q06-IC-HEs" firstAttribute="top" secondItem="ian-6z-ehb" secondAttribute="bottom" constant="10" id="eaG-6O-UlA"/>
                     <constraint firstAttribute="trailing" secondItem="q06-IC-HEs" secondAttribute="trailing" id="rJn-CI-IsN"/>
