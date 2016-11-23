@@ -162,7 +162,6 @@
 		F9991E2A1D2A0A0E009C7731 /* message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9991E271D2A0A0E009C7731 /* message@2x.png */; };
 		F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9991E281D2A0A0E009C7731 /* message@3x.png */; };
 		F9991E2F1D2A0C0D009C7731 /* kateupon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9991E2E1D2A0C0D009C7731 /* kateupon.jpg */; };
-		F99AE5BA1DDEADAF00B6ED4A /* EditCoachProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99AE5B91DDEADAF00B6ED4A /* EditCoachProfileViewController.swift */; };
 		F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9AA81101DDF147500C3B71B /* TextViewAutoHeight.swift */; };
 		F9ABEAD11DC21FA20084B70E /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9ABEAD01DC21FA20084B70E /* Profile.storyboard */; };
 		F9ABEAD51DC346250084B70E /* emptyImage.png in Resources */ = {isa = PBXBuildFile; fileRef = F9ABEAD21DC346250084B70E /* emptyImage.png */; };
@@ -186,6 +185,7 @@
 		F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */; };
 		F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */; };
 		F9AF9DFA1D29C9410065F2D2 /* AboutCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */; };
+		F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */; };
 		F9CA4A051D21021D00E8A585 /* LetUsHelpViewConntroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */; };
 		F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A071D21466600E8A585 /* FlowLayout.swift */; };
 		F9CA4A0B1D21466600E8A585 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A081D21466600E8A585 /* Tag.swift */; };
@@ -436,7 +436,6 @@
 		F9991E271D2A0A0E009C7731 /* message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message@2x.png"; sourceTree = "<group>"; };
 		F9991E281D2A0A0E009C7731 /* message@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message@3x.png"; sourceTree = "<group>"; };
 		F9991E2E1D2A0C0D009C7731 /* kateupon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kateupon.jpg; sourceTree = "<group>"; };
-		F99AE5B91DDEADAF00B6ED4A /* EditCoachProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditCoachProfileViewController.swift; path = ../../../../Applications/EditCoachProfileViewController.swift; sourceTree = "<group>"; };
 		F9AA81101DDF147500C3B71B /* TextViewAutoHeight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewAutoHeight.swift; sourceTree = "<group>"; };
 		F9ABEAD01DC21FA20084B70E /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Profile.storyboard; path = ../Profile.storyboard; sourceTree = "<group>"; };
 		F9ABEAD21DC346250084B70E /* emptyImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emptyImage.png; sourceTree = "<group>"; };
@@ -460,6 +459,7 @@
 		F9ADEFD91CBF868D00991D68 /* tour2@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour2@3x.jpg"; sourceTree = "<group>"; };
 		F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour3@3x.jpg"; sourceTree = "<group>"; };
 		F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutCollectionViewCell.swift; sourceTree = "<group>"; };
+		F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileViewController.swift; sourceTree = "<group>"; };
 		F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetUsHelpViewConntroller.swift; sourceTree = "<group>"; };
 		F9CA4A071D21466600E8A585 /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		F9CA4A081D21466600E8A585 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -665,7 +665,7 @@
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
 				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
 				F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */,
-				F99AE5B91DDEADAF00B6ED4A /* EditCoachProfileViewController.swift */,
+				F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1413,7 +1413,6 @@
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
-				F99AE5BA1DDEADAF00B6ED4A /* EditCoachProfileViewController.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */,
@@ -1429,6 +1428,7 @@
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
 				F9CF54E51D801F2100BE144F /* UserProfileViewController.swift in Sources */,
 				F970A2A61D26384400932BFC /* Scheduler.swift in Sources */,
+				F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */,
 				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
 				F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */,
 				F9EAE8E91D6EFC3400FD32BE /* SettingSmallSeperateTableViewCell.swift in Sources */,
