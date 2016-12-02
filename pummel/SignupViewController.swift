@@ -18,6 +18,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var signupBT : UIButton!
     @IBOutlet var continuingLB : UILabel!
     @IBOutlet var signinDistantCT: NSLayoutConstraint!
+    @IBOutlet var scrollViewHeightCT: NSLayoutConstraint!
     @IBOutlet var passwordAttentionIM: UIImageView!
     @IBOutlet var emailAttentionIM: UIImageView!
     @IBOutlet var dobAttentionIM: UIImageView!
@@ -69,8 +70,27 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
         let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
         let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 736.0) {
-            self.signinDistantCT.constant = 142
+        
+        self.scrollViewHeightCT.constant = SCREEN_MAX_LENGTH
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            switch SCREEN_MAX_LENGTH {
+            case 736.0:
+                self.signinDistantCT.constant = 115
+                break
+                
+            case 667.0:
+                self.signinDistantCT.constant = 39.5
+                break
+                
+            case 568.0:
+                self.signinDistantCT.constant = 30
+                self.scrollViewHeightCT.constant = 320
+                break
+                
+            default:
+                self.signinDistantCT.constant = 186.0
+                break
+            }
         }
     }
 

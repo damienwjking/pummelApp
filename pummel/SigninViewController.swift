@@ -42,8 +42,24 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
         let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
         let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 736.0) {
-            self.signinDistantCT.constant = 250.0
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            switch SCREEN_MAX_LENGTH {
+            case 736.0:
+                self.signinDistantCT.constant = 250.0
+                break
+            
+            case 667.0:
+                self.signinDistantCT.constant = 186.0
+                break
+                
+            case 568.0:
+                self.signinDistantCT.constant = 80.0
+                break
+                
+            default:
+                self.signinDistantCT.constant = 186.0
+                break
+            }
         }
     }
     

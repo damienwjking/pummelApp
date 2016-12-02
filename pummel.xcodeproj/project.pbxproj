@@ -842,8 +842,8 @@
 		F9827F3D1CBD224F00841BF1 /* Xib */ = {
 			isa = PBXGroup;
 			children = (
-				F9827F471CBD242900841BF1 /* SigninViewController.xib */,
 				F9827F431CBD231D00841BF1 /* SignupViewController.xib */,
+				F9827F471CBD242900841BF1 /* SigninViewController.xib */,
 			);
 			name = Xib;
 			sourceTree = "<group>";
