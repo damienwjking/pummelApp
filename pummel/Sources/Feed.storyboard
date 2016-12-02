@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,24 +23,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Result" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="JzR-NU-LUG"/>
-                                    <constraint firstAttribute="width" constant="276" id="t14-4Q-9rc"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine your search by selecting different tags, location or gender." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBM-8q-Zjj">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="T5X-xp-sak"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sQF-5a-42b">
+                                <rect key="frame" x="105" y="243" width="165" height="141"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="141" id="9rc-rd-VII"/>
                                     <constraint firstAttribute="width" constant="165" id="OQi-XN-kN0"/>
@@ -46,7 +34,27 @@
                                     <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="odJ-wo-GMz"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Result" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
+                                <rect key="frame" x="49.5" y="404" width="276" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="JzR-NU-LUG"/>
+                                    <constraint firstAttribute="width" constant="276" id="t14-4Q-9rc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine your search by selecting different tags, location or gender." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBM-8q-Zjj">
+                                <rect key="frame" x="82" y="435" width="211" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="T5X-xp-sak"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WNF-6o-ajD">
+                                <rect key="frame" x="49.5" y="503" width="276" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="23" id="EhX-qx-4Sl"/>
                                     <constraint firstAttribute="width" constant="276" id="u8c-rw-5Tw"/>
@@ -58,16 +66,32 @@
                                     <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="8JI-Eu-Ee6"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKH-Vh-V5u">
+                                <rect key="frame" x="0.0" y="526" width="375" height="141"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cdx-Is-S0P">
+                                <rect key="frame" x="-0.5" y="20" width="375" height="223"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="6fy-ix-Oz7" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="4Xy-SD-xNq"/>
+                            <constraint firstItem="dKH-Vh-V5u" firstAttribute="top" secondItem="WNF-6o-ajD" secondAttribute="bottom" id="5t5-eW-l4F"/>
+                            <constraint firstItem="cdx-Is-S0P" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="DG0-bi-YKa"/>
+                            <constraint firstItem="dKH-Vh-V5u" firstAttribute="width" secondItem="6nh-WZ-7Pc" secondAttribute="width" id="Ezi-Wb-P2p"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="top" secondItem="SBM-8q-Zjj" secondAttribute="bottom" constant="18" id="FeZ-b8-crW"/>
-                            <constraint firstItem="sQF-5a-42b" firstAttribute="top" secondItem="ClG-gm-zz0" secondAttribute="bottom" constant="200" id="hO6-UX-tIE"/>
+                            <constraint firstItem="4av-ME-Ejz" firstAttribute="top" secondItem="dKH-Vh-V5u" secondAttribute="bottom" id="J5q-UJ-8cc"/>
+                            <constraint firstItem="sQF-5a-42b" firstAttribute="top" secondItem="cdx-Is-S0P" secondAttribute="bottom" id="JNH-vG-a6k"/>
+                            <constraint firstItem="cdx-Is-S0P" firstAttribute="height" secondItem="dKH-Vh-V5u" secondAttribute="height" multiplier="150:95" id="cnq-pD-p2h"/>
                             <constraint firstItem="SBM-8q-Zjj" firstAttribute="top" secondItem="6fy-ix-Oz7" secondAttribute="bottom" constant="10" id="ir2-dL-Xbz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="SBM-8q-Zjj" secondAttribute="trailing" constant="66" id="jrT-5n-ccE"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="l6d-NM-q6X"/>
+                            <constraint firstItem="cdx-Is-S0P" firstAttribute="top" secondItem="ClG-gm-zz0" secondAttribute="bottom" id="l9n-NM-BGZ"/>
+                            <constraint firstItem="cdx-Is-S0P" firstAttribute="width" secondItem="6nh-WZ-7Pc" secondAttribute="width" id="oDV-oG-q01"/>
                             <constraint firstItem="SBM-8q-Zjj" firstAttribute="leading" secondItem="6nh-WZ-7Pc" secondAttribute="leadingMargin" constant="66" id="q89-MB-kd3"/>
+                            <constraint firstItem="dKH-Vh-V5u" firstAttribute="centerX" secondItem="WNF-6o-ajD" secondAttribute="centerX" id="r8S-78-dPs"/>
                             <constraint firstItem="sQF-5a-42b" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="rZQ-nC-F7M"/>
                             <constraint firstItem="6fy-ix-Oz7" firstAttribute="top" secondItem="sQF-5a-42b" secondAttribute="bottom" constant="20" id="ykR-xf-tzZ"/>
                         </constraints>
@@ -87,7 +111,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wEG-D9-yU7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4839" y="1026"/>
+            <point key="canvasLocation" x="-4839.1999999999998" y="1025.9370314842579"/>
         </scene>
         <!--Connection-->
         <scene sceneID="5Fl-nL-Zft">

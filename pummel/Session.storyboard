@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qs5-cm-a3y">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qs5-cm-a3y">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,8 +22,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptyImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="L5Y-dN-x0c"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="63i-Wc-G7U">
+                                <rect key="frame" x="0.0" y="20" width="375" height="269"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptyImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="L5Y-dN-x0c">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coming Soon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdK-tz-bDv">
+                                <rect key="frame" x="39.5" y="289" width="295" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="YIK-vA-Ycl"/>
                                 </constraints>
@@ -29,6 +39,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See your individual workouts and when your next session is scheduled for here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ji7-8m-TdZ">
+                                <rect key="frame" x="31" y="347" width="313" height="51"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="51" id="StX-So-tFm"/>
                                 </constraints>
@@ -36,19 +47,31 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7V-mk-cOk">
+                                <rect key="frame" x="0.0" y="398" width="375" height="269"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="M7V-mk-cOk" firstAttribute="height" secondItem="63i-Wc-G7U" secondAttribute="height" id="6Ab-0N-8W8"/>
                             <constraint firstItem="L5Y-dN-x0c" firstAttribute="leading" secondItem="Umf-9n-9ro" secondAttribute="leading" id="77j-aa-GdE"/>
-                            <constraint firstItem="kdK-tz-bDv" firstAttribute="top" secondItem="Rf3-bP-72M" secondAttribute="bottom" constant="226.5" id="8aK-Pc-dTJ"/>
+                            <constraint firstItem="M7V-mk-cOk" firstAttribute="top" secondItem="ji7-8m-TdZ" secondAttribute="bottom" id="H1O-2y-fjf"/>
                             <constraint firstAttribute="trailing" secondItem="L5Y-dN-x0c" secondAttribute="trailing" id="KUo-XD-nqb"/>
                             <constraint firstItem="L5Y-dN-x0c" firstAttribute="top" secondItem="Rf3-bP-72M" secondAttribute="bottom" id="MyF-lc-wb3"/>
+                            <constraint firstItem="63i-Wc-G7U" firstAttribute="top" secondItem="Rf3-bP-72M" secondAttribute="bottom" id="Q2S-bc-m8Z"/>
+                            <constraint firstItem="M7V-mk-cOk" firstAttribute="centerX" secondItem="Umf-9n-9ro" secondAttribute="centerX" id="WDu-KW-CGC"/>
                             <constraint firstItem="kdK-tz-bDv" firstAttribute="leading" secondItem="Umf-9n-9ro" secondAttribute="leadingMargin" constant="23.5" id="YDN-ve-Oqc"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ji7-8m-TdZ" secondAttribute="trailing" constant="15" id="bLZ-sl-6Hq"/>
+                            <constraint firstItem="M7V-mk-cOk" firstAttribute="width" secondItem="Umf-9n-9ro" secondAttribute="width" id="cpn-z0-ojm"/>
                             <constraint firstItem="Tyf-hD-e6F" firstAttribute="top" secondItem="L5Y-dN-x0c" secondAttribute="bottom" id="dek-AY-L7G"/>
+                            <constraint firstItem="63i-Wc-G7U" firstAttribute="centerX" secondItem="L5Y-dN-x0c" secondAttribute="centerX" id="jAO-0J-fAW"/>
+                            <constraint firstItem="63i-Wc-G7U" firstAttribute="width" secondItem="L5Y-dN-x0c" secondAttribute="width" id="la3-HO-p07"/>
                             <constraint firstItem="ji7-8m-TdZ" firstAttribute="top" secondItem="kdK-tz-bDv" secondAttribute="bottom" constant="8" id="p0F-Tg-I1b"/>
+                            <constraint firstItem="Tyf-hD-e6F" firstAttribute="top" secondItem="M7V-mk-cOk" secondAttribute="bottom" id="r7d-yD-oue"/>
                             <constraint firstItem="ji7-8m-TdZ" firstAttribute="leading" secondItem="Umf-9n-9ro" secondAttribute="leadingMargin" constant="15" id="sdB-ph-NG0"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kdK-tz-bDv" secondAttribute="trailing" constant="24.5" id="w1D-Xd-JP8"/>
+                            <constraint firstItem="kdK-tz-bDv" firstAttribute="top" secondItem="63i-Wc-G7U" secondAttribute="bottom" id="wAF-wf-w7K"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="sessions.png" id="tNg-dI-hPk">
