@@ -200,6 +200,18 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             } else {
                 self.mobileContentTF.text = thisIsYourMobile
             }
+            
+            if !(self.userInfo[kFacebookUrl] is NSNull) {
+                self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
+            }
+            
+            if !(self.userInfo[kInstagramUrl] is NSNull) {
+                self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
+            }
+            
+            if !(self.userInfo[kTwitterUrl] is NSNull) {
+                self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
+            }
         }
     }
     
