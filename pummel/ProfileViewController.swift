@@ -559,12 +559,54 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
             self.twitterLink = coachDetail[kTwitterUrl] as? String
         }
         
-        self.facebookDT.constant = 0
-        self.twiterDT.constant = 0
-        self.instagramDT.constant = 0
-        self.socalBTDT.constant = 0
-        self.socalDT.constant = 0
-        self.socailLB.text = ""
+        if (self.instagramLink == "") {
+            if (self.facebookLink == "") {
+                if (self.twitterLink == "") {
+                    self.facebookDT.constant = 0
+                    self.twiterDT.constant = 0
+                    self.instagramDT.constant = 0
+                    self.socalBTDT.constant = 0
+                    self.socalDT.constant = 0
+                    self.socailLB.text = ""
+                } else {
+                    self.facebookDT.constant = 0
+                    self.twiterDT.constant = self.view.frame.size.width
+                    self.instagramDT.constant = 0
+                }
+            } else {
+                if (self.twitterLink == "") {
+                    self.facebookDT.constant = self.view.frame.size.width
+                    self.twiterDT.constant = 0
+                    self.instagramDT.constant = 0
+                } else {
+                    self.facebookDT.constant =  self.view.frame.size.width/2
+                    self.twiterDT.constant = self.view.frame.size.width/2
+                    self.instagramDT.constant = 0
+                }
+            }
+        } else {
+            if (self.facebookLink == "") {
+                if (self.twitterLink == "") {
+                    self.facebookDT.constant = 0
+                    self.twiterDT.constant = 0
+                    self.instagramDT.constant = self.view.frame.size.width
+                } else {
+                    self.facebookDT.constant = 0
+                    self.twiterDT.constant = self.view.frame.size.width/2
+                    self.instagramDT.constant = self.view.frame.size.width/2
+                }
+            } else {
+                if (self.twitterLink == "") {
+                    self.facebookDT.constant = self.view.frame.size.width/2
+                    self.twiterDT.constant = 0
+                    self.instagramDT.constant = self.view.frame.size.width/2
+                } else {
+                    self.facebookDT.constant = self.view.frame.size.width/3
+                    self.twiterDT.constant = self.view.frame.size.width/3
+                    self.instagramDT.constant = self.view.frame.size.width/3
+                }
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

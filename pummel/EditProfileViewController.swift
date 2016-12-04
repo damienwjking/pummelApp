@@ -29,6 +29,12 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var dobContentTF: UITextField!
     @IBOutlet weak var mobileLB: UILabel!
     @IBOutlet weak var mobileContentTF: UITextField!
+    @IBOutlet weak var facebookLB: UILabel!
+    @IBOutlet weak var facebookUrlTF: UITextField!
+    @IBOutlet weak var instagramLB: UILabel!
+    @IBOutlet weak var instagramUrlTF: UITextField!
+    @IBOutlet weak var twitterLB: UILabel!
+    @IBOutlet weak var twitterUrlTF: UITextField!
     @IBOutlet weak var aboutDT: NSLayoutConstraint!
     @IBOutlet weak var tapView: UIView!
     var isFirstTVS : Bool = false
@@ -63,6 +69,9 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.emailLB.font = .pmmMonLight11()
         self.genderLB.font = .pmmMonLight11()
         self.mobileLB.font = .pmmMonLight11()
+        self.facebookLB.font = .pmmMonLight11()
+        self.instagramLB.font = .pmmMonLight11()
+        self.twitterLB.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
         
@@ -72,12 +81,21 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.genderContentTF.font = .pmmMonLight13()
         self.dobContentTF.font = .pmmMonLight13()
         self.mobileContentTF.font = .pmmMonLight13()
+        self.facebookUrlTF.font = .pmmMonLight13()
+        self.facebookUrlTF.placeholder = "http://facebook.com"
+        self.instagramUrlTF.font = .pmmMonLight13()
+        self.instagramUrlTF.placeholder = "http://instagram.com"
+        self.twitterUrlTF.font = .pmmMonLight13()
+        self.twitterUrlTF.placeholder = "http:/twitter.com"
         
         self.nameContentTF.delegate = self
         self.emailContentTF.delegate = self
         self.genderContentTF.delegate = self
         self.dobContentTF.delegate = self
         self.mobileContentTF.delegate = self
+        self.facebookUrlTF.delegate = self
+        self.instagramUrlTF.delegate = self
+        self.twitterUrlTF.delegate = self
         self.aboutContentTV.maxHeight = 100
         
         self.changeAvatarIMW.layer.cornerRadius = 15
@@ -100,6 +118,9 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.mobileContentTF.resignFirstResponder()
         self.nameContentTF.resignFirstResponder()
         self.dobContentTF.resignFirstResponder()
+        self.facebookUrlTF.resignFirstResponder()
+        self.twitterUrlTF.resignFirstResponder()
+        self.instagramUrlTF.resignFirstResponder()
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -220,7 +241,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                 lastname = " "
             }
 
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text])
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
