@@ -48,6 +48,7 @@ let cookieExpiredNotice = "Your cookie was expired, please go to setting to logo
 let turnOneLocationServiceApp = "Pummel need location service to search. Please go to Setting -> Pummel -> Turn on location service"
 let turnOneLocationServiceSystem = "Pummel need location service to search. Please go to Setting -> Priavcy -> Turn on location service"
 let addThisTagToDatabase = "Are you going add this tag to your specialties?"
+let linkInvalid = "Your link isn’t valid!"
 // Key String
 let k_PM_IS_LOGINED = "isLogined"
 let k_PM_IS_COACH = "isCoach"

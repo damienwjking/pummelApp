@@ -507,9 +507,33 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             dobContentTF.attributedText = NSAttributedString(string:dobContentTF.text!,
                                                                attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
         }
+        
+        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
+            self.showMsgLinkInValid()
+            return true
+        }
+        
+        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase("twitter.com") {
+            self.showMsgLinkInValid()
+            return true
+        }
+        
+        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase("instagram.com") {
+            self.showMsgLinkInValid()
+            return true
+        }
+
         return returnValue
     }
     
+    func showMsgLinkInValid() {
+        let alertController = UIAlertController(title: pmmNotice, message: linkInvalid, preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+        }
+        alertController.addAction(OKAction)
+        self.presentViewController(alertController, animated: true) {
+        }
+    }
     
     func isValidEmail(testStr:String) -> Bool {
         let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
