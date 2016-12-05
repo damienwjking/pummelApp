@@ -113,7 +113,7 @@ class ForgottenPasswordController: UIViewController {
                     if (response.response?.statusCode == 200) {
                         self.alertTitleLB.text = String.init(format: "Check your email")
                         self.alertMessageLB.text = String.init(format: "We sent an email to %@. Tap the link in the email to reset your password.", userEmail!)
-                        sweetBT.setTitle(kSweetThanks, forState: .Normal)
+                        self.sweetBT.setTitle(kSweetThanks, forState: .Normal)
                         
                         UIView.animateWithDuration(0.3, animations: { 
                             self.dimView.alpha = 0.5;
