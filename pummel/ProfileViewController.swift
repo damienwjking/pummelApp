@@ -92,6 +92,8 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
     var arrayPhotos: NSArray = []
     var isFromFeed: Bool = false
     
+    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
@@ -150,7 +152,14 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
         self.interestCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
-        self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
+        } else {
+            self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        }
+        
+        
         self.interestCollectionView.backgroundColor = UIColor.clearColor()
         self.aboutCollectionView.backgroundColor = UIColor.clearColor()
         self.statusBarDefault = false
@@ -705,7 +714,13 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         if (collectionView == self.interestCollectionView) {
             self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-            return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+            var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+            
+            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+                cellSize.width += 5;
+            }
+            
+            return cellSize
         } else {
             return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
         }

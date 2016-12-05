@@ -32,6 +32,8 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     var offset: Int = 0
     var isStopGetListTag : Bool = false
     
+    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.letUsHelpTF.font = .pmmPlayFairReg33()
@@ -50,7 +52,13 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         self.collectionView.backgroundColor = UIColor.clearColor()
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
         self.sizingCell?.isSearch = true
-        self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
+        } else {
+            self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        }
+        
         self.flowLayout.isSearch = true
         self.collectionView.delegate = self
         self.collectionView.dataSource = self

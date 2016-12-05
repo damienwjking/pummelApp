@@ -64,6 +64,8 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
     let defaults = NSUserDefaults.standardUserDefaults()
     var currentId : String = ""
     
+    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         currentId = defaults.objectForKey(k_PM_CURRENT_ID) as! String
@@ -140,7 +142,13 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
         self.collectionView.backgroundColor = UIColor.clearColor()
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
         self.sizingCell?.isSearch = true
-        self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
+        } else {
+            self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        }
+        
         self.flowLayout.isSearch = true
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -256,7 +264,13 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            cellSize.width += 5;
+        }
+        
+        return cellSize
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
