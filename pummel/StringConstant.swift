@@ -32,8 +32,8 @@ let imageJpeg = "image/jpeg"
 let imagePng = "image/png"
 let jpgeFile = "imagefile.jpeg"
 let pngFile = "imagefile.png"
-let thisIsYourBio = "This is your bio"
-let thisIsYourMobile = "This is your mobile"
+let thisIsYourBio = "None"
+let thisIsYourMobile = "None"
 let pleaseCheckYourInformationAgain = "Some information couldnt update. Please check your information again"
 let sendYouAImage = "Sent you a image"
 let sendYouAVideo = "Sent you a video"
@@ -168,6 +168,8 @@ let kFeedThirdPartTableViewCell = "FeedThirdPartTableViewCell"
 let kFeedFourthPartTableViewCell = "FeedFourthPartTableViewCell"
 
 // Profile
+let kBeccomeATrainer = "BECOME A TRAINER"
+let kRequestToUpgrade = "REQUEST TO UPGRADE"
 let kNotification = "NOTIFICATIONS"
 let kNewConnections = "New Leads"
 let kMessage = "MESSAGES"
@@ -186,3 +188,7 @@ let kGoProfile = "goProfile"
 let kGoUserProfile = "goUserProfile"
 let kSendMessageConnection = "sendMessageConnection"
 
+
+// Seting
+let kWantToBecomeACoach = "By click on OK, you request to become a Trainer"
+let kBecomeACoachSuccess = "You have accepted to become a Trainer. Let's go to profile to edit your infomation"
