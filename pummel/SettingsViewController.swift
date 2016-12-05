@@ -23,7 +23,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     let cellHeight100 : CGFloat = 100
     
     let knumberOfRowCoach = 20
-    let knumberOfRowUser = 16
+    let knumberOfRowUser = 19
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +50,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             return knumberOfRowCoach
         } else {
             return knumberOfRowUser
@@ -57,8 +58,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             switch indexPath.row {
             case 0:
                 return cellHeight49
@@ -77,11 +77,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         } else {
             switch indexPath.row {
-            case 0, 1, 2, 4, 6, 8, 10, 12, 13, 14, 15:
+            case 1, 3, 4, 5, 7, 9, 11, 13, 15, 16, 17, 18:
                 return 50
-            case 3, 9:
+            case 0, 2, 6, 12:
                 return cellHeight60
-            case 5, 7, 11:
+            case 9, 10, 14:
                 return cellHeight10
             default:
                 return cellHeight30
@@ -91,8 +91,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingDiscoveryHeaderTableViewCell, forIndexPath: indexPath) as! SettingDiscoveryHeaderTableViewCell
@@ -121,7 +120,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             case 4:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
-                cell.newConnectionsLB.text = kNewConnections
+                cell.newConnectionsLB.text = kNewConnections.uppercaseString
                 return cell
             case 5:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
@@ -188,66 +187,81 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         } else {
             switch indexPath.row {
             case 0:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
-                cell.newConnectionsLB.font = .pmmMonReg11()
-                cell.newConnectionsLB.text = kNewConnections
+                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
+                cell.notificationLB.font = .pmmMonReg11()
+                cell.notificationLB.text = kBeccomeATrainer
                 return cell
             case 1:
+                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+                cell.helpAndSupportLB.font = .pmmMonReg11()
+                cell.helpAndSupportLB.text = kRequestToUpgrade
+                return cell
+            case 2:
+                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
+                cell.notificationLB.font = .pmmMonReg11()
+                cell.notificationLB.text = kNotification
+                return cell
+            case 3:
+                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
+                cell.newConnectionsLB.font = .pmmMonReg11()
+                cell.newConnectionsLB.text = kNewConnections.uppercaseString
+                return cell
+            case 4:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kMessage
                 return cell
-            case 2:
+            case 5:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kSessions
                 return cell
-            case 3:
+            case 6:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
                 cell.notificationLB.font = .pmmMonReg11()
                 cell.notificationLB.text = kContactUs
                 return cell
-            case 4:
+            case 7:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.text = kHelpSupport
                 return cell
-            case 5, 7, 11:
+            case 8, 10, 14:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingSmallSeperateTableViewCell, forIndexPath: indexPath) as! SettingSmallSeperateTableViewCell
                 return cell
-            case 6:
+            case 9:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.text = kFeedback
                 return cell
-            case 8:
+            case 11:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.text = kSharePummel
                 return cell
-            case 9:
+            case 12:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
                 cell.notificationLB.font = .pmmMonReg11()
                 cell.notificationLB.text = kLegal
                 return cell
-            case 10:
+            case 13:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.text = kPrivacy
                 return cell
-            case 12:
+            case 15:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.text = kTermOfService
                 return cell
-            case 13:
+            case 16:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
                 return cell
-            case 14:
+            case 17:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLogoutTableViewCell, forIndexPath: indexPath) as! SettingLogoutTableViewCell
                 cell.logoutLB.font = .pmmMonReg11()
                 return cell
-            case 15:
+            case 18:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.text = UIApplication.versionBuild()
@@ -262,8 +276,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             switch indexPath.row {
             case 8:
                 self.sendSupportEmail()
@@ -281,28 +294,28 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         } else {
             switch indexPath.row {
-            case 4:
+            case 1:
+                self.upgradeToCoach()
+            case 7:
                 self.sendSupportEmail()
-            case 6:
+            case 9:
                 self.sendFeedbackEmail()
-            case 8:
+            case 11:
                 self.sharePummel()
-            case 10:
+            case 13:
                 self.openPrivacy()
-            case 12:
+            case 15:
                 self.openTerms()
-            case 14:
+            case 17:
                 self.logOut()
             default: break
             }
         }
-       
     }
     
     func configLocationCell(cell: SettingLocationTableViewCell) {
         var prefix = kPMAPICOACH
-        let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -320,8 +333,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func configDistanceCell(cell: SettingMaxDistanceTableViewCell) {
         var prefix = kPMAPICOACH
-        let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -345,9 +357,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func sliderValueDidChange(sender:UISlider!)
     {
-        
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             let indexpath = NSIndexPath(forRow: 2, inSection: 0)
             let cellDistance = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingMaxDistanceTableViewCell
             var value = String(format:"%0.f", sender.value)
@@ -420,8 +430,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             print(res)
             let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
             if ((outputString?.containsString(kLogoutSuccess)) != nil) {
-                let defaults = NSUserDefaults.standardUserDefaults()
-                defaults.setObject(false, forKey: k_PM_IS_LOGINED)
+                self.defaults.setObject(false, forKey: k_PM_IS_LOGINED)
                 let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
                 for cookie in storage.cookies! {
                     Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
@@ -440,6 +449,39 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     // ...
                 }
             }
+        }
+    }
+    
+    func upgradeToCoach() {
+        let alertController = UIAlertController(title: pmmNotice, message: kWantToBecomeACoach, preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            var prefix = kPMAPICOACH
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+                .responseJSON { response in switch response.result {
+                case .Success(_):
+                    self.defaults.setBool(true, forKey: k_PM_IS_COACH)
+                    self.settingTableView.reloadData()
+                    let alertControllerSuccess = UIAlertController(title: pmmNotice, message: kBecomeACoachSuccess, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    }
+                    alertControllerSuccess.addAction(OKAction)
+                    
+                    self.presentViewController(alertControllerSuccess, animated: true) {
+                        // ...
+                    }
+                case .Failure(_): break
+                }
+            }
+        }
+        let cancelAction = UIAlertAction(title: kCancle, style: .Default) { (action) in
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(OKAction)
+        
+
+        self.presentViewController(alertController, animated: true) {
+            // ...
         }
     }
     
