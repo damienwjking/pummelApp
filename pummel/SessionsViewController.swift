@@ -81,14 +81,12 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             self.scrollTableView.dataSource = self
             self.scrollTableView.rowHeight = 96
             self.scrollTableView.separatorStyle = .None
-            self.scrollTableView.hidden = true
+            self.scrollTableView.showsHorizontalScrollIndicator = false
+            self.scrollTableView.showsVerticalScrollIndicator = false
             let sep : UIView = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
             sep.backgroundColor = UIColor.pmmWhiteColor()
             self.view.addSubview(sep)
         }
-        
-        
-       
     }
     
     func gotNewMessage() {
