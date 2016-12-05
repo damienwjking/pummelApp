@@ -43,6 +43,12 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
     @IBOutlet weak var scrollHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var choseAsManyLB: UILabel!
     @IBOutlet weak var tapView: UIView!
+    @IBOutlet weak var facebookLB: UILabel!
+    @IBOutlet weak var facebookUrlTF: UITextField!
+    @IBOutlet weak var instagramLB: UILabel!
+    @IBOutlet weak var instagramUrlTF: UITextField!
+    @IBOutlet weak var twitterLB: UILabel!
+    @IBOutlet weak var twitterUrlTF: UITextField!
     var isFirstTVS : Bool = false
     var sizingCell: TagCell?
     
@@ -100,6 +106,12 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
         self.achivementContentTF.font = .pmmMonLight13()
         self.qualificationContentTF.font = .pmmMonLight13()
         self.choseAsManyLB.font = .pmmMonLight13()
+        self.facebookUrlTF.font = .pmmMonLight13()
+        self.facebookUrlTF.placeholder = "http://facebook.com"
+        self.instagramUrlTF.font = .pmmMonLight13()
+        self.instagramUrlTF.placeholder = "http://instagram.com"
+        self.twitterUrlTF.font = .pmmMonLight13()
+        self.twitterUrlTF.placeholder = "http:/twitter.com"
         
         self.nameContentTF.delegate = self
         self.emailContentTF.delegate = self
@@ -107,6 +119,9 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
         self.dobContentTF.delegate = self
         self.mobileContentTF.delegate = self
         self.aboutContentTV.delegate = self
+        self.facebookUrlTF.delegate = self
+        self.instagramUrlTF.delegate = self
+        self.twitterUrlTF.delegate = self
         self.achivementContentTF.maxHeight = 200
         self.aboutContentTV.maxHeight = 200
         self.qualificationContentTF.maxHeight = 200
@@ -142,6 +157,9 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
         self.mobileContentTF.resignFirstResponder()
         self.nameContentTF.resignFirstResponder()
         self.dobContentTF.resignFirstResponder()
+        self.facebookUrlTF.resignFirstResponder()
+        self.twitterUrlTF.resignFirstResponder()
+        self.instagramUrlTF.resignFirstResponder()
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -300,6 +318,17 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                             self.mobileContentTF.text = thisIsYourMobile
                         }
                         
+                        if !(self.userInfo[kFacebookUrl] is NSNull) {
+                            self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
+                        }
+                        
+                        if !(self.userInfo[kInstagramUrl] is NSNull) {
+                            self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
+                        }
+                        
+                        if !(self.userInfo[kTwitterUrl] is NSNull) {
+                            self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
+                        }
                     }else if response.response?.statusCode == 401 {
                         let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
@@ -333,6 +362,17 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                 self.mobileContentTF.text = self.userInfo[kMobile] as? String
             } else {
                 self.mobileContentTF.text = thisIsYourMobile
+            }
+            if !(self.userInfo[kFacebookUrl] is NSNull) {
+                self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
+            }
+            
+            if !(self.userInfo[kInstagramUrl] is NSNull) {
+                self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
+            }
+            
+            if !(self.userInfo[kTwitterUrl] is NSNull) {
+                self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
             }
         }
         
@@ -407,7 +447,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                 lastname = " "
             }
             
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text])
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
