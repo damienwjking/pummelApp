@@ -108,6 +108,8 @@ class ForgottenPasswordController: UIViewController {
             }
             
         } else {
+            self.emailTF.resignFirstResponder()
+            
             Alamofire.request(.POST, kPMAPI_FORGOT, parameters: [kEmail:userEmail!])
                 .responseJSON { response in
                     if (response.response?.statusCode == 200) {
