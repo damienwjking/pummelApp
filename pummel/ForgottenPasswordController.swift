@@ -23,6 +23,11 @@ class ForgottenPasswordController: UIViewController {
     @IBOutlet var emailTF: UITextField!
     @IBOutlet var titleLB: UILabel!
     @IBOutlet var doneBTDT: NSLayoutConstraint!
+    @IBOutlet var dimView: UIView!
+    @IBOutlet var alertView: UIView!
+    @IBOutlet var alertTitleLB: UILabel!
+    @IBOutlet var alertMessageLB: UILabel!
+    @IBOutlet var sweetBT: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +44,6 @@ class ForgottenPasswordController: UIViewController {
         self.emailTF.keyboardAppearance = .Dark
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
-
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -53,6 +57,10 @@ class ForgottenPasswordController: UIViewController {
     
     @IBAction func goBackWithSender() {
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -72,6 +80,10 @@ class ForgottenPasswordController: UIViewController {
         return UIStatusBarStyle.LightContent
     }
     
+    @IBAction func buttonSweetWithSender(sender: AnyObject) {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
     
     @IBAction func buttonActionWithSender() {
         
@@ -81,45 +93,47 @@ class ForgottenPasswordController: UIViewController {
         // check if field empty
         
         if(userEmail!.isEmpty) {
-        
-                self.emailTF.highlighted = true
-                
-                let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .Alert)
-                
-                
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    // ...
-                }
-                alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
-                    // ...
-                }
-
+            
+            self.emailTF.highlighted = true
+            
+            let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .Alert)
+            
+            
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+            
         } else {
-//            Alamofire.request(.POST, "http://52.8.5.161/api/request-password-rest", parameters: [kEmail:userEmail!])
-//                .responseJSON { response in
-//                    print("REQUEST-- \(response.request)")  // original URL request
-//                    print("RESPONSE-- \(response.response)") // URL response
-//                    print("DATA-- \(response.data)")     // server data
-//                    print("RESULT-- \(response.result)")   // result of response serialization
-//                    
-//                    
-//                    
-//                    if let JSON = response.result.value {
-//                        print("JSON: \(JSON)")
-//
-//                    }
-//                }
-//            // Thanks you
-//            // hide buttons
-//            
-//            self.loginButton.setTitle("Return to Sign In", forState: .Normal)
-//            self.EmailTextField.hidden = true
-//            self.EmailTextField.borderStyle = UITextBorderStyle.None
-//            self.EmailTextField.placeholder = "Thank you, an email has been sent to your password."
-//            
-//            // to do segueReturnForgottenPassword
-//
+            Alamofire.request(.POST, kPMAPI_FORGOT, parameters: [kEmail:userEmail!])
+                .responseJSON { response in
+                    if (response.response?.statusCode == 200) {
+                        self.alertTitleLB.text = String.init(format: "Check your email")
+                        self.alertMessageLB.text = String.init(format: "We sent an email to %@. Tap the link in the email to reset your password.", userEmail!)
+                        sweetBT.setTitle(kSweetThanks, forState: .Normal)
+                        
+                        UIView.animateWithDuration(0.3, animations: { 
+                            self.dimView.alpha = 0.5;
+                            self.alertView.alpha = 1;
+                            
+                            self.dimView.userInteractionEnabled = true;
+                        })
+                    } else {
+                        let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .Alert)
+                        
+                        
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    }
+            }
         }
     }
 }
