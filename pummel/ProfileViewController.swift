@@ -159,7 +159,6 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
             self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
         }
         
-        
         self.interestCollectionView.backgroundColor = UIColor.clearColor()
         self.aboutCollectionView.backgroundColor = UIColor.clearColor()
         self.statusBarDefault = false
@@ -173,7 +172,6 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
-        
     }
     
     override func viewWillAppear(animated: Bool) {

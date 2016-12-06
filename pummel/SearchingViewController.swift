@@ -54,10 +54,6 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         super.viewDidLoad()
     }
     
-    
-    
-    
-    
     func animationIndicator() {
         self.smallIndicatorView.hidden = false
         let seconds = 0.5
@@ -210,7 +206,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         if (CLLocationManager.locationServicesEnabled())
         {
             switch(CLLocationManager.authorizationStatus()) {
-                case .NotDetermined, .Restricted, .Denied:
+                case .Restricted, .Denied:
                     let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
                             let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                 let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
@@ -223,6 +219,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                     // ...
                     }
                 case .AuthorizedAlways, .AuthorizedWhenInUse: break
+            default: break
             }
         } else {
             let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)

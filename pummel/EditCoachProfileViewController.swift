@@ -104,7 +104,9 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
         self.emailContentTF.font = .pmmMonLight13()
         self.genderContentTF.font = .pmmMonLight13()
         self.dobContentTF.font = .pmmMonLight13()
+        self.dobContentTF.placeholder = "YYYY-MM-DD"
         self.mobileContentTF.font = .pmmMonLight13()
+        self.mobileContentTF.placeholder = "+64..."
         self.achivementContentTF.font = .pmmMonLight13()
         self.qualificationContentTF.font = .pmmMonLight13()
         self.choseAsManyLB.font = .pmmMonLight13()
@@ -113,7 +115,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
         self.instagramUrlTF.font = .pmmMonLight13()
         self.instagramUrlTF.placeholder = "http://instagram.com"
         self.twitterUrlTF.font = .pmmMonLight13()
-        self.twitterUrlTF.placeholder = "http:/twitter.com"
+        self.twitterUrlTF.placeholder = "http://twitter.com"
         
         self.nameContentTF.delegate = self
         self.emailContentTF.delegate = self
@@ -328,8 +330,6 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                         self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
                         if !(self.userInfo[kMobile] is NSNull) {
                             self.mobileContentTF.text = self.userInfo[kMobile] as? String
-                        } else {
-                            self.mobileContentTF.text = thisIsYourMobile
                         }
                         
                         if !(self.userInfo[kFacebookUrl] is NSNull) {
@@ -374,9 +374,8 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
             self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
             if !(self.userInfo[kMobile] is NSNull) {
                 self.mobileContentTF.text = self.userInfo[kMobile] as? String
-            } else {
-                self.mobileContentTF.text = thisIsYourMobile
             }
+            
             if !(self.userInfo[kFacebookUrl] is NSNull) {
                 self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
             }
