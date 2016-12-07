@@ -431,6 +431,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
             if ((outputString?.containsString(kLogoutSuccess)) != nil) {
                 self.defaults.setObject(false, forKey: k_PM_IS_LOGINED)
+                self.defaults.setObject(false, forKey: k_PM_IS_COACH)
                 let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
                 for cookie in storage.cookies! {
                     Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
