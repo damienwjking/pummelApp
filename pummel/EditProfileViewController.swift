@@ -300,7 +300,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     
     func showPopupToSelectProfileAvatar() {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
-            self.imagePicker.allowsEditing = false
+            self.imagePicker.allowsEditing = true
             self.imagePicker.sourceType = .PhotoLibrary
             self.presentViewController(self.imagePicker, animated: true, completion: nil)
         }
@@ -389,7 +389,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
 
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
             activityView.center = self.view.center
             activityView.startAnimating()
