@@ -39,10 +39,66 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: kDone, style: .Plain, target: self, action: #selector(SettingsViewController.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
          self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        if self.defaults.objectForKey(kNewConnections) == nil {
+            self.defaults.setObject(true, forKey: kNewConnections)
+        }
+        if self.defaults.objectForKey(kMessage) == nil {
+            self.defaults.setObject(true, forKey: kMessage)
+        }
+        if self.defaults.objectForKey(kSessions) == nil {
+            self.defaults.setObject(true, forKey: kSessions)
+        }
     }
     
     func done() {
-        self.navigationController?.popViewControllerAnimated(true)
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            let indexpath = NSIndexPath(forRow: 2, inSection: 0)
+            let cellDistance = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingMaxDistanceTableViewCell
+            
+            var prefix = kPMAPICOACH
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                kDistance: cellDistance.slider.value])
+                .responseJSON { response in switch response.result {
+                case .Success(_):
+                    self.navigationController?.popViewControllerAnimated(true)
+                    
+                case .Failure(let error):
+                    print(error)
+                    self.navigationController?.popViewControllerAnimated(true)
+                    }
+            }
+            
+            let newLeadIndexPath = NSIndexPath(forRow: 4, inSection: 0)
+            let newLeadCell = self.settingTableView.cellForRowAtIndexPath(newLeadIndexPath) as! SettingNewConnectionsTableViewCell
+            
+            let messageIndexPath = NSIndexPath(forRow: 5, inSection: 0)
+            let messageCell = self.settingTableView.cellForRowAtIndexPath(messageIndexPath) as! SettingNewConnectionsTableViewCell
+            
+            let sessionIndexPath = NSIndexPath(forRow: 6, inSection: 0)
+            let sessionCell = self.settingTableView.cellForRowAtIndexPath(sessionIndexPath) as! SettingNewConnectionsTableViewCell
+            
+            self.defaults.setObject(newLeadCell.switchBT.on, forKey: kNewConnections)
+            self.defaults.setObject(messageCell.switchBT.on, forKey: kMessage)
+            self.defaults.setObject(sessionCell.switchBT.on, forKey: kSessions)
+        } else {
+            let newLeadIndexPath = NSIndexPath(forRow: 3, inSection: 0)
+            let newLeadCell = self.settingTableView.cellForRowAtIndexPath(newLeadIndexPath) as! SettingNewConnectionsTableViewCell
+            
+            let messageIndexPath = NSIndexPath(forRow: 4, inSection: 0)
+            let messageCell = self.settingTableView.cellForRowAtIndexPath(messageIndexPath) as! SettingNewConnectionsTableViewCell
+            
+            let sessionIndexPath = NSIndexPath(forRow: 5, inSection: 0)
+            let sessionCell = self.settingTableView.cellForRowAtIndexPath(sessionIndexPath) as! SettingNewConnectionsTableViewCell
+            
+            self.defaults.setObject(newLeadCell.switchBT.on, forKey: kNewConnections)
+            self.defaults.setObject(messageCell.switchBT.on, forKey: kMessage)
+            self.defaults.setObject(sessionCell.switchBT.on, forKey: kSessions)
+            
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+        
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -121,16 +177,19 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kNewConnections.uppercaseString
+                cell.switchBT.on = self.defaults.objectForKey(kNewConnections) as! Bool
                 return cell
             case 5:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kMessage
+                cell.switchBT.on = self.defaults.objectForKey(kMessage) as! Bool
                 return cell
             case 6:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kSessions
+                cell.switchBT.on = self.defaults.objectForKey(kSessions) as! Bool
                 return cell
             case 7:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
@@ -205,16 +264,19 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kNewConnections.uppercaseString
+                cell.switchBT.on = self.defaults.objectForKey(kNewConnections) as! Bool
                 return cell
             case 4:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kMessage
+                cell.switchBT.on = self.defaults.objectForKey(kMessage) as! Bool
                 return cell
             case 5:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kSessions
+                cell.switchBT.on = self.defaults.objectForKey(kSessions) as! Bool
                 return cell
             case 6:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
@@ -342,7 +404,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     var distance = String(format:"%0.f", userDetailFull[kDistance]!.doubleValue)
                     distance.appendContentsOf(" kms")
                     cell.maxDistanceContentLB.text = distance
-
+                    cell.slider.value = userDetailFull[kDistance] as! Float
                 } else {
                      cell.maxDistanceContentLB.text = k25kms
                      cell.slider.value = 25

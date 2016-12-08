@@ -49,6 +49,7 @@ let turnOneLocationServiceApp = "Pummel need location service to search. Please 
 let turnOneLocationServiceSystem = "Pummel need location service to search. Please go to Setting -> Priavcy -> Turn on location service"
 let addThisTagToDatabase = "Are you going add this tag to your specialties?"
 let linkInvalid = "Your link isn’t valid!"
+
 // Key String
 let k_PM_IS_LOGINED = "isLogined"
 let k_PM_IS_COACH = "isCoach"
@@ -59,6 +60,7 @@ let k_PM_HEADER_FILEDS = "headerFields"
 let k_PM_SHOW_BADGE = "showBadge"
 let k_PM_SELECTED_NOTIFI = "selectedNotify"
 let k_PM_REFRESH_MESSAGE = "refreshMessage"
+
 // Key Json
 let kConversationId = "conversationId"
 let kServiceArea = "serviceArea"
@@ -131,7 +133,8 @@ let kDontCareUp = "DON'T CARE"
 let kShare = "Share"
 let KReport = "Report"
 let kRows = "rows"
-// Button 
+
+// Button
 let kNavSetting = "SETTINGS"
 let kNavProfile = "PROFILE"
 let kNavEditProfile = "EDIT PROFILE"
