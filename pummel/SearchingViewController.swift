@@ -280,6 +280,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         // TODO: Get current lat & long and add to appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat": currentlat, "long", currentlong]
         
         prefix.appendContentsOf("&limit=6&offset=0")
+        // TODO: append to prefix : prefix.appendcontentsof("lat=...&long=...)
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray]
         Alamofire.request(.GET, prefix)
