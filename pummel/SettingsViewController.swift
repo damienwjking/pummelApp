@@ -9,6 +9,9 @@
 import UIKit
 import MessageUI
 import Alamofire
+import LocationPicker
+import CoreLocation
+import MapKit
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -26,6 +29,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     let knumberOfRowUser = 19
     
     let defaults = NSUserDefaults.standardUserDefaults()
+    var location: Location? {
+        didSet {
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +55,50 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         }
         if self.defaults.objectForKey(kSessions) == nil {
             self.defaults.setObject(true, forKey: kSessions)
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            let indexpath = NSIndexPath(forRow: 1, inSection: 0)
+            let cellLocation = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingLocationTableViewCell
+            if self.location != nil {
+                if self.location?.name != cellLocation.locationContentLB.text {
+                    self.showMsgConfirmUpdateLocation()
+                }
+            }
+            
+        }
+    }
+    
+    func showMsgConfirmUpdateLocation() {
+        let alertController = UIAlertController(title: pmmNotice, message: confirmChangedLocation, preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let indexpath = NSIndexPath(forRow: 1, inSection: 0)
+            let cellLocation = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingLocationTableViewCell
+            cellLocation.locationContentLB.text = self.location?.name
+            self.updateLocationCoach()
+        }
+        let CancelAction = UIAlertAction(title: kCancle, style: .Default) { (action) in
+        }
+        alertController.addAction(OKAction)
+        alertController.addAction(CancelAction)
+        self.presentViewController(alertController, animated: true) {
+        }
+    }
+    
+    func updateLocationCoach() {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            var prefix = kPMAPICOACH
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kServiceArea:(self.location?.name)!, kLat:(self.location?.coordinate.latitude)!, kLong:(self.location?.coordinate.longitude)!])
+                .responseJSON { response in switch response.result {
+                case .Success(_): break
+                    
+                case .Failure(let error):
+                    print(error)
+                    }
+            }
         }
     }
     
@@ -340,6 +391,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             switch indexPath.row {
+            case 1:
+                self.performSegueWithIdentifier("LocationPicker", sender: nil)
             case 8:
                 self.sendSupportEmail()
             case 10:
@@ -384,6 +437,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 let userDetailFull = JSON as! NSDictionary
                 if !(userDetailFull[kServiceArea] is NSNull) {
                     cell.locationContentLB.text = userDetailFull[kServiceArea] as? String
+                    if !(userDetailFull[kLat] is NSNull) && !(userDetailFull[kLong] is NSNull) {
+                        if let lat = userDetailFull[kLat] as? Double {
+                            if let long = userDetailFull[kLong] as? Double {
+                                let coordinates = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                                self.location = Location(name: userDetailFull[kServiceArea] as? String, location: nil,
+                                    placemark: MKPlacemark(coordinate: coordinates, addressDictionary: [:]))
+                            }
+                        }
+                    }
                 } else {
                     cell.locationContentLB.text = "..."
                 }
@@ -551,6 +613,20 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+            if segue.identifier == "LocationPicker" {
+                let locationPicker = segue.destinationViewController as! LocationPickerViewController
+                locationPicker.location = self.location
+                locationPicker.showCurrentLocationButton = true
+                locationPicker.useCurrentLocationAsHint = true
+                locationPicker.showCurrentLocationInitially = true
+                locationPicker.mapType = .Standard
+                locationPicker.completion = { self.location = $0 }
+            }
+        
     }
 }
 
