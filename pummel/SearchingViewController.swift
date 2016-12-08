@@ -277,6 +277,8 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
         }
         
+        // TODO: Get current lat & long and add to appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat": currentlat, "long", currentlong]
+        
         prefix.appendContentsOf("&limit=6&offset=0")
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray]

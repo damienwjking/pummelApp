@@ -116,6 +116,8 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             prefix.appendContentsOf("limit=1")
             prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
+            //TODO: lay lat long from aVariable and noi zo prefit
+            
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
