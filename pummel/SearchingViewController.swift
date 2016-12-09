@@ -277,10 +277,12 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
         }
         
-        // TODO: Get current lat & long and add to appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat": currentlat, "long", currentlong]
+        let limitParams = String(format: "&%@=6&%@=0", kLimit, kOffset)
+        prefix.appendContentsOf(limitParams)
         
-        prefix.appendContentsOf("&limit=6&offset=0")
-        // TODO: append to prefix : prefix.appendcontentsof("lat=...&long=...)
+        let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
+        prefix.appendContentsOf(coordinateParams)
+        
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray]
         Alamofire.request(.GET, prefix)
