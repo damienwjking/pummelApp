@@ -23,7 +23,6 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
     var arrayChat: NSArray!
     var otherKeyboardView: UIView!
     var viewKeyboard: UIView!
-    var spinner: Spinner!
     var isPosting : Bool = false
     let imagePicker = UIImagePickerController()
     
@@ -49,8 +48,6 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
         self.commentPhotoTV.delegate = self
         self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
         self.navigationItem.hidesBackButton = true;
-        spinner = Spinner.init(frame: CGRectMake(self.view.frame.width/2 - 50, self.view.frame.height/2 + 50, 100, 100))
-        spinner.Style = .Dark
         imagePicker.delegate = self
         
         imageScrolView.delegate = self
@@ -151,7 +148,7 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
         if (self.imageSelected!.image != nil) {
             self.isPosting = true
             self.navigationItem.rightBarButtonItem?.enabled = false
-            self.view.addSubview(spinner)
+            self.view.makeToastActivity(message: "Posting")
             self.commentPhotoTV.resignFirstResponder()
             let defaults = NSUserDefaults.standardUserDefaults()
             
@@ -194,8 +191,8 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
                         upload.responseJSON { response in
                             self.navigationItem.rightBarButtonItem?.enabled = true
                              self.isPosting = false
+                            self.view.hideToastActivity()
                             if response.result.error != nil {
-                                self.spinner.removeFromSuperview()
                                 let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                                 
                                 
@@ -207,8 +204,6 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
                                     // ...
                                 }
                             } else {
-                                self.spinner.removeFromSuperview()
-
                                 self.navigationController?.popViewControllerAnimated(true)
                             }
                         }
@@ -216,7 +211,7 @@ class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegat
                     case .Failure( _):
                          self.isPosting = false
                         self.navigationItem.rightBarButtonItem?.enabled = true
-                        self.spinner.removeFromSuperview()
+                        self.view.hideToastActivity()
                         
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                         

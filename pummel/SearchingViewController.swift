@@ -240,7 +240,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         
         self.animationIndicator()
         
-        let seconds = 9.0
+        let seconds = 20.0
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
@@ -279,7 +279,7 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
         }
         
-        let limitParams = String(format: "&%@=10&%@=0", kLimit, kOffset)
+        let limitParams = String(format: "&%@=25&%@=0", kLimit, kOffset)
         prefix.appendContentsOf(limitParams)
         
         let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
@@ -303,7 +303,6 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                             findVC.viewDidLayoutSubviews()
                             findVC.showLetUsHelp = false
                             findVC.viewDidLayoutSubviews()
-        
                             presentingViewController!.dismissViewControllerAnimated(true, completion: {})
                         })
                     } else {

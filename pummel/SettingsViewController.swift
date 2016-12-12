@@ -652,7 +652,7 @@ extension UIApplication {
     
     class func appVersion() -> String {
         var appversion = "Pummel "
-        appversion.appendContentsOf(NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String)
+appversion.appendContentsOf(NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String)
         return appversion
     }
     

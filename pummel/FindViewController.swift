@@ -292,7 +292,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         self.stopSearch = false
-        self.resultPage = 10
+        self.resultPage = 25
         
         if (swipeableView != nil && refined == true ) {
             swipeableView.removeFromSuperview()

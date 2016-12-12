@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import CoreLocation
 
-class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
     @IBOutlet var letUsHelpTF : UILabel!
     @IBOutlet var letUsHelpDetailTF : UILabel!
     @IBOutlet var genderTF : UILabel!
@@ -33,6 +33,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     var isStopGetListTag : Bool = false
     
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -120,7 +121,44 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     @IBAction func goSearching(sender:UIButton!) {
-        performSegueWithIdentifier("searching", sender: nil)
+        if (CLLocationManager.locationServicesEnabled())
+        {
+            locationManager.requestAlwaysAuthorization()
+            locationManager.delegate = self
+            if (CLLocationManager.authorizationStatus() == .Restricted || CLLocationManager.authorizationStatus() == .Denied) {
+                                let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
+                    if let url = settingsUrl {
+                        UIApplication.sharedApplication().openURL(url)
+                    }
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+            } else if (CLLocationManager.authorizationStatus() == .AuthorizedAlways) {
+                performSegueWithIdentifier("searching", sender: nil)
+            }
+        } else {
+            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                self.dismissViewControllerAnimated(false, completion: {
+                    
+                })
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
+        
+    }
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if (status == .AuthorizedAlways) {
+             performSegueWithIdentifier("searching", sender: nil)
+        } 
     }
     
     
