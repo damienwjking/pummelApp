@@ -24,6 +24,7 @@
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
 		9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */; };
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
+		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
@@ -295,6 +296,7 @@
 		9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Client.storyboard; path = ../Client.storyboard; sourceTree = "<group>"; };
 		9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		A23FD1E636ACA8E6CDC611DF /* Pods-pummel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pummel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pummel/Pods-pummel.debug.xcconfig"; sourceTree = "<group>"; };
+		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -851,6 +853,7 @@
 		F98BAF6B1D621789004BD41E /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */,
 				F9AA81101DDF147500C3B71B /* TextViewAutoHeight.swift */,
 				F9FE14411CEBD29B004ABE34 /* Camera roll lib */,
 				F98BAF6C1D6217A7004BD41E /* NSCache+Singleton.swift */,
@@ -1414,6 +1417,7 @@
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
+				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */,
 				F9EAE8F51D6FE86E00FD32BE /* NaviLazyTableView.swift in Sources */,

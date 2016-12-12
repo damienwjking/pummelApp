@@ -459,7 +459,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
             } else {
                 lastname = " "
             }
-            
+            self.view.makeToastActivity(message: "Saving")
             Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
