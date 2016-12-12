@@ -624,6 +624,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 locationPicker.useCurrentLocationAsHint = true
                 locationPicker.showCurrentLocationInitially = true
                 locationPicker.mapType = .Standard
+                
+                let backItem = UIBarButtonItem()
+                backItem.title = "BACK        "
+                backItem.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+
+                navigationItem.backBarButtonItem = backItem
+                self.navigationController?.navigationBar.backIndicatorImage = UIImage()
+                self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
+    
                 locationPicker.completion = { self.location = $0 }
             }
         
