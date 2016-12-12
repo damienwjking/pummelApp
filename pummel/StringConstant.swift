@@ -106,6 +106,8 @@ let kPostId = "postId"
 let kBusinessId = "businessId"
 let kLat = "lat"
 let kLong = "long"
+let kLimit = "limit"
+let kOffset = "offset"
 
 // String
 let kLogoutSuccess = "Logout successful"
