@@ -109,15 +109,17 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
             var prefix = kPMAPICOACH
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            self.view.makeToastActivity(message: "Saving")
             Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
                 kDistance: cellDistance.slider.value])
                 .responseJSON { response in switch response.result {
                 case .Success(_):
                     self.navigationController?.popViewControllerAnimated(true)
-                    
+                    self.view.hideToastActivity()
                 case .Failure(let error):
                     print(error)
                     self.navigationController?.popViewControllerAnimated(true)
+                    self.view.hideToastActivity()
                     }
             }
             

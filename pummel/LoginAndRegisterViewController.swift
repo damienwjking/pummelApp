@@ -137,6 +137,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBAction func clickSigninAction(sender:UIButton!) {
         let userEmail = self.loginVC.emailTF.text!
         let userPassword = self.loginVC.passwordTF.text!
+        self.view.makeToastActivity(message: "Loading")
         Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -177,9 +178,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     }
                     
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                    self.view.hideToastActivity()
         
                 }else {
-                    
+                    self.view.hideToastActivity()
                     let alertController = UIAlertController(title: pmmNotice, message: signInNotice, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                         // ...
@@ -231,6 +233,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             var para : [String: AnyObject]!
             para =  (dob == "") ? [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kGender:gender!] : [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kDob:dob!, kGender:gender!]
             
+            self.view.makeToastActivity(message: "Loading")
             Alamofire.request(.POST, kPMAPI_REGISTER, parameters: para)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
@@ -289,6 +292,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                         if response.result.error != nil {
                                                             activityView.stopAnimating()
                                                             activityView.removeFromSuperview()
+                                                            self.view.hideToastActivity()
                                                             let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .Alert)
                                                             
                                                             let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
@@ -308,6 +312,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                 case .Failure(let encodingError):
                                                     activityView.stopAnimating()
                                                     activityView.removeFromSuperview()
+                                                    self.view.hideToastActivity()
                                                     let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .Alert)
                                                     
                                                     
@@ -326,7 +331,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                         // REGISTER OK, SIGNIN OK
                                         activityView.stopAnimating()
                                         activityView.removeFromSuperview()
-
+                                        self.view.hideToastActivity()
+                                        
                                         self.updateCookies(response)
                                         let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
                                         self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
@@ -336,7 +342,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                 }else {
                                     // REGISTER OK, BUT CAN'T SIGN IN
                                     let alertController = UIAlertController(title: pmmNotice, message:registerNoticeSuccessButCantSignAutomatic, preferredStyle: .Alert)
-                                    
+                                    self.view.hideToastActivity()
                                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                         activityView.stopAnimating()
                                         activityView.removeFromSuperview()
@@ -353,8 +359,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     } else {
                         activityView.stopAnimating()
                         activityView.removeFromSuperview()
+                        self.view.hideToastActivity()
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                        
                         
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                             // ...

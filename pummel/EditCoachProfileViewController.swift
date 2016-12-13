@@ -466,6 +466,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                         //TODO: Save access token here
                         self.trainerInfoUpdate()
                     }else {
+                        self.view.hideToastActivity()
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                             // ...

@@ -265,12 +265,14 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                 lastname = " "
             }
 
+            self.view.makeToastActivity(message: "Saving")
             Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
                         self.navigationController?.popViewControllerAnimated(true)
                     }else {
+                        self.view.hideToastActivity()
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                             // ...

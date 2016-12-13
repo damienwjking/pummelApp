@@ -109,14 +109,14 @@ class ForgottenPasswordController: UIViewController {
             
         } else {
             self.emailTF.resignFirstResponder()
-            
+            self.view.makeToastActivity(message: "Loading")
             Alamofire.request(.POST, kPMAPI_FORGOT, parameters: [kEmail:userEmail!])
                 .responseJSON { response in
                     if (response.response?.statusCode == 200) {
                         self.alertTitleLB.text = String.init(format: "Check your email")
                         self.alertMessageLB.text = String.init(format: "We sent an email to %@. Tap the link in the email to reset your password.", userEmail!)
                         self.sweetBT.setTitle(kSweetThanks, forState: .Normal)
-                        
+                        self.view.hideToastActivity()
                         UIView.animateWithDuration(0.3, animations: { 
                             self.dimView.alpha = 0.5;
                             self.alertView.alpha = 1;
@@ -125,7 +125,7 @@ class ForgottenPasswordController: UIViewController {
                         })
                     } else {
                         let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .Alert)
-                        
+                        self.view.hideToastActivity()
                         
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                             // ...

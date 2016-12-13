@@ -110,7 +110,7 @@ extension UIView {
     class func hr_toastFontName() -> String {
         var name = objc_getAssociatedObject(self, &HRToastFontName) as! String?
         if name == nil {
-            let font = UIFont.systemFontOfSize(12.0)
+            let font = UIFont.pmmMonLight13()
             name = font.fontName
             UIView.hr_setToastFontName(fontName: name!)
         }
