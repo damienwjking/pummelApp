@@ -373,6 +373,7 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
     func updateUI() {
         var prefix = kPMAPICOACH
         prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
+        self.view.makeToastActivity(message: "Loading")
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -502,9 +503,10 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                     }
                 }
                 
-                
+                self.view.hideToastActivity()
             case .Failure(let error):
                 print("Request failed with error: \(error)")
+                self.view.hideToastActivity()
                 }
         }
         
