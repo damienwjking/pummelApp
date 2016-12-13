@@ -49,6 +49,8 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     
     @IBOutlet var backgroundLogo : UIImageView!
 
+    var limit: Int = 0
+    var offset: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -277,14 +279,15 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
         }
         
-        let limitParams = String(format: "&%@=6&%@=0", kLimit, kOffset)
+        let limitParams = String(format: "&%@=10&%@=0", kLimit, kOffset)
         prefix.appendContentsOf(limitParams)
         
         let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
         prefix.appendContentsOf(coordinateParams)
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray]
+        appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(locationManager.location?.coordinate.longitude)!, "long":(locationManager.location?.coordinate.latitude)!]
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {

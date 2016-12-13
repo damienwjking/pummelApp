@@ -32,7 +32,7 @@ class ForgottenPasswordController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.emailTF.font = .pmmMonReg10()
+        self.emailTF.font = .pmmMonReg13()
         self.titleLB.font = .pmmMonReg13()
         self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
                                                                  attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])

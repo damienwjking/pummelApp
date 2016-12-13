@@ -11,7 +11,7 @@
 
 import UIKit
 import UserNotifications
-import RNNotificationView
+//import RNNotificationView
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -69,14 +69,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
              UIApplication.sharedApplication().applicationIconBadgeNumber += 1
              NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
             // Using Singleton
-            RNNotificationView.show(withImage: UIImage(named: "pummelLogo"),
-                                    title: "Pummel",
-                                    message: "You have a message",
-                                    duration: 1,
-                                    onTap: {
-                                        NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
-                }
-            )
+//            RNNotificationView.show(withImage: UIImage(named: "pummelLogo"),
+//                                    title: "Pummel",
+//                                    message: "You have a message",
+//                                    duration: 1,
+//                                    onTap: {
+//                                        NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
+//                }
+//            )
             
         } else {
              NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)

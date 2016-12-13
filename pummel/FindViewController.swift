@@ -114,9 +114,11 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             for id in tagIdsArray {
                 prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
             }
+            
             prefix.appendContentsOf("limit=1")
             prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
-            //TODO: lay lat long from aVariable and noi zo prefit
+            let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, aVariable[kLong] as! Float, kLat, aVariable[kLat] as! Float)
+            prefix.appendContentsOf(coordinateParams)
             
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
@@ -290,7 +292,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         self.stopSearch = false
-        self.resultPage = 6
+        self.resultPage = 10
         
         if (swipeableView != nil && refined == true ) {
             swipeableView.removeFromSuperview()
