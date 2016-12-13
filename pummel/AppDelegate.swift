@@ -11,6 +11,7 @@
 
 import UIKit
 import UserNotifications
+import Mixpanel
 //import RNNotificationView
 
 @UIApplicationMain
@@ -27,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
+        Mixpanel.sharedInstanceWithToken("9007be62479ca54acb05b03991f1e56e", launchOptions: launchOptions)
         return true
     }
 

@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import Mixpanel
 
 class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -177,6 +178,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                         }
                     }
                     
+                    Mixpanel.sharedInstance().identify(NSUUID().UUIDString)
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
                     self.view.hideToastActivity()
         
@@ -332,6 +334,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                         activityView.stopAnimating()
                                         activityView.removeFromSuperview()
                                         self.view.hideToastActivity()
+                                        Mixpanel.sharedInstance().identify(NSUUID().UUIDString)
                                         
                                         self.updateCookies(response)
                                         let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
