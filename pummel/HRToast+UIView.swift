@@ -185,7 +185,7 @@ extension UIView {
         UIView.animateWithDuration(HRToastFadeDuration,
             delay: 0.0, options: ([.CurveEaseOut, .AllowUserInteraction]),
             animations: {
-                toast.alpha = 1.0
+                toast.alpha = 1
             },
             completion: { (finished: Bool) in
                 let timer = NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: #selector(UIView.toastTimerDidFinish(_:)), userInfo: toast, repeats: false)
@@ -261,7 +261,7 @@ extension UIView {
             delay: 0.0,
             options: UIViewAnimationOptions.CurveEaseOut,
             animations: {
-                activityView.alpha = 1.0
+                activityView.alpha = 1
             },
             completion: nil)
     }

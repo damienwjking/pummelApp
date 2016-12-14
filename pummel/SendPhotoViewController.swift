@@ -139,6 +139,7 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     }
     
     func post() {
+        self.view.makeToast(message: "Sending")
         if (self.messageId != nil) {
             self.addMessageToExistConverstation()
         } else {
@@ -206,6 +207,7 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
                 }
             },
             encodingCompletion: { encodingResult in
+                 self.view.hideToastActivity()
                 switch encodingResult {
                 case .Success(let upload, _, _):
                     upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
