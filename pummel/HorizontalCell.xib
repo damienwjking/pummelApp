@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -12,16 +15,27 @@
             <rect key="frame" x="0.0" y="0.0" width="90" height="96"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <frame key="frameInset" width="90" height="95"/>
+                <rect key="frame" x="0.0" y="0.0" width="90" height="95"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ian-6z-ehb">
+                        <rect key="frame" x="10" y="0.0" width="70" height="70"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="70" id="JNj-OU-ckG"/>
                             <constraint firstAttribute="width" constant="70" id="xoT-qi-tqG"/>
                         </constraints>
                     </imageView>
+                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BpV-e3-0SV">
+                        <rect key="frame" x="60" y="0.0" width="20" height="20"/>
+                        <color key="backgroundColor" red="1" green="0.35686274509999999" blue="0.0078431372550000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="4Kb-cE-TKZ"/>
+                            <constraint firstAttribute="height" constant="20" id="vNG-GD-OIh"/>
+                        </constraints>
+                        <state key="normal" image="add.png"/>
+                    </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q06-IC-HEs">
+                        <rect key="frame" x="0.0" y="80" width="90" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="RGo-Nu-vfd"/>
                             <constraint firstAttribute="width" constant="90" id="teg-Qh-a8g"/>
@@ -35,16 +49,22 @@
                     <constraint firstItem="ian-6z-ehb" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="5fi-Nn-YaW"/>
                     <constraint firstItem="q06-IC-HEs" firstAttribute="top" secondItem="ian-6z-ehb" secondAttribute="bottom" constant="10" id="MYb-FU-Ep7"/>
                     <constraint firstItem="q06-IC-HEs" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Obx-qh-TCv"/>
+                    <constraint firstItem="BpV-e3-0SV" firstAttribute="trailing" secondItem="ian-6z-ehb" secondAttribute="trailing" id="Sl6-ad-MRL"/>
                     <constraint firstItem="ian-6z-ehb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="b0K-sj-toZ"/>
                     <constraint firstItem="q06-IC-HEs" firstAttribute="top" secondItem="ian-6z-ehb" secondAttribute="bottom" constant="10" id="eaG-6O-UlA"/>
+                    <constraint firstItem="BpV-e3-0SV" firstAttribute="top" secondItem="ian-6z-ehb" secondAttribute="top" id="iKM-nF-XqD"/>
                     <constraint firstAttribute="trailing" secondItem="q06-IC-HEs" secondAttribute="trailing" id="rJn-CI-IsN"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="addButton" destination="BpV-e3-0SV" id="v18-sA-6r0"/>
                 <outlet property="imageV" destination="ian-6z-ehb" id="4C5-cq-Xq5"/>
                 <outlet property="name" destination="q06-IC-HEs" id="2oj-Mt-8aF"/>
             </connections>
             <point key="canvasLocation" x="440.5" y="104"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="add.png" width="13" height="13"/>
+    </resources>
 </document>

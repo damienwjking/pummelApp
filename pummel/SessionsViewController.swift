@@ -425,7 +425,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kLastOpenAt:dayCurrent, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
-                        self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
+//                        self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
                     } else {
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                         
@@ -440,7 +440,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         } else {
-            self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
+//            self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
         }
     }
     
