@@ -12,6 +12,8 @@ import UIKit
 import Alamofire
 import AlamofireImage
 import Foundation
+import Contacts
+import AddressBook
 
 class SessionsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -73,7 +75,15 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             connectionsLB!.hidden = true
             self.view.addSubview(connectionsLB!)
             self.listMessageTBTopDistance!.constant = 180
-            self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
+            
+            let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+                self.scrollTableView = UITableView(frame: CGRectMake(112, -50, 96, self.view.frame.size.width))
+            } else {
+                self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
+            }
+            
+            
             self.view.addSubview(scrollTableView)
             self.scrollTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
             self.scrollTableView.separatorStyle = .None
@@ -333,6 +343,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 cell = NSBundle.mainBundle().loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
                 cell!.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 2.0))
             }
+            cell!.addButton.hidden = true
+            
             let message = arrayMessages[indexPath.row]
             let conversations = message[kConversation] as! NSDictionary
             let conversationUsers = conversations[kConversationUser] as! NSArray
@@ -359,9 +371,11 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                             .responseImage { response in
                                 let imageRes = response.result.value! as UIImage
                                 cell!.imageV.image = imageRes
+                                cell!.addButton.hidden = false
                         }
                     } else {
                         cell?.imageV.image = UIImage(named: "display-empty.jpg")
+                        cell!.addButton.hidden = false
                     }
                     
                 case .Failure(let error):
@@ -406,41 +420,135 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func clickOnRowMessage(indexPath: NSIndexPath) {
-        self.saveIndexPath = indexPath
-        self.isGoToMessageDetail = true
-        listMessageTB.deselectRowAtIndexPath(indexPath, animated: false)
-        let cell = listMessageTB.cellForRowAtIndexPath(indexPath) as! MessageTableViewCell
-        if (cell.isNewMessage == true) {
-            let message = arrayMessages[indexPath.row]
-            let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = kFullDateFormat
-            dateFormatter.timeZone = NSTimeZone(name: "UTC")
-            let dayCurrent = dateFormatter.stringFromDate(NSDate())
-            var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-            prefix.appendContentsOf("/")
-            prefix.appendContentsOf(String(format:"%0.f", message[kConversationId]!.doubleValue))
-            Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kLastOpenAt:dayCurrent, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-//                        self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
-                    } else {
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+        let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
+        ABAddressBookRequestAccessWithCompletion(addressBookRef) {
+            (granted: Bool, error: CFError!) in
+            dispatch_async(dispatch_get_main_queue()) {
+                if granted == false {
+                    // Henry: show message not enable contact
+                } else {
+                    self.saveIndexPath = indexPath
+                    self.isGoToMessageDetail = true
+                    self.listMessageTB.deselectRowAtIndexPath(indexPath, animated: false)
+                    let cell = self.scrollTableView.cellForRowAtIndexPath(indexPath) as! HorizontalCell
+                    
+                    if (cell.imageV.image != nil) {
+                        self.view.makeToastActivity(message: "Loading")
                         
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                            // ...
+                        let message = self.arrayMessages[indexPath.row]
+                        let conversations = message[kConversation] as! NSDictionary
+                        let conversationUsers = conversations[kConversationUser] as! NSArray
+                        var targetUser = conversationUsers[0] as! NSDictionary
+                        let currentUserid = self.defaults.objectForKey(k_PM_CURRENT_ID) as! String
+                        var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
+                        if (currentUserid == targetUserId){
+                            targetUser = conversationUsers[1] as! NSDictionary
+                            targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
                         }
-                        alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
-                            // ...
+                        var prefixUser = kPMAPIUSER
+                        prefixUser.appendContentsOf(targetUserId)
+                        Alamofire.request(.GET, prefixUser)
+                            .responseJSON { response in switch response.result {
+                            case .Success(let JSON):
+                                self.view.hideToastActivity()
+                                
+                                let userInfo = JSON as! NSDictionary
+                                
+                                let firstName = userInfo.objectForKey(kFirstname) as? String
+                                let lastName = userInfo.objectForKey(kLastName) as? String
+                                let fullName = String(format: "%@ %@", firstName!, lastName!)
+                                
+                                var phoneNumber = userInfo.objectForKey(kMobile) as? String
+                                if phoneNumber == nil {
+                                    phoneNumber = ""
+                                }
+                                
+                                var emailString = userInfo.objectForKey(kEmail) as? String
+                                if emailString == nil {
+                                    emailString = ""
+                                }
+                                
+                                var facebookURL = userInfo.objectForKey(kFacebookUrl) as? String
+                                if facebookURL == nil {
+                                    facebookURL = ""
+                                }
+                                
+                                var twitterURL = userInfo.objectForKey(kTwitterUrl) as? String
+                                if twitterURL == nil {
+                                    twitterURL = ""
+                                }
+                                
+                                var DOBString = (userInfo.objectForKey(kDob) as? String)
+                                if twitterURL == nil {
+                                    twitterURL = "1990-01-01"
+                                } else {
+                                    DOBString = DOBString?.substringToIndex(DOBString!.startIndex.advancedBy(10))
+                                }
+                                
+                                let newContact = CNMutableContact()
+                                
+                                newContact.givenName = firstName!
+                                newContact.middleName = lastName!
+                                if let image = cell.imageV.image,
+                                    let data = UIImagePNGRepresentation(image) {
+                                    newContact.imageData = data
+                                }
+                                
+                                let phone = CNLabeledValue(label: CNLabelWork, value:CNPhoneNumber(stringValue: phoneNumber!))
+                                newContact.phoneNumbers = [phone]
+                                let email = CNLabeledValue(label: CNLabelWork, value:emailString!)
+                                newContact.emailAddresses = [email]
+                                
+                                let facebookProfile = CNLabeledValue(label: "Facebook", value: CNSocialProfile(urlString: facebookURL, username: fullName, userIdentifier: fullName, service: CNSocialProfileServiceFacebook))
+                                
+                                let twitterProfile = CNLabeledValue(label: "Twitter", value: CNSocialProfile(urlString: twitterURL, username: fullName, userIdentifier: fullName, service: CNSocialProfileServiceTwitter))
+                                
+                                newContact.socialProfiles = [facebookProfile, twitterProfile]
+                                
+                                let DOBArray = DOBString?.componentsSeparatedByString("-")
+                                if (DOBArray?.count == 3) {
+                                    let birthday = NSDateComponents()
+                                    birthday.year = Int(DOBArray![0])!
+                                    birthday.month = Int(DOBArray![1])!
+                                    birthday.day = Int(DOBArray![2])!
+                                    newContact.birthday = birthday
+                                }
+                                
+                                
+                                let alert = UIAlertController(title: "Pummel", message: "", preferredStyle: .Alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: { _ in }))
+                                
+                                let request = CNSaveRequest()
+                                request.addContact(newContact, toContainerWithIdentifier: nil)
+                                do {
+                                    let store = CNContactStore()
+                                    
+                                    let contacts = try store.unifiedContactsMatchingPredicate(CNContact.predicateForContactsMatchingName(fullName), keysToFetch:[CNContactGivenNameKey, CNContactFamilyNameKey])
+                                    
+                                    if (contacts.count == 0) {
+                                        try store.executeSaveRequest(request)
+                                        alert.message = "Add contact success"
+                                    } else {
+                                        alert.message = "Contact was added"
+                                    }
+                                    
+                                    self.presentViewController(alert, animated: true, completion: nil)
+                                } catch let error{
+                                    print(error)
+                                    
+                                    alert.message = "Have error on add contact"
+                                    self.presentViewController(alert, animated: true, completion: nil)
+                                }
+                                
+                            case .Failure(let error):
+                                self.view.hideToastActivity()
+                                
+                                print("Request failed with error: \(error)")
+                                }
                         }
                     }
+                }
             }
-            
-        } else {
-//            self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
         }
     }
     
@@ -462,7 +570,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if (tableView == listMessageTB) {
             self.clickOnConnectionImage(indexPath)
-        }else {
+        } else {
             self.clickOnRowMessage(indexPath)
         }
     }

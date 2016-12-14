@@ -56,6 +56,8 @@
 	<string>Pummel uses your location to give you correct result</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Send photo as a message or comment</string>
+	<key>NSContactsUsageDescription</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Montserrat-Regular.otf</string>
