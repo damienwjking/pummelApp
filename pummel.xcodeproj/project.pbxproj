@@ -24,6 +24,9 @@
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
 		9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */; };
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
+		BA0B61ED1E004E0800A98C82 /* miniPummelLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */; };
+		BA0B61EE1E004E0800A98C82 /* miniPummelLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */; };
+		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
@@ -296,6 +299,9 @@
 		9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Client.storyboard; path = ../Client.storyboard; sourceTree = "<group>"; };
 		9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		A23FD1E636ACA8E6CDC611DF /* Pods-pummel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pummel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pummel/Pods-pummel.debug.xcconfig"; sourceTree = "<group>"; };
+		BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@3x.png"; sourceTree = "<group>"; };
+		BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = miniPummelLogo.png; sourceTree = "<group>"; };
+		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
@@ -812,6 +818,9 @@
 				F9827EB81CBBF46B00841BF1 /* pummelLogo.png */,
 				F9827EB91CBBF46B00841BF1 /* pummelLogo@2x.png */,
 				F9827EBA1CBBF46B00841BF1 /* pummelLogo@3x.png */,
+				BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */,
+				BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */,
+				BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */,
 				F9827F4B1CBDEE3C00841BF1 /* attention.png */,
 				F9827F4C1CBDEE3C00841BF1 /* attention@2x.png */,
 				F9827F4D1CBDEE3C00841BF1 /* attention@3x.png */,
@@ -1269,8 +1278,10 @@
 				F9827EBB1CBBF46B00841BF1 /* pummelLogo.png in Resources */,
 				F9827F0C1CBC751500841BF1 /* back@2x.png in Resources */,
 				F9827F541CBDEE3C00841BF1 /* camera.png in Resources */,
+				BA0B61EE1E004E0800A98C82 /* miniPummelLogo.png in Resources */,
 				F983C2A41D013779002DA578 /* avatar.png in Resources */,
 				F9ABEAEE1DC4BC140084B70E /* UserProfile.storyboard in Resources */,
+				BA0B61ED1E004E0800A98C82 /* miniPummelLogo@3x.png in Resources */,
 				F9741E0D1D89A83900D61868 /* display-empty.jpg in Resources */,
 				F9FE14581CEBD29B004ABE34 /* FSAlbumViewCell.xib in Resources */,
 				F9FE14611CEBD29B004ABE34 /* rotatecamera@3x.png in Resources */,
@@ -1332,6 +1343,7 @@
 				F9827F181CBC754900841BF1 /* gender@2x.png in Resources */,
 				F9F3CC491CE7D4A4007F68A5 /* cameraIcon@3x.png in Resources */,
 				F98C41A41CF25F6500ECC66E /* sessions.png in Resources */,
+				BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */,
 				F98C418F1CF25F6500ECC66E /* feed.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
