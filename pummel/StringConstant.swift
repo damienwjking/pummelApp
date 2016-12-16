@@ -50,6 +50,7 @@ let turnOneLocationServiceSystem = "Pummel need location service to search. Plea
 let addThisTagToDatabase = "Are you going add this tag to your specialties?"
 let linkInvalid = "Your link isn’t valid!"
 let confirmChangedLocation = "You have already changed the service area."
+let contactExist = "This coach has already added to your contact"
 
 // Key String
 let k_PM_IS_LOGINED = "isLogined"

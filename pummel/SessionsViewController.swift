@@ -521,7 +521,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                                 }
                                 
                                 
-                                let alert = UIAlertController(title: "Pummel", message: "", preferredStyle: .Alert)
+                                let alert = UIAlertController(title: pmmNotice, message: "", preferredStyle: .Alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: { _ in }))
                                 
                                 let request = CNSaveRequest()
@@ -533,16 +533,16 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                                     
                                     if (contacts.count == 0) {
                                         try store.executeSaveRequest(request)
-                                        alert.message = "Add contact success"
                                     } else {
-                                        alert.message = "Contact was added"
+                                        alert.message = contactExist
+                                        self.presentViewController(alert, animated: true, completion: nil)
                                     }
                                     
-                                    self.presentViewController(alert, animated: true, completion: nil)
+                                    
                                 } catch let error{
                                     print(error)
                                     
-                                    alert.message = "Have error on add contact"
+                                    alert.message = pleaseDoItAgain
                                     self.presentViewController(alert, animated: true, completion: nil)
                                 }
                                 
