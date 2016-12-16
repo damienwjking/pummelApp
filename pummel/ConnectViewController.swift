@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import Mixpanel
 
 class ConnectViewController: UIViewController {
 
@@ -137,11 +138,28 @@ class ConnectViewController: UIViewController {
     }
     
     @IBAction func keepLooking(sender:UIButton) {
+        if coachDetail != nil {
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Keep Looking", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
+        }
+        
         self.dismissViewControllerAnimated(true) { 
         }
     }
     
     @IBAction func sendUsAMessage(sender: UIButton){
+        // Tracker mixpanel
+        if coachDetail != nil {
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
+        }
+        
         if (self.isFromProfile == true) {
             if (self.isFromFeed == true) {
                 let profileVC = presentingViewController!

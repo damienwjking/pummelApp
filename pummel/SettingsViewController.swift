@@ -12,6 +12,7 @@ import Alamofire
 import LocationPicker
 import CoreLocation
 import MapKit
+import Mixpanel
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -151,7 +152,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
             self.navigationController?.popViewControllerAnimated(true)
         }
-        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Profile.Setting", "Name": "Navigation Click", "Label":"Save Setting"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -395,6 +399,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             switch indexPath.row {
             case 1:
                 self.performSegueWithIdentifier("LocationPicker", sender: nil)
+                // Tracker mixpanel
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.Profile.Setting", "Name": "Navigation Click", "Label":"Go Set Location"]
+                mixpanel.track("Event", properties: properties)
             case 8:
                 self.sendSupportEmail()
             case 10:
@@ -577,6 +585,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         }
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Profile.Setting", "Name": "Navigation Click", "Label":"Logout"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func upgradeToCoach() {

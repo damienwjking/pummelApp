@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import Mixpanel
 
 class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
     
@@ -122,6 +123,11 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     
     func newPost() {
          self.performSegueWithIdentifier("goNewPost", sender:nil)
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Feed", "Name": "Navigation Click", "Label":"NewPost"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -302,6 +308,11 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     func goToFeedDetail(sender: UIButton) {
         self.isGoFeedDetail = true
         self.performSegueWithIdentifier("goToFeedDetail", sender: sender)
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Feed", "Name": "Navigation Click", "Label":"Comment"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func showListContext(sender: UIButton) {

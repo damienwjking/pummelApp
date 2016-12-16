@@ -139,6 +139,12 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         let userEmail = self.loginVC.emailTF.text!
         let userPassword = self.loginVC.passwordTF.text!
         self.view.makeToastActivity(message: "Loading")
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Login", "Name": "Navigation Click", "Label":"Login"]
+        mixpanel.track("Event", properties: properties)
+        
         Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -234,6 +240,11 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             
             var para : [String: AnyObject]!
             para =  (dob == "") ? [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kGender:gender!] : [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kDob:dob!, kGender:gender!]
+            
+            // Tracker mixpanel
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.Register", "Name": "Navigation Click", "Label":"Register"]
+            mixpanel.track("Event", properties: properties)
             
             self.view.makeToastActivity(message: "Loading")
             Alamofire.request(.POST, kPMAPI_REGISTER, parameters: para)
@@ -399,6 +410,11 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     func imageTapped()
     {
         showPopupToSelectProfileAvatar()
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Register", "Name": "Navigation Click", "Label":"Select Profile"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {

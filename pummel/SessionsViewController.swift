@@ -14,6 +14,7 @@ import AlamofireImage
 import Foundation
 import Contacts
 import AddressBook
+import Mixpanel
 
 class SessionsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -140,6 +141,11 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func newMessage() {
         performSegueWithIdentifier("newMessage", sender: nil)
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"New Message"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func getMessage() {
@@ -568,11 +574,19 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        var properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"Go Chat"]
+        
         if (tableView == listMessageTB) {
             self.clickOnConnectionImage(indexPath)
+            properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"Add Contact"]
         } else {
             self.clickOnRowMessage(indexPath)
         }
+        
+        mixpanel.track("Event", properties: properties)
     }
     
     

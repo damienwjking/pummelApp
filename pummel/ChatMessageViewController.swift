@@ -9,6 +9,7 @@
 import UIKit
 import RSKGrowingTextView
 import Alamofire
+import Mixpanel
 
 class ChatMessageViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, RSKGrowingTextViewDelegate {
     var nameChatUser : String!
@@ -398,6 +399,11 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     
     @IBAction func goPhoto(sender:UIButton!) {
         performSegueWithIdentifier("sendPhoto", sender: nil)
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.ChatMessage", "Name": "Navigation Click", "Label":"Go Send Picture Message"]
+        mixpanel.track("Event", properties: properties)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -477,6 +483,11 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
             } else {
                 self.sendMessage()
             }
+            
+            // Tracker mixpanel
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.ChatMessage", "Name": "Navigation Click", "Label":"Send Message"]
+            mixpanel.track("Event", properties: properties)
         }
     }
 

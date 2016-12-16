@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import Mixpanel
 
 class EditCoachProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -459,6 +460,12 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
             } else {
                 lastname = " "
             }
+            
+            // Tracker mixpanel
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.Profile.EditProfile", "Name": "Navigation Click", "Label":"Save Profile"]
+            mixpanel.track("Event", properties: properties)
+            
             self.view.makeToastActivity(message: "Saving")
             Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
                 .responseJSON { response in

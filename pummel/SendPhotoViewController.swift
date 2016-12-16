@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import Mixpanel
 
 class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
     
@@ -145,6 +146,11 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
         } else {
             self.sendMessage()
         }
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.ChatMessage.SendPhoto", "Name": "Navigation Click", "Label":"Send A Photo"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func sendMessage() {

@@ -11,6 +11,7 @@
 
 import UIKit
 import Alamofire
+import Mixpanel
 
 class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -193,6 +194,11 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
     
     func setting() {
         performSegueWithIdentifier("goSetting", sender: nil)
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Profile", "Name": "Navigation Click", "Label":"Go Setting"]
+        mixpanel.track("Event", properties: properties)
     }
     
     @IBAction func edit() {
@@ -201,7 +207,10 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
         } else {
             performSegueWithIdentifier("goEditCoach", sender: nil)
         }
-        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Profile", "Name": "Navigation Click", "Label":"Go Edit Profile"]
+        mixpanel.track("Event", properties: properties)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {

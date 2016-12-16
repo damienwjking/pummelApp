@@ -6,8 +6,9 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 import UIKit
+import Mixpanel
 
-class BaseTabBarController: UITabBarController {
+class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     @IBInspectable var defaultIndex: Int = 2
     
@@ -16,6 +17,7 @@ class BaseTabBarController: UITabBarController {
         selectedIndex = defaultIndex
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showBadgeForMessage), name: k_PM_SHOW_BADGE, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.selectedNotification), name: k_PM_SELECTED_NOTIFI, object: nil)
+        self.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -42,5 +44,30 @@ class BaseTabBarController: UITabBarController {
         } else {
             selectedIndex = 3
         }
+    }
+    
+    func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        var properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"ProfileTabbar"]
+        
+        switch self.selectedIndex {
+        case 0:
+            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"FeedTabbar"]
+            break
+        case 1:
+            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"SessionTabbar"]
+            break
+        case 2:
+            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"SearchTabbar"]
+            break
+        case 3:
+            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"MessageTabbar"]
+            break
+        default:
+            break
+        }
+        
+        mixpanel.track("Event", properties: properties)
     }
 }

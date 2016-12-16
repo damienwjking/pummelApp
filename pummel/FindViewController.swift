@@ -13,6 +13,7 @@ import UIColor_FlatColors
 import Cartography
 import ReactiveUI
 import Alamofire
+import Mixpanel
 
 class FindViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     var showLetUsHelp: Bool!
@@ -79,6 +80,10 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         coachDetail = coachTotalDetail[kUser] as! NSDictionary
         self.updateRightBarButtonItem()
         
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Search", "Name": "Navigation Click", "Label":"Back"]
+        mixpanel.track("Event", properties: properties)
     }
 
     func updateRightBarButtonItem() {
@@ -347,12 +352,27 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             let totalDetail = arrayResult[sender.tag]
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
             destination.coachTotalDetail = totalDetail
+            
+            if destination.coachDetail != nil {
+                if let firstName = destination.coachDetail[kFirstname] as? String {
+                    // Tracker mixpanel
+                    let mixpanel = Mixpanel.sharedInstance()
+                    let properties = ["Category": "IOS.ClickOnProfile", "Name": "Profile Is Clicked", "Label":"\(firstName.uppercaseString)"]
+                    mixpanel.track("Event", properties: properties)
+                }
+            }
+
         }
     }
 
     @IBAction func refind() {
         self.resultIndex = 0
         performSegueWithIdentifier("letUsHelp", sender: nil)
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.Search", "Name": "Navigation Click", "Label":"Refine"]
+        mixpanel.track("Event", properties: properties)
     }
     
     override func didReceiveMemoryWarning() {

@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import CoreLocation
+import Mixpanel
 
 class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
     @IBOutlet var letUsHelpTF : UILabel!
@@ -152,7 +153,9 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
                 // ...
             }
         }
-        
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Category": "IOS.FindATrainer", "Name": "Search", "Label":"Search a trainer"]
+        mixpanel.track("Event", properties: properties)
     }
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -206,6 +209,10 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         let tag = tags[indexPath.row]
         if (tag.selected) {
             tagIdsArray.addObject(tag.tagId!)
+            
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.FindATrainer", "Name": "Select Tags", "Label":"\(tag.name!)"]
+            mixpanel.track("Event", properties: properties)
         } else {
             tagIdsArray.removeObject(tag.tagId!)
         }
@@ -226,9 +233,16 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBAction func clickOnGender(sender: UIButton) {
         let selectMale = { (action:UIAlertAction!) -> Void in
             self.genderResultTF.text = kMALEU
+            // Tracker mixpanel
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.FindATrainer", "Name": "Select Gender", "Label":"Select Male"]
+            mixpanel.track("Event", properties: properties)
         }
         let selectFemale = { (action:UIAlertAction!) -> Void in
             self.genderResultTF.text = kFemaleU
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.FindATrainer", "Name": "Select Gender", "Label":"Select Female"]
+            mixpanel.track("Event", properties: properties)
         }
         let selectDontCare = { (action:UIAlertAction!) -> Void in
             self.genderResultTF.text = kDontCareUp
