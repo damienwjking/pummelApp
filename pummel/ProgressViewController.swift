@@ -29,6 +29,21 @@ class ProgressViewController: UIViewController {
         self.comingSoonDetailTF.layer.opacity = 0.69
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
+//        let defaults = NSUserDefaults.standardUserDefaults()
+//        if (defaults.boolForKey(k_PM_IS_COACH) != true) {
+//            //TODO: ADD Log Button As Right Navigationbar Item
+//            let sessionCLientVC = SessionClientViewController(nibName: "SessionsViewController", bundle: nil)
+//            self.addChildViewController(sessionCLientVC)
+//            self.view.addSubview(sessionCLientVC.view)
+//
+//        } else {
+//             //TODO: ADD Book Button As Right Navigationbar Item
+//            // TODO: ADD Log Button As Left Navigationbar Item
+//            let sessionCoachVC = SessionCoachViewController(nibName: "SessionCoachViewController", bundle: nil)
+//            self.addChildViewController(sessionCoachVC)
+//            self.view.addSubview(sessionCoachVC.view)
+//        }
+        
     }
     
     override func didReceiveMemoryWarning() {
