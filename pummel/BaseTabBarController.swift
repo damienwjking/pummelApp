@@ -20,11 +20,6 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-    
     func showBadgeForMessage() {
         if (UIApplication.sharedApplication().applicationIconBadgeNumber != 0) {
              let tabarItem = self.tabBar.items![3]
@@ -59,6 +54,8 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
             properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"SessionTabbar"]
             break
         case 2:
+            let slectedVC = self.selectedViewController as! FindViewController
+            slectedVC.refind()
             properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"SearchTabbar"]
             break
         case 3:

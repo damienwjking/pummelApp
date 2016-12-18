@@ -37,7 +37,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.showLetUsHelp = false
+        self.showLetUsHelp = true
         self.navigationController!.navigationBar.translucent = false
         
         swipeableView = ZLSwipeableView()
@@ -295,6 +295,8 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
         self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"REFIND", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.refind))
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
         
         self.stopSearch = false
         self.resultPage = 25
