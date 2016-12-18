@@ -65,7 +65,7 @@
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nza-qG-J6E">
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="248" id="BNB-J1-5Pi"/>
+                                                    <constraint firstAttribute="width" constant="135" id="BNB-J1-5Pi"/>
                                                     <constraint firstAttribute="height" constant="13" id="ZVQ-M1-H2x"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>

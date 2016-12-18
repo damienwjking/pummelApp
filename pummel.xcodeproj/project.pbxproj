@@ -48,6 +48,17 @@
 		F96051B21DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96051B11DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift */; };
 		F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F964FEC01D215E33008F7C94 /* SearchingViewController.swift */; };
 		F964FEC31D21E049008F7C94 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F964FEC21D21E049008F7C94 /* Images.xcassets */; };
+		F96846FE1E06B4AC009EB06C /* ShareClientSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96846FD1E06B4AC009EB06C /* ShareClientSessionViewController.swift */; };
+		F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96846FF1E06B4CF009EB06C /* SessionClientViewController.swift */; };
+		F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847011E06B509009EB06C /* SessionCoachViewController.swift */; };
+		F96847041E06B51A009EB06C /* LogSessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */; };
+		F96847061E06B532009EB06C /* LogSessionClientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */; };
+		F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */; };
+		F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847091E06B570009EB06C /* BookSessionViewController.swift */; };
+		F968470D1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */; };
+		F96847111E06B726009EB06C /* LogSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847101E06B726009EB06C /* LogSession.storyboard */; };
+		F96847131E06B737009EB06C /* BookSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847121E06B737009EB06C /* BookSession.storyboard */; };
+		F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */; };
 		F970A2A51D26384400932BFC /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A11D26384400932BFC /* Direction.swift */; };
 		F970A2A61D26384400932BFC /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A21D26384400932BFC /* Scheduler.swift */; };
 		F970A2A71D26384400932BFC /* ViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A31D26384400932BFC /* ViewManager.swift */; };
@@ -325,6 +336,17 @@
 		F96051B11DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedFourthPartTableViewCell.swift; sourceTree = "<group>"; };
 		F964FEC01D215E33008F7C94 /* SearchingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingViewController.swift; sourceTree = "<group>"; };
 		F964FEC21D21E049008F7C94 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F96846FD1E06B4AC009EB06C /* ShareClientSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareClientSessionViewController.swift; sourceTree = "<group>"; };
+		F96846FF1E06B4CF009EB06C /* SessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionClientViewController.swift; sourceTree = "<group>"; };
+		F96847011E06B509009EB06C /* SessionCoachViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCoachViewController.swift; sourceTree = "<group>"; };
+		F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientViewController.swift; sourceTree = "<group>"; };
+		F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientDetailViewController.swift; sourceTree = "<group>"; };
+		F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareLogSessionClientViewController.swift; sourceTree = "<group>"; };
+		F96847091E06B570009EB06C /* BookSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionViewController.swift; sourceTree = "<group>"; };
+		F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainerSessionTableViewCell.swift; sourceTree = "<group>"; };
+		F96847101E06B726009EB06C /* LogSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogSession.storyboard; sourceTree = "<group>"; };
+		F96847121E06B737009EB06C /* BookSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BookSession.storyboard; sourceTree = "<group>"; };
+		F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionToUserViewController.swift; sourceTree = "<group>"; };
 		F970A2A11D26384400932BFC /* Direction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		F970A2A21D26384400932BFC /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		F970A2A31D26384400932BFC /* ViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewManager.swift; sourceTree = "<group>"; };
@@ -678,6 +700,14 @@
 			name = Profile;
 			sourceTree = "<group>";
 		};
+		F968470B1E06B5BF009EB06C /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
 		F970A2A01D26382B00932BFC /* ZLSV */ = {
 			isa = PBXGroup;
 			children = (
@@ -914,6 +944,8 @@
 				9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */,
 				F9ABEAD01DC21FA20084B70E /* Profile.storyboard */,
 				F9ABEAE21DC4B4F50084B70E /* Session.storyboard */,
+				F96847101E06B726009EB06C /* LogSession.storyboard */,
+				F96847121E06B737009EB06C /* BookSession.storyboard */,
 				F9ABEAE51DC4B8170084B70E /* Connection.storyboard */,
 				F9ABEAE71DC4B9440084B70E /* CoachProfile.storyboard */,
 				F9ABEAED1DC4BC140084B70E /* UserProfile.storyboard */,
@@ -958,7 +990,16 @@
 		F9CA49FC1D20F62E00E8A585 /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				F968470B1E06B5BF009EB06C /* Cell */,
 				9C1C54361C793AA70083E47B /* ProgressViewController.swift */,
+				F96846FF1E06B4CF009EB06C /* SessionClientViewController.swift */,
+				F96846FD1E06B4AC009EB06C /* ShareClientSessionViewController.swift */,
+				F96847011E06B509009EB06C /* SessionCoachViewController.swift */,
+				F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */,
+				F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */,
+				F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */,
+				F96847091E06B570009EB06C /* BookSessionViewController.swift */,
+				F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */,
 			);
 			name = Session;
 			sourceTree = "<group>";
@@ -1242,6 +1283,7 @@
 				F98C41971CF25F6500ECC66E /* messages@3x.png in Resources */,
 				F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */,
 				F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */,
+				F96847111E06B726009EB06C /* LogSession.storyboard in Resources */,
 				F98C41A31CF25F6500ECC66E /* search@3x.png in Resources */,
 				F9CF54DD1D7F977300BE144F /* liked.png in Resources */,
 				F98C419B1CF25F6500ECC66E /* profile.png in Resources */,
@@ -1306,6 +1348,7 @@
 				F98C41931CF25F6500ECC66E /* feedPressed@2x.png in Resources */,
 				F979E1691D7DC4BD00C717F0 /* comment@3x.png in Resources */,
 				F98C41951CF25F6500ECC66E /* messages.png in Resources */,
+				F96847131E06B737009EB06C /* BookSession.storyboard in Resources */,
 				F98C41AD1CF264CE00ECC66E /* cameraBig.png in Resources */,
 				F979E1621D7DC42E00C717F0 /* like@2x.png in Resources */,
 				F91727661DB3BDCD00C6E612 /* like-image.png in Resources */,
@@ -1417,6 +1460,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F96846FE1E06B4AC009EB06C /* ShareClientSessionViewController.swift in Sources */,
+				F96847041E06B51A009EB06C /* LogSessionClientViewController.swift in Sources */,
 				F9ABEADF1DC367620084B70E /* StringConstant.swift in Sources */,
 				F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */,
 				9C05013B1C9534E100F02B3B /* GetStarted3ViewController.swift in Sources */,
@@ -1424,10 +1469,12 @@
 				F9ABEADB1DC347B90084B70E /* URLConstant.swift in Sources */,
 				F9FE14591CEBD29B004ABE34 /* FSCameraView.swift in Sources */,
 				F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */,
+				F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */,
 				F9CF54E11D7F9BFD00BE144F /* NewPostViewController.swift in Sources */,
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
+				F968470D1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
@@ -1469,12 +1516,15 @@
 				F9D35AB61D266C6C00F47709 /* ConnectViewController.swift in Sources */,
 				F9827F481CBD242900841BF1 /* SigninViewController.swift in Sources */,
 				F9EAE8DD1D6EF8AD00FD32BE /* SettingDiscoveryHeaderTableViewCell.swift in Sources */,
+				F96847061E06B532009EB06C /* LogSessionClientDetailViewController.swift in Sources */,
 				9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */,
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
 				F9EAE8E31D6EFA0900FD32BE /* SettingNotificationHeaderTableViewCell.swift in Sources */,
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
+				F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */,
 				F917276A1DB3DF5600C6E612 /* Spinner.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
+				F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */,
 				F9FE14551CEBD29B004ABE34 /* FSAlbumView.swift in Sources */,
 				F96051B21DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift in Sources */,
 				F9CA4A0B1D21466600E8A585 /* Tag.swift in Sources */,
@@ -1484,9 +1534,11 @@
 				9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */,
 				F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */,
 				F9FE145C1CEBD29B004ABE34 /* FSImageCropView.swift in Sources */,
+				F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */,
 				F9CF54D91D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift in Sources */,
 				F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */,
 				F9ABEAE11DC36C3B0084B70E /* FontConstant.swift in Sources */,
+				F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */,
 				F977EC0D1DAD442F007024EB /* NewCommentImageViewController.swift in Sources */,
 				F91727631DB3343200C6E612 /* HorizontalCell.swift in Sources */,
 				F9FE145B1CEBD29B004ABE34 /* FSConstants.swift in Sources */,

@@ -38,7 +38,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>24</string>
+	<string>25</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -50,14 +50,14 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Use came to take a pic as a profile</string>
+	<key>NSContactsUsageDescription</key>
+	<string></string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Pummel uses your location to give you correct result</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Pummel uses your location to give you correct result</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Send photo as a message or comment</string>
-	<key>NSContactsUsageDescription</key>
-	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Montserrat-Regular.otf</string>
