@@ -293,7 +293,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         if(showLetUsHelp == true) {
             performSegueWithIdentifier("letUsHelp", sender: nil)
         }
-        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"REFINE", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.refind))
+        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"REFIND", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.refind))
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         self.stopSearch = false

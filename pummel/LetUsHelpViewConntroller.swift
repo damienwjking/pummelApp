@@ -124,7 +124,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBAction func goSearching(sender:UIButton!) {
         if (CLLocationManager.locationServicesEnabled())
         {
-            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
             locationManager.delegate = self
             if (CLLocationManager.authorizationStatus() == .Restricted || CLLocationManager.authorizationStatus() == .Denied) {
                                 let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
@@ -138,7 +138,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
                 self.presentViewController(alertController, animated: true) {
                     // ...
                 }
-            } else if (CLLocationManager.authorizationStatus() == .AuthorizedAlways) {
+            } else if (CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse) {
                 performSegueWithIdentifier("searching", sender: nil)
             }
         } else {
@@ -159,7 +159,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if (status == .AuthorizedAlways) {
+        if (status == .AuthorizedWhenInUse) {
              performSegueWithIdentifier("searching", sender: nil)
         } 
     }

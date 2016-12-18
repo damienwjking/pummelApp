@@ -201,7 +201,6 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
