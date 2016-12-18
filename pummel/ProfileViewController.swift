@@ -186,7 +186,7 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         
         
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"SETTING", style:.Plain, target: self, action: #selector(ProfileViewController.setting))
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"SETTINGS", style:.Plain, target: self, action: #selector(ProfileViewController.setting))
         self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
         
         self.getDetail()
@@ -266,7 +266,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                 let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
                 self.avatarIMV.image = imageRes
                 self.coachBorderBackgroundV.hidden = false
-                self.coachBorderV.hidden = false
+                
+                if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                    self.coachBorderV.hidden = false
+                } else {
+                    self.coachBorderV.hidden = true
+                }
             } else {
                 Alamofire.request(.GET, prefix)
                     .responseImage { response in
@@ -275,7 +280,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                             self.avatarIMV.image = imageRes
                             NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
                             self.coachBorderBackgroundV.hidden = false
-                            self.coachBorderV.hidden = false
+                            
+                            if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                                self.coachBorderV.hidden = false
+                            } else {
+                                self.coachBorderV.hidden = true
+                            }
                         }
                 }
             }
@@ -767,6 +777,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://facebook.com/")!)
             }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
         }
     }
     
@@ -781,6 +797,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://twitter.com/")!)
             }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
         }
     }
     
@@ -794,6 +816,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
             } else {
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!)
+            }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
             }
         }
     }
