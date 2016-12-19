@@ -767,6 +767,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://facebook.com/")!)
             }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
         }
     }
     
@@ -781,6 +787,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://twitter.com/")!)
             }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
         }
     }
     
@@ -794,6 +806,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
             } else {
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!)
+            }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
             }
         }
     }

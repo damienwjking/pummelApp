@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import Mixpanel
 
 class CoachProfileViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
@@ -596,6 +597,12 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://facebook.com/")!)
             }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
         }
     }
     
@@ -610,6 +617,12 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://twitter.com/")!)
             }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
         }
     }
     
@@ -623,6 +636,12 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
             } else {
                 //redirect to safari because the user doesn't have Instagram
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!)
+            }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SocialClick", "Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
             }
         }
     }
