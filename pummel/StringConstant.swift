@@ -212,3 +212,4 @@ let kSendMessageConnection = "sendMessageConnection"
 // Seting
 let kWantToBecomeACoach = "Buy click Continue, you are going to apply to coach form."
 let kBecomeACoachSuccess = "You have accepted to become a Trainer. Let's go to profile to edit your infomation"
+let kMessConfirmLogout = "Are you sure you want to log out?"

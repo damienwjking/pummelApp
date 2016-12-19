@@ -429,7 +429,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             case 18:
                 self.openTerms()
             case 20:
-                self.logOut()
+                self.showMsgConfirmLogout()
             default: break
             }
         } else {
@@ -607,6 +607,18 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Category": "IOS.Profile.Setting", "Name": "Navigation Click", "Label":"Logout"]
         mixpanel.track("Event", properties: properties)
+    }
+    
+    func showMsgConfirmLogout() {
+        let confirmLogout = { (action:UIAlertAction!) -> Void in
+            self.logOut()
+        }
+        
+        let alertController = UIAlertController(title: nil, message: kMessConfirmLogout, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Log out", style: UIAlertActionStyle.Destructive, handler: confirmLogout))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Default, handler: nil))
+        
+        self.presentViewController(alertController, animated: true) { }
     }
     
     func selectMeasure() {
