@@ -37,7 +37,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.showLetUsHelp = true
+        self.showLetUsHelp = false
         self.navigationController!.navigationBar.translucent = false
         
         swipeableView = ZLSwipeableView()
