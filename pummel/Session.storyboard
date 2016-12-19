@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qs5-cm-a3y">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qs5-cm-a3y">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,10 +23,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="63i-Wc-G7U">
+                                <rect key="frame" x="0.0" y="20" width="375" height="269"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptyImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="L5Y-dN-x0c"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptyImage.png" translatesAutoresizingMaskIntoConstraints="NO" id="L5Y-dN-x0c">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coming Soon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdK-tz-bDv">
+                                <rect key="frame" x="39.5" y="289" width="295" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="YIK-vA-Ycl"/>
                                 </constraints>
@@ -32,6 +39,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See your individual workouts and when your next session is scheduled for here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ji7-8m-TdZ">
+                                <rect key="frame" x="31" y="347" width="313" height="51"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="51" id="StX-So-tFm"/>
                                 </constraints>
@@ -40,6 +48,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7V-mk-cOk">
+                                <rect key="frame" x="0.0" y="398" width="375" height="269"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -96,7 +105,7 @@
         <!--Session Client View Controller-->
         <scene sceneID="F49-tY-hvn">
             <objects>
-                <viewController id="pCZ-ol-b2l" customClass="SessionClientViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SessionClientViewController" id="pCZ-ol-b2l" customClass="SessionClientViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="H07-oV-06e"/>
                         <viewControllerLayoutGuide type="bottom" id="FtV-00-agp"/>
@@ -117,7 +126,7 @@
         <!--Session Coach View Controller-->
         <scene sceneID="7zc-e7-voW">
             <objects>
-                <viewController id="8IK-lA-zrj" customClass="SessionCoachViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SessionCoachViewController" id="8IK-lA-zrj" customClass="SessionCoachViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pNU-IE-dKP"/>
                         <viewControllerLayoutGuide type="bottom" id="sNH-h6-ife"/>

@@ -143,6 +143,8 @@ let kDontCareUp = "DON'T CARE"
 let kShare = "Share"
 let KReport = "Report"
 let kRows = "rows"
+let kBook = "Book"
+let kLog = "Log"
 
 // Button
 let kNavSetting = "SETTINGS"
