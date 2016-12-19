@@ -30,6 +30,7 @@
 		BA1043051E0826EE006DB43D /* LogComingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043041E0826EE006DB43D /* LogComingTableViewCell.swift */; };
 		BA1043071E083749006DB43D /* LogCompletedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043061E083749006DB43D /* LogCompletedTableViewCell.swift */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
+		E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
@@ -318,6 +319,7 @@
 		BA1043041E0826EE006DB43D /* LogComingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogComingTableViewCell.swift; sourceTree = "<group>"; };
 		BA1043061E083749006DB43D /* LogCompletedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogCompletedTableViewCell.swift; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
+		E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileForUpgradeViewController.swift; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -702,6 +704,7 @@
 				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
 				F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */,
 				F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */,
+				E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1517,6 +1520,7 @@
 				F970A2A71D26384400932BFC /* ViewManager.swift in Sources */,
 				F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */,
 				F9CF54D71D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift in Sources */,
+				E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */,
 				9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */,
 				F98C40A61CF2524600ECC66E /* ChatMessageImageTableViewCell.swift in Sources */,
 				F9EAE8EB1D6EFC6F00FD32BE /* SettingBigSeperateTableViewCell.swift in Sources */,

@@ -221,6 +221,9 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
         } else if (segue.identifier == "goEdit") {
             let destinationVC = segue.destinationViewController as! EditCoachProfileViewController
             destinationVC.userInfo = self.coachDetail
+        } else if segue.identifier == "goSetting" {
+            let destinationVC = segue.destinationViewController as! SettingsViewController
+            destinationVC.userInfo = self.coachDetail
         }
     }
     
