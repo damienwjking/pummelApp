@@ -14,6 +14,7 @@ import Mixpanel
 class EditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var scrollViewBottomDT: NSLayoutConstraint!
     @IBOutlet weak var avatarIMW: UIImageView!
     @IBOutlet weak var changeAvatarIMW: UIImageView!
     @IBOutlet weak var nameLB: UILabel!
@@ -21,15 +22,24 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var aboutLB: UILabel!
     @IBOutlet weak var aboutContentTV: TextViewAutoHeight!
     @IBOutlet weak var aboutContentDT: NSLayoutConstraint!
+    
     @IBOutlet weak var privateInformationLB: UILabel!
     @IBOutlet weak var emailLB: UILabel!
     @IBOutlet weak var emailContentTF: UITextField!
+    @IBOutlet weak var mobileLB: UILabel!
+    @IBOutlet weak var mobileContentTF: UITextField!
+    
+    @IBOutlet weak var healthDataLB: UILabel!
     @IBOutlet weak var genderLB: UILabel!
     @IBOutlet weak var genderContentTF: UITextField!
     @IBOutlet weak var dobLB: UILabel!
     @IBOutlet weak var dobContentTF: UITextField!
-    @IBOutlet weak var mobileLB: UILabel!
-    @IBOutlet weak var mobileContentTF: UITextField!
+    @IBOutlet weak var weightLB: UILabel!
+    @IBOutlet weak var weightContentTF: UITextField!
+    @IBOutlet weak var heightLB: UILabel!
+    @IBOutlet weak var heightContentTF: UITextField!
+    
+    @IBOutlet weak var socialLB: UILabel!
     @IBOutlet weak var facebookLB: UILabel!
     @IBOutlet weak var facebookUrlTF: UITextField!
     @IBOutlet weak var instagramLB: UILabel!
@@ -49,11 +59,11 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationController!.navigationBar.translucent = false;
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"DONE", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditProfileViewController.done))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kDone, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditProfileViewController.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditProfileViewController.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditProfileViewController.cancel))
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
@@ -75,12 +85,16 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.twitterLB.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
+        self.healthDataLB.font = .pmmMonReg11()
+        self.socialLB.font = .pmmMonReg11()
         
         self.nameContentTF.font = .pmmMonLight13()
         self.aboutContentTV.font = .pmmMonLight13()
         self.emailContentTF.font = .pmmMonLight13()
         self.genderContentTF.font = .pmmMonLight13()
         self.dobContentTF.font = .pmmMonLight13()
+        self.weightContentTF.font = .pmmMonLight13()
+        self.heightContentTF.font = .pmmMonLight13()
         self.mobileContentTF.font = .pmmMonLight13()
         self.facebookUrlTF.font = .pmmMonLight13()
         self.facebookUrlTF.placeholder = "http://facebook.com"
@@ -93,6 +107,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.emailContentTF.delegate = self
         self.genderContentTF.delegate = self
         self.dobContentTF.delegate = self
+        self.weightContentTF.delegate = self
+        self.heightContentTF.delegate = self
         self.mobileContentTF.delegate = self
         self.facebookUrlTF.delegate = self
         self.instagramUrlTF.delegate = self
@@ -119,6 +135,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.mobileContentTF.resignFirstResponder()
         self.nameContentTF.resignFirstResponder()
         self.dobContentTF.resignFirstResponder()
+        self.weightContentTF.resignFirstResponder()
+        self.heightContentTF.resignFirstResponder()
         self.facebookUrlTF.resignFirstResponder()
         self.twitterUrlTF.resignFirstResponder()
         self.instagramUrlTF.resignFirstResponder()
@@ -160,14 +178,22 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                         self.aboutContentDT.constant = sizeAboutTV.height + 20
                         
                         self.genderContentTF.text = self.userInfo[kGender] as? String
+                        
                         self.emailContentTF.text = self.userInfo[kEmail] as? String
-                        let stringDob = self.userInfo[kDob] as! String
-                        self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+                        
                         if !(self.userInfo[kMobile] is NSNull) {
                             self.mobileContentTF.text = self.userInfo[kMobile] as? String
                         } else {
                             self.mobileContentTF.text = thisIsYourMobile
                         }
+                        
+                        let stringDob = self.userInfo[kDob] as! String
+                        self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+                        
+                        
+//                        self.weightContentTF.text = self.userInfo["weight"] as! String
+//                        
+//                        self.heightContentTF.text = self.userInfo["height"] as! String
                         
                         if !(self.userInfo[kFacebookUrl] is NSNull) {
                             self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
@@ -199,20 +225,30 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             } else {
                 self.nameContentTF.text = self.userInfo[kFirstname] as? String
             }
+            
             if !(self.userInfo[kBio] is NSNull) {
                 self.aboutContentTV.text = self.userInfo[kBio] as! String
             } else {
                 self.aboutContentTV.text = thisIsYourBio
             }
+            
             self.genderContentTF.text = self.userInfo[kGender] as? String
+            
             self.emailContentTF.text = self.userInfo[kEmail] as? String
-            let stringDob = self.userInfo[kDob] as! String
-            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+            
             if !(self.userInfo[kMobile] is NSNull) {
                 self.mobileContentTF.text = self.userInfo[kMobile] as? String
             } else {
                 self.mobileContentTF.text = thisIsYourMobile
             }
+            
+            let stringDob = self.userInfo[kDob] as! String
+            
+            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+            
+//                        self.weightContentTF.text = self.userInfo["weight"] as! String
+            
+//                        self.heightContentTF.text = self.userInfo["height"] as! String
             
             if !(self.userInfo[kFacebookUrl] is NSNull) {
                 self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
@@ -232,10 +268,12 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.tapView.hidden = false
         if (self.isFirstTVS) {return}
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
-                if (self.view.frame.origin.y >= 0) {
-                    self.view.frame.origin.y -= keyboardSize.height
-                }
+            if (self.scrollView.contentOffset.y >= 0) {
+                self.scrollView.contentOffset.y += keyboardSize.height
             }
+            
+            self.scrollViewBottomDT.constant = keyboardSize.height + 21
+        }
     }
     
     func keyboardWillHide(notification: NSNotification) {
@@ -243,6 +281,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.isFirstTVS = false
         if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
             self.view.frame.origin.y = 64
+            
+            self.scrollViewBottomDT.constant = 21;
         }
     }
     
@@ -272,6 +312,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             mixpanel.track("Event", properties: properties)
             
             self.view.makeToastActivity(message: "Saving")
+            
+            // update weight height
             Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
@@ -516,6 +558,25 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                                                                attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
         }
         
+        // check number weight height
+        if !(self.isNumber(self.weightContentTF.text!)) {
+            returnValue = true
+            weightContentTF.attributedText = NSAttributedString(string:weightContentTF.text!,
+                                                                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+        } else {
+            weightContentTF.attributedText = NSAttributedString(string:weightContentTF.text!,
+                                                             attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+        }
+        
+        if !(self.isNumber(self.heightContentTF.text!)) {
+            returnValue = true
+            heightContentTF.attributedText = NSAttributedString(string:heightContentTF.text!,
+                                                                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+        } else {
+            heightContentTF.attributedText = NSAttributedString(string:heightContentTF.text!,
+                                                                attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+        }
+        
         if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
             self.showMsgLinkInValid()
             return true
@@ -548,6 +609,22 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         return emailTest.evaluateWithObject(testStr)
     }
     
+    func isNumber(testStr:String) -> Bool {
+        do {
+            let numberRegex = try NSRegularExpression(pattern: "[0-9]", options:.CaseInsensitive)
+            let weightString = testStr as NSString
+            let results = numberRegex.matchesInString(testStr, options: [], range: NSMakeRange(0, weightString.length))
+            
+            if results.count == weightString.length {
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            return false
+        }
+    }
+    
     func checkDateChanged(testStr:String) -> Bool {
         if (testStr == "") {
             return false
@@ -574,6 +651,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         if textField.isEqual(self.genderContentTF) == true {
             self.dobContentTF.resignFirstResponder()
+            self.weightContentTF.resignFirstResponder()
+            self.heightContentTF.resignFirstResponder()
             self.emailContentTF.resignFirstResponder()
             self.nameContentTF.resignFirstResponder()
             self.mobileContentTF.resignFirstResponder()
