@@ -10,11 +10,12 @@ import UIKit
 import Foundation
 
 
-class LogComingTableViewCell: UITableViewCell {
+class LogCompletedTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var nameLB: UILabel!
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var messageLB: UILabel!
+    @IBOutlet weak var tagActionLB: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,6 +27,7 @@ class LogComingTableViewCell: UITableViewCell {
         self.messageLB.font = .pmmMonLight16()
         self.timeLB.font = .pmmMonLight13()
         self.timeLB.textColor = UIColor.blackColor()
+        self.tagActionLB.font = .pmmMonLight13()
         
     }
 }

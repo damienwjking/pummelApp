@@ -39,7 +39,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("LogComingTableViewCell") as! LogComingTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("LogCompletedTableViewCell") as! LogCompletedTableViewCell
         
         cell.nameLB.text = "Sarah"
         cell.messageLB.text = "TUE 19th DEC"
@@ -59,6 +59,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
             }
         }
         
+        cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         
         return cell
     }
