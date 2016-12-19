@@ -327,8 +327,12 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                         
                         self.genderContentTF.text = self.userInfo[kGender] as? String
                         self.emailContentTF.text = self.userInfo[kEmail] as? String
-                        let stringDob = self.userInfo[kDob] as! String
-                        self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+                        
+                        if !(self.userInfo[kDob] is NSNull) {
+                            let stringDob = self.userInfo[kDob] as! String
+                            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+                        }
+                        
                         if !(self.userInfo[kMobile] is NSNull) {
                             self.mobileContentTF.text = self.userInfo[kMobile] as? String
                         }
@@ -371,8 +375,12 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
             self.aboutContentDT.constant = sizeAboutTV.height + 20
             self.genderContentTF.text = self.userInfo[kGender] as? String
             self.emailContentTF.text = self.userInfo[kEmail] as? String
-            let stringDob = self.userInfo[kDob] as! String
-            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+            
+            if !(self.userInfo[kDob] is NSNull) {
+                let stringDob = self.userInfo[kDob] as! String
+                self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+            }
+            
             if !(self.userInfo[kMobile] is NSNull) {
                 self.mobileContentTF.text = self.userInfo[kMobile] as? String
             }

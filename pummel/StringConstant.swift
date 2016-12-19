@@ -145,6 +145,7 @@ let KReport = "Report"
 let kRows = "rows"
 let kBook = "Book"
 let kLog = "Log"
+let kContinue = "Continue"
 
 // Button
 let kNavSetting = "SETTINGS"
@@ -209,5 +210,5 @@ let kSendMessageConnection = "sendMessageConnection"
 
 
 // Seting
-let kWantToBecomeACoach = "By click on OK, you request to become a Trainer"
+let kWantToBecomeACoach = "Buy click Continue, you are going to apply to coach form."
 let kBecomeACoachSuccess = "You have accepted to become a Trainer. Let's go to profile to edit your infomation"

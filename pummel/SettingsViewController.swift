@@ -28,6 +28,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     let knumberOfRowCoach = 22
     let knumberOfRowUser = 20
+    var userInfo: NSDictionary!
     
     let defaults = NSUserDefaults.standardUserDefaults()
     var location: Location? {
@@ -648,25 +649,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func upgradeToCoach() {
         let alertController = UIAlertController(title: pmmNotice, message: kWantToBecomeACoach, preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+        let OKAction = UIAlertAction(title: kContinue, style: .Default) { (action) in
             var prefix = kPMAPICOACH
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String])
-                .responseJSON { response in switch response.result {
-                case .Success(_):
-                    self.defaults.setBool(true, forKey: k_PM_IS_COACH)
-                    self.settingTableView.reloadData()
-                    let alertControllerSuccess = UIAlertController(title: pmmNotice, message: kBecomeACoachSuccess, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    }
-                    alertControllerSuccess.addAction(OKAction)
-                    
-                    self.presentViewController(alertControllerSuccess, animated: true) {
-                        // ...
-                    }
-                case .Failure(_): break
-                }
-            }
+            
+            self.performSegueWithIdentifier("upgradeCoach", sender: nil)
         }
         let cancelAction = UIAlertAction(title: kCancle, style: .Default) { (action) in
         }
@@ -703,7 +690,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
     
                 locationPicker.completion = { self.location = $0 }
-            }
+        } else if (segue.identifier == "upgradeCoach") {
+            let destinationVC = segue.destinationViewController as! EditCoachProfileForUpgradeViewController
+            destinationVC.userInfo = self.userInfo
+            destinationVC.settingCV = self
+        }
         
     }
 }
