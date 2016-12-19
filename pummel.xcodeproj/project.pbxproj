@@ -27,6 +27,7 @@
 		BA0B61ED1E004E0800A98C82 /* miniPummelLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */; };
 		BA0B61EE1E004E0800A98C82 /* miniPummelLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */; };
 		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
+		BA1043051E0826EE006DB43D /* LogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043041E0826EE006DB43D /* LogTableViewCell.swift */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
@@ -313,6 +314,7 @@
 		BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@3x.png"; sourceTree = "<group>"; };
 		BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = miniPummelLogo.png; sourceTree = "<group>"; };
 		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
+		BA1043041E0826EE006DB43D /* LogTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTableViewCell.swift; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
@@ -669,6 +671,7 @@
 				F9F3CC401CE221F8007F68A5 /* UserTableViewCell.swift */,
 				F9FE13C71CEAF5F9004ABE34 /* MessageTableViewCell.swift */,
 				F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */,
+				BA1043041E0826EE006DB43D /* LogTableViewCell.swift */,
 				F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */,
 				F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */,
 			);
@@ -1502,6 +1505,7 @@
 				F98BAF6D1D6217A7004BD41E /* NSCache+Singleton.swift in Sources */,
 				F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */,
 				F9CF54D51D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift in Sources */,
+				BA1043051E0826EE006DB43D /* LogTableViewCell.swift in Sources */,
 				F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */,
 				F9EAE8F71D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift in Sources */,
 				F9EAE8E11D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift in Sources */,
