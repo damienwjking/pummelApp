@@ -71,7 +71,7 @@ class ProgressViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK - Public function
+    // MARK: Public function
     func bookButtonClicked() {
         print("book clicked")
         

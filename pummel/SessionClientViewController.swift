@@ -14,23 +14,36 @@ import AlamofireImage
 class SessionClientViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var logTableView: UITableView!
+    @IBOutlet weak var statusSegment: UISegmentedControl!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.initTableView()
+    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        
+    }
+    
+    // MARK: Init
+    func initTableView() {
         self.logTableView.estimatedRowHeight = 120
     }
     
+    // MARK: UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("LogComingTableViewCell") as! LogComingTableViewCell
         
         cell.nameLB.text = "Sarah"
-        cell.messageLB.text = "20th Dec 2016"
-        cell.timeLB.text = "4h"
+        cell.messageLB.text = "TUE 19th DEC"
+        cell.timeLB.text = "4PM"
         
         let prefix = "http://api.pummel.fit/api/uploads/235/render?width=125.0&height=125.0"
         if (NSCache.sharedInstance.objectForKey(prefix) != nil) {

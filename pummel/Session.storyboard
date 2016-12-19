@@ -129,7 +129,7 @@
                                 <rect key="frame" x="0.0" y="67" width="375" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LogTableViewCell" rowHeight="120" id="hLW-Qx-S4M" customClass="LogTableViewCell" customModule="Pummel" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LogComingTableViewCell" rowHeight="120" id="hLW-Qx-S4M" customClass="LogComingTableViewCell" customModule="Pummel" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hLW-Qx-S4M" id="Q5a-wK-10j">
@@ -214,6 +214,7 @@
                     </view>
                     <connections>
                         <outlet property="logTableView" destination="LVh-5y-UiB" id="kA1-Mu-AFX"/>
+                        <outlet property="statusSegment" destination="gNr-c6-1w1" id="gFL-1w-8EA"/>
                         <segue destination="MTa-5x-DKj" kind="show" identifier="userLogASession" id="Au2-PE-kLY"/>
                     </connections>
                 </viewController>
