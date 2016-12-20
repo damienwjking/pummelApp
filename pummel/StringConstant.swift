@@ -112,6 +112,8 @@ let kLat = "lat"
 let kLong = "long"
 let kLimit = "limit"
 let kOffset = "offset"
+let kEmergencyName = "emergencyName"
+let kEmergencyMobile = "emergencyMobile"
 
 // String
 let kLogoutSuccess = "Logout successful"

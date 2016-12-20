@@ -50,6 +50,10 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
     @IBOutlet weak var instagramUrlTF: UITextField!
     @IBOutlet weak var twitterLB: UILabel!
     @IBOutlet weak var twitterUrlTF: UITextField!
+    @IBOutlet weak var emergencyNameLB: UILabel!
+    @IBOutlet weak var emergencyNameTF: UITextField!
+    @IBOutlet weak var emergencyMobileLB: UILabel!
+    @IBOutlet weak var emergencyMobileTF: UITextField!
     var isFirstTVS : Bool = false
     var sizingCell: TagCell?
     
@@ -97,6 +101,8 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
         self.emailLB.font = .pmmMonLight11()
         self.genderLB.font = .pmmMonLight11()
         self.mobileLB.font = .pmmMonLight11()
+        self.emergencyNameLB.font = .pmmMonLight11()
+        self.emergencyMobileLB.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
         self.trainerInfomationLB.font = .pmmMonReg11()
@@ -118,6 +124,8 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
         self.instagramUrlTF.placeholder = "http://instagram.com"
         self.twitterUrlTF.font = .pmmMonLight13()
         self.twitterUrlTF.placeholder = "http://twitter.com"
+        self.emergencyNameTF.font = .pmmMonLight13()
+        self.emergencyMobileTF.font = .pmmMonLight13()
         
         self.nameContentTF.delegate = self
         self.emailContentTF.delegate = self
@@ -128,6 +136,8 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
         self.facebookUrlTF.delegate = self
         self.instagramUrlTF.delegate = self
         self.twitterUrlTF.delegate = self
+        self.emergencyNameTF.delegate = self
+        self.emergencyMobileTF.delegate = self
         self.achivementContentTF.maxHeight = 200
         self.aboutContentTV.maxHeight = 200
         self.qualificationContentTF.maxHeight = 200
@@ -172,6 +182,8 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
         self.facebookUrlTF.resignFirstResponder()
         self.twitterUrlTF.resignFirstResponder()
         self.instagramUrlTF.resignFirstResponder()
+        self.emergencyNameTF.resignFirstResponder()
+        self.emergencyMobileTF.resignFirstResponder()
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -349,6 +361,14 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
                         if !(self.userInfo[kTwitterUrl] is NSNull) {
                             self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
                         }
+                        
+                        if !(self.userInfo[kEmergencyName] is NSNull) {
+                            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
+                        }
+                        
+                        if !(self.userInfo[kEmergencyMobile] is NSNull) {
+                            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
+                        }
                     }else if response.response?.statusCode == 401 {
                         let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
@@ -395,6 +415,14 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
             
             if !(self.userInfo[kTwitterUrl] is NSNull) {
                 self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
+            }
+            
+            if !(self.userInfo[kEmergencyName] is NSNull) {
+                self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
+            }
+            
+            if !(self.userInfo[kEmergencyMobile] is NSNull) {
+                self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
             }
         }
         
@@ -485,7 +513,7 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
             mixpanel.track("Event", properties: properties)
             
             self.view.makeToastActivity(message: "Saving")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!, kEmergencyName:emergencyNameTF.text!, kEmergencyMobile:emergencyMobileTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here

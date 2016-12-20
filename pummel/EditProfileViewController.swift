@@ -48,6 +48,12 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var twitterUrlTF: UITextField!
     @IBOutlet weak var aboutDT: NSLayoutConstraint!
     @IBOutlet weak var tapView: UIView!
+    
+    @IBOutlet weak var emergencyNameLB: UILabel!
+    @IBOutlet weak var emergencyNameTF: UITextField!
+    @IBOutlet weak var emergencyMobileLB: UILabel!
+    @IBOutlet weak var emergencyMobileTF: UITextField!
+    
     var isFirstTVS : Bool = false
      var userInfo: NSDictionary!
     let imagePicker = UIImagePickerController()
@@ -83,6 +89,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.facebookLB.font = .pmmMonLight11()
         self.instagramLB.font = .pmmMonLight11()
         self.twitterLB.font = .pmmMonLight11()
+        self.emergencyNameLB.font = .pmmMonLight11()
+        self.emergencyMobileLB.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
         self.healthDataLB.font = .pmmMonReg11()
@@ -102,6 +110,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.instagramUrlTF.placeholder = "http://instagram.com"
         self.twitterUrlTF.font = .pmmMonLight13()
         self.twitterUrlTF.placeholder = "http:/twitter.com"
+        self.emergencyNameTF.font = .pmmMonLight13()
+        self.emergencyMobileTF.font = .pmmMonLight13()
         
         self.nameContentTF.delegate = self
         self.emailContentTF.delegate = self
@@ -113,6 +123,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.facebookUrlTF.delegate = self
         self.instagramUrlTF.delegate = self
         self.twitterUrlTF.delegate = self
+        self.emergencyNameTF.delegate = self
+        self.emergencyMobileTF.delegate = self
         self.aboutContentTV.maxHeight = 100
         
         self.changeAvatarIMW.layer.cornerRadius = 15
@@ -140,6 +152,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.facebookUrlTF.resignFirstResponder()
         self.twitterUrlTF.resignFirstResponder()
         self.instagramUrlTF.resignFirstResponder()
+        self.emergencyNameTF.resignFirstResponder()
+        self.emergencyMobileTF.resignFirstResponder()
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -206,6 +220,14 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                         if !(self.userInfo[kTwitterUrl] is NSNull) {
                             self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
                         }
+                        
+                        if !(self.userInfo[kEmergencyName] is NSNull) {
+                            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
+                        }
+                        
+                        if !(self.userInfo[kEmergencyMobile] is NSNull) {
+                            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
+                        }
 
                     }else if response.response?.statusCode == 401 {
                         let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
@@ -263,6 +285,14 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             if !(self.userInfo[kTwitterUrl] is NSNull) {
                 self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
             }
+            
+            if !(self.userInfo[kEmergencyName] is NSNull) {
+                self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
+            }
+            
+            if !(self.userInfo[kEmergencyMobile] is NSNull) {
+                self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
+            }
         }
     }
     
@@ -316,7 +346,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             self.view.makeToastActivity(message: "Saving")
             
             // update weight height
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!])
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!, kEmergencyName:emergencyNameTF.text!, kEmergencyMobile:emergencyMobileTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
