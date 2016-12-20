@@ -30,7 +30,7 @@
                                     <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="odJ-wo-GMz"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Sorry we couldnt find any experts nearby" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Sorry we couldn't find any experts nearby" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
                                 <frame key="frameInset" minX="50" minY="377" width="276" height="58"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="58" id="JzR-NU-LUG"/>
@@ -53,7 +53,7 @@
                                     <constraint firstAttribute="height" constant="23" id="EhX-qx-4Sl"/>
                                     <constraint firstAttribute="width" constant="276" id="u8c-rw-5Tw"/>
                                 </constraints>
-                                <state key="normal" title="REFIND SEARCH">
+                                <state key="normal" title="REFINE SEARCH">
                                     <color key="titleColor" red="1" green="0.25882352939999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>

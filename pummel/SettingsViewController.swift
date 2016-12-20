@@ -45,7 +45,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         settingTableView.delegate = self
         settingTableView.dataSource = self
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: kApplyNow, style: .Plain, target: self, action: #selector(SettingsViewController.done))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DONE", style: .Plain, target: self, action: #selector(SettingsViewController.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
          self.navigationItem.setHidesBackButton(true, animated: false)
         

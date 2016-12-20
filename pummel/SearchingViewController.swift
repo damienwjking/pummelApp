@@ -11,26 +11,6 @@ import MapKit
 import Alamofire
 
 class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
-    
-    @IBOutlet var bigCircleFirstIMV : UIImageView!
-    @IBOutlet var bigCircleSecondIMV : UIImageView!
-    @IBOutlet var bigCircleThirdIMV : UIImageView!
-    @IBOutlet var bigCircleFourthIMV : UIImageView!
-    
-    @IBOutlet var medCircleFirstIMV : UIImageView!
-    @IBOutlet var medCircleSecondIMV : UIImageView!
-    @IBOutlet var medCircleThirdIMV : UIImageView!
-    @IBOutlet var medCircleFourthIMV : UIImageView!
-
-    @IBOutlet var smallCircleFirstIMV : UIImageView!
-    @IBOutlet var smallCircleSecondIMV : UIImageView!
-    @IBOutlet var smallCircleThirdIMV : UIImageView!
-    @IBOutlet var smallCircleFourthIMV : UIImageView!
-    
-    @IBOutlet var firstLocationView : UIView!
-    @IBOutlet var secondLocationView : UIView!
-    @IBOutlet var thirdLocationView : UIView!
-    @IBOutlet var fourthLocationView : UIView!
 
     @IBOutlet var smallIndicatorView : UIView!
     @IBOutlet var medIndicatorView : UIView!
@@ -42,10 +22,11 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     @IBOutlet var map: MKMapView!
     
     var gender: String!
-    var tagIdsArray: NSArray!
+    var tagIdsArray: NSArray! = []
     var locationManager: CLLocationManager!
     var stopAnimation: Bool!
     let orangeColor = UIColor.pmmBrightOrangeColor()
+    var getResultSearch : Bool = false
     
     @IBOutlet var backgroundLogo : UIImageView!
 
@@ -119,62 +100,10 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        bigCircleFirstIMV.layer.cornerRadius = 11
-        bigCircleSecondIMV.layer.cornerRadius = 11
-        bigCircleThirdIMV.layer.cornerRadius = 11
-        bigCircleFourthIMV.layer.cornerRadius = 11
-        bigCircleFirstIMV.clipsToBounds = true
-        bigCircleSecondIMV.clipsToBounds = true
-        bigCircleThirdIMV.clipsToBounds = true
-        bigCircleFourthIMV.clipsToBounds = true
-        bigCircleFirstIMV.layer.borderWidth = 0.5
-        bigCircleSecondIMV.layer.borderWidth = 0.5
-        bigCircleThirdIMV.layer.borderWidth = 0.5
-        bigCircleFourthIMV.layer.borderWidth = 0.5
-        bigCircleFirstIMV.layer.borderColor =  orangeColor.CGColor
-        bigCircleSecondIMV.layer.borderColor =  orangeColor.CGColor
-        bigCircleThirdIMV.layer.borderColor =  orangeColor.CGColor
-        bigCircleFourthIMV.layer.borderColor =  orangeColor.CGColor
-        
-        medCircleFirstIMV.layer.cornerRadius = 7
-        medCircleSecondIMV.layer.cornerRadius = 7
-        medCircleThirdIMV.layer.cornerRadius = 7
-        medCircleFourthIMV.layer.cornerRadius = 7
-        medCircleFirstIMV.clipsToBounds = true
-        medCircleSecondIMV.clipsToBounds = true
-        medCircleThirdIMV.clipsToBounds = true
-        medCircleFourthIMV.clipsToBounds = true
-        medCircleFirstIMV.layer.borderWidth = 0.5
-        medCircleSecondIMV.layer.borderWidth = 0.5
-        medCircleThirdIMV.layer.borderWidth = 0.5
-        medCircleFourthIMV.layer.borderWidth = 0.5
-        medCircleFirstIMV.layer.borderColor =  orangeColor.CGColor
-        medCircleSecondIMV.layer.borderColor =  orangeColor.CGColor
-        medCircleThirdIMV.layer.borderColor =  orangeColor.CGColor
-        medCircleFourthIMV.layer.borderColor =  orangeColor.CGColor
-        
-        smallCircleFirstIMV.layer.cornerRadius = 4
-        smallCircleSecondIMV.layer.cornerRadius = 4
-        smallCircleThirdIMV.layer.cornerRadius = 4
-        smallCircleFourthIMV.layer.cornerRadius = 4
-        smallCircleFirstIMV.clipsToBounds = true
-        smallCircleSecondIMV.clipsToBounds = true
-        smallCircleThirdIMV.clipsToBounds = true
-        smallCircleFourthIMV.clipsToBounds = true
-        smallCircleFirstIMV.backgroundColor =  orangeColor
-        smallCircleSecondIMV.backgroundColor =  orangeColor
-        smallCircleThirdIMV.backgroundColor =  orangeColor
-        smallCircleFourthIMV.backgroundColor =  orangeColor
         
         backgroundLogo.layer.cornerRadius = 45
         backgroundLogo.clipsToBounds = true
         backgroundLogo.backgroundColor = orangeColor
-        
-        firstLocationView.hidden = true
-        secondLocationView.hidden = true
-        thirdLocationView.hidden = true
-        fourthLocationView.hidden = true
-        
         self.bigIndicatorView.alpha = 0.05
         self.medIndicatorView.alpha = 0.1
         self.smallIndicatorView.alpha = 0.15
@@ -239,47 +168,39 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         
         self.animationIndicator()
         
-        let seconds = 20.0
-        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-            self.stopAnimation = true
-        })
-        let secondsLocation = 6.0
-        let delayLocation = secondsLocation * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-        let dispatchTimeLocation = dispatch_time(DISPATCH_TIME_NOW, Int64(delayLocation))
-        dispatch_after(dispatchTimeLocation, dispatch_get_main_queue(), {
-            if (Int(arc4random_uniform(3) + 1) == 1) {
-                self.firstLocationView.hidden = false
-                self.thirdLocationView.hidden = false
-            } else if (Int(arc4random_uniform(3) + 1) == 2) {
-                self.secondLocationView.hidden = false
-                self.thirdLocationView.hidden = false
-            } else {
-                self.firstLocationView.hidden = false
-                self.thirdLocationView.hidden = false
-                self.fourthLocationView.hidden = false
-                self.secondLocationView.hidden = false
-            }
-        })
+        self.delayCheck()
         
         self.search()
     }
     
+    func delayCheck() {
+        let seconds = 6.0
+        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            if (self.getResultSearch == true) {
+                self.stopAnimation = true
+            } else {
+                self.delayCheck()
+            }
+        })
+
+    }
+    
     func search() {
         var prefix = kPMAPICOACH_SEARCH
+        let limitParams = String(format: "?%@=25&%@=0", kLimit, kOffset)
+        prefix.appendContentsOf(limitParams)
         if (gender != kDontCare) {
-           prefix.appendContentsOf("?gender=".stringByAppendingString(gender).stringByAppendingString("&"))
+           prefix.appendContentsOf("&gender=".stringByAppendingString(gender).stringByAppendingString("&"))
         } else {
-            prefix.appendContentsOf("?")
+            prefix.appendContentsOf("&")
+            
         }
     
         for id in tagIdsArray {
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
         }
-        
-        let limitParams = String(format: "&%@=25&%@=0", kLimit, kOffset)
-        prefix.appendContentsOf(limitParams)
         
         let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
         prefix.appendContentsOf(coordinateParams)
@@ -291,7 +212,8 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     if (response.result.value == nil) {return}
-                    if (self.stopAnimation == true) {
+                   // if (self.stopAnimation == true) {
+                        self.getResultSearch = true
                         let presentingViewController = self.presentingViewController
                         self.dismissViewControllerAnimated(false, completion: {
                             let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
@@ -304,25 +226,25 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                             findVC.viewDidLayoutSubviews()
                             presentingViewController!.dismissViewControllerAnimated(true, completion: {})
                         })
-                    } else {
-                        let secondsWait = 6.0
-                        let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                            let presentingViewController = self.presentingViewController
-                            self.dismissViewControllerAnimated(false, completion: {
-                                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-                                let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                                findVC.arrayResult.removeAll()
-                                findVC.refined = true
-                                findVC.arrayResult = response.result.value as! [NSDictionary]
-                                findVC.showLetUsHelp = false
-                                findVC.viewDidLayoutSubviews()
-                                presentingViewController!.dismissViewControllerAnimated(true, completion: {})
-                            })
-                        })
-                        
-                    }
+//                    } else {
+//                        let secondsWait = 6.0
+//                        let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+//                        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+//                        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+//                            let presentingViewController = self.presentingViewController
+//                            self.dismissViewControllerAnimated(false, completion: {
+//                                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
+//                                let findVC = tabbarVC.viewControllers![2] as! FindViewController
+//                                findVC.arrayResult.removeAll()
+//                                findVC.refined = true
+//                                findVC.arrayResult = response.result.value as! [NSDictionary]
+//                                findVC.showLetUsHelp = false
+//                                findVC.viewDidLayoutSubviews()
+//                                presentingViewController!.dismissViewControllerAnimated(true, completion: {})
+//                            })
+//                        })
+//                        
+//                    }
                 } else if response.response?.statusCode == 401 {
                     let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in

@@ -316,90 +316,6 @@
                                 </variation>
                             </button>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="USq-uq-u9x"/>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4BC-Pm-kgh">
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g54-J3-SwP">
-                                        <frame key="frameInset" width="22" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7uq-DV-gcq">
-                                        <frame key="frameInset" minX="4" minY="4" width="14" height="14"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZw-tJ-NEJ">
-                                        <frame key="frameInset" minX="7" minY="7" width="8" height="8"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="JUH-IO-9vA"/>
-                                    <constraint firstAttribute="width" constant="22" id="fWi-h5-Rxo"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fZr-EV-pn7">
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QgW-sh-qcp">
-                                        <frame key="frameInset" width="22" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N25-Ip-9O7">
-                                        <frame key="frameInset" minX="4" minY="4" width="14" height="14"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k1I-2d-1G5">
-                                        <frame key="frameInset" minX="7" minY="7" width="8" height="8"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="Rnu-50-1Hf"/>
-                                    <constraint firstAttribute="width" constant="22" id="mjW-Py-X98"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6SP-fO-bNN">
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pBm-0M-N06">
-                                        <frame key="frameInset" width="22" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4BE-mf-htf">
-                                        <frame key="frameInset" minX="4" minY="4" width="14" height="14"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kyV-FF-Scw">
-                                        <frame key="frameInset" minX="7" minY="7" width="8" height="8"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="22" id="FHV-af-ibt"/>
-                                    <constraint firstAttribute="height" constant="22" id="MhD-cr-vHG"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UyH-07-DSb">
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oVp-WF-GW1">
-                                        <frame key="frameInset" width="22" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MM0-qM-sph">
-                                        <frame key="frameInset" minX="4" minY="4" width="14" height="14"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hui-qf-AfN">
-                                        <frame key="frameInset" minX="7" minY="7" width="8" height="8"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="6MB-ux-Ipd"/>
-                                    <constraint firstAttribute="width" constant="22" id="Uqb-WH-Rlx"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dZe-7j-AeU">
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FINDING FITNESS PARTNER…" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cbo-s6-F3P">
@@ -492,54 +408,30 @@
                             <constraint firstItem="FAP-av-qvw" firstAttribute="top" secondItem="USq-uq-u9x" secondAttribute="bottom" id="9bL-td-8AI"/>
                             <constraint firstItem="Gg0-CN-kIW" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" id="9py-Ff-2Yk"/>
                             <constraint firstItem="USq-uq-u9x" firstAttribute="leading" secondItem="bRj-3G-n9t" secondAttribute="leading" id="9wM-Lf-1x0"/>
-                            <constraint firstItem="fZr-EV-pn7" firstAttribute="centerX" secondItem="bRj-3G-n9t" secondAttribute="centerX" constant="106" id="A7D-V5-lmB"/>
                             <constraint firstItem="dZe-7j-AeU" firstAttribute="leading" secondItem="bRj-3G-n9t" secondAttribute="leadingMargin" constant="-20" id="EP3-KE-T05"/>
                             <constraint firstItem="JI9-2O-ZDN" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" id="FLt-zv-eUx"/>
                             <constraint firstItem="USq-uq-u9x" firstAttribute="top" secondItem="bRj-3G-n9t" secondAttribute="top" id="Gbh-6C-fD3"/>
                             <constraint firstAttribute="trailing" secondItem="USq-uq-u9x" secondAttribute="trailing" id="KB4-2N-7bW"/>
                             <constraint firstItem="bHB-uI-Ezz" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" id="UAc-gi-g48"/>
                             <constraint firstItem="dZe-7j-AeU" firstAttribute="top" secondItem="bRj-3G-n9t" secondAttribute="topMargin" id="UEm-qY-gUp"/>
-                            <constraint firstItem="fZr-EV-pn7" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" constant="-73" id="W6u-AO-6ho"/>
-                            <constraint firstItem="6SP-fO-bNN" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" constant="106" id="Wiz-PX-jv0"/>
                             <constraint firstItem="NDX-Ri-UCq" firstAttribute="top" secondItem="ZbC-oL-6FF" secondAttribute="bottom" id="Wos-dP-fov"/>
                             <constraint firstItem="FAP-av-qvw" firstAttribute="top" secondItem="dZe-7j-AeU" secondAttribute="bottom" id="aaK-rn-h0h"/>
                             <constraint firstItem="Zoh-ig-zdC" firstAttribute="centerX" secondItem="bRj-3G-n9t" secondAttribute="centerX" id="aws-tL-T45"/>
-                            <constraint firstItem="UyH-07-DSb" firstAttribute="centerX" secondItem="bRj-3G-n9t" secondAttribute="centerX" constant="-132" id="d9i-N7-7pJ"/>
-                            <constraint firstItem="4BC-Pm-kgh" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" constant="132" id="npW-2A-32N"/>
                             <constraint firstItem="NDX-Ri-UCq" firstAttribute="leading" secondItem="bRj-3G-n9t" secondAttribute="leadingMargin" constant="-20" id="oEU-wk-Orh"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dZe-7j-AeU" secondAttribute="trailing" constant="-20" id="qE9-tA-CFv"/>
                             <constraint firstItem="JI9-2O-ZDN" firstAttribute="centerX" secondItem="bRj-3G-n9t" secondAttribute="centerX" id="sLi-zg-bI9"/>
                             <constraint firstItem="Gg0-CN-kIW" firstAttribute="centerX" secondItem="bRj-3G-n9t" secondAttribute="centerX" id="t9D-4p-kdm"/>
                             <constraint firstItem="Zoh-ig-zdC" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" id="w3h-4j-iPJ"/>
-                            <constraint firstItem="6SP-fO-bNN" firstAttribute="centerX" secondItem="bRj-3G-n9t" secondAttribute="centerX" constant="-93" id="wIb-B5-4rj"/>
-                            <constraint firstItem="4BC-Pm-kgh" firstAttribute="centerX" secondItem="bRj-3G-n9t" secondAttribute="centerX" constant="132" id="was-D5-Nwg"/>
-                            <constraint firstItem="UyH-07-DSb" firstAttribute="centerY" secondItem="bRj-3G-n9t" secondAttribute="centerY" constant="-130" id="wfy-Rd-zSC"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="backgroundLogo" destination="U6A-V3-J6L" id="Xnh-0A-7pK"/>
-                        <outlet property="bigCircleFirstIMV" destination="oVp-WF-GW1" id="lrD-LT-DKU"/>
-                        <outlet property="bigCircleFourthIMV" destination="g54-J3-SwP" id="GG8-La-FmL"/>
-                        <outlet property="bigCircleSecondIMV" destination="pBm-0M-N06" id="3dl-XC-RD9"/>
-                        <outlet property="bigCircleThirdIMV" destination="QgW-sh-qcp" id="xah-HG-fnD"/>
                         <outlet property="bigIndicatorView" destination="FeM-zq-tHP" id="uwk-uy-da4"/>
                         <outlet property="findFinessTF" destination="Cbo-s6-F3P" id="vXf-dO-Hnq"/>
-                        <outlet property="firstLocationView" destination="4BC-Pm-kgh" id="4Xw-M6-Yui"/>
-                        <outlet property="fourthLocationView" destination="UyH-07-DSb" id="Aj1-I2-t5V"/>
                         <outlet property="map" destination="USq-uq-u9x" id="1Wx-GN-v9F"/>
-                        <outlet property="medCircleFirstIMV" destination="MM0-qM-sph" id="6nZ-wm-Ua7"/>
-                        <outlet property="medCircleFourthIMV" destination="7uq-DV-gcq" id="Z8f-X9-mWg"/>
-                        <outlet property="medCircleSecondIMV" destination="4BE-mf-htf" id="GmW-Ix-ep8"/>
-                        <outlet property="medCircleThirdIMV" destination="N25-Ip-9O7" id="Kev-SC-AQq"/>
                         <outlet property="medIndicatorView" destination="Gg0-CN-kIW" id="aUU-zq-jor"/>
                         <outlet property="overlayView" destination="dZe-7j-AeU" id="q4m-yq-2Ag"/>
-                        <outlet property="secondLocationView" destination="fZr-EV-pn7" id="sv3-gE-2Tm"/>
-                        <outlet property="smallCircleFirstIMV" destination="Hui-qf-AfN" id="eat-2L-oiT"/>
-                        <outlet property="smallCircleFourthIMV" destination="gZw-tJ-NEJ" id="Zvj-3y-HTV"/>
-                        <outlet property="smallCircleSecondIMV" destination="kyV-FF-Scw" id="0Fn-6Z-2Hz"/>
-                        <outlet property="smallCircleThirdIMV" destination="k1I-2d-1G5" id="Edz-Bq-YEP"/>
                         <outlet property="smallIndicatorView" destination="Zoh-ig-zdC" id="fr4-za-cgp"/>
-                        <outlet property="thirdLocationView" destination="6SP-fO-bNN" id="6Sw-h3-jAx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uXc-NY-W5r" userLabel="First Responder" sceneMemberID="firstResponder"/>
