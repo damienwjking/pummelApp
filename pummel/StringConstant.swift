@@ -148,6 +148,7 @@ let kRows = "rows"
 let kBook = "Book"
 let kLog = "Log"
 let kContinue = "Continue"
+let kNext = "Next"
 
 // Button
 let kNavSetting = "SETTINGS"
@@ -160,6 +161,9 @@ let kNavNewMessage = "NEW MESSAGE"
 let kNavSendPhoto = "SEND PHOTO"
 let kNavFeed = "FEED"
 let kNavPost = "POST"
+let kBookSession = "BOOK SESSION"
+let kBookShare = "SHARE"
+
 
 // Cell
 let kSettingDiscoveryHeaderTableViewCell = "SettingDiscoveryHeaderTableViewCell"

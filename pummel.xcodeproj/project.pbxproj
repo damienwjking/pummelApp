@@ -39,6 +39,13 @@
 		BACB29E51E09AFFD00C41FAF /* sessionRunning.png in Resources */ = {isa = PBXBuildFile; fileRef = BACB29E41E09AFFD00C41FAF /* sessionRunning.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */; };
+		E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */; };
+		E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */; };
+		E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */; };
+		E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */; };
+		E8D778E61E0AF6A50011E164 /* LeadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */; };
+		E8D778E91E0AF6F00011E164 /* GroupLeadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778E71E0AF6F00011E164 /* GroupLeadTableViewCell.swift */; };
+		E8D778EA1E0AF6F00011E164 /* GroupLeadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8D778E81E0AF6F00011E164 /* GroupLeadTableViewCell.xib */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
@@ -66,7 +73,6 @@
 		F96847061E06B532009EB06C /* LogSessionClientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */; };
 		F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */; };
 		F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847091E06B570009EB06C /* BookSessionViewController.swift */; };
-		F968470D1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */; };
 		F96847111E06B726009EB06C /* LogSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847101E06B726009EB06C /* LogSession.storyboard */; };
 		F96847131E06B737009EB06C /* BookSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847121E06B737009EB06C /* BookSession.storyboard */; };
 		F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */; };
@@ -336,6 +342,13 @@
 		BACB29E41E09AFFD00C41FAF /* sessionRunning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionRunning.png; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileForUpgradeViewController.swift; sourceTree = "<group>"; };
+		E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionTableViewCell.swift; sourceTree = "<group>"; };
+		E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookSessionTableViewCell.xib; sourceTree = "<group>"; };
+		E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionShareViewController.swift; sourceTree = "<group>"; };
+		E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadCollectionViewCell.swift; sourceTree = "<group>"; };
+		E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeadCollectionViewCell.xib; sourceTree = "<group>"; };
+		E8D778E71E0AF6F00011E164 /* GroupLeadTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupLeadTableViewCell.swift; sourceTree = "<group>"; };
+		E8D778E81E0AF6F00011E164 /* GroupLeadTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupLeadTableViewCell.xib; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -365,7 +378,6 @@
 		F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientDetailViewController.swift; sourceTree = "<group>"; };
 		F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareLogSessionClientViewController.swift; sourceTree = "<group>"; };
 		F96847091E06B570009EB06C /* BookSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionViewController.swift; sourceTree = "<group>"; };
-		F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainerSessionTableViewCell.swift; sourceTree = "<group>"; };
 		F96847101E06B726009EB06C /* LogSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogSession.storyboard; sourceTree = "<group>"; };
 		F96847121E06B737009EB06C /* BookSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BookSession.storyboard; sourceTree = "<group>"; };
 		F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionToUserViewController.swift; sourceTree = "<group>"; };
@@ -732,6 +744,12 @@
 				F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */,
 				BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */,
 				BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */,
+				E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */,
+				E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */,
+				E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */,
+				E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */,
+				E8D778E71E0AF6F00011E164 /* GroupLeadTableViewCell.swift */,
+				E8D778E81E0AF6F00011E164 /* GroupLeadTableViewCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -1033,6 +1051,7 @@
 				F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */,
 				F96847091E06B570009EB06C /* BookSessionViewController.swift */,
 				F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */,
+				E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */,
 			);
 			name = Session;
 			sourceTree = "<group>";
@@ -1281,6 +1300,7 @@
 				F9CA4A101D2153CE00E8A585 /* TagCell.xib in Resources */,
 				F9F3CC481CE7D4A4007F68A5 /* cameraIcon@2x.png in Resources */,
 				F9EAE8D91D6ED08200FD32BE /* cardEmpty@2x.png in Resources */,
+				E8D778E61E0AF6A50011E164 /* LeadCollectionViewCell.xib in Resources */,
 				F9D35ABD1D26822400F47709 /* pinGray@2x.png in Resources */,
 				F979E1751D7DC89700C717F0 /* likeSml@3x.png in Resources */,
 				F98C41AF1CF264CE00ECC66E /* cameraBig@3x.png in Resources */,
@@ -1297,6 +1317,7 @@
 				F9827F131CBC752E00841BF1 /* add@3x.png in Resources */,
 				F9827EBC1CBBF46B00841BF1 /* pummelLogo@2x.png in Resources */,
 				F9827F0B1CBC751500841BF1 /* back.png in Resources */,
+				E8D778EA1E0AF6F00011E164 /* GroupLeadTableViewCell.xib in Resources */,
 				F9827F1E1CBC755B00841BF1 /* birthday@2x.png in Resources */,
 				BA141CC01E0AFB060076D4B8 /* SessionDistance.png in Resources */,
 				F98C41911CF25F6500ECC66E /* feed@3x.png in Resources */,
@@ -1317,6 +1338,7 @@
 				F9ABEAE81DC4B9440084B70E /* CoachProfile.storyboard in Resources */,
 				F9827F1F1CBC755B00841BF1 /* birthday@3x.png in Resources */,
 				F98C41971CF25F6500ECC66E /* messages@3x.png in Resources */,
+				E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */,
 				F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */,
 				F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */,
 				F96847111E06B726009EB06C /* LogSession.storyboard in Resources */,
@@ -1512,8 +1534,8 @@
 				F9CF54E11D7F9BFD00BE144F /* NewPostViewController.swift in Sources */,
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
+				E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
-				F968470D1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
@@ -1524,6 +1546,7 @@
 				F9AF9DFA1D29C9410065F2D2 /* AboutCollectionViewCell.swift in Sources */,
 				F9FE13C81CEAF5F9004ABE34 /* MessageTableViewCell.swift in Sources */,
 				F9F3CC431CE7C6AC007F68A5 /* ChatMessageViewController.swift in Sources */,
+				E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
 				F9EAE8E51D6EFA4900FD32BE /* SettingHelpSupportTableViewCell.swift in Sources */,
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
@@ -1549,6 +1572,7 @@
 				F9EAE8F31D6F0E5200FD32BE /* FeaturedFeedTableViewCell.swift in Sources */,
 				F970A2A71D26384400932BFC /* ViewManager.swift in Sources */,
 				F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */,
+				E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */,
 				F9CF54D71D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift in Sources */,
 				E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */,
 				9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */,
@@ -1581,6 +1605,7 @@
 				F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */,
 				F9CF54D91D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift in Sources */,
 				F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */,
+				E8D778E91E0AF6F00011E164 /* GroupLeadTableViewCell.swift in Sources */,
 				F9ABEAE11DC36C3B0084B70E /* FontConstant.swift in Sources */,
 				F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */,
 				F977EC0D1DAD442F007024EB /* NewCommentImageViewController.swift in Sources */,
