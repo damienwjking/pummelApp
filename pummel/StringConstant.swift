@@ -160,6 +160,7 @@ let kNavNewMessage = "NEW MESSAGE"
 let kNavSendPhoto = "SEND PHOTO"
 let kNavFeed = "FEED"
 let kNavPost = "POST"
+let kBookSession = "BOOK SESSION"
 
 // Cell
 let kSettingDiscoveryHeaderTableViewCell = "SettingDiscoveryHeaderTableViewCell"

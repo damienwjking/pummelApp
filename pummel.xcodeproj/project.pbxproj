@@ -33,6 +33,8 @@
 		BACB29E51E09AFFD00C41FAF /* sessionRunning.png in Resources */ = {isa = PBXBuildFile; fileRef = BACB29E41E09AFFD00C41FAF /* sessionRunning.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */; };
+		E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */; };
+		E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
@@ -60,7 +62,6 @@
 		F96847061E06B532009EB06C /* LogSessionClientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */; };
 		F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */; };
 		F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847091E06B570009EB06C /* BookSessionViewController.swift */; };
-		F968470D1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */; };
 		F96847111E06B726009EB06C /* LogSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847101E06B726009EB06C /* LogSession.storyboard */; };
 		F96847131E06B737009EB06C /* BookSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847121E06B737009EB06C /* BookSession.storyboard */; };
 		F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */; };
@@ -324,6 +325,8 @@
 		BACB29E41E09AFFD00C41FAF /* sessionRunning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionRunning.png; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileForUpgradeViewController.swift; sourceTree = "<group>"; };
+		E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionTableViewCell.swift; sourceTree = "<group>"; };
+		E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookSessionTableViewCell.xib; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -353,7 +356,6 @@
 		F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientDetailViewController.swift; sourceTree = "<group>"; };
 		F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareLogSessionClientViewController.swift; sourceTree = "<group>"; };
 		F96847091E06B570009EB06C /* BookSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionViewController.swift; sourceTree = "<group>"; };
-		F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainerSessionTableViewCell.swift; sourceTree = "<group>"; };
 		F96847101E06B726009EB06C /* LogSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogSession.storyboard; sourceTree = "<group>"; };
 		F96847121E06B737009EB06C /* BookSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BookSession.storyboard; sourceTree = "<group>"; };
 		F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionToUserViewController.swift; sourceTree = "<group>"; };
@@ -717,7 +719,8 @@
 		F968470B1E06B5BF009EB06C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */,
+				E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */,
+				E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -1296,6 +1299,7 @@
 				F9ABEAE81DC4B9440084B70E /* CoachProfile.storyboard in Resources */,
 				F9827F1F1CBC755B00841BF1 /* birthday@3x.png in Resources */,
 				F98C41971CF25F6500ECC66E /* messages@3x.png in Resources */,
+				E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */,
 				F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */,
 				F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */,
 				F96847111E06B726009EB06C /* LogSession.storyboard in Resources */,
@@ -1490,7 +1494,6 @@
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
-				F968470D1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
@@ -1526,6 +1529,7 @@
 				F9EAE8F31D6F0E5200FD32BE /* FeaturedFeedTableViewCell.swift in Sources */,
 				F970A2A71D26384400932BFC /* ViewManager.swift in Sources */,
 				F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */,
+				E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */,
 				F9CF54D71D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift in Sources */,
 				E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */,
 				9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */,

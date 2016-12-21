@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3wK-2M-50Y">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3wK-2M-50Y">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -9,7 +9,7 @@
         <!--Book Session View Controller-->
         <scene sceneID="7cc-gy-YXT">
             <objects>
-                <viewController id="3wK-2M-50Y" customClass="BookSessionViewController" sceneMemberID="viewController">
+                <viewController id="3wK-2M-50Y" customClass="BookSessionViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Fv6-VM-Yd1"/>
                         <viewControllerLayoutGuide type="bottom" id="lEv-2b-eCh"/>
@@ -17,9 +17,25 @@
                     <view key="view" contentMode="scaleToFill" id="cy2-6e-UvH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eH7-cD-ulr">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="3wK-2M-50Y" id="JEt-AC-MvX"/>
+                                    <outlet property="delegate" destination="3wK-2M-50Y" id="gwA-2T-oeR"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="eH7-cD-ulr" secondAttribute="trailing" id="7VS-F3-Tg7"/>
+                            <constraint firstItem="lEv-2b-eCh" firstAttribute="top" secondItem="eH7-cD-ulr" secondAttribute="bottom" id="Wqd-kM-ZcV"/>
+                            <constraint firstItem="eH7-cD-ulr" firstAttribute="top" secondItem="Fv6-VM-Yd1" secondAttribute="bottom" id="sBu-9V-Dig"/>
+                            <constraint firstItem="eH7-cD-ulr" firstAttribute="leading" secondItem="cy2-6e-UvH" secondAttribute="leading" id="xic-P6-Wke"/>
+                        </constraints>
                     </view>
                     <connections>
+                        <outlet property="tbView" destination="eH7-cD-ulr" id="5la-iG-pHb"/>
                         <segue destination="3OF-R7-f5T" kind="show" identifier="assignSessionToUser" id="nVb-IE-Iup"/>
                     </connections>
                 </viewController>
