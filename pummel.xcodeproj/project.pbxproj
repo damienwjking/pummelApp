@@ -29,6 +29,12 @@
 		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
 		BA1043051E0826EE006DB43D /* LogComingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043041E0826EE006DB43D /* LogComingTableViewCell.swift */; };
 		BA1043071E083749006DB43D /* LogCompletedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043061E083749006DB43D /* LogCompletedTableViewCell.swift */; };
+		BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */; };
+		BA141CB81E0ADD3A0076D4B8 /* ActivityCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */; };
+		BA141CBD1E0AFB060076D4B8 /* sessionIntensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA141CB91E0AFB060076D4B8 /* sessionIntensity.png */; };
+		BA141CBE1E0AFB060076D4B8 /* sessionCalories.png in Resources */ = {isa = PBXBuildFile; fileRef = BA141CBA1E0AFB060076D4B8 /* sessionCalories.png */; };
+		BA141CBF1E0AFB060076D4B8 /* sessionTime.png in Resources */ = {isa = PBXBuildFile; fileRef = BA141CBB1E0AFB060076D4B8 /* sessionTime.png */; };
+		BA141CC01E0AFB060076D4B8 /* SessionDistance.png in Resources */ = {isa = PBXBuildFile; fileRef = BA141CBC1E0AFB060076D4B8 /* SessionDistance.png */; };
 		BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */; };
 		BACB29E51E09AFFD00C41FAF /* sessionRunning.png in Resources */ = {isa = PBXBuildFile; fileRef = BACB29E41E09AFFD00C41FAF /* sessionRunning.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
@@ -320,6 +326,12 @@
 		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
 		BA1043041E0826EE006DB43D /* LogComingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogComingTableViewCell.swift; sourceTree = "<group>"; };
 		BA1043061E083749006DB43D /* LogCompletedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogCompletedTableViewCell.swift; sourceTree = "<group>"; };
+		BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
+		BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityCell.xib; sourceTree = "<group>"; };
+		BA141CB91E0AFB060076D4B8 /* sessionIntensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionIntensity.png; sourceTree = "<group>"; };
+		BA141CBA1E0AFB060076D4B8 /* sessionCalories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionCalories.png; sourceTree = "<group>"; };
+		BA141CBB1E0AFB060076D4B8 /* sessionTime.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionTime.png; sourceTree = "<group>"; };
+		BA141CBC1E0AFB060076D4B8 /* SessionDistance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SessionDistance.png; sourceTree = "<group>"; };
 		BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionTableViewCell.swift; sourceTree = "<group>"; };
 		BACB29E41E09AFFD00C41FAF /* sessionRunning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionRunning.png; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
@@ -718,6 +730,8 @@
 			isa = PBXGroup;
 			children = (
 				F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */,
+				BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */,
+				BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -739,6 +753,10 @@
 			isa = PBXGroup;
 			children = (
 				BACB29E41E09AFFD00C41FAF /* sessionRunning.png */,
+				BA141CB91E0AFB060076D4B8 /* sessionIntensity.png */,
+				BA141CBA1E0AFB060076D4B8 /* sessionCalories.png */,
+				BA141CBB1E0AFB060076D4B8 /* sessionTime.png */,
+				BA141CBC1E0AFB060076D4B8 /* SessionDistance.png */,
 				F91727651DB3BDCD00C6E612 /* like-image.png */,
 				F9741E0C1D89A83900D61868 /* display-empty.jpg */,
 				F9741E001D89708000D61868 /* edit.png */,
@@ -1280,17 +1298,20 @@
 				F9827EBC1CBBF46B00841BF1 /* pummelLogo@2x.png in Resources */,
 				F9827F0B1CBC751500841BF1 /* back.png in Resources */,
 				F9827F1E1CBC755B00841BF1 /* birthday@2x.png in Resources */,
+				BA141CC01E0AFB060076D4B8 /* SessionDistance.png in Resources */,
 				F98C41911CF25F6500ECC66E /* feed@3x.png in Resources */,
 				F9F3CC3C1CE1EC66007F68A5 /* newmessage@2x.png in Resources */,
 				F9827F311CBC759D00841BF1 /* name@3x.png in Resources */,
 				F98C41991CF25F6500ECC66E /* messagesSelcted@2x.png in Resources */,
 				F9827F111CBC752E00841BF1 /* add.png in Resources */,
 				F970A2B41D2646A900932BFC /* connect.png in Resources */,
+				BA141CBF1E0AFB060076D4B8 /* sessionTime.png in Resources */,
 				F9827F0D1CBC751500841BF1 /* back@3x.png in Resources */,
 				F9FE145A1CEBD29B004ABE34 /* FSCameraView.xib in Resources */,
 				F98C41A61CF25F6500ECC66E /* sessions@3x.png in Resources */,
 				F979E15C1D7DBD5B00C717F0 /* noActivity@2x.png in Resources */,
 				F9FE14561CEBD29B004ABE34 /* FSAlbumView.xib in Resources */,
+				BA141CBE1E0AFB060076D4B8 /* sessionCalories.png in Resources */,
 				F98C41A91CF25F6500ECC66E /* sessionsPressed@3x.png in Resources */,
 				F9741E031D89708000D61868 /* edit.png in Resources */,
 				F9ABEAE81DC4B9440084B70E /* CoachProfile.storyboard in Resources */,
@@ -1373,6 +1394,7 @@
 				F964FEC31D21E049008F7C94 /* Images.xcassets in Resources */,
 				F9991E2A1D2A0A0E009C7731 /* message@2x.png in Resources */,
 				F90D32F81D108DFD00E3C349 /* blackArrow@3x.png in Resources */,
+				BA141CB81E0ADD3A0076D4B8 /* ActivityCell.xib in Resources */,
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
 				F98C41B51CF2650F00ECC66E /* close@3x.png in Resources */,
 				F9827F511CBDEE3C00841BF1 /* attention.png in Resources */,
@@ -1394,6 +1416,7 @@
 				F9827F531CBDEE3C00841BF1 /* attention@3x.png in Resources */,
 				F9ABEAE61DC4B8170084B70E /* Connection.storyboard in Resources */,
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
+				BA141CBD1E0AFB060076D4B8 /* sessionIntensity.png in Resources */,
 				F92994271D35E7D0000C00D5 /* fit4.jpg in Resources */,
 				F9ABEAF61DC4C32A0084B70E /* Message.storyboard in Resources */,
 				F9827F451CBD231D00841BF1 /* SignupViewController.xib in Resources */,
@@ -1542,6 +1565,7 @@
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
 				F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */,
 				F917276A1DB3DF5600C6E612 /* Spinner.swift in Sources */,
+				BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
 				F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */,
 				F9FE14551CEBD29B004ABE34 /* FSAlbumView.swift in Sources */,

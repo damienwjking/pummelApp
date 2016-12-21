@@ -188,6 +188,8 @@ let kFeedSecondPartTableViewCell = "FeedSecondPartTableViewCell"
 let kFeedThirdPartTableViewCell = "FeedThirdPartTableViewCell"
 let kFeedFourthPartTableViewCell = "FeedFourthPartTableViewCell"
 
+let kActivityCell = "ActivityCell"
+
 // Profile
 let kIAmFitnessProfessional = "I’M A FITNESS PROFESSIONAL"
 let kVerifiedFitnessProfessional = "Would you like to become a verified Pummel Fitness professional?  Fill in this form to setup your Mobile profile and start finding new customers."
