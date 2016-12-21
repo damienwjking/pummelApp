@@ -43,16 +43,5 @@ class ProgressViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    // MARK: Public function
-    func bookButtonClicked() {
-        print("book clicked")
-        
-    }
-    
-    func logButtonClicked() {
-        print("log clicked")
-        self.performSegueWithIdentifier("userLogASession", sender: nil)
-    }
 
 }

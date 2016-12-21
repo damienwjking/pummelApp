@@ -40,7 +40,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         rightButton.titleLabel?.font = .pmmMonReg13()
         rightButton.setTitle(kLog, forState: .Normal)
         rightButton.setTitleColor(buttonColor, forState: .Normal)
-        rightButton.addTarget(self, action: #selector(ProgressViewController.logButtonClicked), forControlEvents: .TouchUpInside)
+        rightButton.addTarget(self, action: #selector(SessionClientViewController.logButtonClicked), forControlEvents: .TouchUpInside)
         let rightBarButton = UIBarButtonItem(customView: rightButton)
         rightButton.sizeToFit()
         self.tabBarController?.navigationItem.rightBarButtonItem? = rightBarButton

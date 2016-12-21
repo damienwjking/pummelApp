@@ -255,7 +255,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Tue" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0cw-rs-BhE">
-                                                    <rect key="frame" x="272" y="24" width="83" height="19.5"/>
+                                                    <rect key="frame" x="272" y="24" width="83" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="19.5" id="7WZ-v7-Fxj"/>
                                                         <constraint firstAttribute="width" constant="83" id="pfq-XX-TJy"/>
@@ -349,6 +349,6 @@
         <image name="sessions.png" width="19" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Au2-PE-kLY"/>
+        <segue reference="T2L-tM-8pa"/>
     </inferredMetricsTieBreakers>
 </document>
