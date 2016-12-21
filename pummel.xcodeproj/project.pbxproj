@@ -35,6 +35,7 @@
 		E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */; };
 		E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */; };
 		E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */; };
+		E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
@@ -327,6 +328,7 @@
 		E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileForUpgradeViewController.swift; sourceTree = "<group>"; };
 		E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionTableViewCell.swift; sourceTree = "<group>"; };
 		E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookSessionTableViewCell.xib; sourceTree = "<group>"; };
+		E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionShareViewController.swift; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -1018,6 +1020,7 @@
 				F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */,
 				F96847091E06B570009EB06C /* BookSessionViewController.swift */,
 				F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */,
+				E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */,
 			);
 			name = Session;
 			sourceTree = "<group>";
@@ -1504,6 +1507,7 @@
 				F9AF9DFA1D29C9410065F2D2 /* AboutCollectionViewCell.swift in Sources */,
 				F9FE13C81CEAF5F9004ABE34 /* MessageTableViewCell.swift in Sources */,
 				F9F3CC431CE7C6AC007F68A5 /* ChatMessageViewController.swift in Sources */,
+				E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
 				F9EAE8E51D6EFA4900FD32BE /* SettingHelpSupportTableViewCell.swift in Sources */,
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
