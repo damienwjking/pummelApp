@@ -36,6 +36,10 @@
 		E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */; };
 		E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */; };
 		E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */; };
+		E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */; };
+		E8D778E61E0AF6A50011E164 /* LeadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */; };
+		E8D778E91E0AF6F00011E164 /* GroupLeadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778E71E0AF6F00011E164 /* GroupLeadTableViewCell.swift */; };
+		E8D778EA1E0AF6F00011E164 /* GroupLeadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8D778E81E0AF6F00011E164 /* GroupLeadTableViewCell.xib */; };
 		F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90634321D7F2C5800105B97 /* FeedViewController.swift */; };
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
@@ -329,6 +333,10 @@
 		E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionTableViewCell.swift; sourceTree = "<group>"; };
 		E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookSessionTableViewCell.xib; sourceTree = "<group>"; };
 		E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionShareViewController.swift; sourceTree = "<group>"; };
+		E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadCollectionViewCell.swift; sourceTree = "<group>"; };
+		E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeadCollectionViewCell.xib; sourceTree = "<group>"; };
+		E8D778E71E0AF6F00011E164 /* GroupLeadTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupLeadTableViewCell.swift; sourceTree = "<group>"; };
+		E8D778E81E0AF6F00011E164 /* GroupLeadTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupLeadTableViewCell.xib; sourceTree = "<group>"; };
 		ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pummel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90634321D7F2C5800105B97 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
@@ -723,6 +731,10 @@
 			children = (
 				E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */,
 				E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */,
+				E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */,
+				E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */,
+				E8D778E71E0AF6F00011E164 /* GroupLeadTableViewCell.swift */,
+				E8D778E81E0AF6F00011E164 /* GroupLeadTableViewCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -1269,6 +1281,7 @@
 				F9CA4A101D2153CE00E8A585 /* TagCell.xib in Resources */,
 				F9F3CC481CE7D4A4007F68A5 /* cameraIcon@2x.png in Resources */,
 				F9EAE8D91D6ED08200FD32BE /* cardEmpty@2x.png in Resources */,
+				E8D778E61E0AF6A50011E164 /* LeadCollectionViewCell.xib in Resources */,
 				F9D35ABD1D26822400F47709 /* pinGray@2x.png in Resources */,
 				F979E1751D7DC89700C717F0 /* likeSml@3x.png in Resources */,
 				F98C41AF1CF264CE00ECC66E /* cameraBig@3x.png in Resources */,
@@ -1285,6 +1298,7 @@
 				F9827F131CBC752E00841BF1 /* add@3x.png in Resources */,
 				F9827EBC1CBBF46B00841BF1 /* pummelLogo@2x.png in Resources */,
 				F9827F0B1CBC751500841BF1 /* back.png in Resources */,
+				E8D778EA1E0AF6F00011E164 /* GroupLeadTableViewCell.xib in Resources */,
 				F9827F1E1CBC755B00841BF1 /* birthday@2x.png in Resources */,
 				F98C41911CF25F6500ECC66E /* feed@3x.png in Resources */,
 				F9F3CC3C1CE1EC66007F68A5 /* newmessage@2x.png in Resources */,
@@ -1496,6 +1510,7 @@
 				F9CF54E11D7F9BFD00BE144F /* NewPostViewController.swift in Sources */,
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
+				E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
@@ -1565,6 +1580,7 @@
 				F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */,
 				F9CF54D91D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift in Sources */,
 				F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */,
+				E8D778E91E0AF6F00011E164 /* GroupLeadTableViewCell.swift in Sources */,
 				F9ABEAE11DC36C3B0084B70E /* FontConstant.swift in Sources */,
 				F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */,
 				F977EC0D1DAD442F007024EB /* NewCommentImageViewController.swift in Sources */,

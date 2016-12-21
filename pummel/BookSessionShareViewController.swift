@@ -8,8 +8,10 @@
 
 import UIKit
 
-class BookSessionShareViewController: UIViewController {
+class BookSessionShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var tbView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
@@ -18,6 +20,9 @@ class BookSessionShareViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kDone.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        let nibName = UINib(nibName: "GroupLeadTableViewCell", bundle:nil)
+        self.tbView.registerNib(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -36,6 +41,29 @@ class BookSessionShareViewController: UIViewController {
     
     func done() {
         self.navigationController?.popToRootViewControllerAnimated(false)
+    }
+    
+    //MARK: TableView
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 120
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
+        if indexPath.row == 0 {
+            cell.titleHeader.text = ""
+        } else if indexPath.row == 1 {
+            cell.titleHeader.text = "NEW LEAD GROUP"
+        } else if indexPath.row == 2 {
+            cell.titleHeader.text = "CURENT GROUP"
+        }else {
+            cell.titleHeader.text = "PAST CURENT GROUP"
+        }
+        return cell
     }
     
 
