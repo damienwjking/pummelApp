@@ -8,11 +8,14 @@
 
 import UIKit
 import Foundation
+import Alamofire
 
 class BookSessionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tbView: UITableView!
-    
+    var tags = [Tag]()
+    var arrayTags : [NSDictionary] = []
+    var offset: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +29,7 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
+        self.getListTags()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -38,6 +42,41 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
         self.title = " "
     }
     
+    // MARK: Private function
+    func getListTags() {
+        var listTagsLink = kPMAPI_TAG_OFFSET
+        listTagsLink.appendContentsOf(String(self.offset))
+        Alamofire.request(.GET, listTagsLink)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                self.arrayTags = JSON as! [NSDictionary]
+                if (self.arrayTags.count > 0) {
+                    for i in 0 ..< self.arrayTags.count {
+                        let tagContent = self.arrayTags[i]
+                        let tag = Tag()
+                        tag.name = tagContent[kTitle] as? String
+                        tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
+                        tag.tagColor = self.getRandomColorString()
+                        self.tags.append(tag)
+                    }
+                    self.offset += 10
+                    self.tbView.reloadData()
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
+    }
+    
+    func getRandomColorString() -> String{
+        
+        let randomRed:CGFloat = CGFloat(drand48())
+        let randomGreen:CGFloat = CGFloat(drand48())
+        let randomBlue:CGFloat = CGFloat(drand48())
+        
+        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
+    
     func cancel() {
         self.navigationController?.popViewControllerAnimated(true)
     }
@@ -48,20 +87,20 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return self.tags.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BookSessionTableViewCell") as! BookSessionTableViewCell
-        
-        if indexPath.row == 0 {
-            cell.statusIMV.backgroundColor = UIColor.yellowColor();
-            cell.bookTitleLB.text = "RUNNING"
-        } else {
-            cell.statusIMV.backgroundColor = UIColor.greenColor();
-            cell.bookTitleLB.text = "SWIMMING"
+        if tags.count <= indexPath.row {
+            return cell
         }
-        
+        let tag = tags[indexPath.row]
+        cell.bookTitleLB.text = tag.name
+        cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        if (indexPath.row == tags.count - 1) {
+            self.getListTags()
+        }
         return cell
     }
     

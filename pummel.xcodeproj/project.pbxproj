@@ -38,6 +38,10 @@
 		BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */; };
 		BACB29E51E09AFFD00C41FAF /* sessionRunning.png in Resources */ = {isa = PBXBuildFile; fileRef = BACB29E41E09AFFD00C41FAF /* sessionRunning.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
+		E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */; };
+		E86A65D61E0BD80400FF2935 /* LeadAddedTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E86A65D41E0BD80400FF2935 /* LeadAddedTableViewCell.xib */; };
+		E86A65D91E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A65D71E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift */; };
+		E86A65DA1E0BD8C400FF2935 /* LeadAddedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E86A65D81E0BD8C400FF2935 /* LeadAddedCollectionViewCell.xib */; };
 		E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */; };
 		E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */; };
 		E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */; };
@@ -341,6 +345,10 @@
 		BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionTableViewCell.swift; sourceTree = "<group>"; };
 		BACB29E41E09AFFD00C41FAF /* sessionRunning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionRunning.png; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
+		E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadAddedTableViewCell.swift; sourceTree = "<group>"; };
+		E86A65D41E0BD80400FF2935 /* LeadAddedTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeadAddedTableViewCell.xib; sourceTree = "<group>"; };
+		E86A65D71E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadAddedCollectionViewCell.swift; sourceTree = "<group>"; };
+		E86A65D81E0BD8C400FF2935 /* LeadAddedCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeadAddedCollectionViewCell.xib; sourceTree = "<group>"; };
 		E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileForUpgradeViewController.swift; sourceTree = "<group>"; };
 		E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionTableViewCell.swift; sourceTree = "<group>"; };
 		E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookSessionTableViewCell.xib; sourceTree = "<group>"; };
@@ -741,7 +749,6 @@
 		F968470B1E06B5BF009EB06C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				F968470C1E06B5DD009EB06C /* TrainerSessionTableViewCell.swift */,
 				BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */,
 				BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */,
 				E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */,
@@ -750,6 +757,10 @@
 				E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */,
 				E8D778E71E0AF6F00011E164 /* GroupLeadTableViewCell.swift */,
 				E8D778E81E0AF6F00011E164 /* GroupLeadTableViewCell.xib */,
+				E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */,
+				E86A65D41E0BD80400FF2935 /* LeadAddedTableViewCell.xib */,
+				E86A65D71E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift */,
+				E86A65D81E0BD8C400FF2935 /* LeadAddedCollectionViewCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -1325,6 +1336,7 @@
 				F9827F311CBC759D00841BF1 /* name@3x.png in Resources */,
 				F98C41991CF25F6500ECC66E /* messagesSelcted@2x.png in Resources */,
 				F9827F111CBC752E00841BF1 /* add.png in Resources */,
+				E86A65DA1E0BD8C400FF2935 /* LeadAddedCollectionViewCell.xib in Resources */,
 				F970A2B41D2646A900932BFC /* connect.png in Resources */,
 				BA141CBF1E0AFB060076D4B8 /* sessionTime.png in Resources */,
 				F9827F0D1CBC751500841BF1 /* back@3x.png in Resources */,
@@ -1340,6 +1352,7 @@
 				F98C41971CF25F6500ECC66E /* messages@3x.png in Resources */,
 				E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */,
 				F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */,
+				E86A65D61E0BD80400FF2935 /* LeadAddedTableViewCell.xib in Resources */,
 				F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */,
 				F96847111E06B726009EB06C /* LogSession.storyboard in Resources */,
 				F98C41A31CF25F6500ECC66E /* search@3x.png in Resources */,
@@ -1551,6 +1564,7 @@
 				F9EAE8E51D6EFA4900FD32BE /* SettingHelpSupportTableViewCell.swift in Sources */,
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
+				E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */,
 				F9CF54E51D801F2100BE144F /* UserProfileViewController.swift in Sources */,
 				BA1043071E083749006DB43D /* LogCompletedTableViewCell.swift in Sources */,
 				F970A2A61D26384400932BFC /* Scheduler.swift in Sources */,
@@ -1564,6 +1578,7 @@
 				F970A2AC1D26393F00932BFC /* CardView.swift in Sources */,
 				F98BAF6D1D6217A7004BD41E /* NSCache+Singleton.swift in Sources */,
 				F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */,
+				E86A65D91E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift in Sources */,
 				F9CF54D51D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift in Sources */,
 				BA1043051E0826EE006DB43D /* LogComingTableViewCell.swift in Sources */,
 				F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */,

@@ -1,38 +1,39 @@
 //
-//  GroupLeadTableViewCell.swift
+//  LeadAddedTableViewCell.swift
 //  pummel
 //
-//  Created by Nguyen Vu Hao on 12/22/16.
+//  Created by Hao Nguyen Vu on 12/22/16.
 //  Copyright © 2016 pummel. All rights reserved.
 //
 
 import UIKit
 import Alamofire
 
-class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
+class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
+
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
     var arrayMessages: [NSDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
+    var isAdded = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionViewScrollDirection.Horizontal
-        //layout.estimatedItemSize =  CGSize(width: 70, height: 70)
         self.cv.dataSource = self
         self.cv.delegate = self
-        let nibName = UINib(nibName: "LeadCollectionViewCell" , bundle:nil)
-        self.cv.registerNib(nibName, forCellWithReuseIdentifier: "LeadCollectionViewCell")
+        let nibName = UINib(nibName: "LeadAddedCollectionViewCell" , bundle:nil)
+        self.cv.registerNib(nibName, forCellWithReuseIdentifier: "LeadAddedCollectionViewCell")
         self.cv.collectionViewLayout = layout
         self.cv.reloadData()
         self.titleHeader.font = .pmmMonReg13()
     }
-
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
@@ -41,9 +42,8 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadCollectionViewCell", forIndexPath: indexPath) as! LeadCollectionViewCell
-        cell.btnAdd.hidden = true
-        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", forIndexPath: indexPath) as! LeadAddedCollectionViewCell
+
         let message = arrayMessages[indexPath.row]
         let conversations = message[kConversation] as! NSDictionary
         let conversationUsers = conversations[kConversationUser] as! NSArray
@@ -54,15 +54,13 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             targetUser = conversationUsers[1] as! NSDictionary
             targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
         }
-
+        
         var prefixUser = kPMAPIUSER
         prefixUser.appendContentsOf(targetUserId)
         Alamofire.request(.GET, prefixUser)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 let userInfo = JSON as! NSDictionary
-                let name = userInfo.objectForKey(kFirstname) as! String
-                cell.nameUser.text = name.uppercaseString
                 var link = kPMAPI
                 if !(JSON[kImageUrl] is NSNull) {
                     link.appendContentsOf(JSON[kImageUrl] as! String)
@@ -71,13 +69,11 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                         .responseImage { response in
                             let imageRes = response.result.value! as UIImage
                             cell.imgAvatar.image = imageRes
-                            cell.btnAdd.hidden = false
                     }
                 } else {
                     cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                    cell.btnAdd.hidden = false
+           
                 }
-
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
@@ -88,7 +84,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     func collectionView(collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: 90,height: 90)
+        return CGSize(width: 50,height: 50)
     }
     
     func getMessage() {

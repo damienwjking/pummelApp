@@ -23,6 +23,9 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         
         let nibName = UINib(nibName: "GroupLeadTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")
+        
+        let nibName2 = UINib(nibName: "LeadAddedTableViewCell", bundle:nil)
+        self.tbView.registerNib(nibName2, forCellReuseIdentifier: "LeadAddedTableViewCell")
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -45,7 +48,10 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     
     //MARK: TableView
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 120
+        if indexPath.row == 0 {
+            return 100
+        }
+        return 140
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -53,15 +59,25 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
+        
         if indexPath.row == 0 {
-            cell.titleHeader.text = ""
-        } else if indexPath.row == 1 {
+            let cell = tableView.dequeueReusableCellWithIdentifier("LeadAddedTableViewCell") as! LeadAddedTableViewCell
+            if cell.arrayMessages.count <= 0 {
+                cell.getMessage()
+            }
+            return cell
+        }
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
+        if indexPath.row == 1 {
             cell.titleHeader.text = "NEW LEAD GROUP"
         } else if indexPath.row == 2 {
             cell.titleHeader.text = "CURENT GROUP"
-        }else {
+        } else if indexPath.row == 3 {
             cell.titleHeader.text = "PAST CURENT GROUP"
+        }
+        if cell.arrayMessages.count <= 0 {
+            cell.getMessage()
         }
         return cell
     }

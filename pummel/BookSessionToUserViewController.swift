@@ -8,13 +8,17 @@
 
 import UIKit
 import Foundation
-
+import Alamofire
 
 class BookSessionToUserViewController: UIViewController {
     
     @IBOutlet weak var dateTF: UITextField!
     @IBOutlet weak var contentTF: UITextField!
     @IBOutlet weak var tapView: UIView!
+    @IBOutlet weak var avatarIMV: UIImageView!
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
+    var coachDetail: NSDictionary!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +45,10 @@ class BookSessionToUserViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.next))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        self.avatarIMV.layer.cornerRadius = self.avatarIMV.frame.size.width/2
+        self.avatarIMV.clipsToBounds = true
+        self.getDetail()
     }
     
     func didTapView() {
@@ -78,5 +86,50 @@ class BookSessionToUserViewController: UIViewController {
     
     func next() {
         self.performSegueWithIdentifier("gotoShare", sender: nil)
+    }
+    
+    func getDetail() {
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in
+                if response.response?.statusCode == 200 {
+                    if (response.result.value == nil) {return}
+                    self.coachDetail = response.result.value as! NSDictionary
+                    self.setAvatar()
+                } else if response.response?.statusCode == 401 {
+                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // TODO: LOGOUT
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+        }
+    }
+    
+    func setAvatar() {
+        if !(coachDetail[kImageUrl] is NSNull) {
+            let imageLink = coachDetail[kImageUrl] as! String
+            var prefix = kPMAPI
+            prefix.appendContentsOf(imageLink)
+            let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
+            prefix.appendContentsOf(postfix)
+            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                self.avatarIMV.image = imageRes
+            } else {
+                Alamofire.request(.GET, prefix)
+                    .responseImage { response in
+                        if (response.response?.statusCode == 200) {
+                            let imageRes = response.result.value! as UIImage
+                            self.avatarIMV.image = imageRes
+                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                        }
+                }
+            }
+        }
     }
 }
