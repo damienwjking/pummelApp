@@ -41,8 +41,6 @@ class ProgressViewController: UIViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        self.tabBarController?.title = " "
     }
     
     override func didReceiveMemoryWarning() {

@@ -54,9 +54,9 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     // MARK: UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.isUpComing == true {
-            return 4
+            return 6
         } else {
-            return 1;
+            return 4;
         }
         
         return 0;
@@ -67,7 +67,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
             let cell = tableView.dequeueReusableCellWithIdentifier("LogComingTableViewCell") as! LogComingTableViewCell
             
             cell.nameLB.text = "SARAH"
-            cell.messageLB.text = "TUE 19th DEC"
+            cell.messageLB.text = "tue 19th dec"
             cell.timeLB.text = "4PM"
             
             let prefix = "http://api.pummel.fit/api/uploads/235/render?width=125.0&height=125.0"
@@ -91,8 +91,9 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
             let cell = tableView.dequeueReusableCellWithIdentifier("LogCompletedTableViewCell") as! LogCompletedTableViewCell
             
             cell.nameLB.text = "SARAH"
-            cell.messageLB.text = "TUE 19th DEC"
+            cell.messageLB.text = "tue 19th dec"
             cell.timeLB.text = "4PM"
+            cell.tagActionLB.text = "#RUNNING"
             
             let prefix = "http://api.pummel.fit/api/uploads/235/render?width=125.0&height=125.0"
             if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
@@ -118,6 +119,10 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.01
     }
     
     // MARK: Outlet function

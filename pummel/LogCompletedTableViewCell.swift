@@ -23,10 +23,9 @@ class LogCompletedTableViewCell: UITableViewCell {
         self.avatarIMV.clipsToBounds = true
         self.messageLB.numberOfLines = 2
         
-        self.nameLB.font = .pmmMonLight13()
-        self.messageLB.font = .pmmMonLight16()
+        self.nameLB.font = .pmmMonLight16()
+        self.messageLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
-        self.timeLB.textColor = UIColor.blackColor()
         self.tagActionLB.font = .pmmMonLight13()
         
     }

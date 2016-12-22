@@ -23,6 +23,10 @@ class LogSessionClientDetailViewController: UIViewController, UITableViewDelegat
         
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        var image = UIImage(named: "blackArrow")
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(LogSessionClientDetailViewController.backClicked))
         
         self.tempTextField.frame = CGRectZero
         self.view .addSubview(self.tempTextField)
@@ -53,6 +57,10 @@ class LogSessionClientDetailViewController: UIViewController, UITableViewDelegat
         self.saveBT.hidden = false
         
         self.tappedV.hidden = true
+    }
+    
+    func backClicked() {
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //MARK: TableView

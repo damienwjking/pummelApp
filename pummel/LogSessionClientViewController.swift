@@ -29,9 +29,13 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        var image = UIImage(named: "blackArrow")
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(LogSessionClientViewController.backClicked))
+        
         
         self.initCollectionView()
-        
         
         self.getListTags()
     }
@@ -44,8 +48,6 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        self.title = " "
     }
     
     // MARK: Init
@@ -105,6 +107,10 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         let randomBlue:CGFloat = CGFloat(drand48())
         
         return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
+    
+    func backClicked() {
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     // MARK: UICOLLECTION
