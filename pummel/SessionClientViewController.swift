@@ -66,7 +66,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         if self.isUpComing == true {
             let cell = tableView.dequeueReusableCellWithIdentifier("LogComingTableViewCell") as! LogComingTableViewCell
             
-            cell.nameLB.text = "Sarah"
+            cell.nameLB.text = "SARAH"
             cell.messageLB.text = "TUE 19th DEC"
             cell.timeLB.text = "4PM"
             
@@ -90,7 +90,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         } else {
             let cell = tableView.dequeueReusableCellWithIdentifier("LogCompletedTableViewCell") as! LogCompletedTableViewCell
             
-            cell.nameLB.text = "Sarah"
+            cell.nameLB.text = "SARAH"
             cell.messageLB.text = "TUE 19th DEC"
             cell.timeLB.text = "4PM"
             

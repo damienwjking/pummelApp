@@ -18,9 +18,9 @@ class LogSessionTableViewCell: UITableViewCell {
         super.awakeFromNib()
         
         self.statusIMV.layer.masksToBounds = true
-        self.statusIMV.layer.cornerRadius = 15
+        self.statusIMV.layer.cornerRadius = 20
         
         
-        self.LogTitleLB.font = .pmmMonReg16()
+        self.LogTitleLB.font = .pmmMonLight16()
     }
 }

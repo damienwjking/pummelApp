@@ -13,6 +13,7 @@ import Alamofire
 
 class LogSessionClientViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
     
     var tags = [Tag]()
@@ -81,7 +82,9 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
                             self.tags.append(tag)
                         }
                         self.offset += 10
-                        self.collectionView.reloadData()
+                        
+//                        self.collectionView.reloadData()
+                        self.tableView.reloadData()
                     } else {
                         self.isStopGetListTag = true
                     }
@@ -114,9 +117,9 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         
         self.configureCell(cell, forIndexPath: indexPath)
         
-        if (indexPath.row == tags.count - 1) {
-            self.getListTags()
-        }
+//        if (indexPath.row == tags.count - 1) {
+//            self.getListTags()
+//        }
         
         return cell
     }
@@ -138,32 +141,34 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
     
     
     //MARK: TableView
-//    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        return 60
-//    }
-//    
-//    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 4
-//    }
-//    
-//    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCellWithIdentifier("LogSessionTableViewCell") as! LogSessionTableViewCell
-//        
-//        if indexPath.row == 0 {
-//            cell.statusIMV.backgroundColor = UIColor.yellowColor();
-//            cell.LogTitleLB.text = "RUNNING"
-//        } else {
-//            cell.statusIMV.backgroundColor = UIColor.greenColor();
-//            cell.LogTitleLB.text = "SWIMMING"
-//        }
-//        
-//        return cell
-//    }
-//    
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-//        
-//        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
-//    }
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 60
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.tags.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("LogSessionTableViewCell") as! LogSessionTableViewCell
+        
+        let tag = tags[indexPath.row]
+        cell.LogTitleLB.text = tag.name
+        cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        
+        if (indexPath.row == tags.count - 1) {
+            self.getListTags()
+        }
+        
+        cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
+    }
     
 }
