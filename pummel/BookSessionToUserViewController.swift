@@ -28,7 +28,8 @@ class BookSessionToUserViewController: UIViewController {
         
         let datePickerView  : UIDatePicker = UIDatePicker()
         datePickerView.datePickerMode = UIDatePickerMode.Date
-        datePickerView.backgroundColor = UIColor.whiteColor()
+        datePickerView.backgroundColor = UIColor.blackColor()
+        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         dateTF.inputView = datePickerView
         datePickerView.addTarget(self, action: #selector(BookSessionToUserViewController.handleDatePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
@@ -71,7 +72,7 @@ class BookSessionToUserViewController: UIViewController {
     
     func handleDatePicker(sender: UIDatePicker) {
         let timeFormatter = NSDateFormatter()
-        timeFormatter.dateFormat = "MM/dd/YYYY"
+        timeFormatter.dateFormat = "MMM dd, YYYY"
         dateTF.text = timeFormatter.stringFromDate(sender.date)
     }
     
