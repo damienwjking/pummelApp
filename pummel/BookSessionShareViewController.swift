@@ -39,7 +39,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popToRootViewControllerAnimated(false)
     }
     
     func done() {
@@ -49,7 +49,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     //MARK: TableView
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if indexPath.row == 0 {
-            return 100
+            return 80
         }
         return 140
     }

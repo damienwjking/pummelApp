@@ -26,7 +26,10 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
         let nibName = UINib(nibName: "BookSessionTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName, forCellReuseIdentifier: "BookSessionTableViewCell")
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
+        var image = UIImage(named: "blackArrow")
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
+
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         self.getListTags()
