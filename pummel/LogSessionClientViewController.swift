@@ -141,7 +141,7 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
     
     func configureCell(cell: ActivityCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
+        cell.tagName.text = tag.name?.uppercaseString
         cell.tagBackgroundV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
     }
     
@@ -159,7 +159,7 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         let cell = tableView.dequeueReusableCellWithIdentifier("LogSessionTableViewCell") as! LogSessionTableViewCell
         
         let tag = tags[indexPath.row]
-        cell.LogTitleLB.text = tag.name
+        cell.LogTitleLB.text = tag.name?.uppercaseString
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         
         if (indexPath.row == tags.count - 1) {

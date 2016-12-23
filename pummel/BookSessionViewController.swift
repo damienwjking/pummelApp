@@ -26,9 +26,11 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
         let nibName = UINib(nibName: "BookSessionTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName, forCellReuseIdentifier: "BookSessionTableViewCell")
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
+        var image = UIImage(named: "blackArrow")
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
+        
         self.getListTags()
     }
     
@@ -96,7 +98,7 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
             return cell
         }
         let tag = tags[indexPath.row]
-        cell.bookTitleLB.text = tag.name
+        cell.bookTitleLB.text = tag.name?.uppercaseString
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         if (indexPath.row == tags.count - 1) {
             self.getListTags()
