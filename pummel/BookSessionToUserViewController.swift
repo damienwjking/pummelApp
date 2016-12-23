@@ -10,10 +10,10 @@ import UIKit
 import Foundation
 import Alamofire
 
-class BookSessionToUserViewController: UIViewController {
+class BookSessionToUserViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var dateTF: UITextField!
-    @IBOutlet weak var contentTF: UITextField!
+    @IBOutlet weak var contentTV: UITextView!
     @IBOutlet weak var tapView: UIView!
     @IBOutlet weak var avatarIMV: UIImageView!
     
@@ -52,11 +52,15 @@ class BookSessionToUserViewController: UIViewController {
         self.avatarIMV.clipsToBounds = true
         self.getDetail()
         
-        self.contentTF.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
+        self.contentTV.text = "ADD SOME INFORMATION"
+        self.contentTV.keyboardAppearance = .Dark
+        self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
+        self.contentTV.delegate = self
+        self.contentTV.selectedTextRange = self.contentTV.textRangeFromPosition(  self.contentTV.beginningOfDocument, toPosition:self.contentTV.beginningOfDocument)
     }
     
     func didTapView() {
-        self.contentTF.resignFirstResponder()
+        self.contentTV.resignFirstResponder()
         self.dateTF.resignFirstResponder()
     }
     
@@ -90,6 +94,39 @@ class BookSessionToUserViewController: UIViewController {
     
     func next() {
         self.performSegueWithIdentifier("gotoShare", sender: nil)
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        let currentText:NSString = textView.text
+        let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
+        if updatedText.isEmpty {
+            
+            textView.text = addAComment
+            textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
+            
+            textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            
+            return false
+        }
+        else if textView.textColor == UIColor(white:204.0/255.0, alpha: 1.0) && !text.isEmpty {
+            textView.text = nil
+            textView.textColor = UIColor.pmmWarmGreyTwoColor()
+        }
+        
+        return true
+    }
+    
+    func textViewDidChangeSelection(textView: UITextView) {
+        if self.view.window != nil {
+            if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
+                textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            }
+        }
     }
     
     func getDetail() {
