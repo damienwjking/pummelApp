@@ -16,8 +16,8 @@ class BookSessionTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.statusIMV.layer.masksToBounds = true
-        self.statusIMV.layer.cornerRadius = 15
-        self.bookTitleLB.font = .pmmMonReg13()
+        self.statusIMV.layer.cornerRadius = 20
+        self.bookTitleLB.font = .pmmMonLight16()
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
