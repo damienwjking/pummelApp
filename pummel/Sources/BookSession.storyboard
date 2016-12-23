@@ -60,27 +60,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0P0-oc-jwf">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="190"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="185"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="avatar.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hua-wk-QNG">
-                                        <rect key="frame" x="15" y="10" width="50" height="50"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="display-empty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Hua-wk-QNG">
+                                        <rect key="frame" x="15" y="15" width="40" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="8Nu-mH-BLb"/>
-                                            <constraint firstAttribute="width" constant="50" id="Vth-iQ-akA"/>
+                                            <constraint firstAttribute="height" constant="40" id="8Nu-mH-BLb"/>
+                                            <constraint firstAttribute="width" constant="40" id="Vth-iQ-akA"/>
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Xm-WP-tUs">
-                                        <rect key="frame" x="65" y="10" width="50" height="50"/>
+                                        <rect key="frame" x="60" y="15" width="40" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="8nw-eM-qDk"/>
-                                            <constraint firstAttribute="height" constant="50" id="dSH-qn-p5w"/>
+                                            <constraint firstAttribute="width" constant="40" id="8nw-eM-qDk"/>
+                                            <constraint firstAttribute="height" constant="40" id="dSH-qn-p5w"/>
                                         </constraints>
                                         <state key="normal" image="calendar">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="ADD A DATE" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tJf-HL-JLd">
-                                        <rect key="frame" x="115" y="20" width="250" height="30"/>
+                                        <rect key="frame" x="105" y="20" width="260" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="Gzz-Cg-hCK"/>
                                         </constraints>
@@ -89,7 +89,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" placeholder="ADD SOME INFORMATION" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FaM-FZ-B4x">
-                                        <rect key="frame" x="15" y="80" width="350" height="100"/>
+                                        <rect key="frame" x="15" y="75" width="350" height="100"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="100" id="mpw-hE-0Kb"/>
                                         </constraints>
@@ -98,34 +98,34 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                 </subviews>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="tJf-HL-JLd" firstAttribute="leading" secondItem="6Xm-WP-tUs" secondAttribute="trailing" id="8YW-fp-KaC"/>
-                                    <constraint firstItem="Hua-wk-QNG" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="10" id="BPz-Ts-Fim"/>
-                                    <constraint firstItem="6Xm-WP-tUs" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="10" id="Boe-Ds-YAK"/>
+                                    <constraint firstItem="tJf-HL-JLd" firstAttribute="leading" secondItem="6Xm-WP-tUs" secondAttribute="trailing" constant="5" id="8YW-fp-KaC"/>
+                                    <constraint firstItem="Hua-wk-QNG" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="15" id="BPz-Ts-Fim"/>
+                                    <constraint firstItem="6Xm-WP-tUs" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="15" id="Boe-Ds-YAK"/>
                                     <constraint firstItem="FaM-FZ-B4x" firstAttribute="leading" secondItem="0P0-oc-jwf" secondAttribute="leading" constant="15" id="J5K-Q0-4Ta"/>
                                     <constraint firstItem="tJf-HL-JLd" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="20" id="JHN-wE-4RM"/>
                                     <constraint firstAttribute="trailing" secondItem="tJf-HL-JLd" secondAttribute="trailing" constant="10" id="Mrg-qY-Npc"/>
                                     <constraint firstItem="Hua-wk-QNG" firstAttribute="leading" secondItem="0P0-oc-jwf" secondAttribute="leading" constant="15" id="NAr-Jg-LIh"/>
                                     <constraint firstItem="FaM-FZ-B4x" firstAttribute="top" secondItem="Hua-wk-QNG" secondAttribute="bottom" constant="20" id="NZU-cC-uRF"/>
                                     <constraint firstAttribute="bottom" secondItem="FaM-FZ-B4x" secondAttribute="bottom" constant="10" id="rxb-j9-gT7"/>
-                                    <constraint firstItem="6Xm-WP-tUs" firstAttribute="leading" secondItem="Hua-wk-QNG" secondAttribute="trailing" id="xE8-Ef-kou"/>
+                                    <constraint firstItem="6Xm-WP-tUs" firstAttribute="leading" secondItem="Hua-wk-QNG" secondAttribute="trailing" constant="5" id="xE8-Ef-kou"/>
                                     <constraint firstAttribute="trailing" secondItem="FaM-FZ-B4x" secondAttribute="trailing" constant="10" id="yp0-ge-LCc"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pp3-lg-vQa">
-                                <rect key="frame" x="0.0" y="190" width="375" height="477"/>
+                                <rect key="frame" x="0.0" y="185" width="375" height="482"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u0g-ZJ-sxE">
-                                        <rect key="frame" x="137.5" y="188.5" width="100" height="100"/>
+                                        <rect key="frame" x="137.5" y="191" width="100" height="100"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="100" id="EHc-D6-Xdl"/>
                                             <constraint firstAttribute="height" constant="100" id="JVt-4m-CL5"/>
                                         </constraints>
-                                        <state key="normal" image="camera.png"/>
+                                        <state key="normal" image="cameraBig.png"/>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="u0g-ZJ-sxE" firstAttribute="centerY" secondItem="Pp3-lg-vQa" secondAttribute="centerY" id="WNP-bd-YXZ"/>
                                     <constraint firstItem="u0g-ZJ-sxE" firstAttribute="centerX" secondItem="Pp3-lg-vQa" secondAttribute="centerX" id="r9n-jl-Pc1"/>
@@ -202,8 +202,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="avatar.png" width="300" height="300"/>
         <image name="calendar" width="64" height="64"/>
-        <image name="camera.png" width="40" height="31"/>
+        <image name="cameraBig.png" width="48" height="38"/>
+        <image name="display-empty.jpg" width="256" height="256"/>
     </resources>
 </document>

@@ -50,6 +50,8 @@ class BookSessionToUserViewController: UIViewController {
         self.avatarIMV.layer.cornerRadius = self.avatarIMV.frame.size.width/2
         self.avatarIMV.clipsToBounds = true
         self.getDetail()
+        
+        self.contentTF.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
     }
     
     func didTapView() {
