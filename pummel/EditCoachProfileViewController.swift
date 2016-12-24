@@ -50,6 +50,8 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
     @IBOutlet weak var instagramUrlTF: UITextField!
     @IBOutlet weak var twitterLB: UILabel!
     @IBOutlet weak var twitterUrlTF: UITextField!
+    
+    @IBOutlet weak var emergencyInformationLB: UILabel!
     @IBOutlet weak var emergencyNameLB: UILabel!
     @IBOutlet weak var emergencyNameTF: UITextField!
     @IBOutlet weak var emergencyMobileLB: UILabel!
@@ -105,6 +107,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
         
         self.privateInformationLB.font = .pmmMonReg11()
         self.trainerInfomationLB.font = .pmmMonReg11()
+        self.emergencyInformationLB.font = .pmmMonReg11()
         
         self.nameContentTF.font = .pmmMonLight13()
         self.aboutContentTV.font = .pmmMonLight13()

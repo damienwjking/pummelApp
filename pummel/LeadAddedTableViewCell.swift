@@ -67,6 +67,10 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                     link.appendContentsOf(widthHeight160)
                     Alamofire.request(.GET, link)
                         .responseImage { response in
+                            if response.result.value == nil {
+                                cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
+                                return
+                            }
                             let imageRes = response.result.value! as UIImage
                             cell.imgAvatar.image = imageRes
                     }

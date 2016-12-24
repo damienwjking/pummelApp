@@ -49,6 +49,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var aboutDT: NSLayoutConstraint!
     @IBOutlet weak var tapView: UIView!
     
+    @IBOutlet weak var emergencyInformationLB: UILabel!
     @IBOutlet weak var emergencyNameLB: UILabel!
     @IBOutlet weak var emergencyNameTF: UITextField!
     @IBOutlet weak var emergencyMobileLB: UILabel!
@@ -93,6 +94,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.emergencyMobileLB.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
+        emergencyInformationLB.font = .pmmMonReg11()
         self.healthDataLB.font = .pmmMonReg11()
         self.socialLB.font = .pmmMonReg11()
         
