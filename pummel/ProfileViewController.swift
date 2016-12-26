@@ -228,13 +228,18 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
     }
     
     func getDetail() {
+        self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = false
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
+                self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = true
                 if response.response?.statusCode == 200 {
                     if (response.result.value == nil) {return}
                     self.coachDetail = response.result.value as! NSDictionary
+                    self.defaults.setObject(self.coachDetail[kUnits], forKey: kUnit)
+                    self.defaults.setObject(self.coachDetail[kFirstname], forKey: kFirstname)
+                    kFirstname
                     self.setAvatar()
                     if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
                         self.setBusiness()

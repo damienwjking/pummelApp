@@ -21,6 +21,6 @@ class LogSessionTableViewCell: UITableViewCell {
         self.statusIMV.layer.cornerRadius = 20
         
         
-        self.LogTitleLB.font = .pmmMonLight16()
+        self.LogTitleLB.font = .pmmMonReg13()
     }
 }

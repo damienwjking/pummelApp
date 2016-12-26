@@ -645,32 +645,44 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func selectMeasure() {
         let selectMetric = { (action:UIAlertAction!) -> Void in
+            self.navigationItem.rightBarButtonItem?.enabled = false
+            self.view.makeToastActivity(message: "Saving")
+            
             self.defaults.setObject(metric, forKey: kUnit)
             
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUnits:metric])
-                .responseJSON { response in switch response.result {
-                case .Success(_):
+            
+            Alamofire.request(.PUT, prefix, parameters:
+                [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                    kFirstname:self.defaults.objectForKey(kFirstname) as! String,
+                    kUnits: metric,
+                ])
+                .responseJSON { response in
+                    self.navigationItem.rightBarButtonItem?.enabled = true
+                    self.view.hideToastActivity()
                     self.settingTableView.reloadData()
-                case .Failure(_):
-                    self.settingTableView.reloadData()
-                }
             }
         }
         
         let selectImperial = { (action:UIAlertAction!) -> Void in
+            self.navigationItem.rightBarButtonItem?.enabled = false
+            self.view.makeToastActivity(message: "Saving")
+            
             self.defaults.setObject(imperial, forKey: kUnit)
             
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUnits:imperial])
-                .responseJSON { response in switch response.result {
-                case .Success(_):
+            
+            Alamofire.request(.PUT, prefix, parameters:
+                [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                    kFirstname:self.defaults.objectForKey(kFirstname) as! String,
+                    kUnits: imperial,
+                ])
+                .responseJSON { response in
+                    self.navigationItem.rightBarButtonItem?.enabled = true
+                    self.view.hideToastActivity()
                     self.settingTableView.reloadData()
-                case .Failure(_):
-                    self.settingTableView.reloadData()
-                }
             }
         }
         
