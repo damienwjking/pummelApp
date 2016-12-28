@@ -71,10 +71,13 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
         if indexPath.row == 1 {
             cell.titleHeader.text = "NEW LEAD GROUP"
+            cell.typeGroup = TypeGroup.NewLead
         } else if indexPath.row == 2 {
             cell.titleHeader.text = "CURENT GROUP"
+            cell.typeGroup = TypeGroup.Current
         } else if indexPath.row == 3 {
             cell.titleHeader.text = "PAST CURENT GROUP"
+            cell.typeGroup = TypeGroup.Old
         }
         if cell.arrayMessages.count <= 0 {
             cell.getMessage()
