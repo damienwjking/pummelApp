@@ -9,11 +9,16 @@
 import UIKit
 import Alamofire
 
+enum TypeGroup:Int {
+    case NewLead = 0, Current, Old
+}
+
 class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
     var arrayMessages: [NSDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
+    var typeGroup:TypeGroup!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -45,39 +50,35 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         cell.btnAdd.hidden = true
         
         let message = arrayMessages[indexPath.row]
-        let conversations = message[kConversation] as! NSDictionary
-        let conversationUsers = conversations[kConversationUser] as! NSArray
-        var targetUser = conversationUsers[0] as! NSDictionary
-        let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
-        var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-        if (currentUserid == targetUserId){
-            targetUser = conversationUsers[1] as! NSDictionary
-            targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
+        
+        var targetUserId = ""
+        if let val = message["userId"] as? Int {
+            targetUserId = "\(val)"
         }
-
+        
         var prefixUser = kPMAPIUSER
         prefixUser.appendContentsOf(targetUserId)
         Alamofire.request(.GET, prefixUser)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                let userInfo = JSON as! NSDictionary
-                let name = userInfo.objectForKey(kFirstname) as! String
-                cell.nameUser.text = name.uppercaseString
-                var link = kPMAPI
-                if !(JSON[kImageUrl] is NSNull) {
-                    link.appendContentsOf(JSON[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight160)
-                    Alamofire.request(.GET, link)
-                        .responseImage { response in
-                            let imageRes = response.result.value! as UIImage
-                            cell.imgAvatar.image = imageRes
-                            cell.btnAdd.hidden = false
+                cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
+                cell.btnAdd.hidden = false
+                
+                if let userInfo = JSON as? NSDictionary {
+                    let name = userInfo.objectForKey(kFirstname) as! String
+                    cell.nameUser.text = name.uppercaseString
+                    var link = kPMAPI
+                    if !(JSON[kImageUrl] is NSNull) {
+                        link.appendContentsOf(JSON[kImageUrl] as! String)
+                        link.appendContentsOf(widthHeight160)
+                        Alamofire.request(.GET, link)
+                            .responseImage { response in
+                                let imageRes = response.result.value! as UIImage
+                                cell.imgAvatar.image = imageRes
+                                cell.btnAdd.hidden = false
+                        }
                     }
-                } else {
-                    cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                    cell.btnAdd.hidden = false
                 }
-
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
@@ -92,10 +93,16 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     }
     
     func getMessage() {
-        var prefix = kPMAPIUSER
+        var prefix = kPMAPICOACHS
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET)
-        prefix.appendContentsOf(String(0))
+        if self.typeGroup == TypeGroup.NewLead {
+            prefix.appendContentsOf(kPMAPICOACH_LEADS)
+        } else if self.typeGroup == TypeGroup.Current {
+            prefix.appendContentsOf(kPMAPICOACH_CURRENT)
+        } else if self.typeGroup == TypeGroup.Old {
+            prefix.appendContentsOf(kPMAPICOACH_OLD)
+        }
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
