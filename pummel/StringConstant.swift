@@ -149,6 +149,7 @@ let kBook = "Book"
 let kLog = "Log"
 let kContinue = "Continue"
 let kNext = "Next"
+let kSave = "Save"
 
 // Button
 let kNavSetting = "SETTINGS"
