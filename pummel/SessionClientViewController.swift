@@ -19,12 +19,16 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var underLineViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var logTableView: UITableView!
     
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
     var isUpComing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.initTableView()
+        
+        self.getListSession()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -48,7 +52,22 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     
     // MARK: Init
     func initTableView() {
-        self.logTableView.estimatedRowHeight = 120
+        self.logTableView.estimatedRowHeight = 100
+    }
+    
+    // MARK: Private function
+    func getListSession() {
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
+        
+        Alamofire.request(.GET, prefix)
+            .responseImage { response in
+                if (response.response?.statusCode == 200) {
+                }
+                
+                self.logTableView.reloadData()
+        }
     }
     
     // MARK: UITableView

@@ -174,7 +174,19 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
+        let tag = tags[indexPath.row]
+        self.performSegueWithIdentifier("goLogSessionDetail", sender: tag)
+    }
+    
+    // MARK: Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "goLogSessionDetail" {
+            let destination = segue.destinationViewController as! LogSessionClientDetailViewController
+            
+            destination.tag = sender as! Tag
+        }
+        
+        
     }
     
 }

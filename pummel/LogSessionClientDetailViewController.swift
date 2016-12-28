@@ -10,7 +10,13 @@ import UIKit
 import Alamofire
 import Foundation
 
-class LogSessionClientDetailViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, FusumaDelegate {
+class LogSessionClientDetailViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, FusumaDelegate, UITextFieldDelegate {
+    var tag: Tag = Tag()
+    
+    @IBOutlet weak var sessionIMV: UIImageView!
+    @IBOutlet weak var sessionTitleLB: UILabel!
+    
+    
     @IBOutlet weak var tappedV: UIView!
     
     @IBOutlet weak var dateTF: UITextField!
@@ -19,14 +25,24 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     @IBOutlet weak var imageSelected : UIImageView!
     @IBOutlet weak var imageScrolView : UIScrollView!
     
+    @IBOutlet weak var timeTF: UITextField!
+    @IBOutlet weak var hourLB: UILabel!
+    @IBOutlet weak var minuteLB: UILabel!
+    
+    @IBOutlet weak var distanceTF: UITextField!
+    @IBOutlet weak var distanceLB: UILabel!
+    let distancePickerView = UIPickerView()
+    
+    @IBOutlet weak var intensityTF: UITextField!
+    @IBOutlet weak var intensityLB: UILabel!
+    let intensityPickerView = UIPickerView()
+    
+    @IBOutlet weak var caloriesTF: UITextField!
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     var coachDetail: NSDictionary!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
-    
-    let tempTextField = UITextField()
-    var timePicker = UIDatePicker()
-    var intensityPicker = UIPickerView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,12 +57,33 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.saveClicked))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
-        self.tempTextField.frame = CGRectZero
-        self.view .addSubview(self.tempTextField)
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LogSessionClientDetailViewController.tappedViewClicked))
         self.tappedV.addGestureRecognizer(tapGesture)
         
+        
+        self.initInformation()
+        self.initTime()
+        self.initDistance()
+        self.initIntensity()
+        
+        self.tappedV.hidden = true
+        
+        self.imagePicker.delegate = self
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.title = kLogSession
+        
+        self.sessionIMV.image = self.sessionIMV.image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        self.sessionIMV.tintColor = UIColor.pmmBrightOrangeColor()
+        self.sessionTitleLB.text = tag.name
+        self.sessionTitleLB.textColor = UIColor.pmmBrightOrangeColor()
+    }
+    
+    // MARK: Init
+    func initInformation() {
         let datePickerView  : UIDatePicker = UIDatePicker()
         datePickerView.datePickerMode = UIDatePickerMode.Date
         datePickerView.backgroundColor = UIColor.blackColor()
@@ -63,22 +100,38 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.contentTV.delegate = self
         self.contentTV.selectedTextRange = self.contentTV.textRangeFromPosition(  self.contentTV.beginningOfDocument, toPosition:self.contentTV.beginningOfDocument)
-        
-        self.imagePicker.delegate = self
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.title = kLogSession
+    func initTime() {
+        let timePickerView  : UIDatePicker = UIDatePicker()
+        timePickerView.datePickerMode = .Time
+        timePickerView.backgroundColor = UIColor.blackColor()
+        timePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
+        timeTF.inputView = timePickerView
+        timePickerView.addTarget(self, action: #selector(self.handleTimePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
     }
     
-    // MARK: Init
+    func initDistance() {
+        self.distancePickerView.delegate = self
+        self.distancePickerView.dataSource = self
+        self.distancePickerView.backgroundColor = UIColor.blackColor()
+        self.distancePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
+        distanceTF.inputView = self.distancePickerView
+    }
+    
+    func initIntensity() {
+        self.intensityPickerView.delegate = self
+        self.intensityPickerView.dataSource = self
+        self.intensityPickerView.backgroundColor = UIColor.blackColor()
+        self.intensityPickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
+        intensityTF.inputView = self.intensityPickerView
+    }
+    
     
     // MARK: Private function
     func tappedViewClicked() {
-        self.tempTextField.resignFirstResponder()
-        
+        self.contentTV.resignFirstResponder()
+        self.caloriesTF.resignFirstResponder()
         self.tappedV.hidden = true
     }
     
@@ -87,7 +140,21 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     }
     
     func saveClicked() {
-        self.navigationController?.popViewControllerAnimated(true)
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
+        
+        let param = [
+            kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            "text" : "Run",
+            "type" : "#RUNNING"]
+        
+        Alamofire.request(.POST, prefix, parameters: param)
+            .responseJSON { response in
+                if (response.response?.statusCode == 200) {
+                }
+                
+        }
     }
     
     func getDetail() {
@@ -160,6 +227,15 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         dateTF.text = timeFormatter.stringFromDate(sender.date)
     }
     
+    func handleTimePicker(sender: UIDatePicker) {
+        let timeFormatter = NSDateFormatter()
+        timeFormatter.dateFormat = "hh"
+        hourLB.text = timeFormatter.stringFromDate(sender.date)
+        
+        timeFormatter.dateFormat = "mm"
+        minuteLB.text = timeFormatter.stringFromDate(sender.date)
+    }
+    
     func showCameraRoll() {
         let fusuma = FusumaViewController()
         fusuma.delegate = self
@@ -168,8 +244,82 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.presentViewController(fusuma, animated: true, completion: nil)
     }
     
+    // MARK: UIPickerViewDelegate
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1;
+    }
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if pickerView == self.distancePickerView {
+            return 100;
+        }
+        
+        if pickerView == self.intensityPickerView {
+            return 3;
+        }
+        
+        return 0
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if pickerView == self.distancePickerView {
+            return String(format: "%ld", row)
+        }
+        
+        if pickerView == self.intensityPickerView {
+            if row == 0 {
+                return "Light"
+            } else if row == 1 {
+                return "Moderate"
+            } else if row == 2 {
+                return "Vigorous"
+            }
+        }
+        
+        return "";
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if pickerView == self.distancePickerView {
+            self.distanceLB.text = String(format: "%ld", row)
+        }
+        
+        if pickerView == self.intensityPickerView {
+            if row == 0 {
+                self.intensityLB.text = "Light"
+            } else if row == 1 {
+                self.intensityLB.text = "Moderate"
+            } else if row == 2 {
+                self.intensityLB.text = "Vigorous"
+            }
+        }
+    }
+    
+    // MARK: UITextFieldDelegate
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        if textField == self.distanceTF {
+            self.distancePickerView.selectedRowInComponent(50)
+        }
+        
+        if textField == self.intensityTF {
+            self.distancePickerView.selectedRowInComponent(1)
+        }
+        
+        self.tappedV.hidden = false
+        
+        return true
+    }
+    
     // MARK: UITextViewDelegate
+    func textViewShouldEndEditing(textView: UITextView) -> Bool {
+        self.tappedV.hidden = false
+        
+        return true
+    }
+    
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        
+        
         let currentText:NSString = textView.text
         let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
         if updatedText.isEmpty {
