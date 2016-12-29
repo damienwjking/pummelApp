@@ -16,6 +16,7 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
     var tags = [Tag]()
     var arrayTags : [NSDictionary] = []
     var offset: Int = 0
+    var tagSelect:Tag?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,8 +109,16 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let tag = tags[indexPath.row]
+        tagSelect = tag
         self.performSegueWithIdentifier("assignSessionToUser", sender: nil)
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "assignSessionToUser" {
+            let destination = segue.destinationViewController as! BookSessionToUserViewController
+            destination.tag = tagSelect
+        }
+    }
 }
 

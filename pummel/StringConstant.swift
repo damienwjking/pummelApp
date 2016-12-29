@@ -114,6 +114,8 @@ let kLimit = "limit"
 let kOffset = "offset"
 let kEmergencyName = "emergencyName"
 let kEmergencyMobile = "emergencyMobile"
+let kType = "type"
+let kUserIdTarget = "userIdTarget"
 
 // String
 let kLogoutSuccess = "Logout successful"
