@@ -17,7 +17,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var completedButton: UIButton!
     @IBOutlet weak var underLineView: UIView!
     @IBOutlet weak var underLineViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var logTableView: UITableView!
+    @IBOutlet weak var sessionTableView: UITableView!
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -27,13 +27,21 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         
         self.initTableView()
-        
-        self.getListSession()
+        self.initNavigationBar()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.getListSession()
+    }
+    
+    // MARK: Init
+    func initTableView() {
+        self.sessionTableView.estimatedRowHeight = 100
+    }
+    
+    func initNavigationBar() {
         let buttonColor = UIColor.hex("FB4311", alpha: 1)
         
         // Remove Button At Left Navigationbar Item
@@ -50,11 +58,6 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         self.tabBarController?.navigationItem.rightBarButtonItem? = rightBarButton
     }
     
-    // MARK: Init
-    func initTableView() {
-        self.logTableView.estimatedRowHeight = 100
-    }
-    
     // MARK: Private function
     func getListSession() {
         var prefix = kPMAPIUSER
@@ -66,7 +69,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
                 if (response.response?.statusCode == 200) {
                 }
                 
-                self.logTableView.reloadData()
+                self.sessionTableView.reloadData()
         }
     }
     
@@ -154,7 +157,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         UIView.animateWithDuration(0.3, animations: {
             self.view.layoutIfNeeded()
         }) { (_) in
-            self.logTableView.reloadData()
+            self.sessionTableView.reloadData()
         }
     }
     
@@ -167,10 +170,9 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         UIView.animateWithDuration(0.3, animations: {
             self.view.layoutIfNeeded()
         }) { (_) in
-            self.logTableView.reloadData()
+            self.sessionTableView.reloadData()
         }
     }
-    
     
     func logButtonClicked() {
         print("log clicked")

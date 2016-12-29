@@ -13,10 +13,6 @@ import Foundation
 class LogSessionClientDetailViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, FusumaDelegate, UITextFieldDelegate {
     var tag: Tag = Tag()
     
-    @IBOutlet weak var sessionIMV: UIImageView!
-    @IBOutlet weak var sessionTitleLB: UILabel!
-    
-    
     @IBOutlet weak var tappedV: UIView!
     
     @IBOutlet weak var dateTF: UITextField!
@@ -47,8 +43,38 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.initNavigationBar()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LogSessionClientDetailViewController.tappedViewClicked))
+        self.tappedV.addGestureRecognizer(tapGesture)
+        
+        self.timeTF.delegate = self
+        self.distanceTF.delegate = self
+        self.intensityTF.delegate = self
+        self.caloriesTF.delegate = self
+        
+        self.initInformation()
+        self.initTime()
+        self.initDistance()
+        self.initIntensity()
+        
+        self.tappedV.userInteractionEnabled = false
+        
+        self.caloriesTF.keyboardAppearance = .Dark
+        self.imagePicker.delegate = self
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.title = String(format: "#%@", (self.tag.name?.uppercaseString)!)
+    }
+    
+    // MARK: Init
+    func initNavigationBar() {
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmWarmGreyTwoColor()]
+        
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
@@ -56,33 +82,9 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.saveClicked))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LogSessionClientDetailViewController.tappedViewClicked))
-        self.tappedV.addGestureRecognizer(tapGesture)
-        
-        
-        self.initInformation()
-        self.initTime()
-        self.initDistance()
-        self.initIntensity()
-        
-        self.tappedV.hidden = true
-        
-        self.imagePicker.delegate = self
+        self.navigationItem.rightBarButtonItem!.enabled = false
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.title = kLogSession
-        
-        self.sessionIMV.image = self.sessionIMV.image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        self.sessionIMV.tintColor = UIColor.pmmBrightOrangeColor()
-        self.sessionTitleLB.text = tag.name
-        self.sessionTitleLB.textColor = UIColor.pmmBrightOrangeColor()
-    }
-    
-    // MARK: Init
     func initInformation() {
         let datePickerView  : UIDatePicker = UIDatePicker()
         datePickerView.datePickerMode = UIDatePickerMode.Date
@@ -130,9 +132,12 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     // MARK: Private function
     func tappedViewClicked() {
+        self.timeTF.resignFirstResponder()
         self.contentTV.resignFirstResponder()
         self.caloriesTF.resignFirstResponder()
-        self.tappedV.hidden = true
+        self.distanceTF.resignFirstResponder()
+        self.intensityTF.resignFirstResponder()
+        self.tappedV.userInteractionEnabled = false
     }
     
     func backClicked() {
@@ -144,18 +149,101 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
         
-        let param = [
+        var imageData : NSData!
+        let type : String!
+        let filename : String!
+        imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+        type = imageJpeg
+        filename = jpgeFile
+        
+        let parameters = [
             kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
             "text" : "Run",
-            "type" : "#RUNNING"]
+            "type" : "#RUNNING",
+            "intensity" : "Light",
+            "distance" : "10",
+            "longtime" : "10",
+            "calorie" : "10",]
         
-        Alamofire.request(.POST, prefix, parameters: param)
-            .responseJSON { response in
-                if (response.response?.statusCode == 200) {
+//        Alamofire.request(.POST, prefix, parameters: param)
+//            .responseJSON { response in
+//                if (response.response?.statusCode == 200) {
+//                }
+//                
+//        }
+        
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+                multipartFormData.appendBodyPart(data: imageData, name: "file",
+                    fileName:filename, mimeType:type)
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key as! String)
                 }
-                
-        }
+            },
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                    
+                case .Success(let upload, _, _):
+                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                        dispatch_async(dispatch_get_main_queue()) {
+//                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                        }
+                    }
+                    upload.validate()
+                    upload.responseJSON { response in
+                        self.navigationItem.rightBarButtonItem?.enabled = true
+//                        self.isPosting = false
+                        self.view.hideToastActivity()
+                        if response.result.error != nil {
+                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                            
+                            
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                // ...
+                            }
+                            alertController.addAction(OKAction)
+                            self.presentViewController(alertController, animated: true) {
+                                // ...
+                            }
+                        } else {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
+                    }
+                    
+                case .Failure( _):
+//                    self.isPosting = false
+                    self.navigationItem.rightBarButtonItem?.enabled = true
+                    self.view.hideToastActivity()
+                    
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                    
+                    
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+            }
+        )
     }
+    
+    func cropAndSave() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        let offset = imageScrolView.contentOffset
+        
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
+        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        return image!
+    }
+
     
     func getDetail() {
         var prefix = kPMAPIUSER
@@ -297,22 +385,14 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     // MARK: UITextFieldDelegate
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        if textField == self.distanceTF {
-            self.distancePickerView.selectedRowInComponent(50)
-        }
-        
-        if textField == self.intensityTF {
-            self.distancePickerView.selectedRowInComponent(1)
-        }
-        
-        self.tappedV.hidden = false
+        self.tappedV.userInteractionEnabled = true
         
         return true
     }
     
     // MARK: UITextViewDelegate
-    func textViewShouldEndEditing(textView: UITextView) -> Bool {
-        self.tappedV.hidden = false
+    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        self.tappedV.userInteractionEnabled = true
         
         return true
     }
@@ -387,6 +467,8 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.navigationItem.rightBarButtonItem?.enabled = true
+            
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
             }
