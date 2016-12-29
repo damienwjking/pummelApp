@@ -7,17 +7,23 @@
 //
 
 import UIKit
+import Alamofire
 
-class BookSessionShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class BookSessionShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
 
     @IBOutlet weak var tbView: UITableView!
+    var image:UIImage?
+    var tag:Tag?
+    var textToPost = ""
+    var userIdSelected = ""
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kDone.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.done))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
@@ -26,6 +32,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         
         let nibName2 = UINib(nibName: "LeadAddedTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName2, forCellReuseIdentifier: "LeadAddedTableViewCell")
+        self.tbView.allowsSelection = false
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -43,7 +50,84 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func done() {
-        self.navigationController?.popToRootViewControllerAnimated(false)
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        self.view.addSubview(activityView)
+        var prefix = kPMAPICOACHS
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPMAPICOACH_BOOK)
+
+        var imageData : NSData!
+        let type : String!
+        let filename : String!
+        if self.image != nil {
+            imageData = UIImageJPEGRepresentation(self.image!, 0.2)
+        }
+        
+        type = imageJpeg
+        filename = jpgeFile
+        let textPost = textToPost
+        var parameters = [String:AnyObject]()
+        var tagname = ""
+        tagname = (self.tag?.name?.uppercaseString)!
+        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textPost, kUserIdTarget:userIdSelected, kType:"#\(tagname)"]
+        print(parameters)
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+                if imageData != nil {
+                    multipartFormData.appendBodyPart(data: imageData, name: "file",
+                        fileName:filename, mimeType:type)
+                }
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                }
+            },
+            encodingCompletion: { encodingResult in
+                self.view.hideToastActivity()
+                switch encodingResult {
+                case .Success(let upload, _, _):
+                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                    }
+                    upload.validate()
+                    upload.responseJSON { response in
+                        
+                        if response.result.error != nil {
+                            print(response.result.error)
+                            activityView.stopAnimating()
+                            activityView.removeFromSuperview()
+                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                // ...
+                            }
+                            alertController.addAction(OKAction)
+                            self.presentViewController(alertController, animated: true) {
+                                // ...
+                            }
+                        } else {
+                            activityView.stopAnimating()
+                            activityView.removeFromSuperview()
+                            self.navigationController?.popToRootViewControllerAnimated(false)
+                        }
+                    }
+                    
+                case .Failure(let encodingError):
+                    print(encodingError)
+                    activityView.stopAnimating()
+                    activityView.removeFromSuperview()
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+            }
+        )
     }
     
     //MARK: TableView
@@ -62,9 +146,9 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier("LeadAddedTableViewCell") as! LeadAddedTableViewCell
-            if cell.arrayMessages.count <= 0 {
-                cell.getMessage()
-            }
+            cell.idUser = self.userIdSelected
+            cell.cv.reloadData()
+            cell.delegateLeadAddedTableViewCell = self
             return cell
         }
         
@@ -79,13 +163,29 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
             cell.titleHeader.text = "PAST CURENT GROUP"
             cell.typeGroup = TypeGroup.Old
         }
+        cell.userIdSelected = self.userIdSelected
+        cell.delegateGroupLeadTableViewCell = self
         if cell.arrayMessages.count <= 0 {
             cell.getMessage()
+        } else {
+            cell.cv.reloadData()
         }
         return cell
     }
     
-
+    func selectUserWithID(userId:String) {
+        if userIdSelected == userId {
+            return
+        }
+        userIdSelected = userId
+        self.tbView.reloadData()
+    }
+    
+    func removeUserWithID(userId:String) {
+        userIdSelected = ""
+        self.tbView.reloadData()
+    }
+    
     /*
     // MARK: - Navigation
 

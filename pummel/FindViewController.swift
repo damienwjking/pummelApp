@@ -118,6 +118,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             let tagIdsArray = aVariable["tagIds"] as! NSArray
             for id in tagIdsArray {
                 prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
+                prefix.appendContentsOf("&")
             }
             
             prefix.appendContentsOf("limit=1")

@@ -583,6 +583,22 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             self.clickOnConnectionImage(indexPath)
             properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"Add Contact"]
         } else {
+            let addToIphoneContact = { (action:UIAlertAction!) -> Void in
+                self.clickOnRowMessage(indexPath)
+            }
+            
+            let setAsCurrentUserUnderTrained = { (action:UIAlertAction!) -> Void in
+                //TODO: 
+                // CALL API .../api/coachs/:userId/old (PUT)
+                // OK --> Refresh scrollview lead
+            }
+            
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+            alertController.addAction(UIAlertAction(title: kAddToIphoneContact, style: UIAlertActionStyle.Default, handler: addToIphoneContact))
+            alertController.addAction(UIAlertAction(title: kSetToCurrentCustomer, style: UIAlertActionStyle.Default, handler: setAsCurrentUserUnderTrained))
+            alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+            
+            self.presentViewController(alertController, animated: true) { }
             self.clickOnRowMessage(indexPath)
         }
         
