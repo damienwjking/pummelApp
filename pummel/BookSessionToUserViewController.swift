@@ -23,6 +23,7 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     var coachDetail: NSDictionary!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
+    var tag:Tag?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -266,5 +267,14 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "gotoShare" {
+            let destination = segue.destinationViewController as! BookSessionShareViewController
+            destination.tag = self.tag
+            destination.image = self.imageSelected.image
+            destination.textToPost = self.contentTV.text
+        }
     }
 }

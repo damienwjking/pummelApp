@@ -13,12 +13,19 @@ enum TypeGroup:Int {
     case NewLead = 0, Current, Old
 }
 
+@objc protocol GroupLeadTableViewCellDelegate: class {
+    optional func selectUserWithID(userId:String)
+}
+
+
 class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
     var arrayMessages: [NSDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
     var typeGroup:TypeGroup!
+    weak var delegateGroupLeadTableViewCell: GroupLeadTableViewCellDelegate?
+    var userIdSelected = ""
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -56,6 +63,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             targetUserId = "\(val)"
         }
         
+        cell.nameUser.text = "Name"
         var prefixUser = kPMAPIUSER
         prefixUser.appendContentsOf(targetUserId)
         Alamofire.request(.GET, prefixUser)
@@ -89,7 +97,29 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     func collectionView(collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let userInfo = arrayMessages[indexPath.row]
+        
+        var targetUserId = ""
+        if let val = userInfo["userId"] as? Int {
+            targetUserId = "\(val)"
+        }
+        
+        if userIdSelected == targetUserId {
+            return CGSize(width: 0,height: 90)
+        }
         return CGSize(width: 90,height: 90)
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if self.delegateGroupLeadTableViewCell != nil {
+            let userInfo = arrayMessages[indexPath.row]
+            
+            var targetUserId = ""
+            if let val = userInfo["userId"] as? Int {
+                targetUserId = "\(val)"
+            }
+            self.delegateGroupLeadTableViewCell?.selectUserWithID!(targetUserId)
+        }
     }
     
     func getMessage() {
