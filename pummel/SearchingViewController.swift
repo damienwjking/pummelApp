@@ -200,9 +200,9 @@ class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     
         for id in tagIdsArray {
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
+             prefix.appendContentsOf("&")
         }
-        
-        let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
+        let coordinateParams = String(format: "%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
         prefix.appendContentsOf(coordinateParams)
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
