@@ -39,6 +39,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     var coachDetail: NSDictionary!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
+    var intensityTitleArray = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,13 +112,14 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         timePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         timeTF.inputView = timePickerView
         timePickerView.addTarget(self, action: #selector(self.handleTimePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        
+        self.setTimeLBWithDate(NSDate())
     }
     
     func initDistance() {
         self.distancePickerView.delegate = self
         self.distancePickerView.dataSource = self
         self.distancePickerView.backgroundColor = UIColor.blackColor()
-        self.distancePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         distanceTF.inputView = self.distancePickerView
     }
     
@@ -125,8 +127,11 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.intensityPickerView.delegate = self
         self.intensityPickerView.dataSource = self
         self.intensityPickerView.backgroundColor = UIColor.blackColor()
-        self.intensityPickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         intensityTF.inputView = self.intensityPickerView
+        
+        self.intensityTitleArray.append("Light")
+        self.intensityTitleArray.append("Moderate")
+        self.intensityTitleArray.append("Vigorous")
     }
     
     
@@ -163,7 +168,8 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             "intensity" : "Light",
             "distance" : "10",
             "longtime" : "10",
-            "calorie" : "10",]
+            "calorie" : "10",
+            ]
         
 //        Alamofire.request(.POST, prefix, parameters: param)
 //            .responseJSON { response in
@@ -244,6 +250,14 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         return image!
     }
 
+    func setTimeLBWithDate(date: NSDate) {
+        let timeFormatter = NSDateFormatter()
+        timeFormatter.dateFormat = "HH"
+        hourLB.text = timeFormatter.stringFromDate(date)
+        
+        timeFormatter.dateFormat = "mm"
+        minuteLB.text = timeFormatter.stringFromDate(date)
+    }
     
     func getDetail() {
         var prefix = kPMAPIUSER
@@ -316,12 +330,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     }
     
     func handleTimePicker(sender: UIDatePicker) {
-        let timeFormatter = NSDateFormatter()
-        timeFormatter.dateFormat = "hh"
-        hourLB.text = timeFormatter.stringFromDate(sender.date)
-        
-        timeFormatter.dateFormat = "mm"
-        minuteLB.text = timeFormatter.stringFromDate(sender.date)
+        self.setTimeLBWithDate(sender.date)
     }
     
     func showCameraRoll() {
@@ -349,19 +358,29 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         return 0
     }
     
+    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        var title = ""
+        
+        if pickerView == self.distancePickerView {
+            title = String(format: "%ld", row)
+            
+        }
+        
+        if pickerView == self.intensityPickerView {
+            title = self.intensityTitleArray[row]
+        }
+        
+        let attString = NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+        return attString;
+    }
+    
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == self.distancePickerView {
             return String(format: "%ld", row)
         }
         
         if pickerView == self.intensityPickerView {
-            if row == 0 {
-                return "Light"
-            } else if row == 1 {
-                return "Moderate"
-            } else if row == 2 {
-                return "Vigorous"
-            }
+            return self.intensityTitleArray[row]
         }
         
         return "";
@@ -373,13 +392,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         }
         
         if pickerView == self.intensityPickerView {
-            if row == 0 {
-                self.intensityLB.text = "Light"
-            } else if row == 1 {
-                self.intensityLB.text = "Moderate"
-            } else if row == 2 {
-                self.intensityLB.text = "Vigorous"
-            }
+            self.intensityLB.text = self.intensityTitleArray[row]
         }
     }
     
@@ -388,6 +401,11 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.tappedV.userInteractionEnabled = true
         
         return true
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        self.intensityPickerView.reloadAllComponents()
+        
     }
     
     // MARK: UITextViewDelegate

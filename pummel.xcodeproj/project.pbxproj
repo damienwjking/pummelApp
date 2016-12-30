@@ -32,8 +32,8 @@
 		BA0B61ED1E004E0800A98C82 /* miniPummelLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */; };
 		BA0B61EE1E004E0800A98C82 /* miniPummelLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */; };
 		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
-		BA1043051E0826EE006DB43D /* LogComingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043041E0826EE006DB43D /* LogComingTableViewCell.swift */; };
-		BA1043071E083749006DB43D /* LogCompletedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043061E083749006DB43D /* LogCompletedTableViewCell.swift */; };
+		BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043061E083749006DB43D /* LogTableViewCell.swift */; };
+		BA131BFF1E16B76400CA9A83 /* LogTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */; };
 		BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */; };
 		BA141CB81E0ADD3A0076D4B8 /* ActivityCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */; };
 		BA141CBD1E0AFB060076D4B8 /* sessionIntensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA141CB91E0AFB060076D4B8 /* sessionIntensity.png */; };
@@ -344,8 +344,8 @@
 		BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@3x.png"; sourceTree = "<group>"; };
 		BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = miniPummelLogo.png; sourceTree = "<group>"; };
 		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
-		BA1043041E0826EE006DB43D /* LogComingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogComingTableViewCell.swift; sourceTree = "<group>"; };
-		BA1043061E083749006DB43D /* LogCompletedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogCompletedTableViewCell.swift; sourceTree = "<group>"; };
+		BA1043061E083749006DB43D /* LogTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTableViewCell.swift; sourceTree = "<group>"; };
+		BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogTableViewCell.xib; sourceTree = "<group>"; };
 		BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
 		BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityCell.xib; sourceTree = "<group>"; };
 		BA141CB91E0AFB060076D4B8 /* sessionIntensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionIntensity.png; sourceTree = "<group>"; };
@@ -729,8 +729,6 @@
 				F9F3CC401CE221F8007F68A5 /* UserTableViewCell.swift */,
 				F9FE13C71CEAF5F9004ABE34 /* MessageTableViewCell.swift */,
 				F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */,
-				BA1043041E0826EE006DB43D /* LogComingTableViewCell.swift */,
-				BA1043061E083749006DB43D /* LogCompletedTableViewCell.swift */,
 				BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */,
 				F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */,
 				F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */,
@@ -767,6 +765,8 @@
 		F968470B1E06B5BF009EB06C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				BA1043061E083749006DB43D /* LogTableViewCell.swift */,
+				BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */,
 				BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */,
 				BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */,
 				E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */,
@@ -1432,6 +1432,7 @@
 				9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */,
 				F92994281D35E7D0000C00D5 /* fit2.jpg in Resources */,
 				F98C41411CF25C5F00ECC66E /* LaunchScreen.storyboard in Resources */,
+				BA131BFF1E16B76400CA9A83 /* LogTableViewCell.xib in Resources */,
 				F970A2BE1D264D9B00932BFC /* pin@3x.png in Resources */,
 				F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */,
 				BA03148D1E155B4D00982622 /* longtime.png in Resources */,
@@ -1593,7 +1594,7 @@
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
 				E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */,
 				F9CF54E51D801F2100BE144F /* UserProfileViewController.swift in Sources */,
-				BA1043071E083749006DB43D /* LogCompletedTableViewCell.swift in Sources */,
+				BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */,
 				F970A2A61D26384400932BFC /* Scheduler.swift in Sources */,
 				F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */,
 				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
@@ -1607,7 +1608,6 @@
 				F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */,
 				E86A65D91E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift in Sources */,
 				F9CF54D51D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift in Sources */,
-				BA1043051E0826EE006DB43D /* LogComingTableViewCell.swift in Sources */,
 				F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */,
 				F9EAE8F71D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift in Sources */,
 				F9EAE8E11D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift in Sources */,
