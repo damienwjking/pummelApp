@@ -57,30 +57,6 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     // MARK: Private function
-    func convertDateTimeFromString(dateTimeString: String) -> String{
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = kFullDateFormat
-        let date = dateFormatter.dateFromString(dateTimeString)
-        
-        let newDateFormatter = NSDateFormatter()
-        newDateFormatter.dateFormat = "EEE F MMM"
-        let newDateString = newDateFormatter.stringFromDate(date!)
-        
-        return newDateString
-    }
-    
-    func getHourFromString(dateTimeString: String) -> String {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = kFullDateFormat
-        let date = dateFormatter.dateFromString(dateTimeString)
-        
-        let newDateFormatter = NSDateFormatter()
-        newDateFormatter.dateFormat = "ha"
-        let newDateString = newDateFormatter.stringFromDate(date!).uppercaseString
-        
-        return newDateString
-    }
-    
     func checkUpCommingSesion(session: Session) {
         let now = NSDate()
         
@@ -157,54 +133,7 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         
         let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
         
-        cell.nameLB.text = session.text
-        cell.messageLB.text = self.convertDateTimeFromString(session.createdAt!)
-        cell.timeLB.text = self.getHourFromString(session.datetime!)
-        cell.rateButton.hidden = self.isUpComing
-        
-        cell.typeLB.text = session.type
-        if session.type?.isEmpty == true {
-            cell.typeLBHeightConstraint.constant = 0
-            cell.typeLBBottomConstraint.constant = 0
-        } else {
-            cell.typeLBHeightConstraint.constant = 21
-            cell.typeLBBottomConstraint.constant = 5.5
-        }
-        
-        var prefix = kPMAPIUSER
-//        if session.coachId != nil {
-//            prefix.appendContentsOf(String(format:"%ld", session.coachId!))
-//        } else {
-//            prefix.appendContentsOf(String(format:"%ld", session.userId!))
-//        }
-        prefix.appendContentsOf(String(format:"%ld", session.userId!))
-        
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                let userDetail = JSON as! NSDictionary
-                if !(userDetail[kImageUrl] is NSNull) {
-                    var link = kPMAPI
-                    link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight160)
-                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                        cell.avatarIMV.image = imageRes
-                    } else {
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                cell.avatarIMV.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                        }
-                    }
-                }
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
-        }
-        
-        cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        cell.setData(session, hiddenRateButton: self.isUpComing)
         
         return cell
     }

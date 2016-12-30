@@ -36,6 +36,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     @IBOutlet weak var caloriesTF: UITextField!
     
     let defaults = NSUserDefaults.standardUserDefaults()
+    let titleButton = UIButton()
     var coachDetail: NSDictionary!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
@@ -68,13 +69,31 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.title = String(format: "#%@", (self.tag.name?.uppercaseString)!)
+        self.titleButton.titleLabel?.font = UIFont.pmmMonReg13()
+        self.titleButton.setTitleColor(UIColor.pmmWarmGreyTwoColor(), forState: .Normal)
+        self.titleButton.setTitle(String(format: "#%@", (self.tag.name?.uppercaseString)!), forState: .Normal)
+        self.titleButton.sizeToFit()
+        self.titleButton.addTarget(self, action: #selector(self.titleButtonClicked), forControlEvents: .TouchUpInside)
+        
+        let navigationBar = self.navigationController?.navigationBar
+        navigationBar!.addSubview(self.titleButton)
+        
+        self.titleButton.frame = CGRectMake(((navigationBar?.frame.width)! - self.titleButton.frame.width) / 2,
+                                            0,
+                                            self.titleButton.frame.width,
+                                            (navigationBar?.frame.height)!)
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.titleButton.removeFromSuperview()
     }
     
     // MARK: Init
     func initNavigationBar() {
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmWarmGreyTwoColor()]
         
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
@@ -147,6 +166,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     func backClicked() {
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func titleButtonClicked() {
+        
     }
     
     func saveClicked() {
