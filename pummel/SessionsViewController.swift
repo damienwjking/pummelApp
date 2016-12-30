@@ -591,6 +591,31 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 //TODO: 
                 // CALL API .../api/coachs/:userId/old (PUT)
                 // OK --> Refresh scrollview lead
+                
+                let message = self.arrayMessages[indexPath.row]
+                let conversations = message[kConversation] as! NSDictionary
+                let conversationUsers = conversations[kConversationUser] as! NSArray
+                var targetUser = conversationUsers[0] as! NSDictionary
+                let currentUserid = self.defaults.objectForKey(k_PM_CURRENT_ID) as! String
+                var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
+                if (currentUserid == targetUserId){
+                    targetUser = conversationUsers[1] as! NSDictionary
+                    targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
+                }
+                
+                var prefix = kPMAPICOACHS
+                prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(kPMAPICOACH_OLD)
+                prefix.appendContentsOf("/")
+                print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                print(targetUser[kUserId]!)
+                Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:targetUser[kUserId]!])
+                    .responseJSON { response in
+                        print(response)
+                        if response.response?.statusCode == 200 {
+                            self.scrollTableView.reloadData()
+                        }
+                }
             }
             
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)

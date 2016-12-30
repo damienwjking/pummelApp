@@ -117,6 +117,7 @@ let kEmergencyName = "emergencyName"
 let kEmergencyMobile = "emergencyMobile"
 let kType = "type"
 let kUserIdTarget = "userIdTarget"
+let kUserIdRequest = "userIdRequest"
 
 // String
 let kLogoutSuccess = "Logout successful"
