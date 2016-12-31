@@ -202,7 +202,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: "Move to Old", style: UIAlertActionStyle.Default, handler: clickMoveToOld))
         alertController.addAction(UIAlertAction(title: "Share", style: UIAlertActionStyle.Destructive, handler: clickShare))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Default, handler: nil))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
     }
@@ -236,7 +236,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: "Move to Current", style: UIAlertActionStyle.Default, handler: clickMoveToCurrent))
         alertController.addAction(UIAlertAction(title: "Share", style: UIAlertActionStyle.Destructive, handler: clickShare))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Default, handler: nil))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
     }
