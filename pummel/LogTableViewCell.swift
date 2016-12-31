@@ -42,8 +42,19 @@ class LogTableViewCell: UITableViewCell {
     
     func setData(session: Session, hiddenRateButton: Bool) {
         self.nameLB.text = session.text
-        self.messageLB.text = self.convertDateTimeFromString(session.createdAt!)
-        self.timeLB.text = self.getHourFromString(session.datetime!)
+        
+        if session.createdAt?.isEmpty == false {
+            self.messageLB.text = self.convertDateTimeFromString(session.createdAt!)
+        } else {
+            self.messageLB.text = ""
+        }
+        
+        if session.datetime?.isEmpty == false {
+            self.timeLB.text = self.getHourFromString(session.datetime!)
+        } else {
+            self.timeLB.text = ""
+        }
+        
         self.rateButton.hidden = hiddenRateButton
         
         self.typeLB.text = session.type
@@ -91,7 +102,7 @@ class LogTableViewCell: UITableViewCell {
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
     }
     
-    func convertDateTimeFromString(dateTimeString: String) -> String{
+    func convertDateTimeFromString(dateTimeString: String) -> String {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
         let date = dateFormatter.dateFromString(dateTimeString)
