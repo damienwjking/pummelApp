@@ -36,6 +36,7 @@ class ConnectViewController: UIViewController {
     var coachDetail: NSDictionary!
     var isFromProfile: Bool = false
     var isFromFeed: Bool = false
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -157,6 +158,16 @@ class ConnectViewController: UIViewController {
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("Event", properties: properties)
+                
+                var prefix = kPMAPIUSER
+                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(kPMAPI_LEAD)
+                prefix.appendContentsOf("/")
+                Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:coachDetail[kId]!])
+                    .responseJSON { response in
+                        if response.response?.statusCode == 200 {
+                        }
+                }
             }
         }
         

@@ -23,6 +23,9 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     
     var isUpComing = true
     
+    var upCommingSessions = [Session]()
+    var completedSessions = [Session]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,104 +42,100 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     // MARK: Init
     func initTableView() {
         self.sessionTableView.estimatedRowHeight = 100
+        
+        let nibName = UINib(nibName: "LogTableViewCell", bundle:nil)
+        self.sessionTableView.registerNib(nibName, forCellReuseIdentifier: "LogTableViewCell")
     }
     
     func initNavigationBar() {
-        let buttonColor = UIColor.hex("FB4311", alpha: 1)
-        
         // Remove Button At Left Navigationbar Item
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         
         // ADD Log Button At Right Navigationbar Item
-        let rightButton = UIButton()
-        rightButton.titleLabel?.font = .pmmMonReg13()
-        rightButton.setTitle(kLog, forState: .Normal)
-        rightButton.setTitleColor(buttonColor, forState: .Normal)
-        rightButton.addTarget(self, action: #selector(SessionClientViewController.logButtonClicked), forControlEvents: .TouchUpInside)
-        let rightBarButton = UIBarButtonItem(customView: rightButton)
-        rightButton.sizeToFit()
-        self.tabBarController?.navigationItem.rightBarButtonItem? = rightBarButton
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kLog, style:.Plain, target: self, action: #selector(SessionClientViewController.logButtonClicked))
+        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
     }
     
     // MARK: Private function
+    func checkUpCommingSesion(session: Session) {
+        let now = NSDate()
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = kFullDateFormat
+        let sessionDate = dateFormatter.dateFromString(session.createdAt!)
+        
+        if now.compare(sessionDate!) == .OrderedDescending {
+            self.upCommingSessions.append(session)
+        } else {
+            self.completedSessions.append(session)
+        }
+    }
+    
     func getListSession() {
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
         
         Alamofire.request(.GET, prefix)
-            .responseImage { response in
-                if (response.response?.statusCode == 200) {
+            .responseJSON { response in
+                switch response.result {
+                case .Success(let JSON):
+                    let sessionInfo = JSON as! [NSDictionary]
+                    if (sessionInfo.count > 0) {
+                        for i in 0 ..< sessionInfo.count {
+                            let sessionContent = sessionInfo[i]
+                            let session = Session()
+                            
+                            session.id = sessionContent.objectForKey("id") as? Int
+                            session.text = sessionContent.objectForKey("text") as? String
+                            session.imageUrl = sessionContent.objectForKey("imageUrl") as? String
+                            session.type = sessionContent.objectForKey("type") as? String
+                            session.status = sessionContent.objectForKey("status") as? Int
+                            session.userId = sessionContent.objectForKey("userId") as? Int
+                            session.coachId = sessionContent.objectForKey("coachId") as? Int
+                            session.uploadId = sessionContent.objectForKey("uploadId") as? String
+                            session.datetime = sessionContent.objectForKey("datetime") as? String
+                            session.createdAt = sessionContent.objectForKey("createdAt") as? String
+                            session.updatedAt = sessionContent.objectForKey("updatedAt") as? String
+                            session.distance = sessionContent.objectForKey("distance") as? Int
+                            session.longtime = sessionContent.objectForKey("longtime") as? Int
+                            session.intensity = sessionContent.objectForKey("intensity") as? Int
+                            session.calorie = sessionContent.objectForKey("calorie") as? Int
+                            
+                            self.checkUpCommingSesion(session)
+                        }
+                        
+                        self.sessionTableView.reloadData()
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
                 }
-                
-                self.sessionTableView.reloadData()
         }
     }
     
     // MARK: UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.isUpComing == true {
-            return 6
+        if self.isUpComing {
+            return self.upCommingSessions.count
         } else {
-            return 4;
+            return self.completedSessions.count
         }
-        
-        return 0;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if self.isUpComing == true {
-            let cell = tableView.dequeueReusableCellWithIdentifier("LogComingTableViewCell") as! LogComingTableViewCell
-            
-            cell.nameLB.text = "SARAH"
-            cell.messageLB.text = "tue 19th dec"
-            cell.timeLB.text = "4PM"
-            
-            let prefix = "http://api.pummel.fit/api/uploads/235/render?width=125.0&height=125.0"
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                cell.avatarIMV.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            cell.avatarIMV.image = imageRes
-                        }
-                }
-            }
-            
-            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
-            
-            return cell
+        var session = Session()
+        
+        if self.isUpComing {
+            session = self.upCommingSessions[indexPath.row]
         } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier("LogCompletedTableViewCell") as! LogCompletedTableViewCell
-            
-            cell.nameLB.text = "SARAH"
-            cell.messageLB.text = "tue 19th dec"
-            cell.timeLB.text = "4PM"
-            cell.tagActionLB.text = "#RUNNING"
-            
-            let prefix = "http://api.pummel.fit/api/uploads/235/render?width=125.0&height=125.0"
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                cell.avatarIMV.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            cell.avatarIMV.image = imageRes
-                        }
-                }
-            }
-            
-            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
-            
-            return cell
+            session = self.completedSessions[indexPath.row]
         }
         
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
+        
+        cell.setData(session, hiddenRateButton: self.isUpComing)
+        
+        return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -150,26 +149,26 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     // MARK: Outlet function
     
     @IBAction func upcomingButtonClicked(sender: AnyObject) {
-        self.isUpComing = true
-        
         self.view.layoutIfNeeded()
         self.underLineViewLeadingConstraint.constant = 0
         UIView.animateWithDuration(0.3, animations: {
             self.view.layoutIfNeeded()
         }) { (_) in
+            self.isUpComing = true
+            
             self.sessionTableView.reloadData()
         }
     }
     
     
     @IBAction func completedButtonClicked(sender: AnyObject) {
-        self.isUpComing = false
-        
         self.view.layoutIfNeeded()
         self.underLineViewLeadingConstraint.constant = self.upcomingButton.frame.size.width
         UIView.animateWithDuration(0.3, animations: {
             self.view.layoutIfNeeded()
         }) { (_) in
+            self.isUpComing = false
+            
             self.sessionTableView.reloadData()
         }
     }
