@@ -41,15 +41,12 @@ class LogTableViewCell: UITableViewCell {
     func setData(session: Session, hiddenRateButton: Bool) {
         self.textLB.text = session.text
         
-        if session.createdAt?.isEmpty == false {
-            self.dateLB.text = self.convertDateTimeFromString(session.datetime!)
+        if session.datetime?.isEmpty == false {
+            let localDateTimeString = self.convertUTCTimeToLocalTime(session.datetime!)
+            self.dateLB.text = self.convertDateTimeFromString(localDateTimeString)
+            self.timeLB.text = self.getHourFromString(localDateTimeString)
         } else {
             self.dateLB.text = ""
-        }
-        
-        if session.datetime?.isEmpty == false {
-            self.timeLB.text = self.getHourFromString(session.datetime!)
-        } else {
             self.timeLB.text = ""
         }
         
@@ -113,11 +110,23 @@ class LogTableViewCell: UITableViewCell {
         
         let newDateFormatter = NSDateFormatter()
         newDateFormatter.dateFormat = "ha"
-        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+        newDateFormatter.timeZone = NSTimeZone.localTimeZone()
         let newDateString = newDateFormatter.stringFromDate(date!).uppercaseString
         
         return newDateString
     }
-
     
+    func convertUTCTimeToLocalTime(dateTimeString: String) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = kFullDateFormat
+        dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+        let date = dateFormatter.dateFromString(dateTimeString)
+        
+        let newDateFormatter = NSDateFormatter()
+        newDateFormatter.dateFormat = kFullDateFormat
+        newDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        let newDateString = newDateFormatter.stringFromDate(date!)
+        
+        return newDateString
+    }
 }

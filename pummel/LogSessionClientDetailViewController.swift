@@ -193,6 +193,21 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.tappedV.userInteractionEnabled = false
     }
     
+    func convertLocalTimeToUTCTime(dateTimeString: String) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
+        
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        let date = dateFormatter.dateFromString(dateTimeString)
+        
+        let newDateFormatter = NSDateFormatter()
+        newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
+        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+        let newDateString = newDateFormatter.stringFromDate(date!)
+        
+        return newDateString
+    }
+    
     func backClicked() {
         self.navigationController?.popViewControllerAnimated(true)
     }
@@ -225,7 +240,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             let filename : String! = jpgeFile
             
             let calorieSelected : String = String((self.caloriesTF.text != "") ? Int(self.caloriesTF.text!)! : 0)
-            let selectedDate = self.dateTF.text
+            let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
             let parameters = [
                 kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
                 "text" : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
