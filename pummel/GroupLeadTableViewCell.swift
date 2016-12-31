@@ -14,7 +14,7 @@ enum TypeGroup:Int {
 }
 
 @objc protocol GroupLeadTableViewCellDelegate: class {
-    optional func selectUserWithID(userId:String)
+    optional func selectUserWithID(userId:String, typeGroup:Int)
 }
 
 
@@ -118,7 +118,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             if let val = userInfo["userId"] as? Int {
                 targetUserId = "\(val)"
             }
-            self.delegateGroupLeadTableViewCell?.selectUserWithID!(targetUserId)
+            self.delegateGroupLeadTableViewCell?.selectUserWithID!(targetUserId, typeGroup: self.typeGroup.rawValue)
         }
     }
     
@@ -138,7 +138,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             case .Success(let JSON):
                 let arrayMessageT = JSON as! [NSDictionary]
                 if (arrayMessageT.count > 0) {
-                    self.arrayMessages += arrayMessageT
+                    self.arrayMessages = arrayMessageT
                     self.cv.reloadData()
                 }
             case .Failure(let error):
