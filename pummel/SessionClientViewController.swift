@@ -42,7 +42,6 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     // MARK: Init
     func initTableView() {
         self.sessionTableView.estimatedRowHeight = 100
-        
         let nibName = UINib(nibName: "LogTableViewCell", bundle:nil)
         self.sessionTableView.registerNib(nibName, forCellReuseIdentifier: "LogTableViewCell")
     }
@@ -50,7 +49,6 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     func initNavigationBar() {
         // Remove Button At Left Navigationbar Item
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
-        
         // ADD Log Button At Right Navigationbar Item
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kLog, style:.Plain, target: self, action: #selector(SessionClientViewController.logButtonClicked))
         self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
@@ -59,7 +57,6 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     // MARK: Private function
     func checkUpCommingSesion(session: Session) {
         let now = NSDate()
-        
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
         let sessionDate = dateFormatter.dateFromString(session.createdAt!)

@@ -603,7 +603,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                     targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
                 }
                 
-                var prefix = kPMAPICOACHS
+                var prefix = kPMAPICOACHES
                 prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
                 prefix.appendContentsOf(kPMAPICOACH_OLD)
                 prefix.appendContentsOf("/")

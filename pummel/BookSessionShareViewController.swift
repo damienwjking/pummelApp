@@ -51,6 +51,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func done() {
+        self.view.makeToastActivity(message: "Saving")
         var prefix = kPMAPICOACHES
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPMAPICOACH_BOOK)

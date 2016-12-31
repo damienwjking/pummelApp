@@ -24,7 +24,6 @@
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
 		9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */; };
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
-		BA03148C1E155B4D00982622 /* distance.png in Resources */ = {isa = PBXBuildFile; fileRef = BA03148A1E155B4D00982622 /* distance.png */; };
 		BA03148D1E155B4D00982622 /* longtime.png in Resources */ = {isa = PBXBuildFile; fileRef = BA03148B1E155B4D00982622 /* longtime.png */; };
 		BA03148F1E155C3700982622 /* calorie.png in Resources */ = {isa = PBXBuildFile; fileRef = BA03148E1E155C3700982622 /* calorie.png */; };
 		BA0314911E155FC000982622 /* intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0314901E155FC000982622 /* intensity.png */; };
@@ -64,6 +63,8 @@
 		F91727661DB3BDCD00C6E612 /* like-image.png in Resources */ = {isa = PBXBuildFile; fileRef = F91727651DB3BDCD00C6E612 /* like-image.png */; };
 		F917276A1DB3DF5600C6E612 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91727691DB3DF5600C6E612 /* Spinner.swift */; };
 		F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */; };
+		F9248D8C1E174CB70019491F /* icon_distance.png in Resources */ = {isa = PBXBuildFile; fileRef = F9248D8B1E174CB70019491F /* icon_distance.png */; };
+		F9248D8E1E174D310019491F /* icon_calories.png in Resources */ = {isa = PBXBuildFile; fileRef = F9248D8D1E174D310019491F /* icon_calories.png */; };
 		F92994251D35E7D0000C00D5 /* fit3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F92994201D35E7D0000C00D5 /* fit3.jpg */; };
 		F92994261D35E7D0000C00D5 /* fit0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F92994211D35E7D0000C00D5 /* fit0.jpg */; };
 		F92994271D35E7D0000C00D5 /* fit4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F92994221D35E7D0000C00D5 /* fit4.jpg */; };
@@ -336,7 +337,6 @@
 		9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Client.storyboard; path = ../Client.storyboard; sourceTree = "<group>"; };
 		9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		A23FD1E636ACA8E6CDC611DF /* Pods-pummel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pummel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pummel/Pods-pummel.debug.xcconfig"; sourceTree = "<group>"; };
-		BA03148A1E155B4D00982622 /* distance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = distance.png; sourceTree = "<group>"; };
 		BA03148B1E155B4D00982622 /* longtime.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = longtime.png; sourceTree = "<group>"; };
 		BA03148E1E155C3700982622 /* calorie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calorie.png; sourceTree = "<group>"; };
 		BA0314901E155FC000982622 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
@@ -378,6 +378,8 @@
 		F91727691DB3DF5600C6E612 /* Spinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		F91C17571DBEDC42004D4789 /* Pummel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pummel.entitlements; sourceTree = "<group>"; };
 		F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		F9248D8B1E174CB70019491F /* icon_distance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_distance.png; sourceTree = "<group>"; };
+		F9248D8D1E174D310019491F /* icon_calories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_calories.png; sourceTree = "<group>"; };
 		F92994201D35E7D0000C00D5 /* fit3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = fit3.jpg; sourceTree = "<group>"; };
 		F92994211D35E7D0000C00D5 /* fit0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = fit0.jpg; sourceTree = "<group>"; };
 		F92994221D35E7D0000C00D5 /* fit4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = fit4.jpg; sourceTree = "<group>"; };
@@ -800,8 +802,9 @@
 			isa = PBXGroup;
 			children = (
 				BA0314901E155FC000982622 /* intensity.png */,
+				F9248D8D1E174D310019491F /* icon_calories.png */,
+				F9248D8B1E174CB70019491F /* icon_distance.png */,
 				BA03148E1E155C3700982622 /* calorie.png */,
-				BA03148A1E155B4D00982622 /* distance.png */,
 				BA03148B1E155B4D00982622 /* longtime.png */,
 				BACB29E41E09AFFD00C41FAF /* sessionRunning.png */,
 				BA141CB91E0AFB060076D4B8 /* sessionIntensity.png */,
@@ -1423,6 +1426,7 @@
 				F9FE14581CEBD29B004ABE34 /* FSAlbumViewCell.xib in Resources */,
 				BA0314911E155FC000982622 /* intensity.png in Resources */,
 				F9FE14611CEBD29B004ABE34 /* rotatecamera@3x.png in Resources */,
+				F9248D8E1E174D310019491F /* icon_calories.png in Resources */,
 				F970A2BC1D264D9B00932BFC /* pin.png in Resources */,
 				F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */,
 				F9827F121CBC752E00841BF1 /* add@2x.png in Resources */,
@@ -1460,7 +1464,6 @@
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
 				F98C41B51CF2650F00ECC66E /* close@3x.png in Resources */,
 				F9827F511CBDEE3C00841BF1 /* attention.png in Resources */,
-				BA03148C1E155B4D00982622 /* distance.png in Resources */,
 				F929942F1D35EB58000C00D5 /* whiteArrow.png in Resources */,
 				BACB29E51E09AFFD00C41FAF /* sessionRunning.png in Resources */,
 				F9CDEEF11CF6BA65003DB0B6 /* closewhite@2x.png in Resources */,
@@ -1478,6 +1481,7 @@
 				F9827F251CBC757600841BF1 /* password@3x.png in Resources */,
 				F9827F531CBDEE3C00841BF1 /* attention@3x.png in Resources */,
 				F9ABEAE61DC4B8170084B70E /* Connection.storyboard in Resources */,
+				F9248D8C1E174CB70019491F /* icon_distance.png in Resources */,
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
 				BA141CBD1E0AFB060076D4B8 /* sessionIntensity.png in Resources */,
 				F92994271D35E7D0000C00D5 /* fit4.jpg in Resources */,

@@ -35,12 +35,21 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     @IBOutlet weak var caloriesTF: UITextField!
     
+    @IBOutlet weak var hoursTextLB: UILabel!
+    @IBOutlet weak var minuteTextLB: UILabel!
+    @IBOutlet weak var distanceTextLB: UILabel!
+    @IBOutlet weak var mileTextLB: UILabel!
+    
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     let titleButton = UIButton()
     var coachDetail: NSDictionary!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
     var intensityTitleArray = [String]()
+    var intensitySelected: String = "Light"
+    var distanceSelected: String = "0"
+    var longtimeSelected: String = "0"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +63,24 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.distanceTF.delegate = self
         self.intensityTF.delegate = self
         self.caloriesTF.delegate = self
+        self.timeTF.font = UIFont.pmmMonReg13()
+        self.distanceTF.font = UIFont.pmmMonReg13()
+        self.intensityTF.font = UIFont.pmmMonReg13()
+        self.caloriesTF.font = UIFont.pmmMonReg13()
+        self.hourLB.font = UIFont.pmmMonReg13()
+        self.minuteLB.font = UIFont.pmmMonReg13()
+        self.distanceLB.font = UIFont.pmmMonReg13()
+        self.intensityLB.font = UIFont.pmmMonReg13()
+        let attributes = [
+            NSForegroundColorAttributeName: UIColor.darkGrayColor(),
+            NSFontAttributeName : UIFont.pmmMonReg13()
+        ]
+        self.hoursTextLB.font =  UIFont.pmmMonReg13()
+        self.minuteTextLB.font =  UIFont.pmmMonReg13()
+        self.distanceTextLB.font =  UIFont.pmmMonReg13()
+        self.mileTextLB.font =  UIFont.pmmMonReg13()
         
+        self.caloriesTF.attributedPlaceholder = NSAttributedString(string: "Calories", attributes:attributes)
         self.initInformation()
         self.initTime()
         self.initDistance()
@@ -68,9 +94,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        self.hourLB.text = "0"
+        self.minuteLB.text = "0"
         self.titleButton.titleLabel?.font = UIFont.pmmMonReg13()
-        self.titleButton.setTitleColor(UIColor.pmmWarmGreyTwoColor(), forState: .Normal)
+        self.titleButton.setTitleColor(UIColor(white: 32.0 / 255.0, alpha: 1.0), forState: .Normal)
         self.titleButton.setTitle(String(format: "#%@", (self.tag.name?.uppercaseString)!), forState: .Normal)
         self.titleButton.sizeToFit()
         self.titleButton.addTarget(self, action: #selector(self.titleButtonClicked), forControlEvents: .TouchUpInside)
@@ -82,7 +109,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
                                             0,
                                             self.titleButton.frame.width,
                                             (navigationBar?.frame.height)!)
-        
+
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -102,22 +129,23 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.saveClicked))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
-        self.navigationItem.rightBarButtonItem!.enabled = false
     }
     
     func initInformation() {
         let datePickerView  : UIDatePicker = UIDatePicker()
-        datePickerView.datePickerMode = UIDatePickerMode.Date
+        datePickerView.datePickerMode = UIDatePickerMode.DateAndTime
         datePickerView.backgroundColor = UIColor.blackColor()
         datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         dateTF.inputView = datePickerView
+        dateTF.font = UIFont.pmmMonReg13()
         datePickerView.addTarget(self, action: #selector(self.handleDatePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
         self.getDetail()
         
-        self.contentTV.text = "ADD SOME INFORMATION"
+        self.contentTV.text = "ADD A COMMENT..."
+        self.contentTV.font = UIFont.pmmMonReg13()
         self.contentTV.keyboardAppearance = .Dark
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.contentTV.delegate = self
@@ -129,6 +157,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         timePickerView.datePickerMode = .Time
         timePickerView.backgroundColor = UIColor.blackColor()
         timePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
+        timePickerView.locale = NSLocale(localeIdentifier: "en_GB")
         timeTF.inputView = timePickerView
         timePickerView.addTarget(self, action: #selector(self.handleTimePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
@@ -173,92 +202,105 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     }
     
     func saveClicked() {
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
-        
-        var imageData : NSData!
-        let type : String!
-        let filename : String!
-        imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
-        type = imageJpeg
-        filename = jpgeFile
-        
-        let parameters = [
-            kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-            "text" : "Run",
-            "type" : "#RUNNING",
-            "intensity" : "Light",
-            "distance" : "10",
-            "longtime" : "10",
-            "calorie" : "10",
-            ]
-        
-//        Alamofire.request(.POST, prefix, parameters: param)
-//            .responseJSON { response in
-//                if (response.response?.statusCode == 200) {
-//                }
-//                
-//        }
-        
-        Alamofire.upload(
-            .POST,
-            prefix,
-            multipartFormData: { multipartFormData in
-                multipartFormData.appendBodyPart(data: imageData, name: "file",
-                    fileName:filename, mimeType:type)
-                for (key, value) in parameters {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key as! String)
-                }
-            },
-            encodingCompletion: { encodingResult in
-                switch encodingResult {
-                    
-                case .Success(let upload, _, _):
-                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                        dispatch_async(dispatch_get_main_queue()) {
-//                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                        }
-                    }
-                    upload.validate()
-                    upload.responseJSON { response in
-                        self.navigationItem.rightBarButtonItem?.enabled = true
-//                        self.isPosting = false
-                        self.view.hideToastActivity()
-                        if response.result.error != nil {
-                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                            
-                            
-                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                                // ...
-                            }
-                            alertController.addAction(OKAction)
-                            self.presentViewController(alertController, animated: true) {
-                                // ...
-                            }
-                        } else {
-                            self.navigationController?.popViewControllerAnimated(true)
-                        }
-                    }
-                    
-                case .Failure( _):
-//                    self.isPosting = false
-                    self.navigationItem.rightBarButtonItem?.enabled = true
-                    self.view.hideToastActivity()
-                    
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                }
+        if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
+            
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .Alert)
+            
+            
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
             }
-        )
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        } else {
+            self.view.makeToastActivity(message: "Saving")
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
+            
+            var imageData : NSData!
+            let type : String! = imageJpeg
+            let filename : String! = jpgeFile
+            
+            let calorieSelected : String = String((self.caloriesTF.text != "") ? Int(self.caloriesTF.text!)! : 0)
+            
+            let parameters = [
+                kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                "text" : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
+                "type" :String(format: "#%@", (self.tag.name?.uppercaseString)!),
+                "intensity": self.intensitySelected,
+                "distance" : self.distanceSelected,
+                "longtime" : self.longtimeSelected,
+                "calorie" :  calorieSelected,
+                "datetime": self.dateTF.text
+            ]
+
+            
+            if (self.imageSelected.image != nil) {
+                imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+            }
+            
+            
+            Alamofire.upload(
+                .POST,
+                prefix,
+                multipartFormData: { multipartFormData in
+                    if (self.imageSelected.image != nil) {
+                        multipartFormData.appendBodyPart(data: imageData, name: "file",
+                            fileName:filename, mimeType:type)
+                    }
+
+                    for (key, value) in parameters {
+                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key )
+                    }
+                },
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .Success(let upload, _, _):
+                        
+                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                            dispatch_async(dispatch_get_main_queue()) {
+                                //                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+                            }
+                        }
+                        upload.validate()
+                        upload.responseJSON { response in
+                            self.view.hideToastActivity()
+                            if response.result.error != nil {
+                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                                
+                                
+                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                    // ...
+                                }
+                                alertController.addAction(OKAction)
+                                self.presentViewController(alertController, animated: true) {
+                                    // ...
+                                }
+                            } else {
+                                self.navigationController?.popToRootViewControllerAnimated(false)
+                            }
+                        }
+                        
+                    case .Failure( _):
+                        self.view.hideToastActivity()
+                        
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                        
+                        
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    }
+                }
+            )
+        }
     }
     
     func cropAndSave() -> UIImage {
@@ -280,6 +322,8 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         
         timeFormatter.dateFormat = "mm"
         minuteLB.text = timeFormatter.stringFromDate(date)
+        let total = Int(hourLB.text!)!*60 + Int(minuteLB.text!)!
+        self.longtimeSelected = String(total)
     }
     
     func getDetail() {
@@ -348,7 +392,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     func handleDatePicker(sender: UIDatePicker) {
         let timeFormatter = NSDateFormatter()
-        timeFormatter.dateFormat = "MMM dd, YYYY"
+        timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
         dateTF.text = timeFormatter.stringFromDate(sender.date)
     }
     
@@ -386,11 +430,12 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         
         if pickerView == self.distancePickerView {
             title = String(format: "%ld", row)
-            
+            self.distanceSelected = title
         }
         
         if pickerView == self.intensityPickerView {
             title = self.intensityTitleArray[row]
+            self.intensitySelected = title
         }
         
         let attString = NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
@@ -508,7 +553,6 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            self.navigationItem.rightBarButtonItem?.enabled = true
             
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()

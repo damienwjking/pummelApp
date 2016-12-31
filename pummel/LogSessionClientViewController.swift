@@ -123,10 +123,6 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         
         self.configureCell(cell, forIndexPath: indexPath)
         
-//        if (indexPath.row == tags.count - 1) {
-//            self.getListTags()
-//        }
-        
         return cell
     }
     

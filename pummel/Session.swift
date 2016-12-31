@@ -23,4 +23,5 @@ class Session: NSObject {
     var distance: Int?
     var longtime: Int?
     var intensity: Int?
-    var calorie: Int?}
+    var calorie: Int?
+}
