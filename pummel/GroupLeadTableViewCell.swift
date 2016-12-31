@@ -123,7 +123,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     }
     
     func getMessage() {
-        var prefix = kPMAPICOACHS
+        var prefix = kPMAPICOACHES
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         if self.typeGroup == TypeGroup.NewLead {
             prefix.appendContentsOf(kPMAPICOACH_LEADS)

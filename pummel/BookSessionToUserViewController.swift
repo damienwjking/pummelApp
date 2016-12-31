@@ -32,7 +32,7 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         
         let datePickerView  : UIDatePicker = UIDatePicker()
-        datePickerView.datePickerMode = UIDatePickerMode.Date
+        datePickerView.datePickerMode = UIDatePickerMode.DateAndTime
         datePickerView.backgroundColor = UIColor.blackColor()
         datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
         dateTF.inputView = datePickerView
@@ -83,7 +83,7 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     
     func handleDatePicker(sender: UIDatePicker) {
         let timeFormatter = NSDateFormatter()
-        timeFormatter.dateFormat = "MMM dd, YYYY"
+        timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
         dateTF.text = timeFormatter.stringFromDate(sender.date)
     }
     
@@ -275,6 +275,7 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
             destination.tag = self.tag
             destination.image = self.imageSelected.image
             destination.textToPost = self.contentTV.text
+            destination.dateToPost = self.dateTF.text!
         }
     }
 }

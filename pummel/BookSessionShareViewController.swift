@@ -15,6 +15,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     var image:UIImage?
     var tag:Tag?
     var textToPost = ""
+    var dateToPost = ""
     var userIdSelected = ""
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -50,11 +51,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func done() {
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-        activityView.center = self.view.center
-        activityView.startAnimating()
-        self.view.addSubview(activityView)
-        var prefix = kPMAPICOACHS
+        var prefix = kPMAPICOACHES
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPMAPICOACH_BOOK)
 
@@ -71,8 +68,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         var parameters = [String:AnyObject]()
         var tagname = ""
         tagname = (self.tag?.name?.uppercaseString)!
-        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textPost, kUserIdTarget:userIdSelected, kType:"#\(tagname)"]
-        print(parameters)
+        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textPost, kUserIdTarget:userIdSelected, kType:"#\(tagname)", "datetime": dateToPost]
         Alamofire.upload(
             .POST,
             prefix,
@@ -93,11 +89,9 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
                     }
                     upload.validate()
                     upload.responseJSON { response in
-                        
+                       let json = response.result.value as! NSDictionary
+                        print(json)
                         if response.result.error != nil {
-                            print(response.result.error)
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
                             let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                             let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                 // ...
@@ -107,16 +101,11 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
                                 // ...
                             }
                         } else {
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
                             self.navigationController?.popToRootViewControllerAnimated(false)
                         }
                     }
                     
                 case .Failure(let encodingError):
-                    print(encodingError)
-                    activityView.stopAnimating()
-                    activityView.removeFromSuperview()
                     let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                         // ...
