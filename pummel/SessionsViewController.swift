@@ -618,7 +618,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.view.makeToast(message: "Setting")
                 let lead = self.arrayListLead[indexPath.row]
                 let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
-                
+               
                 
                 var prefix = kPMAPICOACHES
                 prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -628,7 +628,9 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:targetUserId])
                     .responseJSON { response in
                         self.view.hideToastActivity()
+                        
                         if response.response?.statusCode == 200 {
+                            self.arrayListLead.removeAll()
                             self.getListLead()
                         }
                 }
