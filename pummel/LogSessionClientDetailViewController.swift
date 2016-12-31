@@ -225,7 +225,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             let filename : String! = jpgeFile
             
             let calorieSelected : String = String((self.caloriesTF.text != "") ? Int(self.caloriesTF.text!)! : 0)
-            
+            let selectedDate = self.dateTF.text
             let parameters = [
                 kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
                 "text" : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
@@ -234,7 +234,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
                 "distance" : self.distanceSelected,
                 "longtime" : self.longtimeSelected,
                 "calorie" :  calorieSelected,
-                "datetime": self.dateTF.text
+                "datetime":  selectedDate
             ]
 
             

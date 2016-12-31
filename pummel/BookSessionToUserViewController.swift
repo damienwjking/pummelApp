@@ -56,8 +56,9 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
         self.getDetail()
-        
-        self.contentTV.text = "ADD SOME INFORMATION"
+        self.dateTF.font = UIFont.pmmMonReg13()
+        self.contentTV.font = UIFont.pmmMonReg13()
+        self.contentTV.text = "ADD A COMMENT..."
         self.contentTV.keyboardAppearance = .Dark
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.contentTV.delegate = self
@@ -100,7 +101,21 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     }
     
     func next() {
-        self.performSegueWithIdentifier("gotoShare", sender: nil)
+        if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
+            
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .Alert)
+            
+            
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        } else {
+             self.performSegueWithIdentifier("gotoShare", sender: nil)
+        }
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -274,7 +289,7 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
             let destination = segue.destinationViewController as! BookSessionShareViewController
             destination.tag = self.tag
             destination.image = self.imageSelected.image
-            destination.textToPost = self.contentTV.text
+            destination.textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
             destination.dateToPost = self.dateTF.text!
         }
     }

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3wK-2M-50Y">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3wK-2M-50Y">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -16,7 +16,7 @@
                         <viewControllerLayoutGuide type="bottom" id="lEv-2b-eCh"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="cy2-6e-UvH">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eH7-cD-ulr">
@@ -53,28 +53,11 @@
                         <viewControllerLayoutGuide type="bottom" id="XUp-SC-he0"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="iq7-gL-5yL">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0P0-oc-jwf">
                                 <subviews>
-                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Xm-WP-tUs">
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="40" id="8nw-eM-qDk"/>
-                                            <constraint firstAttribute="height" constant="40" id="dSH-qn-p5w"/>
-                                        </constraints>
-                                        <state key="normal" image="calendar">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="ADD A DATE" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tJf-HL-JLd">
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="Gzz-Cg-hCK"/>
-                                        </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="display-empty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Kg8-b6-Wm6">
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="dSO-i1-keG"/>
@@ -86,18 +69,24 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="ADD A DATE" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tJf-HL-JLd">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Gzz-Cg-hCK"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="tJf-HL-JLd" firstAttribute="leading" secondItem="6Xm-WP-tUs" secondAttribute="trailing" constant="5" id="8YW-fp-KaC"/>
-                                    <constraint firstItem="6Xm-WP-tUs" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="15" id="Boe-Ds-YAK"/>
-                                    <constraint firstItem="zqR-gU-5sq" firstAttribute="top" secondItem="6Xm-WP-tUs" secondAttribute="bottom" constant="5" id="Cwn-WH-ZpG"/>
+                                    <constraint firstItem="zqR-gU-5sq" firstAttribute="top" secondItem="Kg8-b6-Wm6" secondAttribute="bottom" constant="5" id="1a0-uA-LI9"/>
                                     <constraint firstAttribute="trailing" secondItem="zqR-gU-5sq" secondAttribute="trailing" constant="5" id="GsL-WV-3k6"/>
                                     <constraint firstItem="tJf-HL-JLd" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="20" id="JHN-wE-4RM"/>
                                     <constraint firstItem="zqR-gU-5sq" firstAttribute="leading" secondItem="0P0-oc-jwf" secondAttribute="leading" constant="15" id="LZf-iS-zcH"/>
-                                    <constraint firstAttribute="trailing" secondItem="tJf-HL-JLd" secondAttribute="trailing" constant="10" id="Mrg-qY-Npc"/>
+                                    <constraint firstAttribute="trailing" secondItem="tJf-HL-JLd" secondAttribute="trailing" constant="8" id="Mrg-qY-Npc"/>
                                     <constraint firstAttribute="bottom" secondItem="zqR-gU-5sq" secondAttribute="bottom" constant="10" id="R9h-Ts-M3e"/>
-                                    <constraint firstItem="6Xm-WP-tUs" firstAttribute="leading" secondItem="Kg8-b6-Wm6" secondAttribute="trailing" constant="5" id="ZAW-KC-dN4"/>
+                                    <constraint firstItem="tJf-HL-JLd" firstAttribute="leading" secondItem="Kg8-b6-Wm6" secondAttribute="trailing" constant="8" id="rFD-KM-x8L"/>
                                     <constraint firstItem="Kg8-b6-Wm6" firstAttribute="leading" secondItem="0P0-oc-jwf" secondAttribute="leading" constant="15" id="xaN-60-vx2"/>
                                     <constraint firstItem="Kg8-b6-Wm6" firstAttribute="top" secondItem="0P0-oc-jwf" secondAttribute="top" constant="15" id="ywY-cu-a6D"/>
                                 </constraints>
@@ -163,7 +152,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Bs-Kt-MZ5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="855" y="192.5"/>
+            <point key="canvasLocation" x="853.60000000000002" y="192.05397301349328"/>
         </scene>
         <!--Book Session Share View Controller-->
         <scene sceneID="Bwe-Gh-ha5">
@@ -174,7 +163,7 @@
                         <viewControllerLayoutGuide type="bottom" id="ZLP-O1-59R"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="cFz-9r-eXH">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZJy-M1-wpF">
@@ -203,7 +192,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="calendar" width="64" height="64"/>
         <image name="cameraBig.png" width="48" height="38"/>
         <image name="display-empty.jpg" width="256" height="256"/>
     </resources>

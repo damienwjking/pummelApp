@@ -83,6 +83,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
         if self.delegateLeadAddedTableViewCell != nil {
             self.delegateLeadAddedTableViewCell?.removeUserWithID!(idUser)
         }
