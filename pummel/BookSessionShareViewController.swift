@@ -164,9 +164,11 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func selectUserWithID(userId:String) {
+        
         if userIdSelected == userId {
             return
         }
+        
         userIdSelected = userId
         self.tbView.reloadData()
     }

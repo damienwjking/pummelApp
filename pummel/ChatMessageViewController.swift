@@ -202,6 +202,31 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
         }
     }
     
+//    func moveToOld() {
+//        let move = { (action:UIAlertAction!) -> Void in
+//            self.view.makeToast(message: "Setting")
+//            var prefix = kPMAPIUSER
+//            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+//            prefix.appendContentsOf(kPMAPI_LEAD)
+//            prefix.appendContentsOf("/")
+//            Alamofire.request(.POST, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:self.userIdTarget])
+//                .responseJSON { response in
+//                    self.view.hideToastActivity()
+//                    if response.response?.statusCode == 200 {
+//                    }
+//            }
+//        }
+//        
+//        let selectCancle = { (action:UIAlertAction!) -> Void in
+//        }
+//        
+//        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+//        alertController.addAction(UIAlertAction(title: kMoveToOld, style: UIAlertActionStyle.Destructive, handler: move))
+//        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: selectCancle))
+//        
+//        self.presentViewController(alertController, animated: true) { }
+//    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageHeaderTableViewCell, forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell

@@ -31,6 +31,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     var isGoToMessageDetail : Bool = false
     var saveIndexPathScrollView : NSIndexPath?
     var connectionsLB : UILabel?
+    var arrayListLead :[NSDictionary] = []
+    var separeateline: UIView?
     
     private struct Constants {
         static let ContentSize: CGSize = CGSize(width: 80, height: 96.0)
@@ -67,13 +69,16 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             self.getMessagetAtSaveIndexPathScrollView()
         }
         
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+          
+        }
+        
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             connectionsLB = UILabel.init(frame: CGRectMake(0, 15, self.view.frame.size.width, 14))
             connectionsLB!.font = .pmmMonReg13()
             connectionsLB!.textColor = UIColor.pmmWarmGreyColor()
             connectionsLB!.textAlignment = .Center
             connectionsLB!.text = kNewConnections
-            connectionsLB!.hidden = true
             self.view.addSubview(connectionsLB!)
             self.listMessageTBTopDistance!.constant = 180
             
@@ -84,21 +89,21 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
             }
             
-            
+            self.getListLead()
             self.view.addSubview(scrollTableView)
             self.scrollTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
             self.scrollTableView.separatorStyle = .None
-            self.scrollTableView.delegate = self
-            self.scrollTableView.dataSource = self
             self.scrollTableView.rowHeight = 96
             self.scrollTableView.separatorStyle = .None
             self.scrollTableView.showsHorizontalScrollIndicator = false
             self.scrollTableView.showsVerticalScrollIndicator = false
-            let sep : UIView = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
-            sep.backgroundColor = UIColor.pmmWhiteColor()
-            self.view.addSubview(sep)
+            separeateline = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
+            separeateline!.backgroundColor = UIColor.pmmWhiteColor()
+            self.view.addSubview(separeateline!)
         }
     }
+    
+    
     
     func gotNewMessage() {
         arrayMessages.removeAll()
@@ -148,6 +153,35 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         mixpanel.track("Event", properties: properties)
     }
     
+    func getListLead() {
+        var prefix = kPMAPICOACHES
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPMAPICOACH_LEADS)
+        
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                self.arrayListLead = JSON as! [NSDictionary]
+                self.scrollTableView.reloadData()
+                if (self.arrayListLead.count == 0) {
+                    self.scrollTableView.delegate = self
+                    self.scrollTableView.dataSource = self
+                    self.listMessageTBTopDistance!.constant = 0
+                    self.scrollTableView.hidden = true
+                    self.connectionsLB!.hidden = true
+                    self.separeateline?.hidden = true
+                } else {
+                    self.scrollTableView.hidden = false
+                    self.listMessageTBTopDistance!.constant = 180
+                    self.connectionsLB!.hidden = false
+                    self.separeateline?.hidden = false
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+            }
+        }
+    }
+    
     func getMessage() {
         if (isStopLoadMessage == false) {
             isLoadingMessage = true
@@ -163,12 +197,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                         self.arrayMessages += arrayMessageT
                         self.isLoadingMessage = false
                         self.listMessageTB.reloadData()
-                        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-                            self.connectionsLB!.hidden = false
-                            self.scrollTableView.reloadData({
-                            })
-                            self.scrollTableView.hidden = false
-                        }
                     } else {
                         self.isLoadingMessage = false
                         self.isStopLoadMessage = true
@@ -180,7 +208,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         }
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -351,16 +378,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             }
             cell!.addButton.hidden = true
             
-            let message = arrayMessages[indexPath.row]
-            let conversations = message[kConversation] as! NSDictionary
-            let conversationUsers = conversations[kConversationUser] as! NSArray
-            var targetUser = conversationUsers[0] as! NSDictionary
-            let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
-            var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-            if (currentUserid == targetUserId){
-                targetUser = conversationUsers[1] as! NSDictionary
-                targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-            }
+            let lead = self.arrayListLead[indexPath.row]
+            let targetUserId = String(format:"%0.f", lead["userId"]!.doubleValue)
             var prefixUser = kPMAPIUSER
             prefixUser.appendContentsOf(targetUserId)
             Alamofire.request(.GET, prefixUser)
@@ -559,17 +578,25 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == self.arrayMessages.count - 1 && isLoadingMessage == false) {
+        if (indexPath.row == self.arrayMessages.count - 1 && isLoadingMessage == false && tableView == self.listMessageTB) {
             offset += 10
             self.getMessage()
         }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (self.arrayMessages == []) {
-            return 0
+        if (tableView == self.listMessageTB) {
+            if (self.arrayMessages == []) {
+                return 0
+            } else {
+                return self.arrayMessages.count
+            }
         } else {
-            return self.arrayMessages.count
+            if (self.arrayListLead == []) {
+                return 0
+            } else {
+                return self.arrayListLead.count
+            }
         }
     }
     
@@ -588,32 +615,21 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
             let setAsCurrentUserUnderTrained = { (action:UIAlertAction!) -> Void in
-                //TODO: 
-                // CALL API .../api/coachs/:userId/old (PUT)
-                // OK --> Refresh scrollview lead
+                self.view.makeToast(message: "Setting")
+                let lead = self.arrayListLead[indexPath.row]
+                let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
                 
-                let message = self.arrayMessages[indexPath.row]
-                let conversations = message[kConversation] as! NSDictionary
-                let conversationUsers = conversations[kConversationUser] as! NSArray
-                var targetUser = conversationUsers[0] as! NSDictionary
-                let currentUserid = self.defaults.objectForKey(k_PM_CURRENT_ID) as! String
-                var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-                if (currentUserid == targetUserId){
-                    targetUser = conversationUsers[1] as! NSDictionary
-                    targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-                }
                 
                 var prefix = kPMAPICOACHES
                 prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                prefix.appendContentsOf(kPMAPICOACH_OLD)
+                prefix.appendContentsOf(kPMAPICOACH_CURRENT)
                 prefix.appendContentsOf("/")
                 print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                print(targetUser[kUserId]!)
-                Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:targetUser[kUserId]!])
+                Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:targetUserId])
                     .responseJSON { response in
-                        print(response)
+                        self.view.hideToastActivity()
                         if response.response?.statusCode == 200 {
-                            self.scrollTableView.reloadData()
+                            self.getListLead()
                         }
                 }
             }
@@ -624,7 +640,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
             
             self.presentViewController(alertController, animated: true) { }
-            self.clickOnRowMessage(indexPath)
         }
         
         mixpanel.track("Event", properties: properties)
