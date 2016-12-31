@@ -47,6 +47,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewWillAppear(animated: Bool) {
+        
         self.tabBarController?.title = kNavMessage
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
@@ -61,16 +62,13 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         tabItem!.badgeValue = nil
         if (isGoToMessageDetail == false) {
             arrayMessages.removeAll()
+            self.listMessageTB.reloadData()
             isStopLoadMessage = false
             offset = 0
             self.getMessage()
         } else {
             self.isGoToMessageDetail = false
             self.getMessagetAtSaveIndexPathScrollView()
-        }
-        
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-          
         }
         
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
@@ -88,7 +86,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             } else {
                 self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
             }
-            
+            self.arrayListLead.removeAll()
+            self.scrollTableView.reloadData()
             self.getListLead()
             self.view.addSubview(scrollTableView)
             self.scrollTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
@@ -162,9 +161,9 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 self.arrayListLead = JSON as! [NSDictionary]
-                self.scrollTableView.reloadData()
                 self.scrollTableView.delegate = self
                 self.scrollTableView.dataSource = self
+                self.scrollTableView.reloadData()
                 if (self.arrayListLead.count == 0) {
                     self.listMessageTBTopDistance!.constant = 0
                     self.scrollTableView.hidden = true
@@ -226,7 +225,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if (tableView == listMessageTB) {
+        if (tableView == listMessageTB && arrayMessages.count != 0) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kMessageTableViewCell, forIndexPath: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
             let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
@@ -586,17 +585,9 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tableView == self.listMessageTB) {
-            if (self.arrayMessages == []) {
-                return 0
-            } else {
-                return self.arrayMessages.count
-            }
+            return self.arrayMessages.count
         } else {
-            if (self.arrayListLead == []) {
-                return 0
-            } else {
-                return self.arrayListLead.count
-            }
+            return self.arrayListLead.count
         }
     }
     
