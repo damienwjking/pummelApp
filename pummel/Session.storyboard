@@ -160,19 +160,61 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="LVh-5y-UiB">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="495"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="pCZ-ol-b2l" id="k9U-3V-Fv0"/>
                                     <outlet property="delegate" destination="pCZ-ol-b2l" id="lF1-i5-4b1"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yeu-16-34c">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jGY-C1-rs1">
+                                        <rect key="frame" x="37.5" y="158.5" width="300" height="222"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="gn8-Ox-3vt">
+                                                <rect key="frame" x="68" y="0.0" width="165" height="160"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="160" id="Jr4-nY-obC"/>
+                                                    <constraint firstAttribute="width" constant="165" id="zVs-68-Hab"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LOOK LIKE THERE IS NO ANY SESSION YET!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="maS-X4-9jQ">
+                                                <rect key="frame" x="0.0" y="181" width="300" height="41"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="300" id="2bF-Pi-ORr"/>
+                                            <constraint firstItem="maS-X4-9jQ" firstAttribute="centerX" secondItem="jGY-C1-rs1" secondAttribute="centerX" id="5A5-l0-rbl"/>
+                                            <constraint firstItem="gn8-Ox-3vt" firstAttribute="top" secondItem="jGY-C1-rs1" secondAttribute="top" id="ID6-Aa-TkD"/>
+                                            <constraint firstAttribute="bottom" secondItem="maS-X4-9jQ" secondAttribute="bottom" id="Jem-LD-H2U"/>
+                                            <constraint firstItem="gn8-Ox-3vt" firstAttribute="centerX" secondItem="jGY-C1-rs1" secondAttribute="centerX" id="LRd-6v-Q1T"/>
+                                            <constraint firstItem="maS-X4-9jQ" firstAttribute="top" secondItem="gn8-Ox-3vt" secondAttribute="bottom" constant="21" id="NJ3-RM-5gc"/>
+                                            <constraint firstItem="maS-X4-9jQ" firstAttribute="width" secondItem="jGY-C1-rs1" secondAttribute="width" id="eEk-gU-JsY"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="jGY-C1-rs1" firstAttribute="centerY" secondItem="Yeu-16-34c" secondAttribute="centerY" constant="-64" id="Dzm-un-Ri7"/>
+                                    <constraint firstItem="jGY-C1-rs1" firstAttribute="centerX" secondItem="Yeu-16-34c" secondAttribute="centerX" id="OGd-8s-2md"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Yeu-16-34c" firstAttribute="centerY" secondItem="bA4-nq-QxQ" secondAttribute="centerY" id="2lM-ey-neA"/>
+                            <constraint firstItem="Yeu-16-34c" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="4Ni-mH-aG5"/>
                             <constraint firstItem="LVh-5y-UiB" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="98s-wi-HLK"/>
+                            <constraint firstItem="Yeu-16-34c" firstAttribute="height" secondItem="bA4-nq-QxQ" secondAttribute="height" id="A44-rY-0bK"/>
+                            <constraint firstItem="Yeu-16-34c" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="B5X-LB-ctL"/>
                             <constraint firstItem="XJI-8h-xtT" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="FDv-Ik-XFL"/>
-                            <constraint firstItem="FtV-00-agp" firstAttribute="top" secondItem="LVh-5y-UiB" secondAttribute="bottom" id="Gsl-Ly-ji5"/>
+                            <constraint firstItem="FtV-00-agp" firstAttribute="top" secondItem="LVh-5y-UiB" secondAttribute="bottom" constant="108" id="Gsl-Ly-ji5"/>
                             <constraint firstItem="LVh-5y-UiB" firstAttribute="top" secondItem="XJI-8h-xtT" secondAttribute="bottom" id="Qyo-Mg-EZf"/>
                             <constraint firstItem="XJI-8h-xtT" firstAttribute="top" secondItem="H07-oV-06e" secondAttribute="bottom" id="Y7A-xA-J3d"/>
                             <constraint firstItem="XJI-8h-xtT" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="coR-lq-63I"/>
@@ -181,6 +223,8 @@
                     </view>
                     <connections>
                         <outlet property="completedButton" destination="FvG-hI-zaG" id="7yk-e9-BcU"/>
+                        <outlet property="noSessionV" destination="Yeu-16-34c" id="Jbw-DA-WGA"/>
+                        <outlet property="noSessionYetLB" destination="maS-X4-9jQ" id="9K5-Qi-EOn"/>
                         <outlet property="sessionTableView" destination="LVh-5y-UiB" id="NXF-b4-Jhv"/>
                         <outlet property="underLineView" destination="Uwp-tg-x44" id="dPc-cS-pdA"/>
                         <outlet property="underLineViewLeadingConstraint" destination="r9G-Oc-m4d" id="ysE-1I-UB7"/>
@@ -252,27 +296,71 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cNQ-UE-cfY">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="495"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="8IK-lA-zrj" id="xsT-rh-UjU"/>
                                     <outlet property="delegate" destination="8IK-lA-zrj" id="72h-Pg-hLF"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yNc-Ka-tbk">
+                                <rect key="frame" x="-0.5" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sud-nu-fq2">
+                                        <rect key="frame" x="37.5" y="158.5" width="300" height="222"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ctf-xl-sx4">
+                                                <rect key="frame" x="68" y="0.0" width="165" height="160"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="165" id="gmI-CE-xaN"/>
+                                                    <constraint firstAttribute="height" constant="160" id="zzr-Fy-zjt"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LOOK LIKE THERE IS NO ANY SESSION YET!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TYJ-sF-yEj">
+                                                <rect key="frame" x="0.0" y="181" width="300" height="41"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="Ctf-xl-sx4" firstAttribute="top" secondItem="sud-nu-fq2" secondAttribute="top" id="3hT-Dr-JQL"/>
+                                            <constraint firstItem="TYJ-sF-yEj" firstAttribute="top" secondItem="Ctf-xl-sx4" secondAttribute="bottom" constant="21" id="9x9-Nb-q5L"/>
+                                            <constraint firstItem="TYJ-sF-yEj" firstAttribute="width" secondItem="sud-nu-fq2" secondAttribute="width" id="Gd3-rk-iVk"/>
+                                            <constraint firstItem="Ctf-xl-sx4" firstAttribute="centerX" secondItem="sud-nu-fq2" secondAttribute="centerX" id="PVe-sQ-XbT"/>
+                                            <constraint firstItem="TYJ-sF-yEj" firstAttribute="centerX" secondItem="sud-nu-fq2" secondAttribute="centerX" id="iW6-Qu-NtH"/>
+                                            <constraint firstAttribute="width" constant="300" id="rSd-dg-cgc"/>
+                                            <constraint firstAttribute="bottom" secondItem="TYJ-sF-yEj" secondAttribute="bottom" id="wxT-G9-y1i"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="sud-nu-fq2" firstAttribute="centerY" secondItem="yNc-Ka-tbk" secondAttribute="centerY" constant="-64" id="jbh-6C-XsI"/>
+                                    <constraint firstItem="sud-nu-fq2" firstAttribute="centerX" secondItem="yNc-Ka-tbk" secondAttribute="centerX" id="xRg-me-J6c"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="cNQ-UE-cfY" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="3Kv-Oq-SPq"/>
                             <constraint firstItem="cNQ-UE-cfY" firstAttribute="top" secondItem="aUj-3x-LVL" secondAttribute="bottom" id="3cu-73-VFb"/>
                             <constraint firstItem="cNQ-UE-cfY" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="ECJ-Qa-3nQ"/>
+                            <constraint firstItem="yNc-Ka-tbk" firstAttribute="centerY" secondItem="pES-rv-YXe" secondAttribute="centerY" id="Gyn-sg-c5E"/>
                             <constraint firstItem="aUj-3x-LVL" firstAttribute="top" secondItem="pNU-IE-dKP" secondAttribute="bottom" id="LXT-8d-Ypm"/>
                             <constraint firstItem="aUj-3x-LVL" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="TAB-gg-Wjp"/>
                             <constraint firstItem="aUj-3x-LVL" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="TEl-mr-zma"/>
-                            <constraint firstItem="sNH-h6-ife" firstAttribute="top" secondItem="cNQ-UE-cfY" secondAttribute="bottom" id="i4g-PN-NHf"/>
+                            <constraint firstItem="sNH-h6-ife" firstAttribute="top" secondItem="cNQ-UE-cfY" secondAttribute="bottom" constant="108" id="i4g-PN-NHf"/>
+                            <constraint firstItem="yNc-Ka-tbk" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="nh7-0k-26U"/>
+                            <constraint firstItem="yNc-Ka-tbk" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="oFC-8l-qVq"/>
+                            <constraint firstItem="yNc-Ka-tbk" firstAttribute="height" secondItem="pES-rv-YXe" secondAttribute="height" id="tPI-T3-zHw"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="completedButton" destination="LNi-kg-nA8" id="5t4-nz-eOL"/>
+                        <outlet property="noSessionV" destination="yNc-Ka-tbk" id="Vc2-XL-uIo"/>
+                        <outlet property="noSessionYetLB" destination="TYJ-sF-yEj" id="7Qd-zC-c8F"/>
                         <outlet property="sessionTableView" destination="cNQ-UE-cfY" id="KgZ-cv-Ick"/>
                         <outlet property="underLineView" destination="2O9-UH-Jez" id="wli-WZ-F0m"/>
                         <outlet property="underLineViewLeadingConstraint" destination="dmw-tw-jZ0" id="Do3-RJ-L5S"/>
@@ -283,14 +371,15 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zhd-0o-Xqa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-415" y="1252"/>
+            <point key="canvasLocation" x="-415.19999999999999" y="1251.7241379310346"/>
         </scene>
     </scenes>
     <resources>
         <image name="emptyImage.png" width="375" height="552"/>
+        <image name="noActivity.png" width="166" height="162"/>
         <image name="sessions.png" width="19" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Au2-PE-kLY"/>
+        <segue reference="T2L-tM-8pa"/>
     </inferredMetricsTieBreakers>
 </document>
