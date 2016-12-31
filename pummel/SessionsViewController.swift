@@ -163,9 +163,9 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             case .Success(let JSON):
                 self.arrayListLead = JSON as! [NSDictionary]
                 self.scrollTableView.reloadData()
+                self.scrollTableView.delegate = self
+                self.scrollTableView.dataSource = self
                 if (self.arrayListLead.count == 0) {
-                    self.scrollTableView.delegate = self
-                    self.scrollTableView.dataSource = self
                     self.listMessageTBTopDistance!.constant = 0
                     self.scrollTableView.hidden = true
                     self.connectionsLB!.hidden = true
