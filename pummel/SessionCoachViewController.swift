@@ -19,6 +19,9 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var underLineViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var sessionTableView: UITableView!
     
+    @IBOutlet weak var noSessionV: UIView!
+    @IBOutlet weak var noSessionYetLB: UILabel!
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     
     var isUpComing = true
@@ -28,6 +31,10 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.upcomingButton.titleLabel?.font = UIFont.pmmMonReg13()
+        self.completedButton.titleLabel?.font = UIFont.pmmMonReg13()
+        self.noSessionYetLB.font = UIFont.pmmPlayFairReg18()
         
         self.initTableView()
         self.initNavigationBar()
@@ -108,7 +115,13 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
                             self.checkUpCommingSesion(session)
                         }
                         
-                        self.sessionTableView.reloadData()
+                        let totalSession = self.upCommingSessions.count + self.completedSessions.count
+                        if totalSession > 0 {
+                            self.noSessionV.hidden = true
+                            self.sessionTableView.reloadData()
+                        } else {
+                            self.noSessionV.hidden = false
+                        }
                     }
                 case .Failure(let error):
                     print("Request failed with error: \(error)")
@@ -143,10 +156,6 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    }
-    
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.01
     }
     
     // MARK: Outlet function

@@ -13,27 +13,25 @@ import Foundation
 
 class LogTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarIMV: UIImageView!
-    @IBOutlet weak var nameLB: UILabel!
+    @IBOutlet weak var textLB: UILabel!
     @IBOutlet weak var timeLB: UILabel!
-    @IBOutlet weak var messageLB: UILabel!
+    @IBOutlet weak var dateLB: UILabel!
     @IBOutlet weak var rateButton: UIButton!
     
-    @IBOutlet weak var typeLBHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var typeLBBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var typeLB: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
-        self.messageLB.numberOfLines = 2
+        self.dateLB.numberOfLines = 2
         
         self.rateButton.layer.cornerRadius = 2;
         
-        self.nameLB.font = .pmmMonLight16()
-        self.messageLB.font = .pmmMonLight13()
+        self.textLB.font = .pmmMonLight13()
+        self.dateLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
-        self.typeLB.font = .pmmMonLight13()
+        self.typeLB.font = .pmmMonReg13()
     }
     
     @IBAction func rateButtonClicked(sender: AnyObject) {
@@ -41,12 +39,12 @@ class LogTableViewCell: UITableViewCell {
     }
     
     func setData(session: Session, hiddenRateButton: Bool) {
-        self.nameLB.text = session.text
+        self.textLB.text = session.text
         
         if session.createdAt?.isEmpty == false {
-            self.messageLB.text = self.convertDateTimeFromString(session.createdAt!)
+            self.dateLB.text = self.convertDateTimeFromString(session.createdAt!)
         } else {
-            self.messageLB.text = ""
+            self.dateLB.text = ""
         }
         
         if session.datetime?.isEmpty == false {
@@ -58,13 +56,6 @@ class LogTableViewCell: UITableViewCell {
         self.rateButton.hidden = hiddenRateButton
         
         self.typeLB.text = session.type
-        if session.type?.isEmpty == true {
-            self.typeLBHeightConstraint.constant = 0
-            self.typeLBBottomConstraint.constant = 0
-        } else {
-            self.typeLBHeightConstraint.constant = 21
-            self.typeLBBottomConstraint.constant = 5.5
-        }
         
         var prefix = kPMAPIUSER
         //        if session.coachId != nil {
@@ -109,6 +100,7 @@ class LogTableViewCell: UITableViewCell {
         
         let newDateFormatter = NSDateFormatter()
         newDateFormatter.dateFormat = "EEE F MMM"
+        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
         let newDateString = newDateFormatter.stringFromDate(date!)
         
         return newDateString
@@ -121,6 +113,7 @@ class LogTableViewCell: UITableViewCell {
         
         let newDateFormatter = NSDateFormatter()
         newDateFormatter.dateFormat = "ha"
+        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
         let newDateString = newDateFormatter.stringFromDate(date!).uppercaseString
         
         return newDateString

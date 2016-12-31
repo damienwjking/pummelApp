@@ -19,6 +19,9 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var underLineViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var sessionTableView: UITableView!
     
+    @IBOutlet weak var noSessionV: UIView!
+    @IBOutlet weak var noSessionYetLB: UILabel!
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     
     var isUpComing = true
@@ -35,6 +38,9 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.upcomingButton.titleLabel?.font = UIFont.pmmMonReg13()
+        self.completedButton.titleLabel?.font = UIFont.pmmMonReg13()
         
         self.getListSession()
     }
@@ -102,7 +108,13 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
                             self.checkUpCommingSesion(session)
                         }
                         
-                        self.sessionTableView.reloadData()
+                        let totalSession = self.upCommingSessions.count + self.completedSessions.count
+                        if totalSession > 0 {
+                            self.noSessionV.hidden = true
+                            self.sessionTableView.reloadData()
+                        } else {
+                            self.noSessionV.hidden = false
+                        }
                     }
                 case .Failure(let error):
                     print("Request failed with error: \(error)")
@@ -137,10 +149,6 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    }
-    
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.01
     }
     
     // MARK: Outlet function
