@@ -42,7 +42,7 @@ class LogTableViewCell: UITableViewCell {
         self.textLB.text = session.text
         
         if session.createdAt?.isEmpty == false {
-            self.dateLB.text = self.convertDateTimeFromString(session.createdAt!)
+            self.dateLB.text = self.convertDateTimeFromString(session.datetime!)
         } else {
             self.dateLB.text = ""
         }
@@ -99,7 +99,7 @@ class LogTableViewCell: UITableViewCell {
         let date = dateFormatter.dateFromString(dateTimeString)
         
         let newDateFormatter = NSDateFormatter()
-        newDateFormatter.dateFormat = "EEE F MMM"
+        newDateFormatter.dateFormat = "EEE dd MMM"
         newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
         let newDateString = newDateFormatter.stringFromDate(date!)
         
