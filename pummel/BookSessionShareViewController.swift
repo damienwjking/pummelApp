@@ -18,6 +18,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     var dateToPost = ""
     var userIdSelected = ""
     let defaults = NSUserDefaults.standardUserDefaults()
+    var forceUpdate = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -155,7 +156,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         }
         cell.userIdSelected = self.userIdSelected
         cell.delegateGroupLeadTableViewCell = self
-        if cell.arrayMessages.count <= 0 {
+        if cell.arrayMessages.count <= 0 || self.forceUpdate == true {
             cell.getMessage()
         } else {
             cell.cv.reloadData()
@@ -163,14 +164,12 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         return cell
     }
     
-    func selectUserWithID(userId:String) {
-        
-        if userIdSelected == userId {
-            return
+    func selectUserWithID(userId:String, typeGroup:Int) {
+        if typeGroup == TypeGroup.Current.rawValue {
+            self.showAlertMovetoOldAction(userId)
+        } else {
+            self.showAlertMovetoCurrentAction(userId,typeGroup: typeGroup)
         }
-        
-        userIdSelected = userId
-        self.tbView.reloadData()
     }
     
     func removeUserWithID(userId:String) {
@@ -178,6 +177,69 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         self.tbView.reloadData()
     }
     
+    func showAlertMovetoOldAction(userID:String) {
+        let clickMoveToOld = { (action:UIAlertAction!) -> Void in
+            var prefix = kPMAPICOACHES
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPMAPICOACH_OLD)
+            prefix.appendContentsOf("/")
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+                .responseJSON { response in
+                    self.view.hideToastActivity()
+                    if response.response?.statusCode == 200 {
+                        self.forceUpdate = true
+                        self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 2, inSection: 0),NSIndexPath(forItem: 3, inSection: 0)], withRowAnimation: .None)
+                        self.forceUpdate = false
+                    }
+            }
+        }
+        
+        let clickShare = { (action:UIAlertAction!) -> Void in
+            self.userIdSelected = userID
+            self.tbView.reloadData()
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Move to Old", style: UIAlertActionStyle.Default, handler: clickMoveToOld))
+        alertController.addAction(UIAlertAction(title: "Share", style: UIAlertActionStyle.Destructive, handler: clickShare))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Default, handler: nil))
+        
+        self.presentViewController(alertController, animated: true) { }
+    }
+    
+    func showAlertMovetoCurrentAction(userID:String,typeGroup:Int) {
+        let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
+            var prefix = kPMAPICOACHES
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPMAPICOACH_CURRENT)
+            prefix.appendContentsOf("/")
+            print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+                .responseJSON { response in
+                    self.view.hideToastActivity()
+                    if response.response?.statusCode == 200 {
+                        self.forceUpdate = true
+                        if typeGroup == TypeGroup.NewLead.rawValue {
+                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
+                        } else {
+                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 2, inSection: 0),NSIndexPath(forItem: 3, inSection: 0)], withRowAnimation: .None)
+                        }
+                        self.forceUpdate = false
+                    }
+            }
+        }
+        
+        let clickShare = { (action:UIAlertAction!) -> Void in
+            self.userIdSelected = userID
+            self.tbView.reloadData()
+        }
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Move to Current", style: UIAlertActionStyle.Default, handler: clickMoveToCurrent))
+        alertController.addAction(UIAlertAction(title: "Share", style: UIAlertActionStyle.Destructive, handler: clickShare))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Default, handler: nil))
+        
+        self.presentViewController(alertController, animated: true) { }
+    }
     /*
     // MARK: - Navigation
 
