@@ -24,7 +24,6 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     @IBOutlet weak var timeTF: UITextField!
     @IBOutlet weak var hourLB: UILabel!
     @IBOutlet weak var minuteLB: UILabel!
-    
     @IBOutlet weak var distanceTF: UITextField!
     @IBOutlet weak var distanceLB: UILabel!
     let distancePickerView = UIPickerView()
@@ -36,7 +35,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     @IBOutlet weak var caloriesLB: UILabel!
     @IBOutlet weak var caloriesTF: UITextField!
     let caloriesPickerView = UIPickerView()
-    
+
     @IBOutlet weak var hoursTextLB: UILabel!
     @IBOutlet weak var minuteTextLB: UILabel!
     @IBOutlet weak var distanceTextLB: UILabel!
@@ -86,13 +85,12 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         
         self.initInformation()
         self.initTime()
+        self.initIntensity()
         self.initDistance()
         self.initCalories()
-        self.initIntensity()
         
         self.tappedV.userInteractionEnabled = false
         
-        self.caloriesTF.keyboardAppearance = .Dark
         self.imagePicker.delegate = self
     }
     
