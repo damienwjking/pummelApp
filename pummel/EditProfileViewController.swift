@@ -156,6 +156,25 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.instagramUrlTF.resignFirstResponder()
         self.emergencyNameTF.resignFirstResponder()
         self.emergencyMobileTF.resignFirstResponder()
+        
+        let numberFormat = NSNumberFormatter()
+        numberFormat.numberStyle = .DecimalStyle
+        
+        var weightText = self.weightContentTF.text
+        if weightText?.isEmpty == false {
+            if isNumber(weightText!) {
+                weightText = numberFormat.stringFromNumber(Int(weightText!)!)
+                self.weightContentTF.text = weightText! + " kgs"
+            }
+        }
+        
+        var heightText = self.heightContentTF.text
+        if heightText?.isEmpty == false {
+            if isNumber(heightText!) {
+                heightText = numberFormat.stringFromNumber(Int(heightText!)!)
+                self.heightContentTF.text = heightText! + " cms"
+            }
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -347,13 +366,26 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             
             self.view.makeToastActivity(message: "Saving")
             
+            let param = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                         kFirstname:firstname,
+                         kLastName: lastname,
+                         kMobile: mobileContentTF.text!,
+                         kDob: dobContentTF.text!,
+                         kGender:(genderContentTF.text?.uppercaseString)!,
+                         kBio: aboutContentTV.text,
+                         kFacebookUrl:facebookUrlTF.text!,
+                         kTwitterUrl:twitterUrlTF.text!,
+                         kInstagramUrl:instagramUrlTF.text!,
+                         kEmergencyName:emergencyNameTF.text!,
+                         kEmergencyMobile:emergencyMobileTF.text!]
+            
             // update weight height
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!, kEmergencyName:emergencyNameTF.text!, kEmergencyMobile:emergencyMobileTF.text!])
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
                         self.navigationController?.popViewControllerAnimated(true)
-                    }else {
+                    } else {
                         self.view.hideToastActivity()
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
@@ -664,7 +696,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             return false
         } else {
             let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = kDateFormat
+            dateFormatter.dateFormat = "YYYY-mm-dd"
             let dateDOB = dateFormatter.dateFromString(testStr)
             
             let date = NSDate()

@@ -123,8 +123,6 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
                             } else {
                                 self.noSessionV.hidden = false
                             }
-                            
-                            self.sessionTableView.reloadData()
                         } else {
                             self.canLoadMore = false
                         }
@@ -134,6 +132,8 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
                     }
                     
                     self.isloading = false
+                    
+                    self.sessionTableView.reloadData()
             }
         }
     }

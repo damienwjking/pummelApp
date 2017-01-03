@@ -96,9 +96,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         super.viewWillAppear(animated)
         self.hourLB.text = "0"
         self.minuteLB.text = "0"
+        let title = self.tag.name?.componentsSeparatedByString(" ").joinWithSeparator("")
+        self.titleButton.setTitle(String(format: "#%@", (title!.uppercaseString)), forState: .Normal)
         self.titleButton.titleLabel?.font = UIFont.pmmMonReg13()
         self.titleButton.setTitleColor(UIColor(white: 32.0 / 255.0, alpha: 1.0), forState: .Normal)
-        self.titleButton.setTitle(String(format: "#%@", (self.tag.name?.uppercaseString)!), forState: .Normal)
         self.titleButton.sizeToFit()
         self.titleButton.addTarget(self, action: #selector(self.titleButtonClicked), forControlEvents: .TouchUpInside)
         

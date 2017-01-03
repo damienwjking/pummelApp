@@ -130,8 +130,6 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
                             } else {
                                 self.noSessionV.hidden = false
                             }
-                            
-                            self.sessionTableView.reloadData()
                         } else {
                             self.canLoadMore = false
                         }
@@ -141,6 +139,8 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
                     }
                     
                     self.isloading = false
+                    
+                    self.sessionTableView.reloadData()
             }
         }
     }

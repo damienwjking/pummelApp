@@ -74,7 +74,9 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.title = kBookSession
+        
+        let tagTitle = self.tag!.name?.componentsSeparatedByString(" ").joinWithSeparator("")
+        self.title = String(format: "#%@", (tagTitle!.uppercaseString))
     }
     
     override func viewWillDisappear(animated: Bool) {
