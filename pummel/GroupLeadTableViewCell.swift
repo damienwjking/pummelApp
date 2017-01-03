@@ -136,8 +136,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                let arrayMessageT = JSON as! [NSDictionary]
-                if (arrayMessageT.count > 0) {
+                if let arrayMessageT = JSON as? [NSDictionary] {
                     self.arrayMessages = arrayMessageT
                     self.cv.reloadData()
                 }
