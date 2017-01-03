@@ -33,11 +33,15 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     @IBOutlet weak var intensityLB: UILabel!
     let intensityPickerView = UIPickerView()
     
+    @IBOutlet weak var caloriesLB: UILabel!
     @IBOutlet weak var caloriesTF: UITextField!
+    let caloriesPickerView = UIPickerView()
     
     @IBOutlet weak var hoursTextLB: UILabel!
     @IBOutlet weak var minuteTextLB: UILabel!
     @IBOutlet weak var distanceTextLB: UILabel!
+    @IBOutlet weak var intensityTextLB: UILabel!
+    @IBOutlet weak var caloriesTextLB: UILabel!
     @IBOutlet weak var mileTextLB: UILabel!
     
     
@@ -49,6 +53,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     var intensityTitleArray = [String]()
     var intensitySelected: String = "Light"
     var distanceSelected: String = "0"
+    var caloriesSelected: String = "0"
     var longtimeSelected: String = "0"
     
     override func viewDidLoad() {
@@ -71,19 +76,18 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.minuteLB.font = UIFont.pmmMonReg13()
         self.distanceLB.font = UIFont.pmmMonReg13()
         self.intensityLB.font = UIFont.pmmMonReg13()
-        let attributes = [
-            NSForegroundColorAttributeName: UIColor.darkGrayColor(),
-            NSFontAttributeName : UIFont.pmmMonReg13()
-        ]
+        self.caloriesLB.font = UIFont.pmmMonReg13()
         self.hoursTextLB.font =  UIFont.pmmMonReg13()
         self.minuteTextLB.font =  UIFont.pmmMonReg13()
         self.distanceTextLB.font =  UIFont.pmmMonReg13()
+        self.intensityTextLB.font =  UIFont.pmmMonReg13()
+        self.caloriesTextLB.font =  UIFont.pmmMonReg13()
         self.mileTextLB.font =  UIFont.pmmMonReg13()
         
-        self.caloriesTF.attributedPlaceholder = NSAttributedString(string: "Calories", attributes:attributes)
         self.initInformation()
         self.initTime()
         self.initDistance()
+        self.initCalories()
         self.initIntensity()
         
         self.tappedV.userInteractionEnabled = false
@@ -162,6 +166,13 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         timeTF.inputView = timePickerView
         timePickerView.addTarget(self, action: #selector(self.handleTimePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
+        let calendar = NSCalendar.currentCalendar()
+        let components = NSDateComponents()
+        components.hour = 0
+        components.minute = 30
+        let defaultDate = calendar.dateFromComponents(components)
+        timePickerView.date = defaultDate!
+        
         self.setTimeLBWithDate(NSDate())
     }
     
@@ -170,6 +181,13 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.distancePickerView.dataSource = self
         self.distancePickerView.backgroundColor = UIColor.blackColor()
         distanceTF.inputView = self.distancePickerView
+        
+        let distanceUnit = self.defaults.objectForKey(kUnit) as? String
+        if (distanceUnit == metric) {
+            self.mileTextLB.text = "KM"
+        } else {
+            self.mileTextLB.text = "mi"
+        }
     }
     
     func initIntensity() {
@@ -183,6 +201,12 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.intensityTitleArray.append("Vigorous")
     }
     
+    func initCalories() {
+        self.caloriesPickerView.delegate = self
+        self.caloriesPickerView.dataSource = self
+        self.caloriesPickerView.backgroundColor = UIColor.blackColor()
+        caloriesTF.inputView = self.caloriesPickerView
+    }
     
     // MARK: Private function
     func tappedViewClicked() {
@@ -438,6 +462,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             return 3;
         }
         
+        if pickerView == self.caloriesPickerView {
+            return 101;
+        }
+        
         return 0
     }
     
@@ -454,6 +482,11 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             self.intensitySelected = title
         }
         
+        if pickerView == self.caloriesPickerView {
+            title = String(format: "%ld", row * 5)
+            self.caloriesSelected = title
+        }
+        
         let attString = NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         return attString;
     }
@@ -467,6 +500,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             return self.intensityTitleArray[row]
         }
         
+        if pickerView == self.caloriesPickerView {
+            return String(format: "%ld", row * 5)
+        }
+        
         return "";
     }
     
@@ -478,6 +515,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         if pickerView == self.intensityPickerView {
             self.intensityLB.text = self.intensityTitleArray[row]
         }
+        
+        if pickerView == self.caloriesPickerView {
+            self.caloriesLB.text = String(format: "%ld", row * 5)
+        }
     }
     
     // MARK: UITextFieldDelegate
@@ -488,8 +529,9 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     }
     
     func textFieldDidBeginEditing(textField: UITextField) {
-        self.intensityPickerView.reloadAllComponents()
-        
+        if textField == self.caloriesTF {
+            self.caloriesPickerView.selectRow(50, inComponent: 0, animated: true)
+        }
     }
     
     // MARK: UITextViewDelegate
@@ -500,7 +542,6 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        
         
         let currentText:NSString = textView.text
         let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
