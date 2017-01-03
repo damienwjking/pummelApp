@@ -13,14 +13,13 @@ import AlamofireImage
 
 class SessionCoachViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var upcomingButton: UIButton!
-    @IBOutlet weak var completedButton: UIButton!
-    @IBOutlet weak var underLineView: UIView!
-    @IBOutlet weak var underLineViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var selectSegment: UISegmentedControl!
     @IBOutlet weak var sessionTableView: UITableView!
     
     @IBOutlet weak var noSessionV: UIView!
     @IBOutlet weak var noSessionYetLB: UILabel!
+    @IBOutlet weak var noSessionContentLB: UILabel!
+    @IBOutlet weak var addSessionBT: UIButton!
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -34,9 +33,11 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.upcomingButton.titleLabel?.font = UIFont.pmmMonReg13()
-        self.completedButton.titleLabel?.font = UIFont.pmmMonReg13()
         self.noSessionYetLB.font = UIFont.pmmPlayFairReg18()
+        self.noSessionContentLB.font = UIFont.pmmMonLight13()
+        self.addSessionBT.titleLabel!.font = UIFont.pmmMonReg12()
+        
+        selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], forState: .Normal)
         
         self.initTableView()
         self.initNavigationBar()
@@ -55,17 +56,18 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
         
         let nibName = UINib(nibName: "LogTableViewCell", bundle:nil)
         self.sessionTableView.registerNib(nibName, forCellReuseIdentifier: "LogTableViewCell")
+        
+        let SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
+        self.sessionTableView.separatorInset = UIEdgeInsetsMake(0, SCREEN_WIDTH, 0, 0)
     }
     
     func initNavigationBar() {
-        // ADD Log Button At Left Navigationbar Item
-        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kLog, style:.Plain, target: self, action: #selector(SessionCoachViewController.logButtonClicked))
-        self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
-        
-        
-        // ADD Book Button At Right Navigationbar Item
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kBook, style:.Plain, target: self, action: #selector(SessionCoachViewController.bookButtonClicked))
-        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
+        // Remove Button At Left Navigationbar Item
+        self.tabBarController?.navigationItem.leftBarButtonItem = nil
+        // ADD + Button At Right Navigationbar Item
+        var image = UIImage(named: "icon_add")
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(self.rightButtonClicked))
     }
     
     // MARK: Private function
@@ -209,38 +211,34 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     // MARK: Outlet function
-    @IBAction func upcomingButtonClicked(sender: AnyObject) {
-        self.view.layoutIfNeeded()
-        self.underLineViewLeadingConstraint.constant = 0
-        UIView.animateWithDuration(0.3, animations: {
-            self.view.layoutIfNeeded()
-        }) { (_) in
-            self.isUpComing = true
-            
-            self.sessionTableView.reloadData()
+    func rightButtonClicked() {
+        let selectLog = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier("coachLogASession", sender: nil)
         }
-    }
-    
-    @IBAction func completedButtonClicked(sender: AnyObject) {
-        self.view.layoutIfNeeded()
-        self.underLineViewLeadingConstraint.constant = self.upcomingButton.frame.size.width
-        UIView.animateWithDuration(0.3, animations: {
-            self.view.layoutIfNeeded()
-        }) { (_) in
-            self.isUpComing = false
-            
-            self.sessionTableView.reloadData()
+        let selectBook = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier("coachMakeABook", sender: nil)
         }
-    }
-    
-    func bookButtonClicked() {
-        print("book clicked")
-        self.performSegueWithIdentifier("coachMakeABook", sender: nil)
         
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: kLog, style: UIAlertActionStyle.Default, handler: selectLog))
+        alertController.addAction(UIAlertAction(title: kBook, style: UIAlertActionStyle.Default, handler: selectBook))
+        
+        self.presentViewController(alertController, animated: true) { }
     }
     
-    func logButtonClicked() {
-        print("log clicked")
+    @IBAction func selecSegmentValueChanged(sender: AnyObject) {
+        if self.selectSegment.selectedSegmentIndex == 0 {
+            self.isUpComing = true
+        } else {
+            self.isUpComing = false
+        }
+        
+        self.sessionTableView.reloadData()
+    }
+    
+    @IBAction func addSessionBTClicked(sender: AnyObject) {
+        print("add session clicked")
         self.performSegueWithIdentifier("coachLogASession", sender: nil)
     }
+    
 }

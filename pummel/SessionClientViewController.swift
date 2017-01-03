@@ -13,14 +13,14 @@ import AlamofireImage
 
 class SessionClientViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    @IBOutlet weak var upcomingButton: UIButton!
-    @IBOutlet weak var completedButton: UIButton!
-    @IBOutlet weak var underLineView: UIView!
-    @IBOutlet weak var underLineViewLeadingConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var selectSegment: UISegmentedControl!
     @IBOutlet weak var sessionTableView: UITableView!
     
     @IBOutlet weak var noSessionV: UIView!
     @IBOutlet weak var noSessionYetLB: UILabel!
+    @IBOutlet weak var noSessionContentLB: UILabel!
+    @IBOutlet weak var addSessionBT: UIButton!
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -34,15 +34,18 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.noSessionYetLB.font = UIFont.pmmPlayFairReg18()
+        self.noSessionContentLB.font = UIFont.pmmMonLight13()
+        self.addSessionBT.titleLabel!.font = UIFont.pmmMonReg12()
+        
+        selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], forState: .Normal)
+        
         self.initTableView()
         self.initNavigationBar()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        self.upcomingButton.titleLabel?.font = UIFont.pmmMonReg13()
-        self.completedButton.titleLabel?.font = UIFont.pmmMonReg13()
         
         self.getListSession()
     }
@@ -52,14 +55,19 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         self.sessionTableView.estimatedRowHeight = 100
         let nibName = UINib(nibName: "LogTableViewCell", bundle:nil)
         self.sessionTableView.registerNib(nibName, forCellReuseIdentifier: "LogTableViewCell")
+        
+        let SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
+        self.sessionTableView.separatorInset = UIEdgeInsetsMake(0, SCREEN_WIDTH, 0, 0)
     }
     
     func initNavigationBar() {
         // Remove Button At Left Navigationbar Item
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
+        
         // ADD Log Button At Right Navigationbar Item
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kLog, style:.Plain, target: self, action: #selector(SessionClientViewController.logButtonClicked))
-        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
+        var image = UIImage(named: "icon_add")
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(self.logButtonClicked))
     }
     
     // MARK: Private function
@@ -208,28 +216,19 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     // MARK: Outlet function
-    @IBAction func upcomingButtonClicked(sender: AnyObject) {
-        self.view.layoutIfNeeded()
-        self.underLineViewLeadingConstraint.constant = 0
-        UIView.animateWithDuration(0.3, animations: {
-            self.view.layoutIfNeeded()
-        }) { (_) in
+    @IBAction func selecSegmentValueChanged(sender: AnyObject) {
+        if self.selectSegment.selectedSegmentIndex == 0 {
             self.isUpComing = true
-            
-            self.sessionTableView.reloadData()
+        } else {
+            self.isUpComing = false
         }
+        
+        self.sessionTableView.reloadData()
     }
     
-    @IBAction func completedButtonClicked(sender: AnyObject) {
-        self.view.layoutIfNeeded()
-        self.underLineViewLeadingConstraint.constant = self.upcomingButton.frame.size.width
-        UIView.animateWithDuration(0.3, animations: {
-            self.view.layoutIfNeeded()
-        }) { (_) in
-            self.isUpComing = false
-            
-            self.sessionTableView.reloadData()
-        }
+    @IBAction func addSessionBTClicked(sender: AnyObject) {
+        print("add session clicked")
+        self.performSegueWithIdentifier("userLogASession", sender: nil)
     }
     
     func logButtonClicked() {
