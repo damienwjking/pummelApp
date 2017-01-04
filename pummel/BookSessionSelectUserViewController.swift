@@ -108,7 +108,7 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
         title.textColor = UIColor.lightGrayColor()
         
         let header = view as! UITableViewHeaderFooterView
-        header.textLabel?.font = .pmmMonLight16()
+        header.textLabel?.font = .pmmMonReg13()
         header.textLabel?.textColor = title.textColor
         
         var text = "NEW LEADS"

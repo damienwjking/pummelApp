@@ -204,8 +204,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="avatarIMV" destination="Kg8-b6-Wm6" id="crk-zg-AmK"/>
-                        <outlet property="avatarUserIMV" destination="UcY-6C-ocX" id="APX-F8-dxz"/>
+                        <outlet property="avatarIMV" destination="UcY-6C-ocX" id="ebv-Q2-MfU"/>
+                        <outlet property="avatarUserIMV" destination="Kg8-b6-Wm6" id="zVB-wb-5pU"/>
                         <outlet property="contentTV" destination="zqR-gU-5sq" id="TYC-5h-EQn"/>
                         <outlet property="dateTF" destination="tJf-HL-JLd" id="vJm-rz-k1D"/>
                         <outlet property="imageScrolView" destination="JFA-6d-TAc" id="NqB-91-xV3"/>

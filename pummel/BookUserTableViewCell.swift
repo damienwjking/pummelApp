@@ -17,6 +17,7 @@ class BookUserTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.imgAvatar.layer.cornerRadius = self.imgAvatar.frame.size.width/2.0
         self.imgAvatar.clipsToBounds = true
+        self.lbName.font = .pmmMonReg13()
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
