@@ -16,6 +16,7 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     @IBOutlet weak var contentTV: UITextView!
     @IBOutlet weak var tapView: UIView!
     @IBOutlet weak var avatarIMV: UIImageView!
+    @IBOutlet weak var avatarUserIMV: UIImageView!
     @IBOutlet weak var imageSelected : UIImageView!
     @IBOutlet weak var imageScrolView : UIScrollView!
     
@@ -24,6 +25,7 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
     var tag:Tag?
+    var userInfoSelect:NSDictionary!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,11 +52,13 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.next))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
+        self.avatarUserIMV.layer.cornerRadius = 20
+        self.avatarUserIMV.clipsToBounds = true
         self.getDetail()
         self.dateTF.font = UIFont.pmmMonReg13()
         self.contentTV.font = UIFont.pmmMonReg13()
@@ -118,6 +122,80 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
         } else {
              self.performSegueWithIdentifier("gotoShare", sender: nil)
         }
+    }
+    
+    func done() {
+        self.view.makeToastActivity(message: "Saving")
+        var prefix = kPMAPICOACHES
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPMAPICOACH_BOOK)
+        
+        var imageData : NSData!
+        let type : String!
+        let filename : String!
+        if self.imageSelected.image != nil {
+            imageData = UIImageJPEGRepresentation(self.imageSelected.image!, 0.2)
+        }
+        
+        type = imageJpeg
+        filename = jpgeFile
+        var userIdSelected = ""
+        if let val = self.userInfoSelect["userId"] as? Int {
+            userIdSelected = "\(val)"
+        }
+        let textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
+        var parameters = [String:AnyObject]()
+        var tagname = ""
+        tagname = (self.tag?.name?.uppercaseString)!
+        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textToPost, kUserIdTarget:userIdSelected, kType:"#\(tagname)", "datetime": self.dateTF.text!]
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+                if imageData != nil {
+                    multipartFormData.appendBodyPart(data: imageData, name: "file",
+                        fileName:filename, mimeType:type)
+                }
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                }
+            },
+            encodingCompletion: { encodingResult in
+                self.view.hideToastActivity()
+                switch encodingResult {
+                case .Success(let upload, _, _):
+                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                    }
+                    upload.validate()
+                    upload.responseJSON { response in
+                        let json = response.result.value as! NSDictionary
+                        print(json)
+                        if response.result.error != nil {
+                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                // ...
+                            }
+                            alertController.addAction(OKAction)
+                            self.presentViewController(alertController, animated: true) {
+                                // ...
+                            }
+                        } else {
+                            self.navigationController?.popToRootViewControllerAnimated(false)
+                        }
+                    }
+                    
+                case .Failure(let encodingError):
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+            }
+        )
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -195,6 +273,33 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
                         }
                 }
             }
+        }
+        
+        var targetUserId = ""
+        if let val = self.userInfoSelect["userId"] as? Int {
+            targetUserId = "\(val)"
+        }
+        
+        var prefixUser = kPMAPIUSER
+        prefixUser.appendContentsOf(targetUserId)
+        Alamofire.request(.GET, prefixUser)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                if let userInfo = JSON as? NSDictionary {
+                    var link = kPMAPI
+                    if !(userInfo[kImageUrl] is NSNull) {
+                        link.appendContentsOf(JSON[kImageUrl] as! String)
+                        link.appendContentsOf(widthHeight160)
+                        Alamofire.request(.GET, link)
+                            .responseImage { response in
+                                let imageRes = response.result.value! as UIImage
+                                self.avatarUserIMV.image = imageRes
+                        }
+                    }
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
         }
     }
     

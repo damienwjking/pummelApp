@@ -111,12 +111,12 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let tag = tags[indexPath.row]
         tagSelect = tag
-        self.performSegueWithIdentifier("assignSessionToUser", sender: nil)
+        self.performSegueWithIdentifier("selectUser", sender: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "assignSessionToUser" {
-            let destination = segue.destinationViewController as! BookSessionToUserViewController
+        if segue.identifier == "selectUser" {
+            let destination = segue.destinationViewController as! BookSessionSelectUserViewController
             destination.tag = tagSelect
         }
     }
