@@ -211,7 +211,6 @@
                         <outlet property="imageScrolView" destination="JFA-6d-TAc" id="NqB-91-xV3"/>
                         <outlet property="imageSelected" destination="CkP-Zq-I6v" id="pTs-EA-wCx"/>
                         <outlet property="tapView" destination="e3z-GW-jsP" id="9hP-gA-CNY"/>
-                        <segue destination="ICZ-oM-Hvx" kind="show" identifier="gotoShare" id="vJ2-MC-067"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Bs-Kt-MZ5" userLabel="First Responder" sceneMemberID="firstResponder"/>

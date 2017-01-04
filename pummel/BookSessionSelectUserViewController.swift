@@ -46,6 +46,13 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
         var prefix = kPMAPICOACHES
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(prefixAPI)
+        if prefixAPI == kPMAPICOACH_LEADS {
+            prefix.appendContentsOf("\(offsetNew)")
+        } else if prefixAPI == kPMAPICOACH_CURRENT {
+            prefix.appendContentsOf("\(offsetCurrent)")
+        } else if prefixAPI == kPMAPICOACH_OLD {
+            prefix.appendContentsOf("\(offsetOld)")
+        }
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -54,12 +61,27 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
                     if prefixAPI == kPMAPICOACH_LEADS {
                         self.arrayNew += arrayMessageT
                         self.tbView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .None)
+                        
+                        self.offsetNew = self.arrayNew.count
+                        if arrayMessageT.count > 0 {
+                            self.loadDataWithPrefix(kPMAPICOACH_LEADS)
+                        }
                     } else if prefixAPI == kPMAPICOACH_CURRENT {
                         self.arrayCurrent += arrayMessageT
                         self.tbView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .None)
+                        
+                        self.offsetCurrent = self.arrayCurrent.count
+                        if arrayMessageT.count > 0 {
+                            self.loadDataWithPrefix(kPMAPICOACH_CURRENT)
+                        }
                     } else if prefixAPI == kPMAPICOACH_OLD {
                         self.arrayOld += arrayMessageT
                         self.tbView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
+                        
+                        self.offsetOld = self.arrayOld.count
+                        if arrayMessageT.count > 0 {
+                            self.loadDataWithPrefix(kPMAPICOACH_OLD)
+                        }
                     }
                 }
             case .Failure(let error):
@@ -99,7 +121,7 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 60.0
+        return 50.0
     }
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
