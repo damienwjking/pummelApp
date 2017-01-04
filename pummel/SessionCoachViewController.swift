@@ -208,6 +208,15 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        var session = Session()
+        if self.isUpComing {
+            session = self.upCommingSessions[indexPath.row]
+        } else {
+            session = self.completedSessions[indexPath.row]
+        }
+        
+        self.performSegueWithIdentifier("coachSessionDetail", sender: session)
     }
     
     // MARK: Outlet function
@@ -215,13 +224,20 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
         let selectLog = { (action:UIAlertAction!) -> Void in
             self.performSegueWithIdentifier("coachLogASession", sender: nil)
         }
+        
         let selectBook = { (action:UIAlertAction!) -> Void in
             self.performSegueWithIdentifier("coachMakeABook", sender: nil)
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.view.tintColor = UIColor.pmmBrightOrangeColor()
+        
         alertController.addAction(UIAlertAction(title: kLog, style: UIAlertActionStyle.Default, handler: selectLog))
         alertController.addAction(UIAlertAction(title: kBook, style: UIAlertActionStyle.Default, handler: selectBook))
+        
+        alertController.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (UIAlertAction) in
+            
+        }))
         
         self.presentViewController(alertController, animated: true) { }
     }
@@ -239,6 +255,14 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func addSessionBTClicked(sender: AnyObject) {
         print("add session clicked")
         self.performSegueWithIdentifier("coachLogASession", sender: nil)
+    }
+    
+    // MARK: Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "coachSessionDetail" {
+            let destination = segue.destinationViewController as! DetailSessionViewController
+            destination.session = sender as! Session
+        }
     }
     
 }

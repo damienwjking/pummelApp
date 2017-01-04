@@ -213,6 +213,15 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        var session = Session()
+        if self.isUpComing {
+            session = self.upCommingSessions[indexPath.row]
+        } else {
+            session = self.completedSessions[indexPath.row]
+        }
+        
+        self.performSegueWithIdentifier("userSessionDetail", sender: session)
     }
     
     // MARK: Outlet function
@@ -235,4 +244,13 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         print("log clicked")
         self.performSegueWithIdentifier("userLogASession", sender: nil)
     }
+    
+    // MARK: Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "userSessionDetail" {
+            let destination = segue.destinationViewController as! DetailSessionViewController
+            destination.session = sender as! Session
+        }
+    }
+    
 }

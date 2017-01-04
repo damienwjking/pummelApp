@@ -22,7 +22,7 @@ class Session: NSObject {
     var updatedAt: String?
     var distance: Int?
     var longtime: Int?
-    var intensity: Int?
+    var intensity: String?
     var calorie: Int?
     
     func parseDataWithDictionary(sessionContent: NSDictionary) {
@@ -39,7 +39,7 @@ class Session: NSObject {
         self.updatedAt = sessionContent.objectForKey("updatedAt") as? String
         self.distance = sessionContent.objectForKey("distance") as? Int
         self.longtime = sessionContent.objectForKey("longtime") as? Int
-        self.intensity = sessionContent.objectForKey("intensity") as? Int
+        self.intensity = sessionContent.objectForKey("intensity") as? String
         self.calorie = sessionContent.objectForKey("calorie") as? Int
     }
 }

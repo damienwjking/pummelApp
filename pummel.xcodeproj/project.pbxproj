@@ -31,7 +31,6 @@
 		BA0B61ED1E004E0800A98C82 /* miniPummelLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */; };
 		BA0B61EE1E004E0800A98C82 /* miniPummelLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */; };
 		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
-		BA0D01D31E1BF2B700BE2B47 /* icon_add.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0D01D21E1BF2B700BE2B47 /* icon_add.png */; };
 		BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043061E083749006DB43D /* LogTableViewCell.swift */; };
 		BA131BFF1E16B76400CA9A83 /* LogTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */; };
 		BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */; };
@@ -41,6 +40,12 @@
 		BA141CBF1E0AFB060076D4B8 /* sessionTime.png in Resources */ = {isa = PBXBuildFile; fileRef = BA141CBB1E0AFB060076D4B8 /* sessionTime.png */; };
 		BA141CC01E0AFB060076D4B8 /* SessionDistance.png in Resources */ = {isa = PBXBuildFile; fileRef = BA141CBC1E0AFB060076D4B8 /* SessionDistance.png */; };
 		BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */; };
+		BA4A667E1E1D322000F5A218 /* icon_add.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4A667C1E1D322000F5A218 /* icon_add.png */; };
+		BA4A667F1E1D322000F5A218 /* icon_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4A667D1E1D322000F5A218 /* icon_add@2x.png */; };
+		BA4A66831E1D466300F5A218 /* empty_session.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4A66801E1D466300F5A218 /* empty_session.png */; };
+		BA4A66841E1D466300F5A218 /* empty_session@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4A66811E1D466300F5A218 /* empty_session@2x.png */; };
+		BA4A66851E1D466300F5A218 /* empty_session@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4A66821E1D466300F5A218 /* empty_session@3x.png */; };
+		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BACB29E51E09AFFD00C41FAF /* sessionRunning.png in Resources */ = {isa = PBXBuildFile; fileRef = BACB29E41E09AFFD00C41FAF /* sessionRunning.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */; };
@@ -346,7 +351,6 @@
 		BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@3x.png"; sourceTree = "<group>"; };
 		BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = miniPummelLogo.png; sourceTree = "<group>"; };
 		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
-		BA0D01D21E1BF2B700BE2B47 /* icon_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_add.png; sourceTree = "<group>"; };
 		BA1043061E083749006DB43D /* LogTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTableViewCell.swift; sourceTree = "<group>"; };
 		BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogTableViewCell.xib; sourceTree = "<group>"; };
 		BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
@@ -356,6 +360,12 @@
 		BA141CBB1E0AFB060076D4B8 /* sessionTime.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionTime.png; sourceTree = "<group>"; };
 		BA141CBC1E0AFB060076D4B8 /* SessionDistance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SessionDistance.png; sourceTree = "<group>"; };
 		BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionTableViewCell.swift; sourceTree = "<group>"; };
+		BA4A667C1E1D322000F5A218 /* icon_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_add.png; sourceTree = "<group>"; };
+		BA4A667D1E1D322000F5A218 /* icon_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_add@2x.png"; sourceTree = "<group>"; };
+		BA4A66801E1D466300F5A218 /* empty_session.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_session.png; sourceTree = "<group>"; };
+		BA4A66811E1D466300F5A218 /* empty_session@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_session@2x.png"; sourceTree = "<group>"; };
+		BA4A66821E1D466300F5A218 /* empty_session@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_session@3x.png"; sourceTree = "<group>"; };
+		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BACB29E41E09AFFD00C41FAF /* sessionRunning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sessionRunning.png; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadAddedTableViewCell.swift; sourceTree = "<group>"; };
@@ -805,7 +815,11 @@
 		F9827EB71CBBF31600841BF1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				BA0D01D21E1BF2B700BE2B47 /* icon_add.png */,
+				BA4A66801E1D466300F5A218 /* empty_session.png */,
+				BA4A66811E1D466300F5A218 /* empty_session@2x.png */,
+				BA4A66821E1D466300F5A218 /* empty_session@3x.png */,
+				BA4A667C1E1D322000F5A218 /* icon_add.png */,
+				BA4A667D1E1D322000F5A218 /* icon_add@2x.png */,
 				F9248D8F1E177C3D0019491F /* icon_delete.png */,
 				BA0314901E155FC000982622 /* intensity.png */,
 				F9248D8D1E174D310019491F /* icon_calories.png */,
@@ -1089,6 +1103,7 @@
 				F96846FF1E06B4CF009EB06C /* SessionClientViewController.swift */,
 				F96846FD1E06B4AC009EB06C /* ShareClientSessionViewController.swift */,
 				F96847011E06B509009EB06C /* SessionCoachViewController.swift */,
+				BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */,
 				F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */,
 				F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */,
 				F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */,
@@ -1340,6 +1355,7 @@
 				F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */,
 				F9EAE8DA1D6ED08200FD32BE /* cardEmpty@3x.png in Resources */,
 				F9FE13CC1CEB1B3E004ABE34 /* Montserrat-Light.ttf in Resources */,
+				BA4A667F1E1D322000F5A218 /* icon_add@2x.png in Resources */,
 				F9CA4A101D2153CE00E8A585 /* TagCell.xib in Resources */,
 				F9F3CC481CE7D4A4007F68A5 /* cameraIcon@2x.png in Resources */,
 				F9EAE8D91D6ED08200FD32BE /* cardEmpty@2x.png in Resources */,
@@ -1360,6 +1376,7 @@
 				F9827F131CBC752E00841BF1 /* add@3x.png in Resources */,
 				F9827EBC1CBBF46B00841BF1 /* pummelLogo@2x.png in Resources */,
 				F9827F0B1CBC751500841BF1 /* back.png in Resources */,
+				BA4A66831E1D466300F5A218 /* empty_session.png in Resources */,
 				E8D778EA1E0AF6F00011E164 /* GroupLeadTableViewCell.xib in Resources */,
 				F9827F1E1CBC755B00841BF1 /* birthday@2x.png in Resources */,
 				BA141CC01E0AFB060076D4B8 /* SessionDistance.png in Resources */,
@@ -1391,6 +1408,7 @@
 				F96847111E06B726009EB06C /* LogSession.storyboard in Resources */,
 				F98C41A31CF25F6500ECC66E /* search@3x.png in Resources */,
 				F9CF54DD1D7F977300BE144F /* liked.png in Resources */,
+				BA4A66851E1D466300F5A218 /* empty_session@3x.png in Resources */,
 				F98C419B1CF25F6500ECC66E /* profile.png in Resources */,
 				F979E15B1D7DBD5B00C717F0 /* noActivity.png in Resources */,
 				F9ABEAEC1DC4BB7E0084B70E /* PostFeed.storyboard in Resources */,
@@ -1416,7 +1434,7 @@
 				F9ABEAEA1DC4BB710084B70E /* FeedDetail.storyboard in Resources */,
 				F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */,
 				F970A2B61D2646A900932BFC /* connect@3x.png in Resources */,
-				BA0D01D31E1BF2B700BE2B47 /* icon_add.png in Resources */,
+				BA4A667E1E1D322000F5A218 /* icon_add.png in Resources */,
 				F98C41921CF25F6500ECC66E /* feedPressed.png in Resources */,
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
 				F979E1681D7DC4BD00C717F0 /* comment@2x.png in Resources */,
@@ -1500,6 +1518,7 @@
 				F9827F181CBC754900841BF1 /* gender@2x.png in Resources */,
 				F9F3CC491CE7D4A4007F68A5 /* cameraIcon@3x.png in Resources */,
 				F98C41A41CF25F6500ECC66E /* sessions.png in Resources */,
+				BA4A66841E1D466300F5A218 /* empty_session@2x.png in Resources */,
 				BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */,
 				F98C418F1CF25F6500ECC66E /* feed.png in Resources */,
 			);
@@ -1620,6 +1639,7 @@
 				F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */,
 				E86A65D91E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift in Sources */,
 				F9CF54D51D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift in Sources */,
+				BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */,
 				F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */,
 				F9EAE8F71D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift in Sources */,
 				F9EAE8E11D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift in Sources */,
