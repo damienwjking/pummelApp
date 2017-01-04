@@ -171,7 +171,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         let defaultDate = calendar.dateFromComponents(components)
         timePickerView.date = defaultDate!
         
-        self.setTimeLBWithDate(NSDate())
+//        self.setTimeLBWithDate(NSDate())
     }
     
     func initDistance() {
@@ -262,7 +262,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             let type : String! = imageJpeg
             let filename : String! = jpgeFile
             
-            let calorieSelected : String = String((self.caloriesTF.text != "") ? Int(self.caloriesTF.text!)! : 0)
+            let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
             let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
             let parameters = [
                 kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
@@ -275,7 +275,6 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
                 "datetime":  selectedDate
             ]
 
-            
             if (self.imageSelected.image != nil) {
                 imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
             }

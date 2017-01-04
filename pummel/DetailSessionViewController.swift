@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class DetailSessionViewController: UIViewController {
 
@@ -55,17 +56,19 @@ class DetailSessionViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.session.calorie = 100
+        self.setAvatar()
+        
+        if self.session.text?.isEmpty == false {
+            self.contentTV.text = self.session.text
+        } else {
+            self.contentTV.text = ""
+        }
         
         
         self.title = self.session.type?.componentsSeparatedByString(" ").joinWithSeparator("")
         
-        if self.session.datetime?.isEmpty == false {
-            let timeFormatter = NSDateFormatter()
-            timeFormatter.dateFormat = kFullDateFormat
-            let date = timeFormatter.dateFromString(self.session.datetime!)
-            timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
-            self.timeLB.text = timeFormatter.stringFromDate(date!)
+        if self.session.longtime != 0 {
+            self.timeLB.text = String(format: "%ld minutes", self.session.longtime!)
             
             self.timeV.hidden = false
             self.timeVHeightConstraint.constant = 50;
@@ -91,7 +94,6 @@ class DetailSessionViewController: UIViewController {
                 self.distanceLB.text = String(format: "%ld mi", self.session.distance!)
             }
             
-            
             self.distanceV.hidden = false
             self.distanceVHeightConstraint.constant = 50
         } else {
@@ -107,6 +109,14 @@ class DetailSessionViewController: UIViewController {
             self.caloriesV.hidden = true
             self.caloriesVHeightConstraint.constant = 0
         }
+        
+        if self.session.datetime?.isEmpty == false {
+            let timeFormatter = NSDateFormatter()
+            timeFormatter.dateFormat = kFullDateFormat
+            let date = timeFormatter.dateFromString(self.session.datetime!)
+            timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
+            self.dateTF.text = timeFormatter.stringFromDate(date!)
+        }
     }
     
     func initLayout() {
@@ -121,8 +131,49 @@ class DetailSessionViewController: UIViewController {
         self.avatarIMV.clipsToBounds = true
         
         self.contentTV.font = UIFont.pmmMonReg13()
-        self.contentTV.keyboardAppearance = .Dark
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
+    }
+    
+    func setAvatar() {
+        var prefix = kPMAPIUSER
+        prefix.appendContentsOf(String(format: "%ld", self.session.userId!))
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in
+                if response.response?.statusCode == 200 {
+                    if (response.result.value == nil) {return}
+                    let userDetail = response.result.value as! NSDictionary
+                    if !(userDetail[kImageUrl] is NSNull) {
+                        let imageLink = userDetail[kImageUrl] as! String
+                        var prefix = kPMAPI
+                        prefix.appendContentsOf(imageLink)
+                        let postfix = widthEqual.stringByAppendingString(self.avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.avatarIMV.frame.size.width.description)
+                        prefix.appendContentsOf(postfix)
+                        if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                            let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                            self.avatarIMV.image = imageRes
+                        } else {
+                            Alamofire.request(.GET, prefix)
+                                .responseImage { response in
+                                    if (response.response?.statusCode == 200) {
+                                        let imageRes = response.result.value! as UIImage
+                                        self.avatarIMV.image = imageRes
+                                        NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                                    }
+                            }
+                        }
+                    }
+
+                } else if response.response?.statusCode == 401 {
+                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // TODO: LOGOUT
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+        }
     }
     
     func backClicked() {
