@@ -12,12 +12,14 @@ import Foundation
 
 class LogSessionClientDetailViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, FusumaDelegate, UITextFieldDelegate {
     var tag: Tag = Tag()
+    var userInfoSelect:NSDictionary!
     
     @IBOutlet weak var tappedV: UIView!
     
     @IBOutlet weak var dateTF: UITextField!
     @IBOutlet weak var contentTV: UITextView!
     @IBOutlet weak var avatarIMV: UIImageView!
+    @IBOutlet weak var avatarUserIMV: UIImageView!
     @IBOutlet weak var imageSelected : UIImageView!
     @IBOutlet weak var imageScrolView : UIScrollView!
     
@@ -262,6 +264,11 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             let type : String! = imageJpeg
             let filename : String! = jpgeFile
             
+            var userIdSelected = ""
+            if let val = self.userInfoSelect["userId"] as? Int {
+                userIdSelected = "\(val)"
+            }
+            
             let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
             let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
             let parameters = [
@@ -272,7 +279,8 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
                 "distance" : self.distanceSelected,
                 "longtime" : self.longtimeSelected,
                 "calorie" :  calorieSelected,
-                "datetime":  selectedDate
+                "datetime":  selectedDate,
+                kUserIdTarget:userIdSelected
             ]
 
             if (self.imageSelected.image != nil) {
@@ -406,6 +414,34 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
                 }
             }
         }
+        
+        var targetUserId = ""
+        if let val = self.userInfoSelect["userId"] as? Int {
+            targetUserId = "\(val)"
+        }
+        
+        var prefixUser = kPMAPIUSER
+        prefixUser.appendContentsOf(targetUserId)
+        Alamofire.request(.GET, prefixUser)
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                if let userInfo = JSON as? NSDictionary {
+                    var link = kPMAPI
+                    if !(userInfo[kImageUrl] is NSNull) {
+                        link.appendContentsOf(JSON[kImageUrl] as! String)
+                        link.appendContentsOf(widthHeight160)
+                        Alamofire.request(.GET, link)
+                            .responseImage { response in
+                                let imageRes = response.result.value! as UIImage
+                                self.avatarUserIMV.image = imageRes
+                        }
+                    }
+                }
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
+
     }
     
     @IBAction func showPopupToSelectImage(sender: AnyObject) {

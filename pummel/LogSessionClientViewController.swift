@@ -132,7 +132,7 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
+        self.performSegueWithIdentifier("selectUser", sender: nil)
     }
     
     func configureCell(cell: ActivityCell, forIndexPath indexPath: NSIndexPath) {
@@ -171,15 +171,15 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let tag = tags[indexPath.row]
-        self.performSegueWithIdentifier("goLogSessionDetail", sender: tag)
+        self.performSegueWithIdentifier("selectUser", sender: tag)
     }
     
     // MARK: Segue
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "goLogSessionDetail" {
-            let destination = segue.destinationViewController as! LogSessionClientDetailViewController
+        if segue.identifier == "selectUser" {
+            let destination = segue.destinationViewController as! LogSessionSelectUserViewController
             
-            destination.tag = sender as! Tag
+            destination.tag = sender as? Tag
         }
         
         

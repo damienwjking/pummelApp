@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bn-X7-I3Z">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bn-X7-I3Z">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -105,7 +105,7 @@
                         <outlet property="collectionView" destination="FRn-Di-WUq" id="yJr-Gc-PIZ"/>
                         <outlet property="flowLayout" destination="UPW-53-HgY" id="QEj-pY-Zk5"/>
                         <outlet property="tableView" destination="H6u-hR-lTz" id="GA0-Jk-sa1"/>
-                        <segue destination="N3f-Ry-iKt" kind="show" identifier="goLogSessionDetail" id="pMW-y5-bwq"/>
+                        <segue destination="kwg-uW-nE1" kind="show" identifier="selectUser" id="dsT-eQ-vRG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NZs-bC-XcJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -130,15 +130,22 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Ek-5F-AI5">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="114"/>
                                         <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="display-empty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="rkn-Sg-3hF">
+                                                <rect key="frame" x="10" y="15" width="40" height="40"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="14o-r2-AqT"/>
+                                                    <constraint firstAttribute="width" constant="40" id="kdX-8d-6FC"/>
+                                                </constraints>
+                                            </imageView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="display-empty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="rGg-XM-sz8">
-                                                <rect key="frame" x="15" y="15" width="40" height="40"/>
+                                                <rect key="frame" x="60" y="15" width="40" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="MV8-hP-RtE"/>
                                                     <constraint firstAttribute="width" constant="40" id="dOh-J1-oHg"/>
                                                 </constraints>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="ADD A DATE" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uOw-tP-BTu">
-                                                <rect key="frame" x="63" y="20" width="302" height="30"/>
+                                                <rect key="frame" x="108" y="20" width="257" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="mNo-Wd-t42"/>
                                                 </constraints>
@@ -160,12 +167,14 @@
                                         <constraints>
                                             <constraint firstItem="uOw-tP-BTu" firstAttribute="leading" secondItem="rGg-XM-sz8" secondAttribute="trailing" constant="8" id="3ht-jA-gJv"/>
                                             <constraint firstItem="0nY-zx-Pxe" firstAttribute="top" secondItem="rGg-XM-sz8" secondAttribute="bottom" constant="5" id="6BU-qE-s98"/>
-                                            <constraint firstItem="rGg-XM-sz8" firstAttribute="leading" secondItem="7Ek-5F-AI5" secondAttribute="leading" constant="15" id="As9-C0-NpM"/>
                                             <constraint firstItem="0nY-zx-Pxe" firstAttribute="leading" secondItem="7Ek-5F-AI5" secondAttribute="leading" constant="15" id="BSC-pZ-xBd"/>
+                                            <constraint firstItem="rkn-Sg-3hF" firstAttribute="leading" secondItem="7Ek-5F-AI5" secondAttribute="leading" constant="10" id="Fu3-mh-QXP"/>
+                                            <constraint firstItem="rGg-XM-sz8" firstAttribute="leading" secondItem="rkn-Sg-3hF" secondAttribute="trailing" constant="10" id="UVn-ml-GUN"/>
                                             <constraint firstAttribute="trailing" secondItem="uOw-tP-BTu" secondAttribute="trailing" constant="10" id="Xz5-fe-ewJ"/>
                                             <constraint firstItem="uOw-tP-BTu" firstAttribute="centerY" secondItem="rGg-XM-sz8" secondAttribute="centerY" id="kCH-Xc-3dN"/>
                                             <constraint firstItem="rGg-XM-sz8" firstAttribute="top" secondItem="7Ek-5F-AI5" secondAttribute="top" constant="15" id="mK1-Wp-x6s"/>
                                             <constraint firstAttribute="bottom" secondItem="0nY-zx-Pxe" secondAttribute="bottom" constant="10" id="oB1-Mp-Ml4"/>
+                                            <constraint firstItem="rkn-Sg-3hF" firstAttribute="top" secondItem="7Ek-5F-AI5" secondAttribute="top" constant="15" id="rEI-q7-Xtu"/>
                                             <constraint firstAttribute="trailing" secondItem="0nY-zx-Pxe" secondAttribute="trailing" constant="5" id="zhO-v4-FYt"/>
                                         </constraints>
                                     </view>
@@ -481,7 +490,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="avatarIMV" destination="rGg-XM-sz8" id="gPc-pm-QAI"/>
+                        <outlet property="avatarIMV" destination="rkn-Sg-3hF" id="nc6-nh-Cor"/>
+                        <outlet property="avatarUserIMV" destination="rGg-XM-sz8" id="OCs-Yc-D4g"/>
                         <outlet property="caloriesLB" destination="AQg-72-lv0" id="y17-PL-iNB"/>
                         <outlet property="caloriesTF" destination="tdu-Z1-DmZ" id="Z9X-o1-DQc"/>
                         <outlet property="caloriesTextLB" destination="bFO-hc-IBU" id="F3n-4l-NYq"/>
@@ -507,6 +517,44 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1RY-BL-Zy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="901.60000000000002" y="62.518740629685162"/>
+        </scene>
+        <!--Log Session Select User View Controller-->
+        <scene sceneID="Pxt-WT-7Ht">
+            <objects>
+                <viewController id="kwg-uW-nE1" customClass="LogSessionSelectUserViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0CZ-D4-Jwn"/>
+                        <viewControllerLayoutGuide type="bottom" id="PhT-B6-jap"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gvM-gh-znw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pCr-UB-TSn">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="kwg-uW-nE1" id="pbt-Ie-UrO"/>
+                                    <outlet property="delegate" destination="kwg-uW-nE1" id="oK5-10-yZz"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="pCr-UB-TSn" secondAttribute="trailing" id="3v7-FH-qqh"/>
+                            <constraint firstItem="pCr-UB-TSn" firstAttribute="top" secondItem="0CZ-D4-Jwn" secondAttribute="bottom" id="7qA-PP-JCK"/>
+                            <constraint firstItem="PhT-B6-jap" firstAttribute="top" secondItem="pCr-UB-TSn" secondAttribute="bottom" id="Pfn-n7-OTD"/>
+                            <constraint firstItem="pCr-UB-TSn" firstAttribute="leading" secondItem="gvM-gh-znw" secondAttribute="leading" id="ayo-Sv-Sek"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tbView" destination="pCr-UB-TSn" id="KFd-q5-rc3"/>
+                        <segue destination="N3f-Ry-iKt" kind="show" identifier="goLogSessionDetail" id="esH-ZK-ZhO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jTH-CG-MNn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="478" y="725"/>
         </scene>
     </scenes>
     <resources>
