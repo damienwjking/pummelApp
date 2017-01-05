@@ -463,7 +463,7 @@
                                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FoG-Nr-iqX">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                             </scrollView>
-                                            <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpa-8c-mDQ">
+                                            <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpa-8c-mDQ">
                                                 <rect key="frame" x="-0.5" y="0.0" width="375" height="375"/>
                                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
