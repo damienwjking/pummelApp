@@ -68,10 +68,10 @@ class DetailSessionViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.session.longtime = 90
-        self.session.distance = 250
-        self.session.intensity = "Light"
-        self.session.calorie = 250
+//        self.session.longtime = 90
+//        self.session.distance = 250
+//        self.session.intensity = "Light"
+//        self.session.calorie = 250
         
         self.typeLabel.text = self.session.type?.componentsSeparatedByString(" ").joinWithSeparator("")
         
