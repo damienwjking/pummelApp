@@ -90,9 +90,10 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
     var coachDetail: NSDictionary!
     var sizingCell: TagCell?
     var tags = [Tag]()
-    var arrayPhotos: NSArray = []
+    var arrayPhotos: NSMutableArray = []
     var isFromFeed: Bool = false
-    
+    var offset: Int = 0
+    var isStopGetListPhotos : Bool = false
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -383,14 +384,22 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
         prefix.appendContentsOf(kPM_PATH_PHOTO)
+        prefix.appendContentsOf("\(self.offset)")
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                self.arrayPhotos = JSON as! NSArray
-                self.aboutCollectionView.reloadData()
-                self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-                self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
-                self.scrollView.scrollEnabled = true
+                if let arrayphoto = JSON as? NSArray {
+                    if arrayphoto.count > 0 {
+                        self.offset += 10
+                        self.arrayPhotos.addObjectsFromArray(arrayphoto as [AnyObject])
+                        self.aboutCollectionView.reloadData()
+                        self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+                        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
+                        self.scrollView.scrollEnabled = true
+                    } else {
+                        self.isStopGetListPhotos = true
+                    }
+                }
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
@@ -744,7 +753,12 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
             self.configureAboutCell(cell, forIndexPath: indexPath)
             return cell
         }
-        
+    }
+    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row == self.arrayPhotos.count - 1 && self.isStopGetListPhotos == false {
+            self.getListImage()
+        }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
