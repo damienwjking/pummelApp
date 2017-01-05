@@ -23,6 +23,7 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
     var sizingCell: ActivityCell?
     @IBOutlet weak var flowLayout: FlowLayout!
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,18 +172,22 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let tag = tags[indexPath.row]
-        self.performSegueWithIdentifier("selectUser", sender: tag)
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.performSegueWithIdentifier("selectUser", sender: tag)
+        } else {
+            self.performSegueWithIdentifier("goLogSessionDetail", sender: tag)
+        }
     }
     
     // MARK: Segue
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "selectUser" {
+        if segue.identifier == "goLogSessionDetail" {
+            let destination = segue.destinationViewController as! LogSessionClientDetailViewController
+            destination.tag = (sender as! Tag)
+        } else if segue.identifier == "selectUser" {
             let destination = segue.destinationViewController as! LogSessionSelectUserViewController
-            
             destination.tag = sender as? Tag
         }
-        
-        
     }
     
 }
