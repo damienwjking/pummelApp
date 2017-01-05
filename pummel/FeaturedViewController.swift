@@ -317,6 +317,17 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     
     func showListContext(sender: UIButton) {
         let selectReport = { (action:UIAlertAction!) -> Void in
+            
+            let feed = self.arrayFeeds[sender.tag]
+            let postId = String(format:"%0.f", feed[kId]!.doubleValue)
+            Alamofire.request(.POST, kPMAPI_REPORT, parameters: ["postId":postId])
+                .responseJSON { response in
+                    if response.response?.statusCode == 200 {
+                        self.arrayFeeds.removeAtIndex(sender.tag)
+                        self.tableFeed.reloadData()
+                    }
+            }
+
         }
         let share = { (action:UIAlertAction!) -> Void in
             self.sharePummel()
