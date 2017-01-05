@@ -438,26 +438,30 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                 self.aboutTVHeightDT.constant = sizeAboutTV.height
                 self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
                 
+                self.qualificationDT.constant = 0
                 if !(coachInformationTotal[kQualification] is NSNull) {
                     let qualificationText = coachInformationTotal[kQualification] as! String
                     self.qualificationTV.text = qualificationText
                     let sizeQualificationTV = self.qualificationTV.sizeThatFits(self.qualificationTV.frame.size)
                     self.qualificationTVHeightDT.constant = sizeQualificationTV.height + 10
-                    self.qualificationDT.constant = self.qualificationTV.frame.origin.y + sizeQualificationTV.height
+                    if qualificationText != "" {
+                        self.qualificationDT.constant = self.qualificationTV.frame.origin.y + sizeQualificationTV.height
+                    }
                 } else {
                     self.qualificationTV.text = " "
-                    self.qualificationDT.constant = 0
                 }
                 
+                self.achivementDT.constant = 0
                 if !(coachInformationTotal[kAchievement] is NSNull) {
                     let achivementText = coachInformationTotal[kAchievement] as! String
                     self.achivementTV.text = achivementText
                     let sizeAchivementTV = self.achivementTV.sizeThatFits(self.achivementTV.frame.size)
                     self.achivementTVHeightDT.constant = sizeAchivementTV.height + 10
-                    self.achivementDT.constant = self.qualificationTV.frame.origin.y + sizeAchivementTV.height
+                    if achivementText != "" {
+                        self.achivementDT.constant = self.qualificationTV.frame.origin.y + sizeAchivementTV.height
+                    }
                 } else {
                     self.achivementTV.text = " "
-                    self.achivementDT.constant = 0
                 }
                 
                 if !(coachInformationTotal[kWebsiteUrl] is NSNull) {
@@ -529,7 +533,6 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                         }
                     }
                 }
-                
                 self.view.hideToastActivity()
             case .Failure(let error):
                 print("Request failed with error: \(error)")
