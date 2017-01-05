@@ -273,8 +273,7 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @IBAction func addSessionBTClicked(sender: AnyObject) {
-        print("add session clicked")
-        self.performSegueWithIdentifier("coachLogASession", sender: nil)
+        self.rightButtonClicked()
     }
     
     // MARK: Segue
