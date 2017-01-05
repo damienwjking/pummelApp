@@ -56,6 +56,8 @@ class DetailSessionViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.title = self.session.type?.componentsSeparatedByString(" ").joinWithSeparator("")
+        
         self.setAvatar()
         
         if self.session.text?.isEmpty == false {
@@ -64,10 +66,7 @@ class DetailSessionViewController: UIViewController {
             self.contentTV.text = ""
         }
         
-        
-        self.title = self.session.type?.componentsSeparatedByString(" ").joinWithSeparator("")
-        
-        if self.session.longtime != 0 {
+        if self.session.longtime != nil && self.session.longtime != 0 {
             self.timeLB.text = String(format: "%ld minutes", self.session.longtime!)
             
             self.timeV.hidden = false
@@ -86,7 +85,7 @@ class DetailSessionViewController: UIViewController {
             self.intensityVHeightConstraint.constant = 0
         }
         
-        if self.session.distance != 0 {
+        if self.session.distance != nil && self.session.distance != 0 {
             let distanceUnit = self.defaults.objectForKey(kUnit) as? String
             if (distanceUnit == metric) {
                 self.distanceLB.text = String(format: "%ld kms", self.session.distance!)
@@ -101,7 +100,7 @@ class DetailSessionViewController: UIViewController {
             self.distanceVHeightConstraint.constant = 0
         }
         
-        if self.session.calorie != 0 {
+        if self.session.calorie != nil && self.session.calorie != 0 {
             self.caloriesLB.text = String(format: "%ld", self.session.calorie!)
             self.caloriesV.hidden = false
             self.caloriesVHeightConstraint.constant = 50
