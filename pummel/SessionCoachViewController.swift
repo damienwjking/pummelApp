@@ -39,6 +39,20 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
         
         selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], forState: .Normal)
         
+        if self.defaults.objectForKey(k_PM_IS_UP_COMING) == nil {
+            self.isUpComing = true
+            self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
+        } else {
+            let isComingValue = self.defaults.objectForKey(k_PM_IS_UP_COMING) as! Int
+            if isComingValue == 1 {
+                self.isUpComing = true
+                self.selectSegment.selectedSegmentIndex = 0
+            } else {
+                self.isUpComing = false
+                self.selectSegment.selectedSegmentIndex = 1
+            }
+        }
+        
         self.initTableView()
         self.initNavigationBar()
     }
@@ -265,8 +279,10 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func selecSegmentValueChanged(sender: AnyObject) {
         if self.selectSegment.selectedSegmentIndex == 0 {
             self.isUpComing = true
+            self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
         } else {
             self.isUpComing = false
+            self.defaults.setValue(0, forKey: k_PM_IS_UP_COMING)
         }
         
         self.sessionTableView.reloadData()
