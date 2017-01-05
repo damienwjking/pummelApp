@@ -485,6 +485,9 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                     self.twitterLink = coachInformation[kTwitterUrl] as? String
                 }
                 
+                self.socalDT.constant = 94
+                self.socalBTDT.constant = 50
+                self.socailLB.text = "SOCIAL"
                 if (self.instagramLink == "") {
                     if (self.facebookLink == "") {
                         if (self.twitterLink == "") {
@@ -598,6 +601,9 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
             self.twitterLink = coachDetail[kTwitterUrl] as? String
         }
         
+        self.socalDT.constant = 94
+        self.socalBTDT.constant = 50
+        self.socailLB.text = "SOCIAL"
         if (self.instagramLink == "") {
             if (self.facebookLink == "") {
                 if (self.twitterLink == "") {
