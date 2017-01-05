@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bn-X7-I3Z">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bn-X7-I3Z">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -24,7 +24,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="FRn-Di-WUq">
-                                <rect key="frame" x="0.0" y="333.5" width="375" height="0.0"/>
+                                <rect key="frame" x="0.0" y="334" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" id="Jbc-ho-mFT"/>
@@ -64,7 +64,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RUNNING" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ajW-OH-0vd">
-                                                    <rect key="frame" x="70" y="26.5" width="284" height="17"/>
+                                                    <rect key="frame" x="70" y="27" width="284" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -492,6 +492,7 @@
                     <connections>
                         <outlet property="avatarIMV" destination="rkn-Sg-3hF" id="nc6-nh-Cor"/>
                         <outlet property="avatarUserIMV" destination="rGg-XM-sz8" id="OCs-Yc-D4g"/>
+                        <outlet property="avatarUserIMVWidth" destination="dOh-J1-oHg" id="fJC-YF-bes"/>
                         <outlet property="caloriesLB" destination="AQg-72-lv0" id="y17-PL-iNB"/>
                         <outlet property="caloriesTF" destination="tdu-Z1-DmZ" id="Z9X-o1-DQc"/>
                         <outlet property="caloriesTextLB" destination="bFO-hc-IBU" id="F3n-4l-NYq"/>

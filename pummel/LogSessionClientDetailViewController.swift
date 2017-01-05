@@ -20,6 +20,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     @IBOutlet weak var contentTV: UITextView!
     @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var avatarUserIMV: UIImageView!
+    @IBOutlet weak var avatarUserIMVWidth: NSLayoutConstraint!
     @IBOutlet weak var imageSelected : UIImageView!
     @IBOutlet weak var imageScrolView : UIScrollView!
     
@@ -267,8 +268,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
             let filename : String! = jpgeFile
             
             var userIdSelected = ""
-            if let val = self.userInfoSelect["userId"] as? Int {
-                userIdSelected = "\(val)"
+            if self.userInfoSelect != nil {
+                if let val = self.userInfoSelect["userId"] as? Int {
+                    userIdSelected = "\(val)"
+                }
             }
             
             let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
@@ -415,6 +418,11 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
                         }
                 }
             }
+        }
+        
+        if self.userInfoSelect == nil {
+            self.avatarUserIMVWidth.constant = 0
+            return
         }
         
         var targetUserId = ""

@@ -31,8 +31,8 @@ class LogSessionSelectUserViewController: UIViewController, UITableViewDelegate,
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
         
-        //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.next))
-        //        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.next))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         let nibName = UINib(nibName: "BookUserTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName, forCellReuseIdentifier: "BookUserTableViewCell")
@@ -95,7 +95,7 @@ class LogSessionSelectUserViewController: UIViewController, UITableViewDelegate,
     }
     
     func next() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
