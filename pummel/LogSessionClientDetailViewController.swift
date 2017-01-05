@@ -147,6 +147,8 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
+        self.avatarUserIMV.layer.cornerRadius = 20
+        self.avatarUserIMV.clipsToBounds = true
         self.getDetail()
         
         self.contentTV.text = "ADD A COMMENT..."
