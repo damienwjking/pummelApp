@@ -221,23 +221,32 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: Outlet function
     func rightButtonClicked() {
-        let selectLog = { (action:UIAlertAction!) -> Void in
+        let logAction = UIAlertAction(title: kLog, style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
             self.performSegueWithIdentifier("coachLogASession", sender: nil)
-        }
+        })
+        logAction.setValue(UIColor.pmmBrightOrangeColor(), forKey: "titleTextColor")
+//        let logAttributedText = NSMutableAttributedString(string: kLog)
+//        let logRange = NSRange(location: 0, length: logAttributedText.length)
+//        logAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg13(), range: logRange)
+//        logAttributedText.addAttribute(NSForegroundColorAttributeName, value: UIColor.pmmBrightOrangeColor(), range: logRange)
+//        guard let logTitleLabel = logAction.valueForKey("__representer")?.valueForKey("label") as? UILabel else { return }
+//        logTitleLabel.attributedText = logAttributedText
         
-        let selectBook = { (action:UIAlertAction!) -> Void in
+        
+        let bookAction = UIAlertAction(title: kBook, style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
             self.performSegueWithIdentifier("coachMakeABook", sender: nil)
-        }
+        })
+        bookAction.setValue(UIColor.pmmBrightOrangeColor(), forKey: "titleTextColor")
+        
+        let cancleAction = UIAlertAction(title: kCancle, style: .Cancel, handler: { (UIAlertAction) in
+            
+        })
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.view.tintColor = UIColor.pmmBrightOrangeColor()
         
-        alertController.addAction(UIAlertAction(title: kLog, style: UIAlertActionStyle.Default, handler: selectLog))
-        alertController.addAction(UIAlertAction(title: kBook, style: UIAlertActionStyle.Default, handler: selectBook))
-        
-        alertController.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (UIAlertAction) in
-            
-        }))
+        alertController.addAction(logAction)
+        alertController.addAction(bookAction)
+        alertController.addAction(cancleAction)
         
         self.presentViewController(alertController, animated: true) { }
     }
