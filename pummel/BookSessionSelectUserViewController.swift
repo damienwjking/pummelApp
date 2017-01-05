@@ -159,7 +159,8 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
             targetUserId = "\(val)"
         }
         
-        cell.lbName.text = "Name"
+        cell.lbName.text = "..."
+        cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
         var prefixUser = kPMAPIUSER
         prefixUser.appendContentsOf(targetUserId)
         Alamofire.request(.GET, prefixUser)
