@@ -243,21 +243,21 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
         
         let logAttributedText = NSMutableAttributedString(string: kLog)
         let logRange = NSRange(location: 0, length: logAttributedText.length)
-        logAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg13(), range: logRange)
+        logAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg16(), range: logRange)
         logAttributedText.addAttribute(NSForegroundColorAttributeName, value: UIColor.pmmBrightOrangeColor(), range: logRange)
         guard let logTitleLabel = logAction.valueForKey("__representer")?.valueForKey("label") as? UILabel else { return }
         logTitleLabel.attributedText = logAttributedText
         
         let bookAttributedText = NSMutableAttributedString(string: kBook)
         let bookRange = NSRange(location: 0, length: bookAttributedText.length)
-        bookAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg13(), range: bookRange)
+        bookAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg16(), range: bookRange)
         bookAttributedText.addAttribute(NSForegroundColorAttributeName, value: UIColor.pmmBrightOrangeColor(), range: bookRange)
         guard let bookTitleLabel = bookAction.valueForKey("__representer")?.valueForKey("label") as? UILabel else { return }
         bookTitleLabel.attributedText = bookAttributedText
         
         let cancleAttributedText = NSMutableAttributedString(string: kCancle)
         let cancleRange = NSRange(location: 0, length: cancleAttributedText.length)
-        cancleAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg16(), range: cancleRange)
+        cancleAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg18(), range: cancleRange)
         guard let cancleTitleLabel = cancleAction.valueForKey("__representer")?.valueForKey("label") as? UILabel else { return }
         cancleTitleLabel.attributedText = cancleAttributedText
     }
