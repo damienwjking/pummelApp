@@ -174,6 +174,7 @@ let kNavFeed = "FEED"
 let kNavPost = "POST"
 let kBookSession = "BOOK SESSION"
 let kBookShare = "SHARE"
+let kClients = "CLIENTS"
 
 
 // Cell
