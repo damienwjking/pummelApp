@@ -1,16 +1,16 @@
 //
-//  BookSessionSelectUserViewController.swift
+//  LogSessionSelectUserViewController.swift
 //  pummel
 //
-//  Created by Hao Nguyen Vu on 1/4/17.
+//  Created by Nguyen Vu Hao on 1/5/17.
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
 import UIKit
 import Alamofire
 
-class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+class LogSessionSelectUserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet weak var tbView: UITableView!
     var arrayNew: [NSDictionary] = []
     var offsetNew: Int = 0
@@ -24,15 +24,15 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.title = "INVITE"
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
         
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.next))
-//        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.next))
+        //        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         let nibName = UINib(nibName: "BookUserTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName, forCellReuseIdentifier: "BookUserTableViewCell")
@@ -115,7 +115,7 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 3
     }
-
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60.0
     }
@@ -141,7 +141,7 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
         }
         header.textLabel?.text = text
     }
-
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BookUserTableViewCell") as! BookUserTableViewCell
         var userInfo:NSDictionary!
@@ -153,7 +153,7 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
         } else {
             userInfo = arrayOld[indexPath.row]
         }
-
+        
         var targetUserId = ""
         if let val = userInfo["userId"] as? Int {
             targetUserId = "\(val)"
@@ -185,7 +185,7 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
                 print("Request failed with error: \(error)")
                 }
         }
-
+        
         
         return cell
     }
@@ -202,15 +202,16 @@ class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate
         }
         
         self.userInfoSelect = userInfo
-        self.performSegueWithIdentifier("assignSessionToUser", sender: nil)
+        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "assignSessionToUser" {
-            let destination = segue.destinationViewController as! BookSessionToUserViewController
-            destination.tag = self.tag
+        if segue.identifier == "goLogSessionDetail" {
+            let destination = segue.destinationViewController as! LogSessionClientDetailViewController
+            destination.tag = self.tag!
             destination.userInfoSelect = self.userInfoSelect
         }
     }
-
+    
 }
+
