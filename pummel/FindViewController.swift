@@ -294,8 +294,8 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         if(showLetUsHelp == true) {
             performSegueWithIdentifier("letUsHelp", sender: nil)
         }
-        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"FIND", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.refind))
-        self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CLIENTS", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnClientClick))
+        self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmWarmGreyColor()], forState: .Normal)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
         
@@ -376,6 +376,10 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Category": "IOS.Search", "Name": "Navigation Click", "Label":"Refine"]
         mixpanel.track("Event", properties: properties)
+    }
+    
+    func btnClientClick() {
+        self.performSegueWithIdentifier("gotoClient", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
