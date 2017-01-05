@@ -95,6 +95,7 @@ class LogSessionSelectUserViewController: UIViewController, UITableViewDelegate,
     }
     
     func next() {
+        self.userInfoSelect = nil
         self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
     }
     
@@ -203,6 +204,7 @@ class LogSessionSelectUserViewController: UIViewController, UITableViewDelegate,
         
         self.userInfoSelect = userInfo
         self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
+        self.tbView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

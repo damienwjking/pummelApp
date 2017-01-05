@@ -341,7 +341,6 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func showListContext(sender: UIButton) {
         let selectDeleted = { (action:UIAlertAction!) -> Void in
-            
         }
         
         let share = { (action:UIAlertAction!) -> Void in

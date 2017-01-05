@@ -106,6 +106,7 @@
                         <outlet property="flowLayout" destination="UPW-53-HgY" id="QEj-pY-Zk5"/>
                         <outlet property="tableView" destination="H6u-hR-lTz" id="GA0-Jk-sa1"/>
                         <segue destination="kwg-uW-nE1" kind="show" identifier="selectUser" id="dsT-eQ-vRG"/>
+                        <segue destination="N3f-Ry-iKt" kind="show" identifier="goLogSessionDetail" id="agN-yW-rD1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NZs-bC-XcJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -566,4 +567,7 @@
         <image name="intensity.png" width="40" height="40"/>
         <image name="longtime.png" width="40" height="40"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="agN-yW-rD1"/>
+    </inferredMetricsTieBreakers>
 </document>
