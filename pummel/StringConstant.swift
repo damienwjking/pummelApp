@@ -161,7 +161,7 @@ let kLog = "LOG"
 let kContinue = "Continue"
 let kNext = "Next"
 let kSave = "Save"
-let kSession = "Session"
+let kSession = "SESSIONS"
 
 // Button
 let kNavSetting = "SETTINGS"

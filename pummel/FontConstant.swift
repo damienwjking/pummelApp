@@ -48,6 +48,10 @@ extension UIFont {
         return UIFont(name: "Montserrat-Regular", size: 18)!
     }
     
+    class func pmmMonReg20() -> UIFont {
+        return UIFont(name: "Montserrat-Regular", size: 20)!
+    }
+    
     
     class func pmmPlayFairReg11() -> UIFont {
         return UIFont(name: "PlayfairDisplay-Regular", size: 11)!

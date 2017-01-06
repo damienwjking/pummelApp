@@ -132,7 +132,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wT9-6X-E42">
-                                        <rect key="frame" x="-1" y="44" width="376" height="0.0"/>
+                                        <rect key="frame" x="-0.5" y="44" width="375" height="0.0"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="5uV-oc-9ug"/>
@@ -274,7 +274,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qlv-E5-DzV">
-                                        <rect key="frame" x="-1" y="44" width="376" height="0.0"/>
+                                        <rect key="frame" x="-0.5" y="44" width="375" height="0.0"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="KYD-Kz-hGO"/>
@@ -716,7 +716,6 @@
                     <connections>
                         <outlet property="caloriesLB" destination="W0z-WL-dVT" id="n0s-xM-fnm"/>
                         <outlet property="caloriesV" destination="6dI-O1-sVy" id="F5W-Ll-jgy"/>
-                        <outlet property="caloriesVHeightConstraint" destination="hFD-tI-gr0" id="nkD-fG-XSv"/>
                         <outlet property="coachIMV" destination="6gh-0i-G6w" id="izc-Zy-qAp"/>
                         <outlet property="coachIMVLeadingConstraint" destination="0hK-CL-DJX" id="ziy-Tf-qJX"/>
                         <outlet property="coachIMVWidthConstraint" destination="KwD-uz-P6s" id="ezh-34-CJP"/>
@@ -724,17 +723,14 @@
                         <outlet property="dateTF" destination="Asn-XQ-UkI" id="rGi-vv-Y1b"/>
                         <outlet property="distanceLB" destination="Mvr-3t-HJT" id="8zM-pN-O6X"/>
                         <outlet property="distanceV" destination="LGc-Za-BBl" id="tlO-hg-kb5"/>
-                        <outlet property="distanceVHeightConstraint" destination="FyF-Jm-n0v" id="cFZ-4Z-CoL"/>
                         <outlet property="intensityLB" destination="cgy-Dd-L1n" id="ehN-3z-fgV"/>
                         <outlet property="intensityV" destination="f2d-kW-wUI" id="tJW-rW-P3a"/>
-                        <outlet property="intensityVHeightConstraint" destination="Tqw-Uu-IRg" id="uEi-U6-axR"/>
                         <outlet property="sessionIMV" destination="8Xf-yk-bXL" id="sb5-Ur-wsF"/>
                         <outlet property="sessionScrollView" destination="FoG-Nr-iqX" id="1K1-2m-VHI"/>
                         <outlet property="sessionTagIMV" destination="QT7-bK-36h" id="6qX-Rh-umN"/>
                         <outlet property="tappedV" destination="Vce-NS-Hbo" id="IpI-3z-AhK"/>
                         <outlet property="timeLB" destination="8Jv-d8-T4g" id="m6d-kJ-95R"/>
                         <outlet property="timeV" destination="tos-Do-hY9" id="JQF-3E-8xN"/>
-                        <outlet property="timeVHeightConstraint" destination="gzh-hy-ays" id="W1c-tD-JNN"/>
                         <outlet property="typeLabel" destination="Iic-W1-c9t" id="sFy-Ud-2YO"/>
                         <outlet property="userIMV" destination="2G2-Vf-bb3" id="K8N-9O-cAk"/>
                     </connections>

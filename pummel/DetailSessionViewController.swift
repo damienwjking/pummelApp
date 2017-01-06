@@ -36,11 +36,6 @@ class DetailSessionViewController: UIViewController {
     
     @IBOutlet weak var tappedV: UIView!
     
-    @IBOutlet weak var timeVHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var distanceVHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var intensityVHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var caloriesVHeightConstraint: NSLayoutConstraint!
-    
     var session = Session()
     var sessionTagColorString = "#FFFFFF"
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -108,19 +103,15 @@ class DetailSessionViewController: UIViewController {
             self.timeLB.text = String(format: "%ld minutes", self.session.longtime!)
             
             self.timeV.hidden = false
-            self.timeVHeightConstraint.constant = 50;
         } else {
             self.timeV.hidden = true
-            self.timeVHeightConstraint.constant = 0;
         }
         
         if self.session.intensity?.isEmpty == false {
             self.intensityLB.text = self.session.intensity
             self.intensityV.hidden = false
-            self.intensityVHeightConstraint.constant = 50
         } else {
             self.intensityV.hidden = true
-            self.intensityVHeightConstraint.constant = 0
         }
         
         if self.session.distance != nil && self.session.distance != 0 {
@@ -132,19 +123,15 @@ class DetailSessionViewController: UIViewController {
             }
             
             self.distanceV.hidden = false
-            self.distanceVHeightConstraint.constant = 50
         } else {
             self.distanceV.hidden = true
-            self.distanceVHeightConstraint.constant = 0
         }
         
         if self.session.calorie != nil && self.session.calorie != 0 {
             self.caloriesLB.text = String(format: "%ld", self.session.calorie!)
             self.caloriesV.hidden = false
-            self.caloriesVHeightConstraint.constant = 50
         } else {
             self.caloriesV.hidden = true
-            self.caloriesVHeightConstraint.constant = 0
         }
         
         if self.session.datetime?.isEmpty == false {
@@ -157,7 +144,7 @@ class DetailSessionViewController: UIViewController {
     }
     
     func initLayout() {
-        self.typeLabel.font = .pmmMonReg13()
+        self.typeLabel.font = .pmmMonReg20()
         self.timeLB.font = .pmmMonLight13()
         self.distanceLB.font = .pmmMonLight13()
         self.intensityLB.font = .pmmMonLight13()
