@@ -90,29 +90,31 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        let sessionDate = dateFormatter.dateFromString(session.datetime!)
-        
-        if now.compare(sessionDate!) == .OrderedAscending {
-            var isNewSession = true
-            for sessionItem in self.upCommingSessions {
-                if session.id == sessionItem.id {
-                    isNewSession = false
-                }
-            }
+        if session.datetime != nil {
+            let sessionDate = dateFormatter.dateFromString(session.datetime!)
             
-            if isNewSession == true {
-                self.upCommingSessions.append(session)
-            }
-        } else {
-            var isNewSession = true
-            for sessionItem in self.completedSessions {
-                if session.id == sessionItem.id {
-                    isNewSession = false
+            if now.compare(sessionDate!) == .OrderedAscending {
+                var isNewSession = true
+                for sessionItem in self.upCommingSessions {
+                    if session.id == sessionItem.id {
+                        isNewSession = false
+                    }
                 }
-            }
-            
-            if isNewSession == true {
-                self.completedSessions.append(session)
+                
+                if isNewSession == true {
+                    self.upCommingSessions.append(session)
+                }
+            } else {
+                var isNewSession = true
+                for sessionItem in self.completedSessions {
+                    if session.id == sessionItem.id {
+                        isNewSession = false
+                    }
+                }
+                
+                if isNewSession == true {
+                    self.completedSessions.append(session)
+                }
             }
         }
     }

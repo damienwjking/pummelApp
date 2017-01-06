@@ -69,6 +69,10 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
         self.contentTV.selectedTextRange = self.contentTV.textRangeFromPosition(  self.contentTV.beginningOfDocument, toPosition:self.contentTV.beginningOfDocument)
         
         imagePicker.delegate = self
+        imageScrolView.delegate = self
+        imageScrolView.minimumZoomScale = 1
+        imageScrolView.maximumZoomScale = 4.0
+        imageScrolView.zoomScale = 1.0
     }
     
     func didTapView() {
@@ -125,77 +129,91 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
     }
     
     func done() {
-        self.view.makeToastActivity(message: "Saving")
-        var prefix = kPMAPICOACHES
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPMAPICOACH_BOOK)
-        
-        var imageData : NSData!
-        let type : String!
-        let filename : String!
-        if self.imageSelected.image != nil {
-            imageData = UIImageJPEGRepresentation(self.imageSelected.image!, 0.2)
-        }
-        
-        type = imageJpeg
-        filename = jpgeFile
-        var userIdSelected = ""
-        if let val = self.userInfoSelect["userId"] as? Int {
-            userIdSelected = "\(val)"
-        }
-        let textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
-        var parameters = [String:AnyObject]()
-        var tagname = ""
-        tagname = (self.tag?.name?.uppercaseString)!
-        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textToPost, kUserIdTarget:userIdSelected, kType:"#\(tagname)", "datetime": self.dateTF.text!]
-        Alamofire.upload(
-            .POST,
-            prefix,
-            multipartFormData: { multipartFormData in
-                if imageData != nil {
-                    multipartFormData.appendBodyPart(data: imageData, name: "file",
-                        fileName:filename, mimeType:type)
-                }
-                for (key, value) in parameters {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                }
-            },
-            encodingCompletion: { encodingResult in
-                self.view.hideToastActivity()
-                switch encodingResult {
-                case .Success(let upload, _, _):
-                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+        if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
+            
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .Alert)
+            
+            
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        } else {
+            self.view.makeToastActivity(message: "Saving")
+            var prefix = kPMAPICOACHES
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPMAPICOACH_BOOK)
+            
+            var imageData : NSData!
+            let type : String!
+            let filename : String!
+            if self.imageSelected.image != nil {
+                imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+            }
+            
+            type = imageJpeg
+            filename = jpgeFile
+            var userIdSelected = ""
+            if let val = self.userInfoSelect["userId"] as? Int {
+                userIdSelected = "\(val)"
+            }
+            let textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
+            var parameters = [String:AnyObject]()
+            var tagname = ""
+            tagname = (self.tag?.name?.uppercaseString)!
+            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textToPost, kUserIdTarget:userIdSelected, kType:"#\(tagname)", "datetime": self.dateTF.text!]
+            Alamofire.upload(
+                .POST,
+                prefix,
+                multipartFormData: { multipartFormData in
+                    if imageData != nil {
+                        multipartFormData.appendBodyPart(data: imageData, name: "file",
+                            fileName:filename, mimeType:type)
                     }
-                    upload.validate()
-                    upload.responseJSON { response in
-                        let json = response.result.value as! NSDictionary
-                        print(json)
-                        if response.result.error != nil {
-                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                                // ...
+                    for (key, value) in parameters {
+                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                    }
+                },
+                encodingCompletion: { encodingResult in
+                    self.view.hideToastActivity()
+                    switch encodingResult {
+                    case .Success(let upload, _, _):
+                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                        }
+                        upload.validate()
+                        upload.responseJSON { response in
+                            let json = response.result.value as! NSDictionary
+                            print(json)
+                            if response.result.error != nil {
+                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                    // ...
+                                }
+                                alertController.addAction(OKAction)
+                                self.presentViewController(alertController, animated: true) {
+                                    // ...
+                                }
+                            } else {
+                                self.navigationController?.popToRootViewControllerAnimated(false)
                             }
-                            alertController.addAction(OKAction)
-                            self.presentViewController(alertController, animated: true) {
-                                // ...
-                            }
-                        } else {
-                            self.navigationController?.popToRootViewControllerAnimated(false)
+                        }
+                        
+                    case .Failure(let encodingError):
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
                         }
                     }
-                    
-                case .Failure(let encodingError):
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
                 }
-            }
-        )
+            )
+        }
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -369,6 +387,10 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
+    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews[0] as! UIImageView
+    }
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             for(subview) in self.imageScrolView.subviews {
@@ -399,5 +421,17 @@ class BookSessionToUserViewController: UIViewController, UITextViewDelegate, Fus
             destination.textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
             destination.dateToPost = self.dateTF.text!
         }
+    }
+    
+    func cropAndSave() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        let offset = imageScrolView.contentOffset
+        
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
+        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        return image!
     }
 }
