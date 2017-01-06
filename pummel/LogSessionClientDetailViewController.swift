@@ -16,7 +16,9 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     @IBOutlet weak var tappedV: UIView!
     
+    
     @IBOutlet weak var dateTF: UITextField!
+    @IBOutlet weak var publicBT: UIButton!
     @IBOutlet weak var contentTV: UITextView!
     @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var avatarUserIMV: UIImageView!
@@ -57,6 +59,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     var distanceSelected: String = "0"
     var caloriesSelected: String = "0"
     var longtimeSelected: String = "0"
+    var isPublic = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +88,9 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.intensityTextLB.font =  UIFont.pmmMonReg13()
         self.caloriesTextLB.font =  UIFont.pmmMonReg13()
         self.mileTextLB.font =  UIFont.pmmMonReg13()
+        self.publicBT.titleLabel?.font = UIFont.pmmMonReg10()
+        
+        self.publicBT.layer.cornerRadius = 2;
         
         self.initInformation()
         self.initTime()
@@ -236,12 +242,24 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         return newDateString
     }
     
+    // MARK: Outlet function
+    
     func backClicked() {
         self.navigationController?.popViewControllerAnimated(true)
     }
     
     func titleButtonClicked() {
         
+    }
+    
+    @IBAction func publicButtonClicked(sender: AnyObject) {
+        self.isPublic = !self.isPublic
+        
+        if self.isPublic == true {
+            self.publicBT.setTitle("PUBLIC", forState: .Normal)
+        } else {
+            self.publicBT.setTitle("PRIVATE", forState: .Normal)
+        }
     }
     
     func saveClicked() {

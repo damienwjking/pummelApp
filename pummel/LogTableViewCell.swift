@@ -16,7 +16,7 @@ class LogTableViewCell: UITableViewCell {
     @IBOutlet weak var textLB: UILabel!
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var dateLB: UILabel!
-    @IBOutlet weak var rateButton: UIButton!
+    @IBOutlet weak var rateBT: UIButton!
     
     @IBOutlet weak var typeLB: UILabel!
     
@@ -26,12 +26,13 @@ class LogTableViewCell: UITableViewCell {
         self.avatarIMV.clipsToBounds = true
         self.dateLB.numberOfLines = 2
         
-        self.rateButton.layer.cornerRadius = 2;
+        self.rateBT.layer.cornerRadius = 2;
         
         self.textLB.font = .pmmMonLight13()
         self.dateLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
         self.typeLB.font = .pmmMonReg13()
+        self.rateBT.titleLabel!.font = .pmmMonReg10()
     }
     
     @IBAction func rateButtonClicked(sender: AnyObject) {
@@ -50,7 +51,7 @@ class LogTableViewCell: UITableViewCell {
             self.timeLB.text = ""
         }
         
-        self.rateButton.hidden = hiddenRateButton
+        self.rateBT.hidden = hiddenRateButton
         
         self.typeLB.text = session.type
         
