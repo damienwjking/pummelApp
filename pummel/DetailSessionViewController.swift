@@ -15,18 +15,19 @@ class DetailSessionViewController: UIViewController {
     @IBOutlet weak var sessionIMV: UIImageView!
     @IBOutlet weak var sessionScrollView: UIScrollView!
     
-    @IBOutlet weak var timeLB: UILabel!
-    @IBOutlet weak var distanceLB: UILabel!
-    @IBOutlet weak var intensityLB: UILabel!
-    @IBOutlet weak var caloriesLB: UILabel!
-    
     @IBOutlet weak var userIMV: UIImageView!
     @IBOutlet weak var coachIMV: UIImageView!
     @IBOutlet weak var coachIMVWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var coachIMVLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var sessionTagIMV: UIImageView!
     
+    @IBOutlet weak var timeLB: UILabel!
+    @IBOutlet weak var distanceLB: UILabel!
+    @IBOutlet weak var intensityLB: UILabel!
+    @IBOutlet weak var caloriesLB: UILabel!
+    
     @IBOutlet weak var dateTF: UITextField!
+    @IBOutlet weak var commentIMV: UIImageView!
     @IBOutlet weak var contentTV: UITextView!
     
     @IBOutlet weak var timeV: UIView!
@@ -101,17 +102,14 @@ class DetailSessionViewController: UIViewController {
         
         if self.session.longtime != nil && self.session.longtime != 0 {
             self.timeLB.text = String(format: "%ld minutes", self.session.longtime!)
-            
-            self.timeV.hidden = false
         } else {
-            self.timeV.hidden = true
+            self.timeLB.text = "..."
         }
         
         if self.session.intensity?.isEmpty == false {
             self.intensityLB.text = self.session.intensity
-            self.intensityV.hidden = false
         } else {
-            self.intensityV.hidden = true
+            self.intensityLB.text = "..."
         }
         
         if self.session.distance != nil && self.session.distance != 0 {
@@ -121,17 +119,14 @@ class DetailSessionViewController: UIViewController {
             } else {
                 self.distanceLB.text = String(format: "%ld mi", self.session.distance!)
             }
-            
-            self.distanceV.hidden = false
         } else {
-            self.distanceV.hidden = true
+            self.distanceLB.text = "..."
         }
         
         if self.session.calorie != nil && self.session.calorie != 0 {
             self.caloriesLB.text = String(format: "%ld", self.session.calorie!)
-            self.caloriesV.hidden = false
         } else {
-            self.caloriesV.hidden = true
+            self.caloriesLB.text = "..."
         }
         
         if self.session.datetime?.isEmpty == false {
@@ -161,6 +156,9 @@ class DetailSessionViewController: UIViewController {
         self.sessionTagIMV.layer.cornerRadius = 20
         self.sessionTagIMV.clipsToBounds = true
         self.sessionTagIMV.backgroundColor = UIColor.init(hexString: sessionTagColorString)
+        
+        self.commentIMV.image = self.commentIMV.image?.imageWithRenderingMode(.AlwaysTemplate)
+        self.commentIMV.tintColor = UIColor.init(hexString: sessionTagColorString)
         
         self.contentTV.font = UIFont.pmmMonReg13()
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
