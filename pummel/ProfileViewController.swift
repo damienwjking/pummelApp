@@ -392,12 +392,13 @@ class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICo
                     if arrayphoto.count > 0 {
                         self.offset += 10
                         self.arrayPhotos.addObjectsFromArray(arrayphoto as [AnyObject])
+                        self.getListImage()
+                    } else {
+                        self.isStopGetListPhotos = true
                         self.aboutCollectionView.reloadData()
                         self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
                         self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
                         self.scrollView.scrollEnabled = true
-                    } else {
-                        self.isStopGetListPhotos = true
                     }
                 }
             case .Failure(let error):
