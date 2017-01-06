@@ -95,6 +95,10 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         self.tappedV.userInteractionEnabled = false
         
         self.imagePicker.delegate = self
+        imageScrolView.delegate = self
+        imageScrolView.minimumZoomScale = 1
+        imageScrolView.maximumZoomScale = 4.0
+        imageScrolView.zoomScale = 1.0
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -672,5 +676,9 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews[0] as! UIImageView
     }
 }
