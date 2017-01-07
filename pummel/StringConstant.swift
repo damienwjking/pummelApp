@@ -177,7 +177,7 @@ let kNavPost = "POST"
 let kBookSession = "BOOK SESSION"
 let kBookShare = "SHARE"
 let kClients = "CLIENTS"
-
+let kCoaches = "COACHES"
 
 // Cell
 let kSettingDiscoveryHeaderTableViewCell = "SettingDiscoveryHeaderTableViewCell"
