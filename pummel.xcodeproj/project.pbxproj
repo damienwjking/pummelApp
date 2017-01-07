@@ -57,6 +57,7 @@
 		E8779E1C1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */; };
 		E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */; };
 		E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */; };
+		E8C444EA1E20AA19006F0548 /* ListCoachsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C444E91E20AA19006F0548 /* ListCoachsViewController.swift */; };
 		E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */; };
 		E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */; };
 		E8D778E61E0AF6A50011E164 /* LeadCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */; };
@@ -392,6 +393,7 @@
 		E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileForUpgradeViewController.swift; sourceTree = "<group>"; };
 		E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionTableViewCell.swift; sourceTree = "<group>"; };
 		E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookSessionTableViewCell.xib; sourceTree = "<group>"; };
+		E8C444E91E20AA19006F0548 /* ListCoachsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListCoachsViewController.swift; sourceTree = "<group>"; };
 		E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionShareViewController.swift; sourceTree = "<group>"; };
 		E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadCollectionViewCell.swift; sourceTree = "<group>"; };
 		E8D778E41E0AF6A50011E164 /* LeadCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeadCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -1170,6 +1172,7 @@
 				F964FEC01D215E33008F7C94 /* SearchingViewController.swift */,
 				F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */,
 				F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */,
+				E8C444E91E20AA19006F0548 /* ListCoachsViewController.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -1687,6 +1690,7 @@
 				F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */,
 				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
 				F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */,
+				E8C444EA1E20AA19006F0548 /* ListCoachsViewController.swift in Sources */,
 				F9EAE8E91D6EFC3400FD32BE /* SettingSmallSeperateTableViewCell.swift in Sources */,
 				F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,

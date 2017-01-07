@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -108,6 +108,7 @@
                         <segue destination="RcJ-86-YBS" kind="presentation" identifier="letUsHelp" id="Z6O-y3-8EI"/>
                         <segue destination="gWf-bF-p9D" kind="show" identifier="sendMessageConnection" id="pOS-qP-4jl"/>
                         <segue destination="vGS-YO-8M7" kind="show" identifier="gotoClient" id="Fx5-WO-RPO"/>
+                        <segue destination="1sf-y9-eYC" kind="show" identifier="gotoCoachs" id="pmp-yP-YKs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wEG-D9-yU7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -145,6 +146,43 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O9s-ju-dzQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3866" y="739"/>
+        </scene>
+        <!--List Coachs View Controller-->
+        <scene sceneID="Nu4-3E-3c1">
+            <objects>
+                <viewController id="1sf-y9-eYC" customClass="ListCoachsViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nf6-8D-Me9"/>
+                        <viewControllerLayoutGuide type="bottom" id="7Jn-IY-VWs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aBm-MS-8xS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0Ea-MJ-Kte">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="1sf-y9-eYC" id="yaV-x3-slx"/>
+                                    <outlet property="delegate" destination="1sf-y9-eYC" id="hpf-Cn-oqq"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="7Jn-IY-VWs" firstAttribute="top" secondItem="0Ea-MJ-Kte" secondAttribute="bottom" id="2Vc-H3-3oI"/>
+                            <constraint firstItem="0Ea-MJ-Kte" firstAttribute="top" secondItem="nf6-8D-Me9" secondAttribute="bottom" id="b0W-vK-gOW"/>
+                            <constraint firstItem="0Ea-MJ-Kte" firstAttribute="leading" secondItem="aBm-MS-8xS" secondAttribute="leading" id="hNH-of-J28"/>
+                            <constraint firstAttribute="trailing" secondItem="0Ea-MJ-Kte" secondAttribute="trailing" id="rVO-4B-Mzp"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tbView" destination="0Ea-MJ-Kte" id="sNG-t8-Ixg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fvw-rQ-nOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5410" y="1783"/>
         </scene>
         <!--Book Session Share View Controller-->
         <scene sceneID="hHj-lP-vtn">

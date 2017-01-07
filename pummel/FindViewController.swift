@@ -298,7 +298,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CLIENTS", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnClientClick))
         } else {
-            self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"FIND", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.refind))
+            self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"COACHES", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnCoachsClick))
         }
         
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
@@ -386,6 +386,10 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func btnClientClick() {
         self.performSegueWithIdentifier("gotoClient", sender: nil)
+    }
+    
+    func btnCoachsClick() {
+        self.performSegueWithIdentifier("gotoCoachs", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {

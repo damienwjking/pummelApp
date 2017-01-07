@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 enum TypeGroup:Int {
-    case NewLead = 0, Current, Old
+    case NewLead = 0, Current, Old, CoachJustConnected, CoachCurrent, CoachOld
 }
 
 @objc protocol GroupLeadTableViewCellDelegate: class {
@@ -71,6 +71,9 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             case .Success(let JSON):
                 cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
                 cell.btnAdd.hidden = false
+                if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+                    cell.btnAdd.hidden = true
+                }
                 
                 if let userInfo = JSON as? NSDictionary {
                     let name = userInfo.objectForKey(kFirstname) as! String
@@ -83,7 +86,6 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                             .responseImage { response in
                                 let imageRes = response.result.value! as UIImage
                                 cell.imgAvatar.image = imageRes
-                                cell.btnAdd.hidden = false
                         }
                     }
                 }
@@ -124,6 +126,9 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     
     func getMessage() {
         var prefix = kPMAPICOACHES
+        if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+            prefix = kPMAPIUSER
+        }
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         if self.typeGroup == TypeGroup.NewLead {
             prefix.appendContentsOf(kPMAPICOACH_LEADS)
@@ -131,6 +136,12 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             prefix.appendContentsOf(kPMAPICOACH_CURRENT)
         } else if self.typeGroup == TypeGroup.Old {
             prefix.appendContentsOf(kPMAPICOACH_OLD)
+        } else if self.typeGroup == TypeGroup.CoachJustConnected {
+            prefix.appendContentsOf(kPMAPICOACH_JUSTCONNECTED)
+        } else if self.typeGroup == TypeGroup.CoachCurrent {
+            prefix.appendContentsOf(kPMAPICOACH_COACHCURRENT)
+        } else if self.typeGroup == TypeGroup.CoachOld {
+            prefix.appendContentsOf(kPMAPICOACH_COACHOLD)
         }
         
         Alamofire.request(.GET, prefix)
