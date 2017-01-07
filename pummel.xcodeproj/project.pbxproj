@@ -42,6 +42,9 @@
 		BA4A66841E1D466300F5A218 /* empty_session@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4A66811E1D466300F5A218 /* empty_session@2x.png */; };
 		BA4A66851E1D466300F5A218 /* empty_session@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA4A66821E1D466300F5A218 /* empty_session@3x.png */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
+		BAFE18451E2094F000387C53 /* connected.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18421E2094F000387C53 /* connected.png */; };
+		BAFE18461E2094F000387C53 /* connected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18431E2094F000387C53 /* connected@2x.png */; };
+		BAFE18471E2094F000387C53 /* connected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18441E2094F000387C53 /* connected@3x.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		E84D638A1E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D63871E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift */; };
 		E84D638B1E1D5D4E00CF8B67 /* BookUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D63881E1D5D4E00CF8B67 /* BookUserTableViewCell.swift */; };
@@ -374,6 +377,9 @@
 		BA4A66811E1D466300F5A218 /* empty_session@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_session@2x.png"; sourceTree = "<group>"; };
 		BA4A66821E1D466300F5A218 /* empty_session@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_session@3x.png"; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
+		BAFE18421E2094F000387C53 /* connected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connected.png; sourceTree = "<group>"; };
+		BAFE18431E2094F000387C53 /* connected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connected@2x.png"; sourceTree = "<group>"; };
+		BAFE18441E2094F000387C53 /* connected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connected@3x.png"; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		E84D63871E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionSelectUserViewController.swift; sourceTree = "<group>"; };
 		E84D63881E1D5D4E00CF8B67 /* BookUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookUserTableViewCell.swift; sourceTree = "<group>"; };
@@ -912,6 +918,9 @@
 				F970A2B11D2646A900932BFC /* connect.png */,
 				F970A2B21D2646A900932BFC /* connect@2x.png */,
 				F970A2B31D2646A900932BFC /* connect@3x.png */,
+				BAFE18421E2094F000387C53 /* connected.png */,
+				BAFE18431E2094F000387C53 /* connected@2x.png */,
+				BAFE18441E2094F000387C53 /* connected@3x.png */,
 				F90D32F31D108DFD00E3C349 /* blackArrow.png */,
 				F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */,
 				F9ABEAD21DC346250084B70E /* emptyImage.png */,
@@ -1401,6 +1410,7 @@
 				F9D35ABD1D26822400F47709 /* pinGray@2x.png in Resources */,
 				F979E1751D7DC89700C717F0 /* likeSml@3x.png in Resources */,
 				F98C41AF1CF264CE00ECC66E /* cameraBig@3x.png in Resources */,
+				BAFE18471E2094F000387C53 /* connected@3x.png in Resources */,
 				F9ABEAD11DC21FA20084B70E /* Profile.storyboard in Resources */,
 				F92994311D35EB58000C00D5 /* whiteArrow@3x.png in Resources */,
 				F9827F191CBC754900841BF1 /* gender@3x.png in Resources */,
@@ -1514,6 +1524,7 @@
 				F9FE145F1CEBD29B004ABE34 /* rotatecamera.png in Resources */,
 				F929942B1D35E7F8000C00D5 /* fit1.jpg in Resources */,
 				F9D35ABE1D26822400F47709 /* pinGray@3x.png in Resources */,
+				BAFE18451E2094F000387C53 /* connected.png in Resources */,
 				F9741E051D89708000D61868 /* edit@3x.png in Resources */,
 				F98C41931CF25F6500ECC66E /* feedPressed@2x.png in Resources */,
 				F979E1691D7DC4BD00C717F0 /* comment@3x.png in Resources */,
@@ -1553,6 +1564,7 @@
 				BA0DB1AB1E1EA31D00CBE586 /* icon_intensity.png in Resources */,
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
 				F92994271D35E7D0000C00D5 /* fit4.jpg in Resources */,
+				BAFE18461E2094F000387C53 /* connected@2x.png in Resources */,
 				F9ABEAF61DC4C32A0084B70E /* Message.storyboard in Resources */,
 				F9827F451CBD231D00841BF1 /* SignupViewController.xib in Resources */,
 				F921CA781E1FB87000C223D7 /* icon_distance@3x.png in Resources */,

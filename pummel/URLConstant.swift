@@ -10,6 +10,7 @@ import Foundation
 
 let kPMAPI = "http://api.pummel.fit"
 let kPMAPIUSER = "http://api.pummel.fit/api/users/"
+let kPMAPICHECKUSERCONNECT = "http://api.pummel.fit/api/users/check"
 let kPMAPIUSER_OFFSET = "http://api.pummel.fit/api/users?offset="
 let kPMAPICOACH = "http://api.pummel.fit/api/coaches/"
 let kPMAPICOACH_SEARCH = "http://api.pummel.fit/api/coaches/searchdistance"
