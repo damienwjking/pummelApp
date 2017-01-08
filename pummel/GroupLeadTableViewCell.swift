@@ -57,10 +57,15 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         cell.btnAdd.hidden = true
         
         let message = arrayMessages[indexPath.row]
-        
         var targetUserId = ""
-        if let val = message["userId"] as? Int {
-            targetUserId = "\(val)"
+        if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+            if let val = message["coachId"] as? Int {
+                targetUserId = "\(val)"
+            }
+        } else{
+            if let val = message["userId"] as? Int {
+                targetUserId = "\(val)"
+            }
         }
         
         cell.nameUser.text = "Name"
