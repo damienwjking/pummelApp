@@ -320,7 +320,7 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
             
             let feed = self.arrayFeeds[sender.tag]
             let postId = String(format:"%0.f", feed[kId]!.doubleValue)
-            Alamofire.request(.POST, kPMAPI_REPORT, parameters: ["postId":postId])
+            Alamofire.request(.PUT, kPMAPI_REPORT, parameters: ["postId":postId])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         self.arrayFeeds.removeAtIndex(sender.tag)
