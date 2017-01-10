@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -54,7 +54,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WNF-6o-ajD">
-                                <rect key="frame" x="49.5" y="517" width="276" height="23"/>
+                                <rect key="frame" x="50" y="517" width="276" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="23" id="EhX-qx-4Sl"/>
                                     <constraint firstAttribute="width" constant="276" id="u8c-rw-5Tw"/>
@@ -215,11 +215,59 @@
                     </view>
                     <connections>
                         <outlet property="tbView" destination="NQ0-MS-QSr" id="PP1-J6-xpE"/>
+                        <segue destination="Pb5-iB-czY" kind="show" identifier="inviteContactUser" id="wCh-FF-UZc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KvM-lu-Mmd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4106" y="1784"/>
+        </scene>
+        <!--Contact User View Controller-->
+        <scene sceneID="vVi-Z5-wjv">
+            <objects>
+                <viewController id="Pb5-iB-czY" customClass="ContactUserViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tDf-rc-BgJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="lt6-fW-fFu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="p9L-Qp-Hgj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IfQ-MD-TQa">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="kContactUserCell" id="EgM-zk-jwW" customClass="ContactUserCell" customModule="Pummel" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EgM-zk-jwW" id="eDt-UY-KOy">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Pb5-iB-czY" id="ALc-gX-qwc"/>
+                                    <outlet property="delegate" destination="Pb5-iB-czY" id="545-71-5Hj"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="IfQ-MD-TQa" firstAttribute="width" secondItem="p9L-Qp-Hgj" secondAttribute="width" id="Ary-eG-hQY"/>
+                            <constraint firstItem="IfQ-MD-TQa" firstAttribute="centerX" secondItem="p9L-Qp-Hgj" secondAttribute="centerX" id="aGa-u5-VcU"/>
+                            <constraint firstItem="IfQ-MD-TQa" firstAttribute="centerY" secondItem="p9L-Qp-Hgj" secondAttribute="centerY" id="lfn-FL-cpB"/>
+                            <constraint firstItem="IfQ-MD-TQa" firstAttribute="height" secondItem="p9L-Qp-Hgj" secondAttribute="height" id="oQ5-lR-r5r"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="IfQ-MD-TQa" id="ybQ-2Z-kIp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sgk-YR-rZX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3263.1999999999998" y="1783.3583208395803"/>
         </scene>
     </scenes>
     <resources>

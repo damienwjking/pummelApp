@@ -26,6 +26,10 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
         
+        // TODO: add right invite button
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kInvite.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.invite))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        
         let nibName = UINib(nibName: "GroupLeadTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")
         
@@ -36,12 +40,16 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.title = kClients
+        self.title = kClients.uppercaseString
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func invite() {
+        self.performSegueWithIdentifier("inviteContactUser", sender: nil)
     }
     
     func cancel() {

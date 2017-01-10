@@ -26,6 +26,7 @@
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
 		BA0314911E155FC000982622 /* intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0314901E155FC000982622 /* intensity.png */; };
 		BA0314941E157C0300982622 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0314931E157C0300982622 /* Session.swift */; };
+		BA04AB691E252BAC00F987BD /* ContactUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */; };
 		BA0B61ED1E004E0800A98C82 /* miniPummelLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */; };
 		BA0B61EE1E004E0800A98C82 /* miniPummelLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */; };
 		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
@@ -362,6 +363,7 @@
 		A23FD1E636ACA8E6CDC611DF /* Pods-pummel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pummel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pummel/Pods-pummel.debug.xcconfig"; sourceTree = "<group>"; };
 		BA0314901E155FC000982622 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
 		BA0314931E157C0300982622 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUserViewController.swift; sourceTree = "<group>"; };
 		BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@3x.png"; sourceTree = "<group>"; };
 		BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = miniPummelLogo.png; sourceTree = "<group>"; };
 		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
@@ -1173,6 +1175,7 @@
 				F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */,
 				F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */,
 				E8C444E91E20AA19006F0548 /* ListCoachsViewController.swift */,
+				BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -1723,6 +1726,7 @@
 				9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */,
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
 				E84D638B1E1D5D4E00CF8B67 /* BookUserTableViewCell.swift in Sources */,
+				BA04AB691E252BAC00F987BD /* ContactUserViewController.swift in Sources */,
 				F9EAE8E31D6EFA0900FD32BE /* SettingNotificationHeaderTableViewCell.swift in Sources */,
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
 				F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */,

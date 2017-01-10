@@ -161,6 +161,7 @@ let kLog = "LOG"
 let kContinue = "Continue"
 let kNext = "Next"
 let kSave = "Save"
+let kInvite = "Invite"
 let kSession = "SESSIONS"
 
 // Button
