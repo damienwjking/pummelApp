@@ -252,6 +252,7 @@
 		F9ADEFDD1CBF868D00991D68 /* tour3@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */; };
 		F9AF9DFA1D29C9410065F2D2 /* AboutCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */; };
 		F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */; };
+		F9C1FB9E1E2531530002CDFF /* pummel_logo_message.png in Resources */ = {isa = PBXBuildFile; fileRef = F9C1FB9D1E2531530002CDFF /* pummel_logo_message.png */; };
 		F9CA4A051D21021D00E8A585 /* LetUsHelpViewConntroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */; };
 		F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A071D21466600E8A585 /* FlowLayout.swift */; };
 		F9CA4A0B1D21466600E8A585 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA4A081D21466600E8A585 /* Tag.swift */; };
@@ -592,6 +593,7 @@
 		F9ADEFDA1CBF868D00991D68 /* tour3@3x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tour3@3x.jpg"; sourceTree = "<group>"; };
 		F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutCollectionViewCell.swift; sourceTree = "<group>"; };
 		F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditCoachProfileViewController.swift; sourceTree = "<group>"; };
+		F9C1FB9D1E2531530002CDFF /* pummel_logo_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pummel_logo_message.png; sourceTree = "<group>"; };
 		F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetUsHelpViewConntroller.swift; sourceTree = "<group>"; };
 		F9CA4A071D21466600E8A585 /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		F9CA4A081D21466600E8A585 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -851,6 +853,7 @@
 		F9827EB71CBBF31600841BF1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				F9C1FB9D1E2531530002CDFF /* pummel_logo_message.png */,
 				F921CA831E1FBDBA00C223D7 /* quote.png */,
 				F921CA841E1FBDBA00C223D7 /* quote@2x.png */,
 				F921CA811E1FBD3400C223D7 /* quote@3x.png */,
@@ -1567,6 +1570,7 @@
 				F9827F251CBC757600841BF1 /* password@3x.png in Resources */,
 				F9827F531CBDEE3C00841BF1 /* attention@3x.png in Resources */,
 				F9ABEAE61DC4B8170084B70E /* Connection.storyboard in Resources */,
+				F9C1FB9E1E2531530002CDFF /* pummel_logo_message.png in Resources */,
 				BA0DB1AB1E1EA31D00CBE586 /* icon_intensity.png in Resources */,
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
 				F92994271D35E7D0000C00D5 /* fit4.jpg in Resources */,
