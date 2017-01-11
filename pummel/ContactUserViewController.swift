@@ -41,6 +41,12 @@ class ContactUserViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.getAllContact()
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.title = kInvite.uppercaseString
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -130,12 +136,20 @@ class ContactUserViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if MFMessageComposeViewController.canSendText() {
             let contact = self.contacts[indexPath.row]
-            let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-            let phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+            let messageImage = UIImage(named: "pummel_logo_message")
+            let messageImageData = UIImagePNGRepresentation(messageImage!)
+            
+            var phoneNumberString = ""
+            if contact.phoneNumbers.count != 0 {
+                let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+                phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+            }
             
             let controller = MFMessageComposeViewController()
-            controller.body = ""
+            controller.body = kMessageInviteContact
             controller.recipients = [phoneNumberString]
+            controller.addAttachmentData(messageImageData!, typeIdentifier: "public.data", filename: "image.png")
+            
             controller.messageComposeDelegate = self
             self.presentViewController(controller, animated: true, completion: nil)
         }
