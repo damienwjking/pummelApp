@@ -22,7 +22,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var coachBorderV: UIView!
     @IBOutlet weak var coachBorderBackgroundV: UIView!
     @IBOutlet weak var connectV : UIView!
-    @IBOutlet weak var connectBT : UIView!
+    @IBOutlet weak var connectBT : UIButton!
     @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var interestLB: UILabel!
     @IBOutlet weak var specialitiesLB: UILabel!
@@ -92,11 +92,19 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     var arrayPhotos: NSArray = []
     var isFromFeed: Bool = false
     
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        self.aboutTV.backgroundColor = .clearColor()
+        self.aboutTV.scrollEnabled = false
+        self.qualificationTV.backgroundColor = .clearColor()
+        self.qualificationTV.scrollEnabled = false
+        
         self.bigBigIndicatorView.alpha = 0.005
         self.bigIndicatorView.alpha = 0.01
         self.medIndicatorView.alpha = 0.025
@@ -118,22 +126,6 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.connectV.layer.cornerRadius = 55/2
         self.connectV.clipsToBounds = true
         self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
-        self.addressLB.font = .pmmMonReg11()
-        self.interestLB.font = .pmmMonReg11()
-        self.specialitiesLB.font = .pmmMonLight11()
-        self.qualificationTV.font = .pmmMonLight13()
-        self.socailLB.font = .pmmMonLight11()
-        self.postLB.font = .pmmMonLight11()
-        self.aboutLB.font = .pmmMonLight11()
-        self.aboutTV.backgroundColor = .clearColor()
-        self.aboutTV.font = .pmmMonLight13()
-        self.aboutTV.scrollEnabled = false
-        self.qualificationTV.backgroundColor = .clearColor()
-        self.qualificationTV.font = .pmmMonLight13()
-        self.qualificationTV.scrollEnabled = false
-        self.facebookBT.titleLabel?.font = .pmmMonReg11()
-        self.twiterBT.titleLabel?.font = .pmmMonReg11()
-        self.instagramBT.titleLabel?.font = .pmmMonReg11()
         self.avatarIMV.layer.cornerRadius = 125/2
         self.coachBorderV.layer.cornerRadius = 135/2
         self.coachBorderBackgroundV.layer.cornerRadius = 129/2
@@ -143,29 +135,9 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.scrollView.scrollsToTop = false
         self.interestCollectionView.delegate = self
         self.interestCollectionView.dataSource = self
+        
         if !(coachDetail[kImageUrl] is NSNull) {
-            let imageLink = coachDetail[kImageUrl] as! String
-            var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
-            let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                self.avatarIMV.image = imageRes
-                self.coachBorderBackgroundV.hidden = false
-                self.coachBorderV.hidden = false
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.avatarIMV.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                            self.coachBorderBackgroundV.hidden = false
-                            self.coachBorderV.hidden = false
-                        }
-                }
-            }
+            self.setCoachAvatar()
         }
         
         self.businessIMV.hidden = true
@@ -173,67 +145,11 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.businessIMV.layer.cornerRadius = 50
         self.businessIMV.clipsToBounds = true
         if !(coachDetail[kBusinessId] is NSNull) {
-            if (coachDetail[kBusinessId] != nil) {
-                let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
-                var linkBusinessId = kPMAPI_BUSINESS
-                linkBusinessId.appendContentsOf(businessId)
-                Alamofire.request(.GET, linkBusinessId)
-                    .responseJSON { response in
-                        if response.response?.statusCode == 200 {
-                            
-                            let jsonBusiness = response.result.value as! NSDictionary
-                            if !(jsonBusiness[kImageUrl] is NSNull) {
-                                let businessLogoUrl = jsonBusiness[kImageUrl] as! String
-                                var prefixLogo = kPMAPI
-                                prefixLogo.appendContentsOf(businessLogoUrl)
-                                prefixLogo.appendContentsOf(widthHeight120)
-                                if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
-                                    self.businessIMV.hidden = false
-                                    let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
-                                    self.businessIMV.image = imageRes
-                                    self.aboutLeftDT.constant = 120
-                                } else {
-                                    Alamofire.request(.GET, prefixLogo)
-                                        .responseImage { response in
-                                            if (response.response?.statusCode == 200) {
-                                                self.businessIMV.hidden = false
-                                                let imageRes = response.result.value! as UIImage
-                                                self.businessIMV.image = imageRes
-                                                self.aboutLeftDT.constant = 120
-                                                NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
-                                            }
-                                    }
-                                }
-                            }
-                        }
-                }
-            }
+            self.getBusinessImage()
         }
 
-        
-
         if (coachDetail[kTags] == nil) {
-            let feedId = String(format:"%0.f", coachDetail[kId]!.doubleValue)
-            var tagLink = kPMAPIUSER
-            tagLink.appendContentsOf(feedId)
-            tagLink.appendContentsOf("/tags")
-            Alamofire.request(.GET, tagLink)
-                .responseJSON { response in
-                    if (response.response?.statusCode == 200) {
-                        let tagArr = response.result.value as! [NSDictionary]
-                        self.tags.removeAll()
-                        for i in 0 ..< tagArr.count {
-                            let tagContent = tagArr[i]
-                            let tag = Tag()
-                            tag.name = tagContent[kTitle] as? String
-                            self.tags.append(tag)
-                        }
-                        self.interestCollectionView.reloadData({
-                            self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
-                            self.interestHeightDT.constant = ((self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50) < 128) ? 128 : (self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50)
-                        })
-                    }
-            }
+            self.getCoachTags()
         } else {
             let coachListTags = coachDetail[kTags] as! NSArray
             self.tags.removeAll()
@@ -265,6 +181,112 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.statusBarDefault = false
         self.aboutCollectionView.delegate = self
         self.aboutCollectionView.dataSource = self
+        getListImage()
+        self.updateUI()
+        self.setupViewForLabelButton()
+        self.checkConnect()
+    }
+    
+    func getBusinessImage() {
+        if (coachDetail[kBusinessId] != nil) {
+            let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+            var linkBusinessId = kPMAPI_BUSINESS
+            linkBusinessId.appendContentsOf(businessId)
+            Alamofire.request(.GET, linkBusinessId)
+                .responseJSON { response in
+                    if response.response?.statusCode == 200 {
+                        
+                        let jsonBusiness = response.result.value as! NSDictionary
+                        if !(jsonBusiness[kImageUrl] is NSNull) {
+                            let businessLogoUrl = jsonBusiness[kImageUrl] as! String
+                            var prefixLogo = kPMAPI
+                            prefixLogo.appendContentsOf(businessLogoUrl)
+                            prefixLogo.appendContentsOf(widthHeight120)
+                            if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
+                                self.businessIMV.hidden = false
+                                let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
+                                self.businessIMV.image = imageRes
+                                self.aboutLeftDT.constant = 120
+                            } else {
+                                Alamofire.request(.GET, prefixLogo)
+                                    .responseImage { response in
+                                        if (response.response?.statusCode == 200) {
+                                            self.businessIMV.hidden = false
+                                            let imageRes = response.result.value! as UIImage
+                                            self.businessIMV.image = imageRes
+                                            self.aboutLeftDT.constant = 120
+                                            NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
+                                        }
+                                }
+                            }
+                        }
+                    }
+            }
+        }
+    }
+    
+    func getCoachTags() {
+        let feedId = String(format:"%0.f", coachDetail[kId]!.doubleValue)
+        var tagLink = kPMAPIUSER
+        tagLink.appendContentsOf(feedId)
+        tagLink.appendContentsOf("/tags")
+        Alamofire.request(.GET, tagLink)
+            .responseJSON { response in
+                if (response.response?.statusCode == 200) {
+                    let tagArr = response.result.value as! [NSDictionary]
+                    self.tags.removeAll()
+                    for i in 0 ..< tagArr.count {
+                        let tagContent = tagArr[i]
+                        let tag = Tag()
+                        tag.name = tagContent[kTitle] as? String
+                        self.tags.append(tag)
+                    }
+                    self.interestCollectionView.reloadData({
+                        self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
+                        self.interestHeightDT.constant = ((self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50) < 128) ? 128 : (self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50)
+                    })
+                }
+        }
+    }
+    
+    func setCoachAvatar() {
+        let imageLink = coachDetail[kImageUrl] as! String
+        var prefix = kPMAPI
+        prefix.appendContentsOf(imageLink)
+        let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
+        prefix.appendContentsOf(postfix)
+        if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+            let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+            self.avatarIMV.image = imageRes
+            self.coachBorderBackgroundV.hidden = false
+            self.coachBorderV.hidden = false
+        } else {
+            Alamofire.request(.GET, prefix)
+                .responseImage { response in
+                    if (response.response?.statusCode == 200) {
+                        let imageRes = response.result.value! as UIImage
+                        self.avatarIMV.image = imageRes
+                        NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                        self.coachBorderBackgroundV.hidden = false
+                        self.coachBorderV.hidden = false
+                    }
+            }
+        }
+    }
+    
+    func setupViewForLabelButton() {
+        self.addressLB.font = .pmmMonReg11()
+        self.interestLB.font = .pmmMonReg11()
+        self.specialitiesLB.font = .pmmMonLight11()
+        self.qualificationTV.font = .pmmMonLight13()
+        self.socailLB.font = .pmmMonLight11()
+        self.postLB.font = .pmmMonLight11()
+        self.aboutLB.font = .pmmMonLight11()
+        self.aboutTV.font = .pmmMonLight13()
+        self.qualificationTV.font = .pmmMonLight13()
+        self.facebookBT.titleLabel?.font = .pmmMonReg11()
+        self.twiterBT.titleLabel?.font = .pmmMonReg11()
+        self.instagramBT.titleLabel?.font = .pmmMonReg11()
         self.ratingLB.font = .pmmMonLight10()
         self.ratingContentLB.font = .pmmMonReg16()
         self.connectionLB.font = .pmmMonLight10()
@@ -273,8 +295,6 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
-        getListImage()
-        self.updateUI()
     }
     
     func getListImage() {
@@ -436,6 +456,45 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         }
         
     }
+    
+    func checkConnect() {
+        self.view.makeToastActivity(message: "Loading")
+        let prefix = kPMAPICHECKUSERCONNECT
+        let param = [
+            kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            kCoachId : coachDetail[kId]!
+        ]
+        
+        Alamofire.request(.POST, prefix, parameters: param)
+            .responseString(completionHandler: { (Response) in
+                self.view.hideToastActivity()
+                
+                switch (Response.result) {
+                case .Success(let resultValue) :
+                    let resultString = resultValue as String
+                    
+                    if (resultString.isEmpty == false) {
+                        if (resultString == "Connected") {
+                            self.connectBT.setImage(UIImage(named: "connected"), forState: .Normal)
+                            self.connectV.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
+                            self.connectBT.userInteractionEnabled = false
+                            
+                        } else if (resultString == "Not yet") {
+                            self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
+                            self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
+                        }
+                    } else {
+                        self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
+                        self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
+                    }
+                    
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                }
+                
+                
+            })
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -444,11 +503,11 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
         postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
         self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
         self.scrollView.scrollEnabled = true
     }
-    
     
     @IBAction func goBackToResult() {
         self.dismissViewControllerAnimated(true) { 

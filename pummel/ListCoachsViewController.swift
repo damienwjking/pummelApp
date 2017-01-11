@@ -1,16 +1,18 @@
 //
-//  BookSessionShareViewController.swift
+//  ListCoachsViewController.swift
 //  pummel
 //
-//  Created by Nguyen Vu Hao on 12/22/16.
-//  Copyright © 2016 pummel. All rights reserved.
+//  Created by Nguyen Vu Hao on 1/7/17.
+//  Copyright © 2017 pummel. All rights reserved.
 //
+
+import UIKit
 
 import UIKit
 import Alamofire
 
-class BookSessionShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
-
+class ListCoachsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate {
+    
     @IBOutlet weak var tbView: UITableView!
     var image:UIImage?
     var tag:Tag?
@@ -26,30 +28,20 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
         
-        // TODO: add right invite button
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kInvite.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.invite))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
-        
         let nibName = UINib(nibName: "GroupLeadTableViewCell", bundle:nil)
         self.tbView.registerNib(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")
-        
-        let nibName2 = UINib(nibName: "LeadAddedTableViewCell", bundle:nil)
-        self.tbView.registerNib(nibName2, forCellReuseIdentifier: "LeadAddedTableViewCell")
+
         self.tbView.allowsSelection = false
     }
-
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.title = kClients.uppercaseString
+        self.title = kCoaches
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func invite() {
-        self.performSegueWithIdentifier("inviteContactUser", sender: nil)
     }
     
     func cancel() {
@@ -68,14 +60,14 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
         if indexPath.row == 0 {
-            cell.titleHeader.text = "NEW LEADS"
-            cell.typeGroup = TypeGroup.NewLead
+            cell.titleHeader.text = "JUST CONNECTED"
+            cell.typeGroup = TypeGroup.CoachJustConnected
         } else if indexPath.row == 1 {
-            cell.titleHeader.text = "EXISTING CLIENTS"
-            cell.typeGroup = TypeGroup.Current
+            cell.titleHeader.text = "CURRENT COACHES"
+            cell.typeGroup = TypeGroup.CoachCurrent
         } else if indexPath.row == 2 {
-            cell.titleHeader.text = "PAST CLIENTS"
-            cell.typeGroup = TypeGroup.Old
+            cell.titleHeader.text = "PAST COACHES"
+            cell.typeGroup = TypeGroup.CoachOld
         }
         cell.userIdSelected = self.userIdSelected
         cell.delegateGroupLeadTableViewCell = self
@@ -88,16 +80,13 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func selectUserWithID(userId:String, typeGroup:Int) {
-        if typeGroup == TypeGroup.Current.rawValue {
-            self.showAlertMovetoOldAction(userId)
-        } else {
-            self.showAlertMovetoCurrentAction(userId,typeGroup: typeGroup)
-        }
-    }
-    
-    func removeUserWithID(userId:String) {
-        userIdSelected = ""
-        self.tbView.reloadData()
+        // TODO:
+        //goto profile
+//        if typeGroup == TypeGroup.Current.rawValue {
+//            self.showAlertMovetoOldAction(userId)
+//        } else {
+//            self.showAlertMovetoCurrentAction(userId,typeGroup: typeGroup)
+//        }
     }
     
     func showAlertMovetoOldAction(userID:String) {
@@ -116,12 +105,7 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
                     }
             }
         }
-        
-        let clickShare = { (action:UIAlertAction!) -> Void in
-            self.userIdSelected = userID
-            self.tbView.reloadData()
-        }
-        
+
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: "Move to Old", style: UIAlertActionStyle.Default, handler: clickMoveToOld))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
@@ -151,10 +135,6 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
             }
         }
         
-        let clickShare = { (action:UIAlertAction!) -> Void in
-            self.userIdSelected = userID
-            self.tbView.reloadData()
-        }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: "Move to Current", style: UIAlertActionStyle.Default, handler: clickMoveToCurrent))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
@@ -162,13 +142,14 @@ class BookSessionShareViewController: UIViewController, UITableViewDelegate, UIT
         self.presentViewController(alertController, animated: true) { }
     }
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
+

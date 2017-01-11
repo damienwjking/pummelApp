@@ -449,7 +449,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             (granted: Bool, error: CFError!) in
             dispatch_async(dispatch_get_main_queue()) {
                 if granted == false {
-                    // Henry: show message not enable contact
+                    //TODO: show message not enable contact
                 } else {
                     self.saveIndexPath = indexPath
                     self.isGoToMessageDetail = true

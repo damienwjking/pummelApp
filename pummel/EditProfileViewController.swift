@@ -349,15 +349,13 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             if (fullNameArr.count > 0) {
                 firstname = fullNameArr[0]
             }
-            var lastname = " "
+            var lastname = ""
             if fullNameArr.count >= 2 {
                 for i in 1 ..< fullNameArr.count {
                     lastname.appendContentsOf(fullNameArr[i])
                     lastname.appendContentsOf(" ")
                 }
-            } else {
-                lastname = " "
-            }
+            } 
 
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
@@ -366,18 +364,19 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             
             self.view.makeToastActivity(message: "Saving")
             
-            let param = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-                         kFirstname:firstname,
-                         kLastName: lastname,
-                         kMobile: mobileContentTF.text!,
-                         kDob: dobContentTF.text!,
-                         kGender:(genderContentTF.text?.uppercaseString)!,
-                         kBio: aboutContentTV.text,
-                         kFacebookUrl:facebookUrlTF.text!,
-                         kTwitterUrl:twitterUrlTF.text!,
-                         kInstagramUrl:instagramUrlTF.text!,
-                         kEmergencyName:emergencyNameTF.text!,
-                         kEmergencyMobile:emergencyMobileTF.text!]
+            let param =
+                [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                 kFirstname:firstname,
+                 kLastName: lastname,
+                 kMobile: mobileContentTF.text!,
+                 kDob: dobContentTF.text!,
+                 kGender:(genderContentTF.text?.uppercaseString)!,
+                 kBio: aboutContentTV.text,
+                 kFacebookUrl:facebookUrlTF.text!,
+                 kTwitterUrl:twitterUrlTF.text!,
+                 kInstagramUrl:instagramUrlTF.text!,
+                 kEmergencyName:emergencyNameTF.text!,
+                 kEmergencyMobile:emergencyMobileTF.text!]
             
             // update weight height
             Alamofire.request(.PUT, prefix, parameters: param)

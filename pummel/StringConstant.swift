@@ -161,7 +161,8 @@ let kLog = "LOG"
 let kContinue = "Continue"
 let kNext = "Next"
 let kSave = "Save"
-let kSession = "Session"
+let kInvite = "Invite"
+let kSession = "SESSIONS"
 
 // Button
 let kNavSetting = "SETTINGS"
@@ -177,7 +178,7 @@ let kNavPost = "POST"
 let kBookSession = "BOOK SESSION"
 let kBookShare = "SHARE"
 let kClients = "CLIENTS"
-
+let kCoaches = "COACHES"
 
 // Cell
 let kSettingDiscoveryHeaderTableViewCell = "SettingDiscoveryHeaderTableViewCell"
