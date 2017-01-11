@@ -103,6 +103,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.emailContentTF.font = .pmmMonLight13()
         self.genderContentTF.font = .pmmMonLight13()
         self.dobContentTF.font = .pmmMonLight13()
+        self.dobContentTF.placeholder = "YYYY-MM-DD"
         self.weightContentTF.font = .pmmMonLight13()
         self.heightContentTF.font = .pmmMonLight13()
         self.mobileContentTF.font = .pmmMonLight13()
@@ -285,7 +286,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                 self.mobileContentTF.text = thisIsYourMobile
             }
             
-            if !(self.userInfo[kMobile] is NSNull) {
+            if !(self.userInfo[kDob] is NSNull) {
                 let stringDob = self.userInfo[kDob] as! String
                 
                 self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))

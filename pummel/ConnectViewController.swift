@@ -25,6 +25,7 @@ class ConnectViewController: UIViewController {
     @IBOutlet weak var titleConnectDetailLB: UILabel!
    
     @IBOutlet weak var sendMessageBT: UIButton!
+    @IBOutlet weak var requestCallBackBT: UIButton!
     @IBOutlet weak var keepLookingBT: UIButton!
     
     @IBOutlet weak var firstConnectingIconV: UIView!
@@ -48,10 +49,14 @@ class ConnectViewController: UIViewController {
         self.keepLookingBT.layer.borderColor = UIColor.whiteColor().CGColor
         self.keepLookingBT.titleLabel?.font = .pmmMonReg13()
         
+        self.requestCallBackBT.layer.cornerRadius = 2
+        self.requestCallBackBT.layer.borderWidth = 0.5
+        self.requestCallBackBT.backgroundColor = .pmmBrightOrangeColor()
+        self.requestCallBackBT.titleLabel?.font = .pmmMonReg13()
+        
         self.sendMessageBT.layer.cornerRadius = 2
         self.sendMessageBT.layer.borderWidth = 0.5
         self.sendMessageBT.backgroundColor = .pmmBrightOrangeColor()
-        
         self.sendMessageBT.titleLabel?.font = .pmmMonReg13()
         
         // Do any additional setup after loading the view.
@@ -98,9 +103,19 @@ class ConnectViewController: UIViewController {
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value as! NSDictionary
                     let coachDetailName = (self.coachDetail[kFirstname] as! String)
-                    let yourName = JSON[kFirstname] as! String                    
-                    let titleConnectLBText = yourName.stringByAppendingString(", meet ").stringByAppendingString(coachDetailName)
+                    
+                    var titleConnectLBText = "Say hi to "
+                    titleConnectLBText = titleConnectLBText.stringByAppendingString(coachDetailName)
                     self.titleConnectLB.text = titleConnectLBText
+                    
+                    var titleConnectDetailText = "Ask "
+                    titleConnectDetailText = titleConnectDetailText.stringByAppendingString(coachDetailName)
+                    titleConnectDetailText = titleConnectDetailText.stringByAppendingString(" a question or arrange your first appointment")
+                    self.titleConnectDetailLB.text = titleConnectDetailText
+                    
+                    let titleSendMessageText = "CHAT WITH ".stringByAppendingString(coachDetailName)
+                    self.sendMessageBT.setTitle(titleSendMessageText.uppercaseString, forState: .Normal)
+                    
                     var link = kPMAPI
                     if !(JSON[kImageUrl] is NSNull) {
                         link.appendContentsOf(JSON[kImageUrl] as! String)
@@ -136,19 +151,6 @@ class ConnectViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    @IBAction func keepLooking(sender:UIButton) {
-        if coachDetail != nil {
-            if let firstName = coachDetail[kFirstname] as? String {
-                let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Keep Looking", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
-            }
-        }
-        
-        self.dismissViewControllerAnimated(true) { 
-        }
     }
     
     @IBAction func sendUsAMessage(sender: UIButton){
@@ -205,6 +207,23 @@ class ConnectViewController: UIViewController {
                     findVC.performSegueWithIdentifier(kSendMessageConnection, sender:nil)
                 })
             }
+        }
+    }
+    
+    @IBAction func requestCallBack(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func keepLooking(sender:UIButton) {
+        if coachDetail != nil {
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Keep Looking", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+            }
+        }
+        
+        self.dismissViewControllerAnimated(true) {
         }
     }
     

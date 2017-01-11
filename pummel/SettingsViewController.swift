@@ -458,7 +458,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             switch indexPath.row {
             case 1:
                 self.selectMeasure()
-            case 3:
+            case 4:
                 self.upgradeToCoach()
             case 9:
                 self.sendSupportEmail()

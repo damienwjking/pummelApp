@@ -38,7 +38,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.showLetUsHelp = true
+        self.showLetUsHelp = false
         self.navigationController!.navigationBar.translucent = false
         
         swipeableView = ZLSwipeableView()
@@ -286,15 +286,19 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
 
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.rightButtonClicked))
         self.updateRightBarButtonItem()
+        
         self.tabBarController?.title = "RESULTS"
+        
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         let selectedImage = UIImage(named: "search")
         self.tabBarItem.image = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
-        if(showLetUsHelp == true) {
+        
+        if (showLetUsHelp == true) {
             performSegueWithIdentifier("letUsHelp", sender: nil)
         }
+        
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CLIENTS", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnClientClick))
         } else {

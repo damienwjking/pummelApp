@@ -227,6 +227,7 @@ class LetUsHelpViewController: UIViewController, UICollectionViewDataSource, UIC
         cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
         cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
+        
     }
     
     

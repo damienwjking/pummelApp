@@ -136,6 +136,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     }
     
     @IBAction func clickSigninAction(sender:UIButton!) {
+        if self.profileIMV.image == nil {
+            return
+        }
+        
         let userEmail = self.loginVC.emailTF.text!
         let userPassword = self.loginVC.passwordTF.text!
         self.view.makeToastActivity(message: "Loading")
