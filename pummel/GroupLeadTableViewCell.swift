@@ -15,6 +15,7 @@ enum TypeGroup:Int {
 
 @objc protocol GroupLeadTableViewCellDelegate: class {
     optional func selectUserWithID(userId:String, typeGroup:Int)
+    optional func selectUserWithID(coachInfo:NSDictionary)
 }
 
 
@@ -22,6 +23,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
     var arrayMessages: [NSDictionary] = []
+    var arrayCoachesInfo: [NSDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
     var typeGroup:TypeGroup!
     weak var delegateGroupLeadTableViewCell: GroupLeadTableViewCellDelegate?
@@ -83,6 +85,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                 if let userInfo = JSON as? NSDictionary {
                     let name = userInfo.objectForKey(kFirstname) as! String
                     cell.nameUser.text = name.uppercaseString
+                    self.arrayCoachesInfo[indexPath.row] = userInfo
                     var link = kPMAPI
                     if !(JSON[kImageUrl] is NSNull) {
                         link.appendContentsOf(JSON[kImageUrl] as! String)
@@ -125,6 +128,10 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             if let val = userInfo["userId"] as? Int {
                 targetUserId = "\(val)"
             }
+            if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+                self.delegateGroupLeadTableViewCell?.selectUserWithID!(self.arrayCoachesInfo[indexPath.row])
+                return
+            }
             self.delegateGroupLeadTableViewCell?.selectUserWithID!(targetUserId, typeGroup: self.typeGroup.rawValue)
         }
     }
@@ -154,6 +161,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             case .Success(let JSON):
                 if let arrayMessageT = JSON as? [NSDictionary] {
                     self.arrayMessages = arrayMessageT
+                    self.arrayCoachesInfo = arrayMessageT
                     self.cv.reloadData()
                 }
             case .Failure(let error):

@@ -79,14 +79,16 @@ class ListCoachsViewController: UIViewController, UITableViewDelegate, UITableVi
         return cell
     }
     
-    func selectUserWithID(userId:String, typeGroup:Int) {
-        // TODO:
-        //goto profile
-//        if typeGroup == TypeGroup.Current.rawValue {
-//            self.showAlertMovetoOldAction(userId)
-//        } else {
-//            self.showAlertMovetoCurrentAction(userId,typeGroup: typeGroup)
-//        }
+    func selectUserWithID(coachInfo:NSDictionary) {
+        self.performSegueWithIdentifier(kGoProfile, sender:coachInfo)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == kGoProfile) {
+            let destination = segue.destinationViewController as! CoachProfileViewController
+            let currentFeedDetail = sender as! NSDictionary
+            destination.coachDetail = currentFeedDetail
+        }
     }
     
     func showAlertMovetoOldAction(userID:String) {
