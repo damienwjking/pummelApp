@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -178,6 +178,7 @@
                     </view>
                     <connections>
                         <outlet property="tbView" destination="0Ea-MJ-Kte" id="sNG-t8-Ixg"/>
+                        <segue destination="REY-5g-p4Z" kind="show" identifier="goProfile" id="cAd-8P-CL0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fvw-rQ-nOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -274,4 +275,7 @@
         <image name="cardEmpty.png" width="166" height="142"/>
         <image name="search.png" width="45" height="45"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="cAd-8P-CL0"/>
+    </inferredMetricsTieBreakers>
 </document>
