@@ -91,6 +91,7 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     var tags = [Tag]()
     var arrayPhotos: NSArray = []
     var isFromFeed: Bool = false
+    var isFromListCoaches: Bool = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -185,6 +186,10 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.updateUI()
         self.setupViewForLabelButton()
         self.checkConnect()
+        
+        if isFromListCoaches == true {
+            self.navigationController?.navigationBar.hidden = true
+        }
     }
     
     func getBusinessImage() {
@@ -510,6 +515,10 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     @IBAction func goBackToResult() {
+        if isFromListCoaches == true {
+            self.navigationController?.popViewControllerAnimated(true)
+            return
+        }
         self.dismissViewControllerAnimated(true) { 
         }
     }

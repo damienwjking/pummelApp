@@ -88,6 +88,7 @@ class ListCoachsViewController: UIViewController, UITableViewDelegate, UITableVi
             let destination = segue.destinationViewController as! CoachProfileViewController
             let currentFeedDetail = sender as! NSDictionary
             destination.coachDetail = currentFeedDetail
+            destination.isFromListCoaches = true
         }
     }
     
