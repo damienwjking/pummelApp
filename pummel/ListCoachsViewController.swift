@@ -37,6 +37,7 @@ class ListCoachsViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.title = kCoaches
+        self.navigationController?.navigationBar.hidden = false
     }
     
     override func didReceiveMemoryWarning() {
