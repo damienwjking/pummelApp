@@ -11,4 +11,5 @@ class Tag {
     var selected = false
     var tagId: String?
     var tagColor: String?
+    var tagType: Int?
 }

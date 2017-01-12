@@ -390,34 +390,34 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == kGoConnect)
-        {
+        if (segue.identifier == kGoConnect) {
             let destination = segue.destinationViewController as! ConnectViewController
             let tag = sender.tag
             let feed = arrayFeeds[tag] 
             currentFeedDetail = feed[kUser] as! NSDictionary
             destination.coachDetail = currentFeedDetail
             destination.isFromFeed = true
-        }else if (segue.identifier == kGoProfile) {
+        } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
             let feed = arrayFeeds[sender.tag] 
             currentFeedDetail = feed[kUser] as! NSDictionary
             destination.coachDetail = currentFeedDetail
             destination.coachTotalDetail = feed
             destination.isFromFeed = true
-        }else if (segue.identifier == kGoUserProfile) {
+        } else if (segue.identifier == kGoUserProfile) {
             let destination = segue.destinationViewController as! UserProfileViewController
             let feed = arrayFeeds[sender.tag] 
             currentFeedDetail = feed[kUser] as! NSDictionary
             destination.userDetail = currentFeedDetail
             destination.userId = String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
-        }else if (segue.identifier == kSendMessageConnection) {
+        } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destinationViewController as! ChatMessageViewController
             
             destination.coachName = ((currentFeedDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercaseString
             destination.typeCoach = true
             destination.coachId = String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
             destination.userIdTarget =  String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
+            destination.preMessage = sender as! String
         } else if (segue.identifier == "goToFeedDetail") {
             let destination = segue.destinationViewController as! FeedViewController
             let feed = arrayFeeds[sender.tag] 

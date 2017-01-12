@@ -69,10 +69,18 @@
                                                     <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pIS-TF-AF6">
+                                                    <rect key="frame" x="31" y="26.5" width="9" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="pIS-TF-AF6" firstAttribute="centerY" secondItem="NBL-bo-JLk" secondAttribute="centerY" id="FBM-pz-TtY"/>
                                                 <constraint firstItem="ajW-OH-0vd" firstAttribute="centerY" secondItem="NBL-bo-JLk" secondAttribute="centerY" id="Fdc-K9-jFP"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="ajW-OH-0vd" secondAttribute="trailing" constant="13" id="J6g-Io-xeN"/>
+                                                <constraint firstItem="pIS-TF-AF6" firstAttribute="centerX" secondItem="NBL-bo-JLk" secondAttribute="centerX" id="KEe-OF-7a0"/>
                                                 <constraint firstItem="NBL-bo-JLk" firstAttribute="leading" secondItem="EZP-de-Q3K" secondAttribute="leadingMargin" constant="7" id="iuD-3L-iEb"/>
                                                 <constraint firstItem="NBL-bo-JLk" firstAttribute="centerY" secondItem="EZP-de-Q3K" secondAttribute="centerY" id="pyP-SL-0bP"/>
                                                 <constraint firstItem="ajW-OH-0vd" firstAttribute="leading" secondItem="NBL-bo-JLk" secondAttribute="trailing" constant="15" id="zYX-m4-HdT"/>
@@ -81,6 +89,7 @@
                                         <connections>
                                             <outlet property="LogTitleLB" destination="ajW-OH-0vd" id="g9u-hm-Y2Y"/>
                                             <outlet property="statusIMV" destination="NBL-bo-JLk" id="fq8-WY-ESc"/>
+                                            <outlet property="tagTypeLabel" destination="pIS-TF-AF6" id="6iZ-N0-jpl"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

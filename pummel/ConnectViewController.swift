@@ -51,7 +51,7 @@ class ConnectViewController: UIViewController {
         
         self.requestCallBackBT.layer.cornerRadius = 2
         self.requestCallBackBT.layer.borderWidth = 0.5
-        self.requestCallBackBT.backgroundColor = .pmmBrightOrangeColor()
+        self.requestCallBackBT.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
         self.requestCallBackBT.titleLabel?.font = .pmmMonReg13()
         
         self.sendMessageBT.layer.cornerRadius = 2
@@ -153,65 +153,47 @@ class ConnectViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func sendUsAMessage(sender: UIButton){
-        // Tracker mixpanel
-        if coachDetail != nil {
-            if let firstName = coachDetail[kFirstname] as? String {
-                let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
-                
-                var prefix = kPMAPIUSER
-                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                prefix.appendContentsOf(kPMAPI_LEAD)
-                prefix.appendContentsOf("/")
-                Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:coachDetail[kId]!])
-                    .responseJSON { response in
-                        if response.response?.statusCode == 200 {
-                        }
-                }
-            }
+    @IBAction func sendUsAMessage(sender: UIButton) {
+        if let firstName = coachDetail[kFirstname] as? String {
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+            mixpanel.track("Event", properties: properties)
         }
-        
-        if (self.isFromProfile == true) {
-            if (self.isFromFeed == true) {
-                let profileVC = presentingViewController!
-                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-                let featureVC = tabbarVC.viewControllers![0] as! FeaturedViewController
-                self.dismissViewControllerAnimated(false, completion: {
-                    profileVC.dismissViewControllerAnimated(false, completion: {
-                        featureVC.performSegueWithIdentifier(kSendMessageConnection, sender:nil)
-                    })
-                })
-            } else {
-                let profileVC = presentingViewController!
-                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-                let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                self.dismissViewControllerAnimated(false, completion: {
-                    profileVC.dismissViewControllerAnimated(false, completion: {
-                        findVC.performSegueWithIdentifier(kSendMessageConnection, sender:nil)
-                    })
-                })
-            }
-        } else {
-            if (isFromFeed == true) {
-                let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
-                let featuredVC = tabbarVC.viewControllers![0] as! FeaturedViewController
-                presentingViewController!.dismissViewControllerAnimated(false, completion: {
-                    featuredVC.performSegueWithIdentifier(kSendMessageConnection, sender:nil)
-                })
-            } else {
-                let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
-                let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                presentingViewController!.dismissViewControllerAnimated(false, completion: {
-                    findVC.performSegueWithIdentifier(kSendMessageConnection, sender:nil)
-                })
-            }
-        }
+
+        self.moveToMessageScreenWithMessage("")
     }
     
     @IBAction func requestCallBack(sender: AnyObject) {
+        let coachDetailName = (self.coachDetail[kFirstname] as! String)
         
+        if let firstName = coachDetail[kFirstname] as? String {
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Request Call Back", "Label":"\(firstName.uppercaseString)"]
+            mixpanel.track("Event", properties: properties)
+        }
+        
+        var prefix = kPMAPIUSER
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in
+                if response.response?.statusCode == 200 {
+                    if (response.result.value == nil) {return}
+                    let userInfo = response.result.value as! NSDictionary
+                    
+                    var phoneNumber = ""
+                    if !(userInfo[kMobile] is NSNull) {
+                        phoneNumber = (userInfo[kMobile] as? String)!
+                    }
+                    
+                    var message = "Hey "
+                    message = message.stringByAppendingString(coachDetailName)
+                    message = ", can you please call me back on "
+                    message = message.stringByAppendingString(phoneNumber)
+                    
+                    self.moveToMessageScreenWithMessage(message)
+                }
+        }
     }
     
     @IBAction func keepLooking(sender:UIButton) {
@@ -231,4 +213,41 @@ class ConnectViewController: UIViewController {
         return UIStatusBarStyle.LightContent
     }
 
+    func moveToMessageScreenWithMessage(message: String) {
+        if (self.isFromProfile == true) {
+            if (self.isFromFeed == true) {
+                let profileVC = presentingViewController!
+                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
+                let featureVC = tabbarVC.viewControllers![0] as! FeaturedViewController
+                self.dismissViewControllerAnimated(false, completion: {
+                    profileVC.dismissViewControllerAnimated(false, completion: {
+                        featureVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                    })
+                })
+            } else {
+                let profileVC = presentingViewController!
+                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
+                let findVC = tabbarVC.viewControllers![2] as! FindViewController
+                self.dismissViewControllerAnimated(false, completion: {
+                    profileVC.dismissViewControllerAnimated(false, completion: {
+                        findVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                    })
+                })
+            }
+        } else {
+            if (isFromFeed == true) {
+                let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
+                let featuredVC = tabbarVC.viewControllers![0] as! FeaturedViewController
+                presentingViewController!.dismissViewControllerAnimated(false, completion: {
+                    featuredVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                })
+            } else {
+                let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
+                let findVC = tabbarVC.viewControllers![2] as! FindViewController
+                presentingViewController!.dismissViewControllerAnimated(false, completion: {
+                    findVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                })
+            }
+        }
+    }
 }
