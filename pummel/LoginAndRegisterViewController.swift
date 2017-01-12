@@ -188,7 +188,24 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                         }
                     }
                     
-                    Mixpanel.sharedInstance().identify(NSUUID().UUIDString)
+                    let mixpanel = Mixpanel.sharedInstance()
+                    if mixpanel.distinctId != "" {
+                        mixpanel.identify(currentId)
+                    } else {
+                        mixpanel.createAlias(currentId, forDistinctID: mixpanel.distinctId)
+                        mixpanel.identify(mixpanel.distinctId)
+                    }
+                    
+                    if let userinfo = JSON!.objectForKey("user") as? NSDictionary {
+                        if let nameUser = userinfo.objectForKey(kFirstname) as? String {
+                            mixpanel.people.set("$name", to: nameUser)
+                        }
+                        
+                        if let mailUser = userinfo[kEmail] as? String {
+                            mixpanel.people.set("$email", to: mailUser)
+                        }
+                    }
+                    
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
                     self.view.hideToastActivity()
         
@@ -349,12 +366,29 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                         activityView.stopAnimating()
                                         activityView.removeFromSuperview()
                                         self.view.hideToastActivity()
-                                        Mixpanel.sharedInstance().identify(NSUUID().UUIDString)
                                         
                                         self.updateCookies(response)
                                         let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
                                         self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
                                         self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
+                                        
+                                        let mixpanel = Mixpanel.sharedInstance()
+                                        if mixpanel.distinctId != "" {
+                                            mixpanel.identify(currentId)
+                                        } else {
+                                            mixpanel.createAlias(currentId, forDistinctID: mixpanel.distinctId)
+                                            mixpanel.identify(mixpanel.distinctId)
+                                        }
+                                        
+                                        if let userinfo = JSON!.objectForKey("user") as? NSDictionary {
+                                            if let nameUser = userinfo.objectForKey(kFirstname) as? String {
+                                                mixpanel.people.set("$name", to: nameUser)
+                                            }
+                                            
+                                            if let mailUser = userinfo[kEmail] as? String {
+                                                mixpanel.people.set("$email", to: mailUser)
+                                            }
+                                        }
                                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                     }
                                 }else {
