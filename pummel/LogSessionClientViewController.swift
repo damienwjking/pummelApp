@@ -82,6 +82,7 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
                             tag.name = tagContent[kTitle] as? String
                             tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
                             tag.tagColor = self.getRandomColorString()
+                            tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
                             self.tags.append(tag)
                         }
                         self.offset += 10
@@ -157,6 +158,7 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         
         let tag = tags[indexPath.row]
         cell.LogTitleLB.text = tag.name?.uppercaseString
+        cell.tagTypeLabel.text = String(format: "%ld", tag.tagType!)
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         
         if (indexPath.row == tags.count - 1) {

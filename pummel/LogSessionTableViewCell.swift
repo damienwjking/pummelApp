@@ -13,6 +13,7 @@ class LogSessionTableViewCell: UITableViewCell {
     
     @IBOutlet weak var statusIMV: UIImageView!
     @IBOutlet weak var LogTitleLB: UILabel!
+    @IBOutlet weak var tagTypeLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,7 +21,7 @@ class LogSessionTableViewCell: UITableViewCell {
         self.statusIMV.layer.masksToBounds = true
         self.statusIMV.layer.cornerRadius = 20
         
-        
         self.LogTitleLB.font = .pmmMonReg13()
+        self.tagTypeLabel.font = .pmmMonReg13()
     }
 }

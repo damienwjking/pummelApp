@@ -524,7 +524,23 @@ class CoachProfileViewController: UIViewController, UICollectionViewDataSource, 
     }
     
     @IBAction func goConnection() {
-        self.performSegueWithIdentifier(kGoConnect, sender: self)
+        // Tracker mixpanel
+        if coachDetail != nil {
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("Event", properties: properties)
+                
+                var prefix = kPMAPIUSER
+                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(kPMAPI_LEAD)
+                prefix.appendContentsOf("/")
+                Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:coachDetail[kId]!])
+                    .responseJSON { response in
+                        self.performSegueWithIdentifier(kGoConnect, sender: self)
+                }
+            }
+        }
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {

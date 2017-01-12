@@ -347,10 +347,8 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "letUsHelp")
-        {
-        } else if (segue.identifier == kGoConnect)
-        {
+        if (segue.identifier == "letUsHelp") {
+        } else if (segue.identifier == kGoConnect) {
             let destination = segue.destinationViewController as! ConnectViewController
             let totalDetail = arrayResult[sender.tag]
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
@@ -360,6 +358,7 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
             destination.typeCoach = true
             destination.coachId = String(format:"%0.f", coachDetail[kId]!.doubleValue)
             destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!.doubleValue)
+            destination.preMessage = sender as! String
         } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
             let totalDetail = arrayResult[sender.tag]
@@ -374,7 +373,6 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
                     mixpanel.track("Event", properties: properties)
                 }
             }
-
         }
     }
 

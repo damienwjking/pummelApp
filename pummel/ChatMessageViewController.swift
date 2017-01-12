@@ -29,6 +29,8 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     var messageId: String!
     var arrayChat: NSArray!
     
+    var preMessage: String = ""
+    
     var isSending: Bool = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -65,9 +67,13 @@ class ChatMessageViewController : UIViewController, UITableViewDataSource, UITab
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        
         self.getArrayChat()
+        
+        self.textBox.text = self.preMessage
     }
     
     func getImageAvatarTextBox() {

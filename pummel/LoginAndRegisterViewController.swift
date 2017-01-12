@@ -136,10 +136,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     }
     
     @IBAction func clickSigninAction(sender:UIButton!) {
-        if self.profileIMV.image == nil {
-            return
-        }
-        
         let userEmail = self.loginVC.emailTF.text!
         let userPassword = self.loginVC.passwordTF.text!
         self.view.makeToastActivity(message: "Loading")
@@ -236,8 +232,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     }
     
     @IBAction func clickSignupAction(sender:UIButton!) {
-        if !(self.checkRuleInputData())
-        {
+        if !(self.checkRuleInputData()) {
             let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
             activityView.center = self.view.center
             activityView.startAnimating()
@@ -459,10 +454,11 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.profileIMV.contentMode = .ScaleAspectFill
             self.profileIMV.image = pickedImage
-                type = imageJpeg
-                filename = jpgeFile
-                imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
-                self.cameraProfileIconIMV.hidden = true
+            type = imageJpeg
+            filename = jpgeFile
+            imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+            self.cameraProfileIconIMV.hidden = true
+            self.addProfilePhototLB.textColor = UIColor(white: 225, alpha: 1.0)
         }
         
         dismissViewControllerAnimated(true, completion: nil)
@@ -499,6 +495,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     
     func checkRuleInputData() -> Bool {
         var returnValue  = false
+        
         if !(self.isValidEmail(signupVC.emailTF.text!)) {
             returnValue = true
             signupVC.emailAttentionIM.hidden = false
@@ -509,6 +506,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             signupVC.emailTF.attributedText = NSAttributedString(string:signupVC.emailTF.text!,
                 attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
         }
+        
         if !(self.checkPassword(signupVC.passwordTF.text!)) {
             returnValue = true
             signupVC.passwordAttentionIM.hidden = false
@@ -519,6 +517,14 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             signupVC.passwordTF.attributedText = NSAttributedString(string:signupVC.passwordTF.text!,
                 attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
         }
+        
+        if self.profileIMV.image == nil {
+            returnValue = true
+            self.addProfilePhototLB.textColor = UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)
+        } else {
+            self.addProfilePhototLB.textColor = UIColor(white: 225, alpha: 1.0)
+        }
+        
         return returnValue
     }
     
