@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -24,9 +23,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sQF-5a-42b">
-                                <rect key="frame" x="105" y="220" width="165" height="141"/>
+                                <rect key="frame" x="105" y="187" width="165" height="160"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="141" id="9rc-rd-VII"/>
+                                    <constraint firstAttribute="height" constant="160" id="9rc-rd-VII"/>
                                     <constraint firstAttribute="width" constant="165" id="OQi-XN-kN0"/>
                                 </constraints>
                                 <state key="normal" image="cardEmpty.png"/>
@@ -34,27 +33,23 @@
                                     <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="odJ-wo-GMz"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Sorry we couldn't find any experts nearby" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
-                                <rect key="frame" x="50" y="377" width="276" height="58"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry we couldn't find any experts nearby" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
+                                <rect key="frame" x="38" y="367" width="300" height="41"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="JzR-NU-LUG"/>
-                                    <constraint firstAttribute="width" constant="276" id="t14-4Q-9rc"/>
+                                    <constraint firstAttribute="width" constant="300" id="t14-4Q-9rc"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine your search by selecting different tags, location or gender." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBM-8q-Zjj">
-                                <rect key="frame" x="82" y="449" width="211" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="T5X-xp-sak"/>
-                                </constraints>
+                                <rect key="frame" x="82" y="418" width="211" height="41"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WNF-6o-ajD">
-                                <rect key="frame" x="50" y="517" width="276" height="23"/>
+                                <rect key="frame" x="50" y="477" width="276" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="23" id="EhX-qx-4Sl"/>
                                     <constraint firstAttribute="width" constant="276" id="u8c-rw-5Tw"/>
@@ -67,11 +62,11 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKH-Vh-V5u">
-                                <rect key="frame" x="0.0" y="540" width="375" height="127"/>
+                                <rect key="frame" x="0.0" y="500" width="375" height="167"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cdx-Is-S0P">
-                                <rect key="frame" x="0.0" y="20" width="375" height="200"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="167"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -84,7 +79,7 @@
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="top" secondItem="SBM-8q-Zjj" secondAttribute="bottom" constant="18" id="FeZ-b8-crW"/>
                             <constraint firstItem="4av-ME-Ejz" firstAttribute="top" secondItem="dKH-Vh-V5u" secondAttribute="bottom" id="J5q-UJ-8cc"/>
                             <constraint firstItem="sQF-5a-42b" firstAttribute="top" secondItem="cdx-Is-S0P" secondAttribute="bottom" id="JNH-vG-a6k"/>
-                            <constraint firstItem="cdx-Is-S0P" firstAttribute="height" secondItem="dKH-Vh-V5u" secondAttribute="height" multiplier="150:95" id="cnq-pD-p2h"/>
+                            <constraint firstItem="cdx-Is-S0P" firstAttribute="height" secondItem="dKH-Vh-V5u" secondAttribute="height" id="cnq-pD-p2h"/>
                             <constraint firstItem="SBM-8q-Zjj" firstAttribute="top" secondItem="6fy-ix-Oz7" secondAttribute="bottom" constant="10" id="ir2-dL-Xbz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="SBM-8q-Zjj" secondAttribute="trailing" constant="66" id="jrT-5n-ccE"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="l6d-NM-q6X"/>
@@ -276,6 +271,6 @@
         <image name="search.png" width="45" height="45"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="cAd-8P-CL0"/>
+        <segue reference="tGO-Rx-XKv"/>
     </inferredMetricsTieBreakers>
 </document>

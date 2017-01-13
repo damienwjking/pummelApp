@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 
 
-class LogSessionClientViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class LogSessionClientViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -168,6 +168,10 @@ class LogSessionClientViewController: UIViewController, UICollectionViewDelegate
         cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.01
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

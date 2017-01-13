@@ -72,7 +72,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pIS-TF-AF6">
                                                     <rect key="frame" x="31" y="26.5" width="9" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" red="0.39215686274509803" green="0.39215686274509803" blue="0.39215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -498,6 +498,13 @@
                                     <constraint firstAttribute="trailing" secondItem="bpP-Gf-BZr" secondAttribute="trailing" id="zF5-a1-tLi"/>
                                 </constraints>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfE-QC-xBD">
+                                <rect key="frame" x="-0.5" y="667" width="375" height="0.0"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" id="on4-9A-m9Z"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ciH-Iz-vKf">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -506,6 +513,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ciH-Iz-vKf" firstAttribute="centerY" secondItem="OQ5-9t-mlf" secondAttribute="centerY" id="CvB-G5-tLs"/>
+                            <constraint firstItem="yfE-QC-xBD" firstAttribute="centerX" secondItem="OQ5-9t-mlf" secondAttribute="centerX" id="DuR-Ni-Gzy"/>
+                            <constraint firstItem="yfE-QC-xBD" firstAttribute="width" secondItem="OQ5-9t-mlf" secondAttribute="width" id="GZV-Bv-Eb6"/>
                             <constraint firstItem="SKM-yC-YIx" firstAttribute="centerX" secondItem="OQ5-9t-mlf" secondAttribute="centerX" id="Q8n-pt-yDo"/>
                             <constraint firstItem="ciH-Iz-vKf" firstAttribute="height" secondItem="OQ5-9t-mlf" secondAttribute="height" id="ZBC-jK-QzF"/>
                             <constraint firstItem="SKM-yC-YIx" firstAttribute="width" secondItem="OQ5-9t-mlf" secondAttribute="width" id="ctM-kB-wuf"/>
@@ -513,12 +522,15 @@
                             <constraint firstItem="ciH-Iz-vKf" firstAttribute="centerX" secondItem="OQ5-9t-mlf" secondAttribute="centerX" id="hEs-f7-dcy"/>
                             <constraint firstItem="ciH-Iz-vKf" firstAttribute="width" secondItem="OQ5-9t-mlf" secondAttribute="width" id="tzd-M2-zz6"/>
                             <constraint firstItem="SKM-yC-YIx" firstAttribute="centerY" secondItem="OQ5-9t-mlf" secondAttribute="centerY" id="w4V-nz-lZr"/>
+                            <constraint firstItem="MfO-YJ-ynL" firstAttribute="top" secondItem="yfE-QC-xBD" secondAttribute="bottom" id="wjN-aO-rqY"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="avatarIMV" destination="rkn-Sg-3hF" id="nc6-nh-Cor"/>
                         <outlet property="avatarUserIMV" destination="rGg-XM-sz8" id="OCs-Yc-D4g"/>
                         <outlet property="avatarUserIMVWidth" destination="dOh-J1-oHg" id="fJC-YF-bes"/>
+                        <outlet property="backgroundKeyboardV" destination="yfE-QC-xBD" id="ext-Zh-oob"/>
+                        <outlet property="backgroundKeyboardVHeightConstraint" destination="on4-9A-m9Z" id="oNk-Dr-lqA"/>
                         <outlet property="caloriesLB" destination="AQg-72-lv0" id="y17-PL-iNB"/>
                         <outlet property="caloriesTF" destination="tdu-Z1-DmZ" id="Z9X-o1-DQc"/>
                         <outlet property="caloriesTextLB" destination="bFO-hc-IBU" id="F3n-4l-NYq"/>

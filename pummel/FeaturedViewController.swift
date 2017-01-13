@@ -22,7 +22,6 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
     var offset: Int = 0
     @IBOutlet weak var noActivityYetLB: UILabel!
     @IBOutlet weak var connectWithCoachLB: UILabel!
-    @IBOutlet weak var findCoaches: UIButton!
     var refreshControl: UIRefreshControl!
     var isLoading : Bool = false
     var isGoFeedDetail : Bool = false
@@ -57,7 +56,6 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         }
         self.noActivityYetLB.font = .pmmPlayFairReg18()
         self.connectWithCoachLB.font = .pmmMonLight13()
-        self.findCoaches.titleLabel?.font = .pmmMonReg12()
     }
     
     func refresh() {
@@ -115,10 +113,6 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
                     }
             }
         }
-    }
-    
-    @IBAction func findCoaches(sender: UIButton!) {
-        self.tabBarController?.selectedIndex = 2
     }
     
     func newPost() {

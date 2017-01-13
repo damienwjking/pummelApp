@@ -48,6 +48,8 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     @IBOutlet weak var caloriesTextLB: UILabel!
     @IBOutlet weak var mileTextLB: UILabel!
     
+    @IBOutlet weak var backgroundKeyboardV: UIView!
+    @IBOutlet weak var backgroundKeyboardVHeightConstraint: NSLayoutConstraint!
     
     let defaults = NSUserDefaults.standardUserDefaults()
     let titleButton = UIButton()
@@ -105,6 +107,9 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         imageScrolView.minimumZoomScale = 1
         imageScrolView.maximumZoomScale = 4.0
         imageScrolView.zoomScale = 1.0
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -132,9 +137,32 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
         super.viewWillDisappear(animated)
         
         self.titleButton.removeFromSuperview()
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
     // MARK: Init
+    func keyboardWillShow(notification: NSNotification) {
+        let userInfo:NSDictionary = notification.userInfo!
+        let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.CGRectValue()
+        let keyboardHeight = keyboardRectangle.height
+        
+        self.backgroundKeyboardVHeightConstraint.constant = keyboardHeight
+        UIView.animateWithDuration(0.3) { 
+            self.view.layoutIfNeeded()
+        }
+        
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        self.backgroundKeyboardVHeightConstraint.constant = 0
+        UIView.animateWithDuration(0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     func initNavigationBar() {
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         
