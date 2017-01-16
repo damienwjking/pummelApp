@@ -334,7 +334,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                         if !(self.userInfo[kBio] is NSNull) {
                             self.aboutContentTV.text = self.userInfo[kBio] as! String
                         } else {
-                            self.aboutContentTV.text = thisIsYourBio
+                            self.aboutContentTV.text = ""
                         }
                         
                         let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
@@ -392,7 +392,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
             if !(self.userInfo[kBio] is NSNull) {
                 self.aboutContentTV.text = self.userInfo[kBio] as! String
             } else {
-                self.aboutContentTV.text = thisIsYourBio
+                self.aboutContentTV.text = ""
             }
             let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
             self.aboutContentDT.constant = sizeAboutTV.height + 20
@@ -442,7 +442,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                     let sizeQualificationTV = self.qualificationContentTF.sizeThatFits(self.qualificationContentTF.frame.size)
                     self.qualificationContentDT.constant = sizeQualificationTV.height + 20
                 } else {
-                    self.qualificationContentTF.text = "None"
+                    self.qualificationContentTF.text = ""
                 }
                 
                 if !(coachInformationTotal[kAchievement] is NSNull) {
@@ -451,7 +451,7 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
                     let sizeAchivementTV = self.achivementContentTF.sizeThatFits(self.achivementContentTF.frame.size)
                     self.achivementContentTFDT.constant = sizeAchivementTV.height  + 20
                 } else {
-                    self.achivementContentTF.text = "None"
+                    self.achivementContentTF.text = ""
                 }
                 
                 
@@ -539,8 +539,8 @@ class EditCoachProfileViewController: UIViewController, UIImagePickerControllerD
     func trainerInfoUpdate() {
         var prefix = kPMAPICOACH
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        let qualStr = (self.qualificationContentTF.text == nil) ? "None" : qualificationContentTF.text
-        let achiveStr = (self.achivementContentTF.text == nil) ? "None" : achivementContentTF.text
+        let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
+        let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
         Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, "qualifications":qualStr, "achievements": achiveStr])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {

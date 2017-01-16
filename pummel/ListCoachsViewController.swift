@@ -60,6 +60,8 @@ class ListCoachsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
+        cell.separatorInset = UIEdgeInsetsMake(0, 1000, 0, 0)
+        
         if indexPath.row == 0 {
             cell.titleHeader.text = "JUST CONNECTED"
             cell.typeGroup = TypeGroup.CoachJustConnected
@@ -70,14 +72,20 @@ class ListCoachsViewController: UIViewController, UITableViewDelegate, UITableVi
             cell.titleHeader.text = "PAST COACHES"
             cell.typeGroup = TypeGroup.CoachOld
         }
+        
         cell.userIdSelected = self.userIdSelected
         cell.delegateGroupLeadTableViewCell = self
+        
         if cell.arrayMessages.count <= 0 || self.forceUpdate == true {
             cell.getMessage()
         } else {
             cell.cv.reloadData()
         }
         return cell
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.01
     }
     
     func selectUserWithID(coachInfo:NSDictionary) {

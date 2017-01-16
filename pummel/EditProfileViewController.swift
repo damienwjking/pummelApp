@@ -207,7 +207,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                         if !(self.userInfo[kBio] is NSNull) {
                             self.aboutContentTV.text = self.userInfo[kBio] as! String
                         } else {
-                            self.aboutContentTV.text = thisIsYourBio
+                            self.aboutContentTV.text = ""
                         }
                         
                         let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
@@ -220,16 +220,33 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                         if !(self.userInfo[kMobile] is NSNull) {
                             self.mobileContentTF.text = self.userInfo[kMobile] as? String
                         } else {
-                            self.mobileContentTF.text = thisIsYourMobile
+                            self.mobileContentTF.text = ""
                         }
                         
-                        let stringDob = self.userInfo[kDob] as! String
-                        self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+                        if !(self.userInfo[kDob] is NSNull) {
+                            let stringDob = self.userInfo[kDob] as! String
+                            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+                        } else {
+                            self.dobContentTF.text = ""
+                        }
                         
+                        if !(self.userInfo[kWeight] is NSNull) {
+                            let weightNumber = self.userInfo[kWeight] as! NSNumber
+                            var weightString = String(format: "%ld", weightNumber.intValue)
+                            weightString = weightString.stringByAppendingString(" kgs")
+                            self.weightContentTF.text = weightString
+                        } else {
+                            self.weightContentTF.text = ""
+                        }
                         
-//                        self.weightContentTF.text = self.userInfo["weight"] as! String
-//                        
-//                        self.heightContentTF.text = self.userInfo["height"] as! String
+                        if !(self.userInfo[kHeight] is NSNull) {
+                            let heightNumber = self.userInfo[kHeight] as! NSNumber
+                            var heightString = String(format: "%ld", heightNumber.intValue)
+                            heightString = heightString.stringByAppendingString(" cms")
+                            self.heightContentTF.text = heightString
+                        } else {
+                            self.heightContentTF.text = ""
+                        }
                         
                         if !(self.userInfo[kFacebookUrl] is NSNull) {
                             self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
@@ -273,7 +290,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             if !(self.userInfo[kBio] is NSNull) {
                 self.aboutContentTV.text = self.userInfo[kBio] as! String
             } else {
-                self.aboutContentTV.text = thisIsYourBio
+                self.aboutContentTV.text = ""
             }
             
             self.genderContentTF.text = self.userInfo[kGender] as? String
@@ -283,18 +300,33 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             if !(self.userInfo[kMobile] is NSNull) {
                 self.mobileContentTF.text = self.userInfo[kMobile] as? String
             } else {
-                self.mobileContentTF.text = thisIsYourMobile
+                self.mobileContentTF.text = ""
             }
             
             if !(self.userInfo[kDob] is NSNull) {
                 let stringDob = self.userInfo[kDob] as! String
-                
                 self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+            } else {
+                self.dobContentTF.text = ""
             }
             
-//                        self.weightContentTF.text = self.userInfo["weight"] as! String
+            if !(self.userInfo[kWeight] is NSNull) {
+                let weightNumber = self.userInfo[kWeight] as! NSNumber
+                var weightString = String(format: "%ld", weightNumber.intValue)
+                weightString = weightString.stringByAppendingString(" kgs")
+                self.weightContentTF.text = weightString
+            } else {
+                self.weightContentTF.text = ""
+            }
             
-//                        self.heightContentTF.text = self.userInfo["height"] as! String
+            if !(self.userInfo[kHeight] is NSNull) {
+                let heightNumber = self.userInfo[kHeight] as! NSNumber
+                var heightString = String(format: "%ld", heightNumber.intValue)
+                heightString = heightString.stringByAppendingString(" cms")
+                self.heightContentTF.text = heightString
+            } else {
+                self.heightContentTF.text = ""
+            }
             
             if !(self.userInfo[kFacebookUrl] is NSNull) {
                 self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
@@ -365,6 +397,9 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             
             self.view.makeToastActivity(message: "Saving")
             
+            let weightString = weightContentTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
+            let heightString = heightContentTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
+            
             let param =
                 [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
                  kFirstname:firstname,
@@ -373,6 +408,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                  kDob: dobContentTF.text!,
                  kGender:(genderContentTF.text?.uppercaseString)!,
                  kBio: aboutContentTV.text,
+                 kWeight: weightString,
+                 kHeight: heightString,
                  kFacebookUrl:facebookUrlTF.text!,
                  kTwitterUrl:twitterUrlTF.text!,
                  kInstagramUrl:instagramUrlTF.text!,
@@ -625,7 +662,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         // check number weight height
-        if !(self.isNumber(self.weightContentTF.text!)) {
+        let weightString = self.weightContentTF.text!.stringByReplacingOccurrencesOfString(" kgs", withString: "")
+        if !(self.isNumber(weightString)) {
             returnValue = true
             weightContentTF.attributedText = NSAttributedString(string:weightContentTF.text!,
                                                                 attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
@@ -634,7 +672,8 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                                                              attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
         }
         
-        if !(self.isNumber(self.heightContentTF.text!)) {
+        let heightString = self.heightContentTF.text!.stringByReplacingOccurrencesOfString(" cms", withString: "")
+        if !(self.isNumber(heightString)) {
             returnValue = true
             heightContentTF.attributedText = NSAttributedString(string:heightContentTF.text!,
                                                                 attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
@@ -727,6 +766,16 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
             return false
         } else if (textField.isEqual(self.nameContentTF)){
             isFirstTVS = true
+            return true
+        } else if (textField.isEqual(self.weightContentTF)){
+            let weightString = weightContentTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
+            self.weightContentTF.text = weightString
+            
+            return true
+        } else if (textField.isEqual(self.heightContentTF)){
+            let heightString = heightContentTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
+            self.heightContentTF.text = heightString
+            
             return true
         } else {
             return true
