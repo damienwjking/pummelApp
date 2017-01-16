@@ -80,8 +80,9 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         // ADD + Button At Right Navigationbar Item
         var image = UIImage(named: "icon_add")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(self.rightButtonClicked))
+        self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.blackColor()
     }
     
     // MARK: Private function

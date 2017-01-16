@@ -69,26 +69,19 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             let cellLocation = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingLocationTableViewCell
             if self.location != nil {
                 if self.location?.name != cellLocation.locationContentLB.text {
-                    self.showMsgConfirmUpdateLocation()
+                    let indexpath = NSIndexPath(forRow: 3, inSection: 0)
+                    let cellLocation = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingLocationTableViewCell
+                    
+                    var locationName = ""
+                    if (self.location?.name?.isEmpty == false) {
+                        locationName = (self.location?.name)!
+                    }
+                    
+                    cellLocation.locationContentLB.text = locationName
+                    self.updateLocationCoach()
                 }
             }
             
-        }
-    }
-    
-    func showMsgConfirmUpdateLocation() {
-        let alertController = UIAlertController(title: pmmNotice, message: confirmChangedLocation, preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-            let indexpath = NSIndexPath(forRow: 3, inSection: 0)
-            let cellLocation = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingLocationTableViewCell
-            cellLocation.locationContentLB.text = self.location?.name
-            self.updateLocationCoach()
-        }
-        let CancelAction = UIAlertAction(title: kCancle, style: .Default) { (action) in
-        }
-        alertController.addAction(OKAction)
-        alertController.addAction(CancelAction)
-        self.presentViewController(alertController, animated: true) {
         }
     }
     
@@ -96,7 +89,17 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kServiceArea:(self.location?.name)!, kLat:(self.location?.coordinate.latitude)!, kLong:(self.location?.coordinate.longitude)!])
+            
+            var locationName = ""
+            if (self.location?.name?.isEmpty == false) {
+                locationName = (self.location?.name)!
+            }
+            
+            let param = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                         kServiceArea:locationName,
+                         kLat:(self.location?.coordinate.latitude)!,
+                         kLong:(self.location?.coordinate.longitude)!]
+            Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
                 .responseJSON { response in switch response.result {
                 case .Success(_): break
                     
@@ -694,7 +697,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func upgradeToCoach() {
-        let alertController = UIAlertController(title: pmmNotice, message: kWantToBecomeACoach, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: kApply, message: kWantToBecomeACoach, preferredStyle: .Alert)
         let OKAction = UIAlertAction(title: kContinue, style: .Default) { (action) in
             var prefix = kPMAPICOACH
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)

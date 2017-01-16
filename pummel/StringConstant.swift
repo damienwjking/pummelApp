@@ -234,7 +234,8 @@ let kSendMessageConnection = "sendMessageConnection"
 
 
 // Seting
-let kWantToBecomeACoach = "Buy click Continue, you are going to apply to coach form."
+let kApply = "Apply"
+let kWantToBecomeACoach = "Please click continue to fill in your application to become a Pummel fitness coach."
 let kBecomeACoachSuccess = "You have accepted to become a Trainer. Let's go to profile to edit your infomation"
 let kMessConfirmLogout = "Are you sure you want to log out?"
 let kMessageInviteContact = "Find an personal trainer or fitness expert in your area http://pummel.fit"

@@ -61,7 +61,7 @@ class LogSessionClientDetailViewController: UIViewController, UIImagePickerContr
     var distanceSelected: String = "0"
     var caloriesSelected: String = "0"
     var longtimeSelected: String = "0"
-    var isPublic = true
+    var isPublic = false
     
     override func viewDidLoad() {
         super.viewDidLoad()

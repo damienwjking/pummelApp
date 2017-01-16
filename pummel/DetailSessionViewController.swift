@@ -102,31 +102,40 @@ class DetailSessionViewController: UIViewController {
         
         if self.session.longtime != nil && self.session.longtime != 0 {
             self.timeLB.text = String(format: "%ld minutes", self.session.longtime!)
+            self.timeV.hidden = false
         } else {
             self.timeLB.text = "..."
+            self.timeV.hidden = true
         }
         
         if self.session.intensity?.isEmpty == false {
             self.intensityLB.text = self.session.intensity
+            self.intensityV.hidden = false
         } else {
             self.intensityLB.text = "..."
+            self.intensityV.hidden = true
         }
         
         if self.session.distance != nil && self.session.distance != 0 {
             let distanceUnit = self.defaults.objectForKey(kUnit) as? String
             if (distanceUnit == metric) {
                 self.distanceLB.text = String(format: "%ld kms", self.session.distance!)
+                self.distanceV.hidden = false
             } else {
                 self.distanceLB.text = String(format: "%ld mi", self.session.distance!)
+                self.distanceV.hidden = false
             }
         } else {
             self.distanceLB.text = "..."
+            self.distanceV.hidden = true
         }
         
         if self.session.calorie != nil && self.session.calorie != 0 {
             self.caloriesLB.text = String(format: "%ld", self.session.calorie!)
+            self.caloriesV.hidden = false
         } else {
             self.caloriesLB.text = "..."
+            self.caloriesV.hidden = true
         }
         
         if self.session.datetime?.isEmpty == false {
