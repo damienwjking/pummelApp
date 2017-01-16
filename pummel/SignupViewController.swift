@@ -22,6 +22,19 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var passwordAttentionIM: UIImageView!
     @IBOutlet var emailAttentionIM: UIImageView!
     @IBOutlet var dobAttentionIM: UIImageView!
+    @IBOutlet weak var termOfServiceBT: UIButton!
+    @IBOutlet weak var andLB: UILabel!
+    @IBOutlet weak var privacyPolicyBT: UIButton!
+    
+    @IBAction func termOfService(sender: AnyObject) {
+        let termOfServiceURL = NSURL(string: "http://pummel.fit/terms/")
+        UIApplication.sharedApplication().openURL(termOfServiceURL!)
+    }
+    
+    @IBAction func privacyPolicy(sender: AnyObject) {
+        let privacyPolicyURL = NSURL(string: "http://pummel.fit/privacy/")
+        UIApplication.sharedApplication().openURL(privacyPolicyURL!)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +46,13 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.dobTF.font = .pmmMonReg13()
         self.genderTF.font = .pmmMonReg13()
         self.continuingLB.font = .pmmMonReg10()
+        self.termOfServiceBT.titleLabel!.font = .pmmMonReg10()
+        self.andLB.font = .pmmMonReg10()
+        self.privacyPolicyBT.titleLabel!.font = .pmmMonReg10()
+        
+        self.termOfServiceBT.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
+        self.privacyPolicyBT.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
+        
        
         self.nameTF.attributedPlaceholder = NSAttributedString(string:"NAME",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])

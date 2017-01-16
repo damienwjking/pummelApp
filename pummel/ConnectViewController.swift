@@ -184,6 +184,7 @@ class ConnectViewController: UIViewController {
                     var phoneNumber = ""
                     if !(userInfo[kMobile] is NSNull) {
                         phoneNumber = (userInfo[kMobile] as? String)!
+                        phoneNumber = (phoneNumber.uppercaseString == "NONE") ? "" : phoneNumber
                     }
                     
                     var message = "Hey "
