@@ -422,7 +422,7 @@
                                                 </constraints>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="ADD A DATE" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Asn-XQ-UkI">
-                                                <rect key="frame" x="159" y="20" width="206" height="30"/>
+                                                <rect key="frame" x="111" y="20" width="254" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="9vU-QU-v9q"/>
                                                 </constraints>
@@ -430,12 +430,6 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QT7-bK-36h">
-                                                <rect key="frame" x="111" y="15" width="40" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="40" id="NAC-BH-Lej"/>
-                                                </constraints>
-                                            </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -444,13 +438,10 @@
                                             <constraint firstAttribute="bottom" secondItem="2G2-Vf-bb3" secondAttribute="bottom" constant="15" id="7fJ-K5-UUh"/>
                                             <constraint firstItem="Asn-XQ-UkI" firstAttribute="centerY" secondItem="2G2-Vf-bb3" secondAttribute="centerY" id="A1X-7p-0B0"/>
                                             <constraint firstItem="6gh-0i-G6w" firstAttribute="centerY" secondItem="2G2-Vf-bb3" secondAttribute="centerY" id="CEq-0H-Etk"/>
-                                            <constraint firstItem="QT7-bK-36h" firstAttribute="height" secondItem="6gh-0i-G6w" secondAttribute="height" id="JXy-fe-gVJ"/>
                                             <constraint firstAttribute="trailing" secondItem="Asn-XQ-UkI" secondAttribute="trailing" constant="10" id="JcI-gF-znP"/>
                                             <constraint firstItem="6gh-0i-G6w" firstAttribute="height" secondItem="2G2-Vf-bb3" secondAttribute="height" id="MFy-km-k63"/>
-                                            <constraint firstItem="Asn-XQ-UkI" firstAttribute="leading" secondItem="QT7-bK-36h" secondAttribute="trailing" constant="8" id="Psu-yn-3ih"/>
                                             <constraint firstItem="2G2-Vf-bb3" firstAttribute="top" secondItem="jiL-2C-7vb" secondAttribute="top" constant="15" id="SEB-sd-Blm"/>
-                                            <constraint firstItem="QT7-bK-36h" firstAttribute="leading" secondItem="6gh-0i-G6w" secondAttribute="trailing" constant="8" id="dps-DP-nwh"/>
-                                            <constraint firstItem="QT7-bK-36h" firstAttribute="centerY" secondItem="6gh-0i-G6w" secondAttribute="centerY" id="iOV-1c-Uew"/>
+                                            <constraint firstItem="Asn-XQ-UkI" firstAttribute="leading" secondItem="6gh-0i-G6w" secondAttribute="trailing" constant="8" id="Wxr-po-SBD"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ipp-uH-RLM" userLabel="image view">
@@ -737,7 +728,6 @@
                         <outlet property="intensityV" destination="f2d-kW-wUI" id="tJW-rW-P3a"/>
                         <outlet property="sessionIMV" destination="8Xf-yk-bXL" id="sb5-Ur-wsF"/>
                         <outlet property="sessionScrollView" destination="FoG-Nr-iqX" id="1K1-2m-VHI"/>
-                        <outlet property="sessionTagIMV" destination="QT7-bK-36h" id="6qX-Rh-umN"/>
                         <outlet property="tappedV" destination="Vce-NS-Hbo" id="IpI-3z-AhK"/>
                         <outlet property="timeLB" destination="8Jv-d8-T4g" id="m6d-kJ-95R"/>
                         <outlet property="timeV" destination="tos-Do-hY9" id="JQF-3E-8xN"/>

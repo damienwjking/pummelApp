@@ -19,7 +19,6 @@ class DetailSessionViewController: UIViewController {
     @IBOutlet weak var coachIMV: UIImageView!
     @IBOutlet weak var coachIMVWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var coachIMVLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var sessionTagIMV: UIImageView!
     
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var distanceLB: UILabel!
@@ -161,10 +160,6 @@ class DetailSessionViewController: UIViewController {
         
         self.coachIMV.layer.cornerRadius = 20
         self.coachIMV.clipsToBounds = true
-
-        self.sessionTagIMV.layer.cornerRadius = 20
-        self.sessionTagIMV.clipsToBounds = true
-        self.sessionTagIMV.backgroundColor = UIColor.init(hexString: sessionTagColorString)
         
         self.commentIMV.image = self.commentIMV.image?.imageWithRenderingMode(.AlwaysTemplate)
         self.commentIMV.tintColor = UIColor.init(hexString: sessionTagColorString)

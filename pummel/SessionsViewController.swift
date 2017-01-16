@@ -20,6 +20,12 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet var listMessageTB: UITableView!
     @IBOutlet var listMessageTBTopDistance : NSLayoutConstraint?
+    
+    @IBOutlet weak var noMessageV: UIView!
+    @IBOutlet weak var noMessageTitleLB: UILabel!
+    @IBOutlet weak var noMessageDetailLB: UILabel!
+    @IBOutlet weak var startConversationBT: UIButton!
+    
     var arrayMessages: [NSDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
     var dataSourceArr : [NSDictionary] = []
@@ -44,6 +50,12 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         self.listMessageTB.dataSource = self
         self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(SessionsViewController.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
+        
+        
+        self.noMessageTitleLB.font = UIFont.pmmPlayFairReg18()
+        self.noMessageDetailLB.font = UIFont.pmmMonLight13()
+        self.startConversationBT.titleLabel!.font = UIFont.pmmMonReg12()
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -72,6 +84,8 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.noMessageTitleLB.text = "Get Connections With Your Clients"
+            
             connectionsLB = UILabel.init(frame: CGRectMake(0, 15, self.view.frame.size.width, 14))
             connectionsLB!.font = .pmmMonReg13()
             connectionsLB!.textColor = UIColor.pmmWarmGreyColor()
@@ -99,10 +113,10 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             separeateline = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
             separeateline!.backgroundColor = UIColor.pmmWhiteColor()
             self.view.addSubview(separeateline!)
+        } else {
+            self.noMessageTitleLB.text = "Get Connections With Your Coaches"
         }
     }
-    
-    
     
     func gotNewMessage() {
         arrayMessages.removeAll()
@@ -141,6 +155,10 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                 print("Request failed with error: \(error)")
                 }
         }
+    }
+    
+    @IBAction func startConversation(sender: AnyObject) {
+        self.newMessage()
     }
     
     func newMessage() {
@@ -196,9 +214,11 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
                         self.arrayMessages += arrayMessageT
                         self.isLoadingMessage = false
                         self.listMessageTB.reloadData()
+                        self.noMessageV.hidden = true
                     } else {
                         self.isLoadingMessage = false
                         self.isStopLoadMessage = true
+                        self.noMessageV.hidden = false
                     }
                 case .Failure(let error):
                     self.offset -= 10
