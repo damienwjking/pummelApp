@@ -11,7 +11,7 @@ import RSKGrowingTextView
 import Alamofire
 import Mixpanel
 
-class ChatMessageViewController : UIViewController, UITableViewDataSource, UITableViewDelegate, RSKGrowingTextViewDelegate {
+class ChatMessageViewController : BaseViewController, UITableViewDataSource, UITableViewDelegate, RSKGrowingTextViewDelegate {
     var nameChatUser : String!
     
     @IBOutlet var textBox: RSKGrowingTextView!

@@ -11,7 +11,7 @@ import UIKit
 import UIKit
 import Alamofire
 
-class ListCoachsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate {
+class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate {
     
     @IBOutlet weak var tbView: UITableView!
     var image:UIImage?

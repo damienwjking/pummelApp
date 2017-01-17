@@ -13,7 +13,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class ProfileViewController:  UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var smallIndicatorView: UIView!
     @IBOutlet weak var medIndicatorView: UIView!

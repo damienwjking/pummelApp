@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class BookSessionShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
+class BookSessionShareViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
 
     @IBOutlet weak var tbView: UITableView!
     var image:UIImage?

@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextViewDelegate,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextViewDelegate,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet var avatarIMV : UIImageView!
     @IBOutlet var commentPhotoTV : UITextView!
@@ -52,7 +52,7 @@ class NewCommentImageViewController: UIViewController, FusumaDelegate, UITextVie
     }
     
     override func viewDidDisappear(animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewDidDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     

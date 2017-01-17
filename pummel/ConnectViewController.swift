@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class ConnectViewController: UIViewController {
+class ConnectViewController: BaseViewController {
 
     @IBOutlet weak var meAvatarIMV : UIImageView!
     @IBOutlet weak var youAvatarIMV : UIImageView!

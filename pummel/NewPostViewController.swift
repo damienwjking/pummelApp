@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class NewPostViewController: UIViewController, FusumaDelegate, UITextViewDelegate,  UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
+class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDelegate,  UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
 
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var commentPhotoTV : UITextView!

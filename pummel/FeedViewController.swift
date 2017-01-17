@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import RSKGrowingTextView
 
-class FeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, RSKGrowingTextViewDelegate {
+class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, RSKGrowingTextViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var feedDetail : NSDictionary!

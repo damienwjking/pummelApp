@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class UserProfileViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
+class UserProfileViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
     
     //@IBOutlet weak var titleUserLB: UILabel!
     @IBOutlet weak var smallIndicatorView: UIView!

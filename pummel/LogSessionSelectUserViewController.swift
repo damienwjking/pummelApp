@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class LogSessionSelectUserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tbView: UITableView!
     var arrayNew: [NSDictionary] = []

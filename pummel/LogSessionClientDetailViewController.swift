@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import Foundation
 
-class LogSessionClientDetailViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, FusumaDelegate, UITextFieldDelegate {
+class LogSessionClientDetailViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, FusumaDelegate, UITextFieldDelegate {
     var tag: Tag = Tag()
     var userInfoSelect:NSDictionary!
     

@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import Alamofire
 
-class BookSessionToUserViewController: UIViewController, UITextViewDelegate, FusumaDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, FusumaDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var dateTF: UITextField!
     @IBOutlet weak var contentTV: UITextView!

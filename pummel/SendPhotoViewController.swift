@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
+class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
     
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var commentPhotoTV : UITextView!
@@ -62,7 +62,7 @@ class SendPhotoViewController: UIViewController, FusumaDelegate, UITextViewDeleg
     }
     
     override func viewDidDisappear(animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewDidDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     

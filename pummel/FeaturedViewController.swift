@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
+class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
@@ -56,6 +56,17 @@ class FeaturedViewController: UIViewController, UICollectionViewDataSource, UICo
         }
         self.noActivityYetLB.font = .pmmPlayFairReg18()
         self.connectWithCoachLB.font = .pmmMonLight13()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        if touch3DType == "3dTouch_4" {
+            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            self.sharePummel()
+        }
     }
     
     func refresh() {

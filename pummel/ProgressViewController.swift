@@ -10,7 +10,7 @@
 
 import UIKit
 
-class ProgressViewController: UIViewController {
+class ProgressViewController: BaseViewController {
     @IBOutlet var comingSoonTF : UILabel!
     @IBOutlet var comingSoonDetailTF : UILabel!
     

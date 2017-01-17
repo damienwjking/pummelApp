@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import Alamofire
 
-class BookSessionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class BookSessionViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tbView: UITableView!
     var tags = [Tag]()

@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class DetailSessionViewController: UIViewController {
+class DetailSessionViewController: BaseViewController {
     
     @IBOutlet weak var typeLabel: UILabel!
     @IBOutlet weak var sessionIMV: UIImageView!

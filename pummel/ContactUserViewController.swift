@@ -25,7 +25,7 @@ class ContactUserCell : UITableViewCell {
     }
 }
 
-class ContactUserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate {
+class ContactUserViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     

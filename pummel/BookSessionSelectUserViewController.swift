@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class BookSessionSelectUserViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class BookSessionSelectUserViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tbView: UITableView!
     var arrayNew: [NSDictionary] = []

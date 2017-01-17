@@ -15,7 +15,7 @@ import ReactiveUI
 import Alamofire
 import Mixpanel
 
-class FindViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+class FindViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     var showLetUsHelp: Bool!
     var swipeableView: ZLSwipeableView!
     var loadCardsFromXib = true
@@ -73,6 +73,15 @@ class FindViewController: UIViewController, UICollectionViewDataSource, UICollec
         noResultContentLB.font = .pmmMonLight13()
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
         swipeableView.hidden = (self.arrayResult.count >= 1) ? false : true
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        if touch3DType == "3dTouch_1" {
+            self.refind()
+        }
     }
     
     func rightButtonClicked() {

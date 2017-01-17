@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class CoachProfileViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class CoachProfileViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var titleCoachLB: UILabel!
     @IBOutlet weak var smallIndicatorView: UIView!

@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import Alamofire
 
-class SearchingViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     @IBOutlet var smallIndicatorView : UIView!
     @IBOutlet var medIndicatorView : UIView!

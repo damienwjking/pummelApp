@@ -16,7 +16,7 @@ import Contacts
 import AddressBook
 import Mixpanel
 
-class SessionsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SessionsViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var listMessageTB: UITableView!
     @IBOutlet var listMessageTBTopDistance : NSLayoutConstraint?
@@ -59,7 +59,6 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewWillAppear(animated: Bool) {
-        
         self.tabBarController?.title = kNavMessage
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
@@ -119,6 +118,17 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        if touch3DType == "3dTouch_3" {
+            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            self.newMessage()
+        }
+    }
+    
     func gotNewMessage() {
         arrayMessages.removeAll()
         self.listMessageTB.reloadData { 
@@ -163,7 +173,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func newMessage() {
-        performSegueWithIdentifier("newMessage", sender: nil)
+        self.performSegueWithIdentifier("newMessage", sender: nil)
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()

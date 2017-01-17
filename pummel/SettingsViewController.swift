@@ -14,7 +14,7 @@ import CoreLocation
 import MapKit
 import Mixpanel
 
-class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SettingsViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var settingTableView: UITableView!
    
@@ -64,6 +64,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             let indexpath = NSIndexPath(forRow: 3, inSection: 0)
             let cellLocation = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingLocationTableViewCell

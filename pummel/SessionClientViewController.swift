@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 import AlamofireImage
 
-class SessionClientViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SessionClientViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
 
     
     @IBOutlet weak var selectSegment: UISegmentedControl!
@@ -62,6 +62,16 @@ class SessionClientViewController: UIViewController, UITableViewDelegate, UITabl
         super.viewWillAppear(animated)
         
         self.getListSession()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        if touch3DType == "3dTouch_2" {
+            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            self.performSegueWithIdentifier("userLogASession", sender: nil)
+        }
     }
     
     // MARK: Init

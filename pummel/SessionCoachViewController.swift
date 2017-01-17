@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 import AlamofireImage
 
-class SessionCoachViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var selectSegment: UISegmentedControl!
     @IBOutlet weak var sessionTableView: UITableView!
@@ -61,6 +61,16 @@ class SessionCoachViewController: UIViewController, UITableViewDelegate, UITable
         super.viewWillAppear(animated)
         
         self.getListSession()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        if touch3DType == "3dTouch_2" {
+            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            self.performSegueWithIdentifier("coachLogASession", sender: nil)
+        }
     }
     
     
