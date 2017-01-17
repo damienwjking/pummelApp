@@ -113,6 +113,7 @@ class SessionsViewController: UIViewController, UITableViewDelegate, UITableView
             separeateline = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
             separeateline!.backgroundColor = UIColor.pmmWhiteColor()
             self.view.addSubview(separeateline!)
+            self.view.bringSubviewToFront(self.noMessageV)
         } else {
             self.noMessageTitleLB.text = "Get Connections With Your Coaches"
         }

@@ -54,6 +54,7 @@ let metric = "Metric"
 let imperial = "Imperial"
 
 // Key String
+let k_PM_3D_TOUCH = "3DTouch"
 let k_PM_IS_LOGINED = "isLogined"
 let k_PM_IS_COACH = "isCoach"
 let k_PM_CURRENT_ID = "currentId"

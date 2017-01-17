@@ -57,6 +57,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
+    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        let type = shortcutItem.type.componentsSeparatedByString(".").last!
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(type, forKey: k_PM_3D_TOUCH)
+    }
+    
     // implemented in your application delegate
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
        let deviceTokenString = deviceToken.hexString
