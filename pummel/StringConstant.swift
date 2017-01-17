@@ -163,6 +163,8 @@ let kNext = "Next"
 let kSave = "Save"
 let kInvite = "Invite"
 let kSession = "SESSIONS"
+let kThanks = "Thanks"
+let kMessageUpgradedCoach = "Thanks for your Pummel Fitness coach application, we will review this shortly and get back to you"
 
 // Button
 let kNavSetting = "SETTINGS"

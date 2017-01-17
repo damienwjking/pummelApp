@@ -47,7 +47,7 @@ class BookSessionViewController: UIViewController, UITableViewDelegate, UITableV
     
     // MARK: Private function
     func getListTags() {
-        var listTagsLink = kPMAPI_TAG_OFFSET
+        var listTagsLink = kPMAPI_TAG4_OFFSET
         listTagsLink.appendContentsOf(String(self.offset))
         Alamofire.request(.GET, listTagsLink)
             .responseJSON { response in switch response.result {

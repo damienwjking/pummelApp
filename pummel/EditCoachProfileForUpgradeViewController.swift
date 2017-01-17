@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 import Alamofire
 import Mixpanel
+import MessageUI
 
-class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMW: UIImageView!
@@ -205,7 +206,7 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
     
     func getListTags() {
         if (isStopGetListTag == false) {
-            var listTagsLink = kPMAPI_TAG_OFFSET
+            var listTagsLink = kPMAPI_TAGALL_OFFSET
             listTagsLink.appendContentsOf(String(offset))
             Alamofire.request(.GET, listTagsLink)
                 .responseJSON { response in switch response.result {
@@ -218,7 +219,10 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
                             tag.name = tagContent[kTitle] as? String
                             tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
                             tag.tagColor = self.getRandomColorString()
-                            self.tags.append(tag)
+                            tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
+                            if tag.tagType == 0 || tag.tagType == 1 || tag.tagType == 2 || tag.tagType == 3 {
+                                self.tags.append(tag)
+                            }
                         }
                         self.offset += 10
                         self.collectionView.reloadData({
@@ -479,7 +483,7 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
     
     func basicInfoUpdate() {
         
-        let alertControllerSuccess = UIAlertController(title: "Congratulation", message: "Your account has just upgraded succesfully", preferredStyle: .Alert)
+        let alertControllerSuccess = UIAlertController(title: kThanks, message: kMessageUpgradedCoach, preferredStyle: .Alert)
         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
             self.callBasicInfoUpdate()
         }
@@ -488,6 +492,25 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
         self.presentViewController(alertControllerSuccess, animated: true) {
             // ...
         }
+    }
+    
+    func sendEmail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            mail.setToRecipients(["hello@pummel.fit"])
+            mail.setMessageBody("Hi Pummel, I have just applied to coach, Please help me review it. Thanks.", isHTML: true)
+            mail.setSubject("Upgrade to coach")
+            self.presentViewController(mail, animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: {
+            self.navigationController?.popViewControllerAnimated(true)
+        })
     }
     
     func callBasicInfoUpdate() {
@@ -553,7 +576,7 @@ class EditCoachProfileForUpgradeViewController: UIViewController, UIImagePickerC
         Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, "qualifications":qualStr, "achievements": achiveStr])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
-                    self.navigationController?.popViewControllerAnimated(true)
+                    self.sendEmail()
                 }else {
                     let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
