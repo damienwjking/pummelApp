@@ -26,13 +26,13 @@ class BaseViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.touch3DMovePage), name: UIApplicationLaunchOptionsShortcutItemKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.touch3DMovePage), name: k_PM_3D_TOUCH_NOTIFICATION, object: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationLaunchOptionsShortcutItemKey, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: k_PM_3D_TOUCH_NOTIFICATION, object: nil)
     }
 
     override func didReceiveMemoryWarning() {

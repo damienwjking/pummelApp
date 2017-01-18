@@ -62,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(type, forKey: k_PM_3D_TOUCH)
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(k_PM_3D_TOUCH_NOTIFICATION, object: nil)
     }
     
     // implemented in your application delegate
