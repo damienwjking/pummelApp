@@ -172,11 +172,15 @@ class ConnectViewController: BaseViewController {
             mixpanel.track("Event", properties: properties)
         }
         
+        self.requestCallBackBT.userInteractionEnabled = false
+        
         var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
+                self.requestCallBackBT.userInteractionEnabled = true
+                
                 if response.response?.statusCode == 200 {
                     if (response.result.value == nil) {return}
                     let userInfo = response.result.value as! NSDictionary
@@ -189,7 +193,7 @@ class ConnectViewController: BaseViewController {
                     
                     var message = "Hey "
                     message = message.stringByAppendingString(coachDetailName)
-                    message = ", can you please call me back on "
+                    message = message.stringByAppendingString(", can you please call me back on ")
                     message = message.stringByAppendingString(phoneNumber)
                     
                     self.moveToMessageScreenWithMessage(message)
