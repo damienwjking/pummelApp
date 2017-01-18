@@ -20,13 +20,15 @@ class BaseViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.touch3DMovePage), name: k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+        
         self.touch3DMovePage()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.touch3DMovePage), name: k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+        
     }
     
     override func viewWillDisappear(animated: Bool) {

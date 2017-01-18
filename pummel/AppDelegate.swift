@@ -63,12 +63,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(type, forKey: k_PM_3D_TOUCH)
         
-        NSNotificationCenter.defaultCenter().postNotificationName(k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+        }
     }
     
     // implemented in your application delegate
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-       let deviceTokenString = deviceToken.hexString
+        let deviceTokenString = deviceToken.hexString
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(deviceTokenString, forKey: k_PM_PUSH_TOKEN)
     }
