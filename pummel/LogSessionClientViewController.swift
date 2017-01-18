@@ -47,6 +47,15 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
         self.title = kLogSession
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        if touch3DType == "3dTouch_2" {
+            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+        }
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
     }
