@@ -11,6 +11,9 @@ import UIKit
 import Alamofire
 import Mixpanel
 import MessageUI
+import LocationPicker
+import CoreLocation
+import MapKit
 
 class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, MFMailComposeViewControllerDelegate {
     
@@ -56,6 +59,13 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     @IBOutlet weak var emergencyNameTF: UITextField!
     @IBOutlet weak var emergencyMobileLB: UILabel!
     @IBOutlet weak var emergencyMobileTF: UITextField!
+    @IBOutlet weak var locationName: UILabel!
+    @IBOutlet weak var healthDataLB: UILabel!
+    @IBOutlet weak var socialLB: UILabel!
+    @IBOutlet weak var weightLB: UILabel!
+    @IBOutlet weak var heightLB: UILabel!
+    @IBOutlet weak var weightTF: UITextField!
+    @IBOutlet weak var heightTF: UITextField!
     var isFirstTVS : Bool = false
     var sizingCell: TagCell?
     
@@ -73,6 +83,10 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     var settingCV:SettingsViewController!
     
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    var location: Location? {
+        didSet {
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,10 +119,14 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.mobileLB.font = .pmmMonLight11()
         self.emergencyNameLB.font = .pmmMonLight11()
         self.emergencyMobileLB.font = .pmmMonLight11()
+        self.weightLB.font = .pmmMonLight11()
+        self.heightLB.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
         self.trainerInfomationLB.font = .pmmMonReg11()
         self.emergencyInformationLB.font = .pmmMonReg11()
+        self.healthDataLB.font = .pmmMonReg11()
+        self.socialLB.font = .pmmMonReg11()
         
         self.nameContentTF.font = .pmmMonLight13()
         self.aboutContentTV.font = .pmmMonLight13()
@@ -129,6 +147,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.twitterUrlTF.placeholder = "http://twitter.com"
         self.emergencyNameTF.font = .pmmMonLight13()
         self.emergencyMobileTF.font = .pmmMonLight13()
+        self.weightTF.font = .pmmMonLight13()
+        self.heightTF.font = .pmmMonLight13()
         
         self.nameContentTF.delegate = self
         self.emailContentTF.delegate = self
@@ -141,6 +161,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.twitterUrlTF.delegate = self
         self.emergencyNameTF.delegate = self
         self.emergencyMobileTF.delegate = self
+        self.weightTF.delegate = self
+        self.heightTF.delegate = self
         self.achivementContentTF.maxHeight = 200
         self.aboutContentTV.maxHeight = 200
         self.qualificationContentTF.maxHeight = 200
@@ -172,6 +194,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.tapView.hidden = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(EditCoachProfileViewController.didTapView))
         self.tapView.addGestureRecognizer(tap)
+        
+        self.title = "Coach Profile"
     }
     
     func didTapView() {
@@ -187,6 +211,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.instagramUrlTF.resignFirstResponder()
         self.emergencyNameTF.resignFirstResponder()
         self.emergencyMobileTF.resignFirstResponder()
+        self.weightTF.resignFirstResponder()
+        self.heightTF.resignFirstResponder()
+    }
+    
+    @IBAction func gotoGetLocation() {
+        self.performSegueWithIdentifier("LocationPicker", sender: nil)
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -201,9 +231,48 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         offset = 0
         isStopGetListTag = false
         self.getListTags()
+        
+        //if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            if self.location != nil {
+                if self.location?.name != locationName.text {
+                    var locationName = ""
+                    if (self.location?.name?.isEmpty == false) {
+                        locationName = (self.location?.name)!
+                    }
+                    
+                    self.locationName.text = locationName
+                    //self.updateLocationCoach()
+                }
+            }
+            
+        //}
     }
     
-    
+    func updateLocationCoach() {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            var prefix = kPMAPICOACH
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            
+            var locationName = ""
+            if (self.location?.name?.isEmpty == false) {
+                locationName = (self.location?.name)!
+            }
+            
+            let param = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                         kServiceArea:locationName,
+                         kLat:(self.location?.coordinate.latitude)!,
+                         kLong:(self.location?.coordinate.longitude)!]
+            Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
+                .responseJSON { response in switch response.result {
+                case .Success(_): break
+                    
+                case .Failure(let error):
+                    print(error)
+                    }
+            }
+        }
+    }
+
     func getListTags() {
         if (isStopGetListTag == false) {
             var listTagsLink = kPMAPI_TAGALL_OFFSET
@@ -537,12 +606,19 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
             let properties = ["Category": "IOS.Profile.EditProfile", "Name": "Navigation Click", "Label":"Save Profile"]
             mixpanel.track("Event", properties: properties)
             
+            let weightString = self.weightTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
+            let heightString = self.heightTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
+            
             self.view.makeToastActivity(message: "Saving")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!, kEmergencyName:emergencyNameTF.text!, kEmergencyMobile:emergencyMobileTF.text!])
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!, kEmergencyName:emergencyNameTF.text!,
+                kWeight: weightString!,
+                kHeight: heightString!,
+                kEmergencyMobile:emergencyMobileTF.text!])
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
                         self.trainerInfoUpdate()
+                        self.updateLocationCoach()
                     }else {
                         self.view.hideToastActivity()
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
@@ -985,6 +1061,28 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         let randomBlue:CGFloat = CGFloat(drand48())
         
         return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "LocationPicker" {
+            let locationPicker = segue.destinationViewController as! LocationPickerViewController
+            locationPicker.location = self.location
+            locationPicker.showCurrentLocationButton = true
+            locationPicker.useCurrentLocationAsHint = true
+            locationPicker.showCurrentLocationInitially = true
+            locationPicker.mapType = .Standard
+            
+            let backItem = UIBarButtonItem()
+            backItem.title = "BACK        "
+            backItem.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+            
+            navigationItem.backBarButtonItem = backItem
+            self.navigationController?.navigationBar.backIndicatorImage = UIImage()
+            self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
+            
+            locationPicker.completion = { self.location = $0 }
+        }
     }
 }
 
