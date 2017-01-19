@@ -444,6 +444,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                         if !(self.userInfo[kEmergencyMobile] is NSNull) {
                             self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
                         }
+                        
+                        if !(self.userInfo[kServiceArea] is NSNull) {
+                            self.locationName.text = self.userInfo[kServiceArea] as? String
+                        } else {
+                            self.locationName.text = "..."
+                        }
                     }else if response.response?.statusCode == 401 {
                         let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
@@ -498,6 +504,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
             
             if !(self.userInfo[kEmergencyMobile] is NSNull) {
                 self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
+            }
+            
+            if !(self.userInfo[kServiceArea] is NSNull) {
+                self.locationName.text = self.userInfo[kServiceArea] as? String
+            } else {
+                self.locationName.text = "..."
             }
         }
         
