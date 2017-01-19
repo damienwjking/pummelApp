@@ -42,6 +42,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         self.avatarIMV.clipsToBounds = true
         self.setAvatar()
         self.commentPhotoTV.text = addAComment
+        self.commentPhotoTV.font = UIFont.pmmMonReg13()
         self.commentPhotoTV.keyboardAppearance = .Dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self

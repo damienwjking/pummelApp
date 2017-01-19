@@ -97,7 +97,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gtL-HL-Dbs">
-                                        <rect key="frame" x="38" y="130" width="300" height="280"/>
+                                        <rect key="frame" x="38" y="144.5" width="300" height="322"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardEmpty.png" translatesAutoresizingMaskIntoConstraints="NO" id="PIX-KY-RFf">
                                                 <rect key="frame" x="67" y="0.0" width="165" height="160"/>
@@ -107,19 +107,30 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get Connections With Your Coaches" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="S87-db-QjG">
-                                                <rect key="frame" x="0.0" y="180" width="300" height="21"/>
+                                                <rect key="frame" x="0.0" y="180" width="300" height="42"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="42" id="izK-Eq-mQ1"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your message will appear here." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5p-jh-FQs">
-                                                <rect key="frame" x="0.0" y="211" width="300" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5p-jh-FQs">
+                                                <rect key="frame" x="0.0" y="232" width="300" height="42"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="42" id="NbY-21-IOt"/>
+                                                </constraints>
+                                                <string key="text">Your message will appear here.
+</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bai-pa-BUg">
-                                                <rect key="frame" x="60.5" y="250" width="179" height="30"/>
+                                                <rect key="frame" x="60.5" y="292" width="179" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="Gw1-hl-AwC"/>
+                                                </constraints>
                                                 <state key="normal" title="START A CONVERSATION">
                                                     <color key="titleColor" red="1" green="0.25882352939999997" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
@@ -148,7 +159,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="gtL-HL-Dbs" firstAttribute="centerX" secondItem="Sqg-yT-sIZ" secondAttribute="centerX" id="85s-9E-389"/>
-                                    <constraint firstItem="gtL-HL-Dbs" firstAttribute="centerY" secondItem="Sqg-yT-sIZ" secondAttribute="centerY" constant="-64" id="KlT-0k-MKL"/>
+                                    <constraint firstItem="gtL-HL-Dbs" firstAttribute="centerY" secondItem="Sqg-yT-sIZ" secondAttribute="centerY" constant="-28" id="KlT-0k-MKL"/>
                                 </constraints>
                             </view>
                         </subviews>

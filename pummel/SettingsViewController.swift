@@ -739,7 +739,9 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.navigationController?.navigationBar.backIndicatorImage = UIImage()
                 self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
     
-                locationPicker.completion = { self.location = $0 }
+                locationPicker.completion = {
+                    self.location = $0
+                }
         } else if (segue.identifier == "upgradeCoach") {
             let destinationVC = segue.destinationViewController as! EditCoachProfileForUpgradeViewController
             destinationVC.userInfo = self.userInfo

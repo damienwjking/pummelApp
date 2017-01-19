@@ -162,7 +162,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zqn-wx-djT">
-                                        <rect key="frame" x="37.5" y="109.5" width="300" height="320"/>
+                                        <rect key="frame" x="37.5" y="108.5" width="300" height="322"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="b8C-Y6-nMb">
                                                 <rect key="frame" x="67.5" y="0.0" width="165" height="160"/>
@@ -172,19 +172,28 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log all your workouts and sessions in Pummel" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ilN-Iv-NCy">
-                                                <rect key="frame" x="0.0" y="180" width="300" height="41"/>
+                                                <rect key="frame" x="0.0" y="180" width="300" height="42"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="42" id="LfC-Qy-nxd"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upcoming appointments from your coach will appear here as well" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FPh-SE-b0f">
-                                                <rect key="frame" x="0.0" y="231" width="300" height="41"/>
+                                                <rect key="frame" x="0.0" y="232" width="300" height="42"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="42" id="h2j-3d-5es"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DgL-hv-yZs">
-                                                <rect key="frame" x="94" y="290" width="112" height="30"/>
+                                                <rect key="frame" x="94" y="292" width="112" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="N7q-JV-Sst"/>
+                                                </constraints>
                                                 <state key="normal" title="ADD A SESSION">
                                                     <color key="titleColor" red="1" green="0.25882352941176467" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
@@ -796,7 +805,7 @@
         <image name="sessions.png" width="19" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="T2L-tM-8pa"/>
-        <segue reference="i8A-qC-9BK"/>
+        <segue reference="Au2-PE-kLY"/>
+        <segue reference="uSf-uW-Yee"/>
     </inferredMetricsTieBreakers>
 </document>

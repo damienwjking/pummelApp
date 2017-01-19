@@ -24,7 +24,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "NEW POST"
+        self.navigationItem.title = "ADD A COMMENT"
         self.navigationController!.navigationBar.translucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationItem.hidesBackButton = true;
@@ -36,6 +36,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
         self.avatarIMV.clipsToBounds = true
         self.setAvatar()
         self.commentPhotoTV.text = addAComment
+        self.commentPhotoTV.font = UIFont.pmmMonReg13()
         self.commentPhotoTV.keyboardAppearance = .Dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self

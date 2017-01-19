@@ -70,6 +70,13 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         self.getListComment()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let scrollPoint = CGPoint(x: 0, y: self.tableView.contentSize.height - self.tableView.frame.size.height);
+        self.tableView.setContentOffset(scrollPoint, animated: true);
+    }
+    
     func getListComment() {
         if (stopGetListComment == false) {
             var commentLink  = kPMAPI_POST
