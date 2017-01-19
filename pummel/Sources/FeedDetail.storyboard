@@ -431,7 +431,7 @@
                                         </constraints>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="MKb-r3-Z0L" customClass="RSKGrowingTextView" customModule="RSKGrowingTextView">
-                                        <rect key="frame" x="33" y="18" width="471" height="33"/>
+                                        <rect key="frame" x="33" y="18" width="411" height="33"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="33" id="4o1-M1-UHg"/>
@@ -450,7 +450,8 @@
                                         </userDefinedRuntimeAttributes>
                                     </textView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2E-EX-DaY">
-                                        <rect key="frame" x="552" y="15" width="40" height="40"/>
+                                        <rect key="frame" x="522" y="0.0" width="70" height="70"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="BG8-9x-KH6"/>
                                             <constraint firstAttribute="width" constant="40" id="lMD-zo-NCR"/>
@@ -471,7 +472,7 @@
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EO0-m0-Nnp">
-                                        <rect key="frame" x="512" y="15" width="40" height="40"/>
+                                        <rect key="frame" x="452" y="0.0" width="70" height="70"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="TAI-Qp-4U4"/>
                                             <constraint firstAttribute="width" constant="40" id="hJG-gq-Dnb"/>
@@ -527,7 +528,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MFQ-QA-I72" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="749" y="-425"/>
+            <point key="canvasLocation" x="748.79999999999995" y="-425.48725637181411"/>
         </scene>
     </scenes>
     <resources>

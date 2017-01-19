@@ -21,6 +21,7 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
     var isStopGetListTag = false
     var offset: Int = 0
     var sizingCell: ActivityCell?
+    var bodyBuildingTag = Tag()
     @IBOutlet weak var flowLayout: FlowLayout!
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -34,7 +35,6 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
         var image = UIImage(named: "blackArrow")
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(LogSessionClientViewController.backClicked))
-        
         
         self.initCollectionView()
         
@@ -92,6 +92,16 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
                             tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
                             tag.tagColor = self.getRandomColorString()
                             tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
+                            
+                            // get body building tag to set color for ccling tag
+                            if tag.name?.uppercaseString == "body building".uppercaseString {
+                                self.bodyBuildingTag = tag
+                            }
+                            
+                            if tag.name?.uppercaseString == "Cycling".uppercaseString {
+                                tag.tagColor = self.bodyBuildingTag.tagColor
+                            }
+                            
                             self.tags.append(tag)
                         }
                         self.offset += 10

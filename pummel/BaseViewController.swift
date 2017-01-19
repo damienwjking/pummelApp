@@ -53,10 +53,7 @@ class BaseViewController: UIViewController {
             } else {
                 if (self.isKindOfClass(LogSessionClientViewController) == false) {
                     self.navigationController?.popToRootViewControllerAnimated(true)
-                } else {
-                    
                 }
-                
                 
                 if touch3DType == "3dTouch_1" {
                     if (self.isKindOfClass(FindViewController) == true ||
@@ -89,10 +86,12 @@ class BaseViewController: UIViewController {
                     } else {
                         self.tabBarController?.selectedIndex = 0
                     }
+                } else {
+                    defaults.setObject("1", forKey: k_PM_3D_TOUCH)
                 }
             }
         } else {
-            defaults.setObject("0", forKey: k_PM_3D_TOUCH)
+            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
         }
     }
 

@@ -24,15 +24,19 @@ class DetailSessionViewController: BaseViewController {
     @IBOutlet weak var distanceLB: UILabel!
     @IBOutlet weak var intensityLB: UILabel!
     @IBOutlet weak var caloriesLB: UILabel!
+    @IBOutlet weak var centerLB: UILabel!
     
     @IBOutlet weak var dateTF: UITextField!
     @IBOutlet weak var commentIMV: UIImageView!
     @IBOutlet weak var contentTV: UITextView!
     
+    @IBOutlet weak var centerIMV: UIImageView!
+    
     @IBOutlet weak var timeV: UIView!
     @IBOutlet weak var distanceV: UIView!
     @IBOutlet weak var intensityV: UIView!
     @IBOutlet weak var caloriesV: UIView!
+    @IBOutlet weak var centerV: UIView!
     
     @IBOutlet weak var tappedV: UIView!
     
@@ -99,9 +103,14 @@ class DetailSessionViewController: BaseViewController {
             self.contentTV.text = ""
         }
         
+        self.centerV.hidden = true
+        
+        var numberInformation = 0;
         if self.session.longtime != nil && self.session.longtime != 0 {
             self.timeLB.text = String(format: "%ld minutes", self.session.longtime!)
             self.timeV.hidden = false
+            
+            numberInformation = numberInformation + 1
         } else {
             self.timeLB.text = "..."
             self.timeV.hidden = true
@@ -110,6 +119,8 @@ class DetailSessionViewController: BaseViewController {
         if self.session.intensity?.isEmpty == false {
             self.intensityLB.text = self.session.intensity
             self.intensityV.hidden = false
+            
+            numberInformation = numberInformation + 1
         } else {
             self.intensityLB.text = "..."
             self.intensityV.hidden = true
@@ -124,6 +135,8 @@ class DetailSessionViewController: BaseViewController {
                 self.distanceLB.text = String(format: "%ld mi", self.session.distance!)
                 self.distanceV.hidden = false
             }
+            
+            numberInformation = numberInformation + 1
         } else {
             self.distanceLB.text = "..."
             self.distanceV.hidden = true
@@ -132,6 +145,8 @@ class DetailSessionViewController: BaseViewController {
         if self.session.calorie != nil && self.session.calorie != 0 {
             self.caloriesLB.text = String(format: "%ld", self.session.calorie!)
             self.caloriesV.hidden = false
+            
+            numberInformation = numberInformation + 1
         } else {
             self.caloriesLB.text = "..."
             self.caloriesV.hidden = true
@@ -144,6 +159,29 @@ class DetailSessionViewController: BaseViewController {
             timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
             self.dateTF.text = timeFormatter.stringFromDate(date!)
         }
+        
+        if numberInformation == 1 {
+            self.centerV.hidden = false
+            
+            if self.timeV.hidden == false {
+                self.centerLB.text = self.timeLB.text
+                self.centerIMV.image = UIImage(named: "icon_longtime")
+            } else if self.intensityV.hidden == false {
+                self.centerLB.text = self.intensityLB.text
+                self.centerIMV.image = UIImage(named: "icon_insensity")
+            } else if self.distanceV.hidden == false {
+                self.centerLB.text = self.distanceLB.text
+                self.centerIMV.image = UIImage(named: "icon_distance")
+            } else if self.caloriesV.hidden == false {
+                self.centerLB.text = self.caloriesLB.text
+                self.centerIMV.image = UIImage(named: "icon_calories")
+            }
+            
+            self.timeV.hidden = true
+            self.intensityV.hidden = true
+            self.distanceV.hidden = true
+            self.caloriesV.hidden = true
+        }
     }
     
     func initLayout() {
@@ -152,6 +190,7 @@ class DetailSessionViewController: BaseViewController {
         self.distanceLB.font = .pmmMonLight13()
         self.intensityLB.font = .pmmMonLight13()
         self.caloriesLB.font = .pmmMonLight13()
+        self.centerLB.font = .pmmMonLight13()
         
         self.dateTF.font = UIFont.pmmMonReg13()
         

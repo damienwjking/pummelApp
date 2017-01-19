@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Ak1-w5-9CN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Ak1-w5-9CN">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,26 +24,39 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QSE-yI-sft">
+                                <rect key="frame" x="0.0" y="-64" width="600" height="827"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="display-empty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="HcF-nH-v2k">
+                                        <rect key="frame" x="15" y="79" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="Itg-bp-vmr"/>
                                             <constraint firstAttribute="height" constant="40" id="OHz-t7-Spb"/>
                                         </constraints>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="no3-Lq-lhJ">
+                                        <rect key="frame" x="0.0" y="227" width="600" height="600"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nYI-pi-Twe"/>
-                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qcA-kk-yHQ">
-                                                <frame key="frameInset" width="600" height="600"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nYI-pi-Twe">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                            </imageView>
+                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qcA-kk-yHQ">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ITf-8X-wax">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ITf-8X-wax">
                                                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     </imageView>
                                                 </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="ITf-8X-wax" firstAttribute="leading" secondItem="qcA-kk-yHQ" secondAttribute="leading" id="8cB-Ed-EFD"/>
+                                                    <constraint firstAttribute="trailing" secondItem="ITf-8X-wax" secondAttribute="trailing" id="HMB-NV-hjp"/>
+                                                    <constraint firstItem="ITf-8X-wax" firstAttribute="height" secondItem="qcA-kk-yHQ" secondAttribute="height" id="IwL-Ox-uMS"/>
+                                                    <constraint firstItem="ITf-8X-wax" firstAttribute="top" secondItem="qcA-kk-yHQ" secondAttribute="top" id="Uf5-nC-Lb7"/>
+                                                    <constraint firstItem="ITf-8X-wax" firstAttribute="width" secondItem="qcA-kk-yHQ" secondAttribute="width" id="YPs-hW-HxK"/>
+                                                    <constraint firstAttribute="bottom" secondItem="ITf-8X-wax" secondAttribute="bottom" id="bqa-ja-lrC"/>
+                                                </constraints>
                                             </scrollView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTe-IO-6QH">
+                                                <rect key="frame" x="276" y="281" width="48" height="38"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="48" id="DR2-vR-dpU"/>
                                                     <constraint firstAttribute="height" constant="38" id="b4R-LH-bbY"/>
@@ -67,6 +83,7 @@
                                         </constraints>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="yfp-TR-foN">
+                                        <rect key="frame" x="63" y="79" width="525" height="148"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="148" id="qrT-Eh-l0F"/>
@@ -75,9 +92,11 @@
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NGP-rb-Ry6">
+                                        <rect key="frame" x="0.0" y="119" width="63" height="108"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MVR-iB-auZ">
+                                        <rect key="frame" x="588" y="33" width="12" height="194"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                 </subviews>
