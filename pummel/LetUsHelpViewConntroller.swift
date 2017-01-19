@@ -115,7 +115,7 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
         let defaults = NSUserDefaults.standardUserDefaults()
         let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
         if touch3DType == "3dTouch_1" {
-            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
         }
     }
 

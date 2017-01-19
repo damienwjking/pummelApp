@@ -69,7 +69,7 @@ class SessionClientViewController: BaseViewController, UITableViewDelegate, UITa
         
         let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
         if touch3DType == "3dTouch_2" {
-            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
             self.performSegueWithIdentifier("userLogASession", sender: nil)
         }
     }

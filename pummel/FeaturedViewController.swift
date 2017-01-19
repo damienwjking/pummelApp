@@ -64,7 +64,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         let defaults = NSUserDefaults.standardUserDefaults()
         let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
         if touch3DType == "3dTouch_4" {
-            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
             self.sharePummel()
         }
     }

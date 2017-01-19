@@ -48,7 +48,7 @@ class BaseViewController: UIViewController {
         if (defaults.objectForKey(k_PM_3D_TOUCH) != nil) {
             let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
             
-            if touch3DType == "1" {
+            if touch3DType == k_PM_3D_TOUCH_VALUE {
                 // Do nothing
             } else {
                 if (self.isKindOfClass(LogSessionClientViewController) == false) {
@@ -87,11 +87,11 @@ class BaseViewController: UIViewController {
                         self.tabBarController?.selectedIndex = 0
                     }
                 } else {
-                    defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+                    defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
                 }
             }
         } else {
-            defaults.setObject("1", forKey: k_PM_3D_TOUCH)
+            defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
         }
     }
 
