@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class EditProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
+class EditProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, FusumaDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var scrollViewBottomDT: NSLayoutConstraint!
@@ -458,9 +458,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             self.presentViewController(self.imagePicker, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-            self.imagePicker.sourceType = .Camera
-            self.imagePicker.cameraDevice = .Front
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.showCameraRoll()
         }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Default, handler: selectFromLibraryHandler))
@@ -468,6 +466,110 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
+    }
+    
+    func showCameraRoll() {
+        let fusuma = FusumaViewController()
+        fusuma.delegate = self
+        fusuma.defaultMode = .Camera
+        fusuma.modeOrder = .CameraFirst
+        self.presentViewController(fusuma, animated: true, completion: nil)
+    }
+    
+    // Fusuma delegate
+    func fusumaImageSelected(image: UIImage) {
+        
+        let pickedImage = image
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        avatarIMW.addSubview(activityView)
+        avatarIMW.contentMode = .ScaleAspectFill
+        var imageData : NSData!
+        let type = imageJpeg
+        let filename = jpgeFile
+        imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+        
+            if (imageData == nil) {
+                dispatch_async(dispatch_get_main_queue(),{
+                    activityView.stopAnimating()
+                    activityView.removeFromSuperview()
+                    //Your main thread code goes in here
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .Alert)
+                    
+                    
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                })
+            }  else {
+                var prefix = kPMAPIUSER
+                let defaults = NSUserDefaults.standardUserDefaults()
+                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(kPM_PATH_PHOTO)
+                var parameters = [String:AnyObject]()
+                parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
+                Alamofire.upload(
+                    .POST,
+                    prefix,
+                    multipartFormData: { multipartFormData in
+                        multipartFormData.appendBodyPart(data: imageData, name: "file",
+                            fileName:filename, mimeType:type)
+                        for (key, value) in parameters {
+                            multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                        }
+                    },
+                    encodingCompletion: { encodingResult in
+                        switch encodingResult {
+                            
+                        case .Success(let upload, _, _):
+                            upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                            }
+                            upload.validate()
+                            upload.responseJSON { response in
+                                if response.result.error != nil {
+                                    // failure
+                                    activityView.stopAnimating()
+                                    activityView.removeFromSuperview()
+                                } else {
+                                    activityView.stopAnimating()
+                                    activityView.removeFromSuperview()
+                                    self.avatarIMW.image = pickedImage
+                                }
+                            }
+                            
+                        case .Failure(let encodingError):
+                            activityView.stopAnimating()
+                            activityView.removeFromSuperview()
+                        }
+                    }
+                )
+        }
+    }
+    
+    func fusumaCameraRollUnauthorized() {
+        
+        print("Camera roll unauthorized")
+        
+        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .Alert)
+        
+        alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
+            
+            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                UIApplication.sharedApplication().openURL(url)
+            }
+            
+        }))
+        
+        alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
+            
+        }))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func imageTapped()
