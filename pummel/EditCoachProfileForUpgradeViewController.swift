@@ -15,7 +15,7 @@ import LocationPicker
 import CoreLocation
 import MapKit
 
-class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, MFMailComposeViewControllerDelegate {
+class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, MFMailComposeViewControllerDelegate,CLLocationManagerDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMW: UIImageView!
@@ -60,12 +60,14 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     @IBOutlet weak var emergencyMobileLB: UILabel!
     @IBOutlet weak var emergencyMobileTF: UITextField!
     @IBOutlet weak var locationName: UILabel!
+    @IBOutlet weak var locationLB: UILabel!
     @IBOutlet weak var healthDataLB: UILabel!
     @IBOutlet weak var socialLB: UILabel!
     @IBOutlet weak var weightLB: UILabel!
     @IBOutlet weak var heightLB: UILabel!
     @IBOutlet weak var weightTF: UITextField!
     @IBOutlet weak var heightTF: UITextField!
+    @IBOutlet weak var arrow: UIImageView!
     var isFirstTVS : Bool = false
     var sizingCell: TagCell?
     
@@ -87,6 +89,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         didSet {
         }
     }
+    
+    var locationManager: CLLocationManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,6 +131,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.emergencyInformationLB.font = .pmmMonReg11()
         self.healthDataLB.font = .pmmMonReg11()
         self.socialLB.font = .pmmMonReg11()
+        self.locationLB.font = .pmmMonReg11()
         
         self.nameContentTF.font = .pmmMonLight13()
         self.aboutContentTV.font = .pmmMonLight13()
@@ -196,6 +201,13 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.tapView.addGestureRecognizer(tap)
         
         self.title = "Coach Profile"
+        
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        self.arrow.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
     }
     
     func didTapView() {
@@ -213,6 +225,31 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.emergencyMobileTF.resignFirstResponder()
         self.weightTF.resignFirstResponder()
         self.heightTF.resignFirstResponder()
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    {
+        let location = locations.last! as CLLocation
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
+            // Place details
+            var placeMark: CLPlacemark!
+            placeMark = placemarks?[0]
+            if ((placeMark) != nil) {
+                // City
+                var city = "..."
+                if ((placeMark.administrativeArea) != nil) {
+                    city = placeMark.administrativeArea!
+                    
+                }
+                self.locationName.text = city
+                let locationTemp = Location(name: city, location: location, placemark: MKPlacemark(coordinate: location.coordinate, addressDictionary: [:]))
+                self.location = locationTemp
+                self.locationManager.stopUpdatingLocation()
+            }
+        })
+        
     }
     
     @IBAction func gotoGetLocation() {
@@ -445,10 +482,14 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                             self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
                         }
                         
+                        self.locationName.text = "..."
                         if !(self.userInfo[kServiceArea] is NSNull) {
-                            self.locationName.text = self.userInfo[kServiceArea] as? String
-                        } else {
-                            self.locationName.text = "..."
+                            if let val = self.userInfo[kServiceArea] as? String {
+                                if val != "" {
+                                    self.locationName.text = val
+                                }
+                            }
+                            
                         }
                     }else if response.response?.statusCode == 401 {
                         let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
@@ -506,10 +547,13 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                 self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
             }
             
+            self.locationName.text = "..."
             if !(self.userInfo[kServiceArea] is NSNull) {
-                self.locationName.text = self.userInfo[kServiceArea] as? String
-            } else {
-                self.locationName.text = "..."
+                if let val = self.userInfo[kServiceArea] as? String {
+                    if val != "" {
+                        self.locationName.text = val
+                    }
+                }
             }
         }
         
