@@ -89,7 +89,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
             switch SCREEN_MAX_LENGTH {
             case 736.0:
-                self.signinDistantCT.constant = 115
+                self.signinDistantCT.constant = 165.5
                 break
                 
             case 667.0:
