@@ -227,9 +227,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                         self.listMessageTB.reloadData()
                         self.noMessageV.hidden = true
                     } else {
+                        if self.arrayMessages.count <= 0 {
+                            self.noMessageV.hidden = false
+                        }
                         self.isLoadingMessage = false
                         self.isStopLoadMessage = true
-                        self.noMessageV.hidden = false
                     }
                 case .Failure(let error):
                     self.offset -= 10

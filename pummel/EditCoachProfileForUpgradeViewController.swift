@@ -240,8 +240,11 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                 // City
                 var city = "..."
                 if ((placeMark.administrativeArea) != nil) {
-                    city = placeMark.administrativeArea!
-                    
+                    if placeMark.subAdministrativeArea != nil {
+                        city = "\(placeMark.subAdministrativeArea!),\(placeMark.administrativeArea!)"
+                    } else {
+                        city = placeMark.administrativeArea!
+                    }
                 }
                 self.locationName.text = city
                 let locationTemp = Location(name: city, location: location, placemark: MKPlacemark(coordinate: location.coordinate, addressDictionary: [:]))
