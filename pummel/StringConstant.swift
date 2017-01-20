@@ -121,7 +121,7 @@ let kOffset = "offset"
 let kEmergencyName = "emergencyName"
 let kEmergencyMobile = "emergencyMobile"
 let kType = "type"
-let kUserIdTarget = "userIdTarget"
+let kUserIdTarget = "coachId"
 let kUserIdRequest = "userIdRequest"
 
 // String

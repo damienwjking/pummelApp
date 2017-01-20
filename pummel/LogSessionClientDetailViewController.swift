@@ -311,7 +311,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             self.view.makeToastActivity(message: "Saving")
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
+            
             
             var imageData : NSData!
             let type : String! = imageJpeg
@@ -322,6 +322,10 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 if let val = self.userInfoSelect["userId"] as? Int {
                     userIdSelected = "\(val)"
                 }
+                prefix = kPMAPICOACH
+                prefix.appendContentsOf(kPM_PATH_LOG_ACTIVITIES_COACH)
+            } else {
+                prefix.appendContentsOf(kPM_PATH_LOG_ACTIVITIES_USER)
             }
             
             let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
