@@ -20,7 +20,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     var swipeableView: ZLSwipeableView!
     var loadCardsFromXib = true
     var resultIndex = 0
-    var resultPage : Int = 6
+    var resultPage : Int = 30
     var sizingCell: TagCell?
     var tags = [Tag]()
     var coachTotalDetail: NSDictionary!
@@ -116,7 +116,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     
     func searchNextPage() {
         if (self.stopSearch == false) {
-            self.resultPage += 1
+            self.resultPage += 30
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
             var prefix = kPMAPICOACH_SEARCH
@@ -131,7 +131,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 prefix.appendContentsOf("&")
             }
             
-            prefix.appendContentsOf("limit=1")
+            prefix.appendContentsOf("limit=30")
             prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
             let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, aVariable[kLong] as! Float, kLat, aVariable[kLat] as! Float)
             prefix.appendContentsOf(coordinateParams)
@@ -140,7 +140,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         if ((response.result.value as! NSArray).count == 0) {
-                            self.stopSearch = true
+                           // self.stopSearch = true
                         } else {
                             let rArray = response.result.value as! [NSDictionary]
                             self.arrayResult += rArray
@@ -184,7 +184,12 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             contentView.connectV.layer.cornerRadius = 50
             contentView.connectV.clipsToBounds = true
             contentView.nameLB.font = .pmmPlayFairReg24()
-            contentView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
+            if !(coachDetail[kLastName] is NSNull) {
+                contentView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
+            } else {
+                contentView.nameLB.text = (coachDetail[kFirstname] as! String)
+            }
+            
             contentView.addressLB.font = .pmmPlayFairReg11()
             if !(coachTotalDetail[kServiceArea] is NSNull) {
                 contentView.addressLB.text = coachTotalDetail[kServiceArea] as? String
@@ -319,7 +324,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
         
         self.stopSearch = false
-        self.resultPage = 25
+        self.resultPage = 30
         
         if (swipeableView != nil && refined == true ) {
             swipeableView.removeFromSuperview()

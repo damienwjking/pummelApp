@@ -189,16 +189,18 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
     
     func search() {
         var prefix = kPMAPICOACH_SEARCH
-        let limitParams = String(format: "?%@=25&%@=0", kLimit, kOffset)
+        let limitParams = String(format: "?%@=30&%@=0", kLimit, kOffset)
         prefix.appendContentsOf(limitParams)
         if (gender != kDontCare) {
-           prefix.appendContentsOf("&gender=".stringByAppendingString(gender).stringByAppendingString("&"))
+            prefix.appendContentsOf("&gender=".stringByAppendingString(gender).stringByAppendingString("&"))
         } else {
             prefix.appendContentsOf("&")
             
         }
     
         for id in tagIdsArray {
+            prefix.appendContentsOf("&")
+
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
              prefix.appendContentsOf("&")
         }
@@ -215,6 +217,11 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                    // if (self.stopAnimation == true) {
                         self.getResultSearch = true
                         let presentingViewController = self.presentingViewController
+                    let secondsWait = 2.0
+                    let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+
                         self.dismissViewControllerAnimated(false, completion: {
                             let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
                             let findVC = tabbarVC.viewControllers![2] as! FindViewController
@@ -226,6 +233,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                             findVC.viewDidLayoutSubviews()
                             presentingViewController!.dismissViewControllerAnimated(true, completion: {})
                         })
+                    });
 //                    } else {
 //                        let secondsWait = 6.0
 //                        let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
