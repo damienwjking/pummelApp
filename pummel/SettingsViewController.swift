@@ -30,6 +30,9 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     let knumberOfRowUser = 21
     var userInfo: NSDictionary!
     
+    var mapState = ""
+    var mapCity = ""
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     var location: Location? {
         didSet {
@@ -108,6 +111,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     print(error)
                     }
             }
+            
+            self.getCityStageOfUser((self.location?.coordinate.latitude)!, long: (self.location?.coordinate.longitude)!)
         }
     }
     
@@ -119,8 +124,12 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
             var prefix = kPMAPICOACH
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             self.view.makeToastActivity(message: "Saving")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-                kDistance: cellDistance.slider.value])
+            
+            let param = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                         kDistance: cellDistance.slider.value,
+                         kState: self.mapState,
+                         kCity: self.mapCity]
+            Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
                 .responseJSON { response in switch response.result {
                 case .Success(_):
                     self.navigationController?.popViewControllerAnimated(true)
@@ -741,6 +750,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
                 locationPicker.completion = {
                     self.location = $0
+                    
+                    self.getCityStageOfUser((self.location?.coordinate.latitude)!, long: (self.location?.coordinate.longitude)!)
                 }
         } else if (segue.identifier == "upgradeCoach") {
             let destinationVC = segue.destinationViewController as! EditCoachProfileForUpgradeViewController
@@ -749,8 +760,60 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
         
     }
+    
+    func getCityStageOfUser(lat:CLLocationDegrees, long:CLLocationDegrees) {
+        let latlngLocationString = String(format: "%f,%f", lat, long)
+        
+        let prefix = "http://maps.googleapis.com/maps/api/geocode/json"
+        let param = ["latlng":latlngLocationString,
+                     "sensor":"true",]
+        
+        Alamofire.request(.GET, prefix, parameters: param)
+            .responseJSON { response in
+                switch response.result {
+                case .Success(let JSON):
+                    let googleMapJSON = JSON as! NSDictionary
+                    let locationArr = ((googleMapJSON["results"] as! NSArray)[0]  as! NSDictionary)["address_components"]  as! NSArray
+                    
+                    var i = 0
+                    while (i < locationArr.count) {
+                        let dictionary = locationArr[i] as! NSDictionary
+                        
+                        let types = dictionary["types"] as! NSArray
+                        var typeIndex = 0
+                        var isAreaLevel1 = false
+                        var isAreaLevel2 = false
+                        while (typeIndex < types.count) {
+                            let type = types[typeIndex]
+                            
+                            if type as! String == "administrative_area_level_1" {
+                                isAreaLevel1 = true
+                                break
+                            } else if type as! String == "administrative_area_level_2" {
+                                isAreaLevel2 = true
+                                break
+                            }
+                            
+                            typeIndex = typeIndex + 1;
+                        }
+                        
+                        if isAreaLevel1 {
+                            self.mapState = dictionary["short_name"] as! String
+                        }
+                        
+                        if isAreaLevel2 {
+                            self.mapCity = dictionary["short_name"] as! String
+                        }
+                        
+                        i = i + 1;
+                    }
+                case .Failure(let error):
+                    print(error)
+                }
+        }
+    }
+    
 }
-
 
 extension SettingsViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(controller:MFMailComposeViewController, didFinishWithResult result:MFMailComposeResult, error:NSError?) {

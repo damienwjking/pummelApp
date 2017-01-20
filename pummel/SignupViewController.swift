@@ -13,7 +13,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var nameTF : UITextField!
     @IBOutlet var emailTF : UITextField!
     @IBOutlet var passwordTF : UITextField!
-    @IBOutlet var dobTF : UITextField!
     @IBOutlet var genderTF : UITextField!
     @IBOutlet var signupBT : UIButton!
     @IBOutlet var continuingLB : UILabel!
@@ -21,7 +20,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var scrollViewHeightCT: NSLayoutConstraint!
     @IBOutlet var passwordAttentionIM: UIImageView!
     @IBOutlet var emailAttentionIM: UIImageView!
-    @IBOutlet var dobAttentionIM: UIImageView!
     @IBOutlet weak var termOfServiceBT: UIButton!
     @IBOutlet weak var andLB: UILabel!
     @IBOutlet weak var privacyPolicyBT: UIButton!
@@ -43,7 +41,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.emailTF.font = .pmmMonReg13()
         self.emailTF.autocorrectionType = UITextAutocorrectionType.No
         self.passwordTF.font = .pmmMonReg13()
-        self.dobTF.font = .pmmMonReg13()
         self.genderTF.font = .pmmMonReg13()
         self.continuingLB.font = .pmmMonReg10()
         self.termOfServiceBT.titleLabel!.font = .pmmMonReg10()
@@ -60,8 +57,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
         self.passwordTF.attributedPlaceholder = NSAttributedString(string:"PASSWORD",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
-        self.dobTF.attributedPlaceholder = NSAttributedString(string:"D.O.B.",
-            attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
         self.genderTF.attributedPlaceholder = NSAttributedString(string:"GENDER",
             attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
         
@@ -72,7 +67,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         
         self.passwordAttentionIM.hidden = true
         self.emailAttentionIM.hidden = true
-        self.dobAttentionIM.hidden = true
 
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(SignupViewController.dismissKeyboard)))
         self.view.userInteractionEnabled = true
@@ -169,42 +163,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         return emailTest.evaluateWithObject(testStr)
     }
     
-    @IBAction func textFieldEditing(sender: UITextField) {
-        let datePickerView:UIDatePicker = UIDatePicker()
-        datePickerView.backgroundColor = UIColor.blackColor()
-        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
-        datePickerView.datePickerMode = UIDatePickerMode.Date
-        sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(SignupViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-    }
-    
-    func datePickerValueChanged(sender:UIDatePicker) {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
-        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
-        self.dobTF.text = dateFormatter.stringFromDate(sender.date)
-        let dateDOB = dateFormatter.dateFromString(self.dobTF.text!)
-        
-        let date = NSDate()
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-        let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
-        _ =  components.year
-        _ = componentsDOB.year
-        
-//        if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
-//            self.dobAttentionIM.hidden = true
-//            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
-//                attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
-//        } else {
-//            self.dobAttentionIM.hidden = false
-//            self.dobTF.attributedText = NSAttributedString(string:self.dobTF.text!,
-//                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-//        }
-    }
-    
     @IBAction func showPopupToSelectGender(sender:UIDatePicker) {
-        self.dobTF.resignFirstResponder()
         self.emailTF.resignFirstResponder()
         self.passwordTF.resignFirstResponder()
         self.nameTF.resignFirstResponder()
@@ -222,6 +181,6 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     }
     
     func dismissKeyboard() {
-        self.dobTF.resignFirstResponder()
+        
     }
 }

@@ -178,7 +178,8 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
         let cell = tableView.dequeueReusableCellWithIdentifier("LogSessionTableViewCell") as! LogSessionTableViewCell
         
         let tag = tags[indexPath.row]
-        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercaseString)!)
+//        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercaseString)!)
+        let tagName = tag.name?.uppercaseString
         cell.LogTitleLB.text = tagName
         cell.tagTypeLabel.text = ""
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)

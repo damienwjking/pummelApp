@@ -101,7 +101,8 @@ class BookSessionViewController: BaseViewController, UITableViewDelegate, UITabl
         }
         let tag = tags[indexPath.row]
         
-        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercaseString)!)
+//        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercaseString)!)
+        let tagName = (tag.name?.uppercaseString)
         cell.bookTitleLB.text = tagName
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         if (indexPath.row == tags.count - 1) {

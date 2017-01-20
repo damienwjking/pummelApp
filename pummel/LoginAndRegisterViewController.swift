@@ -241,7 +241,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             let name = self.signupVC.nameTF.text
             let userEmail = self.signupVC.emailTF.text
             let userPassword = self.signupVC.passwordTF.text
-            let dob = self.signupVC.dobTF.text
             var gender = self.signupVC.genderTF.text
             
             let fullNameArr = name!.characters.split{$0 == " "}.map(String.init)
@@ -255,7 +254,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             }
             
             var para : [String: AnyObject]!
-            para =  (dob == "") ? [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kGender:gender!] : [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kDob:dob!, kGender:gender!]
+            para = [kEmail:userEmail!, kPassword:userPassword!, kFirstname:firstname, kGender:gender!]
             
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
@@ -516,13 +515,6 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             signupVC.passwordAttentionIM.hidden = true
             signupVC.passwordTF.attributedText = NSAttributedString(string:signupVC.passwordTF.text!,
                 attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
-        }
-        
-        if self.profileIMV.image == nil {
-            returnValue = true
-            self.addProfilePhototLB.textColor = UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)
-        } else {
-            self.addProfilePhototLB.textColor = UIColor(white: 225, alpha: 1.0)
         }
         
         return returnValue
