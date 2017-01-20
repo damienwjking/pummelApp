@@ -78,7 +78,7 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
     // MARK: Private function
     func getListTags() {
         if (isStopGetListTag == false) {
-            var listTagsLink = kPMAPI_TAG_OFFSET
+            var listTagsLink = kPMAPI_TAG4_OFFSET
             listTagsLink.appendContentsOf(String(self.offset))
             Alamofire.request(.GET, listTagsLink)
                 .responseJSON { response in switch response.result {
@@ -99,7 +99,9 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
                             }
                             
                             if tag.name?.uppercaseString == "Cycling".uppercaseString {
-                                tag.tagColor = self.bodyBuildingTag.tagColor
+                                if (self.bodyBuildingTag.tagColor?.isEmpty == false) {
+                                    tag.tagColor = self.bodyBuildingTag.tagColor
+                                }
                             }
                             
                             self.tags.append(tag)
@@ -176,8 +178,9 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
         let cell = tableView.dequeueReusableCellWithIdentifier("LogSessionTableViewCell") as! LogSessionTableViewCell
         
         let tag = tags[indexPath.row]
-        cell.LogTitleLB.text = tag.name?.uppercaseString
-        cell.tagTypeLabel.text = String(format: "%ld", tag.tagType!)
+        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercaseString)!)
+        cell.LogTitleLB.text = tagName
+        cell.tagTypeLabel.text = ""
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         
         if (indexPath.row == tags.count - 1) {

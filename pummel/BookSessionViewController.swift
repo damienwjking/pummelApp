@@ -60,6 +60,7 @@ class BookSessionViewController: BaseViewController, UITableViewDelegate, UITabl
                         tag.name = tagContent[kTitle] as? String
                         tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
                         tag.tagColor = self.getRandomColorString()
+                        tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
                         self.tags.append(tag)
                     }
                     self.offset += 10
@@ -99,7 +100,9 @@ class BookSessionViewController: BaseViewController, UITableViewDelegate, UITabl
             return cell
         }
         let tag = tags[indexPath.row]
-        cell.bookTitleLB.text = tag.name?.uppercaseString
+        
+        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercaseString)!)
+        cell.bookTitleLB.text = tagName
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         if (indexPath.row == tags.count - 1) {
             self.getListTags()
