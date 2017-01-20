@@ -2457,11 +2457,11 @@
                                             <constraint firstAttribute="height" constant="21" id="rRg-1Q-VZk"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" red="0.39215686274509803" green="0.39215686274509803" blue="0.39215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Robina, QLD" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zx2-M8-Zsj">
-                                        <rect key="frame" x="380" y="661" width="200" height="21"/>
+                                        <rect key="frame" x="370" y="661" width="200" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="KG9-Ef-ouR"/>
                                             <constraint firstAttribute="width" constant="200" id="pRF-kB-wdE"/>
@@ -2471,7 +2471,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Current Location" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Xl-N3-bl4">
-                                        <rect key="frame" x="380" y="636" width="200" height="21"/>
+                                        <rect key="frame" x="370" y="636" width="200" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="hm7-Xu-elk"/>
                                             <constraint firstAttribute="height" constant="21" id="jPT-ZC-G0c"/>
@@ -2969,6 +2969,9 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blackArrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="h1u-mN-6tP">
+                                        <rect key="frame" x="582" y="652" width="8" height="14"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IM2-ub-GMh">
                                         <rect key="frame" x="0.0" y="629" width="600" height="60"/>
                                         <constraints>
@@ -3026,7 +3029,7 @@
                                     <constraint firstItem="1h3-C0-T4I" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="20" id="DUD-E7-Z6u"/>
                                     <constraint firstAttribute="trailing" secondItem="IM2-ub-GMh" secondAttribute="trailing" id="Dcc-gu-1bZ"/>
                                     <constraint firstItem="wMz-2u-tz5" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="15" id="DfD-D9-5Tp"/>
-                                    <constraint firstAttribute="trailing" secondItem="6Xl-N3-bl4" secondAttribute="trailing" constant="20" id="E1T-Jz-Hxk"/>
+                                    <constraint firstAttribute="trailing" secondItem="6Xl-N3-bl4" secondAttribute="trailing" constant="30" id="E1T-Jz-Hxk"/>
                                     <constraint firstItem="NEz-ry-ztB" firstAttribute="top" secondItem="dJZ-F0-kAp" secondAttribute="bottom" constant="15" id="EMn-lu-7Nb"/>
                                     <constraint firstItem="G4X-uW-3RD" firstAttribute="top" secondItem="Eq8-Zo-Mjt" secondAttribute="bottom" constant="62" id="EQf-dg-747"/>
                                     <constraint firstItem="mBB-wy-gK4" firstAttribute="top" secondItem="lZy-Km-XYC" secondAttribute="bottom" constant="15" id="EWR-qg-QGH"/>
@@ -3045,7 +3048,7 @@
                                     <constraint firstItem="IM2-ub-GMh" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" id="JDg-eo-tQc"/>
                                     <constraint firstItem="0pk-Jz-1bM" firstAttribute="centerX" secondItem="kgt-Xs-tI1" secondAttribute="centerX" constant="40" id="JWh-4p-OCS"/>
                                     <constraint firstItem="qhc-6L-oSb" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="20" id="Jbs-wq-x7H"/>
-                                    <constraint firstAttribute="trailing" secondItem="Zx2-M8-Zsj" secondAttribute="trailing" constant="20" id="KRI-3w-4Xy"/>
+                                    <constraint firstAttribute="trailing" secondItem="Zx2-M8-Zsj" secondAttribute="trailing" constant="30" id="KRI-3w-4Xy"/>
                                     <constraint firstItem="shi-Km-ND0" firstAttribute="top" secondItem="ZeK-za-ovn" secondAttribute="bottom" constant="15" id="KRM-jt-1fx"/>
                                     <constraint firstItem="YlS-l5-z0G" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="15" id="KSj-Xo-5bb"/>
                                     <constraint firstAttribute="trailing" secondItem="ie2-5P-BFV" secondAttribute="trailing" constant="15" id="Kif-eE-E4v"/>
@@ -3066,6 +3069,7 @@
                                     <constraint firstItem="ryb-ge-pRi" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="20" id="TB0-Bw-Wcz"/>
                                     <constraint firstItem="yko-uh-b4R" firstAttribute="top" secondItem="BKq-Yx-tes" secondAttribute="bottom" constant="20" id="Td3-XS-aIj"/>
                                     <constraint firstItem="Nnh-5U-KCC" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" id="TqI-vY-T06"/>
+                                    <constraint firstItem="h1u-mN-6tP" firstAttribute="top" secondItem="Az7-TW-25h" secondAttribute="bottom" constant="20" id="Tub-0p-hct"/>
                                     <constraint firstItem="edH-Bw-AvI" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="15" id="UvI-3b-3mi"/>
                                     <constraint firstItem="Dih-GP-dDL" firstAttribute="top" secondItem="Ni7-df-uqI" secondAttribute="bottom" constant="14.5" id="UyI-di-2Ch"/>
                                     <constraint firstItem="qhc-6L-oSb" firstAttribute="top" secondItem="vdo-3R-NCM" secondAttribute="bottom" constant="10" id="Vhn-RI-fWo"/>
@@ -3118,6 +3122,7 @@
                                     <constraint firstItem="dJZ-F0-kAp" firstAttribute="top" secondItem="25w-g1-XC7" secondAttribute="bottom" constant="15" id="nk9-4V-ZXc"/>
                                     <constraint firstAttribute="trailing" secondItem="ZeK-za-ovn" secondAttribute="trailing" constant="15" id="oRG-FU-DvN"/>
                                     <constraint firstItem="IXz-ac-GRi" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="20" id="oZY-Yn-AJy"/>
+                                    <constraint firstAttribute="trailing" secondItem="h1u-mN-6tP" secondAttribute="trailing" constant="10" id="oha-J2-Wrf"/>
                                     <constraint firstAttribute="trailing" secondItem="25w-g1-XC7" secondAttribute="trailing" constant="15" id="oqQ-PG-ywW"/>
                                     <constraint firstItem="BKq-Yx-tes" firstAttribute="leading" secondItem="kgt-Xs-tI1" secondAttribute="leading" constant="15" id="oxM-fA-bFf"/>
                                     <constraint firstAttribute="trailing" secondItem="T7B-EY-dIN" secondAttribute="trailing" constant="15" id="oyj-xc-b27"/>
@@ -3168,6 +3173,7 @@
                         <outlet property="achivementContentTF" destination="bSh-G1-HOC" id="Abo-Bc-oVr"/>
                         <outlet property="achivementContentTFDT" destination="vPh-Fi-wcc" id="R2K-Zz-hN3"/>
                         <outlet property="achivementLB" destination="g6O-FD-qxV" id="CMC-5W-hty"/>
+                        <outlet property="arrow" destination="h1u-mN-6tP" id="UCC-pC-PSV"/>
                         <outlet property="avatarIMW" destination="Eq8-Zo-Mjt" id="MDb-93-r5z"/>
                         <outlet property="changeAvatarIMW" destination="0pk-Jz-1bM" id="4U6-V2-8Ah"/>
                         <outlet property="choseAsManyLB" destination="vX0-hD-gnr" id="4du-up-edv"/>
@@ -3191,6 +3197,7 @@
                         <outlet property="heightTF" destination="ie2-5P-BFV" id="e71-fK-kv6"/>
                         <outlet property="instagramLB" destination="AgT-nX-eXL" id="ebN-9f-vWu"/>
                         <outlet property="instagramUrlTF" destination="RUJ-tx-Z5d" id="2C9-ob-3bb"/>
+                        <outlet property="locationLB" destination="wMz-2u-tz5" id="ZfE-KY-oQ9"/>
                         <outlet property="locationName" destination="Zx2-M8-Zsj" id="FfU-hE-eoM"/>
                         <outlet property="mobileContentTF" destination="MB6-HJ-nHM" id="154-AQ-s8X"/>
                         <outlet property="mobileLB" destination="FLB-2M-ZKK" id="Rhb-Sc-prR"/>
@@ -3220,6 +3227,7 @@
     </scenes>
     <resources>
         <image name="add.png" width="13" height="13"/>
+        <image name="blackArrow.png" width="8" height="14"/>
         <image name="display-empty.jpg" width="256" height="256"/>
         <image name="edit.png" width="19" height="18"/>
         <image name="pinGray.png" width="5" height="9"/>
