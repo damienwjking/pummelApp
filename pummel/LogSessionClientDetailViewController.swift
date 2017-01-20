@@ -323,6 +323,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                     userIdSelected = "\(val)"
                 }
                 prefix = kPMAPICOACH
+                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
                 prefix.appendContentsOf(kPM_PATH_LOG_ACTIVITIES_COACH)
             } else {
                 prefix.appendContentsOf(kPM_PATH_LOG_ACTIVITIES_USER)
