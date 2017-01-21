@@ -200,7 +200,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         let tap = UITapGestureRecognizer(target: self, action: #selector(EditCoachProfileViewController.didTapView))
         self.tapView.addGestureRecognizer(tap)
         
-        self.title = "Coach Profile"
+        self.title = "COACH PROFILE"
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -230,7 +230,6 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         let location = locations.last! as CLLocation
-        
         let geoCoder = CLGeocoder()
         geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
             // Place details
@@ -240,8 +239,10 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                 // City
                 var city = "..."
                 if ((placeMark.administrativeArea) != nil) {
-                    if placeMark.subAdministrativeArea != nil {
-                        city = "\(placeMark.subAdministrativeArea!),\(placeMark.administrativeArea!)"
+                    if placeMark.locality != nil {
+                        city = "\(placeMark.locality!), \(placeMark.administrativeArea!)"
+                    } else if placeMark.subAdministrativeArea != nil {
+                        city = "\(placeMark.subAdministrativeArea!), \(placeMark.administrativeArea!)"
                     } else {
                         city = placeMark.administrativeArea!
                     }
