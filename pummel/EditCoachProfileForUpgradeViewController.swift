@@ -200,6 +200,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         let tap = UITapGestureRecognizer(target: self, action: #selector(EditCoachProfileViewController.didTapView))
         self.tapView.addGestureRecognizer(tap)
         
+
         self.title = "COACH PROFILE"
         
         locationManager = CLLocationManager()
@@ -522,7 +523,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
             self.aboutContentDT.constant = sizeAboutTV.height + 20
             self.genderContentTF.text = self.userInfo[kGender] as? String
             self.emailContentTF.text = self.userInfo[kEmail] as? String
-            if !(self.userInfo[kMobile] is NSNull) {
+            if !(self.userInfo[kDob] is NSNull) {
                 let stringDob = self.userInfo[kDob] as! String
                 self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
 

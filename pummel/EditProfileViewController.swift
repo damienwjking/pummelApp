@@ -401,7 +401,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             let heightString = heightContentTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
             
             let param =
-                [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                (dobContentTF.text! == "") ? [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
                  kFirstname:firstname,
                  kLastName: lastname,
                  kMobile: mobileContentTF.text!,
@@ -414,7 +414,22 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                  kTwitterUrl:twitterUrlTF.text!,
                  kInstagramUrl:instagramUrlTF.text!,
                  kEmergencyName:emergencyNameTF.text!,
-                 kEmergencyMobile:emergencyMobileTF.text!]
+                 kEmergencyMobile:emergencyMobileTF.text!] :
+                   
+                    [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                     kFirstname:firstname,
+                     kLastName: lastname,
+                     kMobile: mobileContentTF.text!,
+                     kGender:(genderContentTF.text?.uppercaseString)!,
+                     kBio: aboutContentTV.text,
+                     kWeight: weightString,
+                     kHeight: heightString,
+                     kFacebookUrl:facebookUrlTF.text!,
+                     kTwitterUrl:twitterUrlTF.text!,
+                     kInstagramUrl:instagramUrlTF.text!,
+                     kEmergencyName:emergencyNameTF.text!,
+                     kEmergencyMobile:emergencyMobileTF.text!]
+            
             
             // update weight height
             Alamofire.request(.PUT, prefix, parameters: param)
@@ -834,7 +849,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     func checkDateChanged(testStr:String) -> Bool {
         if (testStr == "") {
-            return false
+            return true
         } else {
             let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "YYYY-mm-dd"

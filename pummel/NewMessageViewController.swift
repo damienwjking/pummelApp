@@ -123,7 +123,9 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let user = arrayListUser[indexPath.row]
             var name = user.objectForKey(kFirstname) as! String
             name.appendContentsOf(" ")
-            name.appendContentsOf(user.objectForKey(kLastName) as! String)
+            if !(user.objectForKey(kLastName) is NSNull) {
+                name.appendContentsOf(user.objectForKey(kLastName) as! String)
+            }
             cell.nameLB.text = name.uppercaseString
             let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
             var prefix = kPMAPIUSER
