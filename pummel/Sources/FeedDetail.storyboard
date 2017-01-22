@@ -39,6 +39,20 @@
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ayk-es-TQf">
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                             </imageView>
+                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sqZ-1t-0IJ">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yVF-Ij-aHK">
+                                                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="yVF-Ij-aHK" firstAttribute="top" secondItem="sqZ-1t-0IJ" secondAttribute="top" id="8WM-dg-OsK"/>
+                                                    <constraint firstAttribute="trailing" secondItem="yVF-Ij-aHK" secondAttribute="trailing" id="Afm-iU-2RG"/>
+                                                    <constraint firstItem="yVF-Ij-aHK" firstAttribute="leading" secondItem="sqZ-1t-0IJ" secondAttribute="leading" id="SDc-UI-8HL"/>
+                                                    <constraint firstAttribute="bottom" secondItem="yVF-Ij-aHK" secondAttribute="bottom" id="WKE-nj-14b"/>
+                                                </constraints>
+                                            </scrollView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mD5-8F-oST">
                                                 <rect key="frame" x="276" y="281" width="48" height="38"/>
                                                 <constraints>
@@ -56,10 +70,16 @@
                                             <constraint firstItem="mD5-8F-oST" firstAttribute="centerX" secondItem="fQv-qO-uku" secondAttribute="centerX" id="05P-Zf-evU"/>
                                             <constraint firstAttribute="bottom" secondItem="Ayk-es-TQf" secondAttribute="bottom" id="4Ap-A9-3KM"/>
                                             <constraint firstAttribute="width" secondItem="fQv-qO-uku" secondAttribute="height" multiplier="1:1" id="4k6-Uk-ANp"/>
+                                            <constraint firstAttribute="bottom" secondItem="sqZ-1t-0IJ" secondAttribute="bottom" id="5EF-Yt-fa4"/>
                                             <constraint firstItem="Ayk-es-TQf" firstAttribute="top" secondItem="fQv-qO-uku" secondAttribute="top" id="5OL-T5-bNf"/>
                                             <constraint firstAttribute="trailing" secondItem="Ayk-es-TQf" secondAttribute="trailing" id="Leu-pd-y9u"/>
                                             <constraint firstItem="Ayk-es-TQf" firstAttribute="leading" secondItem="fQv-qO-uku" secondAttribute="leading" id="WQU-Jj-wiT"/>
+                                            <constraint firstItem="yVF-Ij-aHK" firstAttribute="width" secondItem="fQv-qO-uku" secondAttribute="width" id="Zd4-3u-4Tg"/>
+                                            <constraint firstItem="sqZ-1t-0IJ" firstAttribute="top" secondItem="fQv-qO-uku" secondAttribute="top" id="ayh-0f-E3c"/>
+                                            <constraint firstAttribute="trailing" secondItem="sqZ-1t-0IJ" secondAttribute="trailing" id="feL-ja-qDh"/>
                                             <constraint firstItem="mD5-8F-oST" firstAttribute="centerY" secondItem="fQv-qO-uku" secondAttribute="centerY" id="j46-Ya-qo8"/>
+                                            <constraint firstItem="sqZ-1t-0IJ" firstAttribute="leading" secondItem="fQv-qO-uku" secondAttribute="leading" id="vpr-ic-JFi"/>
+                                            <constraint firstItem="yVF-Ij-aHK" firstAttribute="height" secondItem="fQv-qO-uku" secondAttribute="height" id="zzT-Zm-acf"/>
                                         </constraints>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="mJa-F9-rdg">
@@ -119,12 +139,13 @@
                     <connections>
                         <outlet property="avatarIMV" destination="hgo-Pu-xmo" id="Jcl-nc-h7N"/>
                         <outlet property="commentPhotoTV" destination="mJa-F9-rdg" id="vew-Bh-qXq"/>
+                        <outlet property="imageScrolView" destination="sqZ-1t-0IJ" id="P5T-LW-dDZ"/>
                         <outlet property="imageSelected" destination="Ayk-es-TQf" id="xft-zU-ezr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U2m-Jm-gKe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1598" y="-425"/>
+            <point key="canvasLocation" x="2048" y="-425"/>
         </scene>
         <!--Feed View Controller-->
         <scene sceneID="KMq-jE-R9o">
@@ -431,7 +452,7 @@
                                         </constraints>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="MKb-r3-Z0L" customClass="RSKGrowingTextView" customModule="RSKGrowingTextView">
-                                        <rect key="frame" x="33" y="18" width="411" height="33"/>
+                                        <rect key="frame" x="33" y="18" width="471" height="33"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="33" id="4o1-M1-UHg"/>
@@ -450,7 +471,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </textView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2E-EX-DaY">
-                                        <rect key="frame" x="522" y="0.0" width="70" height="70"/>
+                                        <rect key="frame" x="552" y="15" width="40" height="40"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="BG8-9x-KH6"/>
@@ -472,7 +493,7 @@
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EO0-m0-Nnp">
-                                        <rect key="frame" x="452" y="0.0" width="70" height="70"/>
+                                        <rect key="frame" x="512" y="15" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="TAI-Qp-4U4"/>
                                             <constraint firstAttribute="width" constant="40" id="hJG-gq-Dnb"/>
@@ -537,6 +558,6 @@
         <image name="context.png" width="31" height="31"/>
         <image name="display-empty.jpg" width="256" height="256"/>
         <image name="likeSml.png" width="13" height="12"/>
-        <image name="send.png" width="24" height="24"/>
+        <image name="send.png" width="30" height="30"/>
     </resources>
 </document>

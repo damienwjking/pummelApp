@@ -14,6 +14,8 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     @IBOutlet var avatarIMV : UIImageView!
     @IBOutlet var commentPhotoTV : UITextView!
     @IBOutlet var imageSelected : UIImageView?
+    @IBOutlet weak var imageScrolView : UIScrollView!
+    
     var otherKeyboardView: UIView!
     var viewKeyboard: UIView!
     
@@ -21,6 +23,8 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     var isPosting: Bool = false
     let imagePicker = UIImagePickerController()
     var isComment : Bool = false
+    
+    var selectFromLibrary : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +48,12 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
         self.navigationItem.hidesBackButton = true;
         
         imagePicker.delegate = self
+        
+        imageScrolView.delegate = self
+        imageScrolView.minimumZoomScale = 1
+        imageScrolView.maximumZoomScale = 4.0
+        imageScrolView.zoomScale = 1.0
+        imageScrolView.autoresizingMask = [.FlexibleHeight , .FlexibleWidth]
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -146,7 +156,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
             var imageData : NSData!
             let type : String!
             let filename : String!
-            imageData = UIImageJPEGRepresentation(imageSelected!.image!, 0.2)
+            imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
             type = imageJpeg
             filename = jpgeFile
             let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
@@ -218,6 +228,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     
     @IBAction func showPopupToSelectImage(sender:UIButton!) {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
+            self.selectFromLibrary = true
             self.imagePicker.allowsEditing = false
             self.imagePicker.sourceType = .PhotoLibrary
             self.presentViewController(self.imagePicker, animated: true, completion: nil)
@@ -253,6 +264,34 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     // Fusuma delegate
     func fusumaImageSelected(image: UIImage) {
         self.imageSelected!.image = image
+        if (self.selectFromLibrary == true) {
+            self.imageScrolView.hidden = true
+            self.imageSelected?.hidden = false
+        } else {
+            for(subview) in self.imageScrolView.subviews {
+                subview.removeFromSuperview()
+            }
+            let height =  self.view.frame.size.width*image.size.height/image.size.width
+            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let imageViewScrollView = UIImageView.init(frame: frameT)
+            imageViewScrollView.image = image
+            self.imageScrolView.addSubview(imageViewScrollView)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
+            self.imageSelected?.hidden = true
+            self.imageScrolView?.hidden = false
+        }
+    }
+    
+    func cropAndSave() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        let offset = imageScrolView.contentOffset
+        
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
+        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        return image!
     }
     
     func fusumaCameraRollUnauthorized() {
@@ -305,8 +344,19 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            for(subview) in self.imageScrolView.subviews {
+                subview.removeFromSuperview()
+            }
+            self.imageSelected!.image = pickedImage
+            let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
+            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let imageViewScrollView = UIImageView.init(frame: frameT)
+            imageViewScrollView.image = pickedImage
+            self.imageScrolView.addSubview(imageViewScrollView)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
             
-            self.imageSelected?.image = pickedImage
+            self.imageSelected?.hidden = true
+            self.imageScrolView?.hidden = false
         }
         dismissViewControllerAnimated(true, completion: nil)
     }
