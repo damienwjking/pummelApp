@@ -476,8 +476,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             self.showCameraRoll()
         }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Default, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Default, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }

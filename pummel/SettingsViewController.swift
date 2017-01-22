@@ -32,6 +32,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     var mapState = ""
     var mapCity = ""
+    var distanceSliderValue : CGFloat = 0.0
     
     let defaults = NSUserDefaults.standardUserDefaults()
     var location: Location? {
@@ -118,15 +119,12 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func done() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            let indexpath = NSIndexPath(forRow: 4, inSection: 0)
-            let cellDistance = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingMaxDistanceTableViewCell
-            
             var prefix = kPMAPICOACH
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             self.view.makeToastActivity(message: "Saving")
             
             let param = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-                         kDistance: cellDistance.slider.value,
+                         kDistance: self.distanceSliderValue,
                          kState: self.mapState,
                          kCity: self.mapCity]
             Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
@@ -207,7 +205,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 return cellHeight50
             case 0, 1, 2, 3, 5, 8, 14:
                 return cellHeight60
-            case 11, 12, 16:
+            case 10, 12, 16:
                 return cellHeight10
             default:
                 return cellHeight30
@@ -349,6 +347,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 return cell
             case 3:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+                cell.selectionStyle = .None
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
                 cell.helpAndSupportLB.text = kVerifiedFitnessProfessional
@@ -484,7 +483,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
             case 17:
                 self.openTerms()
             case 19:
-                self.logOut()
+                self.showMsgConfirmLogout()
             default: break
             }
         }
@@ -529,9 +528,11 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     distance.appendContentsOf(" kms")
                     cell.maxDistanceContentLB.text = distance
                     cell.slider.value = userDetailFull[kDistance] as! Float
+                    self.distanceSliderValue = userDetailFull[kDistance] as! CGFloat
                 } else {
-                     cell.maxDistanceContentLB.text = k25kms
-                     cell.slider.value = 25
+                    cell.maxDistanceContentLB.text = k25kms
+                    self.distanceSliderValue = 25.0
+                    cell.slider.value = 25.0
                 }
                 cell.slider.addTarget(self, action:#selector(SettingsViewController.sliderValueDidChange), forControlEvents: .ValueChanged)
                 
@@ -549,6 +550,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
             var value = String(format:"%0.f", sender.value)
             value.appendContentsOf(" kms")
             cellDistance.maxDistanceContentLB.text = value
+            self.distanceSliderValue = sender.value as! CGFloat
         }
     }
     

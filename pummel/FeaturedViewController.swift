@@ -341,7 +341,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: KReport, style: UIAlertActionStyle.Destructive, handler: selectReport))
         alertController.addAction(UIAlertAction(title: kShare, style: UIAlertActionStyle.Destructive, handler: share))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: selectCancle))
         

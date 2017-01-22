@@ -43,6 +43,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         self.avatarIMV.clipsToBounds = true
         self.setAvatar()
         self.commentPhotoTV.text = addAComment
+        self.commentPhotoTV.font = UIFont.pmmMonReg13()
         self.commentPhotoTV.keyboardAppearance = .Dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
@@ -244,8 +245,8 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Default, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Default, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }

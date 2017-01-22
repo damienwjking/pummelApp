@@ -446,7 +446,11 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                 
                 let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
                 self.aboutTVHeightDT.constant = sizeAboutTV.height
-                self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+                if (self.aboutTV.text.isEmpty == true) {
+                    self.aboutHeightDT.constant = 0;
+                } else {
+                    self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+                }
                 
                 self.qualificationDT.constant = 0
                 if !(coachInformationTotal[kQualification] is NSNull) {
@@ -589,8 +593,11 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         
         let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
         self.aboutTVHeightDT.constant = sizeAboutTV.height
-        self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
-        
+        if (self.aboutTV.text.isEmpty == true) {
+            self.aboutHeightDT.constant = 0;
+        } else {
+            self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+        }
         
         self.qualificationTV.text = " "
         self.qualificationDT.constant = 0

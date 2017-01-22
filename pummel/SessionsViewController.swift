@@ -661,8 +661,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             }
             
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-            alertController.addAction(UIAlertAction(title: kAddToIphoneContact, style: UIAlertActionStyle.Default, handler: addToIphoneContact))
-            alertController.addAction(UIAlertAction(title: kSetToCurrentCustomer, style: UIAlertActionStyle.Default, handler: setAsCurrentUserUnderTrained))
+            alertController.addAction(UIAlertAction(title: kAddToIphoneContact, style: UIAlertActionStyle.Destructive, handler: addToIphoneContact))
+            alertController.addAction(UIAlertAction(title: kSetToCurrentCustomer, style: UIAlertActionStyle.Destructive, handler: setAsCurrentUserUnderTrained))
             alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
             
             self.presentViewController(alertController, animated: true) { }

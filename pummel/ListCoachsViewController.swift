@@ -119,7 +119,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         }
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Move to Old", style: UIAlertActionStyle.Default, handler: clickMoveToOld))
+        alertController.addAction(UIAlertAction(title: "Move to Old", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
@@ -148,7 +148,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Move to Current", style: UIAlertActionStyle.Default, handler: clickMoveToCurrent))
+        alertController.addAction(UIAlertAction(title: "Move to Current", style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }

@@ -22,32 +22,32 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cdx-Is-S0P">
-                                <rect key="frame" x="37.5" y="144.5" width="300" height="322"/>
+                                <rect key="frame" x="37.5" y="136.5" width="300" height="330"/>
                                 <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardEmpty.png" translatesAutoresizingMaskIntoConstraints="NO" id="Pe1-ue-SAX">
+                                        <rect key="frame" x="67.5" y="0.0" width="165" height="160"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sQF-5a-42b">
                                         <rect key="frame" x="67.5" y="0.0" width="165" height="160"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="160" id="9rc-rd-VII"/>
                                             <constraint firstAttribute="width" constant="165" id="OQi-XN-kN0"/>
                                         </constraints>
-                                        <state key="normal" image="cardEmpty.png"/>
                                         <connections>
                                             <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="odJ-wo-GMz"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
-                                        <rect key="frame" x="-8.5" y="180" width="317.5" height="42"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sorry we couldn't find any experts nearby" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ix-Oz7">
+                                        <rect key="frame" x="-8.5" y="180" width="317.5" height="50"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="42" id="ZFY-6e-3RX"/>
+                                            <constraint firstAttribute="height" constant="50" id="ZFY-6e-3RX"/>
                                         </constraints>
-                                        <string key="text">Sorry we couldn't find any experts nearby
-</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine your search by selecting different tags, location or gender." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBM-8q-Zjj">
-                                        <rect key="frame" x="0.0" y="232" width="300" height="42"/>
+                                        <rect key="frame" x="0.0" y="240" width="300" height="42"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="42" id="AMP-Hg-Ngr"/>
                                         </constraints>
@@ -63,9 +63,13 @@
                                     <constraint firstItem="6fy-ix-Oz7" firstAttribute="centerX" secondItem="cdx-Is-S0P" secondAttribute="centerX" id="6Dl-6v-Qqx"/>
                                     <constraint firstAttribute="width" constant="300" id="CPH-lk-vMA"/>
                                     <constraint firstItem="sQF-5a-42b" firstAttribute="centerX" secondItem="cdx-Is-S0P" secondAttribute="centerX" id="CRB-Fy-CqG"/>
+                                    <constraint firstItem="Pe1-ue-SAX" firstAttribute="centerX" secondItem="sQF-5a-42b" secondAttribute="centerX" id="D3e-K7-BgT"/>
+                                    <constraint firstItem="Pe1-ue-SAX" firstAttribute="centerY" secondItem="sQF-5a-42b" secondAttribute="centerY" id="Wo2-pH-kra"/>
                                     <constraint firstItem="sQF-5a-42b" firstAttribute="top" secondItem="cdx-Is-S0P" secondAttribute="top" id="ZLd-kF-UnA"/>
                                     <constraint firstItem="SBM-8q-Zjj" firstAttribute="top" secondItem="6fy-ix-Oz7" secondAttribute="bottom" constant="10" id="cPs-AS-13Q"/>
                                     <constraint firstItem="SBM-8q-Zjj" firstAttribute="width" secondItem="cdx-Is-S0P" secondAttribute="width" id="gid-EP-dYc"/>
+                                    <constraint firstItem="Pe1-ue-SAX" firstAttribute="width" secondItem="sQF-5a-42b" secondAttribute="width" id="kaD-ZH-qD8"/>
+                                    <constraint firstItem="Pe1-ue-SAX" firstAttribute="height" secondItem="sQF-5a-42b" secondAttribute="height" id="waG-6H-xJz"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WNF-6o-ajD">
@@ -84,7 +88,7 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="cdx-Is-S0P" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="DG0-bi-YKa"/>
-                            <constraint firstItem="cdx-Is-S0P" firstAttribute="centerY" secondItem="6nh-WZ-7Pc" secondAttribute="centerY" constant="-28" id="Mqo-7P-sZb"/>
+                            <constraint firstItem="cdx-Is-S0P" firstAttribute="centerY" secondItem="6nh-WZ-7Pc" secondAttribute="centerY" constant="-32" id="Mqo-7P-sZb"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="bottom" secondItem="cdx-Is-S0P" secondAttribute="bottom" id="PsW-Rh-Ukq"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="centerX" secondItem="cdx-Is-S0P" secondAttribute="centerX" id="lVE-aU-ARC"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="top" secondItem="SBM-8q-Zjj" secondAttribute="bottom" constant="18" id="yAN-9I-Wbk"/>
