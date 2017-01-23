@@ -769,15 +769,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
                                                                attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
         }
-        if !(self.checkDateChanged(dobContentTF.text!)) {
-            returnValue = true
-            dobContentTF.attributedText = NSAttributedString(string:dobContentTF.text!,
-                                                               attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-        } else {
-            dobContentTF.attributedText = NSAttributedString(string:dobContentTF.text!,
-                                                               attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
-        }
-        
+               
         // check number weight height
         let weightString = self.weightContentTF.text!.stringByReplacingOccurrencesOfString(" kgs", withString: "")
         if !(self.isNumber(weightString)) {
