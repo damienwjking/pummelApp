@@ -469,15 +469,15 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     
     func keyboardWillShow(notification: NSNotification) {
         
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()) != nil {
             if ( self.view.frame.origin.y == 0) {
                 let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
                 let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
                 let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
                 if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 667.0) {
-                    self.view.frame.origin.y -= keyboardSize.height - 10
+                    self.view.frame.origin.y = 10
                 } else {
-                    self.view.frame.origin.y -= keyboardSize.height
+                    self.view.frame.origin.y = 0
                 }
             }
         }

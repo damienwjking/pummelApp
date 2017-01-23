@@ -233,6 +233,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                         self.isLoadingMessage = false
                         self.isStopLoadMessage = true
                     }
+                    self.view.bringSubviewToFront(self.noMessageV)
                 case .Failure(let error):
                     self.offset -= 10
                     self.isLoadingMessage = false

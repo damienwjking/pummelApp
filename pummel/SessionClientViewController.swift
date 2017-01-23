@@ -10,8 +10,9 @@ import UIKit
 import Foundation
 import Alamofire
 import AlamofireImage
+import EventKit
 
-class SessionClientViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+class SessionClientViewController: BaseViewController, LogCellDelegate, UITableViewDelegate, UITableViewDataSource{
 
     
     @IBOutlet weak var selectSegment: UISegmentedControl!
@@ -212,12 +213,14 @@ class SessionClientViewController: BaseViewController, UITableViewDelegate, UITa
         
         let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
         
-        cell.setData(session, hiddenRateButton: self.isUpComing)
+        cell.setData(session, hiddenRateButton: self.isUpComing, hiddenCalendarButton: false)
         
         let totalSession = self.upCommingSessions.count + self.completedSessions.count
         if indexPath.row == totalSession - 1{
             self.getListSession()
         }
+        
+        cell.logCellDelegate = self
 
         return cell
     }
@@ -270,6 +273,51 @@ class SessionClientViewController: BaseViewController, UITableViewDelegate, UITa
     func logButtonClicked() {
         print("log clicked")
         self.performSegueWithIdentifier("userLogASession", sender: nil)
+    }
+    
+    // MARK: LogCellDelegate
+    func LogCellClickAddCalendar(cell: LogTableViewCell) {
+        var session = Session()
+        let indexPath = self.sessionTableView.indexPathForCell(cell)
+        if self.isUpComing {
+            session = self.upCommingSessions[indexPath!.row]
+        } else {
+            session = self.completedSessions[indexPath!.row]
+        }
+        
+        let eventStore : EKEventStore = EKEventStore()
+        
+        // 'EKEntityTypeReminder' or 'EKEntityTypeEvent'
+        
+        eventStore.requestAccessToEntityType(.Event, completion: {
+            (granted, error) in
+            
+            if (granted) && (error == nil) {
+                let event:EKEvent = EKEvent(eventStore: eventStore)
+                
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = kFullDateFormat
+                dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+                let startDate = dateFormatter.dateFromString(session.datetime!)
+                
+                let longTime = session.longtime! > 0 ? session.longtime! : 1
+                let calendar = NSCalendar.currentCalendar()
+                let endDate = calendar.dateByAddingUnit(.Minute, value: longTime, toDate: startDate!, options: [])
+                
+                
+                event.title = session.type!
+                event.startDate = startDate!
+                event.endDate = endDate!
+                event.notes = session.text!
+                event.calendar = eventStore.defaultCalendarForNewEvents
+                
+                do {
+                    try eventStore.saveEvent(event, span: .FutureEvents, commit: true)
+                } catch {
+                    
+                }
+            } 
+        })
     }
     
     // MARK: Segue

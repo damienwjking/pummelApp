@@ -231,6 +231,7 @@ let kSharePummel = "SHARE PUMMEL"
 let kLegal = "LEGAL"
 let kPrivacy = "PRIVACY POLICY"
 let kTermOfService = "TERMS OF SERVICE"
+let kChangePassword = "CHANGE PASSWORD"
 let kUnit = "UNIT"
 
 // Navigation 

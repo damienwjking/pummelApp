@@ -37,6 +37,8 @@ class ConnectViewController: BaseViewController {
     var coachDetail: NSDictionary!
     var isFromProfile: Bool = false
     var isFromFeed: Bool = false
+    var isConnected = false
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
@@ -146,6 +148,22 @@ class ConnectViewController: BaseViewController {
                     self.youAvatarIMV.image = imageRes
             }
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.view.hidden = true
+        
+        if self.isConnected {
+            self.sendUsAMessage(self.sendMessageBT)
+        } else {
+            self.view.hidden = false
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
     }
 
     override func didReceiveMemoryWarning() {

@@ -10,6 +10,9 @@ import UIKit
 import Alamofire
 import Foundation
 
+@objc protocol LogCellDelegate: class {
+    optional func LogCellClickAddCalendar(cell: LogTableViewCell)
+}
 
 class LogTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarIMV: UIImageView!
@@ -17,8 +20,12 @@ class LogTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var dateLB: UILabel!
     @IBOutlet weak var rateBT: UIButton!
+    @IBOutlet weak var rateBTTopConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var addCalendarBT: UIButton!
     @IBOutlet weak var typeLB: UILabel!
+    
+    weak var logCellDelegate: LogCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,19 +34,25 @@ class LogTableViewCell: UITableViewCell {
         self.dateLB.numberOfLines = 2
         
         self.rateBT.layer.cornerRadius = 2;
+        self.addCalendarBT.layer.cornerRadius = 2;
         
         self.textLB.font = .pmmMonLight13()
         self.dateLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
         self.typeLB.font = .pmmMonReg13()
         self.rateBT.titleLabel!.font = .pmmMonReg10()
+        self.addCalendarBT.titleLabel!.font = .pmmMonReg10()
     }
     
     @IBAction func rateButtonClicked(sender: AnyObject) {
-        
+     
     }
     
-    func setData(session: Session, hiddenRateButton: Bool) {
+    @IBAction func createCalendar(sender: AnyObject) {
+        self.logCellDelegate?.LogCellClickAddCalendar!(self)
+    }
+    
+    func setData(session: Session, hiddenRateButton: Bool, hiddenCalendarButton: Bool) {
         self.textLB.text = session.text
         
         if session.datetime?.isEmpty == false {
@@ -52,6 +65,11 @@ class LogTableViewCell: UITableViewCell {
         }
         
         self.rateBT.hidden = hiddenRateButton
+        if hiddenRateButton {
+            self.rateBTTopConstraint.constant = -(self.rateBT.frame.size.height)
+        } else {
+            self.rateBTTopConstraint.constant = 12
+        }
         
         self.typeLB.text = session.type
         
@@ -130,4 +148,5 @@ class LogTableViewCell: UITableViewCell {
         
         return newDateString
     }
+    
 }

@@ -92,6 +92,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     var arrayPhotos: NSArray = []
     var isFromFeed: Bool = false
     var isFromListCoaches: Bool = false
+    var isConnected = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -470,9 +471,12 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             kCoachId : coachDetail[kId]!
         ]
         
+        self.connectBT.userInteractionEnabled = false
+        
         Alamofire.request(.POST, prefix, parameters: param)
             .responseString(completionHandler: { (Response) in
                 self.view.hideToastActivity()
+                self.connectBT.userInteractionEnabled = true
                 
                 switch (Response.result) {
                 case .Success(let resultValue) :
@@ -482,7 +486,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                         if (resultString == "Connected") {
                             self.connectBT.setImage(UIImage(named: "connected"), forState: .Normal)
                             self.connectV.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
-                            self.connectBT.userInteractionEnabled = false
+                            self.isConnected = true
                             
                         } else if (resultString == "Not yet") {
                             self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
@@ -550,6 +554,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             destimation.coachDetail = coachDetail
             destimation.isFromProfile = true
             destimation.isFromFeed = false
+            destimation.isConnected = self.isConnected
         }
     }
 
@@ -719,7 +724,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 
             } else {
                 //redirect to safari because the user doesn't have Instagram
-                UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!)
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!) 
             }
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
