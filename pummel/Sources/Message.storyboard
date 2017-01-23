@@ -106,8 +106,8 @@
                                                     <constraint firstAttribute="height" constant="160" id="NKh-vj-Wra"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get Connections With Your Coaches" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="S87-db-QjG">
-                                                <rect key="frame" x="11" y="180" width="278.5" height="50"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All your coach messages will appear here" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="S87-db-QjG">
+                                                <rect key="frame" x="0.5" y="180" width="300" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="izK-Eq-mQ1"/>
                                                 </constraints>
@@ -115,7 +115,7 @@
                                                 <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Let's message to find the best trainer or fitness expert for you." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5p-jh-FQs">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can also ask advice from any other Pummel fitness experts" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5p-jh-FQs">
                                                 <rect key="frame" x="0.0" y="240" width="300" height="42"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="42" id="NbY-21-IOt"/>
@@ -140,6 +140,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="PIX-KY-RFf" firstAttribute="centerX" secondItem="gtL-HL-Dbs" secondAttribute="centerX" id="6nK-fj-GFp"/>
+                                            <constraint firstItem="S87-db-QjG" firstAttribute="width" secondItem="gtL-HL-Dbs" secondAttribute="width" id="6og-eH-tST"/>
                                             <constraint firstItem="PIX-KY-RFf" firstAttribute="top" secondItem="gtL-HL-Dbs" secondAttribute="top" id="7D5-9F-2Hk"/>
                                             <constraint firstItem="S5p-jh-FQs" firstAttribute="top" secondItem="S87-db-QjG" secondAttribute="bottom" constant="10" id="GIh-bC-mNC"/>
                                             <constraint firstItem="S5p-jh-FQs" firstAttribute="centerX" secondItem="S87-db-QjG" secondAttribute="centerX" id="MGt-OJ-nen"/>

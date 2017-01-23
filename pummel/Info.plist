@@ -48,6 +48,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Pummel uses your calender to remind you</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Use came to take a pic as a profile</string>
 	<key>NSContactsUsageDescription</key>

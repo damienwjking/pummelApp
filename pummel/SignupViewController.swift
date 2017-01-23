@@ -87,24 +87,24 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         
         self.scrollViewHeightCT.constant = SCREEN_MAX_LENGTH
         if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            switch SCREEN_MAX_LENGTH {
-            case 736.0:
-                self.signinDistantCT.constant = 165.5
-                break
-                
-            case 667.0:
-                self.signinDistantCT.constant = 39.5
-                break
-                
-            case 568.0:
-                self.signinDistantCT.constant = 30
-                self.scrollViewHeightCT.constant = 320
-                break
-                
-            default:
-                self.signinDistantCT.constant = 186.0
-                break
-            }
+//            switch SCREEN_MAX_LENGTH {
+//            case 736.0:
+//                self.signinDistantCT.constant = 165.5
+//                break
+//                
+//            case 667.0:
+//                self.signinDistantCT.constant = 39.5
+//                break
+//                
+//            case 568.0:
+//                self.signinDistantCT.constant = 30
+//                self.scrollViewHeightCT.constant = 320
+//                break
+//                
+//            default:
+//                self.signinDistantCT.constant = 186.0
+//                break
+//            }
         }
     }
 

@@ -117,13 +117,19 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
             }
         }
         
+        let viewProfile = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+            
+        }
+        
         let clickShare = { (action:UIAlertAction!) -> Void in
             self.userIdSelected = userID
             self.tbView.reloadData()
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Move to Old", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
+        alertController.addAction(UIAlertAction(title: "Remove client", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
+        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfile))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
@@ -151,24 +157,34 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
             }
         }
         
-        let clickShare = { (action:UIAlertAction!) -> Void in
-            self.userIdSelected = userID
-            self.tbView.reloadData()
+        let viewProfile = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+            
         }
+        
+//        goUserProfile
+//        let clickShare = { (action:UIAlertAction!) -> Void in
+//            self.userIdSelected = userID
+//            self.tbView.reloadData()
+//        }
+
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Move to Current", style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
+        alertController.addAction(UIAlertAction(title: "Add to Clients", style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
+        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfile))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == kGoUserProfile {
+            let destination = segue.destinationViewController as! UserProfileViewController
+//            let feed = arrayFeeds[sender.tag]
+//            currentFeedDetail = feed[kUser] as! NSDictionary
+//            destination.userDetail = currentFeedDetail
+            destination.userId = String(format:"%0.f", sender!.doubleValue)
+        }
     }
-    */
 
 }

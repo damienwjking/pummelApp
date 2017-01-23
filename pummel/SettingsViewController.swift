@@ -26,8 +26,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     let cellHeight71 : CGFloat = 71
     let cellHeight100 : CGFloat = 100
     
-    let knumberOfRowCoach = 22
-    let knumberOfRowUser = 21
+    let knumberOfRowCoach = 24
+    let knumberOfRowUser = 23
     var userInfo: NSDictionary!
     
     var mapState = ""
@@ -39,6 +39,10 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
         didSet {
         }
     }
+    
+    var newLeadCell = SettingNewConnectionsTableViewCell()
+    var messageCell = SettingNewConnectionsTableViewCell()
+    var sessionCell = SettingNewConnectionsTableViewCell()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,27 +143,13 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     }
             }
             
-            let newLeadIndexPath = NSIndexPath(forRow: 6, inSection: 0)
-            let newLeadCell = self.settingTableView.cellForRowAtIndexPath(newLeadIndexPath) as! SettingNewConnectionsTableViewCell
-            
-            let messageIndexPath = NSIndexPath(forRow: 7, inSection: 0)
-            let messageCell = self.settingTableView.cellForRowAtIndexPath(messageIndexPath) as! SettingNewConnectionsTableViewCell
-            
-            let sessionIndexPath = NSIndexPath(forRow: 8, inSection: 0)
-            let sessionCell = self.settingTableView.cellForRowAtIndexPath(sessionIndexPath) as! SettingNewConnectionsTableViewCell
-            
-            self.defaults.setObject(newLeadCell.switchBT.on, forKey: kNewConnections)
-            self.defaults.setObject(messageCell.switchBT.on, forKey: kMessage)
-            self.defaults.setObject(sessionCell.switchBT.on, forKey: kSessions)
+            self.defaults.setObject(self.newLeadCell.switchBT.on, forKey: kNewConnections)
+            self.defaults.setObject(self.messageCell.switchBT.on, forKey: kMessage)
+            self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
         } else {
-            let messageIndexPath = NSIndexPath(forRow: 6, inSection: 0)
-            let messageCell = self.settingTableView.cellForRowAtIndexPath(messageIndexPath) as! SettingNewConnectionsTableViewCell
             
-            let sessionIndexPath = NSIndexPath(forRow: 7, inSection: 0)
-            let sessionCell = self.settingTableView.cellForRowAtIndexPath(sessionIndexPath) as! SettingNewConnectionsTableViewCell
-            
-            self.defaults.setObject(messageCell.switchBT.on, forKey: kMessage)
-            self.defaults.setObject(sessionCell.switchBT.on, forKey: kSessions)
+            self.defaults.setObject(self.messageCell.switchBT.on, forKey: kMessage)
+            self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
             
             self.navigationController?.popViewControllerAnimated(true)
         }
@@ -190,22 +180,22 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 return cellHeight71
             case 4:
                 return 100
-            case 0, 1, 5, 9, 15, 19:
+            case 0, 1, 5, 9, 15:
                 return cellHeight60
-            case 6, 7, 8, 10, 12, 14, 16, 18, 20, 21:
+            case 6, 7, 8, 10, 12, 14, 16, 18, 20, 21, 22, 23:
                 return cellHeight50
-            case 11, 13, 17:
+            case 11, 13, 17, 19:
                 return cellHeight10
             default:
                 return cellHeight30
             }
         } else {
             switch indexPath.row {
-            case 4, 6, 7, 9, 11, 13, 15, 17, 18, 19, 20:
+            case 4, 6, 7, 9, 11, 13, 15, 17, 19, 20, 21, 22, 23:
                 return cellHeight50
             case 0, 1, 2, 3, 5, 8, 14:
                 return cellHeight60
-            case 10, 12, 16:
+            case 10, 12, 16, 18:
                 return cellHeight10
             default:
                 return cellHeight30
@@ -256,18 +246,21 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kNewConnections.uppercaseString
                 cell.switchBT.on = self.defaults.objectForKey(kNewConnections) as! Bool
+                self.newLeadCell = cell
                 return cell
             case 7:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kMessage
                 cell.switchBT.on = self.defaults.objectForKey(kMessage) as! Bool
+                self.messageCell = cell
                 return cell
             case 8:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kSessions
                 cell.switchBT.on = self.defaults.objectForKey(kSessions) as! Bool
+                self.sessionCell = cell
                 return cell
             case 9:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
@@ -313,10 +306,16 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.helpAndSupportLB.text = kTermOfService
                 return cell
             case 20:
+                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+                cell.helpAndSupportLB.font = .pmmMonReg11()
+                cell.helpAndSupportLB.textColor = UIColor.blackColor()
+                cell.helpAndSupportLB.text = kChangePassword
+                return cell
+            case 22:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLogoutTableViewCell, forIndexPath: indexPath) as! SettingLogoutTableViewCell
                 cell.logoutLB.font = .pmmMonReg11()
                 return cell
-            case 21:
+            case 23:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
@@ -369,12 +368,14 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kMessage
                 cell.switchBT.on = self.defaults.objectForKey(kMessage) as! Bool
+                self.messageCell = cell
                 return cell
             case 7:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
                 cell.newConnectionsLB.font = .pmmMonReg11()
                 cell.newConnectionsLB.text = kSessions
                 cell.switchBT.on = self.defaults.objectForKey(kSessions) as! Bool
+                self.sessionCell = cell
                 return cell
             case 8:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
@@ -419,14 +420,17 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
                 cell.helpAndSupportLB.text = kTermOfService
                 return cell
-            case 18:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
-                return cell
             case 19:
+                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+                cell.helpAndSupportLB.font = .pmmMonReg11()
+                cell.helpAndSupportLB.textColor = UIColor.blackColor()
+                cell.helpAndSupportLB.text = kChangePassword
+                return cell
+            case 21:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLogoutTableViewCell, forIndexPath: indexPath) as! SettingLogoutTableViewCell
                 cell.logoutLB.font = .pmmMonReg11()
                 return cell
-            case 20:
+            case 22:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
                 cell.helpAndSupportLB.font = .pmmMonReg11()
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
@@ -462,7 +466,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.openPrivacy()
             case 18:
                 self.openTerms()
-            case 20:
+            case 22:
                 self.showMsgConfirmLogout()
             default: break
             }
@@ -482,7 +486,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.openPrivacy()
             case 17:
                 self.openTerms()
-            case 19:
+            case 21:
                 self.showMsgConfirmLogout()
             default: break
             }
