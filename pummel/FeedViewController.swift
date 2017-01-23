@@ -347,8 +347,8 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     func showListContext(sender: UIButton) {
-        let selectDeleted = { (action:UIAlertAction!) -> Void in
-        }
+//        let selectDeleted = { (action:UIAlertAction!) -> Void in
+//        }
         
         let share = { (action:UIAlertAction!) -> Void in
             self.sharePummel()
@@ -358,7 +358,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: KReport, style: UIAlertActionStyle.Destructive, handler: selectDeleted))
+//        alertController.addAction(UIAlertAction(title: KReport, style: UIAlertActionStyle.Destructive, handler: selectDeleted))
         alertController.addAction(UIAlertAction(title: kShare, style: UIAlertActionStyle.Destructive, handler: share))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: selectCancle))
         
