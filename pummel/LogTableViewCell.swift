@@ -65,6 +65,7 @@ class LogTableViewCell: UITableViewCell {
         }
         
         self.rateBT.hidden = hiddenRateButton
+        self.addCalendarBT.hidden = !hiddenRateButton
         if hiddenRateButton {
             self.rateBTTopConstraint.constant = -(self.rateBT.frame.size.height)
         } else {

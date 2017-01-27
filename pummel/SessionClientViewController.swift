@@ -313,6 +313,14 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                 
                 do {
                     try eventStore.saveEvent(event, span: .FutureEvents, commit: true)
+                    let alertController = UIAlertController(title: "", message: "This session has added to your callendar!", preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
                 } catch {
                     
                 }

@@ -215,6 +215,7 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         
         let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
         
+        
         cell.setData(session, hiddenRateButton: self.isUpComing, hiddenCalendarButton: false)
         cell.logCellDelegate = self;
         
@@ -345,6 +346,14 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
                 
                 do {
                     try eventStore.saveEvent(event, span: .FutureEvents, commit: true)
+                    let alertController = UIAlertController(title: "", message: "This session has added to your callendar!", preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
                 } catch {
                     
                 }
