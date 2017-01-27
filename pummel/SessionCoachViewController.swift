@@ -216,7 +216,7 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
         
         
-        cell.setData(session, hiddenRateButton: self.isUpComing, hiddenCalendarButton: false)
+        cell.setData(session, isUpComing: self.isUpComing)
         cell.logCellDelegate = self;
         
         return cell

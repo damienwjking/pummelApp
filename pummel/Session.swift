@@ -37,9 +37,18 @@ class Session: NSObject {
         self.datetime = sessionContent.objectForKey("datetime") as? String
         self.createdAt = sessionContent.objectForKey("createdAt") as? String
         self.updatedAt = sessionContent.objectForKey("updatedAt") as? String
-        self.distance = sessionContent.objectForKey("distance") as? Int
-        self.longtime = sessionContent.objectForKey("longtime") as? Int
         self.intensity = sessionContent.objectForKey("intensity") as? String
+        self.distance = sessionContent.objectForKey("distance") as? Int
+        if self.distance == nil {
+            self.distance = 0
+        }
+        self.longtime = sessionContent.objectForKey("longtime") as? Int
+        if self.longtime == nil {
+            self.longtime = 0
+        }
         self.calorie = sessionContent.objectForKey("calorie") as? Int
+        if self.calorie == nil {
+            self.calorie = 0
+        }
     }
 }

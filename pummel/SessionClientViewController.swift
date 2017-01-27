@@ -213,7 +213,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         
         let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
         
-        cell.setData(session, hiddenRateButton: self.isUpComing, hiddenCalendarButton: false)
+        cell.setData(session, isUpComing: self.isUpComing)
         
         let totalSession = self.upCommingSessions.count + self.completedSessions.count
         if indexPath.row == totalSession - 1{

@@ -19,11 +19,12 @@ class LogTableViewCell: UITableViewCell {
     @IBOutlet weak var textLB: UILabel!
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var dateLB: UILabel!
-    @IBOutlet weak var rateBT: UIButton!
-    @IBOutlet weak var rateBTTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var actionBT: UIButton!
+    @IBOutlet weak var actionView: UIView!
     
-    @IBOutlet weak var addCalendarBT: UIButton!
     @IBOutlet weak var typeLB: UILabel!
+    
+    var isUpComingCell = false
     
     weak var logCellDelegate: LogCellDelegate?
     
@@ -33,26 +34,26 @@ class LogTableViewCell: UITableViewCell {
         self.avatarIMV.clipsToBounds = true
         self.dateLB.numberOfLines = 2
         
-        self.rateBT.layer.cornerRadius = 2;
-        self.addCalendarBT.layer.cornerRadius = 2;
+        self.actionView.layer.cornerRadius = 2;
+        self.actionView.layer.masksToBounds = true;
         
         self.textLB.font = .pmmMonLight13()
         self.dateLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
         self.typeLB.font = .pmmMonReg13()
-        self.rateBT.titleLabel!.font = .pmmMonReg10()
-        self.addCalendarBT.titleLabel!.font = .pmmMonReg10()
+        self.actionBT.titleLabel!.font = .pmmMonReg10()
     }
     
-    @IBAction func rateButtonClicked(sender: AnyObject) {
-     
+    @IBAction func actionButtonClicked(sender: AnyObject) {
+        if self.isUpComingCell {
+            // Add calendar action
+            self.logCellDelegate?.LogCellClickAddCalendar!(self)
+        } else {
+            // Rate action
+        }
     }
     
-    @IBAction func createCalendar(sender: AnyObject) {
-        self.logCellDelegate?.LogCellClickAddCalendar!(self)
-    }
-    
-    func setData(session: Session, hiddenRateButton: Bool, hiddenCalendarButton: Bool) {
+    func setData(session: Session, isUpComing: Bool) {
         self.textLB.text = session.text
         
         if session.datetime?.isEmpty == false {
@@ -64,12 +65,11 @@ class LogTableViewCell: UITableViewCell {
             self.timeLB.text = ""
         }
         
-        self.rateBT.hidden = hiddenRateButton
-        self.addCalendarBT.hidden = !hiddenRateButton
-        if hiddenRateButton {
-            self.rateBTTopConstraint.constant = -(self.rateBT.frame.size.height)
+        self.isUpComingCell = isUpComing
+        if isUpComing {
+            self.actionBT.setTitle("Add to Calendar", forState: .Normal)
         } else {
-            self.rateBTTopConstraint.constant = 12
+            self.actionBT.setTitle("Rate", forState: .Normal)
         }
         
         self.typeLB.text = session.type
