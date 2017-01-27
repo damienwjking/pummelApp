@@ -335,11 +335,11 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
                 "text" : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
                 "type" :String(format: "#%@", (self.tag.name?.uppercaseString)!),
-                "intensity": self.intensitySelected,
-                "distance" : self.distanceSelected,
-                "longtime" : self.longtimeSelected,
-                "calorie" :  calorieSelected,
-                "datetime":  selectedDate,
+                kIntensity : self.intensitySelected,
+                kDistance : self.distanceSelected,
+                kLongtime : self.longtimeSelected,
+                kCalorie :  calorieSelected,
+                kDatetime :  selectedDate,
                 kUserIdTarget:userIdSelected
             ]
 

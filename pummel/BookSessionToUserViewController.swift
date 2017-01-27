@@ -163,8 +163,13 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             let textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
             var parameters = [String:AnyObject]()
             var tagname = ""
+            let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
             tagname = (self.tag?.name?.uppercaseString)!
-            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textToPost, kUserIdTarget:userIdSelected, kType:"#\(tagname)", "datetime": self.dateTF.text!]
+            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                          kText: textToPost,
+                          kUserIdTarget:userIdSelected,
+                          kType:"#\(tagname)",
+                          kDatetime: selectedDate]
             Alamofire.upload(
                 .POST,
                 prefix,
@@ -201,7 +206,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
                             }
                         }
                         
-                    case .Failure(let encodingError):
+                    case .Failure(let _):
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                             // ...
@@ -214,6 +219,21 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
                 }
             )
         }
+    }
+    
+    func convertLocalTimeToUTCTime(dateTimeString: String) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
+        
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        let date = dateFormatter.dateFromString(dateTimeString)
+        
+        let newDateFormatter = NSDateFormatter()
+        newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
+        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+        let newDateString = newDateFormatter.stringFromDate(date!)
+        
+        return newDateString
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
