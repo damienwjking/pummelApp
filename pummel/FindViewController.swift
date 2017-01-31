@@ -309,10 +309,16 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         self.tabBarItem.image = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         
-        if (showLetUsHelp == true) {
-            performSegueWithIdentifier("letUsHelp", sender: nil)
-        }
         
+        if (NSUserDefaults.standardUserDefaults().boolForKey("SHOW_SEARCH_AFTER_REGISTER")) {
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+             performSegueWithIdentifier("letUsHelp", sender: nil)
+        } else {
+            if (showLetUsHelp == true) {
+                performSegueWithIdentifier("letUsHelp", sender: nil)
+            }
+        }
+
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CLIENTS", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnClientClick))
         } else {

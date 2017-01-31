@@ -324,6 +324,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                             let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .Alert)
                                                             
                                                             let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                                                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                                                                 self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                                             }
                                                             alertController.addAction(OKAction)
@@ -333,6 +334,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                         } else {
                                                             activityView.stopAnimating()
                                                             activityView.removeFromSuperview()
+                                                            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                                                             self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                                         }
                                                     }
@@ -346,6 +348,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                     
                                                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                                         // ...
+                                                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                                                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                                     }
                                                     alertController.addAction(OKAction)
@@ -383,6 +386,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                 mixpanel.people.set("$email", to: mailUser)
                                             }
                                         }
+                                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                                         self.performSegueWithIdentifier("showClientSegue", sender: nil)
                                     }
                                 }else {
