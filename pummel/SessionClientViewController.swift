@@ -42,6 +42,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.calendarView.calendarAppearanceDelegate = self
         self.calendarView.calendarDelegate = self
         
+        self.monthLabel.font = UIFont.pmmMonReg18()
         self.noSessionYetLB.font = UIFont.pmmPlayFairReg18()
         self.noSessionContentLB.font = UIFont.pmmMonLight13()
         self.addSessionBT.titleLabel!.font = UIFont.pmmMonReg12()
