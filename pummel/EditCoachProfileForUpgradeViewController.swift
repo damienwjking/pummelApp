@@ -629,7 +629,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
             mail.setToRecipients(["hello@pummel.fit"])
-            mail.setMessageBody("Hi Pummel, I have just applied to coach, Please help me review it. Thanks.", isHTML: true)
+            mail.setMessageBody("Hi Pummel, I have just applied to become a coach.  Can you please review my application shortly. Thanks", isHTML: true)
             mail.setSubject("Upgrade to coach")
             self.presentViewController(mail, animated: true, completion: nil)
         } else {

@@ -44,7 +44,7 @@ class GetStartedViewController: UIViewController {
         self.updateUI()
         let defaults = NSUserDefaults.standardUserDefaults()
         if (defaults.objectForKey(k_PM_IS_LOGINED) == nil) {
-            performSegueWithIdentifier("toSignin", sender: nil)
+            // Do Nothing
         } else if  (defaults.objectForKey(k_PM_IS_LOGINED) as! Bool) {
             let urlString = defaults.objectForKey(k_PM_URL_LAST_COOKIE)
             let url = NSURL(string: urlString as! String)

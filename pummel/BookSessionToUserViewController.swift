@@ -160,7 +160,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             if let val = self.userInfoSelect["userId"] as? Int {
                 userIdSelected = "\(val)"
             }
-            let textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
+            let textToPost = (self.contentTV.text == "" || self.contentTV.text == "ADD A COMMENT..." ) ? "..." : self.contentTV.text
             var parameters = [String:AnyObject]()
             var tagname = ""
             let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
