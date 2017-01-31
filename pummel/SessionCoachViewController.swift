@@ -11,10 +11,15 @@ import Foundation
 import Alamofire
 import AlamofireImage
 import EventKit
+import FSCalendar
+import CVCalendar
 
-class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, LogCellDelegate {
+class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, LogCellDelegate, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
     
-    @IBOutlet weak var selectSegment: UISegmentedControl!
+    @IBOutlet weak var monthLabel: UILabel!
+    @IBOutlet weak var calendarMenuView: CVCalendarMenuView!
+    @IBOutlet weak var calendarView: CVCalendarView!
+    
     @IBOutlet weak var sessionTableView: UITableView!
     
     @IBOutlet weak var noSessionV: UIView!
@@ -24,38 +29,34 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
-    var isUpComing = true
     var isloading = false
     var canLoadMore = true
     
-    var upCommingSessions = [Session]()
-    var completedSessions = [Session]()
+    var sessionList = [Session]()
+    var selectedSessionList = [Session]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.calendarMenuView.menuViewDelegate = self
+        self.calendarView.calendarAppearanceDelegate = self
+        self.calendarView.calendarDelegate = self
+        
+        self.monthLabel.font = UIFont.pmmMonReg20()
         self.noSessionYetLB.font = UIFont.pmmPlayFairReg18()
         self.noSessionContentLB.font = UIFont.pmmMonLight13()
         self.addSessionBT.titleLabel!.font = UIFont.pmmMonReg12()
         
-        selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], forState: .Normal)
-        
-        if self.defaults.objectForKey(k_PM_IS_UP_COMING) == nil {
-            self.isUpComing = true
-            self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
-        } else {
-            let isComingValue = self.defaults.objectForKey(k_PM_IS_UP_COMING) as! Int
-            if isComingValue == 1 {
-                self.isUpComing = true
-                self.selectSegment.selectedSegmentIndex = 0
-            } else {
-                self.isUpComing = false
-                self.selectSegment.selectedSegmentIndex = 1
-            }
-        }
-        
         self.initTableView()
         self.initNavigationBar()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.calendarMenuView.commitMenuViewUpdate()
+        self.calendarView.commitCalendarViewUpdate()
+        
+        
+        super.viewDidLayoutSubviews()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -72,6 +73,12 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
             defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
             self.performSegueWithIdentifier("coachLogASession", sender: nil)
         }
+        
+        // Update Calendar
+        self.calendarView.presentedDate = CVDate(date: NSDate())
+        let convertDateFormatter = NSDateFormatter()
+        convertDateFormatter.dateFormat = "LLLL yyyy"
+        self.monthLabel.text = convertDateFormatter.stringFromDate(NSDate())
     }
     
     
@@ -97,44 +104,10 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     }
     
     // MARK: Private function
-    func checkUpCommingSesion(session: Session) {
-        let now = NSDate()
-        
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = kFullDateFormat
-        if session.datetime != nil {
-            let sessionDate = dateFormatter.dateFromString(session.datetime!)
-            
-            if now.compare(sessionDate!) == .OrderedAscending {
-                var isNewSession = true
-                for sessionItem in self.upCommingSessions {
-                    if session.id == sessionItem.id {
-                        isNewSession = false
-                    }
-                }
-                
-                if isNewSession == true {
-                    self.upCommingSessions.append(session)
-                }
-            } else {
-                var isNewSession = true
-                for sessionItem in self.completedSessions {
-                    if session.id == sessionItem.id {
-                        isNewSession = false
-                    }
-                }
-                
-                if isNewSession == true {
-                    self.completedSessions.append(session)
-                }
-            }
-        }
-    }
-    
     func getListSession() {
         if (self.canLoadMore == true && self.isloading == false) {
             self.isloading = true
-            let totalSession = self.upCommingSessions.count + self.completedSessions.count
+            let totalSession = self.sessionList.count
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
@@ -151,14 +124,18 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
                                 let session = Session()
                                 session.parseDataWithDictionary(sessionContent)
                                 
-                                self.checkUpCommingSesion(session)
-                            }
-                            
-                            let totalSession = self.upCommingSessions.count + self.completedSessions.count
-                            if totalSession > 0 {
-                                self.noSessionV.hidden = true
-                            } else {
-                                self.noSessionV.hidden = false
+                                //self.checkUpCommingSesion(session)
+                                
+                                var isNewSession = true
+                                for sessionItem in self.sessionList {
+                                    if session.id == sessionItem.id {
+                                        isNewSession = false
+                                    }
+                                }
+                                
+                                if isNewSession == true {
+                                    self.sessionList.append(session)
+                                }
                             }
                         } else {
                             self.canLoadMore = false
@@ -170,6 +147,10 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
                     
                     self.isloading = false
                     
+                    self.getListSession()
+                    
+                    //self.calendar.reloadData()
+                    self.presentedDateUpdated(self.calendarView.presentedDate)
                     self.sessionTableView.reloadData()
             }
         }
@@ -177,60 +158,39 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     
     // MARK: UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.isUpComing {
-            if self.upCommingSessions.count == 0 {
-                self.getListSession()
-                
-                return 0
-            } else {
-                return self.upCommingSessions.count
-            }
+        if self.selectedSessionList.count > 0 {
+            self.noSessionV.hidden = true
         } else {
-            if self.completedSessions.count == 0 {
-                self.getListSession()
-                
-                return 0
-            } else {
-                return self.completedSessions.count
-            }
+            self.noSessionV.hidden = false
         }
+        
+        return self.selectedSessionList.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var session = Session()
-        
-        if self.isUpComing {
-            session = self.upCommingSessions[indexPath.row]
-            
-            if indexPath.row == self.upCommingSessions.count - 1{
-                self.getListSession()
-            }
-        } else {
-            session = self.completedSessions[indexPath.row]
-            
-            if indexPath.row == self.completedSessions.count - 1{
-                self.getListSession()
-            }
-        }
+        let session = self.selectedSessionList[indexPath.row]
         
         let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
         
+        let now = NSDate()
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = kFullDateFormat
+        let sessionDate = dateFormatter.dateFromString(session.datetime!)
         
-        cell.setData(session, isUpComing: self.isUpComing)
-        cell.logCellDelegate = self;
+        if now.compare(sessionDate!) == .OrderedAscending {
+            cell.setData(session, isUpComing: true)
+        } else {
+            cell.setData(session, isUpComing: false)
+        }
+        
+        cell.logCellDelegate = self
         
         return cell
     }
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if self.isUpComing {
-            if self.upCommingSessions.count == 0 {
-                return 0.01
-            }
-        } else {
-            if self.completedSessions.count == 0 {
-                return 0.01
-            }
+        if self.sessionList.count == 0 {
+            return 0.01
         }
         
         return 0
@@ -239,14 +199,82 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        var session = Session()
-        if self.isUpComing {
-            session = self.upCommingSessions[indexPath.row]
-        } else {
-            session = self.completedSessions[indexPath.row]
-        }
+        let session = self.selectedSessionList[indexPath.row]
         
         self.performSegueWithIdentifier("coachSessionDetail", sender: session)
+    }
+    
+    // MARK: CVCalendarViewDelegate
+    func presentationMode() -> CalendarMode {
+        return .MonthView
+    }
+    
+    func firstWeekday() -> Weekday {
+        return .Sunday
+    }
+    
+    func presentedDateUpdated(date: Date) {
+        // update month label
+        let monthDateFormatter = NSDateFormatter()
+        monthDateFormatter.dateFormat = "yyyy M"
+        let dateString = String(format:"%ld %ld", date.year, date.month)
+        let convertDate = monthDateFormatter.dateFromString(dateString)
+        
+        let convertDateFormatter = NSDateFormatter()
+        convertDateFormatter.dateFormat = "LLLL yyyy"
+        self.monthLabel.text = convertDateFormatter.stringFromDate(convertDate!)
+        
+        // update session list
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        //let eventDateString = dateFormatter.stringFromDate(date)
+        
+        let calendarString = String(format:"%ld%ld%ld%ld%ld", date.year, date.month/10, date.month%10, date.day/10, date.day%10)
+        
+        let fullDateFormatter = NSDateFormatter()
+        fullDateFormatter.dateFormat = kFullDateFormat
+        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        
+        var i = 0
+        self.selectedSessionList.removeAll()
+        while i < self.sessionList.count {
+            let session = self.sessionList[i]
+            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            
+            if calendarString == sessionDateString {
+                self.selectedSessionList.append(session)
+            }
+            
+            i = i + 1
+        }
+        
+        self.sessionTableView.reloadData()
+    }
+    
+    func dayLabelFont(by weekDay: Weekday, status: CVStatus, present: CVPresent) -> UIFont {
+        return UIFont.pmmMonLight13()
+    }
+    
+    func dayLabelWeekdayHighlightedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelWeekdaySelectedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelPresentWeekdayHighlightedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelPresentWeekdaySelectedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelPresentWeekdayTextColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
     }
     
     // MARK: Outlet function
@@ -292,31 +320,70 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
 //        cancleTitleLabel.attributedText = cancleAttributedText
     }
     
-    @IBAction func selecSegmentValueChanged(sender: AnyObject) {
-        if self.selectSegment.selectedSegmentIndex == 0 {
-            self.isUpComing = true
-            self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
-        } else {
-            self.isUpComing = false
-            self.defaults.setValue(0, forKey: k_PM_IS_UP_COMING)
+    @IBAction func addSessionBTClicked(sender: AnyObject) {
+        self.rightButtonClicked()
+    }
+    
+    // MARK: FSCalendarDataSource
+    func calendar(calendar: FSCalendar, numberOfEventsForDate date: NSDate) -> Int {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        let eventDateString = dateFormatter.stringFromDate(date)
+        
+        let fullDateFormatter = NSDateFormatter()
+        fullDateFormatter.dateFormat = kFullDateFormat
+        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        
+        var i = 0
+        var numberEvent = 0
+        while i < self.sessionList.count {
+            let session = self.sessionList[i]
+            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            
+            if eventDateString == sessionDateString {
+                numberEvent = numberEvent + 1
+            }
+            
+            i = i + 1
+        }
+        
+        return numberEvent
+    }
+    
+    // MARK: FSCalendarDelegate
+    func calendar(calendar: FSCalendar, didSelectDate date: NSDate) {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        let eventDateString = dateFormatter.stringFromDate(date)
+        
+        let fullDateFormatter = NSDateFormatter()
+        fullDateFormatter.dateFormat = kFullDateFormat
+        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        
+        var i = 0
+        self.selectedSessionList.removeAll()
+        while i < self.sessionList.count {
+            let session = self.sessionList[i]
+            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            
+            if eventDateString == sessionDateString {
+                self.selectedSessionList.append(session)
+            }
+            
+            i = i + 1
         }
         
         self.sessionTableView.reloadData()
     }
     
-    @IBAction func addSessionBTClicked(sender: AnyObject) {
-        self.rightButtonClicked()
-    }
-    
     // MARK: LogCellDelegate
     func LogCellClickAddCalendar(cell: LogTableViewCell) {
-        var session = Session()
         let indexPath = self.sessionTableView.indexPathForCell(cell)
-        if self.isUpComing {
-            session = self.upCommingSessions[indexPath!.row]
-        } else {
-            session = self.completedSessions[indexPath!.row]
-        }
+        let session = self.sessionList[indexPath!.row]
         
         let eventStore : EKEventStore = EKEventStore()
         
