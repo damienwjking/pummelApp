@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
+
 class CoachProfileViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var titleCoachLB: UILabel!
@@ -717,8 +718,17 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     
     @IBAction func clickOnInstagram() {
         if (self.instagramLink  != "") {
+            var userInsta = self.instagramLink?.substringFromIndex((self.instagramLink!.rangeOfString("instagram.com/")?.endIndex)!)
+            if ((userInsta!.rangeOfString("/")?.startIndex) != nil) {
+                userInsta = userInsta?.substringToIndex((userInsta!.rangeOfString("/")?.startIndex)!)
+            }
+            
+            let instaappLink = NSURL(string: "instagram://user?username=".stringByAppendingString(userInsta!))
             let instagramUrl = NSURL(string: self.instagramLink!)
-            if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
+            
+            if (UIApplication.sharedApplication().canOpenURL(instaappLink!)) {
+                UIApplication.sharedApplication().openURL(instaappLink!)
+            } else if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
             {
                 UIApplication.sharedApplication().openURL(instagramUrl!)
                 
@@ -731,6 +741,16 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Category": "IOS.SocialClick", "Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("Event", properties: properties)
+            }
+        }
+    }
+}
+
+extension String {
+    func sliceFrom(start: String, to: String) -> String? {
+        return (rangeOfString(start)?.endIndex).flatMap { sInd in
+            (rangeOfString(to, range: sInd..<endIndex)?.startIndex).map { eInd in
+                substringWithRange(sInd..<eInd)
             }
         }
     }

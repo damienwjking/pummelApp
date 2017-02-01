@@ -848,7 +848,16 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     @IBAction func clickOnInstagram() {
         if (self.instagramLink  != "") {
             let instagramUrl = NSURL(string: self.instagramLink!)
-            if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
+            var userInsta = self.instagramLink?.substringFromIndex((self.instagramLink?.rangeOfString("instagram.com/")?.endIndex)!)
+            if ((userInsta!.rangeOfString("/")?.startIndex) != nil) {
+                userInsta = userInsta?.substringToIndex((userInsta!.rangeOfString("/")?.startIndex)!)
+            }
+            
+            let instaappLink = NSURL(string: "instagram://user?username=".stringByAppendingString(userInsta!))
+        
+            if (UIApplication.sharedApplication().canOpenURL(instaappLink!)) {
+                UIApplication.sharedApplication().openURL(instaappLink!)
+            } else if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
             {
                 UIApplication.sharedApplication().openURL(instagramUrl!)
                 
