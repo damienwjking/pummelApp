@@ -468,6 +468,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.openPrivacy()
             case 18:
                 self.openTerms()
+            case 20:
+                self.performSegueWithIdentifier("changePassword", sender: nil)
             case 22:
                 self.showMsgConfirmLogout()
             default: break
@@ -488,6 +490,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.openPrivacy()
             case 17:
                 self.openTerms()
+            case 19:
+                self.performSegueWithIdentifier("changePassword", sender: nil)
             case 21:
                 self.showMsgConfirmLogout()
             default: break

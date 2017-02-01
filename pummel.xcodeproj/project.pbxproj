@@ -220,6 +220,7 @@
 		F98C41B31CF2650F00ECC66E /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = F98C41B01CF2650F00ECC66E /* close.png */; };
 		F98C41B41CF2650F00ECC66E /* close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F98C41B11CF2650F00ECC66E /* close@2x.png */; };
 		F98C41B51CF2650F00ECC66E /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F98C41B21CF2650F00ECC66E /* close@3x.png */; };
+		F98D5DA91E417764002C0C7A /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98D5DA81E417764002C0C7A /* ChangePasswordViewController.swift */; };
 		F9991E291D2A0A0E009C7731 /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = F9991E261D2A0A0E009C7731 /* message.png */; };
 		F9991E2A1D2A0A0E009C7731 /* message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9991E271D2A0A0E009C7731 /* message@2x.png */; };
 		F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F9991E281D2A0A0E009C7731 /* message@3x.png */; };
@@ -563,6 +564,7 @@
 		F98C41B01CF2650F00ECC66E /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		F98C41B11CF2650F00ECC66E /* close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2x.png"; sourceTree = "<group>"; };
 		F98C41B21CF2650F00ECC66E /* close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@3x.png"; sourceTree = "<group>"; };
+		F98D5DA81E417764002C0C7A /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		F9991E261D2A0A0E009C7731 /* message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message.png; sourceTree = "<group>"; };
 		F9991E271D2A0A0E009C7731 /* message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message@2x.png"; sourceTree = "<group>"; };
 		F9991E281D2A0A0E009C7731 /* message@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message@3x.png"; sourceTree = "<group>"; };
@@ -814,6 +816,7 @@
 				F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */,
 				F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */,
 				E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */,
+				F98D5DA81E417764002C0C7A /* ChangePasswordViewController.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1760,6 +1763,7 @@
 				F9CF54D91D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift in Sources */,
 				F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */,
 				E8D778E91E0AF6F00011E164 /* GroupLeadTableViewCell.swift in Sources */,
+				F98D5DA91E417764002C0C7A /* ChangePasswordViewController.swift in Sources */,
 				F9ABEAE11DC36C3B0084B70E /* FontConstant.swift in Sources */,
 				F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */,
 				F977EC0D1DAD442F007024EB /* NewCommentImageViewController.swift in Sources */,

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cCo-RY-fr6">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cCo-RY-fr6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -2048,14 +2048,104 @@
                         <viewControllerLayoutGuide type="bottom" id="9mi-WP-LaF"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="nMU-bK-urF">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="1300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="1318"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8YZ-7g-8Yq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3014" y="5782"/>
+            <point key="canvasLocation" x="-1408" y="8902"/>
+        </scene>
+        <!--Change Password View Controller-->
+        <scene sceneID="vdA-FM-vMl">
+            <objects>
+                <viewController id="Xe3-tj-rg7" customClass="ChangePasswordViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="CYc-ux-17N"/>
+                        <viewControllerLayoutGuide type="bottom" id="qhE-xI-sEh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="J41-og-dtm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW PASSWORD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSB-JW-yaY">
+                                <rect key="frame" x="10" y="64" width="91.5" height="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.5568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aS8-Fg-fMx">
+                                <rect key="frame" x="10" y="88" width="565" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="IIs-9Y-9kK"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9aV-tq-i4f">
+                                <rect key="frame" x="10" y="133" width="570" height="1"/>
+                                <color key="backgroundColor" red="0.81176470590000005" green="0.81176470590000005" blue="0.81176470590000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="vZq-Wq-wWf"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RETYPE NEW PASSWORD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WCe-hV-daD">
+                                <rect key="frame" x="10" y="149" width="152" height="14"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="152" id="Ybc-NJ-UH7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.5568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mNd-x9-cuL">
+                                <rect key="frame" x="10" y="173" width="565" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="hqV-kO-dFO"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0jF-ts-XBP">
+                                <rect key="frame" x="10" y="218" width="570" height="1"/>
+                                <color key="backgroundColor" red="0.81176470590000005" green="0.81176470590000005" blue="0.81176470590000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="yQ1-D9-tEB"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="0jF-ts-XBP" secondAttribute="trailing" constant="20" id="0O9-4p-1dG"/>
+                            <constraint firstItem="9aV-tq-i4f" firstAttribute="top" secondItem="aS8-Fg-fMx" secondAttribute="bottom" constant="15" id="4gr-mg-cNa"/>
+                            <constraint firstItem="WCe-hV-daD" firstAttribute="leading" secondItem="J41-og-dtm" secondAttribute="leading" constant="10" id="5mh-zO-4cu"/>
+                            <constraint firstAttribute="trailing" secondItem="aS8-Fg-fMx" secondAttribute="trailing" constant="25" id="DG5-Lg-Iyx"/>
+                            <constraint firstItem="9aV-tq-i4f" firstAttribute="leading" secondItem="J41-og-dtm" secondAttribute="leading" constant="10" id="Fth-Z4-9lK"/>
+                            <constraint firstAttribute="trailing" secondItem="mNd-x9-cuL" secondAttribute="trailing" constant="25" id="GXg-mx-QJ7"/>
+                            <constraint firstItem="0jF-ts-XBP" firstAttribute="leading" secondItem="J41-og-dtm" secondAttribute="leading" constant="10" id="IfO-ZM-Axb"/>
+                            <constraint firstItem="aS8-Fg-fMx" firstAttribute="top" secondItem="qSB-JW-yaY" secondAttribute="bottom" constant="10" id="JRH-1T-Zwh"/>
+                            <constraint firstItem="aS8-Fg-fMx" firstAttribute="leading" secondItem="qSB-JW-yaY" secondAttribute="leading" id="O4b-ZF-nKt"/>
+                            <constraint firstItem="mNd-x9-cuL" firstAttribute="leading" secondItem="J41-og-dtm" secondAttribute="leading" constant="10" id="OgB-cf-mmK"/>
+                            <constraint firstItem="WCe-hV-daD" firstAttribute="top" secondItem="9aV-tq-i4f" secondAttribute="bottom" constant="15" id="RA0-kI-rrZ"/>
+                            <constraint firstItem="aS8-Fg-fMx" firstAttribute="leading" secondItem="J41-og-dtm" secondAttribute="leading" constant="10" id="YAP-ia-Lcz"/>
+                            <constraint firstItem="qSB-JW-yaY" firstAttribute="top" secondItem="CYc-ux-17N" secondAttribute="bottom" constant="44" id="a6r-n4-avi"/>
+                            <constraint firstItem="qSB-JW-yaY" firstAttribute="leading" secondItem="J41-og-dtm" secondAttribute="leading" constant="10" id="cCJ-dm-1br"/>
+                            <constraint firstItem="mNd-x9-cuL" firstAttribute="top" secondItem="WCe-hV-daD" secondAttribute="bottom" constant="10" id="mk9-x9-9Aa"/>
+                            <constraint firstAttribute="trailing" secondItem="9aV-tq-i4f" secondAttribute="trailing" constant="20" id="pL8-hy-1DZ"/>
+                            <constraint firstItem="0jF-ts-XBP" firstAttribute="top" secondItem="mNd-x9-cuL" secondAttribute="bottom" constant="15" id="rIh-56-Lsg"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="667"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rsF-51-gR0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3315.1999999999998" y="6114.6926536731635"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="7Y3-hs-KhB">
@@ -2370,6 +2460,7 @@
                         </segue>
                         <segue destination="Whi-v8-1cP" kind="show" identifier="LocationPicker" id="y6l-V7-3Lq"/>
                         <segue destination="ZxJ-I4-874" kind="show" identifier="upgradeCoach" id="Zg0-Zh-DbN"/>
+                        <segue destination="Xe3-tj-rg7" kind="show" identifier="changePassword" id="pn2-iv-goA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="de5-Af-Pnq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3234,6 +3325,6 @@
         <image name="profile.png" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="okc-uz-SIC"/>
+        <segue reference="y6l-V7-3Lq"/>
     </inferredMetricsTieBreakers>
 </document>

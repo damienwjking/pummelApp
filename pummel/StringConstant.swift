@@ -191,6 +191,7 @@ let kBookSession = "BOOK SESSION"
 let kBookShare = "SHARE"
 let kClients = "CLIENTS"
 let kCoaches = "COACHES"
+let kChangePassword = "CHANGE PASSWORD"
 
 // Cell
 let kSettingDiscoveryHeaderTableViewCell = "SettingDiscoveryHeaderTableViewCell"
@@ -236,7 +237,6 @@ let kSharePummel = "SHARE PUMMEL"
 let kLegal = "LEGAL"
 let kPrivacy = "PRIVACY POLICY"
 let kTermOfService = "TERMS OF SERVICE"
-let kChangePassword = "CHANGE PASSWORD"
 let kUnit = "UNIT"
 
 // Navigation 
