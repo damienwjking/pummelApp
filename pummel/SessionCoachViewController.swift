@@ -32,7 +32,7 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     @IBOutlet weak var noSessionContentLB: UILabel!
     @IBOutlet weak var noSessionVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var nosessionIMVHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var noSessionContentLBHeightConstraint: NSLayoutConstraint!
+
     @IBOutlet weak var addSessionBT: UIButton!
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -446,20 +446,24 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
             self.calendarViewHeightConstraint.constant = 200
             self.calendateMenuViewHeightConstraint.constant = 25
             self.nosessionIMVHeightConstraint.constant = 0
-            self.noSessionContentLBHeightConstraint.constant = 0
             self.noSessionVCenterYConstraint.constant = 0;
             self.separateLineView.hidden = false
             
-            // to Call function presentedDateUpdated
+            // To Call function presentedDateUpdated
             self.calendarView.presentedDate = self.calendarView.presentedDate
+            
+            // Subtitle no session
+            self.noSessionContentLB.text = "Upcomming appointments from your coach will appear here as well"
         } else {
             self.monthLabelHeightConstraint.constant = 0
             self.calendarViewHeightConstraint.constant = 0
             self.calendateMenuViewHeightConstraint.constant = 0
             self.nosessionIMVHeightConstraint.constant = 160
-            self.noSessionContentLBHeightConstraint.constant = 42
             self.noSessionVCenterYConstraint.constant = -29;
             self.separateLineView.hidden = true
+            
+            // Subtitle no session
+            self.noSessionContentLB.text = "Completed appointments from your coach will appear here as well"
             
             // Update session table
             let fullDateFormatter = NSDateFormatter()
