@@ -312,7 +312,6 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             
-            
             var imageData : NSData!
             let type : String! = imageJpeg
             let filename : String! = jpgeFile

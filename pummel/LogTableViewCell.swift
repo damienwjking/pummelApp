@@ -117,7 +117,7 @@ class LogTableViewCell: UITableViewCell {
         
         let newDateFormatter = NSDateFormatter()
         newDateFormatter.dateFormat = "EEE dd MMM"
-        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+//        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
         let newDateString = newDateFormatter.stringFromDate(date!)
         
         return newDateString

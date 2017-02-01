@@ -67,7 +67,6 @@ let k_PM_HEADER_FILEDS = "headerFields"
 let k_PM_SHOW_BADGE = "showBadge"
 let k_PM_SELECTED_NOTIFI = "selectedNotify"
 let k_PM_REFRESH_MESSAGE = "refreshMessage"
-let k_PM_IS_UP_COMING = "isUpComing"
 
 // Key Json
 let kConversationId = "conversationId"
