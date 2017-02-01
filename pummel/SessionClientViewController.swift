@@ -32,7 +32,6 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     @IBOutlet weak var noSessionContentLB: UILabel!
     @IBOutlet weak var noSessionVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var nosessionIMVHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var noSessionContentLBHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var addSessionBT: UIButton!
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -141,8 +140,6 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                                 let session = Session()
                                 session.parseDataWithDictionary(sessionContent)
                                 
-                                //self.checkUpCommingSesion(session)
-                                
                                 var isNewSession = true
                                 for sessionItem in self.sessionList {
                                     if session.id == sessionItem.id {
@@ -223,6 +220,45 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.performSegueWithIdentifier("userSessionDetail", sender: session)
     }
     
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { (action, indexPath) in
+            if indexPath.row < self.selectedSessionList.count {
+                let session = self.selectedSessionList[indexPath.row]
+                
+                let prefix = kPMAPIDELETEACTIVITY
+                let param = ["activityId":session.id!]
+                
+                Alamofire.request(.POST, prefix, parameters: param)
+                    .responseJSON { response in
+                        if response.response?.statusCode == 200 {
+                            self.selectedSessionList.removeAtIndex(indexPath.row)
+                            tableView.reloadData()
+                            
+                            self.sessionList.removeAll()
+                            self.canLoadMore = true
+                            self.getListSession()
+                            
+                            self.calendarView.contentController.refreshPresentedMonth()
+                            
+                        }
+                }
+            }
+            
+        }
+        deleteRowAction.backgroundColor = UIColor.pmmBrightOrangeColor()
+        
+        
+        return [deleteRowAction]
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        // Call to show editing action
+    }
+    
     // MARK: CVCalendarViewDelegate
     func presentationMode() -> CalendarMode {
         return .MonthView
@@ -264,7 +300,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
             let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
             
-            if calendarString == sessionDateString {
+            if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
                 self.selectedSessionList.append(session)
             }
             
@@ -317,7 +353,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
             let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
             
-            if calendarString == sessionDateString {
+            if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
                 showDotMarker = true
                 break;
             }
@@ -371,20 +407,24 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             self.calendarViewHeightConstraint.constant = 200
             self.calendateMenuViewHeightConstraint.constant = 25
             self.nosessionIMVHeightConstraint.constant = 0
-            self.noSessionContentLBHeightConstraint.constant = 0
             self.noSessionVCenterYConstraint.constant = 0;
             self.separateLineView.hidden = false
             
             // to Call function presentedDateUpdated
             self.calendarView.presentedDate = self.calendarView.presentedDate
+            
+            // Subtitle no session
+            self.noSessionContentLB.text = "Upcomming appointments from your coach will appear here as well"
         } else {
             self.monthLabelHeightConstraint.constant = 0
             self.calendarViewHeightConstraint.constant = 0
             self.calendateMenuViewHeightConstraint.constant = 0
             self.nosessionIMVHeightConstraint.constant = 160
-            self.noSessionContentLBHeightConstraint.constant = 42
             self.noSessionVCenterYConstraint.constant = -29;
             self.separateLineView.hidden = true
+            
+            // Subtitle no session
+            self.noSessionContentLB.text = "Completed appointments from your coach will appear here as well"
             
             // Update session table
             let fullDateFormatter = NSDateFormatter()
