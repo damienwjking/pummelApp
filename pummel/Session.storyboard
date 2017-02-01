@@ -116,7 +116,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2sb-AH-CZ7">
-                                <rect key="frame" x="30" y="30" width="315" height="29"/>
+                                <rect key="frame" x="30" y="25" width="315" height="29"/>
                                 <segments>
                                     <segment title="UPCOMING"/>
                                     <segment title="COMPLETED"/>
@@ -168,7 +168,7 @@
                                 <rect key="frame" x="0.0" y="324" width="375" height="230"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zqn-wx-djT">
-                                        <rect key="frame" x="37.5" y="-50" width="300" height="330"/>
+                                        <rect key="frame" x="38" y="-49.5" width="300" height="330"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="b8C-Y6-nMb">
                                                 <rect key="frame" x="67" y="0.0" width="165" height="160"/>
@@ -243,12 +243,12 @@
                             <constraint firstItem="FtV-00-agp" firstAttribute="top" secondItem="LVh-5y-UiB" secondAttribute="bottom" constant="113" id="Gsl-Ly-ji5"/>
                             <constraint firstItem="LVh-5y-UiB" firstAttribute="top" secondItem="BuE-Ey-QUf" secondAttribute="bottom" constant="1" id="HMY-nG-gEi"/>
                             <constraint firstItem="Yeu-16-34c" firstAttribute="width" secondItem="LVh-5y-UiB" secondAttribute="width" id="Jmy-NG-mH0"/>
-                            <constraint firstItem="Y2y-G7-qLb" firstAttribute="top" secondItem="2sb-AH-CZ7" secondAttribute="bottom" id="NAd-JF-hUR"/>
+                            <constraint firstItem="Y2y-G7-qLb" firstAttribute="top" secondItem="2sb-AH-CZ7" secondAttribute="bottom" constant="5" id="NAd-JF-hUR"/>
                             <constraint firstItem="KTB-Xr-odd" firstAttribute="centerX" secondItem="LVh-5y-UiB" secondAttribute="centerX" id="Rki-Gz-rIP"/>
                             <constraint firstItem="2sb-AH-CZ7" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" constant="-60" id="Tju-ht-Fgx"/>
                             <constraint firstItem="Y2y-G7-qLb" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="UAb-Of-IHW"/>
                             <constraint firstItem="Yeu-16-34c" firstAttribute="centerY" secondItem="LVh-5y-UiB" secondAttribute="centerY" id="VZJ-B8-5oq"/>
-                            <constraint firstItem="2sb-AH-CZ7" firstAttribute="top" secondItem="H07-oV-06e" secondAttribute="bottom" constant="10" id="dLF-Sy-5kH"/>
+                            <constraint firstItem="2sb-AH-CZ7" firstAttribute="top" secondItem="H07-oV-06e" secondAttribute="bottom" constant="5" id="dLF-Sy-5kH"/>
                             <constraint firstItem="LVh-5y-UiB" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="eln-jA-D1f"/>
                             <constraint firstItem="BuE-Ey-QUf" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="eqY-s9-gzU"/>
                             <constraint firstItem="Y2y-G7-qLb" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="fhx-y4-mcf"/>
@@ -297,7 +297,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="KiF-kK-S2w">
-                                <rect key="frame" x="30" y="30" width="315" height="29"/>
+                                <rect key="frame" x="30" y="25" width="315" height="29"/>
                                 <segments>
                                     <segment title="UPCOMING"/>
                                     <segment title="COMPLETED"/>
@@ -377,7 +377,7 @@
                                 <rect key="frame" x="0.0" y="324" width="375" height="230"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sud-nu-fq2">
-                                        <rect key="frame" x="37.5" y="-50" width="300" height="330"/>
+                                        <rect key="frame" x="38" y="-49.5" width="300" height="330"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ctf-xl-sx4">
                                                 <rect key="frame" x="67" y="0.0" width="165" height="160"/>
@@ -454,13 +454,13 @@
                             <constraint firstItem="6xz-Ty-mBN" firstAttribute="top" secondItem="7VX-5T-wDu" secondAttribute="bottom" id="Rha-O8-697"/>
                             <constraint firstItem="6xz-Ty-mBN" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="Ric-kc-uCG"/>
                             <constraint firstItem="KiF-kK-S2w" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" constant="-60" id="U4e-up-JLU"/>
-                            <constraint firstItem="KiF-kK-S2w" firstAttribute="top" secondItem="pNU-IE-dKP" secondAttribute="bottom" constant="10" id="dt2-dJ-9z9"/>
+                            <constraint firstItem="KiF-kK-S2w" firstAttribute="top" secondItem="pNU-IE-dKP" secondAttribute="bottom" constant="5" id="dt2-dJ-9z9"/>
                             <constraint firstItem="yNc-Ka-tbk" firstAttribute="height" secondItem="cNQ-UE-cfY" secondAttribute="height" id="gIc-dg-hSz"/>
                             <constraint firstItem="sNH-h6-ife" firstAttribute="top" secondItem="cNQ-UE-cfY" secondAttribute="bottom" constant="113" id="i4g-PN-NHf"/>
                             <constraint firstItem="7VX-5T-wDu" firstAttribute="top" secondItem="6Zo-kd-LVO" secondAttribute="bottom" id="klZ-G2-neX"/>
                             <constraint firstItem="6xz-Ty-mBN" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="pSy-Z8-Tlc"/>
                             <constraint firstItem="KiF-kK-S2w" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="sdU-WF-Qfu"/>
-                            <constraint firstItem="6Zo-kd-LVO" firstAttribute="top" secondItem="KiF-kK-S2w" secondAttribute="bottom" id="vHl-bo-4hH"/>
+                            <constraint firstItem="6Zo-kd-LVO" firstAttribute="top" secondItem="KiF-kK-S2w" secondAttribute="bottom" constant="5" id="vHl-bo-4hH"/>
                             <constraint firstItem="7VX-5T-wDu" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="xWO-zB-ecK"/>
                             <constraint firstItem="7VX-5T-wDu" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="yH1-Ko-2dr"/>
                         </constraints>
@@ -595,7 +595,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tos-Do-hY9">
-                                        <rect key="frame" x="0.0" y="220" width="187.5" height="50"/>
+                                        <rect key="frame" x="0.0" y="220" width="188" height="50"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eXd-ks-Smb">
                                                 <rect key="frame" x="31" y="0.0" width="126" height="50"/>
@@ -633,10 +633,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LGc-Za-BBl">
-                                        <rect key="frame" x="187.5" y="220" width="187.5" height="50"/>
+                                        <rect key="frame" x="188" y="220" width="187" height="50"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V89-hE-AfX">
-                                                <rect key="frame" x="39.5" y="0.0" width="108" height="50"/>
+                                                <rect key="frame" x="39" y="0.0" width="108" height="50"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_distance.png" translatesAutoresizingMaskIntoConstraints="NO" id="LA3-Ik-J1W">
                                                         <rect key="frame" x="0.0" y="10" width="30" height="30"/>
@@ -671,7 +671,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2d-kW-wUI">
-                                        <rect key="frame" x="0.0" y="270" width="187.5" height="50"/>
+                                        <rect key="frame" x="0.0" y="270" width="188" height="50"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="unV-dJ-FtK">
                                                 <rect key="frame" x="31" y="0.0" width="126" height="50"/>
@@ -709,10 +709,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6dI-O1-sVy">
-                                        <rect key="frame" x="187.5" y="270" width="187.5" height="50"/>
+                                        <rect key="frame" x="188" y="270" width="187" height="50"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GII-Tb-jlB">
-                                                <rect key="frame" x="39.5" y="0.0" width="108" height="50"/>
+                                                <rect key="frame" x="39" y="0.0" width="108" height="50"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_calories.png" translatesAutoresizingMaskIntoConstraints="NO" id="PHn-S2-dLe">
                                                         <rect key="frame" x="0.0" y="10" width="30" height="30"/>
@@ -897,7 +897,7 @@
         <image name="sessions.png" width="19" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="i8A-qC-9BK"/>
-        <segue reference="T2L-tM-8pa"/>
+        <segue reference="Au2-PE-kLY"/>
+        <segue reference="uSf-uW-Yee"/>
     </inferredMetricsTieBreakers>
 </document>
