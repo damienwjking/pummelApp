@@ -406,6 +406,19 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                 }
                         }
                        
+                    } else if (response.response?.statusCode == 400) {
+                        activityView.stopAnimating()
+                        activityView.removeFromSuperview()
+                        self.view.hideToastActivity()
+                        let alertController = UIAlertController(title: pmmNotice, message: yourEmailIsNotValid, preferredStyle: .Alert)
+                        
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
                     } else {
                         activityView.stopAnimating()
                         activityView.removeFromSuperview()
