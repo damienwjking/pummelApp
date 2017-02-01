@@ -115,8 +115,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2sb-AH-CZ7">
+                                <rect key="frame" x="30" y="30" width="315" height="29"/>
+                                <segments>
+                                    <segment title="UPCOMING"/>
+                                    <segment title="COMPLETED"/>
+                                </segments>
+                                <color key="tintColor" red="0.98431372549999996" green="0.26274509800000001" blue="0.066666666669999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="selecSegmentValueChanged:" destination="pCZ-ol-b2l" eventType="valueChanged" id="cQq-QC-Kkf"/>
+                                </connections>
+                            </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y2y-G7-qLb">
-                                <rect key="frame" x="-0.5" y="20" width="375" height="40"/>
+                                <rect key="frame" x="-0.5" y="58" width="375" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="8YG-j4-mkm"/>
                                 </constraints>
@@ -125,28 +136,28 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AlM-94-dql" customClass="CVCalendarMenuView" customModule="CVCalendar">
-                                <rect key="frame" x="-0.5" y="60" width="375" height="25"/>
+                                <rect key="frame" x="-0.5" y="98" width="375" height="25"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="N0K-Jd-Zm3"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BuE-Ey-QUf" customClass="CVCalendarView" customModule="CVCalendar">
-                                <rect key="frame" x="-0.5" y="85" width="375" height="200"/>
+                                <rect key="frame" x="-0.5" y="123" width="375" height="200"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="BuE-Ey-QUf" secondAttribute="height" multiplier="15:8" id="Zvz-OS-JuB"/>
+                                    <constraint firstAttribute="height" constant="200" id="aGM-sL-OjW"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KTB-Xr-odd">
-                                <rect key="frame" x="0.0" y="285" width="375" height="0.0"/>
+                                <rect key="frame" x="0.0" y="324" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="OLr-Ua-TBz"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="LVh-5y-UiB">
-                                <rect key="frame" x="0.0" y="285" width="375" height="269"/>
+                                <rect key="frame" x="0.0" y="324" width="375" height="230"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="pCZ-ol-b2l" id="k9U-3V-Fv0"/>
@@ -154,10 +165,10 @@
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yeu-16-34c">
-                                <rect key="frame" x="0.0" y="285" width="375" height="269"/>
+                                <rect key="frame" x="0.0" y="324" width="375" height="230"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zqn-wx-djT">
-                                        <rect key="frame" x="38" y="-30.5" width="300" height="330"/>
+                                        <rect key="frame" x="37.5" y="-50" width="300" height="330"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="b8C-Y6-nMb">
                                                 <rect key="frame" x="67" y="0.0" width="165" height="160"/>
@@ -230,18 +241,20 @@
                             <constraint firstItem="Yeu-16-34c" firstAttribute="height" secondItem="LVh-5y-UiB" secondAttribute="height" id="ArJ-4A-fXR"/>
                             <constraint firstItem="AlM-94-dql" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="FvM-dq-5Dq"/>
                             <constraint firstItem="FtV-00-agp" firstAttribute="top" secondItem="LVh-5y-UiB" secondAttribute="bottom" constant="113" id="Gsl-Ly-ji5"/>
+                            <constraint firstItem="LVh-5y-UiB" firstAttribute="top" secondItem="BuE-Ey-QUf" secondAttribute="bottom" constant="1" id="HMY-nG-gEi"/>
                             <constraint firstItem="Yeu-16-34c" firstAttribute="width" secondItem="LVh-5y-UiB" secondAttribute="width" id="Jmy-NG-mH0"/>
-                            <constraint firstItem="KTB-Xr-odd" firstAttribute="top" secondItem="BuE-Ey-QUf" secondAttribute="bottom" id="MuS-Ty-hi9"/>
+                            <constraint firstItem="Y2y-G7-qLb" firstAttribute="top" secondItem="2sb-AH-CZ7" secondAttribute="bottom" id="NAd-JF-hUR"/>
                             <constraint firstItem="KTB-Xr-odd" firstAttribute="centerX" secondItem="LVh-5y-UiB" secondAttribute="centerX" id="Rki-Gz-rIP"/>
-                            <constraint firstItem="AlM-94-dql" firstAttribute="top" secondItem="H07-oV-06e" secondAttribute="bottom" constant="40" id="Sbm-KY-oTi"/>
+                            <constraint firstItem="2sb-AH-CZ7" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" constant="-60" id="Tju-ht-Fgx"/>
                             <constraint firstItem="Y2y-G7-qLb" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="UAb-Of-IHW"/>
                             <constraint firstItem="Yeu-16-34c" firstAttribute="centerY" secondItem="LVh-5y-UiB" secondAttribute="centerY" id="VZJ-B8-5oq"/>
-                            <constraint firstItem="Y2y-G7-qLb" firstAttribute="top" secondItem="H07-oV-06e" secondAttribute="bottom" id="bS8-AT-dP5"/>
+                            <constraint firstItem="2sb-AH-CZ7" firstAttribute="top" secondItem="H07-oV-06e" secondAttribute="bottom" constant="10" id="dLF-Sy-5kH"/>
                             <constraint firstItem="LVh-5y-UiB" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="eln-jA-D1f"/>
                             <constraint firstItem="BuE-Ey-QUf" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="eqY-s9-gzU"/>
                             <constraint firstItem="Y2y-G7-qLb" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="fhx-y4-mcf"/>
                             <constraint firstItem="KTB-Xr-odd" firstAttribute="width" secondItem="LVh-5y-UiB" secondAttribute="width" id="ilk-A7-7bR"/>
                             <constraint firstItem="BuE-Ey-QUf" firstAttribute="width" secondItem="bA4-nq-QxQ" secondAttribute="width" id="k2m-kd-fsF"/>
+                            <constraint firstItem="2sb-AH-CZ7" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="pW3-Hs-cYf"/>
                             <constraint firstItem="Yeu-16-34c" firstAttribute="centerX" secondItem="LVh-5y-UiB" secondAttribute="centerX" id="t6M-ww-sPN"/>
                             <constraint firstItem="AlM-94-dql" firstAttribute="centerX" secondItem="bA4-nq-QxQ" secondAttribute="centerX" id="wgD-jd-tIX"/>
                         </constraints>
@@ -250,10 +263,18 @@
                         <outlet property="addSessionBT" destination="DgL-hv-yZs" id="boS-dD-VD7"/>
                         <outlet property="calendarMenuView" destination="AlM-94-dql" id="8wi-Cr-KpY"/>
                         <outlet property="calendarView" destination="BuE-Ey-QUf" id="gDN-i5-jvH"/>
+                        <outlet property="calendarViewHeightConstraint" destination="aGM-sL-OjW" id="05o-aD-b4v"/>
+                        <outlet property="calendateMenuViewHeightConstraint" destination="N0K-Jd-Zm3" id="14n-Z2-ngZ"/>
                         <outlet property="monthLabel" destination="Y2y-G7-qLb" id="0oY-tN-1bL"/>
+                        <outlet property="monthLabelHeightConstraint" destination="8YG-j4-mkm" id="kFG-EK-bgo"/>
                         <outlet property="noSessionContentLB" destination="FPh-SE-b0f" id="lMa-FQ-aZI"/>
+                        <outlet property="noSessionContentLBHeightConstraint" destination="h2j-3d-5es" id="dHZ-bA-jHE"/>
                         <outlet property="noSessionV" destination="Yeu-16-34c" id="Jbw-DA-WGA"/>
+                        <outlet property="noSessionVCenterYConstraint" destination="Hxj-HS-a16" id="TQM-K3-Ndd"/>
                         <outlet property="noSessionYetLB" destination="ilN-Iv-NCy" id="03e-qg-FIY"/>
+                        <outlet property="nosessionIMVHeightConstraint" destination="2M0-b6-4nP" id="uw9-Z3-ykp"/>
+                        <outlet property="selectSegment" destination="2sb-AH-CZ7" id="nfb-ne-VT7"/>
+                        <outlet property="separateLineView" destination="KTB-Xr-odd" id="r3F-S5-ewy"/>
                         <outlet property="sessionTableView" destination="LVh-5y-UiB" id="NXF-b4-Jhv"/>
                         <segue destination="MTa-5x-DKj" kind="show" identifier="userLogASession" id="Au2-PE-kLY"/>
                         <segue destination="J1j-nG-bBm" kind="show" identifier="userSessionDetail" id="uSf-uW-Yee"/>
@@ -275,8 +296,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="KiF-kK-S2w">
+                                <rect key="frame" x="30" y="30" width="315" height="29"/>
+                                <segments>
+                                    <segment title="UPCOMING"/>
+                                    <segment title="COMPLETED"/>
+                                </segments>
+                                <color key="tintColor" red="0.98431372549999996" green="0.26274509800000001" blue="0.066666666669999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="selecSegmentValueChanged:" destination="8IK-lA-zrj" eventType="valueChanged" id="APA-Ef-tE1"/>
+                                </connections>
+                            </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Zo-kd-LVO">
-                                <rect key="frame" x="-0.5" y="20" width="375" height="40"/>
+                                <rect key="frame" x="-0.5" y="58" width="375" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="0ev-jS-9oS"/>
                                 </constraints>
@@ -285,17 +317,17 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7VX-5T-wDu" customClass="CVCalendarMenuView" customModule="CVCalendar">
-                                <rect key="frame" x="-0.5" y="60" width="375" height="25"/>
+                                <rect key="frame" x="-0.5" y="98" width="375" height="25"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="EZy-BQ-BVv"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6xz-Ty-mBN" customClass="CVCalendarView" customModule="CVCalendar">
-                                <rect key="frame" x="0.0" y="85" width="375" height="200"/>
+                                <rect key="frame" x="0.0" y="123" width="375" height="200"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="6xz-Ty-mBN" secondAttribute="height" multiplier="15:8" id="H88-XC-Wt0"/>
+                                    <constraint firstAttribute="height" constant="200" id="pJp-1Y-e1O"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="weekdayTextColor">
@@ -327,14 +359,14 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4kt-y9-lTb">
-                                <rect key="frame" x="0.0" y="285" width="375" height="0.0"/>
+                                <rect key="frame" x="0.0" y="324" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="SST-tw-Eum"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cNQ-UE-cfY">
-                                <rect key="frame" x="0.0" y="285" width="375" height="269"/>
+                                <rect key="frame" x="0.0" y="324" width="375" height="230"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="8IK-lA-zrj" id="xsT-rh-UjU"/>
@@ -342,10 +374,10 @@
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yNc-Ka-tbk">
-                                <rect key="frame" x="0.0" y="285" width="375" height="269"/>
+                                <rect key="frame" x="0.0" y="324" width="375" height="230"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sud-nu-fq2">
-                                        <rect key="frame" x="38" y="-30.5" width="300" height="330"/>
+                                        <rect key="frame" x="37.5" y="-50" width="300" height="330"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ctf-xl-sx4">
                                                 <rect key="frame" x="67" y="0.0" width="165" height="160"/>
@@ -413,7 +445,7 @@
                             <constraint firstItem="cNQ-UE-cfY" firstAttribute="top" secondItem="4kt-y9-lTb" secondAttribute="bottom" id="BJB-fk-XZ0"/>
                             <constraint firstItem="6Zo-kd-LVO" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="BKb-en-Rob"/>
                             <constraint firstItem="cNQ-UE-cfY" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="ECJ-Qa-3nQ"/>
-                            <constraint firstItem="cNQ-UE-cfY" firstAttribute="top" secondItem="6xz-Ty-mBN" secondAttribute="bottom" id="GV4-XV-lXX"/>
+                            <constraint firstItem="cNQ-UE-cfY" firstAttribute="top" secondItem="6xz-Ty-mBN" secondAttribute="bottom" constant="1" id="GV4-XV-lXX"/>
                             <constraint firstItem="yNc-Ka-tbk" firstAttribute="width" secondItem="cNQ-UE-cfY" secondAttribute="width" id="I6L-1H-LG2"/>
                             <constraint firstItem="6Zo-kd-LVO" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="OK4-vZ-c11"/>
                             <constraint firstItem="yNc-Ka-tbk" firstAttribute="centerX" secondItem="cNQ-UE-cfY" secondAttribute="centerX" id="PIz-Yu-tTA"/>
@@ -421,11 +453,14 @@
                             <constraint firstItem="4kt-y9-lTb" firstAttribute="width" secondItem="cNQ-UE-cfY" secondAttribute="width" id="QeX-O7-Vio"/>
                             <constraint firstItem="6xz-Ty-mBN" firstAttribute="top" secondItem="7VX-5T-wDu" secondAttribute="bottom" id="Rha-O8-697"/>
                             <constraint firstItem="6xz-Ty-mBN" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="Ric-kc-uCG"/>
+                            <constraint firstItem="KiF-kK-S2w" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" constant="-60" id="U4e-up-JLU"/>
+                            <constraint firstItem="KiF-kK-S2w" firstAttribute="top" secondItem="pNU-IE-dKP" secondAttribute="bottom" constant="10" id="dt2-dJ-9z9"/>
                             <constraint firstItem="yNc-Ka-tbk" firstAttribute="height" secondItem="cNQ-UE-cfY" secondAttribute="height" id="gIc-dg-hSz"/>
                             <constraint firstItem="sNH-h6-ife" firstAttribute="top" secondItem="cNQ-UE-cfY" secondAttribute="bottom" constant="113" id="i4g-PN-NHf"/>
                             <constraint firstItem="7VX-5T-wDu" firstAttribute="top" secondItem="6Zo-kd-LVO" secondAttribute="bottom" id="klZ-G2-neX"/>
-                            <constraint firstItem="6Zo-kd-LVO" firstAttribute="top" secondItem="pNU-IE-dKP" secondAttribute="bottom" id="oKa-oZ-xok"/>
                             <constraint firstItem="6xz-Ty-mBN" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="pSy-Z8-Tlc"/>
+                            <constraint firstItem="KiF-kK-S2w" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="sdU-WF-Qfu"/>
+                            <constraint firstItem="6Zo-kd-LVO" firstAttribute="top" secondItem="KiF-kK-S2w" secondAttribute="bottom" id="vHl-bo-4hH"/>
                             <constraint firstItem="7VX-5T-wDu" firstAttribute="width" secondItem="pES-rv-YXe" secondAttribute="width" id="xWO-zB-ecK"/>
                             <constraint firstItem="7VX-5T-wDu" firstAttribute="centerX" secondItem="pES-rv-YXe" secondAttribute="centerX" id="yH1-Ko-2dr"/>
                         </constraints>
@@ -434,10 +469,18 @@
                         <outlet property="addSessionBT" destination="2WY-AM-sLP" id="ANl-fs-FbZ"/>
                         <outlet property="calendarMenuView" destination="7VX-5T-wDu" id="Qmi-ft-hx5"/>
                         <outlet property="calendarView" destination="6xz-Ty-mBN" id="zGn-j5-u70"/>
+                        <outlet property="calendarViewHeightConstraint" destination="pJp-1Y-e1O" id="AFm-gM-RON"/>
+                        <outlet property="calendateMenuViewHeightConstraint" destination="EZy-BQ-BVv" id="FrE-Xp-kI5"/>
                         <outlet property="monthLabel" destination="6Zo-kd-LVO" id="sKY-oz-X31"/>
+                        <outlet property="monthLabelHeightConstraint" destination="0ev-jS-9oS" id="L4n-Tn-ah2"/>
                         <outlet property="noSessionContentLB" destination="vRC-je-KhA" id="xud-j2-GbX"/>
+                        <outlet property="noSessionContentLBHeightConstraint" destination="eiG-bc-lxp" id="frd-pJ-BW2"/>
                         <outlet property="noSessionV" destination="yNc-Ka-tbk" id="Vc2-XL-uIo"/>
+                        <outlet property="noSessionVCenterYConstraint" destination="jbh-6C-XsI" id="COv-ev-CCb"/>
                         <outlet property="noSessionYetLB" destination="TYJ-sF-yEj" id="7Qd-zC-c8F"/>
+                        <outlet property="nosessionIMVHeightConstraint" destination="zzr-Fy-zjt" id="vMn-BO-zkV"/>
+                        <outlet property="selectSegment" destination="KiF-kK-S2w" id="6vT-sC-c8B"/>
+                        <outlet property="separateLineView" destination="4kt-y9-lTb" id="Y9P-lI-sKn"/>
                         <outlet property="sessionTableView" destination="cNQ-UE-cfY" id="KgZ-cv-Ick"/>
                         <segue destination="MTa-5x-DKj" kind="show" identifier="coachLogASession" id="T2L-tM-8pa"/>
                         <segue destination="0eE-Jv-KZD" kind="show" identifier="coachMakeABook" id="982-Lm-wWA"/>
@@ -854,7 +897,7 @@
         <image name="sessions.png" width="19" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Au2-PE-kLY"/>
-        <segue reference="uSf-uW-Yee"/>
+        <segue reference="i8A-qC-9BK"/>
+        <segue reference="T2L-tM-8pa"/>
     </inferredMetricsTieBreakers>
 </document>

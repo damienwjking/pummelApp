@@ -16,15 +16,24 @@ import CVCalendar
 
 class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, LogCellDelegate, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
     
-    @IBOutlet weak var monthLabel: UILabel!
-    @IBOutlet weak var calendarMenuView: CVCalendarMenuView!
-    @IBOutlet weak var calendarView: CVCalendarView!
+    @IBOutlet weak var selectSegment: UISegmentedControl!
     
+    @IBOutlet weak var monthLabel: UILabel!
+    @IBOutlet weak var calendarView: CVCalendarView!
+    @IBOutlet weak var calendarMenuView: CVCalendarMenuView!
+    @IBOutlet weak var monthLabelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var calendarViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var calendateMenuViewHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var separateLineView: UIView!
     @IBOutlet weak var sessionTableView: UITableView!
     
     @IBOutlet weak var noSessionV: UIView!
     @IBOutlet weak var noSessionYetLB: UILabel!
     @IBOutlet weak var noSessionContentLB: UILabel!
+    @IBOutlet weak var noSessionVCenterYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var nosessionIMVHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var noSessionContentLBHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var addSessionBT: UIButton!
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -42,10 +51,23 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         self.calendarView.calendarAppearanceDelegate = self
         self.calendarView.calendarDelegate = self
         
-        self.monthLabel.font = UIFont.pmmMonReg18()
+        self.monthLabel.font = UIFont.pmmMonReg13()
         self.noSessionYetLB.font = UIFont.pmmPlayFairReg18()
         self.noSessionContentLB.font = UIFont.pmmMonLight13()
         self.addSessionBT.titleLabel!.font = UIFont.pmmMonReg12()
+        
+        self.selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], forState: .Normal)
+        
+        if self.defaults.objectForKey(k_PM_IS_UP_COMING) == nil {
+            self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
+        } else {
+            let isComingValue = self.defaults.objectForKey(k_PM_IS_UP_COMING) as! Int
+            if isComingValue == 1 {
+                self.selectSegment.selectedSegmentIndex = 0
+            } else {
+                self.selectSegment.selectedSegmentIndex = 1
+            }
+        }
         
         self.initTableView()
         self.initNavigationBar()
@@ -76,9 +98,7 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         
         // Update Calendar
         self.calendarView.presentedDate = CVDate(date: NSDate())
-        let convertDateFormatter = NSDateFormatter()
-        convertDateFormatter.dateFormat = "LLLL yyyy"
-        self.monthLabel.text = convertDateFormatter.stringFromDate(NSDate())
+        self.updateLayout()
     }
     
     
@@ -149,11 +169,13 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
                     
                     self.getListSession()
                     
-                    //self.calendar.reloadData()
                     self.presentedDateUpdated(self.calendarView.presentedDate)
-                    self.sessionTableView.reloadData()
+                    
+                    self.updateLayout()
             }
         }
+        
+        self.calendarView.contentController.refreshPresentedMonth()
     }
     
     // MARK: UITableView
@@ -214,6 +236,8 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     }
     
     func presentedDateUpdated(date: Date) {
+        self.calendarView.contentController.refreshPresentedMonth()
+        
         // update month label
         let monthDateFormatter = NSDateFormatter()
         monthDateFormatter.dateFormat = "yyyy M"
@@ -277,6 +301,44 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         return UIColor.pmmBrightOrangeColor()
     }
     
+    func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        //let eventDateString = dateFormatter.stringFromDate(date)
+        
+        let calendarString = String(format:"%ld%ld%ld%ld%ld", dayView.date.year, dayView.date.month/10, dayView.date.month%10, dayView.date.day/10, dayView.date.day%10)
+        
+        let fullDateFormatter = NSDateFormatter()
+        fullDateFormatter.dateFormat = kFullDateFormat
+        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        
+        var i = 0
+        var showDotMarker = false
+        while i < self.sessionList.count {
+            let session = self.sessionList[i]
+            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            
+            if calendarString == sessionDateString {
+                showDotMarker = true
+                break;
+            }
+            
+            i = i + 1
+        }
+        
+        return showDotMarker
+    }
+    
+    func dotMarker(moveOffsetOnDayView dayView: DayView) -> CGFloat {
+        return 9
+    }
+    
+    func dotMarker(colorOnDayView dayView: DayView) -> [UIColor] {
+        return [UIColor.pmmBrightOrangeColor()]
+    }
+    
     // MARK: Outlet function
     func rightButtonClicked() {
         let logAction = UIAlertAction(title: kLog, style: UIAlertActionStyle.Destructive, handler: { (action:UIAlertAction!) -> Void in
@@ -322,6 +384,67 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     
     @IBAction func addSessionBTClicked(sender: AnyObject) {
         self.rightButtonClicked()
+    }
+
+    @IBAction func selecSegmentValueChanged(sender: AnyObject) {
+        if self.selectSegment.selectedSegmentIndex == 0 {
+            self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
+        } else {
+            self.defaults.setValue(0, forKey: k_PM_IS_UP_COMING)
+        }
+        
+        self.updateLayout()
+    }
+
+    func updateLayout() {
+        // Update layout
+        var isUpComing = false
+        
+        let isComingValue = self.defaults.objectForKey(k_PM_IS_UP_COMING) as! Int
+        if isComingValue == 1 {
+            isUpComing = true
+        }
+        
+        if isUpComing == true {
+            self.monthLabelHeightConstraint.constant = 40
+            self.calendarViewHeightConstraint.constant = 200
+            self.calendateMenuViewHeightConstraint.constant = 25
+            self.nosessionIMVHeightConstraint.constant = 0
+            self.noSessionContentLBHeightConstraint.constant = 0
+            self.noSessionVCenterYConstraint.constant = 0;
+            self.separateLineView.hidden = false
+            
+            // to Call function presentedDateUpdated
+            self.calendarView.presentedDate = self.calendarView.presentedDate
+        } else {
+            self.monthLabelHeightConstraint.constant = 0
+            self.calendarViewHeightConstraint.constant = 0
+            self.calendateMenuViewHeightConstraint.constant = 0
+            self.nosessionIMVHeightConstraint.constant = 160
+            self.noSessionContentLBHeightConstraint.constant = 42
+            self.noSessionVCenterYConstraint.constant = -29;
+            self.separateLineView.hidden = true
+            
+            // Update session table
+            let fullDateFormatter = NSDateFormatter()
+            fullDateFormatter.dateFormat = kFullDateFormat
+            fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+            
+            var i = 0
+            self.selectedSessionList.removeAll()
+            while i < self.sessionList.count {
+                let session = self.sessionList[i]
+                let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+                
+                if NSDate().compare(sessionDate!) == .OrderedDescending {
+                    self.selectedSessionList.append(session)
+                }
+                
+                i = i + 1
+            }
+            
+            self.sessionTableView.reloadData()
+        }
     }
     
     // MARK: FSCalendarDataSource

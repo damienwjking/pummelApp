@@ -42,10 +42,10 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.emailTF.autocorrectionType = UITextAutocorrectionType.No
         self.passwordTF.font = .pmmMonReg13()
         self.genderTF.font = .pmmMonReg13()
-        self.continuingLB.font = .pmmMonReg10()
-        self.termOfServiceBT.titleLabel!.font = .pmmMonReg10()
-        self.andLB.font = .pmmMonReg10()
-        self.privacyPolicyBT.titleLabel!.font = .pmmMonReg10()
+        self.continuingLB.font = .pmmMonReg9()
+        self.termOfServiceBT.titleLabel!.font = .pmmMonReg9()
+        self.andLB.font = .pmmMonReg9()
+        self.privacyPolicyBT.titleLabel!.font = .pmmMonReg9()
         
         self.termOfServiceBT.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
         self.privacyPolicyBT.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
