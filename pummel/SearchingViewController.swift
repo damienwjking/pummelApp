@@ -207,8 +207,16 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         let coordinateParams = String(format: "%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
         prefix.appendContentsOf(coordinateParams)
         
+        // TODO: Get current state & current city
+        // let state =
+        // let city =
+        // let stateCity =  String(format: "&%@=%@&%@=%@", "state", state, "city", city)
+
+        
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(locationManager.location?.coordinate.longitude)!, "long":(locationManager.location?.coordinate.latitude)!]
+        
+        
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in

@@ -740,7 +740,6 @@
 				F98BAF6B1D621789004BD41E /* Others */,
 				F9CA4A031D21011500E8A585 /* Search */,
 				F9CA49FC1D20F62E00E8A585 /* Session */,
-				F9827F3D1CBD224F00841BF1 /* Xib */,
 				F9827EB71CBBF31600841BF1 /* Resource */,
 				F98C41B81CF26A4100ECC66E /* GetStarted */,
 				F98C41B61CF26A1300ECC66E /* Login */,
@@ -1083,6 +1082,7 @@
 		F98C41B61CF26A1300ECC66E /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				F9827F3D1CBD224F00841BF1 /* Xib */,
 				F9827F421CBD231D00841BF1 /* SignupViewController.swift */,
 				F9827F461CBD242900841BF1 /* SigninViewController.swift */,
 				9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */,
