@@ -211,7 +211,27 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         // let state =
         // let city =
         // let stateCity =  String(format: "&%@=%@&%@=%@", "state", state, "city", city)
-
+        
+        let geoCoder = CLGeocoder()
+        if locationManager.location != nil {
+            geoCoder.reverseGeocodeLocation(locationManager.location!, completionHandler: { (placemarks, error) -> Void in
+                // Place details
+                var placeMark: CLPlacemark!
+                placeMark = placemarks?[0]
+                if ((placeMark) != nil) {
+                    var state = ""
+                    var city = ""
+                    if ((placeMark.administrativeArea) != nil) {
+                        if placeMark.locality != nil {
+                            city = placeMark.locality!
+                        } else if placeMark.subAdministrativeArea != nil {
+                            city = placeMark.subAdministrativeArea!
+                        }
+                        state = placeMark.administrativeArea!
+                    }
+                }
+            })
+        }
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(locationManager.location?.coordinate.longitude)!, "long":(locationManager.location?.coordinate.latitude)!]
