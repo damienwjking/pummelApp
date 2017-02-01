@@ -407,8 +407,6 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             
             self.sessionTableView.reloadData()
         }
-        
-        self.calendarView.contentController.refreshPresentedMonth()
     }
     
     // MARK: FSCalendarDataSource
