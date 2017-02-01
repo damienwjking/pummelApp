@@ -699,7 +699,15 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     @IBAction func clickOnTwitter() {
         if (self.twitterLink != "") {
             let twitterUrl = NSURL(string: self.twitterLink!)
-            if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
+            var userTwitter = self.twitterLink?.substringFromIndex((self.twitterLink!.rangeOfString("twitter.com/")?.endIndex)!)
+            if ((userTwitter!.rangeOfString("/")?.startIndex) != nil) {
+                userTwitter = userTwitter?.substringToIndex((userTwitter!.rangeOfString("/")?.startIndex)!)
+            }
+            
+            let twitterLink = NSURL(string: "twitter://user?screen_name=".stringByAppendingString(userTwitter!))
+            if (UIApplication.sharedApplication().canOpenURL(twitterLink!)) {
+                UIApplication.sharedApplication().openURL(twitterLink!)
+            } else if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
             {
                 UIApplication.sharedApplication().openURL(twitterUrl!)
                 
