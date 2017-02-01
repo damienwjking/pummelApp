@@ -8,9 +8,14 @@
 
 import Foundation
 import UIKit
+import Alamofire
 
 class ChangePasswordViewController : BaseViewController {
    
+    @IBOutlet weak var curPassTF: UITextField!
+    @IBOutlet weak var newPassTF: UITextField!
+    @IBOutlet weak var reTypePassTF: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = kChangePassword
@@ -29,11 +34,62 @@ class ChangePasswordViewController : BaseViewController {
     
     func done() {
         // Check new password & retype new password are the same
-        // Call API change password
-        // Show Incicator
-        // Turn off Indicator
-        // Back to settting
-        self.navigationController?.popViewControllerAnimated(true)
+        if self.newPassTF.text?.characters.count < 8 {
+            let alertController = UIAlertController(title: pmmNotice, message: passWordMinCharacter, preferredStyle: .Alert)
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+            return
+        }
+        
+        if self.newPassTF.text == self.reTypePassTF.text {
+            self.view.makeToastActivity()
+            
+            var prefix = kPMAPIUSER
+            let defaults = NSUserDefaults.standardUserDefaults()
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPMAPI_CHANGEPASS)
+            Alamofire.request(.PUT, prefix, parameters: [kPassword:self.curPassTF.text!, kPasswordNew: self.newPassTF.text!])
+                .responseJSON { response in
+                    self.view.hideToastActivity()
+                    print(response.response?.statusCode)
+                    if response.response?.statusCode == 200 {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    } else if response.response?.statusCode == 401 {
+                        let alertController = UIAlertController(title: pmmNotice, message: curPassWrong, preferredStyle: .Alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    } else {
+                        self.view.hideToastActivity()
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    }
+            }
+        } else {
+            let alertController = UIAlertController(title: pmmNotice, message: passWordNotMatch, preferredStyle: .Alert)
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+        }
     }
     
     func cancel() {
