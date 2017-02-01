@@ -152,6 +152,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         if textField.isEqual(self.genderTF) == true {
+            self.showPopupToSelectGender()
             return false
         } else {
             return true
@@ -163,7 +164,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         return emailTest.evaluateWithObject(testStr)
     }
     
-    @IBAction func showPopupToSelectGender(sender:UIDatePicker) {
+    @IBAction func showPopupToSelectGender() {
         self.emailTF.resignFirstResponder()
         self.passwordTF.resignFirstResponder()
         self.nameTF.resignFirstResponder()
