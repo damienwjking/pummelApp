@@ -321,6 +321,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
                 cell.helpAndSupportLB.text = UIApplication.versionBuild()
                 cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+                cell.selectionStyle = .None
                 return cell
             default:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
@@ -436,6 +437,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
                 cell.helpAndSupportLB.text = UIApplication.versionBuild()
                 cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+                cell.selectionStyle = .None
                 return cell
             default:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
@@ -604,11 +606,23 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func openPrivacy() {
-        UIApplication.sharedApplication().openURL(NSURL(string: kPM_PRIVACY)!)
+        let alertController = UIAlertController(title: pmmNotice, message: openLink, preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            UIApplication.sharedApplication().openURL(NSURL(string: kPM_PRIVACY)!)
+        }
+        alertController.addAction(OKAction)
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alertController, animated: true) {}
     }
     
     func openTerms() {
-        UIApplication.sharedApplication().openURL(NSURL(string: kPM_TERM)!)
+        let alertController = UIAlertController(title: pmmNotice, message: openLink, preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+             UIApplication.sharedApplication().openURL(NSURL(string: kPM_TERM)!)
+        }
+        alertController.addAction(OKAction)
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alertController, animated: true) {}
     }
     
     func showSendMailErrorAlert() {
