@@ -18,7 +18,8 @@ class ContactUserCell : UITableViewCell {
         self.imageView?.layer.cornerRadius = 20
         self.imageView?.layer.masksToBounds = true
         
-        self.textLabel?.font = UIFont.pmmMonReg16()
+        self.textLabel?.font = UIFont.pmmMonReg13()
+        self.textLabel?.textColor = UIColor.darkGrayColor()
         self.textLabel?.frame = CGRectMake(60, 0, self.frame.width, self.frame.height)
         
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
@@ -113,7 +114,7 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
             cell?.imageView?.image = UIImage(data: contact.thumbnailImageData!)
         }
         
-        var contactName = ""
+        var contactName : String = ""
         if contact.givenName.isEmpty == false {
             contactName = contact.givenName
         } else {
@@ -125,7 +126,7 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
         }
         
         
-        cell?.textLabel?.text = contactName
+        cell?.textLabel?.text = contactName.uppercaseString
         
         return cell!
     }
