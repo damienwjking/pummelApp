@@ -34,9 +34,13 @@ class Session: NSObject {
         self.userId = sessionContent.objectForKey("userId") as? Int
         self.coachId = sessionContent.objectForKey("coachId") as? Int
         self.uploadId = sessionContent.objectForKey("uploadId") as? String
-        self.datetime = sessionContent.objectForKey("datetime") as? String
         self.createdAt = sessionContent.objectForKey("createdAt") as? String
         self.updatedAt = sessionContent.objectForKey("updatedAt") as? String
+        self.datetime = sessionContent.objectForKey("datetime") as? String
+        if self.datetime == nil {
+            self.datetime = self.createdAt
+        }
+        
         self.intensity = sessionContent.objectForKey("intensity") as? String
         self.distance = sessionContent.objectForKey("distance") as? Int
         if self.distance == nil {

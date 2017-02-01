@@ -11,10 +11,9 @@ import Foundation
 import Alamofire
 import AlamofireImage
 import EventKit
-import FSCalendar
 import CVCalendar
 
-class SessionClientViewController: BaseViewController, LogCellDelegate, UITableViewDelegate, UITableViewDataSource, FSCalendarDelegate, FSCalendarDataSource, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
+class SessionClientViewController: BaseViewController, LogCellDelegate, UITableViewDelegate, UITableViewDataSource, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
     
     @IBOutlet weak var selectSegment: UISegmentedControl!
 
@@ -407,60 +406,6 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             
             self.sessionTableView.reloadData()
         }
-    }
-    
-    // MARK: FSCalendarDataSource
-    func calendar(calendar: FSCalendar, numberOfEventsForDate date: NSDate) -> Int {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let eventDateString = dateFormatter.stringFromDate(date)
-        
-        let fullDateFormatter = NSDateFormatter()
-        fullDateFormatter.dateFormat = kFullDateFormat
-        
-        var i = 0
-        var numberEvent = 0
-        while i < self.sessionList.count {
-            let session = self.sessionList[i]
-            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
-            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
-            
-            if eventDateString == sessionDateString {
-                numberEvent = numberEvent + 1
-            }
-            
-            i = i + 1
-        }
-        
-        return numberEvent
-    }
-    
-    // MARK: FSCalendarDelegate
-    func calendar(calendar: FSCalendar, didSelectDate date: NSDate) {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let eventDateString = dateFormatter.stringFromDate(date)
-        
-        let fullDateFormatter = NSDateFormatter()
-        fullDateFormatter.dateFormat = kFullDateFormat
-        
-        var i = 0
-        self.selectedSessionList.removeAll()
-        while i < self.sessionList.count {
-            let session = self.sessionList[i]
-            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
-            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
-            
-            if eventDateString == sessionDateString {
-                self.selectedSessionList.append(session)
-            }
-            
-            i = i + 1
-        }
-        
-        
-//        self.calendar.reloadData()
-        self.sessionTableView.reloadData()
     }
     
     // MARK: LogCellDelegate
