@@ -321,6 +321,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
                 cell.helpAndSupportLB.text = UIApplication.versionBuild()
                 cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+                cell.selectionStyle = .None
                 return cell
             default:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
@@ -436,6 +437,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.helpAndSupportLB.textColor = UIColor.blackColor()
                 cell.helpAndSupportLB.text = UIApplication.versionBuild()
                 cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+                cell.selectionStyle = .None
                 return cell
             default:
                 let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
