@@ -773,7 +773,21 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
     
                 locationPicker.completion = {
-                    self.location = $0
+                    if let placeMark = $0?.placemark {
+                        // City
+                        var city = "..."
+                        if ((placeMark.administrativeArea) != nil) {
+                            if placeMark.subAdministrativeArea != nil {
+                                city = "\(placeMark.subAdministrativeArea!), \(placeMark.administrativeArea!)"
+                            } else if placeMark.locality != nil {
+                                city = "\(placeMark.locality!), \(placeMark.administrativeArea!)"
+                            } else {
+                                city = placeMark.administrativeArea!
+                            }
+                        }
+                        
+                        self.location = Location(name: city, location: $0?.location, placemark: placeMark)
+                    }
                     
                     self.getCityStageOfUser((self.location?.coordinate.latitude)!, long: (self.location?.coordinate.longitude)!)
                 }
