@@ -43,19 +43,17 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     var newLeadCell = SettingNewConnectionsTableViewCell()
     var messageCell = SettingNewConnectionsTableViewCell()
     var sessionCell = SettingNewConnectionsTableViewCell()
-    
+    var backFromOther : Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = kNavSetting
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationController!.navigationBar.translucent = false;
-        settingTableView.delegate = self
-        settingTableView.dataSource = self
-        
+       
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DONE", style: .Plain, target: self, action: #selector(SettingsViewController.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
-         self.navigationItem.setHidesBackButton(true, animated: false)
+        self.navigationItem.setHidesBackButton(true, animated: false)
         
         if self.defaults.objectForKey(kNewConnections) == nil {
             self.defaults.setObject(true, forKey: kNewConnections)
@@ -69,11 +67,18 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
         if self.defaults.objectForKey(kUnit) == nil {
             self.defaults.setObject(metric, forKey: kUnit)
         }
+
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        settingTableView.delegate = self
+        settingTableView.dataSource = self
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true && self.backFromOther == false) {
             let indexpath = NSIndexPath(forRow: 3, inSection: 0)
             let cellLocation = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingLocationTableViewCell
             if self.location != nil {
@@ -90,7 +95,10 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     self.updateLocationCoach()
                 }
             }
-            
+        }
+        
+        if (self.backFromOther == true) {
+            self.backFromOther = false
         }
     }
     
@@ -565,6 +573,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func sendSupportEmail() {
+        self.backFromOther = true
         if MFMailComposeViewController.canSendMail() {
             let mailComposerVC = MFMailComposeViewController()
             mailComposerVC.mailComposeDelegate = self
@@ -577,6 +586,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func sendFeedbackEmail() {
+        self.backFromOther = true
         if MFMailComposeViewController.canSendMail() {
             let mailComposerVC = MFMailComposeViewController()
             mailComposerVC.mailComposeDelegate = self
@@ -792,11 +802,13 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     self.getCityStageOfUser((self.location?.coordinate.latitude)!, long: (self.location?.coordinate.longitude)!)
                 }
         } else if (segue.identifier == "upgradeCoach") {
+            self.backFromOther = true
             let destinationVC = segue.destinationViewController as! EditCoachProfileForUpgradeViewController
             destinationVC.userInfo = self.userInfo
             destinationVC.settingCV = self
+        } else if (segue.identifier == "changePassword") {
+            self.backFromOther = true
         }
-        
     }
     
     func getCityStageOfUser(lat:CLLocationDegrees, long:CLLocationDegrees) {
