@@ -560,7 +560,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
             var value = String(format:"%0.f", sender.value)
             value.appendContentsOf(" kms")
             cellDistance.maxDistanceContentLB.text = value
-            self.distanceSliderValue = sender.value as! CGFloat
+            self.distanceSliderValue = CGFloat(sender.value)
         }
     }
     

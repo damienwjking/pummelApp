@@ -32,6 +32,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
 
     var limit: Int = 0
     var offset: Int = 0
+    var prefix = kPMAPICOACH_SEARCH
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -188,7 +189,6 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
     }
     
     func search() {
-        var prefix = kPMAPICOACH_SEARCH
         let limitParams = String(format: "?%@=30&%@=0", kLimit, kOffset)
         prefix.appendContentsOf(limitParams)
         if (gender != kDontCare) {
@@ -229,69 +229,54 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         }
                         state = placeMark.administrativeArea!
                     }
-                }
-            })
-        }
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(locationManager.location?.coordinate.longitude)!, "long":(locationManager.location?.coordinate.latitude)!]
-        
-        
-        
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    if (response.result.value == nil) {return}
-                   // if (self.stopAnimation == true) {
-                        self.getResultSearch = true
-                        let presentingViewController = self.presentingViewController
-                    let secondsWait = 2.0
-                    let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-
-                        self.dismissViewControllerAnimated(false, completion: {
-                            let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-                            let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                            findVC.arrayResult.removeAll()
-                            findVC.refined = true
-                            findVC.arrayResult = response.result.value  as! [NSDictionary]
-                            findVC.viewDidLayoutSubviews()
-                            findVC.showLetUsHelp = false
-                            findVC.viewDidLayoutSubviews()
-                            presentingViewController!.dismissViewControllerAnimated(true, completion: {})
-                        })
-                    });
-//                    } else {
-//                        let secondsWait = 6.0
-//                        let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-//                        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-//                        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-//                            let presentingViewController = self.presentingViewController
-//                            self.dismissViewControllerAnimated(false, completion: {
-//                                let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-//                                let findVC = tabbarVC.viewControllers![2] as! FindViewController
-//                                findVC.arrayResult.removeAll()
-//                                findVC.refined = true
-//                                findVC.arrayResult = response.result.value as! [NSDictionary]
-//                                findVC.showLetUsHelp = false
-//                                findVC.viewDidLayoutSubviews()
-//                                presentingViewController!.dismissViewControllerAnimated(true, completion: {})
-//                            })
-//                        })
-//                        
-//                    }
-                } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
+                    
+                    let stateCity =  String(format: "&%@=%@&%@=%@", kState, state, kCity, city.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+                    
+                    
+                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                    appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(self.locationManager.location?.coordinate.longitude)!, "long":(self.locationManager.location?.coordinate.latitude)!, "state": state, "city": city]
+                    
+                    self.prefix.appendContentsOf(stateCity)
+                    
+                    Alamofire.request(.GET, self.prefix)
+                        .responseJSON { response in
+                            if response.response?.statusCode == 200 {
+                                if (response.result.value == nil) {return}
+                                // if (self.stopAnimation == true) {
+                                self.getResultSearch = true
+                                let presentingViewController = self.presentingViewController
+                                let secondsWait = 2.0
+                                let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
+                                let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                                dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                                    
+                                    self.dismissViewControllerAnimated(false, completion: {
+                                        let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
+                                        let findVC = tabbarVC.viewControllers![2] as! FindViewController
+                                        findVC.arrayResult.removeAll()
+                                        findVC.refined = true
+                                        findVC.arrayResult = response.result.value  as! [NSDictionary]
+                                        findVC.viewDidLayoutSubviews()
+                                        findVC.showLetUsHelp = false
+                                        findVC.viewDidLayoutSubviews()
+                                        presentingViewController!.dismissViewControllerAnimated(true, completion: {})
+                                    })
+                                });
+                            } else if response.response?.statusCode == 401 {
+                                let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
+                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                    // TODO: LOGOUT
+                                }
+                                alertController.addAction(OKAction)
+                                self.presentViewController(alertController, animated: true) {
+                                    // ...
+                                }
+                                
+                            }
                     }
                     
                 }
+            })
         }
     }
 }
