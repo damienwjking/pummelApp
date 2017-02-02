@@ -238,6 +238,9 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                 if response.response?.statusCode == 200 {
                     if (response.result.value == nil) {return}
                     self.coachDetail = response.result.value as! NSDictionary
+                    self.defaults.setObject(self.coachDetail["newleadNotification"] as! Int == 0 ? false : true, forKey: kNewConnections)
+                    self.defaults.setObject(self.coachDetail["messageNotification"] as! Int == 0 ? false : true, forKey: kMessage)
+                    self.defaults.setObject(self.coachDetail["sessionNotification"] as! Int == 0 ? false : true, forKey: kSessions)
                     self.defaults.setObject(self.coachDetail[kUnits], forKey: kUnit)
                     self.defaults.setObject(self.coachDetail[kFirstname], forKey: kFirstname)
                     kFirstname

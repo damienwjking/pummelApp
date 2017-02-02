@@ -102,6 +102,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    
+    
     func updateLocationCoach() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
@@ -131,6 +133,9 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func done() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.defaults.setObject(self.newLeadCell.switchBT.on, forKey: kNewConnections)
+            self.defaults.setObject(self.messageCell.switchBT.on, forKey: kMessage)
+            self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
             var prefix = kPMAPICOACH
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             self.view.makeToastActivity(message: "Saving")
@@ -142,24 +147,36 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
             Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
                 .responseJSON { response in switch response.result {
                 case .Success(_):
-                    self.navigationController?.popViewControllerAnimated(true)
-                    self.view.hideToastActivity()
+                    var prefixUser = kPMAPIUSER
+                    prefixUser.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                    prefixUser.appendContentsOf("/notification")
+                    let paramUser = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, "messageNotification": self.messageCell.switchBT.on ? "1" : "0", "newleadNotification": self.newLeadCell.switchBT.on ? "1" : "0", "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
+                    
+                    Alamofire.request(.PUT, prefixUser, parameters: paramUser)
+                        .responseJSON { response in
+                            self.navigationController?.popViewControllerAnimated(true)
+                            self.view.hideToastActivity()
+                    }
                 case .Failure(let error):
                     print(error)
                     self.navigationController?.popViewControllerAnimated(true)
                     self.view.hideToastActivity()
                     }
             }
-            
-            self.defaults.setObject(self.newLeadCell.switchBT.on, forKey: kNewConnections)
-            self.defaults.setObject(self.messageCell.switchBT.on, forKey: kMessage)
-            self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
         } else {
-            
             self.defaults.setObject(self.messageCell.switchBT.on, forKey: kMessage)
             self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
+            self.view.makeToastActivity(message: "Saving")
+            var prefixUser = kPMAPIUSER
+            prefixUser.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefixUser.appendContentsOf("/notification")
+            let paramUser = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, "messageNotification": self.messageCell.switchBT.on ? "1" : "0", "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
             
-            self.navigationController?.popViewControllerAnimated(true)
+            Alamofire.request(.PUT, prefixUser, parameters: paramUser)
+                .responseJSON { response in
+                    self.navigationController?.popViewControllerAnimated(true)
+                    self.view.hideToastActivity()
+            }
         }
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -599,7 +616,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func sharePummel() {
-        self.shareTextImageAndURL(pummelSlogan, sharingImage: UIImage(named: "pummelLogo.png"), sharingURL: NSURL.init(string: kPM))
+        self.shareTextImageAndURL(pummelSlogan, sharingImage: UIImage(named: "shareLogo.png"), sharingURL: NSURL.init(string: kPM))
     }
     
     func shareTextImageAndURL(sharingText: String?, sharingImage: UIImage?, sharingURL: NSURL?) {

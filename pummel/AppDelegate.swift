@@ -11,7 +11,7 @@
 
 import UIKit
 import UserNotifications
-import SwiftMessages
+//import SwiftMessages
 import Mixpanel
 //import RNNotificationView
 
@@ -81,33 +81,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        if (UIApplication.sharedApplication().applicationState == .Active) {
-             UIApplication.sharedApplication().applicationIconBadgeNumber += 1
-             NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
-            // Using Singleton
-            
-            let notification = MessageView.viewFromNib(layout: .CardView)
-            notification.configureTheme(.Success)
-            notification.configureDropShadow()
-            notification.configureContent(title: "Pummel", body: "You have a message")
-            notification.button?.hidden = true
-            notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
-            var notificationConfig = SwiftMessages.defaultConfig
-            notificationConfig.duration = .Seconds(seconds: 1);
-            notificationConfig.presentationStyle = .Top
-            notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
-            SwiftMessages.show(config: notificationConfig, view: notification)
-            
-            let foregroundButton = UIButton(action: { (UIControl) in
-                NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
-                }, forControlEvents: .TouchUpInside)
-            foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
-            
-            notification.addSubview(foregroundButton)
-            
-        } else {
-             NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
-        }
+//        if (UIApplication.sharedApplication().applicationState == .Active) {
+//             UIApplication.sharedApplication().applicationIconBadgeNumber += 1
+//             NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
+//            // Using Singleton
+//            
+//            let notification = MessageView.viewFromNib(layout: .CardView)
+//            notification.configureTheme(.Success)
+//            notification.configureDropShadow()
+//            notification.configureContent(title: "Pummel", body: "You have a message")
+//            notification.button?.hidden = true
+//            notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
+//            var notificationConfig = SwiftMessages.defaultConfig
+//            notificationConfig.duration = .Seconds(seconds: 1);
+//            notificationConfig.presentationStyle = .Top
+//            notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
+//            SwiftMessages.show(config: notificationConfig, view: notification)
+//            
+//            let foregroundButton = UIButton(action: { (UIControl) in
+//                NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
+//                }, forControlEvents: .TouchUpInside)
+//            foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
+//            
+//            notification.addSubview(foregroundButton)
+//            
+//        } else {
+//             NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
+//        }
     }
 
     @available(iOS 10.0, *)

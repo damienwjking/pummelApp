@@ -137,7 +137,7 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if MFMessageComposeViewController.canSendText() {
             let contact = self.contacts[indexPath.row]
-            let messageImage = UIImage(named: "pummel_logo_message")
+            let messageImage = UIImage(named: "shareLogo.png")
             let messageImageData = UIImagePNGRepresentation(messageImage!)
             
             var phoneNumberString = ""
@@ -147,7 +147,7 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
             }
             
             let controller = MFMessageComposeViewController()
-            controller.body = kMessageInviteContact
+            controller.body = pummelSlogan
             controller.recipients = [phoneNumberString]
             controller.addAttachmentData(messageImageData!, typeIdentifier: "public.data", filename: "image.png")
             
