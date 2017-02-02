@@ -147,7 +147,7 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
             }
             
             let controller = MFMessageComposeViewController()
-            controller.body = pummelSlogan
+            controller.body = kMessageInviteContact
             controller.recipients = [phoneNumberString]
             controller.addAttachmentData(messageImageData!, typeIdentifier: "public.data", filename: "image.png")
             
