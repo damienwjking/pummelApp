@@ -12,6 +12,7 @@ import Foundation
 
 class LogSessionClientDetailViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, FusumaDelegate, UITextFieldDelegate {
     var tag: Tag = Tag()
+    var editSession = Session()
     var userInfoSelect:NSDictionary!
     
     @IBOutlet weak var tappedV: UIView!
@@ -61,10 +62,13 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     var distanceSelected: String = "0"
     var caloriesSelected: String = "0"
     var longtimeSelected: String = "0"
+    let timeFormatter: NSDateFormatter = NSDateFormatter()
     var isPublic = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.timeFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
         
         self.initNavigationBar()
         
@@ -116,8 +120,15 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         super.viewWillAppear(animated)
         self.hourLB.text = "0"
         self.minuteLB.text = "0"
-        let title = self.tag.name?.componentsSeparatedByString(" ").joinWithSeparator("")
-        self.titleButton.setTitle(String(format: "#%@", (title!.uppercaseString)), forState: .Normal)
+        
+        if self.editSession.id == nil {
+            let title = self.tag.name?.componentsSeparatedByString(" ").joinWithSeparator("")
+            self.titleButton.setTitle(String(format: "#%@", (title!.uppercaseString)), forState: .Normal)
+        } else {
+            self.titleButton.setTitle(self.editSession.type?.uppercaseString, forState: .Normal)
+        }
+        
+        
         self.titleButton.titleLabel?.font = UIFont.pmmMonReg13()
         self.titleButton.setTitleColor(UIColor(white: 32.0 / 255.0, alpha: 1.0), forState: .Normal)
         self.titleButton.sizeToFit()
@@ -131,6 +142,12 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                                             self.titleButton.frame.width,
                                             (navigationBar?.frame.height)!)
 
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.initSessionData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -163,6 +180,67 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         }
     }
     
+    func initSessionData() {
+        if editSession.id != nil {
+            let fullDateFormatter = NSDateFormatter()
+            fullDateFormatter.dateFormat = kFullDateFormat
+            let sessionDate = fullDateFormatter.dateFromString(self.editSession.datetime!)
+            self.dateTF.text = self.timeFormatter.stringFromDate(sessionDate!)
+            
+            self.contentTV.text = self.editSession.text
+            
+            if self.editSession.longtime == nil {
+                self.hourLB.text = "0"
+                self.minuteLB.text = "0"
+            } else {
+                let hour = self.editSession.longtime! / 60
+                let minute = self.editSession.longtime! % 60
+                
+                self.hourLB.text = String(format: "%ld", hour)
+                self.minuteLB.text = String(format: "%ld", minute)
+            }
+            
+            if self.editSession.distance == nil {
+                self.distanceLB.text = "0"
+            } else {
+                self.distanceLB.text = String(format: "%ld", self.editSession.distance!)
+            }
+            
+            if self.editSession.calorie == nil {
+                self.caloriesLB.text = "0"
+            } else {
+                self.caloriesLB.text = String(format: "%ld", self.editSession.calorie!)
+            }
+            
+            if self.editSession.intensity == nil {
+                self.intensityLB.text = "Light"
+            } else {
+                self.intensityLB.text = self.editSession.intensity
+            }
+            
+            if self.editSession.imageUrl?.isEmpty == false {
+                let imageLink = self.editSession.imageUrl
+                var prefix = kPMAPI
+                prefix.appendContentsOf(imageLink!)
+                let postfix = widthEqual.stringByAppendingString(self.imageSelected.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.imageSelected.frame.size.width.description)
+                prefix.appendContentsOf(postfix)
+                if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                    let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                    self.imageSelected.image = imageRes
+                } else {
+                    Alamofire.request(.GET, prefix)
+                        .responseImage { response in
+                            if (response.response?.statusCode == 200) {
+                                let imageRes = response.result.value! as UIImage
+                                self.imageSelected.image = imageRes
+                                NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                            }
+                    }
+                }
+            }
+        }
+    }
+    
     func initNavigationBar() {
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         
@@ -171,7 +249,13 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(LogSessionClientDetailViewController.backClicked))
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.saveClicked))
+        if self.editSession.id == nil {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.saveClicked))
+        } else {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.editClicked))
+        }
+        
+        
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
     }
     
@@ -331,14 +415,14 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
             let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
             let parameters = [
-                kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-                "text" : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
-                "type" :String(format: "#%@", (self.tag.name?.uppercaseString)!),
-                kIntensity : self.intensitySelected,
-                kDistance : self.distanceSelected,
-                kLongtime : self.longtimeSelected,
-                kCalorie :  calorieSelected,
-                kDatetime :  selectedDate,
+                kUserId      :defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                kText        : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
+                kType        :String(format: "#%@", (self.tag.name?.uppercaseString)!),
+                kIntensity   : self.intensitySelected,
+                kDistance    : self.distanceSelected,
+                kLongtime    : self.longtimeSelected,
+                kCalorie     :  calorieSelected,
+                kDatetime    :  selectedDate,
                 kUserIdTarget:userIdSelected
             ]
 
@@ -407,6 +491,93 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         }
     }
     
+    func editClicked() {
+        self.view.makeToastActivity(message: "Saving")
+        var prefix = kPMAPIACTIVITY
+        prefix.appendContentsOf(String(format:"%ld", self.editSession.id!))
+        
+//        var imageData : NSData!
+//        let type : String! = imageJpeg
+//        let filename : String! = jpgeFile
+        
+        let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
+        let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
+        
+        let parameters = [
+            kActivityId : String(format:"%ld", self.editSession.id!),
+            kText       : self.contentTV.text,
+            kIntensity  : self.intensitySelected,
+            kDistance   : self.distanceSelected,
+            kLongtime   : self.longtimeSelected,
+            kCalorie    : calorieSelected,
+            kDatetime   : selectedDate,
+        ]
+        
+//        if (self.imageSelected.image != nil) {
+//            imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+//        }
+        
+        
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+//                if (self.imageSelected.image != nil) {
+//                    multipartFormData.appendBodyPart(data: imageData, name: "file",
+//                        fileName:filename, mimeType:type)
+//                }
+                
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key )
+                }
+            },
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                case .Success(let upload, _, _):
+                    
+//                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+//                        dispatch_async(dispatch_get_main_queue()) {
+//                            //                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+//                        }
+//                    }
+//                    upload.validate()
+//                    upload.responseJSON { response in
+//                        self.view.hideToastActivity()
+//                        if response.result.error != nil {
+//                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+//                            
+//                            
+//                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+//                                // ...
+//                            }
+//                            alertController.addAction(OKAction)
+//                            self.presentViewController(alertController, animated: true) {
+//                                // ...
+//                            }
+//                        } else {
+                            self.navigationController?.popToRootViewControllerAnimated(false)
+//                        }
+//                    }
+                    break
+                    
+                case .Failure( _):
+                    self.view.hideToastActivity()
+                    
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                    
+                    
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+            }
+        )
+    }
+
     func cropAndSave() -> UIImage {
         UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
         let offset = imageScrolView.contentOffset
@@ -420,12 +591,12 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     }
 
     func setTimeLBWithDate(date: NSDate) {
-        let timeFormatter = NSDateFormatter()
-        timeFormatter.dateFormat = "HH"
-        hourLB.text = timeFormatter.stringFromDate(date)
+        let clockTimeFormatter = NSDateFormatter()
+        clockTimeFormatter.dateFormat = "HH"
+        hourLB.text = clockTimeFormatter.stringFromDate(date)
         
-        timeFormatter.dateFormat = "mm"
-        minuteLB.text = timeFormatter.stringFromDate(date)
+        clockTimeFormatter.dateFormat = "mm"
+        minuteLB.text = clockTimeFormatter.stringFromDate(date)
         let total = Int(hourLB.text!)!*60 + Int(minuteLB.text!)!
         self.longtimeSelected = String(total)
     }
@@ -474,15 +645,20 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             }
         }
         
-        if self.userInfoSelect == nil {
-            self.avatarUserIMVWidth.constant = 0
-            return
+        var targetUserId = ""
+        if self.editSession.coachId == nil {
+            if self.userInfoSelect == nil {
+                self.avatarUserIMVWidth.constant = 0
+                return
+            } else {
+                if let val = self.userInfoSelect["userId"] as? Int {
+                    targetUserId = "\(val)"
+                }
+            }
+        } else {
+            targetUserId = "\(self.editSession.coachId!)"
         }
         
-        var targetUserId = ""
-        if let val = self.userInfoSelect["userId"] as? Int {
-            targetUserId = "\(val)"
-        }
         
         var prefixUser = kPMAPIUSER
         prefixUser.appendContentsOf(targetUserId)
@@ -528,9 +704,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     }
     
     func handleDatePicker(sender: UIDatePicker) {
-        let timeFormatter = NSDateFormatter()
-        timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
-        dateTF.text = timeFormatter.stringFromDate(sender.date)
+        dateTF.text = self.timeFormatter.stringFromDate(sender.date)
     }
     
     func handleTimePicker(sender: UIDatePicker) {

@@ -46,15 +46,20 @@ class DetailSessionViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.sessionTagColorString = self.getRandomColorString()
         
+        // Back button
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backClicked))
+        
+        // Right button
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kEdit.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.editClicked))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         self.initLayout()
     }
@@ -325,6 +330,18 @@ class DetailSessionViewController: BaseViewController {
     
     func backClicked() {
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func editClicked() {
+        self.performSegueWithIdentifier("editLogSession", sender: self.session)
+    }
+    
+    // MARK: Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "editLogSession" {
+            let destinationVC = segue.destinationViewController as! LogSessionClientViewController
+            destinationVC.editSession = sender as! Session
+        }
     }
 
 }

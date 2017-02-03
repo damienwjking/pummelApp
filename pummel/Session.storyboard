@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -876,6 +875,7 @@
                         <outlet property="timeV" destination="tos-Do-hY9" id="JQF-3E-8xN"/>
                         <outlet property="typeLabel" destination="Iic-W1-c9t" id="sFy-Ud-2YO"/>
                         <outlet property="userIMV" destination="2G2-Vf-bb3" id="K8N-9O-cAk"/>
+                        <segue destination="MTa-5x-DKj" kind="show" identifier="editLogSession" id="Y94-Md-QJ3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bc4-HS-ZYy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -895,7 +895,7 @@
         <image name="sessions.png" width="19" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="uSf-uW-Yee"/>
-        <segue reference="Au2-PE-kLY"/>
+        <segue reference="i8A-qC-9BK"/>
+        <segue reference="Y94-Md-QJ3"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -22,6 +22,8 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
     var offset: Int = 0
     var sizingCell: ActivityCell?
     var bodyBuildingTag = Tag()
+    var editSession = Session()
+    var isEditSession = false
     @IBOutlet weak var flowLayout: FlowLayout!
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -45,6 +47,14 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
         super.viewWillAppear(animated)
         
         self.title = kLogSession
+        
+        if (self.isEditSession == true && self.editSession.id == nil) {
+            self.navigationController?.popViewControllerAnimated(false)
+        }
+        
+        if self.editSession.id != nil {
+            self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -212,7 +222,16 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "goLogSessionDetail" {
             let destination = segue.destinationViewController as! LogSessionClientDetailViewController
-            destination.tag = (sender as! Tag)
+            
+            if sender == nil {
+               destination.editSession = self.editSession
+                self.editSession = Session()
+                self.isEditSession = true
+                
+                
+            } else {
+               destination.tag = (sender as! Tag)
+            }
         } else if segue.identifier == "selectUser" {
             let destination = segue.destinationViewController as! LogSessionSelectUserViewController
             destination.tag = sender as? Tag
