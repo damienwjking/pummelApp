@@ -228,7 +228,9 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
                 self.editSession = Session()
                 self.isEditSession = true
                 
-                
+                let view = UIView(frame: self.view.bounds)
+                view.backgroundColor = UIColor.whiteColor()
+                self.view.addSubview(view)
             } else {
                destination.tag = (sender as! Tag)
             }

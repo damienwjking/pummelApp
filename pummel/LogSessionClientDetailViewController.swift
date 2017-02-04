@@ -26,6 +26,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     @IBOutlet weak var avatarUserIMVWidth: NSLayoutConstraint!
     @IBOutlet weak var imageSelected : UIImageView!
     @IBOutlet weak var imageScrolView : UIScrollView!
+    @IBOutlet weak var imageSelectBtn: UIButton!
     
     @IBOutlet weak var timeTF: UITextField!
     @IBOutlet weak var hourLB: UILabel!
@@ -182,6 +183,8 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     
     func initSessionData() {
         if editSession.id != nil {
+            self.imageSelectBtn.hidden = true
+            
             let fullDateFormatter = NSDateFormatter()
             fullDateFormatter.dateFormat = kFullDateFormat
             let sessionDate = fullDateFormatter.dateFromString(self.editSession.datetime!)
@@ -192,18 +195,24 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             if self.editSession.longtime == nil {
                 self.hourLB.text = "0"
                 self.minuteLB.text = "0"
+                self.longtimeSelected = "0"
             } else {
                 let hour = self.editSession.longtime! / 60
                 let minute = self.editSession.longtime! % 60
                 
                 self.hourLB.text = String(format: "%ld", hour)
                 self.minuteLB.text = String(format: "%ld", minute)
+                
+                self.longtimeSelected = String(format: "%ld", self.editSession.longtime!)
             }
             
             if self.editSession.distance == nil {
                 self.distanceLB.text = "0"
+                self.distanceSelected = "0"
             } else {
                 self.distanceLB.text = String(format: "%ld", self.editSession.distance!)
+                
+                self.distanceSelected = String(format: "%ld", self.editSession.distance!)
             }
             
             if self.editSession.calorie == nil {
@@ -214,8 +223,10 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             
             if self.editSession.intensity == nil {
                 self.intensityLB.text = "Light"
+                self.intensitySelected = "Light"
             } else {
                 self.intensityLB.text = self.editSession.intensity
+                self.intensitySelected = self.editSession.intensity!
             }
             
             if self.editSession.imageUrl?.isEmpty == false {
@@ -496,10 +507,6 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         var prefix = kPMAPIACTIVITY
         prefix.appendContentsOf(String(format:"%ld", self.editSession.id!))
         
-//        var imageData : NSData!
-//        let type : String! = imageJpeg
-//        let filename : String! = jpgeFile
-        
         let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
         let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
         
@@ -513,69 +520,23 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             kDatetime   : selectedDate,
         ]
         
-//        if (self.imageSelected.image != nil) {
-//            imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
-//        }
-        
-        
-        Alamofire.upload(
-            .POST,
-            prefix,
-            multipartFormData: { multipartFormData in
-//                if (self.imageSelected.image != nil) {
-//                    multipartFormData.appendBodyPart(data: imageData, name: "file",
-//                        fileName:filename, mimeType:type)
-//                }
+        Alamofire.request(.PUT, prefix, parameters: parameters)
+            .responseJSON { response in
+                self.view.hideToastActivity()
                 
-                for (key, value) in parameters {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key )
-                }
-            },
-            encodingCompletion: { encodingResult in
-                switch encodingResult {
-                case .Success(let upload, _, _):
-                    
-//                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-//                        dispatch_async(dispatch_get_main_queue()) {
-//                            //                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-//                        }
-//                    }
-//                    upload.validate()
-//                    upload.responseJSON { response in
-//                        self.view.hideToastActivity()
-//                        if response.result.error != nil {
-//                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-//                            
-//                            
-//                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-//                                // ...
-//                            }
-//                            alertController.addAction(OKAction)
-//                            self.presentViewController(alertController, animated: true) {
-//                                // ...
-//                            }
-//                        } else {
-                            self.navigationController?.popToRootViewControllerAnimated(false)
-//                        }
-//                    }
-                    break
-                    
-                case .Failure( _):
-                    self.view.hideToastActivity()
-                    
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                    
-                    
+                if response.response?.statusCode == 200 {
+                    self.navigationController?.popToRootViewControllerAnimated(true)
+                } else if response.response?.statusCode == 401 {
+                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
+                        // TODO: LOGOUT
                     }
                     alertController.addAction(OKAction)
                     self.presentViewController(alertController, animated: true) {
                         // ...
                     }
                 }
-            }
-        )
+        }
     }
 
     func cropAndSave() -> UIImage {

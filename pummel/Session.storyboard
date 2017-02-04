@@ -875,7 +875,7 @@
                         <outlet property="timeV" destination="tos-Do-hY9" id="JQF-3E-8xN"/>
                         <outlet property="typeLabel" destination="Iic-W1-c9t" id="sFy-Ud-2YO"/>
                         <outlet property="userIMV" destination="2G2-Vf-bb3" id="K8N-9O-cAk"/>
-                        <segue destination="MTa-5x-DKj" kind="show" identifier="editLogSession" id="Y94-Md-QJ3"/>
+                        <segue destination="MTa-5x-DKj" kind="show" identifier="editLogSession" animates="NO" id="Y94-Md-QJ3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bc4-HS-ZYy" userLabel="First Responder" sceneMemberID="firstResponder"/>
