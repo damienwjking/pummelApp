@@ -585,28 +585,57 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     }
     
     func setAvatar() {
-        if !(coachDetail[kImageUrl] is NSNull) {
-            let imageLink = coachDetail[kImageUrl] as! String
-            var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
-            let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                self.avatarIMV.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.avatarIMV.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                        }
+        // avatar of User
+        if self.editSession.userId == nil {
+            if !(coachDetail[kImageUrl] is NSNull) {
+                let imageLink = coachDetail[kImageUrl] as! String
+                var prefix = kPMAPI
+                prefix.appendContentsOf(imageLink)
+                let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
+                prefix.appendContentsOf(postfix)
+                if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                    let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                    self.avatarIMV.image = imageRes
+                } else {
+                    Alamofire.request(.GET, prefix)
+                        .responseImage { response in
+                            if (response.response?.statusCode == 200) {
+                                let imageRes = response.result.value! as UIImage
+                                self.avatarIMV.image = imageRes
+                                NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                            }
+                    }
                 }
+            }
+        } else {
+            var prefixUser = kPMAPIUSER
+            let targetUserId = "\(self.editSession.userId!)"
+            prefixUser.appendContentsOf(targetUserId)
+            Alamofire.request(.GET, prefixUser)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    if let userInfo = JSON as? NSDictionary {
+                        var link = kPMAPI
+                        if !(userInfo[kImageUrl] is NSNull) {
+                            link.appendContentsOf(JSON[kImageUrl] as! String)
+                            link.appendContentsOf(widthHeight160)
+                            Alamofire.request(.GET, link)
+                                .responseImage { response in
+                                    let imageRes = response.result.value! as UIImage
+                                    self.avatarIMV.image = imageRes
+                            }
+                        }
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
             }
         }
         
+        // avatar of coach
         var targetUserId = ""
+        self.avatarUserIMVWidth.constant = 40
+        
         if self.editSession.coachId == nil {
             if self.userInfoSelect == nil {
                 self.avatarUserIMVWidth.constant = 0
