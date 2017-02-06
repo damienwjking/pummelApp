@@ -704,7 +704,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 userTwitter = userTwitter?.substringToIndex((userTwitter!.rangeOfString("/")?.startIndex)!)
             }
             
-            let twitterLink = NSURL(string: "twitter://user?screen_name=".stringByAppendingString(userTwitter!))
+            let twitterLink = NSURL(string: "tweetie://user?screen_name=".stringByAppendingString(userTwitter!))
             if (UIApplication.sharedApplication().canOpenURL(twitterLink!)) {
                 UIApplication.sharedApplication().openURL(twitterLink!)
             } else if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
@@ -726,17 +726,8 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     
     @IBAction func clickOnInstagram() {
         if (self.instagramLink  != "") {
-            var userInsta = self.instagramLink?.substringFromIndex((self.instagramLink!.rangeOfString("instagram.com/")?.endIndex)!)
-            if ((userInsta!.rangeOfString("/")?.startIndex) != nil) {
-                userInsta = userInsta?.substringToIndex((userInsta!.rangeOfString("/")?.startIndex)!)
-            }
-            
-            let instaappLink = NSURL(string: "instagram://user?username=".stringByAppendingString(userInsta!))
             let instagramUrl = NSURL(string: self.instagramLink!)
-            
-            if (UIApplication.sharedApplication().canOpenURL(instaappLink!)) {
-                UIApplication.sharedApplication().openURL(instaappLink!)
-            } else if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
+            if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
             {
                 UIApplication.sharedApplication().openURL(instagramUrl!)
                 

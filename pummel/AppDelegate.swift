@@ -110,11 +110,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //        }
     }
 
-    @available(iOS 10.0, *)
-    internal func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
-        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
-    }
+//    @available(iOS 10.0, *)
+//    internal func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
+//        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
+//    }
+    
 }
+
 
 extension NSData {
     var hexString: String {

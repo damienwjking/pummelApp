@@ -811,6 +811,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     @IBAction func clickOnFacebook() {
         if (self.facebookLink != "") {
             let facebookUrl = NSURL(string: self.facebookLink!)
+            
             if UIApplication.sharedApplication().canOpenURL(facebookUrl!)
             {
                 UIApplication.sharedApplication().openURL(facebookUrl!)
@@ -831,15 +832,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     @IBAction func clickOnTwitter() {
         if (self.twitterLink != "") {
             let twitterUrl = NSURL(string: self.twitterLink!)
-            var userTwitter = self.twitterLink?.substringFromIndex((self.twitterLink!.rangeOfString("twitter.com/")?.endIndex)!)
-            if ((userTwitter!.rangeOfString("/")?.startIndex) != nil) {
-                userTwitter = userTwitter?.substringToIndex((userTwitter!.rangeOfString("/")?.startIndex)!)
-            }
             
-            let twitterLink = NSURL(string: "twitter://user?screen_name=".stringByAppendingString(userTwitter!))
-            if (UIApplication.sharedApplication().canOpenURL(twitterLink!)) {
-                UIApplication.sharedApplication().openURL(twitterLink!)
-            } else if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
+            if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
             {
                 UIApplication.sharedApplication().openURL(twitterUrl!)
                 
@@ -859,16 +853,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     @IBAction func clickOnInstagram() {
         if (self.instagramLink  != "") {
             let instagramUrl = NSURL(string: self.instagramLink!)
-            var userInsta = self.instagramLink?.substringFromIndex((self.instagramLink?.rangeOfString("instagram.com/")?.endIndex)!)
-            if ((userInsta!.rangeOfString("/")?.startIndex) != nil) {
-                userInsta = userInsta?.substringToIndex((userInsta!.rangeOfString("/")?.startIndex)!)
-            }
-            
-            let instaappLink = NSURL(string: "instagram://user?username=".stringByAppendingString(userInsta!))
-        
-            if (UIApplication.sharedApplication().canOpenURL(instaappLink!)) {
-                UIApplication.sharedApplication().openURL(instaappLink!)
-            } else if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
+           
+            if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
             {
                 UIApplication.sharedApplication().openURL(instagramUrl!)
                 
