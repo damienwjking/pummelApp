@@ -1314,7 +1314,7 @@
 					9C1C54001C7938060083E47B = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = YW7P88KVE4;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2134,15 +2134,15 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = YW7P88KVE4;
 				INFOPLIST_FILE = pummel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fit.pummel.app;
 				PRODUCT_NAME = Pummel;
-				PROVISIONING_PROFILE = "a09bcad2-3678-4806-ac77-2b401bab74b9";
-				PROVISIONING_PROFILE_SPECIFIER = "XC iOS: fit.pummel.app";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2156,15 +2156,15 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = YW7P88KVE4;
 				INFOPLIST_FILE = pummel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fit.pummel.app;
 				PRODUCT_NAME = Pummel;
-				PROVISIONING_PROFILE = "a09bcad2-3678-4806-ac77-2b401bab74b9";
-				PROVISIONING_PROFILE_SPECIFIER = "XC iOS: fit.pummel.app";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
