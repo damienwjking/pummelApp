@@ -62,6 +62,8 @@ class DetailSessionViewController: BaseViewController {
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         self.initLayout()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DetailSessionViewController.updateSession(_:)), name: k_PM_UPDATE_SESSION_NOTIFICATION, object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -186,6 +188,15 @@ class DetailSessionViewController: BaseViewController {
             self.intensityV.hidden = true
             self.distanceV.hidden = true
             self.caloriesV.hidden = true
+        }
+    }
+    
+    func updateSession(notification: NSNotification) {
+        if notification.object != nil {
+            let session = notification.object as! Session
+            self.session = session
+            
+            setData()
         }
     }
     

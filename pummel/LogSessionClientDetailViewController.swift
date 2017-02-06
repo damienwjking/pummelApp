@@ -507,7 +507,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         var prefix = kPMAPIACTIVITY
         prefix.appendContentsOf(String(format:"%ld", self.editSession.id!))
         
-        let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
+        let dateSelected = self.convertLocalTimeToUTCTime(self.dateTF.text!)
         let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
         
         let parameters = [
@@ -517,7 +517,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             kDistance   : self.distanceSelected,
             kLongtime   : self.longtimeSelected,
             kCalorie    : calorieSelected,
-            kDatetime   : selectedDate,
+            kDatetime   : dateSelected,
         ]
         
         Alamofire.request(.PUT, prefix, parameters: parameters)
@@ -525,7 +525,27 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 self.view.hideToastActivity()
                 
                 if response.response?.statusCode == 200 {
-                    self.navigationController?.popToRootViewControllerAnimated(true)
+                    self.navigationController?.popViewControllerAnimated(true)
+                    
+                    self.editSession.text = self.contentTV.text
+                    self.editSession.calorie = Int(calorieSelected)
+                    self.editSession.intensity = self.intensitySelected
+                    self.editSession.distance = Int(self.distanceSelected)
+                    self.editSession.longtime = Int(self.longtimeSelected)
+                    
+                    let newDateFormatter = NSDateFormatter()
+                    newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
+                    newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+                    let date = newDateFormatter.dateFromString(dateSelected)
+                    
+                    let timeFormatter = NSDateFormatter()
+                    timeFormatter.dateFormat = kFullDateFormat
+                    timeFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+                    
+                    self.editSession.datetime = timeFormatter.stringFromDate(date!)
+                    
+                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_UPDATE_SESSION_NOTIFICATION, object: self.editSession)
+                    
                 } else if response.response?.statusCode == 401 {
                     let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in

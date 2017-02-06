@@ -72,6 +72,7 @@ let k_PM_SHOW_BADGE = "showBadge"
 let k_PM_SELECTED_NOTIFI = "selectedNotify"
 let k_PM_REFRESH_MESSAGE = "refreshMessage"
 let k_PM_IS_UP_COMING = "isUpComing"
+let k_PM_UPDATE_SESSION_NOTIFICATION = "updateSessionNotification"
 
 // Key Json
 let kConversationId = "conversationId"
