@@ -755,7 +755,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         
         if pickerView == self.distancePickerView {
             title = String(format: "%ld", row)
-            self.distanceSelected = title
+            self.distanceSelected = String(format: "%ld", self.distancePickerView.selectedRowInComponent(0) + 1)
         }
         
         if pickerView == self.intensityPickerView {
