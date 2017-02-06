@@ -58,6 +58,8 @@ class DetailSessionViewController: BaseViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backClicked))
         
         // Right button
+        
+        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kEdit.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.editClicked))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
@@ -73,11 +75,6 @@ class DetailSessionViewController: BaseViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        self.session.longtime = 90
-//        self.session.distance = 250
-//        self.session.intensity = "Light"
-//        self.session.calorie = 250
         
         self.typeLabel.text = self.session.type?.componentsSeparatedByString(" ").joinWithSeparator("")
         
@@ -101,6 +98,13 @@ class DetailSessionViewController: BaseViewController {
         }
         
         self.setData()
+        
+        if (self.session.calorie == 0 &&
+            self.session.distance == 0 &&
+            self.session.longtime == 0 &&
+            self.session.intensity == nil) {
+            self.navigationItem.rightBarButtonItem = nil
+        }
     }
     
     func setData() {
