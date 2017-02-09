@@ -158,7 +158,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                 let imageLink = userFeed[kImageUrl] as! String
                 var photoLink = kPMAPI
                 photoLink.appendContentsOf(imageLink)
-                let postfix = widthHeight80
+                let postfix = widthHeight120
                 photoLink.appendContentsOf(postfix)
                 if (NSCache.sharedInstance.objectForKey(photoLink) != nil) {
                     let imageRes = NSCache.sharedInstance.objectForKey(photoLink) as! UIImage

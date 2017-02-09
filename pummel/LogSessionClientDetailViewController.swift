@@ -63,6 +63,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     var distanceSelected: String = "0"
     var caloriesSelected: String = "0"
     var longtimeSelected: String = "0"
+    var priv: String = "1"
     let timeFormatter: NSDateFormatter = NSDateFormatter()
     var isPublic = false
     
@@ -383,8 +384,10 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         self.isPublic = !self.isPublic
         
         if self.isPublic == true {
+            priv = "0"
             self.publicBT.setTitle("PUBLIC", forState: .Normal)
         } else {
+            priv = "1"
             self.publicBT.setTitle("PRIVATE", forState: .Normal)
         }
     }
@@ -449,11 +452,13 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                     if (self.imageSelected.image != nil) {
                         multipartFormData.appendBodyPart(data: imageData, name: "file",
                             fileName:filename, mimeType:type)
+                        multipartFormData.appendBodyPart(data: self.priv.dataUsingEncoding(NSUTF8StringEncoding)!, name: "priv")
                     }
 
                     for (key, value) in parameters {
                         multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key )
                     }
+                    
                 },
                 encodingCompletion: { encodingResult in
                     switch encodingResult {

@@ -272,7 +272,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             let imageLink = coachDetail[kImageUrl] as! String
             var prefix = kPMAPI
             prefix.appendContentsOf(imageLink)
-            let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
+            let postfix = widthHeight250
             prefix.appendContentsOf(postfix)
             if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
                 let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
@@ -386,7 +386,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     func getListImage() {
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
-        prefix.appendContentsOf(kPM_PATH_PHOTO)
+        prefix.appendContentsOf(kPM_PATH_PHOTOV2)
         prefix.appendContentsOf("\(self.offset)")
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -797,7 +797,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
         var prefix = kPMAPI
         let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width/2).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width/2).description)
+        let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
         var link = photo.objectForKey(kImageUrl) as! String
         link.appendContentsOf(postfix)
         prefix.appendContentsOf(link)

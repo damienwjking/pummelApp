@@ -112,7 +112,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
                 if !(userDetail[kImageUrl] is NSNull) {
                     var link = kPMAPI
                     link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight80)
+                    link.appendContentsOf(widthHeight120)
                     
                     if (NSCache.sharedInstance.objectForKey(link) != nil) {
                         let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage

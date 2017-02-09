@@ -699,7 +699,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 var prefix = kPMAPIUSER
                 let defaults = NSUserDefaults.standardUserDefaults()
                 prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                prefix.appendContentsOf(kPM_PATH_PHOTO)
+                prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 var parameters = [String:AnyObject]()
                 parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
                 Alamofire.upload(

@@ -665,7 +665,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
             var prefix = kPMAPI
             let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-            let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width/2).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width/2).description)
+            let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
             var link = photo.objectForKey(kImageUrl) as! String
             link.appendContentsOf(postfix)
             prefix.appendContentsOf(link)

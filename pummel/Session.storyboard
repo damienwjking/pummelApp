@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qs5-cm-a3y">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qs5-cm-a3y">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -117,7 +117,7 @@
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2sb-AH-CZ7">
                                 <rect key="frame" x="30" y="25" width="315" height="29"/>
                                 <segments>
-                                    <segment title="UPCOMMING"/>
+                                    <segment title="UPCOMING"/>
                                     <segment title="COMPLETED"/>
                                 </segments>
                                 <color key="tintColor" red="0.98431372549999996" green="0.26274509800000001" blue="0.066666666669999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -297,7 +297,7 @@
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="KiF-kK-S2w">
                                 <rect key="frame" x="30" y="25" width="315" height="29"/>
                                 <segments>
-                                    <segment title="UPCOMMING"/>
+                                    <segment title="UPCOMING"/>
                                     <segment title="COMPLETED"/>
                                 </segments>
                                 <color key="tintColor" red="0.98431372549999996" green="0.26274509800000001" blue="0.066666666669999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -895,7 +895,7 @@
         <image name="sessions.png" width="19" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="i8A-qC-9BK"/>
-        <segue reference="Y94-Md-QJ3"/>
+        <segue reference="uSf-uW-Yee"/>
+        <segue reference="Au2-PE-kLY"/>
     </inferredMetricsTieBreakers>
 </document>

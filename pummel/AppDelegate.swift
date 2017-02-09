@@ -14,6 +14,7 @@ import UserNotifications
 //import SwiftMessages
 import Mixpanel
 //import RNNotificationView
+import Alamofire
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -50,7 +51,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        // Remove badge
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        // Reset badge in server
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf("/resetNotificationBadge")
+            Alamofire.request(.PUT, prefix, parameters: [:])
+                .responseJSON { response in
+            }
+
+        }
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -114,7 +127,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //    internal func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
 //        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
 //    }
-    
 }
 
 
