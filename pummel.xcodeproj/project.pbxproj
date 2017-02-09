@@ -47,6 +47,10 @@
 		E84D638B1E1D5D4E00CF8B67 /* BookUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D63881E1D5D4E00CF8B67 /* BookUserTableViewCell.swift */; };
 		E84D638C1E1D5D4E00CF8B67 /* BookUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E84D63891E1D5D4E00CF8B67 /* BookUserTableViewCell.xib */; };
 		E84D638E1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D638D1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift */; };
+		E85863761E4CD5D500E09CA7 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863751E4CD5D500E09CA7 /* Bolts.framework */; };
+		E85863781E4CD5E900E09CA7 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */; };
+		E858637A1E4CD5FC00E09CA7 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */; };
+		E858637C1E4CD60300E09CA7 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */; };
 		E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */; };
 		E86A65D61E0BD80400FF2935 /* LeadAddedTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E86A65D41E0BD80400FF2935 /* LeadAddedTableViewCell.xib */; };
 		E86A65D91E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A65D71E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift */; };
@@ -378,6 +382,10 @@
 		E84D63881E1D5D4E00CF8B67 /* BookUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookUserTableViewCell.swift; sourceTree = "<group>"; };
 		E84D63891E1D5D4E00CF8B67 /* BookUserTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookUserTableViewCell.xib; sourceTree = "<group>"; };
 		E84D638D1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionSelectUserViewController.swift; sourceTree = "<group>"; };
+		E85863751E4CD5D500E09CA7 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadAddedTableViewCell.swift; sourceTree = "<group>"; };
 		E86A65D41E0BD80400FF2935 /* LeadAddedTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeadAddedTableViewCell.xib; sourceTree = "<group>"; };
 		E86A65D71E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadAddedCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -652,6 +660,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3554D936ED34E385800FB7D6 /* Pods_pummel.framework in Frameworks */,
+				E85863781E4CD5E900E09CA7 /* FBSDKCoreKit.framework in Frameworks */,
+				E858637C1E4CD60300E09CA7 /* FBSDKShareKit.framework in Frameworks */,
+				E858637A1E4CD5FC00E09CA7 /* FBSDKLoginKit.framework in Frameworks */,
+				E85863761E4CD5D500E09CA7 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +687,10 @@
 		3FAF085B267BE895D2297A0E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */,
+				E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */,
+				E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */,
+				E85863751E4CD5D500E09CA7 /* Bolts.framework */,
 				ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */,
 			);
 			name = Frameworks;
@@ -2136,6 +2152,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = YW7P88KVE4;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = pummel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2158,6 +2178,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = YW7P88KVE4;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = pummel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
