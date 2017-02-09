@@ -253,6 +253,9 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
     }
     
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+        if scrollView is UITextView {
+            return nil
+        }
         return scrollView.subviews[0] as! UIImageView
     }
 
