@@ -50,6 +50,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     @IBOutlet weak var instagramUrlTF: UITextField!
     @IBOutlet weak var twitterLB: UILabel!
     @IBOutlet weak var twitterUrlTF: UITextField!
+    @IBOutlet weak var websiteLB: UILabel!
+    @IBOutlet weak var websiteUrlTF: UITextField!
     
     @IBOutlet weak var emergencyInformationLB: UILabel!
     @IBOutlet weak var emergencyNameLB: UILabel!
@@ -126,6 +128,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.instagramUrlTF.placeholder = "http://instagram.com"
         self.twitterUrlTF.font = .pmmMonLight13()
         self.twitterUrlTF.placeholder = "http://twitter.com"
+        self.websiteUrlTF.font = .pmmMonLight13()
         self.emergencyNameTF.font = .pmmMonLight13()
         self.emergencyMobileTF.font = .pmmMonLight13()
         
@@ -138,6 +141,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.facebookUrlTF.delegate = self
         self.instagramUrlTF.delegate = self
         self.twitterUrlTF.delegate = self
+        self.websiteUrlTF.delegate = self
         self.emergencyNameTF.delegate = self
         self.emergencyMobileTF.delegate = self
         self.achivementContentTF.maxHeight = 200
@@ -183,6 +187,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.dobContentTF.resignFirstResponder()
         self.facebookUrlTF.resignFirstResponder()
         self.twitterUrlTF.resignFirstResponder()
+        self.websiteUrlTF.resignFirstResponder()
         self.instagramUrlTF.resignFirstResponder()
         self.emergencyNameTF.resignFirstResponder()
         self.emergencyMobileTF.resignFirstResponder()
@@ -454,7 +459,9 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                     self.achivementContentTF.text = ""
                 }
                 
-                
+                if !(coachInformationTotal[kWebsiteUrl] is NSNull) {
+                    self.websiteUrlTF.text = coachInformationTotal[kWebsiteUrl] as? String
+                }
                 
             case .Failure(let error):
                 print("Request failed with error: \(error)")
@@ -505,8 +512,21 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             let properties = ["Category": "IOS.Profile.EditProfile", "Name": "Navigation Click", "Label":"Save Profile"]
             mixpanel.track("Event", properties: properties)
             
+            let param = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                         kFirstname:firstname,
+                         kLastName: lastname,
+                         kMobile: mobileContentTF.text!,
+                         kDob: dobContentTF.text!,
+                         kGender:(genderContentTF.text?.uppercaseString)!,
+                         kBio: aboutContentTV.text,
+                         kEmergencyName:emergencyNameTF.text!,
+                         kEmergencyMobile:emergencyMobileTF.text!,
+                         kFacebookUrl:facebookUrlTF.text!,
+                         kTwitterUrl:twitterUrlTF.text!,
+                         kInstagramUrl:instagramUrlTF.text!,]
+            
             self.view.makeToastActivity(message: "Saving")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!, kEmergencyName:emergencyNameTF.text!, kEmergencyMobile:emergencyMobileTF.text!])
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
@@ -541,7 +561,12 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
-        Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, "qualifications":qualStr, "achievements": achiveStr])
+        
+        let param = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                     kQualification:qualStr,
+                     kAchievement: achiveStr,
+                     kWebsiteUrl:websiteUrlTF.text!]
+        Alamofire.request(.PUT, prefix, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     self.navigationController?.popViewControllerAnimated(true)
