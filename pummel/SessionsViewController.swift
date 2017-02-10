@@ -148,10 +148,22 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func getMessagetAtSaveIndexPathScrollView() {
+        let message = self.arrayMessages[(self.saveIndexPath?.row)!]
+        let messageID = message.objectForKey(kConversationId) as! Int
+        
+        var offset = 0;
+        for (messageItem) in self.arrayMessages {
+            let messageItemID = messageItem.objectForKey(kConversationId) as! Int
+            
+            if messageID > messageItemID {
+                offset = offset + 1
+            }
+        }
+        
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET)
-        prefix.appendContentsOf(String((saveIndexPath!.row)))
+        prefix.appendContentsOf(String((offset)))
         prefix.appendContentsOf(kPM_PATH_LIMIT_ONE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -160,7 +172,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 if (arrayMessageT.count > 0) {
                     self.arrayMessages.removeAtIndex((self.saveIndexPath?.row)!)
                     self.arrayMessages.insert(arrayMessageT[0], atIndex: (self.saveIndexPath?.row)!)
-                    self.listMessageTB.reloadRowsAtIndexPaths([self.saveIndexPath!], withRowAnimation: .Left)
+                    
+                    self.sortMessage()
+                    self.listMessageTB.reloadData()
                 }
             case .Failure(let error):
                 print("Request failed with error: \(error)")
@@ -210,6 +224,17 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func sortMessage() {
+        if self.arrayMessages.count > 0 {
+            self.arrayMessages = self.arrayMessages.sort { (message1, message2) -> Bool in
+                let lastOpen1:String = message1.objectForKey("lastOpenedAt") as! String
+                let lastOpen2:String = message2.objectForKey("lastOpenedAt") as! String
+                
+                return (lastOpen1.compare(lastOpen2) == NSComparisonResult.OrderedDescending)
+            }
+        }
+    }
+    
     func getMessage() {
         if (isStopLoadMessage == false) {
             isLoadingMessage = true
@@ -233,6 +258,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                         self.isLoadingMessage = false
                         self.isStopLoadMessage = true
                     }
+                    self.sortMessage()
                     self.view.bringSubviewToFront(self.noMessageV)
                 case .Failure(let error):
                     self.offset -= 10
@@ -446,7 +472,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func clickOnConnectionImage(indexPath: NSIndexPath) {
-        saveIndexPath = indexPath
+        self.saveIndexPath = indexPath
         let message = arrayMessages[indexPath.row]
         let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
         let dateFormatter = NSDateFormatter()
@@ -721,7 +747,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             return "\(components.minute)m"
         } else if (components.minute >= 1){
             return "1m"
-        } else if (components.second >= 3) {
+        } else if (components.second >= 20) {
             return "\(components.second)s"
         } else {
             return "Just now"
