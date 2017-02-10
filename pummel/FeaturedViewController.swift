@@ -131,8 +131,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Feed", "Name": "Navigation Click", "Label":"NewPost"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"NewPost"]
+        mixpanel.track("IOS.Feed", properties: properties)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -316,8 +316,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Feed", "Name": "Navigation Click", "Label":"Comment"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Comment"]
+        mixpanel.track("IOS.Feed", properties: properties)
     }
     
     func showListContext(sender: UIButton) {

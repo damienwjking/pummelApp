@@ -173,8 +173,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"New Message"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"New Message"]
+        mixpanel.track("IOS.Message", properties: properties)
     }
     
     func getListLead() {
@@ -625,11 +625,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        var properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"Go Chat"]
+        var properties = ["Name": "Navigation Click", "Label":"Go Chat"]
         
         if (tableView == listMessageTB) {
             self.clickOnConnectionImage(indexPath)
-            properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"Add Contact"]
+            properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
             let addToIphoneContact = { (action:UIAlertAction!) -> Void in
                 self.clickOnRowMessage(indexPath)
@@ -665,7 +665,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             self.presentViewController(alertController, animated: true) { }
         }
         
-        mixpanel.track("Event", properties: properties)
+        mixpanel.track("IOS.Message", properties: properties)
     }
     
     

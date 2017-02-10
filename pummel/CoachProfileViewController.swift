@@ -533,8 +533,8 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         if coachDetail != nil {
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SendMessageToCoach", properties: properties)
                 
                 var prefix = kPMAPIUSER
                 prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -690,8 +690,8 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SocialClick", "Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
             }
         }
     }
@@ -718,8 +718,8 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SocialClick", "Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
             }
         }
     }
@@ -738,8 +738,8 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SocialClick", "Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
             }
         }
     }

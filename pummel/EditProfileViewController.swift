@@ -392,8 +392,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
 
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Category": "IOS.Profile.EditProfile", "Name": "Navigation Click", "Label":"Save Profile"]
-            mixpanel.track("Event", properties: properties)
+            let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
+            mixpanel.track("IOS.Profile.EditProfile", properties: properties)
             
             self.view.makeToastActivity(message: "Saving")
             

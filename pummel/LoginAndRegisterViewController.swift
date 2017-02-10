@@ -142,8 +142,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Login", "Name": "Navigation Click", "Label":"Login"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Login"]
+        mixpanel.track("IOS.Login", properties: properties)
         
         Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
             .responseJSON { response in
@@ -258,8 +258,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Category": "IOS.Register", "Name": "Navigation Click", "Label":"Register"]
-            mixpanel.track("Event", properties: properties)
+            let properties = ["Name": "Navigation Click", "Label":"Register"]
+            mixpanel.track("IOS.Register", properties: properties)
             
             self.view.makeToastActivity(message: "Loading")
             Alamofire.request(.POST, kPMAPI_REGISTER, parameters: para)
@@ -462,8 +462,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Register", "Name": "Navigation Click", "Label":"Select Profile"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Select Profile"]
+        mixpanel.track("IOS.Register", properties: properties)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {

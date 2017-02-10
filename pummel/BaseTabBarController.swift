@@ -44,27 +44,27 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        var properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"ProfileTabbar"]
+        var properties = ["Name": "Navigation Click", "Label":"ProfileTabbar"]
         
         switch self.selectedIndex {
         case 0:
-            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"FeedTabbar"]
+            properties = ["Name": "Navigation Click", "Label":"FeedTabbar"]
             break
         case 1:
-            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"SessionTabbar"]
+            properties = ["Name": "Navigation Click", "Label":"SessionTabbar"]
             break
         case 2:
             let slectedVC = self.selectedViewController as! FindViewController
             slectedVC.refind()
-            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"SearchTabbar"]
+            properties = ["Name": "Navigation Click", "Label":"SearchTabbar"]
             break
         case 3:
-            properties = ["Category": "IOS.Tabbar", "Name": "Navigation Click", "Label":"MessageTabbar"]
+            properties = ["Name": "Navigation Click", "Label":"MessageTabbar"]
             break
         default:
             break
         }
         
-        mixpanel.track("Event", properties: properties)
+        mixpanel.track("IOS.Tabbar", properties: properties)
     }
 }

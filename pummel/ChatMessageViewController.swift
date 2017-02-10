@@ -433,8 +433,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.ChatMessage", "Name": "Navigation Click", "Label":"Go Send Picture Message"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Go Send Picture Message"]
+        mixpanel.track("IOS.ChatMessage", properties: properties)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -517,8 +517,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Category": "IOS.ChatMessage", "Name": "Navigation Click", "Label":"Send Message"]
-            mixpanel.track("Event", properties: properties)
+            let properties = ["Name": "Navigation Click", "Label":"Send Message"]
+            mixpanel.track("IOS.ChatMessage", properties: properties)
         }
     }
 

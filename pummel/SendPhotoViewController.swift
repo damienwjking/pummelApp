@@ -150,8 +150,8 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.ChatMessage.SendPhoto", "Name": "Navigation Click", "Label":"Send A Photo"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Send A Photo"]
+        mixpanel.track("IOS.ChatMessage.SendPhoto", properties: properties)
     }
     
     func sendMessage() {

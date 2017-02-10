@@ -198,8 +198,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Profile", "Name": "Navigation Click", "Label":"Go Setting"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Go Setting"]
+        mixpanel.track("IOS.Profile", properties: properties)
     }
     
     @IBAction func edit() {
@@ -210,8 +210,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         }
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Profile", "Name": "Navigation Click", "Label":"Go Edit Profile"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Go Edit Profile"]
+        mixpanel.track("IOS.Profile", properties: properties)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -823,8 +823,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SocialClick", "Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
             }
         }
     }
@@ -844,8 +844,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SocialClick", "Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
             }
         }
     }
@@ -865,8 +865,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SocialClick", "Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
             }
         }
     }
