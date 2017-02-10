@@ -180,8 +180,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Profile.Setting", "Name": "Navigation Click", "Label":"Save Setting"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Save Setting"]
+        mixpanel.track("IOS.Profile.Setting", properties: properties)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -481,8 +481,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.performSegueWithIdentifier("LocationPicker", sender: nil)
                 // Tracker mixpanel
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.Profile.Setting", "Name": "Navigation Click", "Label":"Go Set Location"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Navigation Click", "Label":"Go Set Location"]
+                mixpanel.track("IOS.Profile.Setting", properties: properties)
             case 10:
                 self.sendSupportEmail()
             case 12:
@@ -691,8 +691,8 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Profile.Setting", "Name": "Navigation Click", "Label":"Logout"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Logout"]
+        mixpanel.track("IOS.Profile.Setting", properties: properties)
     }
     
     func showMsgConfirmLogout() {

@@ -392,8 +392,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
 
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Category": "IOS.Profile.EditProfile", "Name": "Navigation Click", "Label":"Save Profile"]
-            mixpanel.track("Event", properties: properties)
+            let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
+            mixpanel.track("IOS.Profile.EditProfile", properties: properties)
             
             self.view.makeToastActivity(message: "Saving")
             
@@ -525,7 +525,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 var prefix = kPMAPIUSER
                 let defaults = NSUserDefaults.standardUserDefaults()
                 prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                prefix.appendContentsOf(kPM_PATH_PHOTO)
+                prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 var parameters = [String:AnyObject]()
                 parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
                 Alamofire.upload(
@@ -604,7 +604,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                     if !(userDetail[kImageUrl] is NSNull) {
                         var link = kPMAPI
                         link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight200)
+                        link.appendContentsOf(widthHeight250)
                         
                         if (NSCache.sharedInstance.objectForKey(link) != nil) {
                             let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -636,7 +636,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                     if !(userDetail[kImageUrl] is NSNull) {
                         var link = kPMAPI
                         link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight100)
+                        link.appendContentsOf(widthHeight250)
                         
                         if (NSCache.sharedInstance.objectForKey(link) != nil) {
                             let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -700,7 +700,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 var prefix = kPMAPIUSER
                 let defaults = NSUserDefaults.standardUserDefaults()
                 prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                prefix.appendContentsOf(kPM_PATH_PHOTO)
+                prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 var parameters = [String:AnyObject]()
                 parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
                 Alamofire.upload(

@@ -150,7 +150,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                 let imageLink = userFeed[kImageUrl] as! String
                 var photoLink = kPMAPI
                 photoLink.appendContentsOf(imageLink)
-                photoLink.appendContentsOf(widthHeight80)
+                photoLink.appendContentsOf(widthHeight120)
                 if (NSCache.sharedInstance.objectForKey(photoLink) != nil) {
                     let imageRes = NSCache.sharedInstance.objectForKey(photoLink) as! UIImage
                     cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
@@ -399,7 +399,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                 if !(userDetail[kImageUrl] is NSNull) {
                     var link = kPMAPI
                     link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight80)
+                    link.appendContentsOf(widthHeight120)
                     if (NSCache.sharedInstance.objectForKey(link) != nil) {
                         let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
                         self.avatarTextBox.image = imageRes

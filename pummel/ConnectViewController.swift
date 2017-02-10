@@ -174,8 +174,8 @@ class ConnectViewController: BaseViewController {
     @IBAction func sendUsAMessage(sender: UIButton) {
         if let firstName = coachDetail[kFirstname] as? String {
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
-            mixpanel.track("Event", properties: properties)
+            let properties = ["Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+            mixpanel.track("IOS.SendMessageToCoach", properties: properties)
         }
 
         self.moveToMessageScreenWithMessage("")
@@ -186,8 +186,8 @@ class ConnectViewController: BaseViewController {
         
         if let firstName = coachDetail[kFirstname] as? String {
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Request Call Back", "Label":"\(firstName.uppercaseString)"]
-            mixpanel.track("Event", properties: properties)
+            let properties = ["Name": "Request Call Back", "Label":"\(firstName.uppercaseString)"]
+            mixpanel.track("IOS.SendMessageToCoach", properties: properties)
         }
         
         self.requestCallBackBT.userInteractionEnabled = false
@@ -223,8 +223,8 @@ class ConnectViewController: BaseViewController {
         if coachDetail != nil {
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Category": "IOS.SendMessageToCoach", "Name": "Keep Looking", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("Event", properties: properties)
+                let properties = ["Name": "Keep Looking", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SendMessageToCoach", properties: properties)
             }
         }
         

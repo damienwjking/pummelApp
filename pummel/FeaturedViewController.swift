@@ -131,8 +131,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Feed", "Name": "Navigation Click", "Label":"NewPost"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"NewPost"]
+        mixpanel.track("IOS.Feed", properties: properties)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -158,7 +158,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                 let imageLink = userFeed[kImageUrl] as! String
                 var photoLink = kPMAPI
                 photoLink.appendContentsOf(imageLink)
-                let postfix = widthHeight80
+                let postfix = widthHeight120
                 photoLink.appendContentsOf(postfix)
                 if (NSCache.sharedInstance.objectForKey(photoLink) != nil) {
                     let imageRes = NSCache.sharedInstance.objectForKey(photoLink) as! UIImage
@@ -316,8 +316,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Feed", "Name": "Navigation Click", "Label":"Comment"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Comment"]
+        mixpanel.track("IOS.Feed", properties: properties)
     }
     
     func showListContext(sender: UIButton) {

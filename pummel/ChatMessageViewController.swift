@@ -86,7 +86,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if !(userDetail[kImageUrl] is NSNull) {
                     var link = kPMAPI
                     link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight80)
+                    link.appendContentsOf(widthHeight120)
                     
                     if (NSCache.sharedInstance.objectForKey(link) != nil) {
                         let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -357,7 +357,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageImageTableViewCell, forIndexPath: indexPath) as! ChatMessageImageTableViewCell
                 var link = kPMAPI
                 link.appendContentsOf(message.objectForKey(kImageUrl) as! String)
-                link.appendContentsOf(widthHeight320)
+                link.appendContentsOf(widthHeight640)
                 Alamofire.request(.GET, link)
                     .responseImage { response in
                         let imageRes = response.result.value! as UIImage
@@ -374,7 +374,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                         if !(userInfo[kImageUrl] is NSNull) {
                             var link = kPMAPI
                             link.appendContentsOf(userInfo[kImageUrl] as! String)
-                            link.appendContentsOf(widthHeight80)
+                            link.appendContentsOf(widthHeight120)
                             
                             if (NSCache.sharedInstance.objectForKey(link) != nil) {
                                 let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -433,8 +433,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.ChatMessage", "Name": "Navigation Click", "Label":"Go Send Picture Message"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Go Send Picture Message"]
+        mixpanel.track("IOS.ChatMessage", properties: properties)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -517,8 +517,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Category": "IOS.ChatMessage", "Name": "Navigation Click", "Label":"Send Message"]
-            mixpanel.track("Event", properties: properties)
+            let properties = ["Name": "Navigation Click", "Label":"Send Message"]
+            mixpanel.track("IOS.ChatMessage", properties: properties)
         }
     }
 

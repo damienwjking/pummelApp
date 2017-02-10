@@ -92,8 +92,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Search", "Name": "Navigation Click", "Label":"Back"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Back"]
+        mixpanel.track("IOS.Search", properties: properties)
     }
 
     func updateRightBarButtonItem() {
@@ -392,8 +392,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 if let firstName = destination.coachDetail[kFirstname] as? String {
                     // Tracker mixpanel
                     let mixpanel = Mixpanel.sharedInstance()
-                    let properties = ["Category": "IOS.ClickOnProfile", "Name": "Profile Is Clicked", "Label":"\(firstName.uppercaseString)"]
-                    mixpanel.track("Event", properties: properties)
+                    let properties = ["Name": "Profile Is Clicked", "Label":"\(firstName.uppercaseString)"]
+                    mixpanel.track("IOS.ClickOnProfile", properties: properties)
                 }
             }
         }
@@ -405,8 +405,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Search", "Name": "Navigation Click", "Label":"Refine"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Refine"]
+        mixpanel.track("IOS.Search", properties: properties)
     }
     
     func btnClientClick() {

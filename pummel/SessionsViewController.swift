@@ -67,10 +67,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         let selectedImage = UIImage(named: "messagesSelcted")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
-        let tabItem = self.tabBarController?.tabBar.items![3]
-        // Remove badge
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-        tabItem!.badgeValue = nil
         if (isGoToMessageDetail == false) {
             arrayMessages.removeAll()
             self.listMessageTB.reloadData()
@@ -191,8 +187,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"New Message"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"New Message"]
+        mixpanel.track("IOS.Message", properties: properties)
     }
     
     func getListLead() {
@@ -655,11 +651,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        var properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"Go Chat"]
+        var properties = ["Name": "Navigation Click", "Label":"Go Chat"]
         
         if (tableView == listMessageTB) {
             self.clickOnConnectionImage(indexPath)
-            properties = ["Category": "IOS.Message", "Name": "Navigation Click", "Label":"Add Contact"]
+            properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
             let addToIphoneContact = { (action:UIAlertAction!) -> Void in
                 self.clickOnRowMessage(indexPath)
@@ -695,7 +691,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             self.presentViewController(alertController, animated: true) { }
         }
         
-        mixpanel.track("Event", properties: properties)
+        mixpanel.track("IOS.Message", properties: properties)
     }
     
     

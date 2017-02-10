@@ -414,7 +414,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             self.calendarView.presentedDate = self.calendarView.presentedDate
             
             // Subtitle no session
-            self.noSessionContentLB.text = "Upcomming appointments from your coach will appear here as well"
+            self.noSessionContentLB.text = "Upcoming appointments from your coach will appear here as well"
         } else {
             self.monthLabelHeightConstraint.constant = 0
             self.calendarViewHeightConstraint.constant = 0

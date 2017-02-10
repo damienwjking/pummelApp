@@ -19,8 +19,10 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     var arrayListUser: [NSDictionary] = []
     var arrayListUserResult: [NSDictionary] = []
     var isStopLoad: Bool = false
+    var isStopLoadSearch: Bool = false
     var offset : Int = 0
     var isLoading : Bool = false
+    var isLoadingSearch : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +56,8 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         textField.text = ""
+        self.arrayListUserResult.removeAll()
+        self.listUserSearchResultTB.reloadData()
         self.listUserTB.hidden = true
         self.listUserSearchResultTB.hidden = false
         return true
@@ -67,15 +71,12 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             self.listUserSearchResultTB.reloadData()
             self.listUserSearchResultTB.hidden = true
         } else {
-            self.arrayListUserResult = self.arrayListUser.filter({
-                var name = $0[kFirstname] as! String
-                name.appendContentsOf(" ")
-                name.appendContentsOf($0[kLastName] as! String)
-                return name.containsIgnoringCase(textField.text!)
-            })
-            self.listUserSearchResultTB.reloadData()
+            self.arrayListUserResult.removeAll()
+            self.getListUserSearch()
             self.listUserTB.hidden = true
             self.listUserSearchResultTB.hidden = false
+            
+            
         }
     }
     
@@ -87,9 +88,36 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         self.navigationController?.popViewControllerAnimated(true)
     }
     
+    func getListUserSearch() {
+        if (self.isStopLoadSearch == false) {
+            self.isLoading = true
+            var prefix = kPMAPISEARCHUSER
+            let offset = self.arrayListUserResult.count
+            prefix.appendContentsOf(String(offset))
+            prefix.appendContentsOf("&character=")
+            prefix.appendContentsOf(self.toUserTF.text!)
+            Alamofire.request(.GET, prefix)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    let resultArrS = JSON as! [NSDictionary]
+                    if (resultArrS.count == 0) {
+                        self.isLoadingSearch = false
+                        self.isStopLoadSearch = true
+                    } else {
+                        self.arrayListUserResult += resultArrS
+                        self.isLoadingSearch = false
+                        self.listUserSearchResultTB.reloadData()
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+            }
+        }
+    }
+    
     func getListUser() {
         if (self.isStopLoad == false) {
-            self.isLoading = true
+            self.isLoadingSearch = true
             var prefix = kPMAPIUSER_OFFSET
             let offset = self.arrayListUser.count
             prefix.appendContentsOf(String(offset))
@@ -171,7 +199,9 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let user = arrayListUserResult[indexPath.row]
             var name = user.objectForKey(kFirstname) as! String
             name.appendContentsOf(" ")
-            name.appendContentsOf(user.objectForKey(kLastName) as! String)
+            if !(user.objectForKey(kLastName) is NSNull) {
+                name.appendContentsOf(user.objectForKey(kLastName) as! String)
+            }
             cell.nameLB.text = name.uppercaseString
             let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
             var prefix = kPMAPIUSER

@@ -112,7 +112,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
                 if !(userDetail[kImageUrl] is NSNull) {
                     var link = kPMAPI
                     link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight80)
+                    link.appendContentsOf(widthHeight120)
                     
                     if (NSCache.sharedInstance.objectForKey(link) != nil) {
                         let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
@@ -150,8 +150,8 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Category": "IOS.ChatMessage.SendPhoto", "Name": "Navigation Click", "Label":"Send A Photo"]
-        mixpanel.track("Event", properties: properties)
+        let properties = ["Name": "Navigation Click", "Label":"Send A Photo"]
+        mixpanel.track("IOS.ChatMessage.SendPhoto", properties: properties)
     }
     
     func sendMessage() {

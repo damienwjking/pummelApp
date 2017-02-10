@@ -177,6 +177,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
                     if imageData != nil {
                         multipartFormData.appendBodyPart(data: imageData, name: "file",
                             fileName:filename, mimeType:type)
+                        multipartFormData.appendBodyPart(data: "1".dataUsingEncoding(NSUTF8StringEncoding)!, name: "priv")
                     }
                     for (key, value) in parameters {
                         multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
