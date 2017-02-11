@@ -38,14 +38,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
         let branch: Branch = Branch.getInstance()
-        branch.initSession(launchOptions: launchOptions, automaticallyDisplayDeepLinkController: true, deepLinkHandler: { params, error in
+        branch.initSessionWithLaunchOptions(launchOptions, automaticallyDisplayDeepLinkController: true) { (params, error) in
             if error == nil {
                 // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
                 // params will be empty if no data found
                 // ... insert custom logic here ...
-                print("params: %@", params.description)
+                print("params: %@", params!.description)
             }
-        })
+        }
+       
         
         return true
     }
