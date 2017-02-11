@@ -262,7 +262,7 @@ class DetailSessionViewController: BaseViewController {
                         let imageLink = userDetail[kImageUrl] as! String
                         var prefix = kPMAPI
                         prefix.appendContentsOf(imageLink)
-                        let postfix = widthEqual.stringByAppendingString(self.userIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.userIMV.frame.size.width.description)
+                        let postfix = widthHeight120
                         prefix.appendContentsOf(postfix)
                         if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
                             let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
@@ -304,7 +304,7 @@ class DetailSessionViewController: BaseViewController {
                         let imageLink = userDetail[kImageUrl] as! String
                         var prefix = kPMAPI
                         prefix.appendContentsOf(imageLink)
-                        let postfix = widthEqual.stringByAppendingString(self.coachIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.coachIMV.frame.size.width.description)
+                        let postfix = widthHeight120
                         prefix.appendContentsOf(postfix)
                         if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
                             let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
