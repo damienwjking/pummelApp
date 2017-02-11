@@ -33,29 +33,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>prefs</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>instagram</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>twitter</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb1175740259211468</string>
+				<string>pummel</string>
 			</array>
 		</dict>
 	</array>
@@ -167,6 +145,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>branch_app_domain</key>
+	<string>pummel.app.link</string>
+	<key>branch_key</key>
+	<dict>
+		<key>live</key>
+		<string>key_live_aeti2YD2cgaKmel4EtY1eobnsAn10l8n</string>
+		<key>test</key>
+		<string>key_live_aeti2YD2cgaKmel4EtY1eobnsAn10l8n</string>
+	</dict>
 	<key>privacy - location usage description</key>
 	<string>Pummel uses your location to give you correct result</string>
 </dict>

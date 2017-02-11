@@ -554,7 +554,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             let destimation = segue.destinationViewController as! ConnectViewController
             destimation.coachDetail = coachDetail
             destimation.isFromProfile = true
-            destimation.isFromFeed = false
+            destimation.isFromFeed = self.isFromFeed
             destimation.isConnected = self.isConnected
         }
     }

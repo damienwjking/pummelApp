@@ -16,6 +16,7 @@ import Mixpanel
 //import RNNotificationView
 import Alamofire
 import FBSDKCoreKit
+import Branch
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -36,6 +37,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
+        let branch: Branch = Branch.getInstance()
+        branch.initSession(launchOptions: launchOptions, automaticallyDisplayDeepLinkController: true, deepLinkHandler: { params, error in
+            if error == nil {
+                // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                // params will be empty if no data found
+                // ... insert custom logic here ...
+                print("params: %@", params.description)
+            }
+        })
+        
         return true
     }
 
@@ -49,8 +60,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf("/resetNotificationBadge")
+            Alamofire.request(.PUT, prefix, parameters: [:])
+                .responseJSON { response in
+            }
+        }
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
@@ -136,6 +154,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //    internal func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
 //        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
 //    }
+    
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        // pass the url to the handle deep link call
+        Branch.getInstance().handleDeepLink(url);
+        
+        // do other deep link routing for the Facebook SDK, Pinterest SDK, etc
+        return true
+    }
+    
+    // Respond to Universal Links
+    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
+        Branch.getInstance().continueUserActivity(userActivity)
+        
+        return true
+    }
 }
 
 

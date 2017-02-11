@@ -11,6 +11,7 @@ pod 'ReactiveUI'
 pod 'LocationPicker', '0.6.0'
 pod 'Mixpanel'
 pod 'CVCalendar', '1.3.0'
+pod 'Branch'
 end
 post_install do |installer|
     installer.pods_project.targets.each do |target|
