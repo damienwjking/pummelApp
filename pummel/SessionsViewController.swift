@@ -661,6 +661,10 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.clickOnRowMessage(indexPath)
             }
             
+            let viewProfile = { (action:UIAlertAction!) -> Void in
+                self.performSegueWithIdentifier(kGoUserProfile, sender: indexPath.row)
+            }
+            
             let setAsCurrentUserUnderTrained = { (action:UIAlertAction!) -> Void in
                 self.view.makeToast(message: "Setting")
                 let lead = self.arrayListLead[indexPath.row]
@@ -685,6 +689,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
             alertController.addAction(UIAlertAction(title: kAddToIphoneContact, style: UIAlertActionStyle.Destructive, handler: addToIphoneContact))
+            alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfile))
             alertController.addAction(UIAlertAction(title: kSetToCurrentCustomer, style: UIAlertActionStyle.Destructive, handler: setAsCurrentUserUnderTrained))
             alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
             
@@ -696,8 +701,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "checkChatMessage")
-        {
+        if (segue.identifier == "checkChatMessage") {
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
             let message = arrayMessages[indexPathRow]
@@ -712,6 +716,18 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             }
             destinationVC.userIdTarget = targetUserId
             destinationVC.messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
+        }
+        
+        if (segue.identifier == kGoUserProfile) {
+            let destination = segue.destinationViewController as! UserProfileViewController
+            
+            let indexPathRow = sender as! Int
+            
+            let lead = self.arrayListLead[indexPathRow]
+            let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
+            
+            destination.userId = targetUserId
+            destination.userDetail = lead
         }
     }
 

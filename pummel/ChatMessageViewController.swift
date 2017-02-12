@@ -26,6 +26,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     var coachName: String!
     var coachId: String!
     var userIdTarget: String!
+    var targerUser: NSDictionary!
     var messageId: String!
     var arrayChat: NSArray!
     
@@ -55,9 +56,9 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.None
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(ChatMessageViewController.handleTap(_:)))
         self.chatTB.addGestureRecognizer(recognizer)
-        avatarTextBox.layer.cornerRadius = 20
-        avatarTextBox.clipsToBounds = true
-        avatarTextBox.hidden = true
+        self.avatarTextBox.layer.cornerRadius = 20
+        self.avatarTextBox.clipsToBounds = true
+        self.avatarTextBox.hidden = true
         self.getImageAvatarTextBox()
     }
     
@@ -239,10 +240,17 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(userIdTarget as String)
             cell.avatarIMV.image = nil
+            
+            let avatarGesture = UITapGestureRecognizer(target: self, action:#selector(self.avatarClicked))
+            cell.avatarIMV.addGestureRecognizer(avatarGesture)
+            cell.avatarIMV.userInteractionEnabled = true
+            
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
                     let userDetail = JSON as! NSDictionary
+                    self.targerUser = userDetail
+                    
                     if !(userDetail[kImageUrl] is NSNull) {
                         var link = kPMAPI
                         link.appendContentsOf(userDetail[kImageUrl] as! String)
@@ -428,6 +436,10 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.navigationController?.popViewControllerAnimated(true)
     }
     
+    func avatarClicked() {
+        self.performSegueWithIdentifier(kGoUserProfile, sender: nil)
+    }
+    
     @IBAction func goPhoto(sender:UIButton!) {
         performSegueWithIdentifier("sendPhoto", sender: nil)
         
@@ -438,14 +450,18 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "sendPhoto")
-        {
+        if (segue.identifier == "sendPhoto") {
             self.textBox.resignFirstResponder()
             let destinationVC = segue.destinationViewController as! SendPhotoViewController
             destinationVC.messageId = self.messageId
             destinationVC.typeCoach = self.typeCoach
             destinationVC.coachId = self.coachId
             destinationVC.userIdTarget = self.userIdTarget
+        }
+        if (segue.identifier == kGoUserProfile) {
+            let destination = segue.destinationViewController as! UserProfileViewController
+            destination.userId = userIdTarget
+            destination.userDetail = self.targerUser
         }
     }
     

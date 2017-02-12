@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -350,11 +349,20 @@ fasdfasdfasdfas
                         <segue destination="uhu-24-VMw" kind="show" identifier="sendPhoto" id="pyi-qs-lJb">
                             <nil key="action"/>
                         </segue>
+                        <segue destination="jhT-sT-dEg" kind="presentation" identifier="goUserProfile" id="ttK-ax-dh6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="65d-yZ-AFc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="550" y="3277"/>
+        </scene>
+        <!--UserProfile-->
+        <scene sceneID="r5T-0I-VZ9">
+            <objects>
+                <viewControllerPlaceholder storyboardName="UserProfile" id="jhT-sT-dEg" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="flO-JA-IXA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="550" y="3744"/>
         </scene>
         <!--Send Photo View Controller-->
         <scene sceneID="nye-gp-lGD">
@@ -477,6 +485,6 @@ fasdfasdfasdfas
         <image name="cameraBig" width="22" height="22"/>
         <image name="cameraIcon.png" width="24" height="19"/>
         <image name="display-empty.jpg" width="256" height="256"/>
-        <image name="send.png" width="24" height="24"/>
+        <image name="send.png" width="30" height="30"/>
     </resources>
 </document>

@@ -175,6 +175,21 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         self.calendarView.contentController.refreshPresentedMonth()
     }
     
+    func sortSession(isUpcoming: Bool) {
+        if self.selectedSessionList.count > 0 {
+            self.selectedSessionList = self.selectedSessionList.sort { (session1, session2) -> Bool in
+                let lastOpen1 = session1.datetime
+                let lastOpen2 = session2.datetime
+                
+                if isUpcoming {
+                    return (lastOpen1!.compare(lastOpen2!) == NSComparisonResult.OrderedAscending)
+                } else {
+                    return (lastOpen1!.compare(lastOpen2!) == NSComparisonResult.OrderedDescending)
+                }
+            }
+        }
+    }
+    
     // MARK: UITableView
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.selectedSessionList.count > 0 {
@@ -310,6 +325,7 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
             i = i + 1
         }
         
+        self.sortSession(true)
         self.sessionTableView.reloadData()
     }
     
@@ -483,6 +499,7 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
                 i = i + 1
             }
             
+            self.sortSession(false)
             self.sessionTableView.reloadData()
         }
     }
