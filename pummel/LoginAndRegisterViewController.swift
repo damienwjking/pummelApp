@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import Mixpanel
+import FBSDKCoreKit
 
 class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -204,7 +205,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
                     self.view.hideToastActivity()
-        
+                    FBSDKAppEvents.logEvent("Login")
                 }else {
                     self.view.hideToastActivity()
                     let alertController = UIAlertController(title: pmmNotice, message: signInNotice, preferredStyle: .Alert)
@@ -363,6 +364,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                         activityView.stopAnimating()
                                         activityView.removeFromSuperview()
                                         self.view.hideToastActivity()
+                                        FBSDKAppEvents.logEvent("Register")
                                         
                                         self.updateCookies(response)
                                         let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)

@@ -33,14 +33,15 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+                <string>fb259753017780610</string>
 				<string>pummel</string>
 			</array>
-		</dict>
+        </dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>1175740259211468</string>
+	<string>259753017780610</string>
 	<key>FacebookDisplayName</key>
 	<string>Pummel</string>
 	<key>LSApplicationCategoryType</key>
