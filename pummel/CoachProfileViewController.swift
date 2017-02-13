@@ -92,6 +92,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     var tags = [Tag]()
     var arrayPhotos: NSArray = []
     var isFromFeed: Bool = false
+    var isFromChat: Bool = false
     var isFromListCoaches: Bool = false
     var isConnected = false
     
@@ -542,7 +543,11 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 prefix.appendContentsOf("/")
                 Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:coachDetail[kId]!])
                     .responseJSON { response in
-                        self.performSegueWithIdentifier(kGoConnect, sender: self)
+                        if self.isFromChat {
+                            self.dismissViewControllerAnimated(true, completion:nil)
+                        } else {
+                            self.performSegueWithIdentifier(kGoConnect, sender: self)
+                        }
                 }
             }
         }
