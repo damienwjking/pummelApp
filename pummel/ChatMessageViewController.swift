@@ -411,16 +411,17 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (self.messageId == nil) {
             chatTBDistantCT.constant = self.view.frame.size.height/2 - 64 - 49
-            tableView.userInteractionEnabled = false
+            tableView.scrollEnabled = false
+            
             return 1
         } else {
             if (self.arrayChat != nil) {
                 chatTBDistantCT.constant = 0
-                tableView.userInteractionEnabled = true
+                tableView.scrollEnabled = true
                 return self.arrayChat.count + 1
             } else {
                 chatTBDistantCT.constant = self.view.frame.size.height/2 - 64 - 49
-                tableView.userInteractionEnabled = false
+                tableView.scrollEnabled = false
                 return 1
             }
         }
