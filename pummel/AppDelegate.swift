@@ -115,6 +115,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let deviceTokenString = deviceToken.hexString
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(deviceTokenString, forKey: k_PM_PUSH_TOKEN)
+        let mixpanel = Mixpanel.sharedInstance()
+        mixpanel.people.addPushDeviceToken(deviceToken)
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
