@@ -490,6 +490,9 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                             self.connectV.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
                             self.isConnected = true
                             
+                            if self.isFromChat {
+                                self.connectBT.userInteractionEnabled = false
+                            }
                         } else if (resultString == "Not yet") {
                             self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
                             self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
