@@ -158,39 +158,43 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(idSender)
-            cell.avatarIMV.image = nil
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        var link = kPMAPI
-                        link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            cell.avatarIMV.image = imageRes
-                        } else {
+            
+            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+            if (NSCache.sharedInstance.objectForKey(indexPath.row) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(indexPath.row) as! UIImage
+                cell.avatarIMV.image = imageRes
+            } else {
+                Alamofire.request(.GET, prefix)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let userDetail = JSON as! NSDictionary
+                        if !(userDetail[kImageUrl] is NSNull) {
+                            var link = kPMAPI
+                            link.appendContentsOf(userDetail[kImageUrl] as! String)
+                            link.appendContentsOf(widthHeight160)
+                            
                             Alamofire.request(.GET, link)
                                 .responseImage { response in
                                     let imageRes = response.result.value! as UIImage
                                     let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                    NSCache.sharedInstance.setObject(imageRes, forKey: indexPath.row)
                                     dispatch_async(dispatch_get_main_queue(),{
                                         if updateCell != nil {
                                             cell.avatarIMV.image = imageRes
                                         }
                                     })
                             }
+                            
+                        } else {
+                            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
                         }
-                    } else {
-                        cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
             }
+            
+            
             
             return cell
         } else {
@@ -206,38 +210,42 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(idSender)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        var link = kPMAPI
-                        link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            cell.avatarIMV.image = imageRes
-                        } else {
+            
+            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+            if (NSCache.sharedInstance.objectForKey(indexPath.row) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(indexPath.row) as! UIImage
+                cell.avatarIMV.image = imageRes
+            } else {
+                Alamofire.request(.GET, prefix)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let userDetail = JSON as! NSDictionary
+                        if !(userDetail[kImageUrl] is NSNull) {
+                            var link = kPMAPI
+                            link.appendContentsOf(userDetail[kImageUrl] as! String)
+                            link.appendContentsOf(widthHeight160)
+                            
                             Alamofire.request(.GET, link)
                                 .responseImage { response in
                                     let imageRes = response.result.value! as UIImage
                                     let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                    NSCache.sharedInstance.setObject(imageRes, forKey: indexPath.row)
                                     dispatch_async(dispatch_get_main_queue(),{
                                         if updateCell != nil {
                                             cell.avatarIMV.image = imageRes
                                         }
                                     })
                             }
+                            
+                        } else {
+                            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
                         }
-                    } else {
-                        cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
             }
+            
             return cell
 
         }

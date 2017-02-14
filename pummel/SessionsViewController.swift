@@ -344,84 +344,140 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 }
             }
             
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let arrayMessageThisConverId = JSON as! NSArray
-                    if (arrayMessageThisConverId.count != 0) {
-                        let messageDetail = arrayMessageThisConverId[0]
-                        if (!(messageDetail[kText] is NSNull)) {
-                            cell.messageLB.text = messageDetail[kText]  as? String
-                            if (messageDetail[kText] as! String == "") {
-                                cell.messageLB.text = "Media message"
-                            }
-                        } else {
-                            if (!(messageDetail[kImageUrl] is NSNull)) {
-                                cell.messageLB.text = sendYouAImage
-                            } else if (!(messageDetail[KVideoUrl] is NSNull)) {
-                                cell.messageLB.text = sendYouAVideo
-                            } else
-                            {
-                                cell.messageLB.text = "Media messge"
-                            }
-                        }
-                    } else {
-                        cell.messageLB.text = ""
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
-            }
+            let messageText = message[kText] as? String
             
-            let conversations = message[kConversation] as! NSDictionary
-            let conversationUsers = conversations[kConversationUser] as! NSArray
-            var targetUser = conversationUsers[0] as! NSDictionary
-           
-            var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-            if (currentUserid == targetUserId){
-                targetUser = conversationUsers[1] as! NSDictionary
-                targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-            }
-            var prefixUser = kPMAPIUSER
-            prefixUser.appendContentsOf(targetUserId)
-            Alamofire.request(.GET, prefixUser)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userInfo = JSON as! NSDictionary
-                    let name = userInfo.objectForKey(kFirstname) as! String
-                    cell.nameLB.text = name.uppercaseString
-                    var link = kPMAPI
-                    if !(JSON[kImageUrl] is NSNull) {
-                        link.appendContentsOf(JSON[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            cell.avatarIMV.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    if (response.response?.statusCode == 200) {
-                                        let imageRes = response.result.value! as UIImage
-                                        NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                        let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                        dispatch_async(dispatch_get_main_queue(),{
-                                            if updateCell != nil {
-                                                cell.avatarIMV.image = imageRes
-                                            }
-                                        })
-                                        
-                                    }
+            if messageText?.isEmpty == false {
+                cell.messageLB.text = messageText
+            } else {
+                cell.messageLB.text = " "
+                Alamofire.request(.GET, prefix)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let arrayMessageThisConverId = JSON as! NSArray
+                        if (arrayMessageThisConverId.count != 0) {
+                            let messageDetail = arrayMessageThisConverId[0]
+                            if (!(messageDetail[kText] is NSNull)) {
+                                cell.messageLB.text = messageDetail[kText]  as? String
+                                if (messageDetail[kText] as! String == "") {
+                                    cell.messageLB.text = "Media message"
+                                }
+                            } else {
+                                if (!(messageDetail[kImageUrl] is NSNull)) {
+                                    cell.messageLB.text = sendYouAImage
+                                } else if (!(messageDetail[KVideoUrl] is NSNull)) {
+                                    cell.messageLB.text = sendYouAVideo
+                                } else
+                                {
+                                    cell.messageLB.text = "Media messge"
+                                }
                             }
+                        } else {
+                            cell.messageLB.text = " "
                         }
+                        
+                        // Update message
+                        let messageIndex = self.arrayMessages.indexOf(message)
+                        
+                        if messageIndex != nil {
+                            let mutaMessage = message.mutableCopy() as! NSMutableDictionary
+                            mutaMessage[kText] = cell.messageLB.text
+                            let newMessage = NSDictionary(dictionary: mutaMessage)
+                            
+                            self.arrayMessages.removeAtIndex(messageIndex!)
+                            self.arrayMessages.insert(newMessage, atIndex: messageIndex!)
+                        }
+                        
+                        
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
+            }
+        
+            
+            let nameText = message[kFirstname] as? String
+            
+            if nameText?.isEmpty == false {
+                cell.nameLB.text = nameText
+                
+                let imageURL = message[kImageUrl] as? String
+                if (imageURL?.isEmpty == false) {
+                    var link = kPMAPI
+                    link.appendContentsOf(imageURL!)
+                    link.appendContentsOf(widthHeight160)
+                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                        cell.avatarIMV.image = imageRes
                     } else {
                         cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
                     }
-                    
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
+                } else {
+                    cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+                }
+            } else {
+                let conversations = message[kConversation] as! NSDictionary
+                let conversationUsers = conversations[kConversationUser] as! NSArray
+                var targetUser = conversationUsers[0] as! NSDictionary
+                
+                var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
+                if (currentUserid == targetUserId){
+                    targetUser = conversationUsers[1] as! NSDictionary
+                    targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
+                }
+                var prefixUser = kPMAPIUSER
+                prefixUser.appendContentsOf(targetUserId)
+                Alamofire.request(.GET, prefixUser)
+                    .responseJSON { response in switch response.result {
+                    case .Success(let JSON):
+                        let userInfo = JSON as! NSDictionary
+                        
+                        let name = userInfo.objectForKey(kFirstname) as! String
+                        cell.nameLB.text = name.uppercaseString
+                        
+                        var imageURL = userInfo.objectForKey(kImageUrl) as? String
+                        if (imageURL?.isEmpty == true) {
+                            imageURL = " "
+                        }
+                        
+                        // Update message
+                        let messageIndex = self.arrayMessages.indexOf(message)
+                        
+                        if messageIndex != nil {
+                            let mutaMessage = message.mutableCopy() as! NSMutableDictionary
+                            mutaMessage[kFirstname] = name
+                            mutaMessage[kImageUrl] = imageURL
+                            let newMessage = NSDictionary(dictionary: mutaMessage)
+                            
+                            self.arrayMessages.removeAtIndex(messageIndex!)
+                            self.arrayMessages.insert(newMessage, atIndex: messageIndex!)
+                        }
+                        
+                        var link = kPMAPI
+                        if !(JSON[kImageUrl] is NSNull) {
+                            link.appendContentsOf(JSON[kImageUrl] as! String)
+                            link.appendContentsOf(widthHeight160)
+                            if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                                let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                                cell.avatarIMV.image = imageRes
+                            } else {
+                                Alamofire.request(.GET, link)
+                                    .responseImage { response in
+                                        if (response.response?.statusCode == 200) {
+                                            let imageRes = response.result.value! as UIImage
+                                            NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                            tableView.reloadData()
+                                        }
+                                }
+                            }
+                        } else {
+                            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+                        }
+                        
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                        }
+                }
             }
-            
             
             return cell
         } else {
