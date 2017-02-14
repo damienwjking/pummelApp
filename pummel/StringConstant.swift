@@ -58,7 +58,7 @@ let imperial = "Imperial"
 let passWordMinCharacter = "Password must have at least 8 characters. Please try a combination of letters and words."
 let passWordNotMatch = "New password does not match with retype new password"
 let curPassWrong = "Current password does not match, please retype"
-
+let notfindPhoto = "We can't find this post now."
 // Key String
 let k_PM_3D_TOUCH = "3DTouch"
 let k_PM_3D_TOUCH_VALUE = "3DTouch_Default_Value"
