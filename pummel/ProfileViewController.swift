@@ -225,6 +225,12 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         } else if segue.identifier == "goSetting" {
             let destinationVC = segue.destinationViewController as! SettingsViewController
             destinationVC.userInfo = self.coachDetail
+        }  else if segue.identifier == "goToFeedDetail" {
+            let navc = segue.destinationViewController as! UINavigationController
+            let destination = navc.topViewController as! FeedViewController
+            if let feed = sender as? NSDictionary {
+                destination.feedDetail = feed
+            }
         }
     }
     
@@ -784,6 +790,40 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             return cellSize
         } else {
             return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        self.view.makeToastActivity()
+        var prefix = kPMAPI
+        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
+        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
+        Alamofire.request(.GET, prefix, parameters: ["photoId":photo.objectForKey(kId)!])
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                if let arr = JSON as? NSArray {
+                    if arr.count > 0 {
+                        if let dic = arr.objectAtIndex(0) as? NSDictionary {
+                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
+                            self.view.hideToastActivity()
+                            return
+                        }
+                    }
+                }
+                
+                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    // ...
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+                self.view.hideToastActivity()
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+                self.view.hideToastActivity()
         }
     }
     

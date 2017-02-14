@@ -25,6 +25,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     var listComment : [NSDictionary] = []
     var stopGetListComment : Bool = false
     var offset: Int = 0
+    var fromPhoto = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +42,25 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         self.tableView.estimatedRowHeight = 77
         self.tableView.rowHeight = UITableViewAutomaticDimension
         
-        userFeed = feedDetail[kUser] as! NSDictionary
-        
+        if let userDic = feedDetail[kUser] as? NSDictionary {
+            userFeed = userDic
+        } else {
+            fromPhoto = true
+            let userId = feedDetail[kUserId] as! NSInteger
+            var prefixUser = kPMAPIUSER
+            prefixUser.appendContentsOf("\(userId)")
+            Alamofire.request(.GET, prefixUser)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    if let userInfo = JSON as? NSDictionary {
+                        self.userFeed = userInfo
+                        self.tableView.reloadData()
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+            }
+        }
         self.textBox.font = .pmmMonReg13()
         self.textBox.delegate = self
     
@@ -75,8 +93,9 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         
         let scrollPoint = CGPoint(x: 0, y: self.tableView.contentSize.height - self.tableView.frame.size.height);
         self.tableView.setContentOffset(scrollPoint, animated: true);
-        
-        self.tableView.reloadData()
+        if let userDic = feedDetail[kUser] as? NSDictionary {
+            self.tableView.reloadData()
+        }
     }
     
     func getListComment() {
@@ -143,6 +162,9 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.row ==  0) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kFeedFirstPartTableViewCell, forIndexPath: indexPath) as! FeedFirstPartTableViewCell
+            if userFeed == nil {
+                return cell
+            }
             let firstname = userFeed[kFirstname] as? String
             cell.nameLB.text = firstname?.uppercaseString
             
@@ -249,6 +271,9 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
             return cell
         }else if (indexPath.row == 2) {
             let cell = tableView.dequeueReusableCellWithIdentifier("FeedThirdPartTableViewCell", forIndexPath: indexPath) as! FeedThirdPartTableViewCell
+            if userFeed == nil {
+                return cell
+            }
             cell.userCommentLB.text = (userFeed[kFirstname] as! String).uppercaseString
             cell.contentCommentLB.text = feedDetail[kText] as? String
             cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))! + 20
@@ -521,6 +546,10 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     func cancel() {
+        if self.fromPhoto == true {
+            self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+            return
+        }
         self.navigationController?.popViewControllerAnimated(true)
     }
     
