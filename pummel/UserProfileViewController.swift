@@ -118,6 +118,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         } else if segue.identifier == "goToFeedDetail" {
             let navc = segue.destinationViewController as! UINavigationController
             let destination = navc.topViewController as! FeedViewController
+            destination.fromPhoto = true
             if let feed = sender as? NSDictionary {
                 destination.feedDetail = feed
             }
@@ -219,7 +220,8 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         var prefix = kPMAPI
         prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
         let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        Alamofire.request(.GET, prefix, parameters: ["photoId":photo.objectForKey(kId)!])
+        print(photo.objectForKey(kId)!)
+        Alamofire.request(.GET, prefix, parameters: ["photoId":45])
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 if let arr = JSON as? NSArray {

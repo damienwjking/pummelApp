@@ -44,22 +44,6 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         
         if let userDic = feedDetail[kUser] as? NSDictionary {
             userFeed = userDic
-        } else {
-            fromPhoto = true
-            let userId = feedDetail[kUserId] as! NSInteger
-            var prefixUser = kPMAPIUSER
-            prefixUser.appendContentsOf("\(userId)")
-            Alamofire.request(.GET, prefixUser)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    if let userInfo = JSON as? NSDictionary {
-                        self.userFeed = userInfo
-                        self.tableView.reloadData()
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
-            }
         }
         self.textBox.font = .pmmMonReg13()
         self.textBox.delegate = self
@@ -93,9 +77,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         
         let scrollPoint = CGPoint(x: 0, y: self.tableView.contentSize.height - self.tableView.frame.size.height);
         self.tableView.setContentOffset(scrollPoint, animated: true);
-        if let userDic = feedDetail[kUser] as? NSDictionary {
-            self.tableView.reloadData()
-        }
+        self.tableView.reloadData()
     }
     
     func getListComment() {
