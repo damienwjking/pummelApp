@@ -663,8 +663,12 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func logOut() {
+        self.view.makeToastActivity(message: "Logging Out")
+        
         Alamofire.request(.DELETE, kPMAPI_LOGOUT).response { (req, res, data, error) -> Void in
             print(res)
+            self.view.hideToastActivity()
+            
             let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
             if ((outputString?.containsString(kLogoutSuccess)) != nil) {
                 self.defaults.setObject(false, forKey: k_PM_IS_LOGINED)
