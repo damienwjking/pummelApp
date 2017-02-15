@@ -398,7 +398,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             let nameText = message[kFirstname] as? String
             
             if nameText?.isEmpty == false {
-                cell.nameLB.text = nameText
+                cell.nameLB.text = nameText?.uppercaseString
                 
                 let imageURL = message[kImageUrl] as? String
                 if (imageURL?.isEmpty == false) {
