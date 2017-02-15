@@ -799,7 +799,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         var prefix = kPMAPI
         prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
         let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        Alamofire.request(.GET, prefix, parameters: ["photoId":45])
+        Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 if let arr = JSON as? NSArray {
