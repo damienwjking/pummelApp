@@ -20,7 +20,7 @@ class Session: NSObject {
     var datetime: String?
     var createdAt: String?
     var updatedAt: String?
-    var distance: Int?
+    var distance: Double?
     var longtime: Int?
     var intensity: String?
     var calorie: Int?
@@ -42,7 +42,7 @@ class Session: NSObject {
         }
         
         self.intensity = sessionContent.objectForKey("intensity") as? String
-        self.distance = sessionContent.objectForKey("distance") as? Int
+        self.distance = sessionContent.objectForKey("distance") as? Double
         if self.distance == nil {
             self.distance = 0
         }

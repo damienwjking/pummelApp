@@ -211,9 +211,18 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 self.distanceLB.text = "0"
                 self.distanceSelected = "0"
             } else {
-                self.distanceLB.text = String(format: "%ld", self.editSession.distance!)
-                
-                self.distanceSelected = String(format: "%ld", self.editSession.distance!)
+                let distanceUnit = self.defaults.objectForKey(kUnit) as? String
+                if (distanceUnit == metric) {
+                    self.distanceLB.text = String(format: "%0.0f", self.editSession.distance!)
+                    
+                    self.distanceSelected = String(format: "%0.0f", self.editSession.distance!)
+                } else {
+                    let distanceValue = Double(self.editSession.distance!) / 1.61
+                    
+                    self.distanceLB.text = String(format: "%0.1f", distanceValue)
+                    
+                    self.distanceSelected = String(format: "%0.1f", distanceValue)
+                }
             }
             
             if self.editSession.calorie == nil {
@@ -428,15 +437,28 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             
             let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
             let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
+            
+            var distanceSelected = ""
+            if Double(self.distanceSelected) > 0 {
+                let distanceUnit = self.defaults.objectForKey(kUnit) as? String
+                if (distanceUnit == metric) {
+                    distanceSelected = String(format: "%0.1f", Double(self.distanceSelected)!)
+                } else {
+                    let distanceValue = Double(self.distanceSelected)! * 1.61
+                    
+                    distanceSelected = String(format: "%0.1f", distanceValue)
+                }
+            }
+            
             let parameters = [
                 kUserId      :defaults.objectForKey(k_PM_CURRENT_ID) as! String,
                 kText        : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
                 kType        :String(format: "#%@", (self.tag.name?.uppercaseString)!),
                 kIntensity   : self.intensitySelected,
-                kDistance    : self.distanceSelected,
+                kDistance    : distanceSelected,
                 kLongtime    : self.longtimeSelected,
-                kCalorie     :  calorieSelected,
-                kDatetime    :  selectedDate,
+                kCalorie     : calorieSelected,
+                kDatetime    : selectedDate,
                 kUserIdTarget:userIdSelected
             ]
 
@@ -515,11 +537,23 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         let dateSelected = self.convertLocalTimeToUTCTime(self.dateTF.text!)
         let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
         
+        var distanceSelected = ""
+        if Double(self.distanceSelected) > 0 {
+            let distanceUnit = self.defaults.objectForKey(kUnit) as? String
+            if (distanceUnit == metric) {
+                distanceSelected = String(format: "%0.1f", Double(self.distanceSelected)!)
+            } else {
+                let distanceValue = Double(self.distanceSelected)! * 1.61
+                
+                distanceSelected = String(format: "%0.1f", distanceValue)
+            }
+        }
+        
         let parameters = [
             kActivityId : String(format:"%ld", self.editSession.id!),
             kText       : self.contentTV.text,
             kIntensity  : self.intensitySelected,
-            kDistance   : self.distanceSelected,
+            kDistance   : distanceSelected,
             kLongtime   : self.longtimeSelected,
             kCalorie    : calorieSelected,
             kDatetime   : dateSelected,
@@ -535,8 +569,16 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                     self.editSession.text = self.contentTV.text
                     self.editSession.calorie = Int(calorieSelected)
                     self.editSession.intensity = self.intensitySelected
-                    self.editSession.distance = Int(self.distanceSelected)
+                    
                     self.editSession.longtime = Int(self.longtimeSelected)
+                    
+                    
+                    let distanceUnit = self.defaults.objectForKey(kUnit) as? String
+                    if (distanceUnit == metric) {
+                        self.editSession.distance = Double(self.distanceSelected)
+                    } else {
+                        self.editSession.distance = Double(self.distanceSelected)! * 1.61
+                    }
                     
                     let newDateFormatter = NSDateFormatter()
                     newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
@@ -760,7 +802,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         
         if pickerView == self.distancePickerView {
             title = String(format: "%ld", row)
-            self.distanceSelected = String(format: "%ld", self.distancePickerView.selectedRowInComponent(0) + 1)
+//            self.distanceSelected = String(format: "%ld", self.distancePickerView.selectedRowInComponent(0) + 1)
         }
         
         if pickerView == self.intensityPickerView {
@@ -796,6 +838,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == self.distancePickerView {
             self.distanceLB.text = String(format: "%ld", row)
+            self.distanceSelected = String(format: "%ld", row)
         }
         
         if pickerView == self.intensityPickerView {

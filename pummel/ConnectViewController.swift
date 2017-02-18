@@ -137,10 +137,10 @@ class ConnectViewController: BaseViewController {
                 }
         }
         
-        if !(coachDetail[kImageUrl] is NSNull) {
-            let imageLink = coachDetail[kImageUrl] as! String
+        let imageLink = coachDetail[kImageUrl] as? String
+        if (imageLink?.isEmpty == false) {
             prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
+            prefix.appendContentsOf(imageLink!)
             prefix.appendContentsOf(widthHeight236)
             Alamofire.request(.GET, prefix)
                 .responseImage { response in

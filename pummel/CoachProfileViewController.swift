@@ -140,7 +140,8 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.interestCollectionView.delegate = self
         self.interestCollectionView.dataSource = self
         
-        if !(coachDetail[kImageUrl] is NSNull) {
+        let imageLink = coachDetail[kImageUrl] as? String
+        if (imageLink?.isEmpty == false) {
             self.setCoachAvatar()
         }
         
@@ -540,12 +541,16 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 let properties = ["Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SendMessageToCoach", properties: properties)
                 
+                self.view.makeToastActivity(message: "Connecting")
+                
                 var prefix = kPMAPIUSER
                 prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
                 prefix.appendContentsOf(kPMAPI_LEAD)
                 prefix.appendContentsOf("/")
                 Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:coachDetail[kId]!])
                     .responseJSON { response in
+                        self.view.hideToastActivity()
+                        
                         if self.isFromChat {
                             self.dismissViewControllerAnimated(true, completion:nil)
                         } else {

@@ -216,11 +216,15 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             }
         
             // Check Coach
+            cell.userInteractionEnabled = false
             var coachLink  = kPMAPICOACH
             let coachId = String(format:"%0.f", userFeed[kId]!.doubleValue)
             coachLink.appendContentsOf(coachId)
+        
             Alamofire.request(.GET, coachLink)
                 .responseJSON { response in
+                    cell.userInteractionEnabled = true
+                    
                     if response.response?.statusCode == 200 {
                         cell.isCoach = true
                     } else {

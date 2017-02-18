@@ -140,10 +140,10 @@ class DetailSessionViewController: BaseViewController {
         if self.session.distance != nil && self.session.distance != 0 {
             let distanceUnit = self.defaults.objectForKey(kUnit) as? String
             if (distanceUnit == metric) {
-                self.distanceLB.text = String(format: "%ld kms", self.session.distance!)
+                self.distanceLB.text = String(format: "%0.0f kms", self.session.distance!)
                 self.distanceV.hidden = false
             } else {
-                self.distanceLB.text = String(format: "%ld mi", self.session.distance!)
+                self.distanceLB.text = String(format: "%0.1f mi", (Double(self.session.distance!) / 1.61))
                 self.distanceV.hidden = false
             }
             
