@@ -179,14 +179,19 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     
     func updateUI() {
         self.userNameLB.text = (self.userDetail[kFirstname] as! String).uppercaseString
-        var rating = self.userDetail[kRating] as! Double
-        rating = rating * 100
-        self.ratingContentLB.text = String(format:"%0.f", rating).stringByAppendingString("%")
+        
+        self.ratingContentLB.text = String(format:"%0.f", (self.userDetail[kConnectionCount]!.doubleValue * 200) + (self.userDetail[kPostCount]!.doubleValue * 150))
+        
         self.connectionContentLB.text = String(format:"%0.f", self.userDetail[kConnectionCount]!.doubleValue)
+        
         self.postNumberContentLB.text = String(format:"%0.f", self.userDetail[kPostCount]!.doubleValue)
+        
         self.aboutTV.text = !(self.userDetail[kBio] is NSNull) ? self.userDetail[kBio] as! String : letAddYourDetail
+        
         let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
+        
         self.aboutTVHeightDT.constant = sizeAboutTV.height
+        
         self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
     }
     

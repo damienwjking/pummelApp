@@ -426,25 +426,23 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             case .Success(let JSON):
                 let coachInformationTotal = JSON as! NSDictionary
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
-                if (coachInformation[kRating] is NSNull) {
-                    self.ratingContentLB.text = "0%"
-                } else {
-                    var rating = coachInformation[kRating] as! Double
-                    rating = rating * 100
-                    self.ratingContentLB.text = String(format:"%0.f", rating).stringByAppendingString("%")
-                }
                 
+                var totalPoint = 0.0
                 if (coachInformation[kConnectionCount] is NSNull) {
                     self.connectionContentLB.text = "0"
                 } else {
                     self.connectionContentLB.text = String(format:"%0.f", coachInformation[kConnectionCount]!.doubleValue)
+                    
+                    totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 200)
                 }
-                
                 if (coachInformation[kPostCount] is NSNull) {
                     self.postNumberContentLB.text  = "0"
                 } else {
                     self.postNumberContentLB.text = String(format:"%0.f", coachInformation[kPostCount]!.doubleValue)
+                    
+                    totalPoint = totalPoint + (coachInformation[kPostCount]!.doubleValue * 150)
                 }
+                self.ratingContentLB.text = String(format:"%0.f", totalPoint)
                 
                 if !(coachInformationTotal[kServiceArea] is NSNull) {
                     self.addressLB.text = coachInformationTotal[kServiceArea] as? String
@@ -575,25 +573,24 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.coachBorderBackgroundV.hidden = true
         self.coachBorderV.hidden = true
         self.addressIconIMV.hidden = true
-        if (coachDetail[kRating] is NSNull) {
-            self.ratingContentLB.text = "0%"
-        } else {
-            var rating = coachDetail[kRating] as! Double
-            rating = rating * 100
-            self.ratingContentLB.text = String(format:"%0.f", rating).stringByAppendingString("%")
-        }
         
+        var totalPoint = 0.0
         if (coachDetail[kConnectionCount] is NSNull) {
             self.connectionContentLB.text = "0"
         } else {
             self.connectionContentLB.text = String(format:"%0.f", coachDetail[kConnectionCount]!.doubleValue)
+            
+            totalPoint = totalPoint + (coachDetail[kConnectionCount]!.doubleValue * 200)
         }
         
         if (coachDetail[kPostCount] is NSNull) {
             self.postNumberContentLB.text  = "0"
         } else {
             self.postNumberContentLB.text = String(format:"%0.f", coachDetail[kPostCount]!.doubleValue)
+            
+            totalPoint = totalPoint + (coachDetail[kPostCount]!.doubleValue * 150)
         }
+        self.ratingContentLB.text = String(format:"%0.f", totalPoint)
         
         self.addressLB.hidden = true
         
