@@ -68,6 +68,7 @@
 		F90D32F61D108DFD00E3C349 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F31D108DFD00E3C349 /* blackArrow.png */; };
 		F90D32F71D108DFD00E3C349 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */; };
 		F90D32F81D108DFD00E3C349 /* blackArrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */; };
+		F911B23F1E55288600F464B2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F911B23E1E55288600F464B2 /* GoogleService-Info.plist */; };
 		F91727631DB3343200C6E612 /* HorizontalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91727611DB3343200C6E612 /* HorizontalCell.swift */; };
 		F91727641DB3343200C6E612 /* HorizontalCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F91727621DB3343200C6E612 /* HorizontalCell.xib */; };
 		F91727661DB3BDCD00C6E612 /* like-image.png in Resources */ = {isa = PBXBuildFile; fileRef = F91727651DB3BDCD00C6E612 /* like-image.png */; };
@@ -404,6 +405,7 @@
 		F90D32F31D108DFD00E3C349 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
 		F90D32F41D108DFD00E3C349 /* blackArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@2x.png"; sourceTree = "<group>"; };
 		F90D32F51D108DFD00E3C349 /* blackArrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@3x.png"; sourceTree = "<group>"; };
+		F911B23E1E55288600F464B2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F91727611DB3343200C6E612 /* HorizontalCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalCell.swift; sourceTree = "<group>"; };
 		F91727621DB3343200C6E612 /* HorizontalCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HorizontalCell.xib; sourceTree = "<group>"; };
 		F91727651DB3BDCD00C6E612 /* like-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "like-image.png"; sourceTree = "<group>"; };
@@ -744,6 +746,7 @@
 				F9ABEAE41DC4B6820084B70E /* Storyboard */,
 				9C1C540D1C7938070083E47B /* Assets.xcassets */,
 				9C1C54121C7938070083E47B /* Info.plist */,
+				F911B23E1E55288600F464B2 /* GoogleService-Info.plist */,
 				F91C17571DBEDC42004D4789 /* Pummel.entitlements */,
 				F964FEC21D21E049008F7C94 /* Images.xcassets */,
 			);
@@ -1330,7 +1333,7 @@
 					9C1C54001C7938060083E47B = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = YW7P88KVE4;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1552,6 +1555,7 @@
 				F98C41A51CF25F6500ECC66E /* sessions@2x.png in Resources */,
 				F9827F2B1CBC758A00841BF1 /* email@3x.png in Resources */,
 				F970A2B51D2646A900932BFC /* connect@2x.png in Resources */,
+				F911B23F1E55288600F464B2 /* GoogleService-Info.plist in Resources */,
 				F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */,
 				F921CA7E1E1FBB5100C223D7 /* icon_calories.png in Resources */,
 				F9EAE8D81D6ED08200FD32BE /* cardEmpty.png in Resources */,
@@ -2150,7 +2154,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = YW7P88KVE4;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2161,8 +2165,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fit.pummel.app;
 				PRODUCT_NAME = Pummel;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "072656a3-4251-4646-806a-0b077250538c";
+				PROVISIONING_PROFILE_SPECIFIER = "XC iOS: fit.pummel.app";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2176,7 +2180,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = YW7P88KVE4;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2187,8 +2191,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = fit.pummel.app;
 				PRODUCT_NAME = Pummel;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "072656a3-4251-4646-806a-0b077250538c";
+				PROVISIONING_PROFILE_SPECIFIER = "XC iOS: fit.pummel.app";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

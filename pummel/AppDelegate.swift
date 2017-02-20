@@ -17,6 +17,7 @@ import Mixpanel
 import Alamofire
 import FBSDKCoreKit
 import Branch
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -47,6 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
        
+        FIRApp.configure()
         
         return true
     }

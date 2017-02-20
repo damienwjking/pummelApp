@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>372036568194-r2a9c0m60b2qnokp9ou6516d4sonmjcj.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.372036568194-r2a9c0m60b2qnokp9ou6516d4sonmjcj</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAr2QHZ8NJ_GwB8rH1xaxojq0l8AX3qOYk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>372036568194</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>fit.pummel.app</string>
+	<key>PROJECT_ID</key>
+	<string>pummel-1224</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pummel-1224.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:372036568194:ios:a8caf735d1885a0e</string>
+	<key>DATABASE_URL</key>
+	<string>https://pummel-1224.firebaseio.com</string>
+</dict>
+</plist>
