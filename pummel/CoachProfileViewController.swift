@@ -22,7 +22,8 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var coachBorderV: UIView!
     @IBOutlet weak var coachBorderBackgroundV: UIView!
-    @IBOutlet weak var connectV : UIView!
+    @IBOutlet weak var actionViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var phoneBT: UIButton!
     @IBOutlet weak var connectBT : UIButton!
     @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var interestLB: UILabel!
@@ -127,9 +128,12 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.titleCoachLB.font = .pmmMonReg13()
         self.titleCoachLB.text = (coachDetail[kFirstname] as! String).uppercaseString
         
-        self.connectV.layer.cornerRadius = 55/2
-        self.connectV.clipsToBounds = true
-        self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
+        self.connectBT.layer.cornerRadius = 55/2
+        self.connectBT.clipsToBounds = true
+        self.connectBT.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
+        self.actionViewWidthConstraint.constant = 55;
+        self.phoneBT.hidden = true
+        
         self.avatarIMV.layer.cornerRadius = 125/2
         self.coachBorderV.layer.cornerRadius = 135/2
         self.coachBorderBackgroundV.layer.cornerRadius = 129/2
@@ -492,7 +496,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                     if (resultString.isEmpty == false) {
                         if (resultString == "Connected") {
                             self.connectBT.setImage(UIImage(named: "connected"), forState: .Normal)
-                            self.connectV.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
+                            self.connectBT.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
                             self.isConnected = true
                             
                             if self.isFromChat {
@@ -500,11 +504,11 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                             }
                         } else if (resultString == "Not yet") {
                             self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
-                            self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
+                            self.connectBT.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
                         }
                     } else {
                         self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
-                        self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
+                        self.connectBT.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
                     }
                     
                 case .Failure(let error):
@@ -535,6 +539,10 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         }
         self.dismissViewControllerAnimated(true) { 
         }
+    }
+    
+    @IBAction func phoneBTClicked(sender: AnyObject) {
+    
     }
     
     @IBAction func goConnection() {

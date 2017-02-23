@@ -27,6 +27,9 @@
 		BA0314911E155FC000982622 /* intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0314901E155FC000982622 /* intensity.png */; };
 		BA0314941E157C0300982622 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0314931E157C0300982622 /* Session.swift */; };
 		BA04AB691E252BAC00F987BD /* ContactUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */; };
+		BA0A2C1C1E5F4273006C6C61 /* icon_phone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0A2C191E5F4273006C6C61 /* icon_phone@3x.png */; };
+		BA0A2C1D1E5F4273006C6C61 /* icon_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0A2C1A1E5F4273006C6C61 /* icon_phone@2x.png */; };
+		BA0A2C1E1E5F4273006C6C61 /* icon_phone.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0A2C1B1E5F4273006C6C61 /* icon_phone.png */; };
 		BA0B61ED1E004E0800A98C82 /* miniPummelLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */; };
 		BA0B61EE1E004E0800A98C82 /* miniPummelLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */; };
 		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
@@ -364,6 +367,9 @@
 		BA0314901E155FC000982622 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
 		BA0314931E157C0300982622 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUserViewController.swift; sourceTree = "<group>"; };
+		BA0A2C191E5F4273006C6C61 /* icon_phone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_phone@3x.png"; sourceTree = "<group>"; };
+		BA0A2C1A1E5F4273006C6C61 /* icon_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_phone@2x.png"; sourceTree = "<group>"; };
+		BA0A2C1B1E5F4273006C6C61 /* icon_phone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_phone.png; sourceTree = "<group>"; };
 		BA0B61EA1E004E0800A98C82 /* miniPummelLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@3x.png"; sourceTree = "<group>"; };
 		BA0B61EB1E004E0800A98C82 /* miniPummelLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = miniPummelLogo.png; sourceTree = "<group>"; };
 		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
@@ -861,6 +867,9 @@
 		F9827EB71CBBF31600841BF1 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				BA0A2C191E5F4273006C6C61 /* icon_phone@3x.png */,
+				BA0A2C1A1E5F4273006C6C61 /* icon_phone@2x.png */,
+				BA0A2C1B1E5F4273006C6C61 /* icon_phone.png */,
 				F9C17B811E4354E000CE3A8B /* shareLogo.png */,
 				F9F8EC511E35B5C2005EC167 /* icon_add.png */,
 				F9F8EC521E35B5C2005EC167 /* icon_add@2x.png */,
@@ -1441,8 +1450,10 @@
 				F9FE145A1CEBD29B004ABE34 /* FSCameraView.xib in Resources */,
 				F98C41A61CF25F6500ECC66E /* sessions@3x.png in Resources */,
 				F979E15C1D7DBD5B00C717F0 /* noActivity@2x.png in Resources */,
+				BA0A2C1E1E5F4273006C6C61 /* icon_phone.png in Resources */,
 				F9F8EC441E35B22A005EC167 /* add@3x.png in Resources */,
 				F9FE14561CEBD29B004ABE34 /* FSAlbumView.xib in Resources */,
+				BA0A2C1C1E5F4273006C6C61 /* icon_phone@3x.png in Resources */,
 				F9248D901E177C3E0019491F /* icon_delete.png in Resources */,
 				F98C41A91CF25F6500ECC66E /* sessionsPressed@3x.png in Resources */,
 				F9741E031D89708000D61868 /* edit.png in Resources */,
@@ -1569,6 +1580,7 @@
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
 				BAFE18461E2094F000387C53 /* connected@2x.png in Resources */,
 				F9ABEAF61DC4C32A0084B70E /* Message.storyboard in Resources */,
+				BA0A2C1D1E5F4273006C6C61 /* icon_phone@2x.png in Resources */,
 				F9827F451CBD231D00841BF1 /* SignupViewController.xib in Resources */,
 				F921CA781E1FB87000C223D7 /* icon_distance@3x.png in Resources */,
 				F9F3CC3D1CE1EC66007F68A5 /* newmessage@3x.png in Resources */,

@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -429,25 +430,40 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LHK-4V-H9q">
-                                        <rect key="frame" x="273" y="272" width="55" height="55"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h5U-8z-NAS">
+                                        <rect key="frame" x="180" y="272" width="240" height="55"/>
                                         <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7F4-eX-Wc2">
+                                                <rect key="frame" x="185" y="0.5" width="55" height="55"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="7F4-eX-Wc2" secondAttribute="height" multiplier="1:1" id="khk-kH-y8n"/>
+                                                </constraints>
+                                                <state key="normal" image="icon_phone"/>
+                                                <connections>
+                                                    <action selector="phoneBTClicked:" destination="cHG-mo-slS" eventType="touchUpInside" id="2Gp-eA-aOd"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S1X-vx-wK2">
                                                 <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="S1X-vx-wK2" secondAttribute="height" multiplier="1:1" id="QpP-6R-KkN"/>
+                                                </constraints>
                                                 <state key="normal" image="connect.png"/>
                                                 <connections>
                                                     <action selector="goConnection" destination="cHG-mo-slS" eventType="touchUpInside" id="V38-aW-gaY"/>
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="S1X-vx-wK2" secondAttribute="bottom" id="5pv-Nv-Tjp"/>
-                                            <constraint firstAttribute="height" constant="55" id="9QE-dn-Lq0"/>
-                                            <constraint firstItem="S1X-vx-wK2" firstAttribute="leading" secondItem="LHK-4V-H9q" secondAttribute="leading" id="9i0-qs-fOV"/>
-                                            <constraint firstAttribute="trailing" secondItem="S1X-vx-wK2" secondAttribute="trailing" id="DIb-Cg-UjH"/>
-                                            <constraint firstAttribute="width" constant="55" id="NkW-LG-47r"/>
-                                            <constraint firstItem="S1X-vx-wK2" firstAttribute="top" secondItem="LHK-4V-H9q" secondAttribute="top" id="sGX-Qr-xiP"/>
+                                            <constraint firstItem="S1X-vx-wK2" firstAttribute="leading" secondItem="h5U-8z-NAS" secondAttribute="leading" id="0aC-M5-YDb"/>
+                                            <constraint firstAttribute="trailing" secondItem="7F4-eX-Wc2" secondAttribute="trailing" id="28M-Pn-YpC"/>
+                                            <constraint firstItem="S1X-vx-wK2" firstAttribute="height" secondItem="h5U-8z-NAS" secondAttribute="height" id="4Qg-Ex-v2m"/>
+                                            <constraint firstItem="7F4-eX-Wc2" firstAttribute="centerY" secondItem="h5U-8z-NAS" secondAttribute="centerY" id="ZGb-aW-VaX"/>
+                                            <constraint firstAttribute="width" constant="240" id="aOo-YL-C1K"/>
+                                            <constraint firstAttribute="height" constant="55" id="dh3-Ik-Irj"/>
+                                            <constraint firstItem="7F4-eX-Wc2" firstAttribute="height" secondItem="h5U-8z-NAS" secondAttribute="height" id="gEQ-m5-uvH"/>
+                                            <constraint firstItem="S1X-vx-wK2" firstAttribute="centerY" secondItem="h5U-8z-NAS" secondAttribute="centerY" id="mtd-nA-qi6"/>
                                         </constraints>
                                     </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OJD-JP-fA0">
@@ -604,11 +620,11 @@
                                     <constraint firstItem="mes-GW-9mh" firstAttribute="top" secondItem="Tpj-wg-Ba0" secondAttribute="top" id="1zE-Bq-UDR"/>
                                     <constraint firstItem="NC9-lG-tay" firstAttribute="top" secondItem="289-ua-YUI" secondAttribute="bottom" id="BQ8-0J-5CA"/>
                                     <constraint firstAttribute="trailing" secondItem="Epj-9f-bf1" secondAttribute="trailing" id="DE9-zE-4iE"/>
+                                    <constraint firstItem="h5U-8z-NAS" firstAttribute="top" secondItem="LY5-Ye-xHU" secondAttribute="bottom" constant="218" id="G1E-el-ssD"/>
                                     <constraint firstAttribute="bottom" secondItem="OJD-JP-fA0" secondAttribute="bottom" id="Gsr-Kz-n0c"/>
                                     <constraint firstAttribute="trailing" secondItem="WjU-Wz-OJ0" secondAttribute="trailing" id="ODQ-53-a2n"/>
                                     <constraint firstItem="LY5-Ye-xHU" firstAttribute="leading" secondItem="Tpj-wg-Ba0" secondAttribute="leading" constant="50" id="PPH-SL-Kh8"/>
                                     <constraint firstItem="LR7-xd-al5" firstAttribute="leading" secondItem="Tpj-wg-Ba0" secondAttribute="leading" id="Rrd-ir-rln"/>
-                                    <constraint firstItem="LHK-4V-H9q" firstAttribute="top" secondItem="LY5-Ye-xHU" secondAttribute="bottom" constant="218" id="SA7-Ra-RU2"/>
                                     <constraint firstItem="HbL-Sh-JwB" firstAttribute="top" secondItem="NC9-lG-tay" secondAttribute="bottom" id="SGV-o0-obT"/>
                                     <constraint firstAttribute="trailing" secondItem="WjU-Wz-OJ0" secondAttribute="trailing" id="SlI-wH-QmT"/>
                                     <constraint firstItem="NC9-lG-tay" firstAttribute="leading" secondItem="Tpj-wg-Ba0" secondAttribute="leading" id="TQZ-2u-Jtf"/>
@@ -618,7 +634,6 @@
                                     <constraint firstItem="289-ua-YUI" firstAttribute="leading" secondItem="Tpj-wg-Ba0" secondAttribute="leading" id="YRv-gc-wGw"/>
                                     <constraint firstItem="LR7-xd-al5" firstAttribute="top" secondItem="HbL-Sh-JwB" secondAttribute="bottom" id="Z60-t9-our"/>
                                     <constraint firstItem="OJD-JP-fA0" firstAttribute="leading" secondItem="Tpj-wg-Ba0" secondAttribute="leading" id="bak-sg-hkJ"/>
-                                    <constraint firstItem="LHK-4V-H9q" firstAttribute="centerX" secondItem="AnQ-m1-GqG" secondAttribute="centerX" id="brj-mR-pdi"/>
                                     <constraint firstItem="OJD-JP-fA0" firstAttribute="leading" secondItem="Tpj-wg-Ba0" secondAttribute="leading" id="cC9-T8-IaT"/>
                                     <constraint firstItem="AnQ-m1-GqG" firstAttribute="top" secondItem="mes-GW-9mh" secondAttribute="bottom" id="chc-h3-gm7"/>
                                     <constraint firstAttribute="trailing" secondItem="cvy-kH-VvY" secondAttribute="trailing" id="d4e-Ma-Sxs"/>
@@ -636,6 +651,7 @@
                                     <constraint firstAttribute="trailing" secondItem="289-ua-YUI" secondAttribute="trailing" id="qjI-Wd-9oP"/>
                                     <constraint firstItem="LY5-Ye-xHU" firstAttribute="top" secondItem="Tpj-wg-Ba0" secondAttribute="top" constant="15" id="u6b-Vw-qaW"/>
                                     <constraint firstAttribute="trailing" secondItem="mes-GW-9mh" secondAttribute="trailing" id="vEH-Be-8TM"/>
+                                    <constraint firstItem="h5U-8z-NAS" firstAttribute="centerX" secondItem="AnQ-m1-GqG" secondAttribute="centerX" id="xf3-Lk-5AG"/>
                                     <constraint firstItem="cvy-kH-VvY" firstAttribute="top" secondItem="LR7-xd-al5" secondAttribute="bottom" id="xoi-RT-z96"/>
                                     <constraint firstAttribute="trailing" secondItem="LY5-Ye-xHU" secondAttribute="trailing" constant="50" id="ziQ-0X-Ns1"/>
                                     <constraint firstItem="mes-GW-9mh" firstAttribute="leading" secondItem="Tpj-wg-Ba0" secondAttribute="leading" id="zib-kM-bmH"/>
@@ -670,6 +686,7 @@
                         <outlet property="achivementDT" destination="zSE-l5-Xry" id="JQX-h6-jzM"/>
                         <outlet property="achivementTV" destination="urz-Zk-kbm" id="1m8-u7-c5q"/>
                         <outlet property="achivementTVHeightDT" destination="naY-1B-Bpd" id="SW6-nX-b0y"/>
+                        <outlet property="actionViewWidthConstraint" destination="aOo-YL-C1K" id="408-aQ-yOr"/>
                         <outlet property="addressLB" destination="nza-qG-J6E" id="idg-vQ-7GI"/>
                         <outlet property="avatarIMV" destination="HX0-fb-Oce" id="AcL-LV-9as"/>
                         <outlet property="backBT" destination="MRd-j9-xdJ" id="Caf-9z-o8Q"/>
@@ -679,7 +696,6 @@
                         <outlet property="coachBorderBackgroundV" destination="jet-1G-DaB" id="2r4-GP-asg"/>
                         <outlet property="coachBorderV" destination="iWC-Uu-pFa" id="jAr-Wg-E0a"/>
                         <outlet property="connectBT" destination="S1X-vx-wK2" id="z1R-Hw-qgt"/>
-                        <outlet property="connectV" destination="LHK-4V-H9q" id="sJR-5m-Rdw"/>
                         <outlet property="connectionContentLB" destination="Lpd-o0-rDP" id="TKo-nl-jNd"/>
                         <outlet property="connectionLB" destination="BgO-5S-1FW" id="gSG-AD-V1i"/>
                         <outlet property="detailV" destination="mes-GW-9mh" id="bMm-HM-hJc"/>
@@ -696,6 +712,7 @@
                         <outlet property="interestLB" destination="pPt-HV-aTe" id="P7Z-F0-8N6"/>
                         <outlet property="interestV" destination="289-ua-YUI" id="FTX-bJ-EyD"/>
                         <outlet property="medIndicatorView" destination="0N0-oE-kow" id="fdD-Jy-q2A"/>
+                        <outlet property="phoneBT" destination="7F4-eX-Wc2" id="0Mg-Ys-8m2"/>
                         <outlet property="postHeightDT" destination="Ab9-Fm-4YX" id="O1N-pR-yDo"/>
                         <outlet property="postLB" destination="naZ-4w-LBs" id="7Lz-6f-PiV"/>
                         <outlet property="postNumberContentLB" destination="r9P-z7-a9K" id="xCe-Sv-rzc"/>
@@ -754,7 +771,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xEo-ch-oqR" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="crm-Qf-dgO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="crm-Qf-dgO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -772,6 +789,7 @@
         <image name="back.png" width="8" height="14"/>
         <image name="connect.png" width="22" height="22"/>
         <image name="display-empty.jpg" width="256" height="256"/>
+        <image name="icon_phone" width="16" height="16"/>
         <image name="pinGray.png" width="5" height="9"/>
     </resources>
 </document>
