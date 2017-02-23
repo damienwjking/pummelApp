@@ -15,7 +15,7 @@ import ReactiveUI
 import Alamofire
 import Mixpanel
 
-class FindViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+class FindViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout{
     var showLetUsHelp: Bool!
     var swipeableView: ZLSwipeableView!
     var loadCardsFromXib = true
@@ -35,6 +35,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     @IBOutlet weak var refineSearchBT: UIButton!
     let rightBarButtonItemTitle = "BACK"
     let defaults = NSUserDefaults.standardUserDefaults()
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +72,16 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         }
         
         
+        let nibName = UINib(nibName: "CardContentView", bundle: nil)
+        self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
+        
+        self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 60), height: (UIScreen.mainScreen().bounds.size.height - 160))
+        self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 30, 0, 30)
+        self.collectionViewLayout.minimumLineSpacing = 60
+        
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
@@ -82,6 +95,10 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         if touch3DType == "3dTouch_1" {
             self.refind()
         }
+        
+        self.collectionView.contentOffset = CGPointMake((UIScreen.mainScreen().bounds.size.width), 0)
+        
+        self.collectionView.reloadData()
     }
     
     func rightButtonClicked() {
@@ -158,10 +175,11 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if (self.arrayResult.count > 0) {
-            self.swipeableView.hidden = false
-            swipeableView.nextView = {
-                return self.nextCardView()
-            }
+//            self.swipeableView.hidden = false
+            self.swipeableView.hidden = true
+//            swipeableView.nextView = {
+//                return self.nextCardView()
+//            }
         }
     }
     
@@ -219,8 +237,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             }
             
             //TagList
-            contentView.collectionView.delegate = self
-            contentView.collectionView.dataSource = self
+//            contentView.collectionView.delegate = self
+//            contentView.collectionView.dataSource = self
             let cellNib = UINib(nibName: kTagCell, bundle: nil)
             contentView.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
             contentView.collectionView.backgroundColor = UIColor.clearColor()
@@ -423,37 +441,174 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tags.count
+        if collectionView == self.collectionView {
+            self.collectionView.hidden = ((self.arrayResult.count > 0) == false)
+            
+            if self.arrayResult.count == 0 {
+                return 0
+            } else {
+                return self.arrayResult.count + 2
+            }
+        } else {
+            return self.tags.count
+        }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-        self.configureCell(cell, forIndexPath: indexPath)
-        return cell
+        if collectionView == self.collectionView {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", forIndexPath: indexPath) as! CardViewCell
+            cell.clipsToBounds = false
+            
+            var cellIndex = indexPath.row - 1
+            if (cellIndex < 0) {
+                cellIndex = self.arrayResult.count - 1
+            } else if (cellIndex >= self.arrayResult.count) {
+                cellIndex = 0
+            }
+            
+            coachTotalDetail = arrayResult[cellIndex]
+            coachDetail = coachTotalDetail[kUser] as! NSDictionary
+            let coachListTags = coachDetail[kTags] as! NSArray
+            
+            cell.cardView.avatarIMV.image = nil
+            cell.cardView.translatesAutoresizingMaskIntoConstraints = false
+            cell.cardView.backgroundColor = cell.cardView.backgroundColor
+            cell.cardView.connectV.layer.cornerRadius = 50
+            cell.cardView.connectV.clipsToBounds = true
+            cell.cardView.nameLB.font = .pmmPlayFairReg24()
+            if !(coachDetail[kLastName] is NSNull) {
+                cell.cardView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
+            } else {
+                cell.cardView.nameLB.text = (coachDetail[kFirstname] as! String)
+            }
+            
+            cell.cardView.addressLB.font = .pmmPlayFairReg11()
+            if !(coachTotalDetail[kServiceArea] is NSNull) {
+                cell.cardView.addressLB.text = coachTotalDetail[kServiceArea] as? String
+            }
+            let postfix = widthEqual.stringByAppendingString(String(self.view.frame.size.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width))
+            if !(coachDetail[kImageUrl] is NSNull) {
+                let imageLink = coachDetail[kImageUrl] as! String
+                var prefix = kPMAPI
+                prefix.appendContentsOf(imageLink)
+                prefix.appendContentsOf(postfix)
+                if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                    let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                    cell.cardView.avatarIMV.image = imageRes
+                } else {
+                    Alamofire.request(.GET, prefix)
+                        .responseImage { response in
+                            if (response.response?.statusCode == 200) {
+                                let imageRes = response.result.value! as UIImage
+                                cell.cardView.avatarIMV.image = imageRes
+                                NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                            }
+                    }
+                }
+            }
+            
+            let cellNib = UINib(nibName: kTagCell, bundle: nil)
+            cell.cardView.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
+            cell.cardView.collectionView.backgroundColor = UIColor.clearColor()
+            self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
+            // contentView.flowLayout.smaller = true
+            
+            // Business ImageView
+            cell.cardView.connectV.hidden = true
+            if !(coachDetail[kBusinessId] is NSNull) {
+                let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+                var linkBusinessId = kPMAPI_BUSINESS
+                linkBusinessId.appendContentsOf(businessId)
+                Alamofire.request(.GET, linkBusinessId)
+                    .responseJSON { response in
+                        if response.response?.statusCode == 200 {
+                            
+                            let jsonBusiness = response.result.value as! NSDictionary
+                            if !(jsonBusiness[kImageUrl] is NSNull) {
+                                let businessLogoUrl = jsonBusiness[kImageUrl] as! String
+                                var prefixLogo = kPMAPI
+                                prefixLogo.appendContentsOf(businessLogoUrl)
+                                prefixLogo.appendContentsOf(widthHeight120)
+                                if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
+                                    cell.cardView.connectV.hidden = false
+                                    let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
+                                    cell.cardView.businessIMV.image = imageRes
+                                } else {
+                                    Alamofire.request(.GET, prefixLogo)
+                                        .responseImage { response in
+                                            if (response.response?.statusCode == 200) {
+                                                cell.cardView.connectV.hidden = false
+                                                let imageRes = response.result.value! as UIImage
+                                                cell.cardView.businessIMV.image = imageRes
+                                                NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+
+            cell.cardView.collectionView.delegate = self
+            cell.cardView.collectionView.dataSource = self
+            self.tags.removeAll()
+            for i in 0 ..< coachListTags.count {
+                let tagContent = coachListTags[i] as! NSDictionary
+                let tag = Tag()
+                tag.name = tagContent[kTitle] as? String
+                self.tags.append(tag)
+            }
+            cell.cardView.collectionView.reloadData()
+            
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
+            self.configureCell(cell, forIndexPath: indexPath)
+            
+            return cell
+        }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        if collectionView != self.collectionView {
+            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
+            return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        } else {
+            return self.collectionViewLayout.itemSize
+        }
     }
-    
+
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-        tags[indexPath.row].selected = !tags[indexPath.row].selected
-        collectionView.reloadData()
+        if collectionView != self.collectionView {
+            collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+            tags[indexPath.row].selected = !tags[indexPath.row].selected
+            collectionView.reloadData()
+        }
     }
-    
+
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
         cell.tagName.textColor = UIColor.blackColor()
         cell.layer.borderColor = UIColor.clearColor().CGColor
     }
+//
+//    func goConnect(sender:UIButton!) {
+//        self.performSegueWithIdentifier(kGoConnect, sender: sender)
+//    }
     
-    func goConnect(sender:UIButton!) {
-        self.performSegueWithIdentifier(kGoConnect, sender: sender)
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if scrollView == self.collectionView {
+            let index = Int(round(scrollView.contentOffset.x / self.collectionView.frame.size.width))
+            
+            if (index == 0) {
+                let newOffsetX = CGFloat(self.arrayResult.count) * (self.collectionView.frame.size.width)
+                scrollView.contentOffset = CGPoint(x: newOffsetX, y: 0)
+            } else if (index > (self.arrayResult.count )) {
+                scrollView.contentOffset = CGPoint(x: (self.collectionView.frame.size.width), y: 0)
+            }
+        }
     }
-    
 }
 
 extension UIImageView {

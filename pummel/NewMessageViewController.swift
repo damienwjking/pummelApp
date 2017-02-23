@@ -160,8 +160,8 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             prefix.appendContentsOf(idSender)
             
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-            if (NSCache.sharedInstance.objectForKey(indexPath.row) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(indexPath.row) as! UIImage
+            if (NSCache.sharedInstance.objectForKey(idSender) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(idSender) as! UIImage
                 cell.avatarIMV.image = imageRes
             } else {
                 Alamofire.request(.GET, prefix)
@@ -177,7 +177,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                                 .responseImage { response in
                                     let imageRes = response.result.value! as UIImage
                                     let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: indexPath.row)
+                                    NSCache.sharedInstance.setObject(imageRes, forKey: idSender)
                                     dispatch_async(dispatch_get_main_queue(),{
                                         if updateCell != nil {
                                             cell.avatarIMV.image = imageRes
@@ -212,8 +212,8 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             prefix.appendContentsOf(idSender)
             
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-            if (NSCache.sharedInstance.objectForKey(indexPath.row) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(indexPath.row) as! UIImage
+            if (NSCache.sharedInstance.objectForKey(idSender) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(idSender) as! UIImage
                 cell.avatarIMV.image = imageRes
             } else {
                 Alamofire.request(.GET, prefix)
@@ -229,7 +229,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                                 .responseImage { response in
                                     let imageRes = response.result.value! as UIImage
                                     let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: indexPath.row)
+                                    NSCache.sharedInstance.setObject(imageRes, forKey: idSender)
                                     dispatch_async(dispatch_get_main_queue(),{
                                         if updateCell != nil {
                                             cell.avatarIMV.image = imageRes
