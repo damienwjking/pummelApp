@@ -189,11 +189,16 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         getListImage()
         self.updateUI()
         self.setupViewForLabelButton()
-        self.checkConnect()
         
         if isFromListCoaches == true {
             self.navigationController?.navigationBar.hidden = true
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.checkConnect()
     }
     
     func getBusinessImage() {
