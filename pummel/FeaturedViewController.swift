@@ -227,8 +227,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     
                     if response.response?.statusCode == 200 {
                         cell.isCoach = true
+                        cell.avatarBT.layer.borderWidth = 2
+                        cell.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
                     } else {
                         cell.isCoach = false
+                        cell.avatarBT.layer.borderWidth = 0
+                        cell.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
                     }
             }
         
