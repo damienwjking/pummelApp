@@ -65,11 +65,11 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             self.refind()
         }
         
-        self.collectionView.contentOffset = CGPointMake((UIScreen.mainScreen().bounds.size.width), 0)
-        
         if self.arrayResult.count > 0 {
             if self.firstLoad == false {
                 self.firstLoad = true
+                
+                self.collectionView.contentOffset = CGPointMake((UIScreen.mainScreen().bounds.size.width), 0)
                 
                 self.collectionView.reloadData()
             }
