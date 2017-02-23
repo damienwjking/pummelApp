@@ -17,7 +17,6 @@ import Mixpanel
 
 class FindViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout{
     var showLetUsHelp: Bool!
-    var swipeableView: ZLSwipeableView!
     var loadCardsFromXib = true
     var resultIndex = 0
     var resultPage : Int = 30
@@ -33,7 +32,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
     @IBOutlet weak var refineSearchBT: UIButton!
-    let rightBarButtonItemTitle = "BACK"
     let defaults = NSUserDefaults.standardUserDefaults()
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -43,34 +41,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         super.viewDidLoad()
         self.showLetUsHelp = false
         self.navigationController!.navigationBar.translucent = false
-        
-        swipeableView = ZLSwipeableView()
-        view.addSubview(swipeableView)
-        swipeableView.didStart = {view, location in
-        }
-        swipeableView.swiping = {view, location, translation in
-        }
-        swipeableView.didEnd = {view, location in
-        }
-        swipeableView.didSwipe = {view, direction, vector in
-            self.updateRightBarButtonItem()
-        }
-        
-        swipeableView.didCancel = {view in
-        }
-        swipeableView.didTap = {view, location in
-            self.performSegueWithIdentifier(kGoProfile, sender: self)
-        }
-        swipeableView.didDisappear = { view in
-            self.searchNextPage()
-        }
-        constrain(swipeableView, view) { view1, view2 in
-            view1.left == view2.left + 20
-            view1.right == view2.right - 20
-            view1.top == view2.top + 20
-            view1.bottom == view2.bottom - 80
-        }
-        
         
         let nibName = UINib(nibName: "CardContentView", bundle: nil)
         self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
@@ -85,7 +55,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
-        swipeableView.hidden = (self.arrayResult.count >= 1) ? false : true
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -98,37 +67,13 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         self.collectionView.contentOffset = CGPointMake((UIScreen.mainScreen().bounds.size.width), 0)
         
-        self.collectionView.reloadData()
-    }
-    
-    func rightButtonClicked() {
-        self.swipeableView.rewind()
-        coachTotalDetail = arrayResult[resultIndex - 1]
-        coachDetail = coachTotalDetail[kUser] as! NSDictionary
-        self.updateRightBarButtonItem()
-        
-        // Tracker mixpanel
-        let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Name": "Navigation Click", "Label":"Back"]
-        mixpanel.track("IOS.Search", properties: properties)
-    }
-
-    func updateRightBarButtonItem() {
-        let historyLength = self.swipeableView.history.count
-        let enabled = historyLength != 0
-        self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = enabled
-        if !enabled {
-            self.tabBarController?.navigationItem.rightBarButtonItem?.title = rightBarButtonItemTitle
-            self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmWarmGreyColor()], forState: .Normal)
-            return
+        if self.arrayResult.count > 0 {
+            if self.firstLoad == false {
+                self.firstLoad = true
+                
+                self.collectionView.reloadData()
+            }
         }
-        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
-    }
-    
-    func intRightBarButtonItem() {
-        self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = false
-        self.tabBarController?.navigationItem.rightBarButtonItem?.title = rightBarButtonItemTitle
-        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmWarmGreyColor()], forState: .Normal)
     }
     
     func searchNextPage() {
@@ -160,149 +105,18 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         if ((response.result.value as! NSArray).count == 0) {
-                           // self.stopSearch = true
+                            self.stopSearch = true
                         } else {
                             let rArray = response.result.value as! [NSDictionary]
                             self.arrayResult += rArray
+                            
+                            self.collectionView.reloadData()
                         }
                     }
             }
         } else {
             print("no more resul")
         }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if (self.arrayResult.count > 0) {
-//            self.swipeableView.hidden = false
-            self.swipeableView.hidden = true
-//            swipeableView.nextView = {
-//                return self.nextCardView()
-//            }
-        }
-    }
-    
-    // MARK: ()
-    func nextCardView() -> UIView? {
-        resultIndex += 1
-        if resultIndex >= arrayResult.count  {
-            resultIndex = 0
-        }
-        
-        coachTotalDetail = arrayResult[resultIndex]
-        coachDetail = coachTotalDetail[kUser] as! NSDictionary
-        let coachListTags = coachDetail[kTags] as! NSArray
-        
-        let cardView = CardView(frame: swipeableView.bounds)
-        cardView.backgroundColor = UIColor.whiteColor()
-        
-        if loadCardsFromXib {
-            let contentView = NSBundle.mainBundle().loadNibNamed("CardContentView", owner: nil, options: nil)!.first as! CardView
-            contentView.avatarIMV.image = nil
-            contentView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.backgroundColor = cardView.backgroundColor
-            contentView.connectV.layer.cornerRadius = 50
-            contentView.connectV.clipsToBounds = true
-            contentView.nameLB.font = .pmmPlayFairReg24()
-            if !(coachDetail[kLastName] is NSNull) {
-                contentView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
-            } else {
-                contentView.nameLB.text = (coachDetail[kFirstname] as! String)
-            }
-            
-            contentView.addressLB.font = .pmmPlayFairReg11()
-            if !(coachTotalDetail[kServiceArea] is NSNull) {
-                contentView.addressLB.text = coachTotalDetail[kServiceArea] as? String
-            }
-            let postfix = widthEqual.stringByAppendingString(String(self.view.frame.size.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width))
-            if !(coachDetail[kImageUrl] is NSNull) {
-                let imageLink = coachDetail[kImageUrl] as! String
-                var prefix = kPMAPI
-                prefix.appendContentsOf(imageLink)
-                prefix.appendContentsOf(postfix)
-                if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                    let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                    contentView.avatarIMV.image = imageRes
-                } else {
-                    Alamofire.request(.GET, prefix)
-                        .responseImage { response in
-                            if (response.response?.statusCode == 200) {
-                                let imageRes = response.result.value! as UIImage
-                                contentView.avatarIMV.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                            }
-                    }
-                }
-            }
-            
-            //TagList
-//            contentView.collectionView.delegate = self
-//            contentView.collectionView.dataSource = self
-            let cellNib = UINib(nibName: kTagCell, bundle: nil)
-            contentView.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
-            contentView.collectionView.backgroundColor = UIColor.clearColor()
-            self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
-           // contentView.flowLayout.smaller = true
-            
-            // Business ImageView
-            contentView.connectV.hidden = true
-            if !(coachDetail[kBusinessId] is NSNull) {
-                let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
-                var linkBusinessId = kPMAPI_BUSINESS
-                linkBusinessId.appendContentsOf(businessId)
-                Alamofire.request(.GET, linkBusinessId)
-                    .responseJSON { response in
-                        if response.response?.statusCode == 200 {
-                            
-                            let jsonBusiness = response.result.value as! NSDictionary
-                            if !(jsonBusiness[kImageUrl] is NSNull) {
-                                let businessLogoUrl = jsonBusiness[kImageUrl] as! String
-                                var prefixLogo = kPMAPI
-                                prefixLogo.appendContentsOf(businessLogoUrl)
-                                prefixLogo.appendContentsOf(widthHeight120)
-                                if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
-                                    contentView.connectV.hidden = false
-                                    let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
-                                    contentView.businessIMV.image = imageRes
-                                } else {
-                                    Alamofire.request(.GET, prefixLogo)
-                                        .responseImage { response in
-                                            if (response.response?.statusCode == 200) {
-                                                contentView.connectV.hidden = false
-                                                let imageRes = response.result.value! as UIImage
-                                                contentView.businessIMV.image = imageRes
-                                                NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
-                                            }
-                                    }
-                                }
-                            }
-                        }
-                }
-            }
-            
-            
-            cardView.addSubview(contentView)
-            
-            constrain(contentView, cardView) { view1, view2 in
-                view1.left == view2.left
-                view1.top == view2.top
-                view1.width == cardView.bounds.width
-                view1.height == cardView.bounds.height
-            }
-            
-            
-            self.tags.removeAll()
-            for i in 0 ..< coachListTags.count {
-                let tagContent = coachListTags[i] as! NSDictionary
-                let tag = Tag()
-                tag.name = tagContent[kTitle] as? String
-                self.tags.append(tag)
-            }
-            contentView.collectionView.reloadData()
-        }
-        cardView.tag = resultIndex
-        return cardView
     }
     
     func colorForName(name: String) -> UIColor {
@@ -319,9 +133,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.rightButtonClicked))
-        self.updateRightBarButtonItem()
-        
         self.tabBarController?.title = "RESULTS"
         
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
@@ -346,45 +157,14 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"COACHES", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnCoachsClick))
         }
         
+        self.tabBarController?.navigationItem.rightBarButtonItem = nil
+        
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
         
         self.stopSearch = false
         self.resultPage = 30
-        
-        if (swipeableView != nil && refined == true ) {
-            swipeableView.removeFromSuperview()
-            swipeableView = ZLSwipeableView()
-            swipeableView.history.removeAll()
-            view.addSubview(swipeableView)
-            self.updateRightBarButtonItem()
-            swipeableView.didStart = {view, location in
-            }
-            swipeableView.swiping = {view, location, translation in
-            }
-            swipeableView.didEnd = {view, location in
-            }
-            swipeableView.didSwipe = {view, direction, vector in
-                self.updateRightBarButtonItem()
-            }
-            swipeableView.didCancel = {view in
-            }
-            swipeableView.didTap = {view, location in
-                self.performSegueWithIdentifier(kGoProfile, sender: view)
-            }
-            swipeableView.didDisappear = { view in
-                self.searchNextPage()
-            }
-            constrain(swipeableView, view) { view1, view2 in
-                view1.left == view2.left + 20
-                view1.right == view2.right - 20
-                view1.top == view2.top + 20
-                view1.bottom == view2.bottom - 80
-            }
-            refined = false
-            swipeableView.hidden = (self.arrayResult.count >= 1) ? false : true
-        }
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -402,7 +182,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             destination.preMessage = sender as! String
         } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
-            let totalDetail = arrayResult[sender.tag]
+            let totalDetail = sender as! NSDictionary
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
             destination.coachTotalDetail = totalDetail
             
@@ -464,6 +244,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 cellIndex = self.arrayResult.count - 1
             } else if (cellIndex >= self.arrayResult.count) {
                 cellIndex = 0
+                
+                self.searchNextPage()
             }
             
             coachTotalDetail = arrayResult[cellIndex]
@@ -549,8 +331,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 }
             }
 
-            cell.cardView.collectionView.delegate = self
-            cell.cardView.collectionView.dataSource = self
             self.tags.removeAll()
             for i in 0 ..< coachListTags.count {
                 let tagContent = coachListTags[i] as! NSDictionary
@@ -558,6 +338,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 tag.name = tagContent[kTitle] as? String
                 self.tags.append(tag)
             }
+            
+            cell.cardView.collectionView.delegate = self
+            cell.cardView.collectionView.dataSource = self
             cell.cardView.collectionView.reloadData()
             
             return cell
@@ -570,16 +353,25 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        if collectionView != self.collectionView {
+        if collectionView == self.collectionView {
+            return self.collectionViewLayout.itemSize
+        } else {
             self.configureCell(self.sizingCell!, forIndexPath: indexPath)
             return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-        } else {
-            return self.collectionViewLayout.itemSize
         }
     }
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if collectionView != self.collectionView {
+        if collectionView == self.collectionView {
+            var cellIndex = indexPath.row - 1
+            if (cellIndex < 0) {
+                cellIndex = self.arrayResult.count - 1
+            } else if (cellIndex >= self.arrayResult.count) {
+                cellIndex = 0
+            }
+            
+            self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[cellIndex])
+        } else {
             collectionView.deselectItemAtIndexPath(indexPath, animated: false)
             tags[indexPath.row].selected = !tags[indexPath.row].selected
             collectionView.reloadData()
@@ -592,10 +384,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         cell.tagName.textColor = UIColor.blackColor()
         cell.layer.borderColor = UIColor.clearColor().CGColor
     }
-//
-//    func goConnect(sender:UIButton!) {
-//        self.performSegueWithIdentifier(kGoConnect, sender: sender)
-//    }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         if scrollView == self.collectionView {
