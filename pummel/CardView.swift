@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CardView: UIView {
+class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
    
     @IBOutlet var connectV : UIView!
     @IBOutlet var nameLB: UILabel!
@@ -17,6 +17,9 @@ class CardView: UIView {
     @IBOutlet weak var flowLayout: FlowLayout!
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var businessIMV : UIImageView!
+    
+    var tags = [Tag]()
+    var sizingCell: TagCell?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,5 +45,45 @@ class CardView: UIView {
         
       //  businessIMV.layer.cornerRadius = 60
       //  businessIMV.clipsToBounds = true
+    }
+    
+    func registerTagCell() {
+        self.collectionView.delegate = self;
+        self.collectionView.dataSource = self;
+        
+        let cellNib = UINib(nibName: kTagCell, bundle: nil)
+        self.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
+        self.collectionView.backgroundColor = UIColor.clearColor()
+        self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tags.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
+        self.configureCell(cell, forIndexPath: indexPath)
+        
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
+        return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+        tags[indexPath.row].selected = !tags[indexPath.row].selected
+        collectionView.reloadData()
+    }
+    
+    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
+        let tag = tags[indexPath.row]
+        cell.tagName.text = tag.name
+        cell.tagName.textColor = UIColor.blackColor()
+        cell.layer.borderColor = UIColor.clearColor().CGColor
     }
 }

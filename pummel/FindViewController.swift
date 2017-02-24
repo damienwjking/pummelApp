@@ -20,15 +20,13 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     var loadCardsFromXib = true
     var resultIndex = 0
     var resultPage : Int = 30
-    var sizingCell: TagCell?
-    var tags = [Tag]()
     var coachTotalDetail: NSDictionary!
     var coachDetail: NSDictionary!
     var arrayResult : [NSDictionary] = []
     var arrayTags : NSArray!
     var stopSearch: Bool = false
     var firstLoad: Bool = false
-    var refined : Bool = false
+    var widthCell : CGFloat = 0.0
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
     @IBOutlet weak var refineSearchBT: UIButton!
@@ -45,12 +43,14 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         let nibName = UINib(nibName: "CardContentView", bundle: nil)
         self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
         
-        self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 60), height: (UIScreen.mainScreen().bounds.size.height - 160))
-        self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 30, 0, 30)
-        self.collectionViewLayout.minimumLineSpacing = 60
+        self.widthCell = (UIScreen.mainScreen().bounds.size.width - 30)
+        self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 40), height: (UIScreen.mainScreen().bounds.size.height - 160))
+        self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 20, 0, 0)
+        self.collectionViewLayout.minimumLineSpacing = 10
         
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
+        self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast
         
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
@@ -69,7 +69,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             if self.firstLoad == false {
                 self.firstLoad = true
                 
-                self.collectionView.contentOffset = CGPointMake((UIScreen.mainScreen().bounds.size.width), 0)
+                self.collectionView.contentOffset = CGPointMake(self.widthCell, 0)
                 
                 self.collectionView.reloadData()
             }
@@ -229,9 +229,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             } else {
                 return self.arrayResult.count + 2
             }
-        } else {
-            return self.tags.count
         }
+        
+        return 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -251,6 +251,15 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             coachTotalDetail = arrayResult[cellIndex]
             coachDetail = coachTotalDetail[kUser] as! NSDictionary
             let coachListTags = coachDetail[kTags] as! NSArray
+            
+            cell.cardView.tags.removeAll()
+            for i in 0 ..< coachListTags.count {
+                let tagContent = coachListTags[i] as! NSDictionary
+                let tag = Tag()
+                tag.name = tagContent[kTitle] as? String
+                cell.cardView.tags.append(tag)
+            }
+            cell.cardView.collectionView.reloadData()
             
             cell.cardView.avatarIMV.image = nil
             cell.cardView.translatesAutoresizingMaskIntoConstraints = false
@@ -289,12 +298,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 }
             }
             
-            let cellNib = UINib(nibName: kTagCell, bundle: nil)
-            cell.cardView.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
-            cell.cardView.collectionView.backgroundColor = UIColor.clearColor()
-            self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
-            // contentView.flowLayout.smaller = true
-            
             // Business ImageView
             cell.cardView.connectV.hidden = true
             if !(coachDetail[kBusinessId] is NSNull) {
@@ -330,35 +333,19 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                         }
                 }
             }
-
-            self.tags.removeAll()
-            for i in 0 ..< coachListTags.count {
-                let tagContent = coachListTags[i] as! NSDictionary
-                let tag = Tag()
-                tag.name = tagContent[kTitle] as? String
-                self.tags.append(tag)
-            }
-            
-            cell.cardView.collectionView.delegate = self
-            cell.cardView.collectionView.dataSource = self
-            cell.cardView.collectionView.reloadData()
-            
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-            self.configureCell(cell, forIndexPath: indexPath)
             
             return cell
         }
+        
+        return UICollectionViewCell()
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         if collectionView == self.collectionView {
             return self.collectionViewLayout.itemSize
-        } else {
-            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-            return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
         }
+        
+        return CGSizeZero
     }
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -371,31 +358,57 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             }
             
             self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[cellIndex])
-        } else {
-            collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-            tags[indexPath.row].selected = !tags[indexPath.row].selected
-            collectionView.reloadData()
         }
     }
-
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
-        cell.tagName.textColor = UIColor.blackColor()
-        cell.layer.borderColor = UIColor.clearColor().CGColor
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if scrollView == self.collectionView {
+        // Update position for loop carousel
+        if (scrollView.contentOffset.x < self.widthCell / 3) {
+            let newOffsetX = (CGFloat(self.arrayResult.count) * self.widthCell) + (self.widthCell / 3)
+            scrollView.contentOffset = CGPoint(x: newOffsetX, y: 0)
+        } else if (scrollView.contentOffset.x > (CGFloat(self.arrayResult.count) * self.widthCell) + ((self.widthCell * 2) / 3)) {
+            scrollView.contentOffset = CGPoint(x: ((self.widthCell * 2) / 3), y: 0)
+            }
+        }
+    }
+    
+    func endPagingCarousel(scrollView: UIScrollView) {
+        if scrollView == self.collectionView {
+            // custom pageing
+            var point = scrollView.contentOffset
+            point.x = self.widthCell * CGFloat(Int(round((point.x / self.widthCell))))
+            
+            scrollView.setContentOffset(point, animated: true)
+            
+            for (cell) in self.collectionView.visibleCells() {
+                cell.userInteractionEnabled = true
+            }
+        }
+    }
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        if scrollView == self.collectionView {
+            for (cell) in self.collectionView.visibleCells() {
+                cell.userInteractionEnabled = false
+            }
+        }
+    }
+    
+    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+        if scrollView == self.collectionView {
+            for (cell) in self.collectionView.visibleCells() {
+                cell.userInteractionEnabled = false
+            }
+        }
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        endPagingCarousel(scrollView)
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if scrollView == self.collectionView {
-            let index = Int(round(scrollView.contentOffset.x / self.collectionView.frame.size.width))
-            
-            if (index == 0) {
-                let newOffsetX = CGFloat(self.arrayResult.count) * (self.collectionView.frame.size.width)
-                scrollView.contentOffset = CGPoint(x: newOffsetX, y: 0)
-            } else if (index > (self.arrayResult.count )) {
-                scrollView.contentOffset = CGPoint(x: (self.collectionView.frame.size.width), y: 0)
-            }
-        }
+        endPagingCarousel(scrollView)
     }
 }
 

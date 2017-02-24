@@ -254,7 +254,6 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                                         let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
                                         let findVC = tabbarVC.viewControllers![2] as! FindViewController
                                         findVC.arrayResult.removeAll()
-                                        findVC.refined = true
                                         findVC.arrayResult = response.result.value  as! [NSDictionary]
                                         findVC.viewDidLayoutSubviews()
                                         findVC.showLetUsHelp = false

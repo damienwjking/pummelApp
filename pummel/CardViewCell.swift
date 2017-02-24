@@ -11,4 +11,9 @@ import UIKit
 class CardViewCell: UICollectionViewCell {
     @IBOutlet weak var cardView: CardView!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.cardView.registerTagCell()
+    }
 }
