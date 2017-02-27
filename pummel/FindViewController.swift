@@ -21,7 +21,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     var resultIndex = 0
     var resultPage : Int = 30
     var coachTotalDetail: NSDictionary!
-    var coachDetail: NSDictionary!
     var arrayResult : [NSDictionary] = []
     var arrayTags : NSArray!
     var stopSearch: Bool = false
@@ -166,11 +165,15 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
         } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destinationViewController as! ChatMessageViewController
-            destination.coachName = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercaseString
+            
+            let coachDetail = (sender as! NSArray)[0]
+            let message = (sender as! NSArray)[1] as! String
+            
+            destination.coachName = ((coachDetail[kFirstname] as! String).stringByAppendingString(" ")).uppercaseString
             destination.typeCoach = true
-            destination.coachId = String(format:"%0.f", coachDetail[kId]!.doubleValue)
-            destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!.doubleValue)
-            destination.preMessage = sender as! String
+            destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
+            destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
+            destination.preMessage = message
         } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
             let totalDetail = sender as! NSDictionary
@@ -226,13 +229,13 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", forIndexPath: indexPath) as! CardViewCell
             cell.clipsToBounds = false
             
-            var cellIndex = indexPath.row
+            let cellIndex = indexPath.row
             if (cellIndex == self.arrayResult.count - 1) {
                 self.searchNextPage()
             }
             
             coachTotalDetail = arrayResult[cellIndex]
-            coachDetail = coachTotalDetail[kUser] as! NSDictionary
+            let coachDetail = coachTotalDetail[kUser] as! NSDictionary
             let coachListTags = coachDetail[kTags] as! NSArray
             
             cell.cardView.tags.removeAll()

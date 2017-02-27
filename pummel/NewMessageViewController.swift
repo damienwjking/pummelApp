@@ -270,8 +270,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "chatMessage")
-        {
+        if (segue.identifier == "chatMessage") {
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
             let user = (listUserTB.hidden == false) ? arrayListUser[indexPathRow] : arrayListUserResult[indexPathRow]

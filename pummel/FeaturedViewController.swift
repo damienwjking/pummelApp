@@ -426,11 +426,14 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destinationViewController as! ChatMessageViewController
             
+//            let coachDetail = (sender as! NSArray)[0]
+            let message = (sender as! NSArray)[1] as! String
+            
             destination.coachName = ((currentFeedDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercaseString
             destination.typeCoach = true
             destination.coachId = String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
             destination.userIdTarget =  String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
-            destination.preMessage = sender as! String
+            destination.preMessage = message
         } else if (segue.identifier == "goToFeedDetail") {
             let destination = segue.destinationViewController as! FeedViewController
             let feed = arrayFeeds[sender.tag] 

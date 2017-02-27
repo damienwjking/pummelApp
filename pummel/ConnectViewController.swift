@@ -244,7 +244,7 @@ class ConnectViewController: BaseViewController {
                 let featureVC = tabbarVC.viewControllers![0] as! FeaturedViewController
                 self.dismissViewControllerAnimated(false, completion: {
                     profileVC.dismissViewControllerAnimated(false, completion: {
-                        featureVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                        featureVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
                     })
                 })
             } else {
@@ -253,7 +253,7 @@ class ConnectViewController: BaseViewController {
                 let findVC = tabbarVC.viewControllers![2] as! FindViewController
                 self.dismissViewControllerAnimated(false, completion: {
                     profileVC.dismissViewControllerAnimated(false, completion: {
-                        findVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                        findVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
                     })
                 })
             }
@@ -262,13 +262,13 @@ class ConnectViewController: BaseViewController {
                 let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
                 let featuredVC = tabbarVC.viewControllers![0] as! FeaturedViewController
                 presentingViewController!.dismissViewControllerAnimated(false, completion: {
-                    featuredVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                    featuredVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
                 })
             } else {
                 let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
                 let findVC = tabbarVC.viewControllers![2] as! FindViewController
                 presentingViewController!.dismissViewControllerAnimated(false, completion: {
-                    findVC.performSegueWithIdentifier(kSendMessageConnection, sender:message)
+                    findVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
                 })
             }
         }

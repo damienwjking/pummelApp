@@ -205,6 +205,14 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.checkConnect()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
+        self.scrollView.scrollEnabled = true
+    }
+    
     func getBusinessImage() {
         if (coachDetail[kBusinessId] != nil) {
             let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
@@ -524,14 +532,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-        self.scrollView.scrollEnabled = true
-    }
-    
     @IBAction func goBackToResult() {
         if isFromListCoaches == true {
             self.navigationController?.popViewControllerAnimated(true)
@@ -574,8 +574,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == kGoConnect)
-        {
+        if (segue.identifier == kGoConnect) {
             let destimation = segue.destinationViewController as! ConnectViewController
             destimation.coachDetail = coachDetail
             destimation.isFromProfile = true
