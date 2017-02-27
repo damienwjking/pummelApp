@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIFont {
+    // Montserrat-Light
     class func pmmMonLight10() -> UIFont {
         return UIFont(name: "Montserrat-Light", size: 10)!
     }
@@ -20,10 +21,15 @@ extension UIFont {
         return UIFont(name: "Montserrat-Light", size: 13)!
     }
     
+    class func pmmMonLight14() -> UIFont {
+        return UIFont(name: "Montserrat-Light", size: 14)!
+    }
+    
     class func pmmMonLight16() -> UIFont {
         return UIFont(name: "Montserrat-Light", size: 16)!
     }
     
+    // Montserrat-Regular
     class func pmmMonReg9() -> UIFont {
         return UIFont(name: "Montserrat-Regular", size: 9)!
     }
@@ -56,7 +62,7 @@ extension UIFont {
         return UIFont(name: "Montserrat-Regular", size: 20)!
     }
     
-    
+    // PlayfairDisplay-Regular
     class func pmmPlayFairReg11() -> UIFont {
         return UIFont(name: "PlayfairDisplay-Regular", size: 11)!
     }

@@ -221,6 +221,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let coachId = String(format:"%0.f", userFeed[kId]!.doubleValue)
             coachLink.appendContentsOf(coachId)
         
+            cell.avatarBT.layer.borderWidth = 0
+            cell.coachLB.text = ""
+            cell.coachLBTraillingConstraint.constant = 0
             Alamofire.request(.GET, coachLink)
                 .responseJSON { response in
                     cell.userInteractionEnabled = true
@@ -228,11 +231,14 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     if response.response?.statusCode == 200 {
                         cell.isCoach = true
                         cell.avatarBT.layer.borderWidth = 2
-                        cell.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+                        
+                        cell.coachLBTraillingConstraint.constant = 5
+                        UIView.animateWithDuration(0.3, animations: {
+                            cell.coachLB.layoutIfNeeded()
+                            cell.coachLB.text = kCoach.uppercaseString
+                        })
                     } else {
                         cell.isCoach = false
-                        cell.avatarBT.layer.borderWidth = 0
-                        cell.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
                     }
             }
         

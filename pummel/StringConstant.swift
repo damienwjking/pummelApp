@@ -138,6 +138,7 @@ let kDatetime = "datetime"
 let kUserIdTarget = "userIdTarget"
 let kUserIdRequest = "userIdRequest"
 let kActivityId = "activityId"
+let kCoach = "coach"
 
 // String
 let kLogoutSuccess = "Logout successful"

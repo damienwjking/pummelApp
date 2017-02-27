@@ -24,7 +24,7 @@ class TagCell: UICollectionViewCell {
         self.tagBackgroundV.backgroundColor = UIColor.clearColor()
         self.tagBackgroundV.layer.cornerRadius = 2
         self.tagName.textColor = UIColor.whiteColor()
-        self.tagName.font = UIFont(name: "Montserrat-Light", size: 14)
+        self.tagName.font = .pmmMonLight14()
         self.layer.cornerRadius = 2
         
         self.tagNameMaxWidthConstraint.constant = UIScreen.mainScreen().bounds.width - 9

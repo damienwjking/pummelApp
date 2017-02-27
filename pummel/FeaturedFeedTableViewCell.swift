@@ -11,8 +11,8 @@ import Alamofire
 
 class FeaturedFeedTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarBT : UIButton!
+    @IBOutlet weak var coachLB: UILabel!
     @IBOutlet weak var nameLB: UILabel!
-    @IBOutlet weak var nameBT: UILabel!
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var imageContentIMV: UIImageView!
     @IBOutlet weak var likeBT : UIButton!
@@ -21,6 +21,7 @@ class FeaturedFeedTableViewCell: UITableViewCell {
     @IBOutlet weak var likeLB: UILabel!
     @IBOutlet weak var firstUserCommentLB: UILabel!
     @IBOutlet weak var firstContentCommentLB: UILabel!
+    @IBOutlet weak var coachLBTraillingConstraint: NSLayoutConstraint!
     @IBOutlet weak var firstContentCommentConstrant: NSLayoutConstraint!
     @IBOutlet weak var viewAllLB: UILabel!
     @IBOutlet weak var viewAllBT: UIButton!
@@ -33,6 +34,8 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.avatarBT.layer.cornerRadius = 15
         self.avatarBT.clipsToBounds = true
+        self.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.coachLB.font = .pmmMonReg13()
         self.nameLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
         self.likeLB.font = .pmmMonLight13()
