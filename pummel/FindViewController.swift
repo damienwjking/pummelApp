@@ -25,7 +25,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     var arrayResult : [NSDictionary] = []
     var arrayTags : NSArray!
     var stopSearch: Bool = false
-    var firstLoad: Bool = false
     var widthCell : CGFloat = 0.0
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
@@ -65,15 +64,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             self.refind()
         }
         
-        if self.arrayResult.count > 0 {
-            if self.firstLoad == false {
-                self.firstLoad = true
-                
-                self.collectionView.contentOffset = CGPointMake(self.widthCell, 0)
-                
-                self.collectionView.reloadData()
-            }
-        }
+        self.collectionView.reloadData()
     }
     
     func searchNextPage() {
@@ -224,11 +215,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         if collectionView == self.collectionView {
             self.collectionView.hidden = ((self.arrayResult.count > 0) == false)
             
-            if self.arrayResult.count == 0 {
-                return 0
-            } else {
-                return self.arrayResult.count + 2
-            }
+            return self.arrayResult.count
         }
         
         return 0
@@ -239,12 +226,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", forIndexPath: indexPath) as! CardViewCell
             cell.clipsToBounds = false
             
-            var cellIndex = indexPath.row - 1
-            if (cellIndex < 0) {
-                cellIndex = self.arrayResult.count - 1
-            } else if (cellIndex >= self.arrayResult.count) {
-                cellIndex = 0
-                
+            var cellIndex = indexPath.row
+            if (cellIndex == self.arrayResult.count - 1) {
                 self.searchNextPage()
             }
             
@@ -350,26 +333,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if collectionView == self.collectionView {
-            var cellIndex = indexPath.row - 1
-            if (cellIndex < 0) {
-                cellIndex = self.arrayResult.count - 1
-            } else if (cellIndex >= self.arrayResult.count) {
-                cellIndex = 0
-            }
+            let cellIndex = indexPath.row
             
             self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[cellIndex])
-        }
-    }
-    
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        if scrollView == self.collectionView {
-        // Update position for loop carousel
-        if (scrollView.contentOffset.x < self.widthCell / 3) {
-            let newOffsetX = (CGFloat(self.arrayResult.count) * self.widthCell) + (self.widthCell / 3)
-            scrollView.contentOffset = CGPoint(x: newOffsetX, y: 0)
-        } else if (scrollView.contentOffset.x > (CGFloat(self.arrayResult.count) * self.widthCell) + ((self.widthCell * 2) / 3)) {
-            scrollView.contentOffset = CGPoint(x: ((self.widthCell * 2) / 3), y: 0)
-            }
         }
     }
     
