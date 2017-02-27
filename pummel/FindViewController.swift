@@ -48,7 +48,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast
+        self.collectionView.decelerationRate = ((UIScrollViewDecelerationRateFast + UIScrollViewDecelerationRateNormal) / 2.0)
         
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
