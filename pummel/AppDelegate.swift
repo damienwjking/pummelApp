@@ -13,7 +13,6 @@ import UIKit
 import UserNotifications
 //import SwiftMessages
 import Mixpanel
-//import RNNotificationView
 import Alamofire
 import FBSDKCoreKit
 import Branch

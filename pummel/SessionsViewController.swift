@@ -301,7 +301,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             prefix.appendContentsOf(kPM_PARTH_MESSAGE)
             prefix.appendContentsOf("?limit=1")
             
-            let timeAgo = message["updatedAt"] as! String
+            let timeAgo = message["conversation"]!["updatedAt"] as! String
             let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = kFullDateFormat
             dateFormatter.timeZone = NSTimeZone(name: "UTC")
@@ -313,41 +313,16 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.messageLB.font = .pmmMonReg16()
                 cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
             } else {
-                let conversationUser = message["conversation"]!["conversationUsers"] as! NSArray
-                let firstUser = conversationUser[0] as! NSDictionary
-                let secondUser = conversationUser[1] as! NSDictionary
-                if (firstUser[kLastOpenAt] is NSNull) {
-                    cell.nameLB.font = .pmmMonLight13()
-                    cell.messageLB.font = .pmmMonLight16()
-                    cell.timeLB.textColor = UIColor.blackColor()
-                } else if (secondUser[kLastOpenAt] is NSNull) {
-                    cell.nameLB.font = .pmmMonLight13()
-                    cell.messageLB.font = .pmmMonLight16()
-                    cell.timeLB.textColor = UIColor.blackColor()
+                let lastOpenAtM = dateFormatter.dateFromString(message[kLastOpenAt] as! String)
+                let updateAtM =  dateFormatter.dateFromString(message["conversation"]!["updatedAt"] as! String)
+                if (lastOpenAtM!.compare(updateAtM!) == NSComparisonResult.OrderedAscending) {
+                    cell.nameLB.font = .pmmMonReg13()
+                    cell.messageLB.font = .pmmMonReg16()
+                    cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
                 } else {
-                    let firstUserLOA =  firstUser[kLastOpenAt] as! String
-                    let secondUserLOA =  secondUser[kLastOpenAt] as! String
-                    let fistUserDayOpen : NSDate!
-                    let secondUserDayOpen : NSDate!
-                    if (String(format:"%0.f",firstUser[kUserId]!.doubleValue) == currentUserid) {
-                        fistUserDayOpen = dateFormatter.dateFromString(firstUserLOA)
-                        secondUserDayOpen = dateFormatter.dateFromString(secondUserLOA)
-                    } else {
-                        fistUserDayOpen = dateFormatter.dateFromString(secondUserLOA)
-                        secondUserDayOpen = dateFormatter.dateFromString(firstUserLOA)
-                    }
-                    
-                    if (fistUserDayOpen.compare(secondUserDayOpen) == NSComparisonResult.OrderedAscending) {
-                        cell.nameLB.font = .pmmMonReg13()
-                        cell.messageLB.font = .pmmMonReg16()
-                        cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
-                        cell.isNewMessage = true
-                    } else {
-                        cell.nameLB.font = .pmmMonLight13()
-                        cell.messageLB.font = .pmmMonLight16()
-                        cell.timeLB.textColor = UIColor.blackColor()
-                        cell.isNewMessage = false
-                    }
+                    cell.messageLB.font = .pmmMonLight16()
+                    cell.timeLB.textColor = UIColor.blackColor()
+                    cell.isNewMessage = false
                 }
             }
             
@@ -534,16 +509,12 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.saveIndexPath = indexPath
         let message = arrayMessages[indexPath.row]
         let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = kFullDateFormat
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")
-        let dayCurrent = dateFormatter.stringFromDate(NSDate())
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION_V2)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(String(format:"%0.f", message[kConversationId]!.doubleValue))
-        Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kLastOpenAt:dayCurrent, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+        Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     self.isGoToMessageDetail = true

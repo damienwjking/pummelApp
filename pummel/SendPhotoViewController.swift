@@ -191,7 +191,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)
-        prefix.appendContentsOf(kPM_PARTH_MESSAGE)
+        prefix.appendContentsOf(kPM_PARTH_MESSAGE_V2)
         
         imageSelected?.image?.CGImage
         var imageData : NSData!

@@ -449,9 +449,6 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     self.performSegueWithIdentifier(kGoUserProfile, sender: nil)
                 }
         }
-        
-        
-//
     }
     
     @IBAction func goPhoto(sender:UIButton!) {
@@ -511,7 +508,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)
-        prefix.appendContentsOf(kPM_PARTH_MESSAGE)
+        prefix.appendContentsOf(kPM_PARTH_MESSAGE_V2)
         Alamofire.request(.POST, prefix, parameters: [kConversationId:self.messageId, kText:textBox.text, "file":"nodata".dataUsingEncoding(NSUTF8StringEncoding)!])
             .responseJSON { response in
                 self.isSending = false
@@ -529,12 +526,6 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     prefixT.appendContentsOf("/")
                     prefixT.appendContentsOf(self.messageId as String)
                     
-                    Alamofire.request(.PUT, prefixT, parameters: [kConversationId:self.messageId as String, kLastOpenAt:dayCurrent, kUserId: self.defaults.objectForKey(k_PM_CURRENT_ID) as! String])
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                                print("updated lastOpenAt")
-                            }
-                    }
                 }
         }
     }
