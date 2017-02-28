@@ -223,12 +223,12 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     func sortMessage() {
         if self.arrayMessages.count > 0 {
             self.arrayMessages = self.arrayMessages.sort { (message1, message2) -> Bool in
-                let lastOpen1 = message1["lastOpenedAt"] as? String
+                let lastOpen1 = message1["conversation"]!["updatedAt"] as? String
                 if lastOpen1 == nil {
                     return true
                 }
                 
-                let lastOpen2 = message2["lastOpenedAt"] as? String
+                let lastOpen2 = message2["conversation"]!["updatedAt"] as? String
                 if lastOpen2 == nil {
                     return false
                 }
