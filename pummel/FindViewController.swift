@@ -43,7 +43,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         self.widthCell = (UIScreen.mainScreen().bounds.size.width - 30)
         self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 40), height: (UIScreen.mainScreen().bounds.size.height - 160))
-        self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 20, 0, 0)
+        self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 5, 0, 0)
         self.collectionViewLayout.minimumLineSpacing = 10
         
         self.collectionView.delegate = self
@@ -340,44 +340,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             
             self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[cellIndex])
         }
-    }
-    
-    func endPagingCarousel(scrollView: UIScrollView) {
-        if scrollView == self.collectionView {
-            // custom pageing
-            var point = scrollView.contentOffset
-            point.x = self.widthCell * CGFloat(Int(round((point.x / self.widthCell))))
-            
-            scrollView.setContentOffset(point, animated: true)
-            
-            for (cell) in self.collectionView.visibleCells() {
-                cell.userInteractionEnabled = true
-            }
-        }
-    }
-    
-    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-        if scrollView == self.collectionView {
-            for (cell) in self.collectionView.visibleCells() {
-                cell.userInteractionEnabled = false
-            }
-        }
-    }
-    
-    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
-        if scrollView == self.collectionView {
-            for (cell) in self.collectionView.visibleCells() {
-                cell.userInteractionEnabled = false
-            }
-        }
-    }
-    
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        endPagingCarousel(scrollView)
-    }
-    
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        endPagingCarousel(scrollView)
     }
 }
 
