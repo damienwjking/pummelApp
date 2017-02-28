@@ -25,6 +25,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     var arrayTags : NSArray!
     var stopSearch: Bool = false
     var widthCell : CGFloat = 0.0
+    var currentOffset: CGPoint = CGPointZero
+    var touchPoint: CGPoint = CGPointZero
+    
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
     @IBOutlet weak var refineSearchBT: UIButton!
@@ -67,26 +70,68 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-//        self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast
-        
-        // add Swipe gesture
-        let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
-        swipeLeftGesture.direction = .Left
-        self.collectionView.addGestureRecognizer(swipeLeftGesture)
-        
-        let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
-        swipeLeftGesture.direction = .Right
-        self.collectionView.addGestureRecognizer(swipeRightGesture)
-        
     }
     
     func carouselSwipeLeft() {
-        print("swipe left")
+        var offsetX = self.collectionView.contentOffset.x + self.widthCell
+        offsetX = offsetX > self.collectionView.contentSize.width ? self.collectionView.contentSize.width : offsetX
+        
+        let newContentOffset = CGPointMake(offsetX, 0)
+        
+        UIView.animateWithDuration(0.25, animations: {
+            self.collectionView.contentOffset = newContentOffset
+            }) { (_) in
+            self.endPagingCarousel(self.collectionView)
+        }
     }
     
     func carouselSwipeRight() {
-        print("swipe right")
+        var offsetX = self.collectionView.contentOffset.x - self.widthCell
+        offsetX = offsetX < 0 ? 0 : offsetX
         
+        let newContentOffset = CGPointMake(offsetX, 0)
+        
+        UIView.animateWithDuration(0.25, animations: {
+            self.collectionView.contentOffset = newContentOffset
+        }) { (_) in
+            self.endPagingCarousel(self.collectionView)
+        }
+    }
+    
+    func carouselLongPress(longPress:UILongPressGestureRecognizer) {
+        switch longPress.state {
+        case .Began:
+            self.currentOffset = self.collectionView.contentOffset
+            self.touchPoint = longPress.locationOfTouch(0, inView: self.collectionView)
+            break
+        case .Changed:
+            let movePoint = longPress.locationOfTouch(0, inView: self.collectionView)
+            let deltaX = (self.touchPoint.x - movePoint.x)
+            
+            if deltaX > 3 {
+                let newOffsetX = self.currentOffset.x + deltaX
+                self.collectionView.setContentOffset(CGPointMake(newOffsetX, 0), animated: false)
+            }
+            break
+        case .Ended:
+            print("end")
+            self.endPagingCarousel(self.collectionView)
+            
+            break
+        default:
+            // Do nothing
+            break
+        }
+    }
+    
+    func endPagingCarousel(scrollView: UIScrollView) {
+        if scrollView == self.collectionView {
+            // custom pageing
+            var point = scrollView.contentOffset
+            point.x = self.widthCell * CGFloat(Int(round((point.x / self.widthCell))))
+            
+            scrollView.setContentOffset(point, animated: true)
+        }
     }
     
     func searchNextPage() {
@@ -341,6 +386,22 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                             }
                         }
                 }
+            }
+            
+            // add Swipe gesture
+            if cell.gestureRecognizers?.count < 3 {
+                
+                let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
+                swipeLeftGesture.direction = .Left
+                cell.addGestureRecognizer(swipeLeftGesture)
+                
+                let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
+                swipeRightGesture.direction = .Right
+                cell.addGestureRecognizer(swipeRightGesture)
+                
+                let longTouchGesture = UILongPressGestureRecognizer(target: self, action: #selector(carouselLongPress))
+                longTouchGesture.minimumPressDuration = 0.1
+                cell.addGestureRecognizer(longTouchGesture)
             }
             
             return cell
