@@ -84,8 +84,8 @@
                                     <action selector="refind" destination="cAI-GB-clN" eventType="touchUpInside" id="8JI-Eu-Ee6"/>
                                 </connections>
                             </button>
-                            <collectionView autoresizesSubviews="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8Iv-Bk-Q2r">
-                                <rect key="frame" x="15" y="0.0" width="345" height="667"/>
+                            <collectionView autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8Iv-Bk-Q2r">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="tSp-Gp-9J1">
                                     <size key="itemSize" width="50" height="50"/>
@@ -113,7 +113,7 @@
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="bottom" secondItem="cdx-Is-S0P" secondAttribute="bottom" id="PsW-Rh-Ukq"/>
                             <constraint firstItem="8Iv-Bk-Q2r" firstAttribute="centerX" secondItem="6nh-WZ-7Pc" secondAttribute="centerX" id="Te3-Ln-GPc"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="centerX" secondItem="cdx-Is-S0P" secondAttribute="centerX" id="lVE-aU-ARC"/>
-                            <constraint firstItem="8Iv-Bk-Q2r" firstAttribute="width" secondItem="6nh-WZ-7Pc" secondAttribute="width" constant="-30" id="m4a-zc-TDh"/>
+                            <constraint firstItem="8Iv-Bk-Q2r" firstAttribute="width" secondItem="6nh-WZ-7Pc" secondAttribute="width" id="m4a-zc-TDh"/>
                             <constraint firstItem="8Iv-Bk-Q2r" firstAttribute="centerY" secondItem="6nh-WZ-7Pc" secondAttribute="centerY" id="oDv-bn-1p1"/>
                             <constraint firstItem="WNF-6o-ajD" firstAttribute="top" secondItem="SBM-8q-Zjj" secondAttribute="bottom" constant="18" id="yAN-9I-Wbk"/>
                         </constraints>
@@ -276,7 +276,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EgM-zk-jwW" id="eDt-UY-KOy">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>

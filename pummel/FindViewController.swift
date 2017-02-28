@@ -38,17 +38,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         self.showLetUsHelp = false
         self.navigationController!.navigationBar.translucent = false
         
-        let nibName = UINib(nibName: "CardContentView", bundle: nil)
-        self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
-        
-        self.widthCell = (UIScreen.mainScreen().bounds.size.width - 30)
-        self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 40), height: (UIScreen.mainScreen().bounds.size.height - 160))
-        self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 5, 0, 0)
-        self.collectionViewLayout.minimumLineSpacing = 10
-        
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast
+        self.setupCollectionView()
         
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
@@ -64,6 +54,39 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         }
         
         self.collectionView.reloadData()
+    }
+    
+    func setupCollectionView() {
+        let nibName = UINib(nibName: "CardContentView", bundle: nil)
+        self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
+        
+        self.widthCell = (UIScreen.mainScreen().bounds.size.width - 30)
+        self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 40), height: (UIScreen.mainScreen().bounds.size.height - 160))
+        self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 20, 0, 0)
+        self.collectionViewLayout.minimumLineSpacing = 10
+        
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+//        self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast
+        
+        // add Swipe gesture
+        let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
+        swipeLeftGesture.direction = .Left
+        self.collectionView.addGestureRecognizer(swipeLeftGesture)
+        
+        let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
+        swipeLeftGesture.direction = .Right
+        self.collectionView.addGestureRecognizer(swipeRightGesture)
+        
+    }
+    
+    func carouselSwipeLeft() {
+        print("swipe left")
+    }
+    
+    func carouselSwipeRight() {
+        print("swipe right")
+        
     }
     
     func searchNextPage() {
