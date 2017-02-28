@@ -180,7 +180,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     func updateUI() {
         self.userNameLB.text = (self.userDetail[kFirstname] as! String).uppercaseString
         
-        self.ratingContentLB.text = String(format:"%0.f", (self.userDetail[kConnectionCount]!.doubleValue * 200) + (self.userDetail[kPostCount]!.doubleValue * 150))
+        self.ratingContentLB.text = String(format:"%0.f", (self.userDetail[kConnectionCount]!.doubleValue * 120) + (self.userDetail[kPostCount]!.doubleValue * 75))
         
         self.connectionContentLB.text = String(format:"%0.f", self.userDetail[kConnectionCount]!.doubleValue)
         

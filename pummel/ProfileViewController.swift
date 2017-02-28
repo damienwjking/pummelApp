@@ -433,14 +433,14 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                 } else {
                     self.connectionContentLB.text = String(format:"%0.f", coachInformation[kConnectionCount]!.doubleValue)
                     
-                    totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 200)
+                    totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
                 }
                 if (coachInformation[kPostCount] is NSNull) {
                     self.postNumberContentLB.text  = "0"
                 } else {
                     self.postNumberContentLB.text = String(format:"%0.f", coachInformation[kPostCount]!.doubleValue)
                     
-                    totalPoint = totalPoint + (coachInformation[kPostCount]!.doubleValue * 150)
+                    totalPoint = totalPoint + (coachInformation[kPostCount]!.doubleValue * 75)
                 }
                 self.ratingContentLB.text = String(format:"%0.f", totalPoint)
                 
@@ -580,7 +580,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         } else {
             self.connectionContentLB.text = String(format:"%0.f", coachDetail[kConnectionCount]!.doubleValue)
             
-            totalPoint = totalPoint + (coachDetail[kConnectionCount]!.doubleValue * 200)
+            totalPoint = totalPoint + (coachDetail[kConnectionCount]!.doubleValue * 120)
         }
         
         if (coachDetail[kPostCount] is NSNull) {
@@ -588,7 +588,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         } else {
             self.postNumberContentLB.text = String(format:"%0.f", coachDetail[kPostCount]!.doubleValue)
             
-            totalPoint = totalPoint + (coachDetail[kPostCount]!.doubleValue * 150)
+            totalPoint = totalPoint + (coachDetail[kPostCount]!.doubleValue * 75)
         }
         self.ratingContentLB.text = String(format:"%0.f", totalPoint)
         

@@ -357,7 +357,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 } else {
                     self.connectionContentLB.text = String(format:"%0.f", coachInformation[kConnectionCount]!.doubleValue)
                     
-                    totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 200)
+                    totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
                 }
                 
                 if (coachInformation[kPostCount] is NSNull) {
@@ -365,7 +365,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 } else {
                     self.postNumberContentLB.text = String(format:"%0.f", coachInformation[kPostCount]!.doubleValue)
                     
-                    totalPoint = totalPoint + (coachInformation[kPostCount]!.doubleValue * 150)
+                    totalPoint = totalPoint + (coachInformation[kPostCount]!.doubleValue * 75)
                 }
                 self.ratingContentLB.text = String(format:"%0.f", totalPoint)
                 
