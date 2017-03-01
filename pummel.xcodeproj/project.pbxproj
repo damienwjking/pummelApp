@@ -35,6 +35,8 @@
 		BA0B61EF1E004E0800A98C82 /* miniPummelLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */; };
 		BA0DB1AB1E1EA31D00CBE586 /* icon_intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0DB1A31E1EA31D00CBE586 /* icon_intensity.png */; };
 		BA0DB1AC1E1EA31D00CBE586 /* icon_insensity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0DB1A41E1EA31D00CBE586 /* icon_insensity@2x.png */; };
+		BA0E98771E6664060019A24A /* CardContentNoResult.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA0E98761E6664060019A24A /* CardContentNoResult.xib */; };
+		BA0E98791E6673BF0019A24A /* NoResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0E98781E6673BF0019A24A /* NoResultCell.swift */; };
 		BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043061E083749006DB43D /* LogTableViewCell.swift */; };
 		BA131BFF1E16B76400CA9A83 /* LogTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */; };
 		BA1404181E2E5F700075CC3A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1404171E2E5F700075CC3A /* BaseViewController.swift */; };
@@ -375,6 +377,8 @@
 		BA0B61EC1E004E0800A98C82 /* miniPummelLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miniPummelLogo@2x.png"; sourceTree = "<group>"; };
 		BA0DB1A31E1EA31D00CBE586 /* icon_intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_intensity.png; sourceTree = "<group>"; };
 		BA0DB1A41E1EA31D00CBE586 /* icon_insensity@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_insensity@2x.png"; sourceTree = "<group>"; };
+		BA0E98761E6664060019A24A /* CardContentNoResult.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardContentNoResult.xib; sourceTree = "<group>"; };
+		BA0E98781E6673BF0019A24A /* NoResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoResultCell.swift; sourceTree = "<group>"; };
 		BA1043061E083749006DB43D /* LogTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTableViewCell.swift; sourceTree = "<group>"; };
 		BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogTableViewCell.xib; sourceTree = "<group>"; };
 		BA1404171E2E5F700075CC3A /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -860,6 +864,8 @@
 				F970A2AB1D26393F00932BFC /* CardView.swift */,
 				BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */,
 				F970A2AF1D26463000932BFC /* CardContentView.xib */,
+				BA0E98781E6673BF0019A24A /* NoResultCell.swift */,
+				BA0E98761E6664060019A24A /* CardContentNoResult.xib */,
 			);
 			name = ZLSV;
 			sourceTree = "<group>";
@@ -1578,6 +1584,7 @@
 				F9C1FB9E1E2531530002CDFF /* pummel_logo_message.png in Resources */,
 				BA0DB1AB1E1EA31D00CBE586 /* icon_intensity.png in Resources */,
 				F9827F1D1CBC755B00841BF1 /* birthday.png in Resources */,
+				BA0E98771E6664060019A24A /* CardContentNoResult.xib in Resources */,
 				BAFE18461E2094F000387C53 /* connected@2x.png in Resources */,
 				F9ABEAF61DC4C32A0084B70E /* Message.storyboard in Resources */,
 				BA0A2C1D1E5F4273006C6C61 /* icon_phone@2x.png in Resources */,
@@ -1683,6 +1690,7 @@
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */,
+				BA0E98791E6673BF0019A24A /* NoResultCell.swift in Sources */,
 				F9EAE8F51D6FE86E00FD32BE /* NaviLazyTableView.swift in Sources */,
 				F9EAE8E71D6EFA7A00FD32BE /* SettingNewConnectionsTableViewCell.swift in Sources */,
 				F9CA4A0C1D21466600E8A585 /* TagCell.swift in Sources */,

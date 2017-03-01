@@ -8,6 +8,10 @@
 
 import UIKit
 
+@objc public protocol CardViewDelegate {
+    func cardViewTagClicked()
+}
+
 class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
    
     @IBOutlet var connectV : UIView!
@@ -18,6 +22,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var businessIMV : UIImageView!
     
+    weak var delegate : CardViewDelegate? = nil
     var tags = [Tag]()
     var sizingCell: TagCell?
     
@@ -78,6 +83,10 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         collectionView.deselectItemAtIndexPath(indexPath, animated: false)
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         collectionView.reloadData()
+        
+        if self.delegate != nil {
+            self.delegate?.cardViewTagClicked()
+        }
     }
     
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {

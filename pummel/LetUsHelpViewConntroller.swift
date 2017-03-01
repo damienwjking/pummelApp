@@ -213,11 +213,20 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         let tag = tags[indexPath.row]
         if (tag.selected) {
-            tagIdsArray.addObject(tag.tagId!)
-            
-            let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Name": "Select Tags", "Label":"\(tag.name!)"]
-            mixpanel.track("IOS.FindATrainer", properties: properties)
+            if tagIdsArray.count < 4 {
+                tagIdsArray.addObject(tag.tagId!)
+                
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Name": "Select Tags", "Label":"\(tag.name!)"]
+                mixpanel.track("IOS.FindATrainer", properties: properties)
+            } else {
+                let alertController = UIAlertController(title: nil, message: "Select just a few tags to broaden your search", preferredStyle: .Alert)
+                alertController.addAction(UIAlertAction(title: kOk, style: UIAlertActionStyle.Cancel, handler: { (_) in
+                    self.tags[indexPath.row].selected = !self.tags[indexPath.row].selected
+                    self.collectionView.reloadData()
+                }))
+                self.presentViewController(alertController, animated: true) { }
+            }
         } else {
             tagIdsArray.removeObject(tag.tagId!)
         }

@@ -258,6 +258,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                                         findVC.viewDidLayoutSubviews()
                                         findVC.showLetUsHelp = false
                                         findVC.viewDidLayoutSubviews()
+                                        findVC.collectionView.contentOffset = CGPointZero
                                         presentingViewController!.dismissViewControllerAnimated(true, completion: {})
                                     })
                                 });
