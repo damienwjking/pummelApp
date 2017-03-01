@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Light.ttf">
+            <string>Montserrat-Light</string>
+        </array>
+        <array key="Montserrat-Regular.otf">
+            <string>Montserrat-Regular</string>
+        </array>
+        <array key="PlayfairDisplay-Regular.otf">
+            <string>PlayfairDisplay-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SearchNoCoach" id="eCZ-KI-OUk" customClass="NoResultCell" customModule="Pummel" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="860"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="600" height="860"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZMT-xP-woR">
+                        <rect key="frame" x="150" y="266.5" width="300" height="327"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardEmpty.png" translatesAutoresizingMaskIntoConstraints="NO" id="8aS-4B-q10">
+                                <rect key="frame" x="67" y="0.0" width="165" height="160"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zd8-jp-tsn">
+                                <rect key="frame" x="67" y="0.0" width="165" height="160"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="165" id="d2U-S7-TtR"/>
+                                    <constraint firstAttribute="height" constant="160" id="ry9-eb-JMd"/>
+                                </constraints>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Still didn't find any experts you like nearby" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HIU-Xj-FYf">
+                                <rect key="frame" x="0.0" y="180" width="300" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="8oQ-gD-9vx"/>
+                                    <constraint firstAttribute="width" constant="300" id="UJC-Mr-Aiy"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="18"/>
+                                <color key="textColor" red="0.094117647060000004" green="0.094117647060000004" blue="0.094117647060000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refine your search by selecting different tags, location or gender." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FY9-aA-U1S">
+                                <rect key="frame" x="0.0" y="240" width="300" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="HBP-KX-LgG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="13"/>
+                                <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gum-SY-CxH">
+                                <rect key="frame" x="101" y="300" width="99" height="27"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="12"/>
+                                <state key="normal" title="REFINE SEARCH">
+                                    <color key="titleColor" red="1" green="0.25882352939999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="HIU-Xj-FYf" firstAttribute="centerX" secondItem="ZMT-xP-woR" secondAttribute="centerX" id="9zk-9s-5dt"/>
+                            <constraint firstItem="HIU-Xj-FYf" firstAttribute="top" secondItem="Zd8-jp-tsn" secondAttribute="bottom" constant="20" id="AgP-Uk-oih"/>
+                            <constraint firstItem="8aS-4B-q10" firstAttribute="centerX" secondItem="Zd8-jp-tsn" secondAttribute="centerX" id="CPT-TO-4eq"/>
+                            <constraint firstItem="FY9-aA-U1S" firstAttribute="width" secondItem="ZMT-xP-woR" secondAttribute="width" id="Mw0-HW-Q1G"/>
+                            <constraint firstItem="Zd8-jp-tsn" firstAttribute="centerX" secondItem="ZMT-xP-woR" secondAttribute="centerX" id="O3h-gO-YKV"/>
+                            <constraint firstItem="8aS-4B-q10" firstAttribute="width" secondItem="Zd8-jp-tsn" secondAttribute="width" id="Pxn-dx-p6f"/>
+                            <constraint firstItem="FY9-aA-U1S" firstAttribute="top" secondItem="HIU-Xj-FYf" secondAttribute="bottom" constant="10" id="TA6-Xo-0aL"/>
+                            <constraint firstItem="gum-SY-CxH" firstAttribute="top" secondItem="FY9-aA-U1S" secondAttribute="bottom" constant="18" id="TRA-SK-JPW"/>
+                            <constraint firstAttribute="bottom" secondItem="gum-SY-CxH" secondAttribute="bottom" id="bFG-hr-sxh"/>
+                            <constraint firstItem="8aS-4B-q10" firstAttribute="height" secondItem="Zd8-jp-tsn" secondAttribute="height" id="bZu-vs-cjq"/>
+                            <constraint firstAttribute="width" constant="300" id="cSG-hi-CLM"/>
+                            <constraint firstItem="FY9-aA-U1S" firstAttribute="centerX" secondItem="ZMT-xP-woR" secondAttribute="centerX" id="dps-Af-Lkm"/>
+                            <constraint firstItem="Zd8-jp-tsn" firstAttribute="top" secondItem="ZMT-xP-woR" secondAttribute="top" id="ecB-OM-fc1"/>
+                            <constraint firstItem="8aS-4B-q10" firstAttribute="centerY" secondItem="Zd8-jp-tsn" secondAttribute="centerY" id="mK8-e6-DqN"/>
+                            <constraint firstItem="gum-SY-CxH" firstAttribute="centerX" secondItem="ZMT-xP-woR" secondAttribute="centerX" id="qHW-Cv-ZNs"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="ZMT-xP-woR" firstAttribute="centerX" secondItem="eCZ-KI-OUk" secondAttribute="centerX" id="ZLJ-Ie-n4y"/>
+                <constraint firstItem="ZMT-xP-woR" firstAttribute="centerY" secondItem="eCZ-KI-OUk" secondAttribute="centerY" id="fjm-X7-gns"/>
+            </constraints>
+            <size key="customSize" width="600" height="860"/>
+            <connections>
+                <outlet property="noResultContentLB" destination="FY9-aA-U1S" id="aYv-0e-gqa"/>
+                <outlet property="noResultLB" destination="HIU-Xj-FYf" id="97B-Xl-GjK"/>
+                <outlet property="refineSearchBT" destination="gum-SY-CxH" id="erj-7D-DJy"/>
+            </connections>
+            <point key="canvasLocation" x="-1361" y="1812"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="cardEmpty.png" width="166" height="142"/>
+    </resources>
+</document>

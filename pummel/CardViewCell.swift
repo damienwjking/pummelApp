@@ -8,12 +8,25 @@
 
 import UIKit
 
-class CardViewCell: UICollectionViewCell {
+@objc protocol CardViewCellDelegate {
+    func cardViewCellTagClicked(cell: CardViewCell)
+}
+
+class CardViewCell: UICollectionViewCell, CardViewDelegate {
     @IBOutlet weak var cardView: CardView!
+    
+    weak var delegate : CardViewCellDelegate? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        self.cardView.delegate = self
         self.cardView.registerTagCell()
+    }
+    
+    func cardViewTagClicked() {
+        if  self.delegate != nil {
+            self.delegate?.cardViewCellTagClicked(self)
+        }
     }
 }

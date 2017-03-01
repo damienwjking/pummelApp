@@ -15,7 +15,7 @@ import ReactiveUI
 import Alamofire
 import Mixpanel
 
-class FindViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout{
+class FindViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout, CardViewCellDelegate{
     var showLetUsHelp: Bool!
     var loadCardsFromXib = true
     var resultIndex = 0
@@ -62,6 +62,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     func setupCollectionView() {
         let nibName = UINib(nibName: "CardContentView", bundle: nil)
         self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
+        
+        let noResultNibName = UINib(nibName: "CardContentNoResult", bundle: nil)
+        self.collectionView.registerNib(noResultNibName, forCellWithReuseIdentifier: "SearchNoCoach")
         
         self.widthCell = (UIScreen.mainScreen().bounds.size.width - 30)
         self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 40), height: (UIScreen.mainScreen().bounds.size.height - 160))
@@ -223,6 +226,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         self.stopSearch = false
         self.resultPage = 30
+        
+        self.endPagingCarousel(self.collectionView)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -284,9 +289,15 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.collectionView {
-            self.collectionView.hidden = ((self.arrayResult.count > 0) == false)
-            
-            return self.arrayResult.count
+            if (self.arrayResult.count == 0) {
+                self.collectionView.hidden = true
+                
+                return 0
+            } else {
+                self.collectionView.hidden = false
+                
+                return self.arrayResult.count + 1
+            }
         }
         
         return 0
@@ -294,117 +305,134 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         if collectionView == self.collectionView {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", forIndexPath: indexPath) as! CardViewCell
-            cell.clipsToBounds = false
-            
-            let cellIndex = indexPath.row
-            if (cellIndex == self.arrayResult.count - 1) {
-                self.searchNextPage()
-            }
-            
-            coachTotalDetail = arrayResult[cellIndex]
-            let coachDetail = coachTotalDetail[kUser] as! NSDictionary
-            let coachListTags = coachDetail[kTags] as! NSArray
-            
-            cell.cardView.tags.removeAll()
-            for i in 0 ..< coachListTags.count {
-                let tagContent = coachListTags[i] as! NSDictionary
-                let tag = Tag()
-                tag.name = tagContent[kTitle] as? String
-                cell.cardView.tags.append(tag)
-            }
-            cell.cardView.collectionView.reloadData()
-            
-            cell.cardView.avatarIMV.image = nil
-            cell.cardView.translatesAutoresizingMaskIntoConstraints = false
-            cell.cardView.backgroundColor = cell.cardView.backgroundColor
-            cell.cardView.connectV.layer.cornerRadius = 50
-            cell.cardView.connectV.clipsToBounds = true
-            cell.cardView.nameLB.font = .pmmPlayFairReg24()
-            if !(coachDetail[kLastName] is NSNull) {
-                cell.cardView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
+            if indexPath.row == self.arrayResult.count {
+                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("SearchNoCoach", forIndexPath: indexPath) as! NoResultCell
+                
+                // add refind action
+                cell.refineSearchBT.addTarget(self, action: #selector(refind), forControlEvents: .TouchUpInside)
+                
+                // add Swipe gesture
+                if cell.gestureRecognizers?.count < 1 {
+                    let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
+                    swipeRightGesture.direction = .Right
+                    cell.addGestureRecognizer(swipeRightGesture)
+                }
+                
+                return cell
             } else {
-                cell.cardView.nameLB.text = (coachDetail[kFirstname] as! String)
-            }
-            
-            cell.cardView.addressLB.font = .pmmPlayFairReg11()
-            if !(coachTotalDetail[kServiceArea] is NSNull) {
-                cell.cardView.addressLB.text = coachTotalDetail[kServiceArea] as? String
-            }
-            let postfix = widthEqual.stringByAppendingString(String(self.view.frame.size.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width))
-            if !(coachDetail[kImageUrl] is NSNull) {
-                let imageLink = coachDetail[kImageUrl] as! String
-                var prefix = kPMAPI
-                prefix.appendContentsOf(imageLink)
-                prefix.appendContentsOf(postfix)
-                if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                    let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                    cell.cardView.avatarIMV.image = imageRes
+                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", forIndexPath: indexPath) as! CardViewCell
+                cell.delegate = self
+                cell.clipsToBounds = false
+                
+                let cellIndex = indexPath.row
+                if (cellIndex == self.arrayResult.count - 1) {
+                    self.searchNextPage()
+                }
+                
+                coachTotalDetail = arrayResult[cellIndex]
+                let coachDetail = coachTotalDetail[kUser] as! NSDictionary
+                let coachListTags = coachDetail[kTags] as! NSArray
+                
+                cell.cardView.tags.removeAll()
+                for i in 0 ..< coachListTags.count {
+                    let tagContent = coachListTags[i] as! NSDictionary
+                    let tag = Tag()
+                    tag.name = tagContent[kTitle] as? String
+                    cell.cardView.tags.append(tag)
+                }
+                cell.cardView.collectionView.reloadData()
+                
+                cell.cardView.avatarIMV.image = nil
+                cell.cardView.translatesAutoresizingMaskIntoConstraints = false
+                cell.cardView.backgroundColor = cell.cardView.backgroundColor
+                cell.cardView.connectV.layer.cornerRadius = 50
+                cell.cardView.connectV.clipsToBounds = true
+                cell.cardView.nameLB.font = .pmmPlayFairReg24()
+                if !(coachDetail[kLastName] is NSNull) {
+                    cell.cardView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
                 } else {
-                    Alamofire.request(.GET, prefix)
-                        .responseImage { response in
-                            if (response.response?.statusCode == 200) {
-                                let imageRes = response.result.value! as UIImage
-                                cell.cardView.avatarIMV.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                            }
+                    cell.cardView.nameLB.text = (coachDetail[kFirstname] as! String)
+                }
+                
+                cell.cardView.addressLB.font = .pmmPlayFairReg11()
+                if !(coachTotalDetail[kServiceArea] is NSNull) {
+                    cell.cardView.addressLB.text = coachTotalDetail[kServiceArea] as? String
+                }
+                let postfix = widthEqual.stringByAppendingString(String(self.view.frame.size.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width))
+                if !(coachDetail[kImageUrl] is NSNull) {
+                    let imageLink = coachDetail[kImageUrl] as! String
+                    var prefix = kPMAPI
+                    prefix.appendContentsOf(imageLink)
+                    prefix.appendContentsOf(postfix)
+                    if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                        let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                        cell.cardView.avatarIMV.image = imageRes
+                    } else {
+                        Alamofire.request(.GET, prefix)
+                            .responseImage { response in
+                                if (response.response?.statusCode == 200) {
+                                    let imageRes = response.result.value! as UIImage
+                                    cell.cardView.avatarIMV.image = imageRes
+                                    NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                                }
+                        }
                     }
                 }
-            }
-            
-            // Business ImageView
-            cell.cardView.connectV.hidden = true
-            if !(coachDetail[kBusinessId] is NSNull) {
-                let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
-                var linkBusinessId = kPMAPI_BUSINESS
-                linkBusinessId.appendContentsOf(businessId)
-                Alamofire.request(.GET, linkBusinessId)
-                    .responseJSON { response in
-                        if response.response?.statusCode == 200 {
-                            
-                            let jsonBusiness = response.result.value as! NSDictionary
-                            if !(jsonBusiness[kImageUrl] is NSNull) {
-                                let businessLogoUrl = jsonBusiness[kImageUrl] as! String
-                                var prefixLogo = kPMAPI
-                                prefixLogo.appendContentsOf(businessLogoUrl)
-                                prefixLogo.appendContentsOf(widthHeight120)
-                                if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
-                                    cell.cardView.connectV.hidden = false
-                                    let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
-                                    cell.cardView.businessIMV.image = imageRes
-                                } else {
-                                    Alamofire.request(.GET, prefixLogo)
-                                        .responseImage { response in
-                                            if (response.response?.statusCode == 200) {
-                                                cell.cardView.connectV.hidden = false
-                                                let imageRes = response.result.value! as UIImage
-                                                cell.cardView.businessIMV.image = imageRes
-                                                NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
-                                            }
+                
+                // Business ImageView
+                cell.cardView.connectV.hidden = true
+                if !(coachDetail[kBusinessId] is NSNull) {
+                    let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+                    var linkBusinessId = kPMAPI_BUSINESS
+                    linkBusinessId.appendContentsOf(businessId)
+                    Alamofire.request(.GET, linkBusinessId)
+                        .responseJSON { response in
+                            if response.response?.statusCode == 200 {
+                                
+                                let jsonBusiness = response.result.value as! NSDictionary
+                                if !(jsonBusiness[kImageUrl] is NSNull) {
+                                    let businessLogoUrl = jsonBusiness[kImageUrl] as! String
+                                    var prefixLogo = kPMAPI
+                                    prefixLogo.appendContentsOf(businessLogoUrl)
+                                    prefixLogo.appendContentsOf(widthHeight120)
+                                    if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
+                                        cell.cardView.connectV.hidden = false
+                                        let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
+                                        cell.cardView.businessIMV.image = imageRes
+                                    } else {
+                                        Alamofire.request(.GET, prefixLogo)
+                                            .responseImage { response in
+                                                if (response.response?.statusCode == 200) {
+                                                    cell.cardView.connectV.hidden = false
+                                                    let imageRes = response.result.value! as UIImage
+                                                    cell.cardView.businessIMV.image = imageRes
+                                                    NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
+                                                }
+                                        }
                                     }
                                 }
                             }
-                        }
+                    }
                 }
+                
+                // add Swipe gesture
+                if cell.gestureRecognizers?.count < 2 {
+                    
+                    let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
+                    swipeLeftGesture.direction = .Left
+                    cell.addGestureRecognizer(swipeLeftGesture)
+                    
+                    let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
+                    swipeRightGesture.direction = .Right
+                    cell.addGestureRecognizer(swipeRightGesture)
+                    
+                    //                let longTouchGesture = UILongPressGestureRecognizer(target: self, action: #selector(carouselLongPress))
+                    //                longTouchGesture.minimumPressDuration = 0.1
+                    //                cell.addGestureRecognizer(longTouchGesture)
+                }
+                
+                return cell
             }
-            
-            // add Swipe gesture
-            if cell.gestureRecognizers?.count < 2 {
-                
-                let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
-                swipeLeftGesture.direction = .Left
-                cell.addGestureRecognizer(swipeLeftGesture)
-                
-                let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
-                swipeRightGesture.direction = .Right
-                cell.addGestureRecognizer(swipeRightGesture)
-                
-//                let longTouchGesture = UILongPressGestureRecognizer(target: self, action: #selector(carouselLongPress))
-//                longTouchGesture.minimumPressDuration = 0.1
-//                cell.addGestureRecognizer(longTouchGesture)
-            }
-            
-            return cell
         }
         
         return UICollectionViewCell()
@@ -420,10 +448,18 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if collectionView == self.collectionView {
-            let cellIndex = indexPath.row
-            
-            self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[cellIndex])
+            if indexPath.row < self.arrayResult.count {
+                let cellIndex = indexPath.row
+                
+                self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[cellIndex])
+            }
         }
+    }
+    
+    func cardViewCellTagClicked(cell: CardViewCell) {
+        let indexPath = self.collectionView.indexPathForCell(cell)
+        
+        self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[(indexPath?.row)!])
     }
 }
 
