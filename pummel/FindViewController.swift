@@ -74,7 +74,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     
     func carouselSwipeLeft() {
         var offsetX = self.collectionView.contentOffset.x + self.widthCell
-        offsetX = offsetX > self.collectionView.contentSize.width ? self.collectionView.contentSize.width : offsetX
+        offsetX = offsetX > self.collectionView.contentSize.width - self.widthCell ? self.collectionView.contentSize.width - self.widthCell : offsetX
         
         let newContentOffset = CGPointMake(offsetX, 0)
         
@@ -389,7 +389,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             }
             
             // add Swipe gesture
-            if cell.gestureRecognizers?.count < 3 {
+            if cell.gestureRecognizers?.count < 2 {
                 
                 let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
                 swipeLeftGesture.direction = .Left
@@ -399,9 +399,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 swipeRightGesture.direction = .Right
                 cell.addGestureRecognizer(swipeRightGesture)
                 
-                let longTouchGesture = UILongPressGestureRecognizer(target: self, action: #selector(carouselLongPress))
-                longTouchGesture.minimumPressDuration = 0.1
-                cell.addGestureRecognizer(longTouchGesture)
+//                let longTouchGesture = UILongPressGestureRecognizer(target: self, action: #selector(carouselLongPress))
+//                longTouchGesture.minimumPressDuration = 0.1
+//                cell.addGestureRecognizer(longTouchGesture)
             }
             
             return cell
