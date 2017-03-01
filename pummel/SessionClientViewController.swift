@@ -498,7 +498,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                 
                 do {
                     try eventStore.saveEvent(event, span: .FutureEvents, commit: true)
-                    let alertController = UIAlertController(title: "", message: "This session has been added to your callendar", preferredStyle: .Alert)
+                    let alertController = UIAlertController(title: "", message: "This session has been added to your calendar", preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                         // ...
                     }
