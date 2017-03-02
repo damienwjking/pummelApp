@@ -143,7 +143,7 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
                 self.presentViewController(alertController, animated: true) {
                     // ...
                 }
-            } else if (CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse) {
+            } else if (CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse || CLLocationManager.authorizationStatus() == .AuthorizedAlways) {
                 performSegueWithIdentifier("searching", sender: nil)
             }
         } else {
