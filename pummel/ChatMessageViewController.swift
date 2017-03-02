@@ -36,6 +36,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
+    // MARK: Controller Life Circle
     override func viewDidLoad() {
         super.viewDidLoad()
         var image = UIImage(named: "blackArrow")
@@ -62,10 +63,6 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.getImageAvatarTextBox()
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -75,6 +72,10 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.getArrayChat()
         
         self.textBox.text = self.preMessage
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     func getImageAvatarTextBox() {
@@ -139,6 +140,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     print("Request failed with error: \(error)")
                 }
             }
+        } else {
+            self.sendMessage(false)
         }
     }
     
@@ -182,7 +185,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        self.sendMessage()
+        self.sendMessage(true)
         return true
     }
     
@@ -192,7 +195,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.leftMarginLeftChatCT.constant = 40
     }
     
-    // Table Delegate
+    // MARK: UITableViewDelegate
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if (indexPath.row == 0) {
             return 197
@@ -433,6 +436,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     
+    // MARK: Outlet function
     func cancel() {
         self.navigationController?.popViewControllerAnimated(true)
     }
@@ -479,7 +483,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         }
     }
     
-    func sendMessage() {
+    func sendMessage(addEmptyMessage:Bool) {
         let values : [String]
         
         values = (self.typeCoach == true) ? [coachId] : [userIdTarget as String]
@@ -495,7 +499,12 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     let conversationId = String(format:"%0.f",JSON!.objectForKey(kId)!.doubleValue)
                     //Add message to converstaton
                     self.messageId = conversationId
-                    self.addMessageToExistConverstation()
+                    
+                    if (addEmptyMessage) {
+                        self.addMessageToExistConverstation()
+                    } else {
+                        self.getArrayChat()
+                    }
                 }
         }
         
@@ -525,7 +534,6 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
                     prefixT.appendContentsOf("/")
                     prefixT.appendContentsOf(self.messageId as String)
-                    
                 }
         }
     }
@@ -536,7 +544,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             if (self.messageId != nil) {
                 self.addMessageToExistConverstation()
             } else {
-                self.sendMessage()
+                self.sendMessage(true)
             }
             
             // Tracker mixpanel

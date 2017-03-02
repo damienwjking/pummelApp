@@ -27,23 +27,30 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var startConversationBT: UIButton!
     
     var arrayMessages: [NSDictionary] = []
-    let defaults = NSUserDefaults.standardUserDefaults()
+    var arrayListLead :[NSDictionary] = []
     var dataSourceArr : [NSDictionary] = []
+    
     var scrollTableView : UITableView!
     var offset : Int = 0
+    
+    var saveIndexPath: NSIndexPath?
+    var saveIndexPathScrollView : NSIndexPath?
+    
+    var refreshControl: UIRefreshControl!
+    var connectionsLB : UILabel?
+    var separeateline: UIView?
+    
     var isStopLoadMessage : Bool = false
     var isLoadingMessage : Bool = false
-    var saveIndexPath: NSIndexPath?
     var isGoToMessageDetail : Bool = false
-    var saveIndexPathScrollView : NSIndexPath?
-    var connectionsLB : UILabel?
-    var arrayListLead :[NSDictionary] = []
-    var separeateline: UIView?
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     private struct Constants {
         static let ContentSize: CGSize = CGSize(width: 80, height: 96.0)
     }
     
+    // MARK: Controller Life Circle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.listMessageTB.delegate = self
@@ -51,11 +58,13 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(SessionsViewController.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
         
-        
         self.noMessageTitleLB.font = UIFont.pmmPlayFairReg18()
         self.noMessageDetailLB.font = UIFont.pmmMonLight13()
         self.startConversationBT.titleLabel!.font = UIFont.pmmMonReg12()
         
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.addTarget(self, action: #selector(refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
+        self.listMessageTB.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -125,12 +134,28 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: Private function
+    func refreshControlTable() {
+        if (self.isLoadingMessage == false) {
+            self.gotNewMessage()
+        }
+    }
+    
     func gotNewMessage() {
         arrayMessages.removeAll()
         self.listMessageTB.reloadData { 
             self.isStopLoadMessage = false
             self.offset = 0
             self.getMessage()
+            
+            if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                self.getListLead()
+            }
         }
     }
     
@@ -176,10 +201,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 print("Request failed with error: \(error)")
                 }
         }
-    }
-    
-    @IBAction func startConversation(sender: AnyObject) {
-        self.newMessage()
     }
     
     func newMessage() {
@@ -246,37 +267,41 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET)
             prefix.appendContentsOf(String(offset))
             Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let arrayMessageT = JSON as! [NSDictionary]
-                    if (arrayMessageT.count > 0) {
-                        self.arrayMessages += arrayMessageT
-                        self.isLoadingMessage = false
-                        self.listMessageTB.reloadData()
-                        self.noMessageV.hidden = true
-                    } else {
-                        if self.arrayMessages.count <= 0 {
-                            self.noMessageV.hidden = false
+                .responseJSON { response in
+                    switch response.result {
+                    case .Success(let JSON):
+                        let arrayMessageT = JSON as! [NSDictionary]
+                        if (arrayMessageT.count > 0) {
+                            self.arrayMessages += arrayMessageT
+                            self.isLoadingMessage = false
+                            self.listMessageTB.reloadData()
+                            self.noMessageV.hidden = true
+                        } else {
+                            if self.arrayMessages.count <= 0 {
+                                self.noMessageV.hidden = false
+                            }
+                            self.isLoadingMessage = false
+                            self.isStopLoadMessage = true
                         }
+                        self.sortMessage()
+                        self.view.bringSubviewToFront(self.noMessageV)
+                    case .Failure(let error):
+                        self.offset -= 10
                         self.isLoadingMessage = false
-                        self.isStopLoadMessage = true
+                        print("Request failed with error: \(error)")
                     }
-                    self.sortMessage()
-                    self.view.bringSubviewToFront(self.noMessageV)
-                case .Failure(let error):
-                    self.offset -= 10
-                    self.isLoadingMessage = false
-                    print("Request failed with error: \(error)")
-                }
+                    
+                    self.refreshControl.endRefreshing()
             }
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // MARK: Outlet Function
+    @IBAction func startConversation(sender: AnyObject) {
+        self.newMessage()
     }
     
+    // MARK: UITableViewDelegate
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
     {
         if (defaults.boolForKey(k_PM_IS_COACH) == true) { if (tableView == self.scrollTableView) {
@@ -767,35 +792,40 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
 
     func timeAgoSinceDate(date:NSDate) -> String {
-        let calendar = NSCalendar.currentCalendar()
-        let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
         let now = NSDate()
-        let earliest = now.earlierDate(date)
-        let latest = (earliest == now) ? date : now
-        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendarOptions.MatchPreviousTimePreservingSmallerUnits)
         
-        if (components.year >= 2) {
-            return "\(components.year)y"
-        } else if (components.year >= 1){
-            return "1y"
-        } else if (components.month >= 2) {
-            return "\(components.month)m"
-        } else if (components.month >= 1){
-            return "1m"
-        } else if (components.day >= 2) {
-            return "\(components.day)d"
-        } else if (components.day >= 1){
-            return "1d"
-        } else if (components.hour >= 2) {
-            return "\(components.hour)hr"
-        } else if (components.hour >= 1){
-            return "1hr"
-        } else if (components.minute >= 2) {
-            return "\(components.minute)m"
-        } else if (components.minute >= 1){
-            return "1m"
-        } else if (components.second >= 20) {
-            return "\(components.second)s"
+        if (date.compare(now) == .OrderedAscending) {
+            let calendar = NSCalendar.currentCalendar()
+            let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
+            let earliest = now.earlierDate(date)
+            let latest = (earliest == now) ? date : now
+            let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendarOptions.MatchPreviousTimePreservingSmallerUnits)
+            
+            if (components.year >= 2) {
+                return "\(components.year)y"
+            } else if (components.year >= 1){
+                return "1y"
+            } else if (components.month >= 2) {
+                return "\(components.month) month"
+            } else if (components.month >= 1){
+                return "1 month"
+            } else if (components.day >= 2) {
+                return "\(components.day)d"
+            } else if (components.day >= 1){
+                return "1d"
+            } else if (components.hour >= 2) {
+                return "\(components.hour)hr"
+            } else if (components.hour >= 1){
+                return "1hr"
+            } else if (components.minute >= 2) {
+                return "\(components.minute)m"
+            } else if (components.minute >= 1){
+                return "1m"
+            } else if (components.second >= 20) {
+                return "\(components.second)s"
+            } else {
+                return "Just now"
+            }
         } else {
             return "Just now"
         }
