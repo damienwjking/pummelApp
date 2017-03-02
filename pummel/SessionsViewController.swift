@@ -320,6 +320,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     cell.messageLB.font = .pmmMonReg16()
                     cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
                 } else {
+                    cell.nameLB.font = .pmmMonLight13()
                     cell.messageLB.font = .pmmMonLight16()
                     cell.timeLB.textColor = UIColor.blackColor()
                     cell.isNewMessage = false
