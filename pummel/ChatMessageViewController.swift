@@ -515,18 +515,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if response.response?.statusCode == 200 {
                     self.getArrayChat()
                     self.textBox.text = ""
-                    self.textBox.resignFirstResponder()
-                    let dateFormatter = NSDateFormatter()
-                    dateFormatter.dateFormat = kFullDateFormat
-                    dateFormatter.timeZone = NSTimeZone(name: "UTC")
-                    let dayCurrent = dateFormatter.stringFromDate(NSDate())
-                    var prefixT = kPMAPIUSER
-                    prefixT.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                    prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
-                    prefixT.appendContentsOf("/")
-                    prefixT.appendContentsOf(self.messageId as String)
-                    
-                }
+                    self.textBox.resignFirstResponder()                }
         }
     }
     

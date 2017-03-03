@@ -14,6 +14,7 @@ class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLB: UILabel!
     @IBOutlet weak var timeLB: UILabel!
     @IBOutlet weak var messageLB: UILabel!
+    var targetId: String!
     var isNewMessage: Bool!
     override func awakeFromNib() {
         super.awakeFromNib()

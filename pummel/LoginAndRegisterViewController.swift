@@ -340,7 +340,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                         }
                                                     }
                                                     
-                                                case .Failure(let encodingError):
+                                                case .Failure(let _):
                                                     activityView.stopAnimating()
                                                     activityView.removeFromSuperview()
                                                     self.view.hideToastActivity()

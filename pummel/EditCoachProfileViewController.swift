@@ -756,7 +756,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                                 }
                             }
                             
-                        case .Failure(let encodingError):
+                        case .Failure(let _):
                             activityView.stopAnimating()
                             activityView.removeFromSuperview()
                         }

@@ -67,16 +67,16 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         let selectedImage = UIImage(named: "messagesSelcted")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
-        if (isGoToMessageDetail == false) {
+       // if (isGoToMessageDetail == false) {
             arrayMessages.removeAll()
             self.listMessageTB.reloadData()
             isStopLoadMessage = false
             offset = 0
             self.getMessage()
-        } else {
-            self.isGoToMessageDetail = false
-            self.getMessagetAtSaveIndexPathScrollView()
-        }
+//        } else {
+//            self.isGoToMessageDetail = false
+//            self.getMessagetAtSaveIndexPathScrollView()
+//        }
         
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             self.noMessageTitleLB.text = "Get Connections With Your Clients"
@@ -144,22 +144,10 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func getMessagetAtSaveIndexPathScrollView() {
-        let message = self.arrayMessages[(self.saveIndexPath?.row)!]
-        let messageID = message.objectForKey(kConversationId) as! Int
-        
-        var offset = 0;
-        for (messageItem) in self.arrayMessages {
-            let messageItemID = messageItem.objectForKey(kConversationId) as! Int
-            
-            if messageID > messageItemID {
-                offset = offset + 1
-            }
-        }
-        
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET)
-        prefix.appendContentsOf(String((offset)))
+        prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
+        prefix.appendContentsOf(String((self.saveIndexPath?.row)!))
         prefix.appendContentsOf(kPM_PATH_LIMIT_ONE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -168,8 +156,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 if (arrayMessageT.count > 0) {
                     self.arrayMessages.removeAtIndex((self.saveIndexPath?.row)!)
                     self.arrayMessages.insert(arrayMessageT[0], atIndex: (self.saveIndexPath?.row)!)
-                    
-                    self.sortMessage()
                     self.listMessageTB.reloadData()
                 }
             case .Failure(let error):
@@ -220,35 +206,19 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func sortMessage() {
-        if self.arrayMessages.count > 0 {
-            self.arrayMessages = self.arrayMessages.sort { (message1, message2) -> Bool in
-                let lastOpen1 = message1["conversation"]!["updatedAt"] as? String
-                if lastOpen1 == nil {
-                    return true
-                }
-                
-                let lastOpen2 = message2["conversation"]!["updatedAt"] as? String
-                if lastOpen2 == nil {
-                    return false
-                }
-                
-                return (lastOpen1!.compare(lastOpen2!) == NSComparisonResult.OrderedDescending)
-            }
-        }
-    }
-    
     func getMessage() {
         if (isStopLoadMessage == false) {
+            self.view.makeToastActivity(message: "Loading")
             isLoadingMessage = true
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET)
+            prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
             prefix.appendContentsOf(String(offset))
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
                     let arrayMessageT = JSON as! [NSDictionary]
+                    self.view.hideToastActivity()
                     if (arrayMessageT.count > 0) {
                         self.arrayMessages += arrayMessageT
                         self.isLoadingMessage = false
@@ -261,9 +231,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                         self.isLoadingMessage = false
                         self.isStopLoadMessage = true
                     }
-                    self.sortMessage()
                     self.view.bringSubviewToFront(self.noMessageV)
                 case .Failure(let error):
+                    self.view.hideToastActivity()
                     self.offset -= 10
                     self.isLoadingMessage = false
                     print("Request failed with error: \(error)")
@@ -292,174 +262,145 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             let cell = tableView.dequeueReusableCellWithIdentifier(kMessageTableViewCell, forIndexPath: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
             let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            
             //Get Text
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             prefix.appendContentsOf(kPM_PATH_CONVERSATION)
             prefix.appendContentsOf("/")
-            prefix.appendContentsOf(String(format:"%0.f", message[kConversationId]!.doubleValue))
-            prefix.appendContentsOf(kPM_PARTH_MESSAGE)
-            prefix.appendContentsOf("?limit=1")
+            prefix.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
+        
             
-            let timeAgo = message["conversation"]!["updatedAt"] as! String
+            let timeAgo = message["updatedAt"] as! String
             let dateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = kFullDateFormat
             dateFormatter.timeZone = NSTimeZone(name: "UTC")
             let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
             cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
             
-            if (message[kLastOpenAt] is NSNull) {
-                cell.nameLB.font = .pmmMonReg13()
-                cell.messageLB.font = .pmmMonReg16()
-                cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
-            } else {
-                let lastOpenAtM = dateFormatter.dateFromString(message[kLastOpenAt] as! String)
-                let updateAtM =  dateFormatter.dateFromString(message["conversation"]!["updatedAt"] as! String)
-                if (lastOpenAtM!.compare(updateAtM!) == NSComparisonResult.OrderedAscending) {
-                    cell.nameLB.font = .pmmMonReg13()
-                    cell.messageLB.font = .pmmMonReg16()
-                    cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
-                } else {
-                    cell.nameLB.font = .pmmMonLight13()
-                    cell.messageLB.font = .pmmMonLight16()
-                    cell.timeLB.textColor = UIColor.blackColor()
-                    cell.isNewMessage = false
-                }
-            }
-            
-            let messageText = message[kText] as? String
-            
-            if messageText?.isEmpty == false {
-                cell.messageLB.text = messageText
-            } else {
-                cell.messageLB.text = " "
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let arrayMessageThisConverId = JSON as! NSArray
-                        if (arrayMessageThisConverId.count != 0) {
-                            let messageDetail = arrayMessageThisConverId[0]
-                            if (!(messageDetail[kText] is NSNull)) {
-                                cell.messageLB.text = messageDetail[kText]  as? String
-                                if (messageDetail[kText] as! String == "") {
-                                    cell.messageLB.text = "Media message"
-                                }
-                            } else {
-                                if (!(messageDetail[kImageUrl] is NSNull)) {
-                                    cell.messageLB.text = sendYouAImage
-                                } else if (!(messageDetail[KVideoUrl] is NSNull)) {
-                                    cell.messageLB.text = sendYouAVideo
-                                } else
-                                {
-                                    cell.messageLB.text = "Media messge"
-                                }
-                            }
-                        } else {
-                            cell.messageLB.text = " "
-                        }
-                        
-                        // Update message
-                        let messageIndex = self.arrayMessages.indexOf(message)
-                        
-                        if messageIndex != nil {
-                            let mutaMessage = message.mutableCopy() as! NSMutableDictionary
-                            mutaMessage[kText] = cell.messageLB.text
-                            let newMessage = NSDictionary(dictionary: mutaMessage)
-                            
-                            self.arrayMessages.removeAtIndex(messageIndex!)
-                            self.arrayMessages.insert(newMessage, atIndex: messageIndex!)
-                        }
-                        
-                        
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
-                        }
-                }
-            }
-        
-            
-            let nameText = message[kFirstname] as? String
-            
-            if nameText?.isEmpty == false {
-                cell.nameLB.text = nameText?.uppercaseString
-                
-                let imageURL = message[kImageUrl] as? String
-                if (imageURL?.isEmpty == false) {
-                    var link = kPMAPI
-                    link.appendContentsOf(imageURL!)
-                    link.appendContentsOf(widthHeight160)
-                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                        cell.avatarIMV.image = imageRes
+            Alamofire.request(.GET, prefix)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    
+                    // Check which on is sender
+                    let conversationsUserArray = JSON as! NSArray
+                    let conversationMe : NSDictionary!
+                    let conversationTarget: NSDictionary!
+                    let converstationTemp = conversationsUserArray[0] as! NSDictionary
+                    if (String(format:"%0.f", converstationTemp[kUserId]!.doubleValue) == self.defaults.objectForKey(k_PM_CURRENT_ID) as! String) {
+                        conversationMe = conversationsUserArray[0] as! NSDictionary
+                        conversationTarget = conversationsUserArray[1]  as! NSDictionary
                     } else {
-                        cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+                        conversationMe = conversationsUserArray[1] as! NSDictionary
+                        conversationTarget = conversationsUserArray[0]  as! NSDictionary
                     }
-                } else {
-                    cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-                }
-            } else {
-                let conversations = message[kConversation] as! NSDictionary
-                let conversationUsers = conversations[kConversationUser] as! NSArray
-                var targetUser = conversationUsers[0] as! NSDictionary
-                
-                var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-                if (currentUserid == targetUserId){
-                    targetUser = conversationUsers[1] as! NSDictionary
-                    targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-                }
-                var prefixUser = kPMAPIUSER
-                prefixUser.appendContentsOf(targetUserId)
-                Alamofire.request(.GET, prefixUser)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let userInfo = JSON as! NSDictionary
+                    
+                    cell.targetId = String(format:"%0.f", conversationTarget[kUserId]!.doubleValue)
                         
-                        let name = userInfo.objectForKey(kFirstname) as! String
-                        cell.nameLB.text = name.uppercaseString
-                        
-                        var imageURL = userInfo.objectForKey(kImageUrl) as? String
-                        if (imageURL?.isEmpty == true) {
-                            imageURL = " "
+                    // Check New or old
+                    if (conversationMe[kLastOpenAt] is NSNull) {
+                        cell.nameLB.font = .pmmMonReg13()
+                        cell.messageLB.font = .pmmMonReg16()
+                        cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
+                    } else {
+                        let lastOpenAtM = dateFormatter.dateFromString(conversationMe[kLastOpenAt] as! String)
+                        let updateAtM =  dateFormatter.dateFromString(message["updatedAt"] as! String)
+                        if (lastOpenAtM!.compare(updateAtM!) == NSComparisonResult.OrderedAscending) {
+                            cell.nameLB.font = .pmmMonReg13()
+                            cell.messageLB.font = .pmmMonReg16()
+                            cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
+                        } else {
+                            cell.nameLB.font = .pmmMonLight13()
+                            cell.messageLB.font = .pmmMonLight16()
+                            cell.timeLB.textColor = UIColor.blackColor()
+                            cell.isNewMessage = false
                         }
-                        
-                        // Update message
-                        let messageIndex = self.arrayMessages.indexOf(message)
-                        
-                        if messageIndex != nil {
-                            let mutaMessage = message.mutableCopy() as! NSMutableDictionary
-                            mutaMessage[kFirstname] = name
-                            mutaMessage[kImageUrl] = imageURL
-                            let newMessage = NSDictionary(dictionary: mutaMessage)
+                    }
+                    
+                    // Get name
+                    var prefixUser = kPMAPIUSER
+                    prefixUser.appendContentsOf(String(format:"%0.f", conversationTarget[kUserId]!.doubleValue))
+                    Alamofire.request(.GET, prefixUser)
+                        .responseJSON { response in switch response.result {
+                        case .Success(let JSON):
+                            let userInfo = JSON as! NSDictionary
                             
-                            self.arrayMessages.removeAtIndex(messageIndex!)
-                            self.arrayMessages.insert(newMessage, atIndex: messageIndex!)
-                        }
-                        
-                        var link = kPMAPI
-                        if !(JSON[kImageUrl] is NSNull) {
-                            link.appendContentsOf(JSON[kImageUrl] as! String)
-                            link.appendContentsOf(widthHeight160)
-                            if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                                let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                                cell.avatarIMV.image = imageRes
-                            } else {
-                                Alamofire.request(.GET, link)
-                                    .responseImage { response in
-                                        if (response.response?.statusCode == 200) {
-                                            let imageRes = response.result.value! as UIImage
-                                            NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                            tableView.reloadData()
-                                        }
+                            let name = userInfo.objectForKey(kFirstname) as! String
+                            cell.nameLB.text = name.uppercaseString
+                            
+                            var imageURL = userInfo.objectForKey(kImageUrl) as? String
+                            if (imageURL?.isEmpty == true) {
+                                imageURL = " "
+                            }
+                            
+                            var link = kPMAPI
+                            if !(JSON[kImageUrl] is NSNull) {
+                                link.appendContentsOf(JSON[kImageUrl] as! String)
+                                link.appendContentsOf(widthHeight160)
+                                if (NSCache.sharedInstance.objectForKey(link) != nil) {
+                                    let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                                    cell.avatarIMV.image = imageRes
+                                } else {
+                                    Alamofire.request(.GET, link)
+                                        .responseImage { response in
+                                            if (response.response?.statusCode == 200) {
+                                                let imageRes = response.result.value! as UIImage
+                                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                                                tableView.reloadData()
+                                            }
+                                    }
                                 }
+                            } else {
+                                cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+                            }
+                            
+                        case .Failure(let error):
+                            print("Request failed with error: \(error)")
+                            }
+                    }
+                    
+                    
+                    
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+            }
+            
+            // Get last text
+            var prefixT = kPMAPIUSER
+            prefixT.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
+            prefixT.appendContentsOf("/")
+            prefixT.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
+            prefixT.appendContentsOf("/messages")
+            cell.messageLB.text = " "
+            Alamofire.request(.GET, prefixT)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    let arrayMessageThisConverId = JSON as! NSArray
+                    if (arrayMessageThisConverId.count != 0) {
+                        let messageDetail = arrayMessageThisConverId[0]
+                        if (!(messageDetail[kText] is NSNull)) {
+                            cell.messageLB.text = messageDetail[kText]  as? String
+                            if (messageDetail[kText] as! String == "") {
+                                cell.messageLB.text = "Media message"
                             }
                         } else {
-                            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+                            if (!(messageDetail[kImageUrl] is NSNull)) {
+                                cell.messageLB.text = sendYouAImage
+                            } else if (!(messageDetail[KVideoUrl] is NSNull)) {
+                                cell.messageLB.text = sendYouAVideo
+                            } else
+                            {
+                                cell.messageLB.text = "Media messge"
+                            }
                         }
-                        
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
-                        }
-                }
+                    } else {
+                        cell.messageLB.text = " "
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
             }
             
             return cell
@@ -509,12 +450,12 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     func clickOnConnectionImage(indexPath: NSIndexPath) {
         self.saveIndexPath = indexPath
         let message = arrayMessages[indexPath.row]
-        let messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
+        let messageId = String(format:"%0.f", message[kId]!.doubleValue)
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_CONVERSATION_V2)
         prefix.appendContentsOf("/")
-        prefix.appendContentsOf(String(format:"%0.f", message[kConversationId]!.doubleValue))
+        prefix.appendContentsOf(messageId)
         Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -533,6 +474,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 }
         }
     }
+    
     
     func clickOnRowMessage(indexPath: NSIndexPath) {
         let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
@@ -740,17 +682,10 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
             let message = arrayMessages[indexPathRow]
-            let conversations = message[kConversation] as! NSDictionary
-            let conversationUsers = conversations[kConversationUser] as! NSArray
-            var targetUser = conversationUsers[0] as! NSDictionary
-            var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-            let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
-            if (currentUserid == targetUserId){
-                targetUser = conversationUsers[1] as! NSDictionary
-                targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-            }
-            destinationVC.userIdTarget = targetUserId
-            destinationVC.messageId = String(format:"%0.f", message[kConversationId]!.doubleValue)
+            let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
+            
+            destinationVC.userIdTarget = cell.targetId
+            destinationVC.messageId = String(format:"%0.f", message[kId]!.doubleValue)
         }
         
         if (segue.identifier == kGoUserProfile) {
@@ -779,7 +714,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         } else if (components.year >= 1){
             return "1y"
         } else if (components.month >= 2) {
-            return "\(components.month)m"
+            return "\(components.month)month"
         } else if (components.month >= 1){
             return "1m"
         } else if (components.day >= 2) {
