@@ -80,8 +80,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
        // if (isGoToMessageDetail == false) {
 //            arrayMessages.removeAll()
             self.listMessageTB.reloadData()
-            isStopLoadMessage = false
-            offset = 0
+//            isStopLoadMessage = false
+//            offset = 0
 //            self.getMessage()
 //        } else {
 //            self.isGoToMessageDetail = false
