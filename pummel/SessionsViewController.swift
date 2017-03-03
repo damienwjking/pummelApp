@@ -64,6 +64,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.refreshControl = UIRefreshControl()
         self.refreshControl.addTarget(self, action: #selector(refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
         self.listMessageTB.addSubview(self.refreshControl)
+        
+        self.getMessage()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -76,11 +78,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
        // if (isGoToMessageDetail == false) {
-            arrayMessages.removeAll()
+//            arrayMessages.removeAll()
             self.listMessageTB.reloadData()
             isStopLoadMessage = false
             offset = 0
-            self.getMessage()
+//            self.getMessage()
 //        } else {
 //            self.isGoToMessageDetail = false
 //            self.getMessagetAtSaveIndexPathScrollView()
@@ -125,8 +127,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        let touch3DType = self.defaults.objectForKey(k_PM_3D_TOUCH) as! String
         if touch3DType == "3dTouch_3" {
             defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
             self.newMessage()
