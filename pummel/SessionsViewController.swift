@@ -143,6 +143,27 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if (scrollView == self.listMessageTB) {
+            if(velocity.y>0){
+                if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+                    self.listMessageTBTopDistance!.constant = 0
+                    self.scrollTableView.hidden = true
+                    self.connectionsLB!.hidden = true
+                    self.separeateline?.hidden = true
+                }
+            }else{
+                if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+                    self.scrollTableView.hidden = false
+                    self.listMessageTBTopDistance!.constant = 180
+                    self.connectionsLB!.hidden = false
+                    self.separeateline?.hidden = false
+                }
+            }
+        }
+        
+    }
+    
     func getMessagetAtSaveIndexPathScrollView() {
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
