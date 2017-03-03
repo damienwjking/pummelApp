@@ -734,8 +734,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         if (tableView == listMessageTB) {
             var offsetPoint = tableView.contentOffset
-            if (self.scrollTableView.hidden == false) {
-                offsetPoint.y = offsetPoint.y + 180
+            
+            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+                if (self.scrollTableView.hidden == true) {
+                    offsetPoint.y = offsetPoint.y + 180
+                }
             }
             
             self.currentContentOffset = offsetPoint
