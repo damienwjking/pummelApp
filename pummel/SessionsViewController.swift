@@ -26,7 +26,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var noMessageDetailLB: UILabel!
     @IBOutlet weak var startConversationBT: UIButton!
     
-    var arrayMessages: [NSDictionary] = []
+    var arrayMessages: [NSMutableDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
     var dataSourceArr : [NSDictionary] = []
     var scrollTableView : UITableView!
@@ -212,7 +212,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                let arrayMessageT = JSON as! [NSDictionary]
+                let arrayMessageT = JSON as! [NSMutableDictionary]
                 if (arrayMessageT.count > 0) {
                     self.arrayMessages.removeAtIndex((self.saveIndexPath?.row)!)
                     self.arrayMessages.insert(arrayMessageT[0], atIndex: (self.saveIndexPath?.row)!)
@@ -283,7 +283,10 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                         let arrayMessageT = JSON as! [NSDictionary]
                         self.view.hideToastActivity()
                         if (arrayMessageT.count > 0) {
-                            self.arrayMessages += arrayMessageT
+                            for (message) in arrayMessageT {
+                                self.arrayMessages.append(message.mutableCopy() as! NSMutableDictionary)
+                            }
+                            
                             self.isLoadingMessage = false
                             self.listMessageTB.reloadData()
                             self.noMessageV.hidden = true
@@ -345,6 +348,20 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
             cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
             
+            let nameString: String? = message[kFirstname] as? String
+            if nameString?.isEmpty == false {
+                cell.nameLB.text = nameString
+            } else {
+                cell.nameLB.text = ""
+            }
+            
+            let userImage = message["userImage"] as? UIImage
+            if userImage != nil {
+                cell.avatarIMV.image = userImage
+            } else {
+                cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+            }
+            
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -394,6 +411,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                             
                             let name = userInfo.objectForKey(kFirstname) as! String
                             cell.nameLB.text = name.uppercaseString
+                            message[kFirstname] = cell.nameLB.text
                             
                             var imageURL = userInfo.objectForKey(kImageUrl) as? String
                             if (imageURL?.isEmpty == true) {
@@ -410,6 +428,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                                     dispatch_async(dispatch_get_main_queue(),{
                                         if updateCell != nil {
                                             cell.avatarIMV.image = imageRes
+                                            message["userImage"] = imageRes
                                         }
                                     })
                                 } else {
@@ -422,6 +441,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                                                 dispatch_async(dispatch_get_main_queue(),{
                                                     if updateCell != nil {
                                                         cell.avatarIMV.image = imageRes
+                                                        message["userImage"] = imageRes
                                                     }
                                                 })
                                             }
@@ -429,6 +449,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                                 }
                             } else {
                                 cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
+                                message["userImage"] = UIImage(named:"display-empty.jpg")
                             }
                             
                         case .Failure(let error):
