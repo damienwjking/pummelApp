@@ -40,6 +40,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     var arrayListLead :[NSDictionary] = []
     var separeateline: UIView?
     
+    var refreshControl: UIRefreshControl!
+    
     private struct Constants {
         static let ContentSize: CGSize = CGSize(width: 80, height: 96.0)
     }
@@ -56,6 +58,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.noMessageDetailLB.font = UIFont.pmmMonLight13()
         self.startConversationBT.titleLabel!.font = UIFont.pmmMonReg12()
         
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.addTarget(self, action: #selector(refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
+        self.listMessageTB.addSubview(self.refreshControl)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -122,6 +127,16 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         if touch3DType == "3dTouch_3" {
             defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
             self.newMessage()
+        }
+    }
+    
+    func refreshControlTable() {
+        if (self.isLoadingMessage == false) {
+            self.gotNewMessage()
+            
+            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+                self.getListLead()
+            }
         }
     }
     
@@ -215,29 +230,32 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
             prefix.appendContentsOf(String(offset))
             Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let arrayMessageT = JSON as! [NSDictionary]
-                    self.view.hideToastActivity()
-                    if (arrayMessageT.count > 0) {
-                        self.arrayMessages += arrayMessageT
-                        self.isLoadingMessage = false
-                        self.listMessageTB.reloadData()
-                        self.noMessageV.hidden = true
-                    } else {
-                        if self.arrayMessages.count <= 0 {
-                            self.noMessageV.hidden = false
+                .responseJSON { response in
+                    switch response.result {
+                    case .Success(let JSON):
+                        let arrayMessageT = JSON as! [NSDictionary]
+                        self.view.hideToastActivity()
+                        if (arrayMessageT.count > 0) {
+                            self.arrayMessages += arrayMessageT
+                            self.isLoadingMessage = false
+                            self.listMessageTB.reloadData()
+                            self.noMessageV.hidden = true
+                        } else {
+                            if self.arrayMessages.count <= 0 {
+                                self.noMessageV.hidden = false
+                            }
+                            self.isLoadingMessage = false
+                            self.isStopLoadMessage = true
                         }
+                        self.view.bringSubviewToFront(self.noMessageV)
+                    case .Failure(let error):
+                        self.view.hideToastActivity()
+                        self.offset -= 10
                         self.isLoadingMessage = false
-                        self.isStopLoadMessage = true
+                        print("Request failed with error: \(error)")
                     }
-                    self.view.bringSubviewToFront(self.noMessageV)
-                case .Failure(let error):
-                    self.view.hideToastActivity()
-                    self.offset -= 10
-                    self.isLoadingMessage = false
-                    print("Request failed with error: \(error)")
-                }
+                    
+                    self.refreshControl.endRefreshing()
             }
         }
     }
