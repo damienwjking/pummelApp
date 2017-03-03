@@ -733,7 +733,12 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         var properties = ["Name": "Navigation Click", "Label":"Go Chat"]
         
         if (tableView == listMessageTB) {
-            self.currentContentOffset = tableView.contentOffset
+            var offsetPoint = tableView.contentOffset
+            if ((self.scrollTableView) == true) {
+                offsetPoint.y = offsetPoint.y + 180
+            }
+            
+            self.currentContentOffset = offsetPoint
             
             self.clickOnConnectionImage(indexPath)
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
