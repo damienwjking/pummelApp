@@ -130,6 +130,18 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.connectionsLB?.hidden = true
+        self.separeateline?.hidden = true
+        self.scrollTableView.hidden = true
+        
+        self.connectionsLB?.removeAllSubviews()
+        self.separeateline?.removeAllSubviews()
+        self.scrollTableView.removeAllSubviews()
+    }
+    
     func refreshControlTable() {
         if (self.isLoadingMessage == false) {
             self.gotNewMessage()
@@ -160,21 +172,25 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if (scrollView == self.listMessageTB) {
-            if(velocity.y>0){
+            if(velocity.y > 0){
                 if (defaults.boolForKey(k_PM_IS_COACH) == true) {
                     self.listMessageTBTopDistance!.constant = 0
                     self.scrollTableView.hidden = true
                     self.connectionsLB!.hidden = true
                     self.separeateline?.hidden = true
                 }
-            }else{
+            } else {
                 if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-                    self.scrollTableView.hidden = false
                     self.listMessageTBTopDistance!.constant = 180
+                    self.scrollTableView.hidden = false
                     self.connectionsLB!.hidden = false
                     self.separeateline?.hidden = false
                 }
             }
+            
+            UIView.animateWithDuration(0.3, animations: {
+                self.view.layoutIfNeeded()
+            })
         }
         
     }
@@ -495,8 +511,12 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         prefix.appendContentsOf(kPM_PATH_CONVERSATION_V2)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(messageId)
+        
+        self.view.makeToastActivity(message: "Loading")
         Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
             .responseJSON { response in
+                self.view.hideToastActivity()
+                
                 if response.response?.statusCode == 200 {
                     self.isGoToMessageDetail = true
                     self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)

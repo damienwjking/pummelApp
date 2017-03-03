@@ -95,7 +95,9 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let offset = self.arrayListUserResult.count
             prefix.appendContentsOf(String(offset))
             prefix.appendContentsOf("&character=")
-            prefix.appendContentsOf(self.toUserTF.text!)
+//            prefix.appendContentsOf(self.toUserTF.text!)
+            prefix.appendContentsOf(self.toUserTF.text!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+            
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
