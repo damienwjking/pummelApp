@@ -133,13 +133,14 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.connectionsLB?.hidden = true
-        self.separeateline?.hidden = true
-        self.scrollTableView.hidden = true
-        
-        self.connectionsLB?.removeAllSubviews()
-        self.separeateline?.removeAllSubviews()
-        self.scrollTableView.removeAllSubviews()
+        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.connectionsLB?.hidden = true
+            self.separeateline?.hidden = true
+            self.scrollTableView.hidden = true
+            self.connectionsLB?.removeAllSubviews()
+            self.separeateline?.removeAllSubviews()
+            self.scrollTableView.removeAllSubviews()
+        }
     }
     
     func refreshControlTable() {
@@ -260,7 +261,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func getMessage() {
         if (isStopLoadMessage == false) {
-            self.view.makeToastActivity(message: "Loading")
+            if (offset == 0) {
+                self.view.makeToastActivity(message: "Loading")
+            }
             isLoadingMessage = true
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -320,7 +323,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             
             //Get Text
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(currentUserid)
             prefix.appendContentsOf(kPM_PATH_CONVERSATION)
             prefix.appendContentsOf("/")
             prefix.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
@@ -394,14 +397,24 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                                 link.appendContentsOf(widthHeight160)
                                 if (NSCache.sharedInstance.objectForKey(link) != nil) {
                                     let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                                    cell.avatarIMV.image = imageRes
+                                    let updateCell = tableView .cellForRowAtIndexPath(indexPath)
+                                    dispatch_async(dispatch_get_main_queue(),{
+                                        if updateCell != nil {
+                                            cell.avatarIMV.image = imageRes
+                                        }
+                                    })
                                 } else {
                                     Alamofire.request(.GET, link)
                                         .responseImage { response in
                                             if (response.response?.statusCode == 200) {
                                                 let imageRes = response.result.value! as UIImage
                                                 NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                                tableView.reloadData()
+                                                let updateCell = tableView .cellForRowAtIndexPath(indexPath)
+                                                dispatch_async(dispatch_get_main_queue(),{
+                                                    if updateCell != nil {
+                                                        cell.avatarIMV.image = imageRes
+                                                    }
+                                                })
                                             }
                                     }
                                 }
