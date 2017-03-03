@@ -40,6 +40,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     var arrayListLead :[NSDictionary] = []
     var separeateline: UIView?
     
+    var currentContentOffset = CGPointZero
+    
     var refreshControl: UIRefreshControl!
     
     private struct Constants {
@@ -51,8 +53,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.listMessageTB.delegate = self
         self.listMessageTB.dataSource = self
         self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(SessionsViewController.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.refreshControlTable), name: "SEND_CHAT_MESSAGE", object: nil)
         
         self.noMessageTitleLB.font = UIFont.pmmPlayFairReg18()
         self.noMessageDetailLB.font = UIFont.pmmMonLight13()
@@ -145,6 +148,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func refreshControlTable() {
         if (self.isLoadingMessage == false) {
+            self.currentContentOffset = CGPointZero
+            self.listMessageTB.contentOffset = CGPointZero
+            
             self.gotNewMessage()
             
             if (defaults.boolForKey(k_PM_IS_COACH) == true) {
@@ -296,6 +302,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     }
                     
                     self.refreshControl.endRefreshing()
+                    
+                    self.listMessageTB.contentOffset = self.currentContentOffset
             }
         }
     }
@@ -703,6 +711,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         var properties = ["Name": "Navigation Click", "Label":"Go Chat"]
         
         if (tableView == listMessageTB) {
+            self.currentContentOffset = tableView.contentOffset
+            
             self.clickOnConnectionImage(indexPath)
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {

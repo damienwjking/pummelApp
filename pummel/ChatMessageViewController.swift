@@ -33,6 +33,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     var preMessage: String = ""
     
     var isSending: Bool = false
+    var isSendMessage = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -438,6 +439,10 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     // MARK: Outlet function
     func cancel() {
+        if self.isSendMessage {
+            NSNotificationCenter.defaultCenter().postNotificationName("SEND_CHAT_MESSAGE", object: nil)
+        }
+        
         self.navigationController?.popViewControllerAnimated(true)
     }
     
@@ -536,6 +541,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             } else {
                 self.sendMessage(true)
             }
+            
+            self.isSendMessage = true
             
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
