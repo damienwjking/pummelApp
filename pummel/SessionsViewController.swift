@@ -19,26 +19,29 @@ import Mixpanel
 class SessionsViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var listMessageTB: UITableView!
-    @IBOutlet var listMessageTBTopDistance : NSLayoutConstraint?
+//    @IBOutlet var listMessageTBTopDistance : NSLayoutConstraint?
+    
+    @IBOutlet weak var horizontalViewHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var noMessageV: UIView!
     @IBOutlet weak var noMessageTitleLB: UILabel!
     @IBOutlet weak var noMessageDetailLB: UILabel!
     @IBOutlet weak var startConversationBT: UIButton!
     
+    @IBOutlet weak var scrollTableView : UITableView!
+    @IBOutlet weak var connectionsLB : UILabel?
+    var separeateline: UIView?
+    
     var arrayMessages: [NSMutableDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
     var dataSourceArr : [NSDictionary] = []
-    var scrollTableView : UITableView!
     var offset : Int = 0
     var isStopLoadMessage : Bool = false
     var isLoadingMessage : Bool = false
     var saveIndexPath: NSIndexPath?
     var isGoToMessageDetail : Bool = false
     var saveIndexPathScrollView : NSIndexPath?
-    var connectionsLB : UILabel?
     var arrayListLead :[NSDictionary] = []
-    var separeateline: UIView?
     
     var currentContentOffset = CGPointZero
     
@@ -91,20 +94,28 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             self.noMessageTitleLB.text = "Get Connections With Your Clients"
             
-            connectionsLB = UILabel.init(frame: CGRectMake(0, 15, self.view.frame.size.width, 14))
+            
+            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+                self.connectionsLB?.hidden = true
+                self.separeateline?.hidden = true
+                self.scrollTableView.hidden = true
+                self.connectionsLB?.removeAllSubviews()
+                self.separeateline?.removeAllSubviews()
+                self.scrollTableView.removeAllSubviews()
+            }
             connectionsLB!.font = .pmmMonReg13()
             connectionsLB!.textColor = UIColor.pmmWarmGreyColor()
             connectionsLB!.textAlignment = .Center
             connectionsLB!.text = kNewConnections
             self.view.addSubview(connectionsLB!)
-            self.listMessageTBTopDistance!.constant = 180
+            self.horizontalViewHeightConstraint!.constant = 180
             
-            let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
-            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-                self.scrollTableView = UITableView(frame: CGRectMake(112, -50, 96, self.view.frame.size.width))
-            } else {
-                self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
-            }
+//            let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+//            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+//                self.scrollTableView = UITableView(frame: CGRectMake(112, -50, 96, self.view.frame.size.width))
+//            } else {
+//                self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
+//            }
             self.arrayListLead.removeAll()
             self.scrollTableView.reloadData()
             self.getListLead()
@@ -117,6 +128,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             self.scrollTableView.showsVerticalScrollIndicator = false
             separeateline = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
             separeateline!.backgroundColor = UIColor.pmmWhiteColor()
+            
+            
+            
             self.view.addSubview(separeateline!)
             self.view.bringSubviewToFront(self.noMessageV)
         } else {
@@ -182,14 +196,14 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         if (scrollView == self.listMessageTB) {
             if(velocity.y > 0){
                 if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-                    self.listMessageTBTopDistance!.constant = 0
+                    self.horizontalViewHeightConstraint!.constant = 0
                     self.scrollTableView.hidden = true
                     self.connectionsLB!.hidden = true
                     self.separeateline?.hidden = true
                 }
             } else {
                 if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-                    self.listMessageTBTopDistance!.constant = 180
+                    self.horizontalViewHeightConstraint!.constant = 180
                     self.scrollTableView.hidden = false
                     self.connectionsLB!.hidden = false
                     self.separeateline?.hidden = false
@@ -246,17 +260,15 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 self.arrayListLead = JSON as! [NSDictionary]
-                self.scrollTableView.delegate = self
-                self.scrollTableView.dataSource = self
                 self.scrollTableView.reloadData()
                 if (self.arrayListLead.count == 0) {
-                    self.listMessageTBTopDistance!.constant = 0
+                    self.horizontalViewHeightConstraint!.constant = 0
                     self.scrollTableView.hidden = true
                     self.connectionsLB!.hidden = true
                     self.separeateline?.hidden = true
                 } else {
                     self.scrollTableView.hidden = false
-                    self.listMessageTBTopDistance!.constant = 180
+                    self.horizontalViewHeightConstraint!.constant = 180
                     self.connectionsLB!.hidden = false
                     self.separeateline?.hidden = false
                 }
