@@ -28,9 +28,10 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var noMessageDetailLB: UILabel!
     @IBOutlet weak var startConversationBT: UIButton!
     
-    @IBOutlet weak var scrollTableView : UITableView!
+    @IBOutlet weak var horizontalView: UIView!
+    @IBOutlet weak var horizontalTableView : UITableView!
     @IBOutlet weak var connectionsLB : UILabel?
-    var separeateline: UIView?
+    @IBOutlet weak var separeateline: UIView?
     
     var arrayMessages: [NSMutableDictionary] = []
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -60,6 +61,13 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.refreshControlTable), name: "SEND_CHAT_MESSAGE", object: nil)
         
+        self.connectionsLB!.font = .pmmMonReg13()
+        self.connectionsLB!.textColor = UIColor.pmmWarmGreyColor()
+        self.connectionsLB!.text = kNewConnections
+        
+        self.horizontalTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
+        self.separeateline!.backgroundColor = UIColor.pmmWhiteColor()
+        
         self.noMessageTitleLB.font = UIFont.pmmPlayFairReg18()
         self.noMessageDetailLB.font = UIFont.pmmMonLight13()
         self.startConversationBT.titleLabel!.font = UIFont.pmmMonReg12()
@@ -72,67 +80,17 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController?.title = kNavMessage
-        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        let image = UIImage(named: "newmessage")!.imageWithRenderingMode(.AlwaysOriginal)
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(SessionsViewController.newMessage))
-        let selectedImage = UIImage(named: "messagesSelcted")
-        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
-        self.tabBarController?.navigationItem.leftBarButtonItem = nil
-       // if (isGoToMessageDetail == false) {
-//            arrayMessages.removeAll()
-            self.listMessageTB.reloadData()
-//            isStopLoadMessage = false
-//            offset = 0
-//            self.getMessage()
-//        } else {
-//            self.isGoToMessageDetail = false
-//            self.getMessagetAtSaveIndexPathScrollView()
-//        }
+        self.initNavigationBar()
+        
+        self.listMessageTB.reloadData()
+        
+        self.getListLead()
+        self.horizontalViewHeightConstraint!.constant = 0
+        
+        self.view.bringSubviewToFront(self.noMessageV)
         
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             self.noMessageTitleLB.text = "Get Connections With Your Clients"
-            
-            
-            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-                self.connectionsLB?.hidden = true
-                self.separeateline?.hidden = true
-                self.scrollTableView.hidden = true
-                self.connectionsLB?.removeAllSubviews()
-                self.separeateline?.removeAllSubviews()
-                self.scrollTableView.removeAllSubviews()
-            }
-            connectionsLB!.font = .pmmMonReg13()
-            connectionsLB!.textColor = UIColor.pmmWarmGreyColor()
-            connectionsLB!.textAlignment = .Center
-            connectionsLB!.text = kNewConnections
-            self.view.addSubview(connectionsLB!)
-            self.horizontalViewHeightConstraint!.constant = 180
-            
-//            let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
-//            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-//                self.scrollTableView = UITableView(frame: CGRectMake(112, -50, 96, self.view.frame.size.width))
-//            } else {
-//                self.scrollTableView = UITableView(frame: CGRectMake(150, -96, 96, self.view.frame.size.width))
-//            }
-            self.arrayListLead.removeAll()
-            self.scrollTableView.reloadData()
-            self.getListLead()
-            self.view.addSubview(scrollTableView)
-            self.scrollTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
-            self.scrollTableView.separatorStyle = .None
-            self.scrollTableView.rowHeight = 96
-            self.scrollTableView.separatorStyle = .None
-            self.scrollTableView.showsHorizontalScrollIndicator = false
-            self.scrollTableView.showsVerticalScrollIndicator = false
-            separeateline = UIView.init(frame: CGRectMake(0, 179.5, self.view.frame.width, 0.5))
-            separeateline!.backgroundColor = UIColor.pmmWhiteColor()
-            
-            
-            
-            self.view.addSubview(separeateline!)
-            self.view.bringSubviewToFront(self.noMessageV)
         } else {
             self.noMessageTitleLB.text = "Get Connections With Your Coaches"
         }
@@ -150,15 +108,17 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-            self.connectionsLB?.hidden = true
-            self.separeateline?.hidden = true
-            self.scrollTableView.hidden = true
-            self.connectionsLB?.removeAllSubviews()
-            self.separeateline?.removeAllSubviews()
-            self.scrollTableView.removeAllSubviews()
-        }
+    }
+    
+    func initNavigationBar() {
+        self.tabBarController?.title = kNavMessage
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        let image = UIImage(named: "newmessage")!.imageWithRenderingMode(.AlwaysOriginal)
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(SessionsViewController.newMessage))
+        let selectedImage = UIImage(named: "messagesSelcted")
+        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
+        self.tabBarController?.navigationItem.leftBarButtonItem = nil
     }
     
     func refreshControlTable() {
@@ -193,28 +153,19 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if (scrollView == self.listMessageTB) {
-            if(velocity.y > 0){
-                if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+            if (scrollView == self.listMessageTB) {
+                if(velocity.y > 0){
                     self.horizontalViewHeightConstraint!.constant = 0
-                    self.scrollTableView.hidden = true
-                    self.connectionsLB!.hidden = true
-                    self.separeateline?.hidden = true
-                }
-            } else {
-                if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+                } else {
                     self.horizontalViewHeightConstraint!.constant = 180
-                    self.scrollTableView.hidden = false
-                    self.connectionsLB!.hidden = false
-                    self.separeateline?.hidden = false
                 }
+                
+                UIView.animateWithDuration(0.3, animations: {
+                    self.view.layoutIfNeeded()
+                })
             }
-            
-            UIView.animateWithDuration(0.3, animations: {
-                self.view.layoutIfNeeded()
-            })
         }
-        
     }
     
     func getMessagetAtSaveIndexPathScrollView() {
@@ -260,17 +211,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 self.arrayListLead = JSON as! [NSDictionary]
-                self.scrollTableView.reloadData()
+                self.horizontalTableView.reloadData()
                 if (self.arrayListLead.count == 0) {
                     self.horizontalViewHeightConstraint!.constant = 0
-                    self.scrollTableView.hidden = true
-                    self.connectionsLB!.hidden = true
-                    self.separeateline?.hidden = true
                 } else {
-                    self.scrollTableView.hidden = false
                     self.horizontalViewHeightConstraint!.constant = 180
-                    self.connectionsLB!.hidden = false
-                    self.separeateline?.hidden = false
                 }
             case .Failure(let error):
                 print("Request failed with error: \(error)")
@@ -329,9 +274,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         // Dispose of any resources that can be recreated.
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
-    {
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) { if (tableView == self.scrollTableView) {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+            if (tableView == self.horizontalTableView) {
                 return 96
             }
         }
@@ -601,7 +546,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     self.saveIndexPath = indexPath
                     self.isGoToMessageDetail = true
                     self.listMessageTB.deselectRowAtIndexPath(indexPath, animated: false)
-                    let cell = self.scrollTableView.cellForRowAtIndexPath(indexPath) as! HorizontalCell
+                    let cell = self.horizontalTableView.cellForRowAtIndexPath(indexPath) as! HorizontalCell
                     
                     if (cell.imageV.image != nil) {
                         self.view.makeToastActivity(message: "Loading")
@@ -748,7 +693,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             var offsetPoint = tableView.contentOffset
             
             if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-                if (self.scrollTableView.hidden == true) {
+                if (self.horizontalTableView.hidden == true) {
                     offsetPoint.y = offsetPoint.y + 180
                 }
             }
