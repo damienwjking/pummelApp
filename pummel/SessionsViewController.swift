@@ -44,7 +44,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     var saveIndexPathScrollView : NSIndexPath?
     var arrayListLead :[NSDictionary] = []
     
-    var currentContentOffset = CGPointZero
+//    var currentContentOffset = CGPointZero
     
     var refreshControl: UIRefreshControl!
     
@@ -77,15 +77,15 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.listMessageTB.addSubview(self.refreshControl)
         
         self.getMessage()
+        
+        self.getListLead()
+        self.horizontalViewHeightConstraint!.constant = 0
     }
     
     override func viewWillAppear(animated: Bool) {
         self.initNavigationBar()
         
         self.listMessageTB.reloadData()
-        
-        self.getListLead()
-        self.horizontalViewHeightConstraint!.constant = 0
         
         self.view.bringSubviewToFront(self.noMessageV)
         
@@ -123,7 +123,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func refreshControlTable() {
         if (self.isLoadingMessage == false) {
-            self.currentContentOffset = CGPointZero
+//            self.currentContentOffset = CGPointZero
             self.listMessageTB.contentOffset = CGPointZero
             
             self.gotNewMessage()
@@ -245,8 +245,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                             }
                             
                             self.isLoadingMessage = false
-                            self.listMessageTB.reloadData()
                             self.noMessageV.hidden = true
+                            
+                             self.listMessageTB.reloadData()
                         } else {
                             if self.arrayMessages.count <= 0 {
                                 self.noMessageV.hidden = false
@@ -254,7 +255,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                             self.isLoadingMessage = false
                             self.isStopLoadMessage = true
                         }
-                        self.view.bringSubviewToFront(self.noMessageV)
                     case .Failure(let error):
                         self.view.hideToastActivity()
                         self.offset -= 10
@@ -264,7 +264,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     
                     self.refreshControl.endRefreshing()
                     
-                    self.listMessageTB.contentOffset = self.currentContentOffset
+//                    self.listMessageTB.contentOffset = self.currentContentOffset
             }
         }
     }
@@ -698,7 +698,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 }
             }
             
-            self.currentContentOffset = offsetPoint
+//            self.currentContentOffset = offsetPoint
             
             self.clickOnConnectionImage(indexPath)
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
