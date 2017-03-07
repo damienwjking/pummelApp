@@ -440,6 +440,16 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             let message = arrayMessages[indexPath.row]
             let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
             
+            // TargetID
+            let targerID = message["targetId"] as? String
+            if (targerID?.isEmpty == false) {
+                cell.targetId = targerID
+                cell.userInteractionEnabled = true
+            } else {
+                cell.userInteractionEnabled = false
+            }
+            
+            
             //Get Text
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(currentUserid)
