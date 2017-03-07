@@ -123,14 +123,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func refreshControlTable() {
         if (self.isLoadingMessage == false) {
-//            self.currentContentOffset = CGPointZero
             self.listMessageTB.contentOffset = CGPointZero
             
             self.gotNewMessage()
             
-            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-                self.getListLead()
-            }
+            self.getListLead()
         }
     }
     
@@ -263,8 +260,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     }
                     
                     self.refreshControl.endRefreshing()
-                    
-//                    self.listMessageTB.contentOffset = self.currentContentOffset
             }
         }
     }
@@ -690,16 +685,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         var properties = ["Name": "Navigation Click", "Label":"Go Chat"]
         
         if (tableView == listMessageTB) {
-            var offsetPoint = tableView.contentOffset
-            
-            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-                if (self.horizontalTableView.hidden == true) {
-                    offsetPoint.y = offsetPoint.y + 180
-                }
-            }
-            
-//            self.currentContentOffset = offsetPoint
-            
             self.clickOnConnectionImage(indexPath)
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
