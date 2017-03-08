@@ -16,34 +16,22 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMW: UIImageView!
     @IBOutlet weak var changeAvatarIMW: UIImageView!
+    
     @IBOutlet weak var nameLB: UILabel!
     @IBOutlet weak var nameContentTF: UITextField!
     @IBOutlet weak var aboutLB: UILabel!
     @IBOutlet weak var aboutContentTV: TextViewAutoHeight!
     @IBOutlet weak var aboutContentDT: NSLayoutConstraint!
+    
     @IBOutlet weak var privateInformationLB: UILabel!
-    @IBOutlet weak var trainerInfomationLB: UILabel!
     @IBOutlet weak var emailLB: UILabel!
     @IBOutlet weak var emailContentTF: UITextField!
+    @IBOutlet weak var mobileLB: UILabel!
+    @IBOutlet weak var mobileContentTF: UITextField!
     @IBOutlet weak var genderLB: UILabel!
     @IBOutlet weak var genderContentTF: UITextField!
     @IBOutlet weak var dobLB: UILabel!
     @IBOutlet weak var dobContentTF: UITextField!
-    @IBOutlet weak var mobileLB: UILabel!
-    @IBOutlet weak var mobileContentTF: UITextField!
-    @IBOutlet weak var aboutDT: NSLayoutConstraint!
-    @IBOutlet weak var achivementLB: UILabel!
-    @IBOutlet weak var achivementContentTF: TextViewAutoHeight!
-    @IBOutlet weak var achivementContentTFDT: NSLayoutConstraint!
-    @IBOutlet weak var qualificationLB: UILabel!
-    @IBOutlet weak var qualificationContentTF: TextViewAutoHeight!
-    @IBOutlet weak var qualificationContentDT: NSLayoutConstraint!
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var flowLayout: FlowLayout!
-    @IBOutlet weak var tagHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var scrollHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var choseAsManyLB: UILabel!
-    @IBOutlet weak var tapView: UIView!
     @IBOutlet weak var facebookLB: UILabel!
     @IBOutlet weak var facebookUrlTF: UITextField!
     @IBOutlet weak var instagramLB: UILabel!
@@ -58,6 +46,20 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     @IBOutlet weak var emergencyNameTF: UITextField!
     @IBOutlet weak var emergencyMobileLB: UILabel!
     @IBOutlet weak var emergencyMobileTF: UITextField!
+    
+    @IBOutlet weak var trainerInfomationLB: UILabel!
+    @IBOutlet weak var achivementLB: UILabel!
+    @IBOutlet weak var achivementContentTF: TextViewAutoHeight!
+    @IBOutlet weak var qualificationLB: UILabel!
+    @IBOutlet weak var qualificationContentTF: TextViewAutoHeight!
+    @IBOutlet weak var specialites: UILabel!
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var flowLayout: FlowLayout!
+    @IBOutlet weak var tagHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var choseAsManyLB: UILabel!
+    @IBOutlet weak var tapView: UIView!
+    
     var isFirstTVS : Bool = false
     var sizingCell: TagCell?
     
@@ -106,6 +108,9 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.mobileLB.font = .pmmMonLight11()
         self.emergencyNameLB.font = .pmmMonLight11()
         self.emergencyMobileLB.font = .pmmMonLight11()
+        self.qualificationLB.font = .pmmMonLight11()
+        self.achivementLB.font = .pmmMonLight11()
+        self.specialites.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
         self.trainerInfomationLB.font = .pmmMonReg11()
@@ -201,7 +206,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         super.viewWillAppear(animated)
         self.setAvatar()
         self.updateUI()
-        self.aboutDT.constant = self.view.frame.size.width - 30
         offset = 0
         isStopGetListTag = false
         self.getListTags()
@@ -228,7 +232,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                         self.offset += 10
                         self.collectionView.reloadData({
                             self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize().height
-                            self.scrollHeightConstraint.constant = self.collectionView.frame.origin.y + self.tagHeightConstraint.constant
                         })
                     } else {
                         self.isStopGetListTag = true
@@ -342,8 +345,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                             self.aboutContentTV.text = ""
                         }
                         
-                        let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
-                        self.aboutContentDT.constant = sizeAboutTV.height + 20
+//                        let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
+//                        self.aboutContentDT.constant = sizeAboutTV.height + 20
                         
                         self.genderContentTF.text = self.userInfo[kGender] as? String
                         self.emailContentTF.text = self.userInfo[kEmail] as? String
@@ -400,7 +403,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 self.aboutContentTV.text = ""
             }
             let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
-            self.aboutContentDT.constant = sizeAboutTV.height + 20
+//            self.aboutContentDT.constant = sizeAboutTV.height + 20
             self.genderContentTF.text = self.userInfo[kGender] as? String
             self.emailContentTF.text = self.userInfo[kEmail] as? String
             
@@ -444,8 +447,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 if !(coachInformationTotal[kQualification] is NSNull) {
                     let qualificationText = coachInformationTotal[kQualification] as! String
                     self.qualificationContentTF.text = qualificationText
-                    let sizeQualificationTV = self.qualificationContentTF.sizeThatFits(self.qualificationContentTF.frame.size)
-                    self.qualificationContentDT.constant = sizeQualificationTV.height + 20
+//                    let sizeQualificationTV = self.qualificationContentTF.sizeThatFits(self.qualificationContentTF.frame.size)
+//                    self.qualificationContentDT.constant = sizeQualificationTV.height + 20
                 } else {
                     self.qualificationContentTF.text = ""
                 }
@@ -453,8 +456,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 if !(coachInformationTotal[kAchievement] is NSNull) {
                     let achivementText = coachInformationTotal[kAchievement] as! String
                     self.achivementContentTF.text = achivementText
-                    let sizeAchivementTV = self.achivementContentTF.sizeThatFits(self.achivementContentTF.frame.size)
-                    self.achivementContentTFDT.constant = sizeAchivementTV.height  + 20
+//                    let sizeAchivementTV = self.achivementContentTF.sizeThatFits(self.achivementContentTF.frame.size)
+//                    self.achivementContentTFDT.constant = sizeAchivementTV.height  + 20
                 } else {
                     self.achivementContentTF.text = ""
                 }
