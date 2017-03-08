@@ -502,6 +502,10 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
             self.sortSession(false)
             self.sessionTableView.reloadData()
         }
+        
+        UIView.animateWithDuration(0.3) { 
+            self.view.layoutIfNeeded()
+        }
     }
     
     // MARK: LogCellDelegate
