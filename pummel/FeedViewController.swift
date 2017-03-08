@@ -205,9 +205,9 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
             cell.shareBT.addTarget(self, action: #selector(FeaturedViewController.showListContext(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             cell.likeBT.addTarget(self, action: #selector(FeedViewController.likeThisPost(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             //Get Likes status
-            let coachId = String(format:"%0.f", feedDetail[kId]!.doubleValue)
+            let currentID = String(format:"%0.f", feedDetail[kId]!.doubleValue)
             var likeLink  = kPMAPI_LIKE
-            likeLink.appendContentsOf(coachId)
+            likeLink.appendContentsOf(currentID)
             likeLink.appendContentsOf(kPM_PATH_LIKE)
             Alamofire.request(.GET, likeLink)
                 .responseJSON { response in
@@ -232,13 +232,37 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                     }
             }
 
+            // Check Coach
+            cell.userInteractionEnabled = false
+            let userID = String(format:"%0.f", feedDetail[kUserId]!.doubleValue)
+            var coachLink  = kPMAPICOACH
+            coachLink.appendContentsOf(userID)
+            
+            cell.avatarBT.layer.borderWidth = 0
+            cell.coachLB.text = ""
+            cell.coachLBTraillingConstraint.constant = 0
+            Alamofire.request(.GET, coachLink)
+                .responseJSON { response in
+                    cell.userInteractionEnabled = true
+                    
+                    if response.response?.statusCode == 200 {
+                        cell.avatarBT.layer.borderWidth = 2
+                        
+                        cell.coachLBTraillingConstraint.constant = 5
+                        UIView.animateWithDuration(0.3, animations: {
+                            cell.coachLB.layoutIfNeeded()
+                            cell.coachLB.text = kCoach.uppercaseString
+                        })
+                    }
+            }
+            
             return cell
         } else if (indexPath.row == 1) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kFeedSecondPartTableViewCell, forIndexPath: indexPath) as! FeedSecondPartTableViewCell
             //Get Likes
-            let coachId = String(format:"%0.f", feedDetail[kId]!.doubleValue)
+            let currentID = String(format:"%0.f", feedDetail[kId]!.doubleValue)
             var likeLink  = kPMAPI_LIKE
-            likeLink.appendContentsOf(coachId)
+            likeLink.appendContentsOf(currentID)
             likeLink.appendContentsOf(kPM_PATH_LIKE)
             Alamofire.request(.GET, likeLink)
                 .responseJSON { response in
@@ -338,7 +362,6 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     func goProfile(sender: UIButton) {
-        
         self.performSegueWithIdentifier(kGoProfile, sender:sender)
     }
     

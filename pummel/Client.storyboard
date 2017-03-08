@@ -185,16 +185,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kTd-pS-f1u">
-                                                    <rect key="frame" x="0.0" y="0.0" width="319" height="60"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="60"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coach" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HIp-zm-ogf">
-                                                            <rect key="frame" x="60" y="22" width="39" height="16"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HIp-zm-ogf">
+                                                            <rect key="frame" x="60" y="30" width="0.0" height="0.0"/>
                                                             <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="13"/>
                                                             <color key="textColor" red="0.090196078431372548" green="0.090196078431372548" blue="0.090196078431372548" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DAMIEN" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aUb-Ue-Xe3">
-                                                            <rect key="frame" x="104" y="22" width="200" height="16"/>
+                                                            <rect key="frame" x="65" y="22" width="200" height="16"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="16" id="2Xa-wC-3zJ"/>
                                                                 <constraint firstAttribute="width" constant="200" id="fz0-Lc-CUm"/>
@@ -204,7 +204,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y1t-oN-hco">
-                                                            <rect key="frame" x="104" y="22" width="200" height="16"/>
+                                                            <rect key="frame" x="65" y="22" width="200" height="16"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="16" id="Fy1-WP-qXR"/>
                                                                 <constraint firstAttribute="width" constant="200" id="ePo-rG-IwE"/>
@@ -237,13 +237,13 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WNU-NC-5K2">
-                                                    <rect key="frame" x="0.0" y="60" width="319" height="319"/>
+                                                    <rect key="frame" x="0.0" y="60" width="280" height="280"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ySA-Ja-vJo">
-                                                            <rect key="frame" x="0.0" y="0.0" width="319" height="319"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="280" height="280"/>
                                                         </imageView>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="like-image.png" translatesAutoresizingMaskIntoConstraints="NO" id="pSR-7p-R0B">
-                                                            <rect key="frame" x="99" y="99" width="120" height="120"/>
+                                                            <rect key="frame" x="79.5" y="79.5" width="120" height="120"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="120" id="jXt-ag-4NL"/>
                                                                 <constraint firstAttribute="height" constant="120" id="kYt-pp-RZP"/>
@@ -262,7 +262,7 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lVu-mi-Xuq">
-                                                    <rect key="frame" x="0.0" y="379" width="319" height="60"/>
+                                                    <rect key="frame" x="0.0" y="340" width="280" height="60"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BQC-to-dGP">
                                                             <rect key="frame" x="15" y="15" width="30" height="30"/>
@@ -280,7 +280,7 @@
                                                             <state key="normal" image="comment.png"/>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LVj-eV-mxD">
-                                                            <rect key="frame" x="274" y="15" width="30" height="30"/>
+                                                            <rect key="frame" x="235" y="15" width="30" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="30" id="bb0-Up-lLu"/>
                                                                 <constraint firstAttribute="height" constant="30" id="qDh-z8-9VJ"/>
@@ -311,10 +311,10 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9E6-ho-8On">
-                                                    <rect key="frame" x="0.0" y="439" width="319" height="169"/>
+                                                    <rect key="frame" x="0.0" y="400" width="280" height="169"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3vR-oV-SHt">
-                                                            <rect key="frame" x="0.0" y="17" width="319" height="13"/>
+                                                            <rect key="frame" x="0.0" y="17" width="280" height="13"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="likeSml.png" translatesAutoresizingMaskIntoConstraints="NO" id="dJ0-nZ-D6c">
                                                                     <rect key="frame" x="15" y="0.0" width="13" height="13"/>
@@ -356,7 +356,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pcH-tw-8Bs">
-                                                            <rect key="frame" x="15" y="71" width="289" height="48"/>
+                                                            <rect key="frame" x="15" y="71" width="250" height="48"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="48" id="DAr-W8-Qb8"/>
                                                             </constraints>
@@ -375,7 +375,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hRD-nV-fIC">
-                                                            <rect key="frame" x="0.0" y="109" width="319" height="60"/>
+                                                            <rect key="frame" x="0.0" y="109" width="280" height="60"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="60" id="38b-C4-dlh"/>
                                                             </constraints>
