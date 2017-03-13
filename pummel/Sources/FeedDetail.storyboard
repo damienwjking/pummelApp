@@ -556,7 +556,7 @@
                         <outlet property="tableView" destination="jo1-xj-DFh" id="FHD-hF-kTh"/>
                         <outlet property="textBox" destination="MKb-r3-Z0L" id="YYQ-O7-Zi1"/>
                         <segue destination="vmi-Cl-kb2" kind="show" identifier="goNewPost" id="BUm-2M-dlN"/>
-                        <segue destination="bgr-Ja-OZZ" kind="presentation" identifier="clickURLLink" id="ts9-DY-x7O"/>
+                        <segue destination="bgr-Ja-OZZ" kind="show" identifier="clickURLLink" id="ts9-DY-x7O"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MFQ-QA-I72" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -572,18 +572,18 @@
                         <viewControllerLayoutGuide type="bottom" id="SaU-yI-Gxm"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Olr-JH-Koa">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="1200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylE-A1-53l">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="1200"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <outlet property="delegate" destination="bgr-Ja-OZZ" id="Izg-Ya-0Ia"/>
                                 </connections>
                             </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="bgf-Qd-B1X">
-                                <rect key="frame" x="177.5" y="323.5" width="20" height="20"/>
+                                <rect key="frame" x="290" y="590" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

@@ -181,7 +181,7 @@
                                         <rect key="frame" x="0.0" y="28" width="328" height="896"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eFh-8c-NyH" id="YJM-S3-wH9">
-                                            <rect key="frame" x="0.0" y="0.0" width="328" height="895"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="328" height="895.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kTd-pS-f1u">
@@ -468,7 +468,7 @@
                         <segue destination="ISJ-2B-nHW" kind="presentation" identifier="goUserProfile" id="JUz-x8-3Nn"/>
                         <segue destination="Ccl-Of-O49" kind="show" identifier="goToFeedDetail" id="gUV-m3-HpE"/>
                         <segue destination="L48-MW-P9N" kind="push" identifier="sendMessageConnection" id="QU3-vC-ICQ"/>
-                        <segue destination="U6V-S5-maD" kind="presentation" identifier="clickURLLink" id="cMA-0W-Q2t"/>
+                        <segue destination="U6V-S5-maD" kind="show" identifier="clickURLLink" id="cMA-0W-Q2t"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNB-e7-PKw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -512,18 +512,18 @@
                         <viewControllerLayoutGuide type="bottom" id="YED-me-BIj"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="oSJ-wz-fTZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eQI-Ft-RQ5">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <outlet property="delegate" destination="U6V-S5-maD" id="dtG-nB-M7M"/>
                                 </connections>
                             </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ptT-lW-NHu">
-                                <rect key="frame" x="178" y="324" width="20" height="20"/>
+                                <rect key="frame" x="150" y="274" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

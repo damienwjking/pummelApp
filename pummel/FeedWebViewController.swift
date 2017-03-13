@@ -17,8 +17,6 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,28 +27,41 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.loadWeb()
+        
         self.activityIndicator.startAnimating()
         self.activityIndicator.hidden = false
         
 //        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backButtonClicked))
 //        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         
-        self.loadWeb()
+        
+        
+        
+        // Title
+        self.title = kNavFeed
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        
+        // Left button
+        let image = UIImage(named: "back")!.imageWithRenderingMode(.AlwaysTemplate)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(self.backButtonClicked))
+        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.pmmBrightOrangeColor()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        let closeImage = UIImage(named: "closewhite")
+//        let closeImage = UIImage(named: "closewhite")
         
-        self.closeButton = UIButton(type: UIButtonType.Custom)
-        self.closeButton!.frame = CGRectMake(0, 20, 40, 40)
-        self.closeButton?.setImage(closeImage, forState: .Normal)
-        self.closeButton?.tintColor = UIColor.pmmBrightOrangeColor()
-        self.closeButton!.addTarget(self, action: #selector(self.backButtonClicked), forControlEvents: .TouchUpInside)
-        
-        
-        self.webView.scrollView.addSubview(self.closeButton!)
+//        self.closeButton = UIButton(type: UIButtonType.Custom)
+//        self.closeButton!.frame = CGRectMake(0, 20, 40, 40)
+//        self.closeButton?.setImage(closeImage, forState: .Normal)
+//        self.closeButton?.tintColor = UIColor.pmmBrightOrangeColor()
+//        self.closeButton!.addTarget(self, action: #selector(self.backButtonClicked), forControlEvents: .TouchUpInside)
+//        
+//        
+//        self.webView.scrollView.addSubview(self.closeButton!)
     }
     
     func loadWeb() {
@@ -61,9 +72,7 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
     }
     
     func backButtonClicked() {
-        self.dismissViewControllerAnimated(true) { 
-            // Do nothing
-        }
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     func webViewDidFinishLoad(webView: UIWebView) {
