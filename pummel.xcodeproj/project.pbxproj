@@ -45,6 +45,7 @@
 		BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */; };
 		BA1DA3DC1E5DD59F00E3BF7A /* CardViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
+		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
 		BAFE18451E2094F000387C53 /* connected.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18421E2094F000387C53 /* connected.png */; };
 		BAFE18461E2094F000387C53 /* connected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18431E2094F000387C53 /* connected@2x.png */; };
 		BAFE18471E2094F000387C53 /* connected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18441E2094F000387C53 /* connected@3x.png */; };
@@ -387,6 +388,7 @@
 		BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionTableViewCell.swift; sourceTree = "<group>"; };
 		BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewCell.swift; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
+		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
 		BAFE18421E2094F000387C53 /* connected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connected.png; sourceTree = "<group>"; };
 		BAFE18431E2094F000387C53 /* connected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connected@2x.png"; sourceTree = "<group>"; };
 		BAFE18441E2094F000387C53 /* connected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connected@3x.png"; sourceTree = "<group>"; };
@@ -1234,6 +1236,7 @@
 				F90634321D7F2C5800105B97 /* FeedViewController.swift */,
 				F9CF54E01D7F9BFD00BE144F /* NewPostViewController.swift */,
 				F977EC0C1DAD442F007024EB /* NewCommentImageViewController.swift */,
+				BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */,
 			);
 			name = Feed;
 			sourceTree = "<group>";
@@ -1687,6 +1690,7 @@
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
 				E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
+				BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,

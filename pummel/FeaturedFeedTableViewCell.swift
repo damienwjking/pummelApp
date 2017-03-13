@@ -20,9 +20,9 @@ class FeaturedFeedTableViewCell: UITableViewCell {
     @IBOutlet weak var shareBT: UIButton!
     @IBOutlet weak var likeLB: UILabel!
     @IBOutlet weak var firstUserCommentLB: UILabel!
-    @IBOutlet weak var firstContentCommentLB: UILabel!
+    @IBOutlet weak var firstContentCommentTV: UITextView!
     @IBOutlet weak var coachLBTraillingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var firstContentCommentConstrant: NSLayoutConstraint!
+    @IBOutlet weak var firstContentTextViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewAllLB: UILabel!
     @IBOutlet weak var viewAllBT: UIButton!
     @IBOutlet weak var likeImage: UIImageView!
@@ -40,7 +40,8 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         self.timeLB.font = .pmmMonLight13()
         self.likeLB.font = .pmmMonLight13()
         self.firstUserCommentLB.font = .pmmMonLight13()
-        self.firstContentCommentLB.font = .pmmMonLight16()
+        self.firstContentCommentTV.font = .pmmMonLight16()
+        self.firstContentCommentTV.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonLight16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
         self.viewAllLB.font = .pmmMonLight13()
         self.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(FeaturedFeedTableViewCell.onDoubleTap(_:)))

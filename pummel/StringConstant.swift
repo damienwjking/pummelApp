@@ -255,6 +255,7 @@ let kGoConnect = "goConnect"
 let kGoProfile = "goProfile"
 let kGoUserProfile = "goUserProfile"
 let kSendMessageConnection = "sendMessageConnection"
+let kClickURLLink = "clickURLLink"
 
 
 // Seting

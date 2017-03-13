@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import RSKGrowingTextView
 
-class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, RSKGrowingTextViewDelegate {
+class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, RSKGrowingTextViewDelegate, UITextViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var feedDetail : NSDictionary!
@@ -281,8 +281,10 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                 return cell
             }
             cell.userCommentLB.text = (userFeed[kFirstname] as! String).uppercaseString
-            cell.contentCommentLB.text = feedDetail[kText] as? String
-            cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))! + 20
+            
+            cell.contentCommentTV.delegate = self
+            cell.contentCommentTV.text = feedDetail[kText] as? String
+            cell.contentCommentTVConstraint.constant = (cell.contentCommentTV.text?.heightWithConstrainedWidth(cell.contentCommentTV.frame.width, font: cell.contentCommentTV.font!))! + 20
             return cell
         } else {
             
@@ -300,8 +302,8 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                                 let userCommentInfo = response.result.value as! NSDictionary
                                 let userName = userCommentInfo[kFirstname] as! String
                                 cell.userCommentLB.text = userName.uppercaseString
-                                cell.contentCommentLB.text = text
-                                cell.contentCommentConstrant.constant = (cell.contentCommentLB.text?.heightWithConstrainedWidth(cell.contentCommentLB.frame.width, font: cell.contentCommentLB.font))! + 20
+                                cell.contentCommentTV.text = text
+                                cell.contentCommentTVConstraint.constant = (cell.contentCommentTV.text?.heightWithConstrainedWidth(cell.contentCommentTV.frame.width, font: cell.contentCommentTV.font!))! + 20
                             })
                         }
                 }
@@ -374,8 +376,10 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         } else if (segue.identifier == "goNewPost") {
             let destination = segue.destinationViewController as! NewCommentImageViewController
             destination.postId = String(format:"%0.f", feedDetail[kId]!.doubleValue)
+        } else if (segue.identifier == kClickURLLink) {
+            let destination = segue.destinationViewController as! FeedWebViewController
+            destination.URL = sender as? NSURL
         }
-        
     }
     
     func showListContext(sender: UIButton) {
@@ -540,6 +544,12 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         } else {
             return "Just now"
         }
+    }
+    
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        self.performSegueWithIdentifier(kClickURLLink, sender: URL)
+        
+        return false
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {

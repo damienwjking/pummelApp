@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
+class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
@@ -277,8 +277,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     }
             }
         
-            cell.firstContentCommentLB.text = feed[kText] as? String
-            cell.firstContentCommentConstrant.constant = (cell.firstContentCommentLB.text?.heightWithConstrainedWidth(cell.firstContentCommentLB.frame.width, font: cell.firstContentCommentLB.font))! + 10
+            cell.firstContentCommentTV.delegate = self
+            cell.firstContentCommentTV.text = feed[kText] as? String
+            cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(cell.firstContentCommentTV.frame.width, font: cell.firstContentCommentTV.font!))! + 10
             cell.firstUserCommentLB.text = firstname?.uppercaseString
             cell.viewAllBT.tag = indexPath.row
             cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
@@ -408,6 +409,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.performSegueWithIdentifier(kGoConnect, sender: sender)
     }
     
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        self.performSegueWithIdentifier(kClickURLLink, sender: URL)
+        
+        return false
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == kGoConnect) {
             let destination = segue.destinationViewController as! ConnectViewController
@@ -444,6 +451,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let destination = segue.destinationViewController as! FeedViewController
             let feed = arrayFeeds[sender.tag] 
             destination.feedDetail = feed
+        } else if (segue.identifier == kClickURLLink) {
+            let destination = segue.destinationViewController as! FeedWebViewController
+            destination.URL = sender as? NSURL
         }
     }
 
