@@ -204,7 +204,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
             prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
              prefix.appendContentsOf("&")
         }
-        let coordinateParams = String(format: "%@=%f&%@=%f", kLong, 151.205, kLat, -33.8728)
+        let coordinateParams = String(format: "%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
         prefix.appendContentsOf(coordinateParams)
         
         // TODO: Get current state & current city
@@ -230,11 +230,11 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         state = placeMark.administrativeArea!
                     }
                     
-                    let stateCity =  String(format: "&%@=%@&%@=%@", kState, "nsw", kCity, "Bass Hill".stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+                    let stateCity =  String(format: "&%@=%@&%@=%@", kState, state, kCity, city.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
                     
                     
                     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                    appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":-33.8728, "long":151.205, "state": "nsw", "city": "Bass Hill"]
+                    appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(self.locationManager.location?.coordinate.longitude)!, "long":(self.locationManager.location?.coordinate.latitude)!, "state": state, "city": city]
                     
                     self.prefix.appendContentsOf(stateCity)
                     

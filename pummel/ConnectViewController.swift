@@ -62,34 +62,16 @@ class ConnectViewController: BaseViewController {
         self.sendMessageBT.titleLabel?.font = .pmmMonReg13()
         
         // Do any additional setup after loading the view.
-        self.meBigIndicatorView.alpha = 0.0125
-        self.meMedIndicatorView.alpha = 0.025
-        self.meSmallIndicatorView.alpha = 0.05
-        
-        self.meBigIndicatorView.layer.cornerRadius = 344/2
-        self.meMedIndicatorView.layer.cornerRadius = 130
-        self.meSmallIndicatorView.layer.cornerRadius = 195/2
-        
         self.meBigIndicatorView.clipsToBounds = true
         self.meMedIndicatorView.clipsToBounds = true
         self.meSmallIndicatorView.clipsToBounds = true
         
-        self.youBigIndicatorView.alpha = 0.0125
-        self.youMedIndicatorView.alpha = 0.025
-        self.youSmallIndicatorView.alpha = 0.05
-        
-        self.youBigIndicatorView.layer.cornerRadius = 344/2
-        self.youMedIndicatorView.layer.cornerRadius = 130
-        self.youSmallIndicatorView.layer.cornerRadius = 195/2
         
         self.youBigIndicatorView.clipsToBounds = true
         self.youMedIndicatorView.clipsToBounds = true
         self.youSmallIndicatorView.clipsToBounds = true
         
-        self.meAvatarIMV.layer.cornerRadius = 118/2
         self.meAvatarIMV.clipsToBounds = true
-        
-        self.youAvatarIMV.layer.cornerRadius = 118/2
         self.youAvatarIMV.clipsToBounds = true
         
         self.firstConnectingIconV.layer.cornerRadius = 5
@@ -160,10 +142,40 @@ class ConnectViewController: BaseViewController {
         } else {
             self.view.hidden = false
         }
+        
+        self.hiddenIndicatorView(true)
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        self.meBigIndicatorView.layer.cornerRadius = self.meBigIndicatorView.frame.width/2
+        self.meMedIndicatorView.layer.cornerRadius = self.meMedIndicatorView.frame.width/2
+        self.meSmallIndicatorView.layer.cornerRadius = self.meSmallIndicatorView.frame.width/2
+        
+        self.youBigIndicatorView.layer.cornerRadius = self.youBigIndicatorView.frame.width/2
+        self.youMedIndicatorView.layer.cornerRadius = self.youMedIndicatorView.frame.width/2
+        self.youSmallIndicatorView.layer.cornerRadius = self.youSmallIndicatorView.frame.width/2
+        
+        self.meAvatarIMV.layer.cornerRadius = self.meAvatarIMV.frame.width/2
+        self.youAvatarIMV.layer.cornerRadius = self.youAvatarIMV.frame.width/2
+        
+        UIView.animateWithDuration(0.2) {
+            self.hiddenIndicatorView(false)
+        }
+    }
+    
+    func hiddenIndicatorView(isHidden: Bool) {
+        self.meBigIndicatorView.hidden = isHidden
+        self.meMedIndicatorView.hidden = isHidden
+        self.meSmallIndicatorView.hidden = isHidden
+        
+        self.youBigIndicatorView.hidden = isHidden
+        self.youMedIndicatorView.hidden = isHidden
+        self.youSmallIndicatorView.hidden = isHidden
+        
+        self.meAvatarIMV.hidden = isHidden
+        self.youAvatarIMV.hidden = isHidden
     }
 
     override func didReceiveMemoryWarning() {
