@@ -169,7 +169,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.ratingLB.font = .pmmMonLight10()
         self.ratingContentLB.font = .pmmMonReg16()
         self.connectionLB.font = .pmmMonLight10()
-        self.connectionLB.text = (defaults.boolForKey(k_PM_IS_COACH)) ? "CLIENTS" : "SESSIONS"
+        self.connectionLB.text = (defaults.boolForKey(k_PM_IS_COACH)) ? "RATING" : "SESSIONS"
         self.connectionContentLB.font = .pmmMonReg16()
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
@@ -428,13 +428,18 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
                 
                 var totalPoint = 0.0
-                if (coachInformation[kConnectionCount] is NSNull) {
-                    self.connectionContentLB.text = "0"
+                if (self.defaults.boolForKey(k_PM_IS_COACH)) {
+                    self.connectionContentLB.text = "100%"
                 } else {
-                    self.connectionContentLB.text = String(format:"%0.f", coachInformation[kConnectionCount]!.doubleValue)
-                    
-                    totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
+                    if (coachInformation[kConnectionCount] is NSNull) {
+                        self.connectionContentLB.text = "0"
+                    } else {
+                        self.connectionContentLB.text = String(format:"%0.f", coachInformation[kConnectionCount]!.doubleValue)
+                
+                        totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
+                    }
                 }
+                
                 if (coachInformation[kPostCount] is NSNull) {
                     self.postNumberContentLB.text  = "0"
                 } else {
