@@ -95,7 +95,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     var isFromFeed: Bool = false
     var isFromChat: Bool = false
     var isFromListCoaches: Bool = false
-    var isFromSearchCoaches: Bool = false
     var isConnected = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -360,10 +359,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
 //                    
 //                    totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
 //                }
-                
-                if self.isFromSearchCoaches == true {
-                    self.connectionContentLB.text = "100%"
-                }
                 
                 if (coachInformation[kPostCount] is NSNull) {
                      self.postNumberContentLB.text  = "0"
