@@ -75,10 +75,15 @@ class GetStartedViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "toSignin")
-        {
+        if (segue.identifier == "toSignin") {
             let destinationVC = segue.destinationViewController as! LoginAndRegisterViewController
             destinationVC.isShowLogin = true
+        } else if(segue.identifier == "showClientWithoutLogin") {
+            // Send token
+            let application = UIApplication.sharedApplication()
+            let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+            application.registerForRemoteNotifications()
         }
     }
     

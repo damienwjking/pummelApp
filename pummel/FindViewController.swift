@@ -252,6 +252,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             let totalDetail = sender as! NSDictionary
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
             destination.coachTotalDetail = totalDetail
+            destination.isFromSearchCoaches = true
             
             if destination.coachDetail != nil {
                 if let firstName = destination.coachDetail[kFirstname] as? String {

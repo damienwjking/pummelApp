@@ -170,20 +170,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     }
                     
                     // Send token
-                    if !(self.defaults.objectForKey(k_PM_PUSH_TOKEN) is NSNull) {
-                        let tokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN) as! String
-                        var linkPostNotif = kPMAPIUSER
-                        linkPostNotif.appendContentsOf(currentId)
-                        linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
-                        Alamofire.request(.POST, linkPostNotif, parameters: [kUserId:currentId, kProtocol:"APNS", kToken: tokenString])
-                            .responseJSON { response in
-                                if response.response?.statusCode == 200 {
-                                    print("Already push tokenString")
-                                } else {
-                                    print("Can't push tokenString")
-                                }
-                        }
-                    }
+                    let application = UIApplication.sharedApplication()
+                    let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+                    application.registerUserNotificationSettings(settings)
+                    application.registerForRemoteNotifications()
                     
                     let mixpanel = Mixpanel.sharedInstance()
                     if mixpanel.distinctId != "" {
@@ -278,19 +268,10 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                     self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
                                    
                                     // Send token
-                                    let tokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN)
-                                    var linkPostNotif = kPMAPIUSER
-                                    linkPostNotif.appendContentsOf(currentId)
-                                    linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
-                                    Alamofire.request(.POST, linkPostNotif, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProtocol:"APNS", kToken: tokenString!])
-                                        .responseJSON { response in
-                                            if response.response?.statusCode == 200 {
-                                                print("Already push tokenString")
-                                            } else {
-                                                print("Can't push tokenString")
-                                            }
-                                    }
-
+                                    let application = UIApplication.sharedApplication()
+                                    let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+                                    application.registerUserNotificationSettings(settings)
+                                    application.registerForRemoteNotifications()
                                     
                                     if (self.cameraProfileIconIMV.hidden) {
                                         var prefix = kPMAPIUSER

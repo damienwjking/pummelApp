@@ -95,6 +95,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     var isFromFeed: Bool = false
     var isFromChat: Bool = false
     var isFromListCoaches: Bool = false
+    var isFromSearchCoaches: Bool = false
     var isConnected = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -194,7 +195,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.updateUI()
         self.setupViewForLabelButton()
         
-        if isFromListCoaches == true {
+        if self.isFromListCoaches == true {
             self.navigationController?.navigationBar.hidden = true
         }
     }
@@ -316,7 +317,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.ratingLB.font = .pmmMonLight10()
         self.ratingContentLB.font = .pmmMonReg16()
         self.connectionLB.font = .pmmMonLight10()
-        self.connectionLB.text = "CLIENTS"
         self.connectionContentLB.font = .pmmMonReg16()
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
@@ -360,6 +360,13 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                     totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
                 }
                 
+                if self.isFromSearchCoaches == true {
+                    self.connectionLB.text = "RATING"
+                    self.connectionContentLB.text = "100%"
+                } else {
+                    self.connectionLB.text = "CLIENTS"
+                }
+                
                 if (coachInformation[kPostCount] is NSNull) {
                      self.postNumberContentLB.text  = "0"
                 } else {
@@ -367,6 +374,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                     
                     totalPoint = totalPoint + (coachInformation[kPostCount]!.doubleValue * 75)
                 }
+                
                 self.ratingContentLB.text = String(format:"%0.f", totalPoint)
                 
                 if !(coachInformationTotal[kServiceArea] is NSNull) {

@@ -29,9 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Override point for customization after application launch.
     //    Mixpanel.initialize(token: "9007be62479ca54acb05b03991f1e56e")
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
-        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-        application.registerUserNotificationSettings(settings)
-        application.registerForRemoteNotifications()
         let token = "9007be62479ca54acb05b03991f1e56e"
         _ = Mixpanel.sharedInstanceWithToken(token)
         
@@ -118,6 +115,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         defaults.setObject(deviceTokenString, forKey: k_PM_PUSH_TOKEN)
         let mixpanel = Mixpanel.sharedInstance()
         mixpanel.people.addPushDeviceToken(deviceToken)
+        
+        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
+        let param = [kUserId:currentId,
+                     kProtocol:"APNS",
+                     kToken: deviceTokenString]
+        
+        var linkPostNotif = kPMAPIUSER
+        linkPostNotif.appendContentsOf(currentId)
+        linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
+        Alamofire.request(.POST, linkPostNotif, parameters: param)
+            .responseJSON { response in
+                if response.response?.statusCode == 200 {
+                    print("Already push tokenString")
+                } else {
+                    print("Can't push tokenString")
+                }
+        }
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
