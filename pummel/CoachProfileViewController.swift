@@ -153,8 +153,23 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.aboutLeftDT.constant = 10
         self.businessIMV.layer.cornerRadius = 50
         self.businessIMV.clipsToBounds = true
-        if !(coachDetail[kBusinessId] is NSNull) {
+        if (coachDetail[kBusinessId] != nil) {
             self.getBusinessImage()
+        } else {
+            var prefix = kPMAPICOACHES
+            prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
+            
+            Alamofire.request(.GET, prefix).responseJSON(completionHandler: { (response) in
+                if response.response?.statusCode == 200 {
+                    let jsonBusiness = response.result.value as! NSDictionary
+                    if (jsonBusiness[kBusinessId] != nil) {
+                        let dictionary: NSMutableDictionary = NSMutableDictionary(dictionary: self.coachDetail)
+                        dictionary[kBusinessId] = jsonBusiness[kBusinessId]!.doubleValue
+                        self.coachDetail = dictionary
+                        self.getBusinessImage()
+                    }
+                }
+            })
         }
 
         if (coachDetail[kTags] == nil) {
