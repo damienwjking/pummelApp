@@ -277,9 +277,15 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     }
             }
         
+            cell.layoutIfNeeded()
+            cell.firstContentCommentTV.layoutIfNeeded()
             cell.firstContentCommentTV.delegate = self
             cell.firstContentCommentTV.text = feed[kText] as? String
-            cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(cell.firstContentCommentTV.frame.width, font: cell.firstContentCommentTV.font!))! + 10
+        
+            let marginTopBottom = cell.firstContentCommentTV.layoutMargins.top + cell.firstContentCommentTV.layoutMargins.bottom
+            let marginLeftRight = cell.firstContentCommentTV.layoutMargins.left + cell.firstContentCommentTV.layoutMargins.right
+            cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
+        
             cell.firstUserCommentLB.text = firstname?.uppercaseString
             cell.viewAllBT.tag = indexPath.row
             cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
