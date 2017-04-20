@@ -156,7 +156,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         if (coachDetail[kBusinessId] != nil) {
             self.getBusinessImage()
         } else {
-            var prefix = kPMAPICOACHES
+            var prefix = kPMAPIUSER
             prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
             
             Alamofire.request(.GET, prefix).responseJSON(completionHandler: { (response) in
