@@ -46,6 +46,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
+        refineSearchBT.layer.cornerRadius = 5
     }
     
     override func viewDidAppear(animated: Bool) {

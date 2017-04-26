@@ -120,7 +120,7 @@
                                     <segment title="UPCOMING"/>
                                     <segment title="COMPLETED"/>
                                 </segments>
-                                <color key="tintColor" red="0.98431372549999996" green="0.26274509800000001" blue="0.066666666669999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="1" green="0.35686274509803922" blue="0.062745098039215685" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <action selector="selecSegmentValueChanged:" destination="pCZ-ol-b2l" eventType="valueChanged" id="cQq-QC-Kkf"/>
                                 </connections>
@@ -195,12 +195,14 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DgL-hv-yZs">
-                                                <rect key="frame" x="94" y="140" width="112" height="30"/>
+                                                <rect key="frame" x="77.5" y="140" width="145" height="30"/>
+                                                <color key="backgroundColor" red="1" green="0.35686274509803922" blue="0.062745098039215685" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="N7q-JV-Sst"/>
+                                                    <constraint firstAttribute="width" constant="145" id="YJi-DT-Olt"/>
                                                 </constraints>
                                                 <state key="normal" title="ADD A SESSION">
-                                                    <color key="titleColor" red="1" green="0.25882352941176467" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="addSessionBTClicked:" destination="pCZ-ol-b2l" eventType="touchUpInside" id="eyi-8W-2OQ"/>
@@ -300,7 +302,7 @@
                                     <segment title="UPCOMING"/>
                                     <segment title="COMPLETED"/>
                                 </segments>
-                                <color key="tintColor" red="0.98431372549999996" green="0.26274509800000001" blue="0.066666666669999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="1" green="0.35686274509803922" blue="0.062745098039215685" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <action selector="selecSegmentValueChanged:" destination="8IK-lA-zrj" eventType="valueChanged" id="APA-Ef-tE1"/>
                                 </connections>
@@ -403,9 +405,13 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2WY-AM-sLP">
-                                                <rect key="frame" x="94" y="140" width="112" height="30"/>
+                                                <rect key="frame" x="77.5" y="140" width="145" height="30"/>
+                                                <color key="backgroundColor" red="1" green="0.35686274509803922" blue="0.062745098039215685" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="145" id="1LG-FA-W47"/>
+                                                </constraints>
                                                 <state key="normal" title="ADD A SESSION">
-                                                    <color key="titleColor" red="1" green="0.25882352941176467" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="addSessionBTClicked:" destination="8IK-lA-zrj" eventType="touchUpInside" id="8NS-Ic-1lc"/>

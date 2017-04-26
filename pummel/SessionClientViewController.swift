@@ -54,6 +54,8 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.noSessionContentLB.font = UIFont.pmmMonLight13()
         self.addSessionBT.titleLabel!.font = UIFont.pmmMonReg12()
         
+        self.addSessionBT.layer.cornerRadius = 5
+        
         self.selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], forState: .Normal)
         
         if self.defaults.objectForKey(k_PM_IS_UP_COMING) == nil {

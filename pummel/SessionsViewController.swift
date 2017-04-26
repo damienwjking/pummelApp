@@ -72,6 +72,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.noMessageDetailLB.font = UIFont.pmmMonLight13()
         self.startConversationBT.titleLabel!.font = UIFont.pmmMonReg12()
         
+        self.startConversationBT.layer.cornerRadius = 5
+        
         self.refreshControl = UIRefreshControl()
         self.refreshControl.addTarget(self, action: #selector(refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
         self.listMessageTB.addSubview(self.refreshControl)

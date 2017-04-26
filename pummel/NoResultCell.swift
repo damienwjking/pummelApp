@@ -21,5 +21,6 @@ class NoResultCell: UICollectionViewCell {
         self.noResultLB.font = .pmmPlayFairReg18()
         self.noResultContentLB.font = .pmmMonLight13()
         self.refineSearchBT.titleLabel!.font = .pmmMonReg12()
+        self.refineSearchBT.layer.cornerRadius = 5
     }
 }
