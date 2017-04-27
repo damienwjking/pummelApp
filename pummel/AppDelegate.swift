@@ -139,33 +139,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-//        if (UIApplication.sharedApplication().applicationState == .Active) {
-//             UIApplication.sharedApplication().applicationIconBadgeNumber += 1
-//             NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
-//            // Using Singleton
-//            
-//            let notification = MessageView.viewFromNib(layout: .CardView)
-//            notification.configureTheme(.Success)
-//            notification.configureDropShadow()
-//            notification.configureContent(title: "Pummel", body: "You have a message")
-//            notification.button?.hidden = true
-//            notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
-//            var notificationConfig = SwiftMessages.defaultConfig
-//            notificationConfig.duration = .Seconds(seconds: 1);
-//            notificationConfig.presentationStyle = .Top
-//            notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
-//            SwiftMessages.show(config: notificationConfig, view: notification)
-//            
-//            let foregroundButton = UIButton(action: { (UIControl) in
+        let alert = userInfo["aps"]!["alert"] as! String
+        if (UIApplication.sharedApplication().applicationState != .Active) {
+            if (alert.containsString("Hey you have a new message")) {
+                // TODO: OPEN MESSAGE SCREEEN --> RELOAD
+            }
+            if (alert.containsString("you have a new comment in your post:")) {
+                // TODO: OPEN FEED
+            }
+            if (alert.containsString("You have a new Lead")) {
+                // TODO: OPEN CLIENT SCREEN (ONLY COACH)
+            }
+            if (alert.containsString("You have a new booking")){
+                // TODO:OPEN INCOMING SESSION SCREEN
+            }
+        } else {
+//            if (UIApplication.sharedApplication().applicationState == .Active) {
+//                UIApplication.sharedApplication().applicationIconBadgeNumber += 1
+//                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
+//                // Using Singleton
+//                
+//                let notification = MessageView.viewFromNib(layout: .CardView)
+//                notification.configureTheme(.Success)
+//                notification.configureDropShadow()
+//                notification.configureContent(title: "Pummel", body: alert)
+//                notification.button?.hidden = true
+//                notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
+//                var notificationConfig = SwiftMessages.defaultConfig
+//                notificationConfig.duration = .Seconds(seconds: 1);
+//                notificationConfig.presentationStyle = .Top
+//                notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
+//                SwiftMessages.show(config: notificationConfig, view: notification)
+//                
+//                let foregroundButton = UIButton(action: { (UIControl) in
+//                    NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
+//                    }, forControlEvents: .TouchUpInside)
+//                foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
+//                
+//                notification.addSubview(foregroundButton)
+//                
+//            } else {
 //                NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
-//                }, forControlEvents: .TouchUpInside)
-//            foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
-//            
-//            notification.addSubview(foregroundButton)
-//            
-//        } else {
-//             NSNotificationCenter.defaultCenter().postNotificationName( k_PM_SELECTED_NOTIFI, object: nil)
-//        }
+//            }
+        }
     }
 
 //    @available(iOS 10.0, *)

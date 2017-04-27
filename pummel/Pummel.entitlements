@@ -8,6 +8,9 @@
 	<array>
 		<string>applinks:pummel.app.link</string>
 		<string>applinks:pummel-alternate.app.link</string>
+		<string>applinks:pummel.fit</string>
+		<string>applinks:*.pummel.fit</string>
+		<string>applinks:e67sw.app.goo.gl</string>
 	</array>
 </dict>
 </plist>

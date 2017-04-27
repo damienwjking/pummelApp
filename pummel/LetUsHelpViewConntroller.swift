@@ -272,25 +272,47 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
     }
     
     @IBAction func clickOnLocation(sender: UIButton) {
+        let mixpanel = Mixpanel.sharedInstance()
         let selectGym = { (action:UIAlertAction!) -> Void in
+            let properties = ["Name": "Search - Select Location", "Label":"Select Gym"]
+            mixpanel.track("IOS.FindATrainer.Location", properties: properties)
+
             self.locationResultTF.text = kGYM
         }
         let selectSmall = { (action:UIAlertAction!) -> Void in
+            let properties = ["Name": "Search - Select Location", "Label":"Select SmallGroupTranning"]
+            mixpanel.track("IOS.FindATrainer", properties: properties)
+
             self.locationResultTF.text = kSMALLGROUPTRAINING
         }
         let selectBootcamp = { (action:UIAlertAction!) -> Void in
+            let properties = ["Name": "Search - Select Location", "Label":"Select Bootcamp"]
+            mixpanel.track("OS.FindATrainer.Location", properties: properties)
+
             self.locationResultTF.text = kBOOTCAMP
         }
         let selectMobile = { (action:UIAlertAction!) -> Void in
+            let properties = ["Name": "Search - Select Location", "Label":"Select Mobile"]
+            mixpanel.track("IOS.FindATrainer.Location", properties: properties)
+
             self.locationResultTF.text = kMOBILE
         }
         let selectOutdoor = { (action:UIAlertAction!) -> Void in
+            let properties = ["Name": "Search - Select Location", "Label":"Select Outdoor"]
+            mixpanel.track("IOS.FindATrainer.Location", properties: properties)
+
             self.locationResultTF.text = kOUTDOOR
         }
         let selectAnywhere = { (action:UIAlertAction!) -> Void in
+            let properties = ["Name": "Search - Select Location", "Label":"Select Anywhere"]
+            mixpanel.track("IOS.FindATrainer.Location", properties: properties)
+
             self.locationResultTF.text = kANYWHERE
         }
         let selectPrivateStudio = { (action:UIAlertAction!) -> Void in
+            
+            let properties = ["Name": "Search - Select Location", "Label":"Select PrivateStudio"]
+            mixpanel.track("IOS.FindATrainer.Location", properties: properties)
             self.locationResultTF.text = kPRIVATESTUDIO
         }
         
