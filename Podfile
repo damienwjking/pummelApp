@@ -12,6 +12,7 @@ pod 'LocationPicker', '0.6.0'
 pod 'Mixpanel'
 pod 'CVCalendar', '1.3.0'
 pod 'Branch'
+pod 'SwiftMessages', '2.0.0'
 pod 'Firebase'
 end
 post_install do |installer|
