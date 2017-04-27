@@ -59,10 +59,8 @@ let passWordMinCharacter = "Password must have at least 8 characters. Please try
 let passWordNotMatch = "New password does not match with retype new password"
 let curPassWrong = "Current password does not match, please retype"
 let notfindPhoto = "This post is no longer available"
+
 // Key String
-let k_PM_3D_TOUCH = "3DTouch"
-let k_PM_3D_TOUCH_VALUE = "3DTouch_Default_Value"
-let k_PM_3D_TOUCH_NOTIFICATION = "3DTouchNotification"
 let k_PM_IS_LOGINED = "isLogined"
 let k_PM_IS_COACH = "isCoach"
 let k_PM_CURRENT_ID = "currentId"
@@ -80,6 +78,20 @@ let k_PM_REFRESH_SESSION = "refreshSession"
 let k_PM_REFRESH_CLIENTS = "refreshClients"
 let k_PM_IS_UP_COMING = "isUpComing"
 let k_PM_UPDATE_SESSION_NOTIFICATION = "updateSessionNotification"
+
+let k_PM_MOVE_SCREEN = "moveScreen"
+let k_PM_MOVE_SCREEN_NO_MOVE = "moveScreenNoMove"
+let k_PM_MOVE_SCREEN_NOTIFICATION = "moveScreenNotification"
+
+let k_PM_MOVE_SCREEN_3D_TOUCH_1 = "3dTouch_1"
+let k_PM_MOVE_SCREEN_3D_TOUCH_2 = "3dTouch_2"
+let k_PM_MOVE_SCREEN_3D_TOUCH_3 = "3dTouch_3"
+let k_PM_MOVE_SCREEN_3D_TOUCH_4 = "3dTouch_4"
+
+let k_PM_MOVE_SCREEN_NOTI_FEED = "noti_feed"
+let k_PM_MOVE_SCREEN_NOTI_NEW_LEAD = "noti_new_lead"
+let k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE = "noti_new_message"
+let k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION = "noti_incoming_session"
 
 // Key Json
 let kConversationId = "conversationId"

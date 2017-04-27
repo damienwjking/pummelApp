@@ -101,9 +101,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        let touch3DType = self.defaults.objectForKey(k_PM_3D_TOUCH) as! String
-        if touch3DType == "3dTouch_3" {
-            defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
+        let moveScreenType = self.defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_3 {
+            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             self.newMessage()
         }
     }
@@ -792,6 +792,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
             let message = arrayMessages[indexPathRow]
+            message[kLastOpenAt] = "1"
             let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
             
             destinationVC.userIdTarget = cell.targetId
