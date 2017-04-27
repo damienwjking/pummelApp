@@ -142,19 +142,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let alert = userInfo["aps"]!["alert"] as! String
         if (UIApplication.sharedApplication().applicationState != .Active) {
             if (alert.containsString("Hey you have a new message")) {
-                // TODO: OPEN MESSAGE SCREEEN --> RELOAD
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
             }
             if (alert.containsString("you have a new comment in your post:")) {
-                // TODO: OPEN FEED
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_FEED, object: nil)
             }
             if (alert.containsString("You have a new Lead")) {
-                // TODO: OPEN CLIENT SCREEN (ONLY COACH)
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_CLIENTS, object: nil)
             }
             if (alert.containsString("You have a new booking")){
-                // TODO:OPEN INCOMING SESSION SCREEN
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_SESSIONS, object: nil)
             }
         } else {
             if (alert.containsString("Hey you have a new message")) {
+                
                 let notification = MessageView.viewFromNib(layout: .CardView)
                                 notification.configureTheme(.Success)
                                 notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
@@ -169,7 +170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                 SwiftMessages.show(config: notificationConfig, view: notification)
                 
                                 let foregroundButton = UIButton(action: { (UIControl) in
-                                    //TODO: GO TO LIST MESSAGE, IF DANG O LIST MESSAGE --> RELOAD
+                                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
                                     }, forControlEvents: .TouchUpInside)
                                 foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
                                 
@@ -191,7 +192,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 SwiftMessages.show(config: notificationConfig, view: notification)
                 
                 let foregroundButton = UIButton(action: { (UIControl) in
-                    //TODO: GO TO FEED, IF DANG O FEED --> RELOAD
+                     NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_FEED, object: nil)
                     }, forControlEvents: .TouchUpInside)
                 foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
                 
@@ -213,7 +214,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 SwiftMessages.show(config: notificationConfig, view: notification)
                 
                 let foregroundButton = UIButton(action: { (UIControl) in
-                    //TODO: GO TO LIST CLIENTS, NEU DANG O LIST CLIENTS --> RELOAD (ONLY COACH)
+                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_CLIENTS, object: nil)
                     }, forControlEvents: .TouchUpInside)
                 foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
                 
@@ -235,7 +236,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 SwiftMessages.show(config: notificationConfig, view: notification)
                 
                 let foregroundButton = UIButton(action: { (UIControl) in
-                    //TODO: GO TO LIST INCOMMING SESSION. NEU DANG O LIST ICOMMING SESSION --> RELOAD
+                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_SESSIONS, object: nil)
                     }, forControlEvents: .TouchUpInside)
                 foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
                 

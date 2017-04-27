@@ -15,27 +15,38 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedIndex = defaultIndex
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showBadgeForMessage), name: k_PM_SHOW_BADGE, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.selectedNotification), name: k_PM_SELECTED_NOTIFI, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessage), name: k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showFeed), name: k_PM_SHOW_FEED, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showSession), name: k_PM_SHOW_SHOW_SESSIONS, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showClients), name: k_PM_SHOW_SHOW_CLIENTS, object: nil)
         self.delegate = self
     }
     
-    func showBadgeForMessage() {
-        if (UIApplication.sharedApplication().applicationIconBadgeNumber != 0) {
-             let tabarItem = self.tabBar.items![3]
-             tabarItem.badgeValue = String(UIApplication.sharedApplication().applicationIconBadgeNumber)
-            if selectedIndex == 3 {
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
-            }
+    func showMessage() {
+        if selectedIndex == 3 {
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
+        } else {
+            selectedIndex = 3
         }
     }
     
-    func selectedNotification() {
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-        let tabarItem = self.tabBar.items![3]
-        tabarItem.badgeValue = nil
+    func showFeed() {
+        selectedIndex = 0
+    }
+    
+    func showSession() {
         if selectedIndex == 3 {
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_SESSION, object: nil)
+        } else {
+            selectedIndex = 3
+        }
+
+    }
+    
+    func showClients() {
+        if selectedIndex == 3 {
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_CLIENTS, object: nil)
         } else {
             selectedIndex = 3
         }

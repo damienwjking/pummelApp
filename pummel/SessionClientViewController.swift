@@ -82,7 +82,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector(SessionCoachViewController.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
         self.getListSession()
     }
     
@@ -98,6 +98,11 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         // Update Calendar
         self.calendarView.presentedDate = CVDate(date: NSDate())
         self.updateLayout()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     // MARK: Init

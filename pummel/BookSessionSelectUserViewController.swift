@@ -42,6 +42,29 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         self.loadDataWithPrefix(kPMAPICOACH_OLD)
     }
     
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector(SessionCoachViewController.getListClientAgain), name: k_PM_REFRESH_CLIENTS, object: nil)
+    }
+    
+    func getListClientAgan() {
+        self.arrayCurrent.removeAll()
+        self.offsetCurrent = 0
+        self.arrayNew.removeAll()
+        self.offsetNew = 0
+        self.arrayOld.removeAll()
+        self.offsetOld = 0
+        self.loadDataWithPrefix(kPMAPICOACH_LEADS)
+        self.loadDataWithPrefix(kPMAPICOACH_CURRENT)
+        self.loadDataWithPrefix(kPMAPICOACH_OLD)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     func loadDataWithPrefix(prefixAPI:String) {
         var prefix = kPMAPICOACHES
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
