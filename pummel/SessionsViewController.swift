@@ -792,6 +792,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
             let indexPathRow = sender as! Int
             let message = arrayMessages[indexPathRow]
+            message[kLastOpenAt] = "1"
             let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
             
             destinationVC.userIdTarget = cell.targetId
