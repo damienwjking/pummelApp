@@ -20,9 +20,9 @@ class BaseViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.viewDidAppear(_:)), name: k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.viewDidAppear(_:)), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
         
-        self.touch3DMovePage()
+        self.checkMoveScreen()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -34,7 +34,7 @@ class BaseViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,27 +42,27 @@ class BaseViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func touch3DMovePage() {
+    func checkMoveScreen() {
         let defaults = NSUserDefaults.standardUserDefaults()
         
-        if (defaults.objectForKey(k_PM_3D_TOUCH) != nil) {
-            let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
+        if (defaults.objectForKey(k_PM_MOVE_SCREEN) != nil) {
+            let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
             
-            if touch3DType == k_PM_3D_TOUCH_VALUE {
+            if moveScreenType == k_PM_MOVE_SCREEN_NO_MOVE {
                 // Do nothing
             } else {
                 if (self.isKindOfClass(LogSessionClientViewController) == false) {
                     self.navigationController?.popToRootViewControllerAnimated(true)
                 }
                 
-                if touch3DType == "3dTouch_1" {
+                if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_1 {
                     if (self.isKindOfClass(FindViewController) == true ||
                         self.isKindOfClass(LetUsHelpViewController) == true){
                         // Do nothing
                     } else {
                         self.tabBarController?.selectedIndex = 2
                     }
-                } else if touch3DType == "3dTouch_2" {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_2 {
                     if (self.isKindOfClass(ProgressViewController) == true) {
                         
                     } else if (self.isKindOfClass(LogSessionClientViewController) == true) {
@@ -74,24 +74,56 @@ class BaseViewController: UIViewController {
                     } else {
                         self.tabBarController?.selectedIndex = 1
                     }
-                } else if touch3DType == "3dTouch_3" {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_3 {
                     if (self.isKindOfClass(SessionsViewController) == true ){
                         
                     } else {
                         self.tabBarController?.selectedIndex = 3
                     }
-                } else if touch3DType == "3dTouch_4" {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_4 {
                     if (self.isKindOfClass(FeaturedViewController) == true ){
                         
                     } else {
                         self.tabBarController?.selectedIndex = 0
                     }
-                } else {
-                    defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
+                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_FEED {
+                    if (self.isKindOfClass(FeaturedViewController) == true ){
+                        
+                    } else {
+                        self.tabBarController?.selectedIndex = 0
+                    }
+                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_NEW_LEAD {
+                    if (self.isKindOfClass(FindViewController) == true) {
+                        
+                    } else {
+                        self.tabBarController?.selectedIndex = 2
+                    }
+                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE {
+                    if (self.isKindOfClass(SessionsViewController) == true ){
+                        
+                    } else {
+                        self.tabBarController?.selectedIndex = 3
+                    }
+                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION {
+                    if (self.isKindOfClass(ProgressViewController) == true) {
+                        
+                    } else if (self.isKindOfClass(LogSessionClientViewController) == true) {
+                        
+                    } else if (self.isKindOfClass(SessionCoachViewController) == true) {
+                        
+                    } else if (self.isKindOfClass(SessionClientViewController) == true){
+                        
+                    } else {
+                        self.tabBarController?.selectedIndex = 1
+                    }
+                }
+                
+                else {
+                    defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
                 }
             }
         } else {
-            defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
+            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
         }
     }
 

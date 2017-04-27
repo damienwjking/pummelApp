@@ -97,14 +97,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
-        let type = shortcutItem.type.componentsSeparatedByString(".").last!
-        
         let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(type, forKey: k_PM_3D_TOUCH)
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+        if (defaults.objectForKey(k_PM_IS_LOGINED) != nil) {
+            if defaults.boolForKey(k_PM_IS_LOGINED) == true {
+                let type = shortcutItem.type.componentsSeparatedByString(".").last!
+                
+                defaults.setObject(type, forKey: k_PM_MOVE_SCREEN)
+                
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+                }
+            }
         }
     }
     
@@ -140,40 +145,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         let alert = userInfo["aps"]!["alert"] as! String
+        let defaults = NSNotificationCenter.defaultCenter()
+        
         if (UIApplication.sharedApplication().applicationState != .Active) {
             if (alert.containsString("Hey you have a new message")) {
-                // TODO: OPEN MESSAGE SCREEEN --> RELOAD
+                // OPEN MESSAGE SCREEEN --> RELOAD
+                defaults.setValue(k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE, forKey: k_PM_MOVE_SCREEN)
             }
             if (alert.containsString("you have a new comment in your post:")) {
-                // TODO: OPEN FEED
+                // OPEN FEED
+                defaults.setValue(k_PM_MOVE_SCREEN_NOTI_FEED, forKey: k_PM_MOVE_SCREEN)
             }
             if (alert.containsString("You have a new Lead")) {
-                // TODO: OPEN CLIENT SCREEN (ONLY COACH)
+                // OPEN CLIENT SCREEN (ONLY COACH)
+                defaults.setValue(k_PM_MOVE_SCREEN_NOTI_NEW_LEAD, forKey: k_PM_MOVE_SCREEN)
             }
             if (alert.containsString("You have a new booking")){
-                // TODO:OPEN INCOMING SESSION SCREEN
+                // OPEN INCOMING SESSION SCREEN
+                defaults.setValue(k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION, forKey: k_PM_MOVE_SCREEN)
             }
+            
+            defaults.postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
         } else {
             if (alert.containsString("Hey you have a new message")) {
-                let notification = MessageView.viewFromNib(layout: .CardView)
-                                notification.configureTheme(.Success)
-                                notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
-                                notification.configureDropShadow()
-                                notification.configureContent(title: "Pummel", body: alert)
-                                notification.button?.hidden = true
-                                notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
-                                var notificationConfig = SwiftMessages.defaultConfig
-                                notificationConfig.duration = .Seconds(seconds: 3);
-                                notificationConfig.presentationStyle = .Top
-                                notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
-                                SwiftMessages.show(config: notificationConfig, view: notification)
+                defaults.setValue(k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE, forKey: k_PM_MOVE_SCREEN)
                 
-                                let foregroundButton = UIButton(action: { (UIControl) in
-                                    //TODO: GO TO LIST MESSAGE, IF DANG O LIST MESSAGE --> RELOAD
-                                    }, forControlEvents: .TouchUpInside)
-                                foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
-                                
-                                notification.addSubview(foregroundButton)
+                let notification = MessageView.viewFromNib(layout: .CardView)
+                notification.configureTheme(.Success)
+                notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
+                notification.configureDropShadow()
+                notification.configureContent(title: "Pummel", body: alert)
+                notification.button?.hidden = true
+                notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
+                var notificationConfig = SwiftMessages.defaultConfig
+                notificationConfig.duration = .Seconds(seconds: 3);
+                notificationConfig.presentationStyle = .Top
+                notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
+                SwiftMessages.show(config: notificationConfig, view: notification)
+                
+                let foregroundButton = UIButton(action: { (UIControl) in
+                    //TODO: GO TO LIST MESSAGE, IF DANG O LIST MESSAGE --> RELOAD
+                    defaults.setValue(k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE, forKey: k_PM_MOVE_SCREEN)
+                    
+                    }, forControlEvents: .TouchUpInside)
+                foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
+                
+                notification.addSubview(foregroundButton)
             }
             
             if (alert.containsString("you have a new comment in your post:")) {
@@ -220,7 +237,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 notification.addSubview(foregroundButton)
             }
             if (alert.containsString("You have a new booking")){
-                // TODO:OPEN INCOMING SESSION SCREEN
+                // TODO: OPEN INCOMING SESSION SCREEN
                 let notification = MessageView.viewFromNib(layout: .CardView)
                 notification.configureTheme(.Success)
                 notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())

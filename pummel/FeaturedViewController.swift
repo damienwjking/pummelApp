@@ -62,10 +62,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         super.viewDidAppear(animated)
         
         let defaults = NSUserDefaults.standardUserDefaults()
-        let touch3DType = defaults.objectForKey(k_PM_3D_TOUCH) as! String
-        if touch3DType == "3dTouch_4" {
-            defaults.setObject(k_PM_3D_TOUCH_VALUE, forKey: k_PM_3D_TOUCH)
+        let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_4 {
+            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             self.sharePummel()
+        } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_FEED {
+            self.refresh()
         }
     }
     
