@@ -84,7 +84,7 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector(SessionCoachViewController.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SessionCoachViewController.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
         self.getListSession()
     }
     

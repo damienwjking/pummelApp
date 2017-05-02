@@ -225,6 +225,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     func getMessage() {
         if (isStopLoadMessage == false) {
             if (offset == 0) {
+                NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
                 self.view.makeToastActivity(message: "Loading")
             }
             isLoadingMessage = true
@@ -744,6 +746,9 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             self.clickOnConnectionImage(indexPath)
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
+            NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
+            
             let addToIphoneContact = { (action:UIAlertAction!) -> Void in
                 self.clickOnRowMessage(indexPath)
             }

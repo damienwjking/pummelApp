@@ -45,7 +45,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector(SessionCoachViewController.getListClientAgain), name: k_PM_REFRESH_CLIENTS, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BookSessionSelectUserViewController.getListClientAgan), name: k_PM_REFRESH_CLIENTS, object: nil)
     }
     
     func getListClientAgan() {

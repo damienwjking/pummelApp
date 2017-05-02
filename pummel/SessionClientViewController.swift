@@ -82,7 +82,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector(SessionCoachViewController.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
         self.getListSession()
     }
     

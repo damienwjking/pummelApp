@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
     //    Mixpanel.initialize(token: "9007be62479ca54acb05b03991f1e56e")
+        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
         let token = "9007be62479ca54acb05b03991f1e56e"
         _ = Mixpanel.sharedInstanceWithToken(token)
@@ -155,7 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         } else {
             if (alert.containsString("Hey you have a new message")) {
-                
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
                 let notification = MessageView.viewFromNib(layout: .CardView)
                                 notification.configureTheme(.Success)
                                 notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
