@@ -248,7 +248,22 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                         self.view.hideToastActivity()
                         if (arrayMessageT.count > 0) {
                             for (message) in arrayMessageT {
-                                self.arrayMessages.append(message.mutableCopy() as! NSMutableDictionary)
+                                var isExist = false
+                                for (localMessage) in self.arrayMessages {
+                                    let localMessageID = localMessage[kId] as? Int
+                                    let messageID = message[kId]  as? Int
+                                    
+                                    if (localMessageID != nil && messageID != nil) {
+                                        if (localMessageID == messageID) {
+                                            isExist = true
+                                        }
+                                    }
+                                }
+                                
+                                if (isExist == false) {
+                                    self.arrayMessages.append(message.mutableCopy() as! NSMutableDictionary)
+                                }
+
                             }
                             
                             self.isLoadingMessage = false
