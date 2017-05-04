@@ -139,34 +139,42 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func gotNewMessage() {
         arrayMessages.removeAll()
-        self.listMessageTB.reloadData { 
-            self.isStopLoadMessage = false
-            self.offset = 0
-            self.getMessage()
+        self.listMessageTB.reloadData {
+            if (self.isStopLoadMessage == true) {
+                self.isStopLoadMessage = false
+                self.offset = 0
+                self.getMessage()
+            }
         }
     }
     
     func gotNewNotificationShowBage() {
         arrayMessages.removeAll()
         self.listMessageTB.reloadData {
-            self.isStopLoadMessage = false
-            self.offset = 0
-            self.getMessage()
+            if (self.isStopLoadMessage == true) {
+                self.isStopLoadMessage = false
+                self.offset = 0
+                self.getMessage()
+            }
         }
     }
     
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             if (scrollView == self.listMessageTB) {
-                if(velocity.y > 0){
+                if (self.arrayListLead.count == 0) {
                     self.horizontalViewHeightConstraint!.constant = 0
                 } else {
-                    self.horizontalViewHeightConstraint!.constant = 180
+                    if(velocity.y > 0){
+                        self.horizontalViewHeightConstraint!.constant = 0
+                    } else {
+                        self.horizontalViewHeightConstraint!.constant = 180
+                    }
+                    
+                    UIView.animateWithDuration(0.3, animations: {
+                        self.view.layoutIfNeeded()
+                    })
                 }
-                
-                UIView.animateWithDuration(0.3, animations: {
-                    self.view.layoutIfNeeded()
-                })
             }
         }
     }
@@ -244,7 +252,21 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                         self.view.hideToastActivity()
                         if (arrayMessageT.count > 0) {
                             for (message) in arrayMessageT {
-                                self.arrayMessages.append(message.mutableCopy() as! NSMutableDictionary)
+                                var isExist = false
+                                for (localMessage) in self.arrayMessages {
+                                    let localMessageID = localMessage[kId] as? Int64
+                                    let messageID = message[kId]  as? Int64
+                                    
+                                    if (localMessageID != nil && messageID != nil) {
+                                        if (localMessageID == messageID) {
+                                            isExist = true
+                                        }
+                                    }
+                                }
+                                
+                                if (isExist == false) {
+                                    self.arrayMessages.append(message.mutableCopy() as! NSMutableDictionary)
+                                }
                             }
                             
                             self.isLoadingMessage = false
