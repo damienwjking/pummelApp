@@ -140,22 +140,18 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     func gotNewMessage() {
         arrayMessages.removeAll()
         self.listMessageTB.reloadData {
-            if (self.isStopLoadMessage == true) {
-                self.isStopLoadMessage = false
-                self.offset = 0
-                self.getMessage()
-            }
+            self.isStopLoadMessage = false
+            self.offset = 0
+            self.getMessage()
         }
     }
     
     func gotNewNotificationShowBage() {
         arrayMessages.removeAll()
         self.listMessageTB.reloadData {
-            if (self.isStopLoadMessage == true) {
-                self.isStopLoadMessage = false
-                self.offset = 0
-                self.getMessage()
-            }
+            self.isStopLoadMessage = false
+            self.offset = 0
+            self.getMessage()
         }
     }
     
