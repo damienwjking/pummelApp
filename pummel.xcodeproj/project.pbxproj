@@ -2183,7 +2183,7 @@
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YW7P88KVE4;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2209,7 +2209,7 @@
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YW7P88KVE4;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

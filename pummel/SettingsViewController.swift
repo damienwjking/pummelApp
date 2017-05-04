@@ -664,7 +664,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func logOut() {
         self.view.makeToastActivity(message: "Logging Out")
-        
+        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
         Alamofire.request(.DELETE, kPMAPI_LOGOUT).response { (req, res, data, error) -> Void in
             print(res)
             self.view.hideToastActivity()

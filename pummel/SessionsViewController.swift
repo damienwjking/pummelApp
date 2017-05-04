@@ -86,6 +86,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     override func viewWillAppear(animated: Bool) {
         self.initNavigationBar()
+        NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
+        NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
         
         self.listMessageTB.reloadData()
         
@@ -125,6 +127,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func refreshControlTable() {
         if (self.isLoadingMessage == false) {
+            NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
             self.listMessageTB.contentOffset = CGPointZero
             
             self.gotNewMessage()
@@ -225,8 +229,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     func getMessage() {
         if (isStopLoadMessage == false) {
             if (offset == 0) {
-                NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
                 self.view.makeToastActivity(message: "Loading")
             }
             isLoadingMessage = true
@@ -743,11 +745,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         var properties = ["Name": "Navigation Click", "Label":"Go Chat"]
         
         if (tableView == listMessageTB) {
+            NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
             self.clickOnConnectionImage(indexPath)
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
-            NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
             
             let addToIphoneContact = { (action:UIAlertAction!) -> Void in
                 self.clickOnRowMessage(indexPath)
