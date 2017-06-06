@@ -423,6 +423,15 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     func getImageAvatarTextBox() {
+        
+        ImageRouter.getCurrentUserAvatar { (result, error) in
+            let userDetail = UIImage(data: result!)
+            
+            
+            print("123")
+            
+        }.fetchdata()
+        
         var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
