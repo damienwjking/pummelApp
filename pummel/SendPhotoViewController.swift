@@ -92,14 +92,18 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
-        viewKeyboard.removeFromSuperview()
-        otherKeyboardView.removeFromSuperview()
-        self.commentPhotoTV.resignFirstResponder()
+        if viewKeyboard != nil && viewKeyboard.superview != nil {
+            viewKeyboard.removeFromSuperview()
+            otherKeyboardView.removeFromSuperview()
+            self.commentPhotoTV.resignFirstResponder()
+        }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        viewKeyboard.removeFromSuperview()
-        otherKeyboardView.removeFromSuperview()
+        if viewKeyboard != nil && viewKeyboard.superview != nil {
+            viewKeyboard.removeFromSuperview()
+            otherKeyboardView.removeFromSuperview()
+        }
     }
     
     func setAvatar() {

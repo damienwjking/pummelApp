@@ -150,24 +150,17 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
             let firstname = userFeed[kFirstname] as? String
             cell.nameLB.text = firstname?.uppercaseString
             
-            if !(userFeed[kImageUrl] is NSNull) {
+            if (userFeed[kImageUrl] != nil) {
                 let imageLink = userFeed[kImageUrl] as! String
-                var photoLink = kPMAPI
-                photoLink.appendContentsOf(imageLink)
-                photoLink.appendContentsOf(widthHeight120)
-                if (NSCache.sharedInstance.objectForKey(photoLink) != nil) {
-                    let imageRes = NSCache.sharedInstance.objectForKey(photoLink) as! UIImage
-                    cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
-                } else {
-                    Alamofire.request(.GET, photoLink)
-                        .responseImage { response in
-                            if (response.response?.statusCode == 200) {
-                                let imageRes = response.result.value! as UIImage
-                                cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
-                                NSCache.sharedInstance.setObject(imageRes, forKey: photoLink)
-                            }
+                
+                ImageRouter.getImage(posString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
+                    if (error == nil) {
+                        let imageRes = result as! UIImage
+                        cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
+                    } else {
+                        print("Request failed with error: \(error)")
                     }
-                }
+                }).fetchdata()
             } else {
                 cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
             }
@@ -423,44 +416,15 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     func getImageAvatarTextBox() {
-        
-        ImageRouter.getCurrentUserAvatar { (result, error) in
-            let userDetail = UIImage(data: result!)
-            
-            
-            print("123")
-            
-        }.fetchdata()
-        
-        var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                let userDetail = JSON as! NSDictionary
-                if !(userDetail[kImageUrl] is NSNull) {
-                    var link = kPMAPI
-                    link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight120)
-                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                        self.avatarTextBox.image = imageRes
-                    } else {
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                self.avatarTextBox.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                        }
-                    }
-                } else {
-                    self.avatarTextBox.image = UIImage(named: "display-empty.jpg")
-                }
-            case .Failure(let error):
+        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight120, completed: { (result, error) in
+            if (error == nil) {
+                let textBoxImage = result as! UIImage
+                
+                self.avatarTextBox.image = textBoxImage
+            } else {
                 print("Request failed with error: \(error)")
             }
-        }
+        }).fetchdata()
     }
     
     func keyboardWillShow(notification: NSNotification) {

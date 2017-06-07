@@ -230,39 +230,19 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     
     func getBusinessImage() {
         if (coachDetail[kBusinessId] != nil) {
-            let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
-            var linkBusinessId = kPMAPI_BUSINESS
-            linkBusinessId.appendContentsOf(businessId)
-            Alamofire.request(.GET, linkBusinessId)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        
-                        let jsonBusiness = response.result.value as! NSDictionary
-                        if !(jsonBusiness[kImageUrl] is NSNull) {
-                            let businessLogoUrl = jsonBusiness[kImageUrl] as! String
-                            var prefixLogo = kPMAPI
-                            prefixLogo.appendContentsOf(businessLogoUrl)
-                            prefixLogo.appendContentsOf(widthHeight120)
-                            if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
-                                self.businessIMV.hidden = false
-                                let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
-                                self.businessIMV.image = imageRes
-                                self.aboutLeftDT.constant = 120
-                            } else {
-                                Alamofire.request(.GET, prefixLogo)
-                                    .responseImage { response in
-                                        if (response.response?.statusCode == 200) {
-                                            self.businessIMV.hidden = false
-                                            let imageRes = response.result.value! as UIImage
-                                            self.businessIMV.image = imageRes
-                                            self.aboutLeftDT.constant = 120
-                                            NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
-                                        }
-                                }
-                            }
-                        }
-                    }
-            }
+            let businessID = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+            
+            ImageRouter.getBusinessLogo(businessID: businessID, sizeString: widthHeight120, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    
+                    self.businessIMV.hidden = false
+                    self.businessIMV.image = imageRes
+                    self.aboutLeftDT.constant = 120
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
         }
     }
     

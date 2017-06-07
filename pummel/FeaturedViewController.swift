@@ -156,31 +156,24 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             cell.nameLB.text = firstname?.uppercaseString
         
             // Avatar
-            if !(userFeed[kImageUrl] is NSNull) {
+            if (userFeed[kImageUrl] != nil) {
                 let imageLink = userFeed[kImageUrl] as! String
-                var photoLink = kPMAPI
-                photoLink.appendContentsOf(imageLink)
-                let postfix = widthHeight120
-                photoLink.appendContentsOf(postfix)
-                if (NSCache.sharedInstance.objectForKey(photoLink) != nil) {
-                    let imageRes = NSCache.sharedInstance.objectForKey(photoLink) as! UIImage
-                    cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
-                } else {
-                    cell.avatarBT.setBackgroundImage(nil, forState: .Normal)
-                    Alamofire.request(.GET, photoLink)
-                        .responseImage { response in
-                            if (response.response?.statusCode == 200) {
-                                let imageRes = response.result.value! as UIImage
-                                let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                NSCache.sharedInstance.setObject(imageRes, forKey: photoLink)
-                                dispatch_async(dispatch_get_main_queue(),{
-                                    if updateCell != nil {
-                                         cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
-                                    }
-                                })
-                            }
+                ImageRouter.getImage(posString: imageLink, sizeString: widthHeight120) { (result, error) in
+                    if (error == nil) {
+                        let imageRes = result as! UIImage
+                        
+                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                        if updateCell != nil {
+                            dispatch_async(dispatch_get_main_queue(),{
+                                
+                                cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
+                                
+                            })
+                        }
+                    } else {
+                        print("Request failed with error: \(error)")
                     }
-                }
+                }.fetchdata()
             } else {
                 cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
             }

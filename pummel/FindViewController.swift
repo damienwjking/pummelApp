@@ -382,38 +382,19 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 
                 // Business ImageView
                 cell.cardView.connectV.hidden = true
-                if !(coachDetail[kBusinessId] is NSNull) {
+                if (coachDetail[kBusinessId] != nil) {
                     let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
-                    var linkBusinessId = kPMAPI_BUSINESS
-                    linkBusinessId.appendContentsOf(businessId)
-                    Alamofire.request(.GET, linkBusinessId)
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                                
-                                let jsonBusiness = response.result.value as! NSDictionary
-                                if !(jsonBusiness[kImageUrl] is NSNull) {
-                                    let businessLogoUrl = jsonBusiness[kImageUrl] as! String
-                                    var prefixLogo = kPMAPI
-                                    prefixLogo.appendContentsOf(businessLogoUrl)
-                                    prefixLogo.appendContentsOf(widthHeight120)
-                                    if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
-                                        cell.cardView.connectV.hidden = false
-                                        let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
-                                        cell.cardView.businessIMV.image = imageRes
-                                    } else {
-                                        Alamofire.request(.GET, prefixLogo)
-                                            .responseImage { response in
-                                                if (response.response?.statusCode == 200) {
-                                                    cell.cardView.connectV.hidden = false
-                                                    let imageRes = response.result.value! as UIImage
-                                                    cell.cardView.businessIMV.image = imageRes
-                                                    NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
-                                                }
-                                        }
-                                    }
-                                }
-                            }
-                    }
+                    
+                    ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
+                        if (error == nil) {
+                            cell.cardView.connectV.hidden = false
+                            
+                            let imageRes = result as! UIImage
+                            cell.cardView.businessIMV.image = imageRes
+                        } else {
+                            print("Request failed with error: \(error)")
+                        }
+                    }).fetchdata()
                 }
                 
                 // add Swipe gesture

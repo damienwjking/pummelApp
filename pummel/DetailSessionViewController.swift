@@ -251,87 +251,29 @@ class DetailSessionViewController: BaseViewController {
     }
     
     func setUserAvatar() {
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(String(format: "%ld", self.session.userId!))
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    if (response.result.value == nil) {return}
-                    let userDetail = response.result.value as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        let imageLink = userDetail[kImageUrl] as! String
-                        var prefix = kPMAPI
-                        prefix.appendContentsOf(imageLink)
-                        let postfix = widthHeight120
-                        prefix.appendContentsOf(postfix)
-                        if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                            self.userIMV.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, prefix)
-                                .responseImage { response in
-                                    if (response.response?.statusCode == 200) {
-                                        let imageRes = response.result.value! as UIImage
-                                        self.userIMV.image = imageRes
-                                        NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                                    }
-                            }
-                        }
-                    }
-
-                } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                }
-        }
+        let userID = String(format: "%ld", self.session.userId!)
+        
+        ImageRouter.getUserAvatar(userID: userID, sizeString: widthHeight120) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.userIMV.image = imageRes
+            } else {
+                print("Request failed with error: \(error)")
+            }
+        }.fetchdata()
     }
     
     func setCoachAvatar() {
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(String(format: "%ld", self.session.coachId!))
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    if (response.result.value == nil) {return}
-                    let userDetail = response.result.value as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        let imageLink = userDetail[kImageUrl] as! String
-                        var prefix = kPMAPI
-                        prefix.appendContentsOf(imageLink)
-                        let postfix = widthHeight120
-                        prefix.appendContentsOf(postfix)
-                        if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                            self.coachIMV.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, prefix)
-                                .responseImage { response in
-                                    if (response.response?.statusCode == 200) {
-                                        let imageRes = response.result.value! as UIImage
-                                        self.coachIMV.image = imageRes
-                                        NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                                    }
-                            }
-                        }
-                    }
-                    
-                } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                }
-        }
+        let coachID = String(format: "%ld", self.session.coachId!)
+        
+        ImageRouter.getUserAvatar(userID: coachID, sizeString: widthHeight120) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.coachIMV.image = imageRes
+            } else {
+                print("Request failed with error: \(error)")
+            }
+        }.fetchdata()
     }
     
     func getRandomColorString() -> String{

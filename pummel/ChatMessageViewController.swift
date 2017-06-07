@@ -80,35 +80,15 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     func getImageAvatarTextBox() {
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                let userDetail = JSON as! NSDictionary
-                if !(userDetail[kImageUrl] is NSNull) {
-                    var link = kPMAPI
-                    link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight120)
-                    
-                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                        self.avatarTextBox.image = imageRes
-                    } else {
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                self.avatarTextBox.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                        }
-                    }
-                } else {
-                    self.avatarTextBox.image = UIImage(named: "display-empty.jpg")
-                }
-            case .Failure(let error):
+        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight120, completed: { (result, error) in
+            if (error == nil) {
+                let textBoxImage = result as! UIImage
+                
+                self.avatarTextBox.image = textBoxImage
+            } else {
                 print("Request failed with error: \(error)")
-                }
-        }
+            }
+        }).fetchdata()
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
@@ -367,43 +347,31 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageImageTableViewCell, forIndexPath: indexPath) as! ChatMessageImageTableViewCell
-                var link = kPMAPI
-                link.appendContentsOf(message.objectForKey(kImageUrl) as! String)
-                link.appendContentsOf(widthHeight640)
-                Alamofire.request(.GET, link)
-                    .responseImage { response in
-                        let imageRes = response.result.value! as UIImage
-                       cell.photoIMW.image = imageRes
-                }
-                var prefix = kPMAPIUSER
-                prefix.appendContentsOf(String(format:"%0.f",message[kUserId]!.doubleValue))
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let userInfo = JSON as! NSDictionary
+                
+                let imageURLString = message.objectForKey(kImageUrl) as! String
+                ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight640, completed: { (result, error) in
+                    let imageRes = result as! UIImage
+                    cell.photoIMW.image = imageRes
+                }).fetchdata()
+                
+                let userID = String(format:"%0.f",message[kUserId]!.doubleValue)
+                
+                UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
+                    if (error == nil) {
+                        let userInfo = result as! NSDictionary
+                        
                         let name = userInfo.objectForKey(kFirstname) as! String
                         cell.nameLB.text = name.uppercaseString
-                        if !(userInfo[kImageUrl] is NSNull) {
-                            var link = kPMAPI
-                            link.appendContentsOf(userInfo[kImageUrl] as! String)
-                            link.appendContentsOf(widthHeight120)
-                            
-                            if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                                let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                                cell.avatarIMV.image = imageRes
-                            } else {
-                                Alamofire.request(.GET, link)
-                                    .responseImage { response in
-                                        let imageRes = response.result.value! as UIImage
-                                        cell.avatarIMV.image = imageRes
-                                        NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                }
-                            }
-                        }
-                    case .Failure(let error):
+                        
+                        let imageURLString = userInfo[kImageUrl] as! String
+                        ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight120, completed: { (result, error) in
+                            let imageRes = result as! UIImage
+                            cell.avatarIMV.image = imageRes
+                        }).fetchdata()
+                    } else {
                         print("Request failed with error: \(error)")
                     }
-                }
+                })
                 
                 cell.messageLB.text = (message.objectForKey(kText) == nil) ? "" :  message.objectForKey(kText) as? String
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
