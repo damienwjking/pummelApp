@@ -594,66 +594,27 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     func setAvatar() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) != true) {
-            var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        var link = kPMAPI
-                        link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight250)
-                        
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            self.avatarIMW.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    self.avatarIMW.image = imageRes
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                            }
-                        }
-                    } else {
-                        self.avatarIMW.image = UIImage(named:"display-empty.jpg")
-                    }
-                case .Failure(let error):
+        
+        if (defaults.boolForKey(k_PM_IS_COACH) == false) {
+            ImageRouter.getCurrentUserAvatar(sizeString: widthHeight250, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.avatarIMW.image = imageRes
+                } else {
                     print("Request failed with error: \(error)")
-                    }
-            }
-
+                }
+            }).fetchdata()
         } else {
-            var prefix = kPMAPICOACH
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userDetailFull = JSON as! NSDictionary
-                    let userDetail = userDetailFull[kUser] as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        var link = kPMAPI
-                        link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight250)
-                        
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            self.avatarIMW.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    self.avatarIMW.image = imageRes
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                            }
-                        }
-                    }
-                case .Failure(let error):
+            let coachID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            
+            ImageRouter.getCoachAvatar(coachID: coachID, sizeString: widthHeight250, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.avatarIMW.image = imageRes
+                } else {
                     print("Request failed with error: \(error)")
-                    }
-            }
+                }
+            }).fetchdata()
         }
     }
 

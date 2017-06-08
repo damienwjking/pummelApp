@@ -155,8 +155,11 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                 
                 ImageRouter.getImage(posString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
                     if (error == nil) {
-                        let imageRes = result as! UIImage
-                        cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
+                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                        if (updateCell != nil) {
+                            let imageRes = result as! UIImage
+                            cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
+                        }
                     } else {
                         print("Request failed with error: \(error)")
                     }

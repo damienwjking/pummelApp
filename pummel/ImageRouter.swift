@@ -14,6 +14,7 @@ typealias CompletionBlock = (result: AnyObject?, error: NSError?) -> Void
 enum ImageRouter: URLRequestConvertible {
     case getCurrentUserAvatar(sizeString: String, completed: CompletionBlock)
     case getUserAvatar(userID : String, sizeString: String, completed: CompletionBlock)
+    case getCoachAvatar(coachID : String, sizeString: String, completed: CompletionBlock)
     case getBusinessLogo(businessID : String, sizeString: String, completed: CompletionBlock)
     case getImage(posString: String, sizeString: String, completed: CompletionBlock)
     
@@ -22,6 +23,8 @@ enum ImageRouter: URLRequestConvertible {
         case .getCurrentUserAvatar(let sizeString, _):
             return sizeString
         case .getUserAvatar(_, let sizeString, _):
+            return sizeString
+        case .getCoachAvatar(_, let sizeString, _):
             return sizeString
         case .getBusinessLogo(_, let sizeString, _):
             return sizeString
@@ -36,6 +39,8 @@ enum ImageRouter: URLRequestConvertible {
             return completed
         case .getUserAvatar(_, _, let completed):
             return completed
+        case .getCoachAvatar(_, _, let completed):
+            return completed
         case .getBusinessLogo(_, _, let completed):
             return completed
         case .getImage(_, _, let completed):
@@ -48,6 +53,8 @@ enum ImageRouter: URLRequestConvertible {
         case .getCurrentUserAvatar:
             return .GET
         case .getUserAvatar:
+            return .GET
+        case .getCoachAvatar:
             return .GET
         case .getBusinessLogo:
             return .GET
@@ -67,6 +74,9 @@ enum ImageRouter: URLRequestConvertible {
             
         case .getUserAvatar(let userID, _, _):
             prefix = kPMAPIUSER + userID
+            
+        case .getCoachAvatar(let coachID, _, _):
+            prefix = kPMAPICOACH + coachID
             
         case .getBusinessLogo(let businessID, _, _):
             prefix = kPMAPI_BUSINESS + businessID
@@ -91,7 +101,7 @@ enum ImageRouter: URLRequestConvertible {
     
     func fetchdata() {
         switch self {
-        case .getCurrentUserAvatar, .getUserAvatar, .getBusinessLogo:
+        case .getCurrentUserAvatar, .getUserAvatar, .getCoachAvatar, .getBusinessLogo:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .Success(let JSON):

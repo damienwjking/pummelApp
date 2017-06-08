@@ -149,32 +149,14 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     }
     
     func setAvatar() {
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(userId)
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                let userDetail = JSON as! NSDictionary
-                if !(userDetail[kImageUrl] is NSNull) {
-                    var link = kPMAPI
-                    link.appendContentsOf(userDetail[kImageUrl] as! String)
-                    link.appendContentsOf(widthHeight160)
-                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                        self.avatarIMV.image = imageRes
-                    } else {
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                self.avatarIMV.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                        }
-                    }
-                }
-            case .Failure(let error):
+        ImageRouter.getUserAvatar(userID: self.userId, sizeString: widthHeight160) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.avatarIMV.image = imageRes
+            } else {
                 print("Request failed with error: \(error)")
-                }
-        }
+            }
+        }.fetchdata()
     }
     
     func updateUI() {

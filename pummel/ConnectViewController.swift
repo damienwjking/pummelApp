@@ -100,35 +100,31 @@ class ConnectViewController: BaseViewController {
                     let titleSendMessageText = "CHAT WITH ".stringByAppendingString(coachDetailName)
                     self.sendMessageBT.setTitle(titleSendMessageText.uppercaseString, forState: .Normal)
                     
-                    var link = kPMAPI
                     if !(JSON[kImageUrl] is NSNull) {
-                        link.appendContentsOf(JSON[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight236)
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            self.meAvatarIMV.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    self.meAvatarIMV.image = imageRes
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
+                        let imageURLString = JSON[kImageUrl] as! String
+                        
+                        ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight236, completed: { (result, error) in
+                            if (error == nil) {
+                                let imageRes = result as! UIImage
+                                self.meAvatarIMV.image = imageRes
+                            } else {
+                                print("Request failed with error: \(error)")
                             }
-                        }
+                        }).fetchdata()
                     }
                 }
         }
         
         let imageLink = coachDetail[kImageUrl] as? String
         if (imageLink?.isEmpty == false) {
-            prefix = kPMAPI
-            prefix.appendContentsOf(imageLink!)
-            prefix.appendContentsOf(widthHeight236)
-            Alamofire.request(.GET, prefix)
-                .responseImage { response in
-                    let imageRes = response.result.value! as UIImage
+            ImageRouter.getImage(posString: imageLink!, sizeString: widthHeight236, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
                     self.youAvatarIMV.image = imageRes
-            }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
         }
     }
     

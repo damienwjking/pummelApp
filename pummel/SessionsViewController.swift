@@ -359,31 +359,21 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                                     imageURL = " "
                                 }
                                 
-                                var link = kPMAPI
-                                if !(JSON[kImageUrl] is NSNull) {
-                                    link.appendContentsOf(JSON[kImageUrl] as! String)
-                                    link.appendContentsOf(widthHeight160)
-                                    if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                                        let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                                        dispatch_async(dispatch_get_main_queue(),{
-                                            message["userImage"] = imageRes
-                                            
-                                            self.listMessageTB.reloadData()
-                                        })
-                                    } else {
-                                        Alamofire.request(.GET, link)
-                                            .responseImage { response in
-                                                if (response.response?.statusCode == 200) {
-                                                    let imageRes = response.result.value! as UIImage
-                                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                                    dispatch_async(dispatch_get_main_queue(),{
-                                                        message["userImage"] = imageRes
-                                                        
-                                                        self.listMessageTB.reloadData()
-                                                    })
-                                                }
+                                if (JSON[kImageUrl] != nil) {
+                                    let imageURLString = JSON[kImageUrl] as! String
+                                    
+                                    ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                        if (error == nil) {
+                                            dispatch_async(dispatch_get_main_queue(),{
+                                                let imageRes = result as! UIImage
+                                                message["userImage"] = imageRes
+                                                
+                                                self.listMessageTB.reloadData()
+                                            })
+                                        } else {
+                                            print("Request failed with error: \(error)")
                                         }
-                                    }
+                                    }).fetchdata()
                                 } else {
                                     message["userImage"] = UIImage(named:"display-empty.jpg")
                                     
@@ -544,33 +534,39 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             
             let lead = self.arrayListLead[indexPath.row]
             let targetUserId = String(format:"%0.f", lead["userId"]!.doubleValue)
-            var prefixUser = kPMAPIUSER
-            prefixUser.appendContentsOf(targetUserId)
-            Alamofire.request(.GET, prefixUser)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userInfo = JSON as! NSDictionary
-                    let name = userInfo.objectForKey(kFirstname) as! String
-                    cell!.name.text = name.uppercaseString
-                    var link = kPMAPI
-                    if !(JSON[kImageUrl] is NSNull) {
-                        link.appendContentsOf(JSON[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                cell!.imageV.image = imageRes
-                                cell!.addButton.hidden = false
+            
+            UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
+                if (error == nil) {
+                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                    if (updateCell != nil) {
+                        let userInfo = result as! NSDictionary
+                        let name = userInfo.objectForKey(kFirstname) as! String
+                        cell!.name.text = name.uppercaseString
+                        
+                        if (userInfo[kImageUrl] != nil) {
+                            let imageURLString = userInfo[kImageUrl] as! String
+                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                if (error == nil) {
+                                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                                    if (updateCell != nil) {
+                                        let imageRes = result as! UIImage
+                                        cell!.imageV.image = imageRes
+                                        cell!.addButton.hidden = false
+                                    }
+                                } else {
+                                    print("Request failed with error: \(error)")
+                                }
+                            }).fetchdata()
+                        } else {
+                            cell?.imageV.image = UIImage(named: "display-empty.jpg")
+                            cell!.addButton.hidden = false
                         }
-                    } else {
-                        cell?.imageV.image = UIImage(named: "display-empty.jpg")
-                        cell!.addButton.hidden = false
                     }
-                    
-                case .Failure(let error):
+                } else {
                     print("Request failed with error: \(error)")
-                    }
-            }
+                }
+            }).fetchdata()
+            
             cell!.selectionStyle = .None
             return cell!
         }

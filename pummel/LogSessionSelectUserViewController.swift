@@ -162,31 +162,37 @@ class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegat
         
         cell.lbName.text = "..."
         cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-        var prefixUser = kPMAPIUSER
-        prefixUser.appendContentsOf(targetUserId)
-        Alamofire.request(.GET, prefixUser)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                if let userInfo = JSON as? NSDictionary {
-                    let name = userInfo.objectForKey(kFirstname) as! String
-                    cell.lbName.text = name.uppercaseString
-                    var link = kPMAPI
-                    if !(JSON[kImageUrl] is NSNull) {
-                        link.appendContentsOf(JSON[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                cell.imgAvatar.image = imageRes
+        
+        UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
+            let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+            if (updateCell != nil) {
+                if (error == nil) {
+                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                    if (updateCell != nil) {
+                        if let userInfo = result as? NSDictionary {
+                            let name = userInfo.objectForKey(kFirstname) as! String
+                            cell.lbName.text = name.uppercaseString
+                            
+                            let imageURLString = userInfo[kImageUrl] as! String
+                            
+                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                                if (updateCell != nil) {
+                                    if (error == nil) {
+                                        let imageRes = result as! UIImage
+                                        cell.imgAvatar.image = imageRes
+                                    } else {
+                                        print("Request failed with error: \(error)")
+                                    }
+                                }
+                            }).fetchdata()
                         }
                     }
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
-        }
-        
+            }
+        }.fetchdata()
         
         return cell
     }

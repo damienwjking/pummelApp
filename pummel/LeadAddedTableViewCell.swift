@@ -51,28 +51,18 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", forIndexPath: indexPath) as! LeadAddedCollectionViewCell
 
-        var prefixUser = kPMAPIUSER
-        prefixUser.appendContentsOf(idUser)
-        Alamofire.request(.GET, prefixUser)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                if let userInfo = JSON as? NSDictionary {
-                    var link = kPMAPI
-                    if !(userInfo[kImageUrl] is NSNull) {
-                        link.appendContentsOf(userInfo[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                cell.imgAvatar.image = imageRes
-                        }
-                    }
+        ImageRouter.getUserAvatar(userID: self.idUser, sizeString: widthHeight160) { (result, error) in
+            if (error == nil) {
+                let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
+                if (updateCell != nil) {
+                    let imageRes = result as! UIImage
+                    cell.imgAvatar.image = imageRes
                 }
-            case .Failure(let error):
+            } else {
                 print("Request failed with error: \(error)")
-                }
-        }
+            }
+        }.fetchdata()
+        
         return cell
     }
     

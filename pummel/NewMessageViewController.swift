@@ -157,46 +157,23 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                 name.appendContentsOf(user.objectForKey(kLastName) as! String)
             }
             cell.nameLB.text = name.uppercaseString
-            let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
-            var prefix = kPMAPIUSER
-            prefix.appendContentsOf(idSender)
             
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-            if (NSCache.sharedInstance.objectForKey(idSender) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(idSender) as! UIImage
-                cell.avatarIMV.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let userDetail = JSON as! NSDictionary
-                        if !(userDetail[kImageUrl] is NSNull) {
-                            var link = kPMAPI
-                            link.appendContentsOf(userDetail[kImageUrl] as! String)
-                            link.appendContentsOf(widthHeight160)
-                            
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: idSender)
-                                    dispatch_async(dispatch_get_main_queue(),{
-                                        if updateCell != nil {
-                                            cell.avatarIMV.image = imageRes
-                                        }
-                                    })
-                            }
-                            
-                        } else {
-                            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-                        }
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
-                        }
+            
+            let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
+            ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
+                if (error == nil) {
+                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                    if updateCell != nil {
+                        let imageRes = result as! UIImage
+                        dispatch_async(dispatch_get_main_queue(),{
+                            cell.avatarIMV.image = imageRes
+                        })
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-            }
-            
-            
+            }).fetchdata()
             
             return cell
         } else {
@@ -209,45 +186,24 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                 name.appendContentsOf(user.objectForKey(kLastName) as! String)
             }
             cell.nameLB.text = name.uppercaseString
-            let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
-            var prefix = kPMAPIUSER
-            prefix.appendContentsOf(idSender)
             
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-            if (NSCache.sharedInstance.objectForKey(idSender) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(idSender) as! UIImage
-                cell.avatarIMV.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let userDetail = JSON as! NSDictionary
-                        if !(userDetail[kImageUrl] is NSNull) {
-                            var link = kPMAPI
-                            link.appendContentsOf(userDetail[kImageUrl] as! String)
-                            link.appendContentsOf(widthHeight160)
-                            
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: idSender)
-                                    dispatch_async(dispatch_get_main_queue(),{
-                                        if updateCell != nil {
-                                            cell.avatarIMV.image = imageRes
-                                        }
-                                    })
-                            }
-                            
-                        } else {
-                            cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-                        }
-                    case .Failure(let error):
-                        print("Request failed with error: \(error)")
-                        }
-                }
-            }
             
+            let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
+            ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
+                if (error == nil) {
+                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                    if updateCell != nil {
+                        let imageRes = result as! UIImage
+                        dispatch_async(dispatch_get_main_queue(),{
+                            cell.avatarIMV.image = imageRes
+                        })
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
+                        
             return cell
 
         }

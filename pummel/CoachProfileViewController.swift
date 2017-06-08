@@ -235,9 +235,9 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             ImageRouter.getBusinessLogo(businessID: businessID, sizeString: widthHeight120, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
+                    self.businessIMV.image = imageRes
                     
                     self.businessIMV.hidden = false
-                    self.businessIMV.image = imageRes
                     self.aboutLeftDT.constant = 120
                 } else {
                     print("Request failed with error: \(error)")

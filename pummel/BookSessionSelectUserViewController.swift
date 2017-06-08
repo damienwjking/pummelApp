@@ -184,32 +184,16 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         
         cell.lbName.text = "..."
         cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-        var prefixUser = kPMAPIUSER
-        prefixUser.appendContentsOf(targetUserId)
-        Alamofire.request(.GET, prefixUser)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                if let userInfo = JSON as? NSDictionary {
-                    let name = userInfo.objectForKey(kFirstname) as! String
-                    cell.lbName.text = name.uppercaseString
-                    var link = kPMAPI
-                    if !(JSON[kImageUrl] is NSNull) {
-                        link.appendContentsOf(JSON[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                cell.imgAvatar.image = imageRes
-                        }
-                    }
-                }
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
-        }
-
         
+        ImageRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                cell.imgAvatar.image = imageRes
+            } else {
+                print("Request failed with error: \(error)")
+            }
+        }.fetchdata()
+    
         return cell
     }
     

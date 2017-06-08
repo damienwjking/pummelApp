@@ -275,79 +275,41 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     func setAvatar() {
-        if !(coachDetail[kImageUrl] is NSNull) {
+        if (coachDetail[kImageUrl] != nil) {
             let imageLink = coachDetail[kImageUrl] as! String
-            var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
-            let postfix = widthHeight250
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                self.avatarIMV.image = imageRes
-                self.coachBorderBackgroundV.hidden = false
-                
-                if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-                    self.coachBorderV.hidden = false
+            
+            ImageRouter.getImage(posString: imageLink, sizeString: widthHeight250, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.avatarIMV.image = imageRes
+                    self.coachBorderBackgroundV.hidden = false
+                    
+                    if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                        self.coachBorderV.hidden = false
+                    } else {
+                        self.coachBorderV.hidden = true
+                    }
                 } else {
-                    self.coachBorderV.hidden = true
+                    print("Request failed with error: \(error)")
                 }
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.avatarIMV.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                            self.coachBorderBackgroundV.hidden = false
-                            
-                            if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-                                self.coachBorderV.hidden = false
-                            } else {
-                                self.coachBorderV.hidden = true
-                            }
-                        }
-                }
-            }
+            }).fetchdata()
         }
     }
     
     func setBusiness() {
-        if !(coachDetail[kBusinessId] is NSNull) {
-            if (coachDetail[kBusinessId] != nil) {
-                let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
-                var linkBusinessId = kPMAPI_BUSINESS
-                linkBusinessId.appendContentsOf(businessId)
-                Alamofire.request(.GET, linkBusinessId)
-                    .responseJSON { response in
-                        if response.response?.statusCode == 200 {
-                            
-                            let jsonBusiness = response.result.value as! NSDictionary
-                            if !(jsonBusiness[kImageUrl] is NSNull) {
-                                let businessLogoUrl = jsonBusiness[kImageUrl] as! String
-                                var prefixLogo = kPMAPI
-                                prefixLogo.appendContentsOf(businessLogoUrl)
-                                prefixLogo.appendContentsOf(widthHeight120)
-                                if (NSCache.sharedInstance.objectForKey(prefixLogo) != nil) {
-                                    self.businessIMV.hidden = false
-                                    let imageRes = NSCache.sharedInstance.objectForKey(prefixLogo) as! UIImage
-                                    self.businessIMV.image = imageRes
-                                    self.aboutLeftDT.constant = 120
-                                } else {
-                                    Alamofire.request(.GET, prefixLogo)
-                                        .responseImage { response in
-                                            if (response.response?.statusCode == 200) {
-                                                self.businessIMV.hidden = false
-                                                let imageRes = response.result.value! as UIImage
-                                                self.businessIMV.image = imageRes
-                                                self.aboutLeftDT.constant = 120
-                                                NSCache.sharedInstance.setObject(imageRes, forKey: prefixLogo)
-                                            }
-                                    }
-                                }
-                            }
-                        }
+        if (coachDetail[kBusinessId] != nil) {
+            let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+            
+            ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
+                if (error == nil) {
+                    self.businessIMV.hidden = false
+                    let imageRes = result as! UIImage
+                    self.businessIMV.image = imageRes
+                    self.aboutLeftDT.constant = 120
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-            }
+            }).fetchdata()
         }
     }
     

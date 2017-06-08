@@ -221,51 +221,26 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageHeaderTableViewCell, forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell
-            var prefix = kPMAPIUSER
-            prefix.appendContentsOf(userIdTarget as String)
-            cell.avatarIMV.image = nil
             
             let avatarGesture = UITapGestureRecognizer(target: self, action:#selector(self.avatarClicked))
             cell.avatarIMV.addGestureRecognizer(avatarGesture)
             cell.avatarIMV.userInteractionEnabled = true
+            cell.avatarIMV.image = UIImage(named: "display-empty.jpg")
             
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
-                    self.targerUser = userDetail
+            ImageRouter.getUserAvatar(userID: self.userIdTarget, sizeString: widthHeight160, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
                     
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        var link = kPMAPI
-                        link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                    if updateCell != nil {
+                        dispatch_async(dispatch_get_main_queue(),{
                             cell.avatarIMV.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    if (response.response?.statusCode == 200) {
-                                        let imageRes = response.result.value! as UIImage
-                                        NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                        let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                        dispatch_async(dispatch_get_main_queue(),{
-                                            if updateCell != nil {
-                                                cell.avatarIMV.image = imageRes
-                                            }
-                                        })
-                                        
-                                    }
-                            }
-                        }
-                    } else {
-                        cell.avatarIMV.image = UIImage(named: "display-empty.jpg")
+                        })
                     }
-                case .Failure(let error):
+                } else {
                     print("Request failed with error: \(error)")
-                    }
-            }
+                }
+            }).fetchdata()
             
             if (typeCoach == true) {
                 cell.nameChatUserLB.text = coachName
@@ -297,46 +272,40 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             let message = arrayChat[num-indexPath.row] as! NSDictionary
             if (message[kImageUrl] is NSNull) {
                 let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageWithoutImageTableViewCell, forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
-                var prefix = kPMAPIUSER
-                prefix.appendContentsOf(String(format:"%0.f",message[kUserId]!.doubleValue))
+                
+                let userID = String(format:"%0.f",message[kUserId]!.doubleValue)
                 cell.avatarIMV.image = nil
-                Alamofire.request(.GET, prefix)
-                        .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                            let userInfo = JSON as! NSDictionary
+                
+                UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
+                    if (error == nil) {
+                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                        if (updateCell != nil) {
+                            let userInfo = result as! NSDictionary
+                            
                             let name = userInfo.objectForKey(kFirstname) as! String
                             cell.nameLB.text = name.uppercaseString
-                            if !(userInfo[kImageUrl] is NSNull) {
-                                var link = kPMAPI
-                                link.appendContentsOf(userInfo[kImageUrl] as! String)
-                                link.appendContentsOf(widthHeight160)
+                            if (userInfo[kImageUrl] != nil) {
+                                let userImageURL = userInfo[kImageUrl] as! String
                                 
-                                if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                                    let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                                    cell.avatarIMV.image = imageRes
-                                } else {
-                                    Alamofire.request(.GET, link)
-                                        .responseImage { response in
-                                            if (response.response?.statusCode == 200) {
-                                                let imageRes = response.result.value! as UIImage
-                                                NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                                                let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                                dispatch_async(dispatch_get_main_queue(),{
-                                                    if updateCell != nil {
-                                                        cell.avatarIMV.image = imageRes
-                                                    }
-                                                })
-                                                
-                                            }
+                                ImageRouter.getImage(posString: userImageURL, sizeString: widthHeight160, completed: { (result, error) in
+                                    let imageRes = result as! UIImage
+                                    
+                                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                                    if updateCell != nil {
+                                        dispatch_async(dispatch_get_main_queue(),{
+                                            cell.avatarIMV.image = imageRes
+                                        })
                                     }
-                                }
+                                }).fetchdata()
+                                
                             } else {
                                 cell.avatarIMV.image = UIImage(named: "display-empty.jpg")
                             }
-                    case .Failure(let error):
-                            print("Request failed with error: \(error)")
+                        }
+                    } else {
+                        print("Request failed with error: \(error)")
                     }
-                }
+                }).fetchdata()
                 
                 if (message.objectForKey(kText) == nil) {
                     cell.messageLB.text = ""
@@ -350,28 +319,37 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 let imageURLString = message.objectForKey(kImageUrl) as! String
                 ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight640, completed: { (result, error) in
-                    let imageRes = result as! UIImage
-                    cell.photoIMW.image = imageRes
+                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                    if (updateCell != nil) {
+                        let imageRes = result as! UIImage
+                        cell.photoIMW.image = imageRes
+                    }
                 }).fetchdata()
                 
                 let userID = String(format:"%0.f",message[kUserId]!.doubleValue)
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let userInfo = result as! NSDictionary
-                        
-                        let name = userInfo.objectForKey(kFirstname) as! String
-                        cell.nameLB.text = name.uppercaseString
-                        
-                        let imageURLString = userInfo[kImageUrl] as! String
-                        ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight120, completed: { (result, error) in
-                            let imageRes = result as! UIImage
-                            cell.avatarIMV.image = imageRes
-                        }).fetchdata()
+                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                        if (updateCell != nil) {
+                            let userInfo = result as! NSDictionary
+                            
+                            let name = userInfo.objectForKey(kFirstname) as! String
+                            cell.nameLB.text = name.uppercaseString
+                            
+                            let imageURLString = userInfo[kImageUrl] as! String
+                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight120, completed: { (result, error) in
+                                let updateCell = tableView.cellForRowAtIndexPath(indexPath)
+                                if (updateCell != nil) {
+                                    let imageRes = result as! UIImage
+                                    cell.avatarIMV.image = imageRes
+                                }
+                            }).fetchdata()
+                        }
                     } else {
                         print("Request failed with error: \(error)")
                     }
-                })
+                }).fetchdata()
                 
                 cell.messageLB.text = (message.objectForKey(kText) == nil) ? "" :  message.objectForKey(kText) as? String
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
