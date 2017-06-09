@@ -12,8 +12,14 @@
 import UIKit
 import Alamofire
 import Mixpanel
+import AVKit
+import AVFoundation
+import PhotosUI
 
-class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var smallIndicatorView: UIView!
     @IBOutlet weak var medIndicatorView: UIView!
@@ -95,6 +101,9 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     var offset: Int = 0
     var isStopGetListPhotos : Bool = false
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    
+    let imagePickerController = UIImagePickerController()
+    var videoView: UIView? = nil
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -193,6 +202,56 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.getDetail()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Remove video layer
+        for layer in (self.videoView?.layer.sublayers)! {
+            layer.removeFromSuperlayer()
+        }
+        
+        // Remove video view
+        self.videoView?.removeFromSuperview()
+    }
+    
+    func showVideoLayout(videoURL: String) {
+        // Move avatar to top left
+        let newAvatarSize: CGFloat = 37.0
+        let margin: CGFloat = 10.0
+        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + margin
+        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + margin
+        self.avatarIMVWidthConstraint.constant = newAvatarSize
+        
+        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
+        self.coachBorderV.layer.cornerRadius = (newAvatarSize + 10)/2
+        self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
+        
+        // Hidden indicator view
+        self.smallIndicatorView.hidden = true
+        self.medIndicatorView.hidden = true
+        self.bigIndicatorView.hidden = true
+        self.bigBigIndicatorView.hidden = true
+        
+        // Animation
+        UIView.animateWithDuration(0.5, animations: {
+            self.detailV.layoutIfNeeded()
+            }) { (_) in
+                // Show video
+                self.videoView = UIView.init(frame: self.detailV.bounds)
+//                let videoURL = NSURL(string: kPMAPI + videoURL + ".mp4")
+                let videoURL = NSURL(string: "http://api.pummel.fit/api/uploads/889/videoRender")
+                let player = AVPlayer(URL: videoURL!)
+                let playerLayer = AVPlayerLayer(player: player)
+                playerLayer.frame = self.videoView!.bounds
+                self.videoView!.layer.addSublayer(playerLayer)
+                
+                self.detailV.insertSubview(self.videoView!, atIndex: 0)
+                
+                player.play()
+
+        }
+    }
+    
     func setting() {
         performSegueWithIdentifier("goSetting", sender: nil)
         
@@ -260,6 +319,12 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                     } else {
                         self.updateUIUser()
                         self.getListImage()
+                    }
+                    
+                    let videoURL = self.coachDetail["videoUrl"] as? String
+                    // check Video URL
+                    if (videoURL?.isEmpty == false) {
+                        self.showVideoLayout(videoURL!)
                     }
                 } else if response.response?.statusCode == 401 {
                     let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
@@ -912,5 +977,26 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
         }
+    }
+    
+    @IBAction func cameraButtonClicked(sender: AnyObject) {
+        imagePickerController.allowsEditing = false
+        imagePickerController.sourceType = .PhotoLibrary
+        imagePickerController.delegate = self
+        imagePickerController.mediaTypes = ["public.movie"]
+        
+        presentViewController(imagePickerController, animated: true, completion: nil)
+    }
+    
+    // MARK: UIImagePickerControllerDelegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let videoURL = info["UIImagePickerControllerReferenceURL"] as? NSURL
+        let data = NSData(contentsOfURL: videoURL!)
+        
+        // TODO: send video by method mutipart to server
+        
+        
+        
+        imagePickerController.dismissViewControllerAnimated(true, completion: nil)
     }
 }
