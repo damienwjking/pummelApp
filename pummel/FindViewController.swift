@@ -19,7 +19,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     var showLetUsHelp: Bool!
     var loadCardsFromXib = true
     var resultIndex = 0
-    var resultPage : Int = 30
     var coachTotalDetail: NSDictionary!
     var arrayResult : [NSDictionary] = []
     var arrayTags : NSArray!
@@ -140,7 +139,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     
     func searchNextPage() {
         if (self.stopSearch == false) {
-            self.resultPage += 30
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
             var prefix = kPMAPICOACH_SEARCH
@@ -156,7 +154,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             }
             
             prefix.appendContentsOf("limit=30")
-            prefix.appendContentsOf("&offset=".stringByAppendingString(String(resultPage)))
+            prefix.appendContentsOf("&offset=".stringByAppendingString(String(self.arrayResult.count)))
             let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, aVariable[kLong] as! Float, kLat, aVariable[kLat] as! Float)
             prefix.appendContentsOf(coordinateParams)
             
@@ -226,7 +224,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
         
         self.stopSearch = false
-        self.resultPage = 30
         
         self.endPagingCarousel(self.collectionView)
     }
