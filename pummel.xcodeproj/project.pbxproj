@@ -24,6 +24,8 @@
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
 		9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */; };
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
+		BA003AA01EEE3241002FE038 /* FeedRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA003A9F1EEE3241002FE038 /* FeedRouter.swift */; };
+		BA003AA41EEE5532002FE038 /* PMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA003AA31EEE5532002FE038 /* PMHelper.swift */; };
 		BA02EE2B1EE7B14300495943 /* UserRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA02EE2A1EE7B14300495943 /* UserRouter.swift */; };
 		BA0314911E155FC000982622 /* intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0314901E155FC000982622 /* intensity.png */; };
 		BA0314941E157C0300982622 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0314931E157C0300982622 /* Session.swift */; };
@@ -369,6 +371,8 @@
 		9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Client.storyboard; path = ../Client.storyboard; sourceTree = "<group>"; };
 		9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		A23FD1E636ACA8E6CDC611DF /* Pods-pummel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pummel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pummel/Pods-pummel.debug.xcconfig"; sourceTree = "<group>"; };
+		BA003A9F1EEE3241002FE038 /* FeedRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedRouter.swift; sourceTree = "<group>"; };
+		BA003AA31EEE5532002FE038 /* PMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMHelper.swift; sourceTree = "<group>"; };
 		BA02EE2A1EE7B14300495943 /* UserRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRouter.swift; sourceTree = "<group>"; };
 		BA0314901E155FC000982622 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
 		BA0314931E157C0300982622 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -803,6 +807,8 @@
 			children = (
 				BA81A4421EE68CA5002D626E /* ImageRouter.swift */,
 				BA02EE2A1EE7B14300495943 /* UserRouter.swift */,
+				BA003A9F1EEE3241002FE038 /* FeedRouter.swift */,
+				BA003AA31EEE5532002FE038 /* PMHelper.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -1779,6 +1785,8 @@
 				9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */,
 				F970A2A81D26384400932BFC /* ZLSwipeableView.swift in Sources */,
 				9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */,
+				BA003AA41EEE5532002FE038 /* PMHelper.swift in Sources */,
+				BA003AA01EEE3241002FE038 /* FeedRouter.swift in Sources */,
 				BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */,
 				F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */,
 				F9FE145C1CEBD29B004ABE34 /* FSImageCropView.swift in Sources */,

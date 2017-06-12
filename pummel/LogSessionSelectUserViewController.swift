@@ -164,33 +164,30 @@ class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegat
         cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
         
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
-            let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-            if (updateCell != nil) {
-                if (error == nil) {
-                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                    if (updateCell != nil) {
-                        if let userInfo = result as? NSDictionary {
-                            let name = userInfo.objectForKey(kFirstname) as! String
-                            cell.lbName.text = name.uppercaseString
-                            
-                            let imageURLString = userInfo[kImageUrl] as! String
-                            
-                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                                let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                                if (updateCell != nil) {
-                                    if (error == nil) {
-                                        let imageRes = result as! UIImage
-                                        cell.imgAvatar.image = imageRes
-                                    } else {
-                                        print("Request failed with error: \(error)")
-                                    }
+            if (error == nil) {
+                let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                if visibleCell == true {
+                    if let userInfo = result as? NSDictionary {
+                        let name = userInfo.objectForKey(kFirstname) as! String
+                        cell.lbName.text = name.uppercaseString
+                        
+                        let imageURLString = userInfo[kImageUrl] as! String
+                        
+                        ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                            let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                            if visibleCell == true {
+                                if (error == nil) {
+                                    let imageRes = result as! UIImage
+                                    cell.imgAvatar.image = imageRes
+                                } else {
+                                    print("Request failed with error: \(error)")
                                 }
-                            }).fetchdata()
-                        }
+                            }
+                        }).fetchdata()
                     }
-                } else {
-                    print("Request failed with error: \(error)")
                 }
+            } else {
+                print("Request failed with error: \(error)")
             }
         }.fetchdata()
         

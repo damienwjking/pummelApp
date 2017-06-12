@@ -1,38 +1,32 @@
 //
-//  UserRouter.swift
+//  FeedRouter.swift
 //  pummel
 //
-//  Created by Nguyễn Tấn Phúc on 6/7/17.
+//  Created by Nguyễn Tấn Phúc on 6/12/17.
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
 import Foundation
 import Alamofire
 
-enum UserRouter: URLRequestConvertible {
-    
-    case getCurrentUserInfo(completed: CompletionBlock)
-    case getUserInfo(userID : String, completed: CompletionBlock)
-    case checkCoachOfUser(userID : String, completed: CompletionBlock)
+enum FeedRouter: URLRequestConvertible {
+    case getListFeed(offset: Int, completed: CompletionBlock)
+    case getUserInfo(userID : String, completed: CompletionBlock) // delete
     
     var comletedBlock: CompletionBlock {
         switch self {
-        case .getCurrentUserInfo(let completed):
+        case .getListFeed(_, let completed):
             return completed
         case .getUserInfo(_, let completed):
-            return completed
-        case .checkCoachOfUser(_, let completed):
             return completed
         }
     }
     
     var method: Alamofire.Method {
         switch self {
-        case .getCurrentUserInfo:
+        case .getListFeed:
             return .GET
         case .getUserInfo:
-            return .GET
-        case .checkCoachOfUser:
             return .GET
         }
     }
@@ -43,14 +37,11 @@ enum UserRouter: URLRequestConvertible {
         
         var prefix = ""
         switch self {
-        case .getCurrentUserInfo:
-            prefix = kPMAPIUSER + currentUserID
+        case .getListFeed(let offset, _):
+            prefix = kPMAPI_POST_OFFSET + String(offset)
             
         case .getUserInfo(let userID, _):
             prefix = kPMAPIUSER + userID
-            
-        case .checkCoachOfUser(let userID, _):
-            prefix = kPMAPICOACH + userID
         }
         
         return prefix
@@ -69,24 +60,15 @@ enum UserRouter: URLRequestConvertible {
     
     func fetchdata() {
         switch self {
-        case .getCurrentUserInfo, .getUserInfo:
+        case .getListFeed, .getUserInfo:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
+                    let userDetail = JSON as! [NSDictionary]
                     
                     self.comletedBlock(result: userDetail, error: nil)
                 case .Failure(let error):
                     self.comletedBlock(result: nil, error: error)
-                }
-            })
-            
-        case checkCoachOfUser:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
-                if response.response?.statusCode == 200 {
-                    self.comletedBlock(result: true, error: nil)
-                } else {
-                    self.comletedBlock(result: false, error: nil)
                 }
             })
         }

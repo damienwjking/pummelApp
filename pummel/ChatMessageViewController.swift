@@ -231,8 +231,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     
-                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                    if updateCell != nil {
+                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    if visibleCell == true {
                         dispatch_async(dispatch_get_main_queue(),{
                             cell.avatarIMV.image = imageRes
                         })
@@ -278,8 +278,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                        if (updateCell != nil) {
+                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
                             let name = userInfo.objectForKey(kFirstname) as! String
@@ -288,13 +288,17 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                                 let userImageURL = userInfo[kImageUrl] as! String
                                 
                                 ImageRouter.getImage(posString: userImageURL, sizeString: widthHeight160, completed: { (result, error) in
-                                    let imageRes = result as! UIImage
-                                    
-                                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                                    if updateCell != nil {
-                                        dispatch_async(dispatch_get_main_queue(),{
-                                            cell.avatarIMV.image = imageRes
-                                        })
+                                    if (error == nil) {
+                                        let imageRes = result as! UIImage
+                                        
+                                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                        if visibleCell == true {
+                                            dispatch_async(dispatch_get_main_queue(),{
+                                                cell.avatarIMV.image = imageRes
+                                            })
+                                        }
+                                    } else {
+                                        print("Request failed with error: \(error)")
                                     }
                                 }).fetchdata()
                                 
@@ -319,10 +323,14 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 let imageURLString = message.objectForKey(kImageUrl) as! String
                 ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight640, completed: { (result, error) in
-                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                    if (updateCell != nil) {
-                        let imageRes = result as! UIImage
-                        cell.photoIMW.image = imageRes
+                    if (error == nil) {
+                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        if visibleCell == true {
+                            let imageRes = result as! UIImage
+                            cell.photoIMW.image = imageRes
+                        }
+                    } else {
+                        print("Request failed with error: \(error)")
                     }
                 }).fetchdata()
                 
@@ -330,8 +338,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                        if (updateCell != nil) {
+                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
                             let name = userInfo.objectForKey(kFirstname) as! String
@@ -339,10 +347,14 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             
                             let imageURLString = userInfo[kImageUrl] as! String
                             ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight120, completed: { (result, error) in
-                                let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                                if (updateCell != nil) {
-                                    let imageRes = result as! UIImage
-                                    cell.avatarIMV.image = imageRes
+                                if (error == nil) {
+                                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                    if visibleCell == true {
+                                        let imageRes = result as! UIImage
+                                        cell.avatarIMV.image = imageRes
+                                    }
+                                } else {
+                                    print("Request failed with error: \(error)")
                                 }
                             }).fetchdata()
                         }

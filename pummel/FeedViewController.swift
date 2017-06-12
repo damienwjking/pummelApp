@@ -155,8 +155,8 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                 
                 ImageRouter.getImage(posString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
                     if (error == nil) {
-                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                        if (updateCell != nil) {
+                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        if visibleCell == true {
                             let imageRes = result as! UIImage
                             cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
                         }

@@ -162,12 +162,10 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         
-                        let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                        if updateCell != nil {
+                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        if visibleCell == true {
                             dispatch_async(dispatch_get_main_queue(),{
-                                
                                 cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
-                                
                             })
                         }
                     } else {

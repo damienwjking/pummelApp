@@ -537,8 +537,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                    if (updateCell != nil) {
+                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    if visibleCell == true {
                         let userInfo = result as! NSDictionary
                         let name = userInfo.objectForKey(kFirstname) as! String
                         cell!.name.text = name.uppercaseString
@@ -547,8 +547,8 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                             let imageURLString = userInfo[kImageUrl] as! String
                             ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
-                                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                                    if (updateCell != nil) {
+                                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                    if visibleCell == true {
                                         let imageRes = result as! UIImage
                                         cell!.imageV.image = imageRes
                                         cell!.addButton.hidden = false

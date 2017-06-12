@@ -163,8 +163,8 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
             ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
-                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                    if updateCell != nil {
+                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    if visibleCell == true {
                         let imageRes = result as! UIImage
                         dispatch_async(dispatch_get_main_queue(),{
                             cell.avatarIMV.image = imageRes
@@ -192,8 +192,8 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
             ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
-                    let updateCell = tableView.cellForRowAtIndexPath(indexPath)
-                    if updateCell != nil {
+                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    if visibleCell == true {
                         let imageRes = result as! UIImage
                         dispatch_async(dispatch_get_main_queue(),{
                             cell.avatarIMV.image = imageRes
