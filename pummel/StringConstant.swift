@@ -163,6 +163,8 @@ let kUserIdTarget = "userIdTarget"
 let kUserIdRequest = "userIdRequest"
 let kActivityId = "activityId"
 let kCoach = "coach"
+let kSubTitle = "subtitle"
+let kDiscount = "discount"
 
 // String
 let kLogoutSuccess = "Logout successful"
@@ -281,6 +283,7 @@ let kGoProfile = "goProfile"
 let kGoUserProfile = "goUserProfile"
 let kSendMessageConnection = "sendMessageConnection"
 let kClickURLLink = "clickURLLink"
+let kGoDiscount = "goDiscount"
 
 
 // Seting

@@ -61,6 +61,11 @@
 		BAFE18461E2094F000387C53 /* connected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18431E2094F000387C53 /* connected@2x.png */; };
 		BAFE18471E2094F000387C53 /* connected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BAFE18441E2094F000387C53 /* connected@3x.png */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
+		E84890A31EEE5733003201A9 /* FeedDiscountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84890A21EEE5733003201A9 /* FeedDiscountView.swift */; };
+		E8499E6D1EEF89A7008A65C2 /* DiscountColectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8499E6B1EEF89A7008A65C2 /* DiscountColectionViewCell.swift */; };
+		E8499E6E1EEF89A7008A65C2 /* DiscountColectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8499E6C1EEF89A7008A65C2 /* DiscountColectionViewCell.xib */; };
+		E8499E701EEFBDE7008A65C2 /* DiscountDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8499E6F1EEFBDE7008A65C2 /* DiscountDetailVC.swift */; };
+		E8499E721EEFBE36008A65C2 /* Discount.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8499E711EEFBE36008A65C2 /* Discount.storyboard */; };
 		E84D638A1E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D63871E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift */; };
 		E84D638B1E1D5D4E00CF8B67 /* BookUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D63881E1D5D4E00CF8B67 /* BookUserTableViewCell.swift */; };
 		E84D638C1E1D5D4E00CF8B67 /* BookUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E84D63891E1D5D4E00CF8B67 /* BookUserTableViewCell.xib */; };
@@ -415,6 +420,11 @@
 		BAFE18431E2094F000387C53 /* connected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connected@2x.png"; sourceTree = "<group>"; };
 		BAFE18441E2094F000387C53 /* connected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connected@3x.png"; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
+		E84890A21EEE5733003201A9 /* FeedDiscountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedDiscountView.swift; sourceTree = "<group>"; };
+		E8499E6B1EEF89A7008A65C2 /* DiscountColectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscountColectionViewCell.swift; sourceTree = "<group>"; };
+		E8499E6C1EEF89A7008A65C2 /* DiscountColectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DiscountColectionViewCell.xib; sourceTree = "<group>"; };
+		E8499E6F1EEFBDE7008A65C2 /* DiscountDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscountDetailVC.swift; sourceTree = "<group>"; };
+		E8499E711EEFBE36008A65C2 /* Discount.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Discount.storyboard; sourceTree = "<group>"; };
 		E84D63871E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionSelectUserViewController.swift; sourceTree = "<group>"; };
 		E84D63881E1D5D4E00CF8B67 /* BookUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookUserTableViewCell.swift; sourceTree = "<group>"; };
 		E84D63891E1D5D4E00CF8B67 /* BookUserTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookUserTableViewCell.xib; sourceTree = "<group>"; };
@@ -1162,6 +1172,7 @@
 				F9ABEAF31DC4C0A30084B70E /* Chat.storyboard */,
 				F9ABEAF51DC4C32A0084B70E /* Message.storyboard */,
 				F9ABEAF71DC4C53D0084B70E /* Feed.storyboard */,
+				E8499E711EEFBE36008A65C2 /* Discount.storyboard */,
 			);
 			name = Storyboard;
 			path = Sources;
@@ -1270,6 +1281,7 @@
 				F9CF54E01D7F9BFD00BE144F /* NewPostViewController.swift */,
 				F977EC0C1DAD442F007024EB /* NewCommentImageViewController.swift */,
 				BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */,
+				E8499E6F1EEFBDE7008A65C2 /* DiscountDetailVC.swift */,
 			);
 			name = Feed;
 			sourceTree = "<group>";
@@ -1282,6 +1294,9 @@
 				F9CF54D61D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift */,
 				F9CF54D81D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift */,
 				F96051B11DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift */,
+				E84890A21EEE5733003201A9 /* FeedDiscountView.swift */,
+				E8499E6B1EEF89A7008A65C2 /* DiscountColectionViewCell.swift */,
+				E8499E6C1EEF89A7008A65C2 /* DiscountColectionViewCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -1507,6 +1522,7 @@
 				E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */,
 				F9991E2B1D2A0A0E009C7731 /* message@3x.png in Resources */,
 				E86A65D61E0BD80400FF2935 /* LeadAddedTableViewCell.xib in Resources */,
+				E8499E721EEFBE36008A65C2 /* Discount.storyboard in Resources */,
 				F9F8EC421E35B22A005EC167 /* add.png in Resources */,
 				F9F8EC551E35B5C2005EC167 /* icon_add@2x.png in Resources */,
 				F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */,
@@ -1546,6 +1562,7 @@
 				F98C41921CF25F6500ECC66E /* feedPressed.png in Resources */,
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
 				F979E1681D7DC4BD00C717F0 /* comment@2x.png in Resources */,
+				E8499E6E1EEF89A7008A65C2 /* DiscountColectionViewCell.xib in Resources */,
 				F9ABEAE31DC4B4F50084B70E /* Session.storyboard in Resources */,
 				F98C41B41CF2650F00ECC66E /* close@2x.png in Resources */,
 				F92994301D35EB58000C00D5 /* whiteArrow@2x.png in Resources */,
@@ -1794,6 +1811,7 @@
 				9C1C54051C7938070083E47B /* AppDelegate.swift in Sources */,
 				E84D638B1E1D5D4E00CF8B67 /* BookUserTableViewCell.swift in Sources */,
 				BA04AB691E252BAC00F987BD /* ContactUserViewController.swift in Sources */,
+				E8499E701EEFBDE7008A65C2 /* DiscountDetailVC.swift in Sources */,
 				F9EAE8E31D6EFA0900FD32BE /* SettingNotificationHeaderTableViewCell.swift in Sources */,
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
 				F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */,
@@ -1816,12 +1834,14 @@
 				F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */,
 				E8D778E91E0AF6F00011E164 /* GroupLeadTableViewCell.swift in Sources */,
 				F98D5DA91E417764002C0C7A /* ChangePasswordViewController.swift in Sources */,
+				E84890A31EEE5733003201A9 /* FeedDiscountView.swift in Sources */,
 				F9ABEAE11DC36C3B0084B70E /* FontConstant.swift in Sources */,
 				F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */,
 				F977EC0D1DAD442F007024EB /* NewCommentImageViewController.swift in Sources */,
 				BA0314941E157C0300982622 /* Session.swift in Sources */,
 				F91727631DB3343200C6E612 /* HorizontalCell.swift in Sources */,
 				F9FE145B1CEBD29B004ABE34 /* FSConstants.swift in Sources */,
+				E8499E6D1EEF89A7008A65C2 /* DiscountColectionViewCell.swift in Sources */,
 				9C8FF40E1C84728400449A54 /* TransitionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

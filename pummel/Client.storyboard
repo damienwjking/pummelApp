@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="KkH-W6-md2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="KkH-W6-md2">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -181,7 +181,7 @@
                                         <rect key="frame" x="0.0" y="28" width="328" height="896"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eFh-8c-NyH" id="YJM-S3-wH9">
-                                            <rect key="frame" x="0.0" y="0.0" width="328" height="895.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="328" height="895"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kTd-pS-f1u">
@@ -469,6 +469,7 @@
                         <segue destination="Ccl-Of-O49" kind="show" identifier="goToFeedDetail" id="gUV-m3-HpE"/>
                         <segue destination="L48-MW-P9N" kind="push" identifier="sendMessageConnection" id="QU3-vC-ICQ"/>
                         <segue destination="U6V-S5-maD" kind="show" identifier="clickURLLink" id="cMA-0W-Q2t"/>
+                        <segue destination="tHT-M1-guu" kind="show" identifier="goDiscount" id="moB-c1-YUz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNB-e7-PKw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -562,6 +563,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MMJ-Ug-MB0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1289" y="197"/>
+        </scene>
+        <!--Discount-->
+        <scene sceneID="DOw-D2-xI5">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Discount" id="tHT-M1-guu" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="J7U-mb-2Yx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1634" y="337"/>
         </scene>
     </scenes>
     <resources>

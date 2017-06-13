@@ -123,4 +123,5 @@ let kPMAPICOACH_BOOK = "/bookV2"
 let kPMAPI_LEAD = "/lead"
 let kPMAPI_CHANGEPASS = "/password"
 let kPMAPI_POSTOFPHOTO = "/api/postOfPhoto"
+let kPMAPI_DISCOUNTS = "/api/discounts/?offset="
 
