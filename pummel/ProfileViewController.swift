@@ -214,7 +214,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.videoView?.removeFromSuperview()
     }
     
-    func showVideoLayout(videoURL: String) {
+    func showVideoLayout(videoURLString: String) {
         // Move avatar to top left
         let newAvatarSize: CGFloat = 37.0
         let margin: CGFloat = 10.0
@@ -238,8 +238,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             }) { (_) in
                 // Show video
                 self.videoView = UIView.init(frame: self.detailV.bounds)
-//                let videoURL = NSURL(string: kPMAPI + videoURL + ".mp4")
-                let videoURL = NSURL(string: "http://api.pummel.fit/api/uploads/889/videoRender")
+                let videoURL = NSURL(string: videoURLString)
                 let player = AVPlayer(URL: videoURL!)
                 let playerLayer = AVPlayerLayer(player: player)
                 playerLayer.frame = self.videoView!.bounds
@@ -994,7 +993,56 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         let data = NSData(contentsOfURL: videoURL!)
         
         // TODO: send video by method mutipart to server
+        let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
+        let videoData = NSData(contentsOfURL: videoPath)
+        let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+        let videoType = "video/" + videoExtend
+        let videoName = "video." + videoExtend
         
+        // Insert activity indicator
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        self.view.addSubview(activityView)
+        
+        // TODO: send video by method mutipart to server
+        var prefix = kPMAPIUSER
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_VIDEO)
+        var parameters = [String:AnyObject]()
+        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+                multipartFormData.appendBodyPart(data: videoData!,
+                    name: "file",
+                    fileName:videoName,
+                    mimeType:videoType)
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                }
+            },
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                    
+                case .Success(let upload, _, _):
+                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                    }
+                    upload.validate()
+                    upload.responseJSON { response in
+                        // Do nothing
+                    }
+                    
+                case .Failure(let _): break
+                    // Do nothing
+                }
+                
+                activityView.stopAnimating()
+                activityView.removeFromSuperview()
+            }
+        )
         
         
         imagePickerController.dismissViewControllerAnimated(true, completion: nil)

@@ -1006,9 +1006,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                         }
                         upload.validate()
                         upload.responseJSON { response in
-                            if response.result.error == nil {
-//                               self.avatarIMW.image = pickedImage
-                            }
+                            // Do nothing
                         }
                         
                     case .Failure(let _): break
