@@ -11,21 +11,25 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
+class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, FeedDiscountViewDelegate {
     
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
     var tags = [Tag]()
     var arrayFeeds : [NSDictionary] = []
+    var arrayDiscount : [NSDictionary] = []
     var currentFeedDetail: NSDictionary!
     var isStopFetch: Bool!
     var offset: Int = 0
+    var offsetDiscount: Int = 0
     @IBOutlet weak var noActivityYetLB: UILabel!
     @IBOutlet weak var connectWithCoachLB: UILabel!
     var refreshControl: UIRefreshControl!
     var isLoading : Bool = false
+    var isLoadDiscount : Bool = false
     var isGoFeedDetail : Bool = false
     var isGoProfileDetail : Bool = false
+    var headerDiscount:FeedDiscountView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,10 +78,14 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func refresh() {
         self.tableFeed.hidden = true
         self.arrayFeeds.removeAll()
+        self.arrayDiscount.removeAll()
         self.tableFeed.reloadData { 
             self.refreshControl.endRefreshing()
             self.isStopFetch = false
+            self.isLoadDiscount = false
             self.offset = 0
+            self.offsetDiscount = 0
+            self.getListDiscount()
             self.getListFeeds()
         }
     }
@@ -85,6 +93,38 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func refreshControlTable() {
         if (isLoading == false) {
             self.refresh()
+        }
+    }
+    
+    func getListDiscount() {
+        var prefix = "\(kPMAPI)\(kPMAPI_DISCOUNTS)"
+        prefix.appendContentsOf(String(offsetDiscount))
+        Alamofire.request(.GET, prefix)
+            .responseJSON { response in
+                self.isLoadDiscount = false
+                if response.response?.statusCode == 200 {
+                    if let arr = response.result.value as? [NSDictionary] {
+                        self.offsetDiscount += 10
+                        self.arrayDiscount += arr
+                        print(arr)
+                        if arr.count > 0 {
+                            if self.headerDiscount != nil {
+                                self.headerDiscount.arrayResult = self.arrayDiscount
+                            } else {
+                                self.tableFeed.reloadData()
+                            }
+                        }
+                    }
+                } else if response.response?.statusCode == 401 {
+                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // TODO: LOGOUT
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
         }
     }
     
@@ -137,11 +177,46 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         mixpanel.track("IOS.Feed", properties: properties)
     }
     
+    func goToDetailDiscount(discountDetail: NSDictionary) {
+        self.performSegueWithIdentifier(kGoDiscount, sender:discountDetail)
+    }
+    
+    func loadMoreDiscount() {
+        if self.isLoadDiscount == false {
+            self.isLoadDiscount = true
+            self.getListDiscount()
+        }
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 2
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 1 {
+            return nil
+        }
+        
+        if headerDiscount == nil {
+            headerDiscount = FeedDiscountView.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
+            headerDiscount.delegate = self
+        }
+        headerDiscount.arrayResult = self.arrayDiscount
+        
+        return headerDiscount
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 200
+        }
+        return 0.001
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 0
+        }
         return self.arrayFeeds.count
     }
     
@@ -372,7 +447,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func goProfile(sender: UIButton) {
-        let cell = tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 0)) as! FeaturedFeedTableViewCell
+        let cell = tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 1)) as! FeaturedFeedTableViewCell
         self.isGoProfileDetail = true
         if (cell.isCoach == true) {
             self.performSegueWithIdentifier(kGoProfile, sender:sender)
@@ -462,6 +537,11 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         } else if (segue.identifier == kClickURLLink) {
             let destination = segue.destinationViewController as! FeedWebViewController
             destination.URL = sender as? NSURL
+        } else if segue.identifier == kGoDiscount {
+            let destination = segue.destinationViewController as! DiscountDetailVC
+            if let dic = sender as? NSDictionary {
+                destination.discountDetail = dic
+            }
         }
     }
 
