@@ -19,7 +19,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     var arrayFeeds : [NSDictionary] = []
     var currentFeedDetail: NSDictionary!
     var isStopFetch: Bool!
-    var offset: Int = 0
     @IBOutlet weak var noActivityYetLB: UILabel!
     @IBOutlet weak var connectWithCoachLB: UILabel!
     var refreshControl: UIRefreshControl!
@@ -50,7 +49,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.tableFeed.rowHeight = UITableViewAutomaticDimension
        
         self.isStopFetch = false
-        if (isLoading == false && isGoFeedDetail == false && isGoProfileDetail == false) {
+        if (self.isLoading == false &&
+            self.isGoFeedDetail == false &&
+            self.isGoProfileDetail == false) {
             self.tableFeed.hidden = true
             self.refresh()
         }
@@ -77,7 +78,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.tableFeed.reloadData { 
             self.refreshControl.endRefreshing()
             self.isStopFetch = false
-            self.offset = 0
             self.getListFeeds()
         }
     }
@@ -91,40 +91,26 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func getListFeeds() {
         if (self.isStopFetch == false) {
             self.isLoading = true
-            var prefix = kPMAPI_POST_OFFSET
-            prefix.appendContentsOf(String(offset))
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        
-                        if (response.result.value == nil) {return}
-                        let arr = response.result.value as! [NSDictionary]
-                        if (arr.count > 0) {
-                            self.arrayFeeds += arr
-                            self.tableFeed.hidden = (self.arrayFeeds.count > 0) ?  false : true
-                            self.offset += 10
-                            self.isLoading = false
-                            self.tableFeed.reloadData({ 
-                                self.tableFeed.hidden = false
-                            })
-                        } else {
-                            self.isLoading = false
-                            self.isStopFetch = true
-                        }
-                    } else if response.response?.statusCode == 401 {
-                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                            // TODO: LOGOUT
-                        }
-                        alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
-                            // ...
-                        }
+            
+            FeedRouter.getListFeed(offset: self.arrayFeeds.count, completed: { (result, error) in
+                if (error == nil) {
+                    let arr = result as! [NSDictionary]
+                    
+                    if (arr.count > 0) {
+                        self.arrayFeeds += arr
+                        self.tableFeed.reloadData({
+                            // Hidden table view if no data
+                            self.tableFeed.hidden = (self.arrayFeeds.count == 0)
+                        })
                     } else {
-                        self.isLoading = false
                         self.isStopFetch = true
                     }
-            }
+                    
+                    self.isLoading = false
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
         }
     }
     
@@ -157,6 +143,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         
             // Avatar
             if (userFeed[kImageUrl] != nil) {
+                cell.avatarBT.setBackgroundImage(nil, forState: .Normal)
                 let imageLink = userFeed[kImageUrl] as! String
                 ImageRouter.getImage(posString: imageLink, sizeString: widthHeight120) { (result, error) in
                     if (error == nil) {
