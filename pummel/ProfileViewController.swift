@@ -104,6 +104,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     
     let imagePickerController = UIImagePickerController()
     var videoView: UIView? = nil
+    var isShowVideo: Bool = true
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -206,12 +207,14 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         super.viewWillDisappear(animated)
         
         // Remove video layer
-        for layer in (self.videoView?.layer.sublayers)! {
-            layer.removeFromSuperlayer()
+        if (self.videoView != nil) {
+            for layer in (self.videoView?.layer.sublayers)! {
+                layer.removeFromSuperlayer()
+            }
+            
+            // Remove video view
+            self.videoView?.removeFromSuperview()
         }
-        
-        // Remove video view
-        self.videoView?.removeFromSuperview()
     }
     
     func showVideoLayout(videoURLString: String) {
@@ -232,22 +235,21 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.bigIndicatorView.hidden = true
         self.bigBigIndicatorView.hidden = true
         
+        // Show video
+        self.videoView = UIView.init(frame: self.detailV.bounds)
+        let videoURL = NSURL(string: videoURLString)
+        let player = AVPlayer(URL: videoURL!)
+        let playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = self.videoView!.bounds
+        self.videoView!.layer.addSublayer(playerLayer)
+        
+        self.detailV.insertSubview(self.videoView!, atIndex: 0)
+        
         // Animation
         UIView.animateWithDuration(0.5, animations: {
             self.detailV.layoutIfNeeded()
             }) { (_) in
-                // Show video
-                self.videoView = UIView.init(frame: self.detailV.bounds)
-                let videoURL = NSURL(string: videoURLString)
-                let player = AVPlayer(URL: videoURL!)
-                let playerLayer = AVPlayerLayer(player: player)
-                playerLayer.frame = self.videoView!.bounds
-                self.videoView!.layer.addSublayer(playerLayer)
-                
-                self.detailV.insertSubview(self.videoView!, atIndex: 0)
-                
                 player.play()
-
         }
     }
     
@@ -322,7 +324,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                     
                     let videoURL = self.coachDetail["videoUrl"] as? String
                     // check Video URL
-                    if (videoURL?.isEmpty == false) {
+                    if (videoURL?.isEmpty == false && self.isShowVideo == true) {
                         self.showVideoLayout(videoURL!)
                     }
                 } else if response.response?.statusCode == 401 {
@@ -989,10 +991,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     
     // MARK: UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let videoURL = info["UIImagePickerControllerReferenceURL"] as? NSURL
-        let data = NSData(contentsOfURL: videoURL!)
-        
-        // TODO: send video by method mutipart to server
+        // send video by method mutipart to server
         let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
         let videoData = NSData(contentsOfURL: videoPath)
         let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
@@ -1005,12 +1004,14 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         activityView.startAnimating()
         self.view.addSubview(activityView)
         
-        // TODO: send video by method mutipart to server
+        // send video by method mutipart to server
         var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
         prefix.appendContentsOf(kPM_PATH_VIDEO)
         var parameters = [String:AnyObject]()
+        
+        self.isShowVideo = false
         parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
         Alamofire.upload(
             .POST,
@@ -1032,7 +1033,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                     }
                     upload.validate()
                     upload.responseJSON { response in
-                        // Do nothing
+                        self.isShowVideo = true
+                        self.getDetail()
                     }
                     
                 case .Failure(let _): break
