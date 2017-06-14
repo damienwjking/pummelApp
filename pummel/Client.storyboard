@@ -19,7 +19,7 @@
         <scene sceneID="j0W-cB-OuJ">
             <objects>
                 <navigationController id="KkH-W6-md2" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KT7-Ts-9CF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="KT7-Ts-9CF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -507,7 +507,7 @@
         <!--Feed Web View Controller-->
         <scene sceneID="kWq-XO-e8T">
             <objects>
-                <viewController id="U6V-S5-maD" customClass="FeedWebViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FeedWebViewController" id="U6V-S5-maD" customClass="FeedWebViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Rvg-UB-xxg"/>
                         <viewControllerLayoutGuide type="bottom" id="YED-me-BIj"/>

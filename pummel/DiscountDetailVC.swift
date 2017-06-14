@@ -9,15 +9,43 @@
 import UIKit
 import Alamofire
 
-class DiscountDetailVC: UIViewController {
+class DiscountDetailVC: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var imgCover:UIImageView!
+    @IBOutlet weak var imgLogo:UIImageView!
+    @IBOutlet weak var lbTitle:UILabel!
+    @IBOutlet weak var btnDiscount:UIButton!
+    @IBOutlet weak var lbDescription:UILabel!
+    @IBOutlet weak var tvLink:UITextView!
     
+    var businessDetail:NSDictionary!
     var discountDetail:NSDictionary!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.lbTitle.font = UIFont.pmmMonReg20()
+        self.lbTitle.textColor = UIColor.whiteColor()
+        
+        self.btnDiscount.layer.borderColor = UIColor.whiteColor().CGColor
+        self.btnDiscount.layer.cornerRadius = 15
+        self.btnDiscount.layer.borderWidth = 1
+        self.btnDiscount.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        
+        self.tvLink.delegate = self
+        self.tvLink.text = ""
+        self.lbDescription.text = ""
+        
         self.updateData()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     func updateData() {
@@ -42,6 +70,15 @@ class DiscountDetailVC: UIViewController {
             }
         }
         
+        if let val = discountDetail[kTitle] as? String {
+            self.lbTitle.text = val
+        }
+        
+        if let val = discountDetail[kDiscount] as? String {
+            self.btnDiscount.setTitle(val, forState: .Normal)
+            self.btnDiscount.hidden = false
+        }
+        
         // Get bussiness
         let businessId = String(format:"%0.f", discountDetail[kBusinessId]!.doubleValue)
         var linkBusinessId = kPMAPI_BUSINESS
@@ -49,26 +86,72 @@ class DiscountDetailVC: UIViewController {
         Alamofire.request(.GET, linkBusinessId)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
-                    let jsonBusiness = response.result.value as! NSDictionary
-                    print(jsonBusiness)
+                    if let jsonBusiness = response.result.value as? NSDictionary {
+                        self.businessDetail = jsonBusiness
+                        self.fillData()
+                        print(jsonBusiness)
+                    }
                 }
         }
     }
+    
+    func fillData() {
+        self.lbDescription.font = UIFont.pmmMonReg16()
+        self.imgLogo.layer.cornerRadius = 75
+        self.imgLogo.clipsToBounds = true
+        
+        self.tvLink.font = .pmmMonReg16()
+        self.tvLink.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
+        
+        let postfix = widthEqual.stringByAppendingString(String(self.imgLogo.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.imgLogo.bounds.height))
+        if !(businessDetail[kImageUrl] is NSNull) {
+            let imageLink = businessDetail[kImageUrl] as! String
+            var prefix = kPMAPI
+            prefix.appendContentsOf(imageLink)
+            prefix.appendContentsOf(postfix)
+            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
+                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                self.imgLogo.image = imageRes
+            } else {
+                Alamofire.request(.GET, prefix)
+                    .responseImage { response in
+                        if (response.response?.statusCode == 200) {
+                            let imageRes = response.result.value! as UIImage
+                            self.imgLogo.image = imageRes
+                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
+                        }
+                }
+            }
+        }
+        
+        if let val = businessDetail[kDescription] as? String {
+            self.lbDescription.text = val
+        }
+        
+        if let val = businessDetail[kWebsite] as? String {
+            self.tvLink.text = val
+        }
+    }
+    
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        self.performSegueWithIdentifier(kClickURLLink, sender: URL)
+        
+        return false
+    }
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == kClickURLLink) {
+            let destination = segue.destinationViewController as! FeedWebViewController
+            destination.URL = sender as? NSURL
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func backButtonClicked() {
+        _ = self.navigationController?.popViewControllerAnimated(true)
     }
-    */
-
 }

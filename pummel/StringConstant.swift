@@ -165,6 +165,8 @@ let kActivityId = "activityId"
 let kCoach = "coach"
 let kSubTitle = "subtitle"
 let kDiscount = "discount"
+let kDescription = "description"
+let kWebsite = "website"
 
 // String
 let kLogoutSuccess = "Logout successful"
