@@ -105,6 +105,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     let imagePickerController = UIImagePickerController()
     var videoView: UIView? = nil
     var isShowVideo: Bool = true
+    let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -207,7 +208,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         super.viewWillDisappear(animated)
         
         // Remove video layer
-        if (self.videoView != nil) {
+        if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
             for layer in (self.videoView?.layer.sublayers)! {
                 layer.removeFromSuperlayer()
             }
@@ -236,9 +237,13 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.bigBigIndicatorView.hidden = true
         
         // Show video
+        if (self.videoView?.superview != nil) {
+            self.videoView?.removeFromSuperview()
+        }
         self.videoView = UIView.init(frame: self.detailV.bounds)
         let videoURL = NSURL(string: videoURLString)
         let player = AVPlayer(URL: videoURL!)
+        player.actionAtItemEnd = .None
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.frame = self.videoView!.bounds
         self.videoView!.layer.addSublayer(playerLayer)
@@ -251,6 +256,29 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             }) { (_) in
                 player.play()
         }
+        
+        // Add indicator for video
+        if (self.videoIndicator.superview != nil) {
+            self.videoIndicator.removeFromSuperview()
+        }
+        self.videoIndicator.startAnimating()
+        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
+        
+        // Remove loop play video for 
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        
+        // Add notification for loop play video
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.loopPlayVideo),
+                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         object: player.currentItem)
+    }
+    
+    func loopPlayVideo(notification: NSNotification) {
+        let playerItem = notification.object as! AVPlayerItem
+        
+        playerItem.seekToTime(kCMTimeZero)
     }
     
     func setting() {
@@ -322,7 +350,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                         self.getListImage()
                     }
                     
-                    let videoURL = self.coachDetail["videoUrl"] as? String
+                    let videoURL = self.coachDetail[kVideoURL] as? String
                     // check Video URL
                     if (videoURL?.isEmpty == false && self.isShowVideo == true) {
                         self.showVideoLayout(videoURL!)
@@ -999,10 +1027,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         let videoName = "video." + videoExtend
         
         // Insert activity indicator
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-        activityView.center = self.view.center
-        activityView.startAnimating()
-        self.view.addSubview(activityView)
+        self.view.makeToastActivity(message: "Uploading")
         
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
@@ -1033,16 +1058,25 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                     }
                     upload.validate()
                     upload.responseJSON { response in
-                        self.isShowVideo = true
-                        self.getDetail()
+                        self.view.hideToastActivity()
+                        
+                        if (response.response?.statusCode == 200) {
+                            let dictionary = response.result.value as! [NSDictionary]
+                            let videoURL = dictionary.first![kVideoURL] as! String
+                            
+                            // Update videoURL for coach detail
+                            let newCoachDetail = NSMutableDictionary.init(dictionary: self.coachDetail)
+                            newCoachDetail.setValue(videoURL, forKey: KVideoUrl)
+                            self.coachDetail = newCoachDetail
+                            
+                            self.isShowVideo = true
+                            self.showVideoLayout(videoURL)
+                        }
                     }
                     
-                case .Failure(let _): break
+                case .Failure( _): break
                     // Do nothing
                 }
-                
-                activityView.stopAnimating()
-                activityView.removeFromSuperview()
             }
         )
         

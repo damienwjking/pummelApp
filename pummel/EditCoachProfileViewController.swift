@@ -974,10 +974,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             let videoName = "video." + videoExtend
             
             // Insert activity indicator
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-            activityView.center = self.view.center
-            activityView.startAnimating()
-            self.view.addSubview(activityView)
+            self.view.makeToastActivity(message: "Uploading")
             
             // send video by method mutipart to server
             var prefix = kPMAPIUSER
@@ -1007,14 +1004,13 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                         upload.validate()
                         upload.responseJSON { response in
                             // Do nothing
+                            self.view.hideToastActivity()
+                            self.navigationController?.popViewControllerAnimated(true)
                         }
                         
                     case .Failure(let _): break
                         // Do nothing
                     }
-                    
-                    activityView.stopAnimating()
-                    activityView.removeFromSuperview()
                 }
             )
         }
