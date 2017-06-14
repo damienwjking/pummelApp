@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cHG-mo-slS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cHG-mo-slS">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -75,7 +75,7 @@
                                                     <constraint firstAttribute="width" constant="125" id="W45-sR-7SC"/>
                                                 </constraints>
                                             </imageView>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinGray.png" translatesAutoresizingMaskIntoConstraints="NO" id="4gT-PK-0Gi">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinGray" translatesAutoresizingMaskIntoConstraints="NO" id="4gT-PK-0Gi">
                                                 <rect key="frame" x="288" y="246" width="6" height="9"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="6" id="AyH-wo-g39"/>
@@ -97,7 +97,7 @@
                                                     <constraint firstAttribute="width" constant="46" id="GXm-Ry-G6K"/>
                                                     <constraint firstAttribute="height" constant="30" id="YZ0-Xf-Tbv"/>
                                                 </constraints>
-                                                <state key="normal" image="back.png"/>
+                                                <state key="normal" image="back"/>
                                                 <connections>
                                                     <action selector="goBackToResult" destination="cHG-mo-slS" eventType="touchUpInside" id="E08-Zv-m5q"/>
                                                 </connections>
@@ -448,7 +448,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="S1X-vx-wK2" secondAttribute="height" multiplier="1:1" id="QpP-6R-KkN"/>
                                                 </constraints>
-                                                <state key="normal" image="connect.png"/>
+                                                <state key="normal" image="connect"/>
                                                 <connections>
                                                     <action selector="goConnection" destination="cHG-mo-slS" eventType="touchUpInside" id="V38-aW-gaY"/>
                                                 </connections>
@@ -786,10 +786,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="back.png" width="8" height="14"/>
-        <image name="connect.png" width="22" height="22"/>
+        <image name="back" width="8" height="14"/>
+        <image name="connect" width="22" height="22"/>
         <image name="display-empty.jpg" width="256" height="256"/>
-        <image name="icon_phone" width="16" height="16"/>
-        <image name="pinGray.png" width="5" height="9"/>
+        <image name="icon_phone" width="55" height="55"/>
+        <image name="pinGray" width="5" height="9"/>
     </resources>
 </document>

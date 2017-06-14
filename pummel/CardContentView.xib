@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -32,7 +32,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pin.png" translatesAutoresizingMaskIntoConstraints="NO" id="nO6-Bh-E6Z">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pin" translatesAutoresizingMaskIntoConstraints="NO" id="nO6-Bh-E6Z">
                                 <rect key="frame" x="15" y="648" width="6" height="9"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="9" id="3Lh-PO-uj5"/>
@@ -89,6 +89,10 @@
                                     <constraint firstItem="9C9-ni-Y1U" firstAttribute="width" secondItem="rok-13-CsH" secondAttribute="width" id="qVM-ci-ybd"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6xv-ty-44m">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="oya-QN-9qH">
                                 <rect key="frame" x="5" y="667" width="595" height="173"/>
                                 <collectionViewLayout key="collectionViewLayout" id="w37-Bx-eYS" customClass="FlowLayout" customModule="Pummel" customModuleProvider="target"/>
@@ -120,12 +124,16 @@
                             <constraint firstItem="SWE-7i-NON" firstAttribute="leading" secondItem="8qQ-gL-UXu" secondAttribute="leading" constant="15" id="OgE-KF-K0a"/>
                             <constraint firstItem="oya-QN-9qH" firstAttribute="top" secondItem="H3R-NT-cZh" secondAttribute="bottom" constant="8" id="SBg-AV-DvZ"/>
                             <constraint firstItem="H3R-NT-cZh" firstAttribute="top" secondItem="SWE-7i-NON" secondAttribute="bottom" constant="6" id="VV7-GW-t5D"/>
+                            <constraint firstItem="6xv-ty-44m" firstAttribute="width" secondItem="0jg-Kg-69V" secondAttribute="width" id="WeI-iK-mgP"/>
+                            <constraint firstItem="6xv-ty-44m" firstAttribute="centerY" secondItem="0jg-Kg-69V" secondAttribute="centerY" id="aLK-iT-pyZ"/>
                             <constraint firstItem="oya-QN-9qH" firstAttribute="leading" secondItem="8qQ-gL-UXu" secondAttribute="leading" constant="5" id="cEl-tN-kbF"/>
+                            <constraint firstItem="6xv-ty-44m" firstAttribute="height" secondItem="0jg-Kg-69V" secondAttribute="height" id="g5i-D6-qee"/>
                             <constraint firstItem="2ho-gc-eIM" firstAttribute="centerY" secondItem="8qQ-gL-UXu" secondAttribute="centerY" constant="168" id="hxn-6J-c3n"/>
                             <constraint firstAttribute="trailing" secondItem="0jg-Kg-69V" secondAttribute="trailing" id="itt-nO-Q52"/>
                             <constraint firstItem="35C-KK-Y1d" firstAttribute="centerY" secondItem="0jg-Kg-69V" secondAttribute="centerY" multiplier="0.5" id="kka-iK-UVr"/>
                             <constraint firstItem="nO6-Bh-E6Z" firstAttribute="top" secondItem="SWE-7i-NON" secondAttribute="bottom" constant="8" id="lWy-Ao-jjj"/>
                             <constraint firstItem="H3R-NT-cZh" firstAttribute="leading" secondItem="nO6-Bh-E6Z" secondAttribute="trailing" constant="8" id="rCL-Nw-T7K"/>
+                            <constraint firstItem="6xv-ty-44m" firstAttribute="centerX" secondItem="0jg-Kg-69V" secondAttribute="centerX" id="sa7-Pc-ufc"/>
                             <constraint firstItem="0jg-Kg-69V" firstAttribute="leading" secondItem="8qQ-gL-UXu" secondAttribute="leading" id="ssu-G4-d4Z"/>
                             <constraint firstItem="0jg-Kg-69V" firstAttribute="top" secondItem="8qQ-gL-UXu" secondAttribute="top" id="wby-ww-kqk"/>
                             <constraint firstAttribute="trailing" secondItem="2ho-gc-eIM" secondAttribute="trailing" constant="20" id="wcL-Nv-OCH"/>
@@ -158,11 +166,12 @@
                 <outlet property="cardView" destination="8qQ-gL-UXu" id="SbQ-y2-1Ic"/>
                 <outlet property="moreInfoLabel" destination="383-Vi-Qor" id="hhf-ct-TgJ"/>
                 <outlet property="moreInfoLeftView" destination="rok-13-CsH" id="etm-h2-oTg"/>
+                <outlet property="videoView" destination="6xv-ty-44m" id="qrx-Fn-0Vz"/>
             </connections>
             <point key="canvasLocation" x="304" y="1425"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="pin.png" width="5" height="9"/>
+        <image name="pin" width="5" height="9"/>
     </resources>
 </document>

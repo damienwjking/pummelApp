@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6cd-R6-CbA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6cd-R6-CbA">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -66,7 +66,7 @@
                                                     <constraint firstAttribute="height" constant="125" id="rKN-ue-5fh"/>
                                                 </constraints>
                                             </imageView>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="79B0F4DD-F738-495C-8E89-1B671246C03C" translatesAutoresizingMaskIntoConstraints="NO" id="7PB-Kl-gU0">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="6669A52D-F218-4C71-9D35-788E12F1A048" translatesAutoresizingMaskIntoConstraints="NO" id="7PB-Kl-gU0">
                                                 <rect key="frame" x="218" y="247" width="6" height="9"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="9" id="2A8-W3-ydj"/>
@@ -79,7 +79,7 @@
                                                     <constraint firstAttribute="width" constant="46" id="BYo-1a-zqO"/>
                                                     <constraint firstAttribute="height" constant="30" id="MgO-xH-ktY"/>
                                                 </constraints>
-                                                <state key="normal" image="back.png"/>
+                                                <state key="normal" image="back"/>
                                                 <connections>
                                                     <action selector="goBackToFeed:" destination="6cd-R6-CbA" eventType="touchUpInside" id="afx-6m-EUL"/>
                                                 </connections>
@@ -386,7 +386,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="60c-3Z-3QI" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pNA-XZ-GHH">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pNA-XZ-GHH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -401,7 +401,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="79B0F4DD-F738-495C-8E89-1B671246C03C" width="5" height="9">
+        <image name="6669A52D-F218-4C71-9D35-788E12F1A048" width="5" height="9">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
@@ -455,7 +455,7 @@ ANcA2QDbCjEKNgpBCkoKXQphCmwKdQp6CoIKhQqKCpkKnQqkCqwKuQq+CsAKwgrHCs8K0grXCt8K4gr0
 CvcK/AAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAAAr+A
 </mutableData>
         </image>
-        <image name="back.png" width="8" height="14"/>
+        <image name="back" width="8" height="14"/>
         <image name="display-empty.jpg" width="256" height="256"/>
     </resources>
 </document>

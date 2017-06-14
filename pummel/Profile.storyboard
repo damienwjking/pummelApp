@@ -78,7 +78,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="897-JI-yRT">
                                                 <rect key="frame" x="294" y="246" width="12" height="14"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinGray.png" translatesAutoresizingMaskIntoConstraints="NO" id="rLf-jv-zSr">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinGray" translatesAutoresizingMaskIntoConstraints="NO" id="rLf-jv-zSr">
                                                         <rect key="frame" x="0.0" y="2" width="6" height="9"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="6" id="Ofv-N4-gMg"/>
@@ -111,9 +111,16 @@
                                                     <constraint firstAttribute="width" constant="30" id="DSR-wn-CXo"/>
                                                     <constraint firstAttribute="width" secondItem="db4-N2-14n" secondAttribute="height" multiplier="1:1" id="f8s-xx-kmE"/>
                                                 </constraints>
-                                                <state key="normal" image="cameraIcon.png"/>
+                                                <state key="normal" image="cameraIcon"/>
                                                 <connections>
                                                     <action selector="cameraButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="I8t-vl-uDa"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="51y-60-mKL">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                                                <state key="normal" image="icon_play_video"/>
+                                                <connections>
+                                                    <action selector="playVideoButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="htf-i4-hWl"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -123,6 +130,7 @@
                                             <constraint firstItem="dwI-Ae-AUK" firstAttribute="centerY" secondItem="U88-8Z-7He" secondAttribute="centerY" id="1zB-zx-peJ"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerX" secondItem="2Qg-F7-KVb" secondAttribute="centerX" id="7Nb-vm-r9A"/>
                                             <constraint firstItem="dwI-Ae-AUK" firstAttribute="centerX" secondItem="U88-8Z-7He" secondAttribute="centerX" id="8qn-f8-Mbx"/>
+                                            <constraint firstItem="51y-60-mKL" firstAttribute="centerY" secondItem="dUz-At-R3A" secondAttribute="centerY" id="Bpg-A4-pky"/>
                                             <constraint firstItem="QKN-pI-WDt" firstAttribute="centerY" secondItem="2Qg-F7-KVb" secondAttribute="centerY" id="DDd-5p-E86"/>
                                             <constraint firstItem="T7h-3e-Ut7" firstAttribute="centerY" secondItem="2Qg-F7-KVb" secondAttribute="centerY" id="FyG-cp-JXK"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerY" secondItem="2Qg-F7-KVb" secondAttribute="centerY" id="Kw8-zG-evl"/>
@@ -130,14 +138,17 @@
                                             <constraint firstItem="QKN-pI-WDt" firstAttribute="leading" secondItem="T7h-3e-Ut7" secondAttribute="leading" constant="3" id="QDz-uD-jNf"/>
                                             <constraint firstItem="2Qg-F7-KVb" firstAttribute="leading" secondItem="QKN-pI-WDt" secondAttribute="leading" constant="2" id="ShR-gH-jvJ"/>
                                             <constraint firstItem="H39-IH-xZm" firstAttribute="centerY" secondItem="dwI-Ae-AUK" secondAttribute="centerY" id="T74-gU-6qN"/>
+                                            <constraint firstItem="51y-60-mKL" firstAttribute="height" secondItem="dUz-At-R3A" secondAttribute="height" id="Yrl-Bp-K2r"/>
                                             <constraint firstItem="Pss-Fx-2Jc" firstAttribute="centerX" secondItem="H39-IH-xZm" secondAttribute="centerX" id="b27-Sf-Hin"/>
                                             <constraint firstItem="T7h-3e-Ut7" firstAttribute="centerX" secondItem="2Qg-F7-KVb" secondAttribute="centerX" id="cnf-Hc-NTs"/>
                                             <constraint firstItem="2Qg-F7-KVb" firstAttribute="top" secondItem="QKN-pI-WDt" secondAttribute="top" constant="2" id="e3h-L0-JXu"/>
                                             <constraint firstItem="H39-IH-xZm" firstAttribute="centerX" secondItem="dwI-Ae-AUK" secondAttribute="centerX" id="eLW-zF-2qm"/>
+                                            <constraint firstItem="51y-60-mKL" firstAttribute="width" secondItem="dUz-At-R3A" secondAttribute="width" id="gEb-Gj-46b"/>
                                             <constraint firstItem="897-JI-yRT" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="iuZ-ap-b0b"/>
                                             <constraint firstItem="2Qg-F7-KVb" firstAttribute="centerY" secondItem="dUz-At-R3A" secondAttribute="centerY" id="kD3-gQ-xaI"/>
                                             <constraint firstItem="QKN-pI-WDt" firstAttribute="top" secondItem="T7h-3e-Ut7" secondAttribute="top" constant="3" id="lbc-7N-Qs0"/>
                                             <constraint firstItem="QKN-pI-WDt" firstAttribute="centerX" secondItem="2Qg-F7-KVb" secondAttribute="centerX" id="ntb-Se-lAF"/>
+                                            <constraint firstItem="51y-60-mKL" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="oos-B3-R9x"/>
                                             <constraint firstAttribute="bottom" secondItem="897-JI-yRT" secondAttribute="bottom" constant="40" id="pe0-4A-TgH"/>
                                             <constraint firstAttribute="height" constant="300" id="rus-GV-gMl"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="sW0-3i-KJg"/>
@@ -448,7 +459,7 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y3s-QY-MfM">
                                                 <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
-                                                <state key="normal" image="edit.png"/>
+                                                <state key="normal" image="edit"/>
                                                 <connections>
                                                     <action selector="edit" destination="cCo-RY-fr6" eventType="touchUpInside" id="eXL-Da-mf7"/>
                                                 </connections>
@@ -691,6 +702,7 @@
                         <outlet property="bigBigIndicatorView" destination="Pss-Fx-2Jc" id="LWO-XX-gLN"/>
                         <outlet property="bigIndicatorView" destination="H39-IH-xZm" id="boe-Xq-cIz"/>
                         <outlet property="businessIMV" destination="fwM-Te-ye7" id="Sr0-Zj-XUu"/>
+                        <outlet property="cameraButton" destination="db4-N2-14n" id="82Q-SC-2DI"/>
                         <outlet property="coachBorderBackgroundV" destination="QKN-pI-WDt" id="eQh-2s-zAj"/>
                         <outlet property="coachBorderV" destination="T7h-3e-Ut7" id="eE3-b6-rLL"/>
                         <outlet property="connectBT" destination="Y3s-QY-MfM" id="XdH-rO-OB7"/>
@@ -711,6 +723,7 @@
                         <outlet property="interestLB" destination="Rgf-jJ-cvo" id="Fk3-YB-yC0"/>
                         <outlet property="interestV" destination="uEh-DN-xjd" id="EbU-BQ-xVU"/>
                         <outlet property="medIndicatorView" destination="dwI-Ae-AUK" id="ak8-pE-MC9"/>
+                        <outlet property="playVideoButton" destination="51y-60-mKL" id="Lcd-if-uxt"/>
                         <outlet property="postHeightDT" destination="M23-lU-MhQ" id="e3f-Ll-AAr"/>
                         <outlet property="postLB" destination="qri-1r-v9Z" id="f6B-gf-NUC"/>
                         <outlet property="postNumberContentLB" destination="ANS-Sq-Pg2" id="5GD-5q-0li"/>
@@ -2379,7 +2392,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mH3-BG-64I">
-                                                    <rect key="frame" x="20" y="24" width="560" height="27"/>
+                                                    <rect key="frame" x="20" y="24.5" width="560" height="26.5"/>
                                                     <string key="text">Would you like to become a verified Pummel Fitness professional?  Fill in this form to setup your Mobile profile and start finding new customers.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3365,7 +3378,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ey2-z7-s6W" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7N0-97-9tW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="7N0-97-9tW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3382,10 +3395,11 @@
     <resources>
         <image name="add.png" width="13" height="13"/>
         <image name="blackArrow.png" width="8" height="14"/>
-        <image name="cameraIcon.png" width="24" height="19"/>
+        <image name="cameraIcon" width="24" height="19"/>
         <image name="display-empty.jpg" width="256" height="256"/>
-        <image name="edit.png" width="19" height="18"/>
-        <image name="pinGray.png" width="5" height="9"/>
+        <image name="edit" width="19" height="18"/>
+        <image name="icon_play_video" width="50" height="50"/>
+        <image name="pinGray" width="5" height="9"/>
         <image name="profile.png" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>

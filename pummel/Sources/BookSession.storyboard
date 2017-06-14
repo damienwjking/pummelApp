@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3wK-2M-50Y">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="3wK-2M-50Y">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -162,7 +161,7 @@
                                             <constraint firstAttribute="width" constant="100" id="EHc-D6-Xdl"/>
                                             <constraint firstAttribute="height" constant="100" id="JVt-4m-CL5"/>
                                         </constraints>
-                                        <state key="normal" image="cameraBig.png"/>
+                                        <state key="normal" image="cameraBig"/>
                                         <connections>
                                             <action selector="showPopupToSelectImageWithSender" destination="3OF-R7-f5T" eventType="touchUpInside" id="8No-Rh-ygq"/>
                                         </connections>
@@ -256,7 +255,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="cameraBig.png" width="48" height="38"/>
+        <image name="cameraBig" width="48" height="38"/>
         <image name="display-empty.jpg" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>

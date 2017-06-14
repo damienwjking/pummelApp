@@ -56,16 +56,30 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             self.refind()
         }
         
-        self.collectionView.reloadData()
+        self.collectionView.reloadData { 
+            self.checkPlayVideoOnPresentCell()
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        for indexPath in self.collectionView.indexPathsForVisibleItems() {
+            let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as! CardViewCell
+            
+            cell.stopPlayVideo()
+        }
     }
     
     func setupCollectionView() {
+        // register cell
         let nibName = UINib(nibName: "CardContentView", bundle: nil)
         self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
         
         let noResultNibName = UINib(nibName: "CardContentNoResult", bundle: nil)
         self.collectionView.registerNib(noResultNibName, forCellWithReuseIdentifier: "SearchNoCoach")
         
+        // setup cell
         self.widthCell = (UIScreen.mainScreen().bounds.size.width - 30)
         self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 40), height: (UIScreen.mainScreen().bounds.size.height - 160))
         self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 20, 0, 0)
@@ -75,16 +89,56 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         self.collectionView.dataSource = self
     }
     
+    func checkPlayVideoOnPresentCell() {
+        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(Double(Int64(NSEC_PER_SEC)) * 0.1))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            // Play video on present cell
+            let cellIndex = Int(round(self.collectionView.contentOffset.x / self.widthCell))
+            let indexPath = NSIndexPath(forRow: cellIndex, inSection: 0)
+            let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as? CardViewCell
+            if (cell != nil) {
+                //                let videoURL = coachDetail[kVideoURL] as? String
+                let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
+                if (videoURL.isEmpty == false) {
+                    
+                    cell!.showVideo(videoURL)
+                    
+                }
+            }
+            
+            // Remove video layer
+            if (cellIndex > 0) {
+                let preCellIndex = NSIndexPath(forRow: cellIndex - 1, inSection: 0)
+                let preCell = self.collectionView.cellForItemAtIndexPath(preCellIndex) as? CardViewCell
+                if (preCell != nil) {
+                    preCell!.stopPlayVideo()
+                }
+            }
+            
+            if (cellIndex < self.arrayResult.count - 1) {
+                let posCellIndex = NSIndexPath(forRow: cellIndex + 1, inSection: 0)
+                let posCell = self.collectionView.cellForItemAtIndexPath(posCellIndex) as? CardViewCell
+                if (posCell != nil) {
+                    posCell!.stopPlayVideo()
+                }
+            }
+        })
+    }
+    
     func carouselSwipeLeft() {
         var offsetX = self.collectionView.contentOffset.x + self.widthCell
-        offsetX = offsetX > self.collectionView.contentSize.width - self.widthCell ? self.collectionView.contentSize.width - self.widthCell : offsetX
+        let remainSpace = self.collectionView.contentSize.width - self.widthCell
+        if (offsetX > remainSpace) {
+            offsetX = remainSpace
+        }
         
         let newContentOffset = CGPointMake(offsetX, 0)
         
         UIView.animateWithDuration(0.25, animations: {
             self.collectionView.contentOffset = newContentOffset
-            }) { (_) in
+        }) { (_) in
             self.endPagingCarousel(self.collectionView)
+            self.checkPlayVideoOnPresentCell()
         }
     }
     
@@ -98,6 +152,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             self.collectionView.contentOffset = newContentOffset
         }) { (_) in
             self.endPagingCarousel(self.collectionView)
+            self.checkPlayVideoOnPresentCell()
         }
     }
     
@@ -331,6 +386,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 let coachDetail = coachTotalDetail[kUser] as! NSDictionary
                 let coachListTags = coachDetail[kTags] as! NSArray
                 
+                // Show tag
                 cell.cardView.tags.removeAll()
                 for i in 0 ..< coachListTags.count {
                     let tagContent = coachListTags[i] as! NSDictionary
@@ -340,6 +396,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 }
                 cell.cardView.collectionView.reloadData()
                 
+                // Show coach detail
                 cell.cardView.avatarIMV.image = nil
                 cell.cardView.translatesAutoresizingMaskIntoConstraints = false
                 cell.cardView.backgroundColor = cell.cardView.backgroundColor
@@ -352,6 +409,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                     cell.cardView.nameLB.text = (coachDetail[kFirstname] as! String)
                 }
                 
+                // Show Coach avatar
                 cell.cardView.addressLB.font = .pmmPlayFairReg11()
                 if !(coachTotalDetail[kServiceArea] is NSNull) {
                     cell.cardView.addressLB.text = coachTotalDetail[kServiceArea] as? String
@@ -386,7 +444,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                     Alamofire.request(.GET, linkBusinessId)
                         .responseJSON { response in
                             if response.response?.statusCode == 200 {
-                                
                                 let jsonBusiness = response.result.value as! NSDictionary
                                 if !(jsonBusiness[kImageUrl] is NSNull) {
                                     let businessLogoUrl = jsonBusiness[kImageUrl] as! String
@@ -423,10 +480,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                     let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
                     swipeRightGesture.direction = .Right
                     cell.addGestureRecognizer(swipeRightGesture)
-                    
-                    //                let longTouchGesture = UILongPressGestureRecognizer(target: self, action: #selector(carouselLongPress))
-                    //                longTouchGesture.minimumPressDuration = 0.1
-                    //                cell.addGestureRecognizer(longTouchGesture)
                 }
                 
                 return cell

@@ -31,6 +31,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var coachBorderBackgroundV: UIView!
     @IBOutlet weak var connectV : UIView!
     @IBOutlet weak var connectBT : UIView!
+    @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var playVideoButton: UIButton!
     @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var addressIconIMV: UIImageView!
     @IBOutlet weak var interestLB: UILabel!
@@ -104,6 +106,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     
     let imagePickerController = UIImagePickerController()
     var videoView: UIView? = nil
+    var videoPlayer: AVPlayer? = nil
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
     
@@ -197,11 +200,12 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         let selectedImage = UIImage(named: "profilePressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         
-        
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"SETTINGS", style:.Plain, target: self, action: #selector(ProfileViewController.setting))
         self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
         
         self.getDetail()
+        
+        self.playVideoButton.hidden = true
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -212,6 +216,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             for layer in (self.videoView?.layer.sublayers)! {
                 layer.removeFromSuperlayer()
             }
+            
+            self.videoPlayer?.pause()
             
             // Remove video view
             self.videoView?.removeFromSuperview()
@@ -242,9 +248,9 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         }
         self.videoView = UIView.init(frame: self.detailV.bounds)
         let videoURL = NSURL(string: videoURLString)
-        let player = AVPlayer(URL: videoURL!)
-        player.actionAtItemEnd = .None
-        let playerLayer = AVPlayerLayer(player: player)
+        self.videoPlayer = AVPlayer(URL: videoURL!)
+        self.videoPlayer!.actionAtItemEnd = .None
+        let playerLayer = AVPlayerLayer(player: self.videoPlayer)
         playerLayer.frame = self.videoView!.bounds
         self.videoView!.layer.addSublayer(playerLayer)
         
@@ -254,7 +260,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         UIView.animateWithDuration(0.5, animations: {
             self.detailV.layoutIfNeeded()
             }) { (_) in
-                player.play()
+                self.videoPlayer!.play()
         }
         
         // Add indicator for video
@@ -270,15 +276,18 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         
         // Add notification for loop play video
         NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.loopPlayVideo),
+                                                         selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
-                                                         object: player.currentItem)
+                                                         object: self.videoPlayer!.currentItem)
     }
     
-    func loopPlayVideo(notification: NSNotification) {
+    func endVideoNotification(notification: NSNotification) {
         let playerItem = notification.object as! AVPlayerItem
         
         playerItem.seekToTime(kCMTimeZero)
+        
+        self.videoPlayer?.pause()
+        self.playVideoButton.hidden = false
     }
     
     func setting() {
@@ -350,8 +359,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                         self.getListImage()
                     }
                     
-                    let videoURL = self.coachDetail[kVideoURL] as? String
                     // check Video URL
+                    let videoURL = self.coachDetail[kVideoURL] as? String
                     if (videoURL?.isEmpty == false && self.isShowVideo == true) {
                         self.showVideoLayout(videoURL!)
                     }
@@ -1015,6 +1024,12 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         imagePickerController.mediaTypes = ["public.movie"]
         
         presentViewController(imagePickerController, animated: true, completion: nil)
+    }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        self.videoPlayer?.play()
+        
+        self.playVideoButton.hidden = true
     }
     
     // MARK: UIImagePickerControllerDelegate
