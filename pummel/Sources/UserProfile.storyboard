@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -63,16 +64,25 @@
                                                 <rect key="frame" x="238" y="88" width="125" height="125"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="125" id="0HT-vQ-iG4"/>
-                                                    <constraint firstAttribute="height" constant="125" id="rKN-ue-5fh"/>
+                                                    <constraint firstAttribute="width" secondItem="0IK-t5-Chk" secondAttribute="height" multiplier="1:1" id="7jm-dG-8YE"/>
                                                 </constraints>
                                             </imageView>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="6669A52D-F218-4C71-9D35-788E12F1A048" translatesAutoresizingMaskIntoConstraints="NO" id="7PB-Kl-gU0">
-                                                <rect key="frame" x="218" y="247" width="6" height="9"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0MQ-br-Jdy">
+                                                <rect key="frame" x="50" y="15" width="500" height="39"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="9" id="2A8-W3-ydj"/>
-                                                    <constraint firstAttribute="width" constant="6" id="5f8-tE-zPc"/>
+                                                    <constraint firstAttribute="height" constant="39" id="Tcz-kf-FKe"/>
                                                 </constraints>
-                                            </imageView>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gz-9Y-fxT">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                                                <state key="normal" image="icon_play_video"/>
+                                                <connections>
+                                                    <action selector="playVideoButtonClicked:" destination="6cd-R6-CbA" eventType="touchUpInside" id="Nlh-Rz-4k9"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d2S-A4-FWH">
                                                 <rect key="frame" x="0.0" y="20" width="46" height="30"/>
                                                 <constraints>
@@ -84,37 +94,30 @@
                                                     <action selector="goBackToFeed:" destination="6cd-R6-CbA" eventType="touchUpInside" id="afx-6m-EUL"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0MQ-br-Jdy">
-                                                <rect key="frame" x="50" y="15" width="500" height="39"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="39" id="Tcz-kf-FKe"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" red="0.25882352939999997" green="0.18823529410000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstItem="0IK-t5-Chk" firstAttribute="centerY" secondItem="grt-By-SEN" secondAttribute="centerY" id="0EP-nV-K9p"/>
                                             <constraint firstItem="d2S-A4-FWH" firstAttribute="leading" secondItem="grt-By-SEN" secondAttribute="leading" id="0VF-uL-4f3"/>
                                             <constraint firstItem="0MQ-br-Jdy" firstAttribute="top" secondItem="grt-By-SEN" secondAttribute="top" constant="15" id="26T-Kr-auf"/>
-                                            <constraint firstItem="ceF-hX-Vgq" firstAttribute="top" secondItem="grt-By-SEN" secondAttribute="top" constant="60" id="2AQ-1T-G7H"/>
+                                            <constraint firstItem="ceF-hX-Vgq" firstAttribute="centerX" secondItem="0IK-t5-Chk" secondAttribute="centerX" id="3jz-XS-FAN"/>
                                             <constraint firstItem="0IK-t5-Chk" firstAttribute="centerX" secondItem="grt-By-SEN" secondAttribute="centerX" id="6nd-jC-QFn"/>
-                                            <constraint firstItem="ceF-hX-Vgq" firstAttribute="top" secondItem="mfY-PC-eLb" secondAttribute="top" constant="30" id="7fZ-DW-ZCn"/>
-                                            <constraint firstItem="5rs-Ur-ieW" firstAttribute="top" secondItem="grt-By-SEN" secondAttribute="top" constant="-6" id="9gi-oe-qDU"/>
-                                            <constraint firstItem="7PB-Kl-gU0" firstAttribute="top" secondItem="ceF-hX-Vgq" secondAttribute="bottom" constant="7" id="BrB-Pb-odl"/>
+                                            <constraint firstItem="X78-pq-RP6" firstAttribute="centerX" secondItem="5rs-Ur-ieW" secondAttribute="centerX" id="8oY-gr-wD0"/>
                                             <constraint firstAttribute="trailing" secondItem="0MQ-br-Jdy" secondAttribute="trailing" constant="50" id="Bs7-fg-Wka"/>
-                                            <constraint firstItem="7PB-Kl-gU0" firstAttribute="top" secondItem="ceF-hX-Vgq" secondAttribute="bottom" constant="7" id="Fif-29-shS"/>
-                                            <constraint firstItem="7PB-Kl-gU0" firstAttribute="centerX" secondItem="grt-By-SEN" secondAttribute="centerX" constant="-79" id="GTM-4d-kqZ"/>
-                                            <constraint firstItem="5rs-Ur-ieW" firstAttribute="centerX" secondItem="grt-By-SEN" secondAttribute="centerX" id="Lgd-lD-N9z"/>
-                                            <constraint firstItem="X78-pq-RP6" firstAttribute="top" secondItem="grt-By-SEN" secondAttribute="top" constant="-37" id="Oef-t2-ofI"/>
                                             <constraint firstItem="d2S-A4-FWH" firstAttribute="top" secondItem="grt-By-SEN" secondAttribute="top" constant="20" id="QeZ-3Z-NXs"/>
-                                            <constraint firstItem="ceF-hX-Vgq" firstAttribute="leading" secondItem="mfY-PC-eLb" secondAttribute="leading" constant="30" id="Wjb-cQ-F0V"/>
+                                            <constraint firstItem="X78-pq-RP6" firstAttribute="centerY" secondItem="5rs-Ur-ieW" secondAttribute="centerY" id="R87-nQ-JW5"/>
+                                            <constraint firstItem="mfY-PC-eLb" firstAttribute="centerY" secondItem="ceF-hX-Vgq" secondAttribute="centerY" id="aPL-E6-7nE"/>
+                                            <constraint firstItem="5gz-9Y-fxT" firstAttribute="centerY" secondItem="grt-By-SEN" secondAttribute="centerY" id="h4G-47-ets"/>
+                                            <constraint firstItem="ceF-hX-Vgq" firstAttribute="centerY" secondItem="0IK-t5-Chk" secondAttribute="centerY" id="iaf-Mo-zAH"/>
                                             <constraint firstItem="ceF-hX-Vgq" firstAttribute="centerX" secondItem="grt-By-SEN" secondAttribute="centerX" id="mcd-to-xhW"/>
+                                            <constraint firstItem="5rs-Ur-ieW" firstAttribute="centerX" secondItem="mfY-PC-eLb" secondAttribute="centerX" id="nWU-pU-pD0"/>
+                                            <constraint firstItem="5gz-9Y-fxT" firstAttribute="height" secondItem="grt-By-SEN" secondAttribute="height" id="oRJ-Nz-FEi"/>
+                                            <constraint firstItem="mfY-PC-eLb" firstAttribute="centerX" secondItem="ceF-hX-Vgq" secondAttribute="centerX" id="p25-iI-OAM"/>
                                             <constraint firstItem="0MQ-br-Jdy" firstAttribute="leading" secondItem="d2S-A4-FWH" secondAttribute="trailing" constant="4" id="sHR-Sg-UTR"/>
-                                            <constraint firstItem="X78-pq-RP6" firstAttribute="centerX" secondItem="grt-By-SEN" secondAttribute="centerX" id="v7K-xh-IXN"/>
-                                            <constraint firstItem="0IK-t5-Chk" firstAttribute="top" secondItem="grt-By-SEN" secondAttribute="top" constant="88" id="vJN-AC-Ryi"/>
+                                            <constraint firstItem="5rs-Ur-ieW" firstAttribute="centerY" secondItem="mfY-PC-eLb" secondAttribute="centerY" id="tAV-ag-6Q1"/>
+                                            <constraint firstItem="5gz-9Y-fxT" firstAttribute="width" secondItem="grt-By-SEN" secondAttribute="width" id="uve-GV-w9D"/>
                                             <constraint firstAttribute="height" constant="300" id="x45-z3-U0I"/>
+                                            <constraint firstItem="5gz-9Y-fxT" firstAttribute="centerX" secondItem="grt-By-SEN" secondAttribute="centerX" id="zRb-CG-Ia4"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Tk-TB-pRv">
@@ -349,11 +352,16 @@
                         <outlet property="aboutTVHeightDT" destination="y7p-YB-WCK" id="UL1-3d-OwF"/>
                         <outlet property="aboutV" destination="kpS-bD-yXK" id="9iQ-Yx-cCT"/>
                         <outlet property="avatarIMV" destination="0IK-t5-Chk" id="0Kh-Ob-joq"/>
+                        <outlet property="avatarIMVCenterXConstraint" destination="6nd-jC-QFn" id="dZ2-Je-hgd"/>
+                        <outlet property="avatarIMVCenterYConstraint" destination="0EP-nV-K9p" id="w6r-P6-WNU"/>
+                        <outlet property="avatarIMVWidthConstraint" destination="0HT-vQ-iG4" id="TKU-bI-120"/>
                         <outlet property="bigBigIndicatorView" destination="X78-pq-RP6" id="3wD-Ol-G9m"/>
                         <outlet property="bigIndicatorView" destination="5rs-Ur-ieW" id="b7Y-8p-XS3"/>
                         <outlet property="connectionContentLB" destination="ECr-M0-wvc" id="1I1-0P-oKp"/>
                         <outlet property="connectionLB" destination="i4Z-Ti-1ZX" id="abq-M1-fj8"/>
+                        <outlet property="detailV" destination="grt-By-SEN" id="ss0-6k-ZFI"/>
                         <outlet property="medIndicatorView" destination="mfY-PC-eLb" id="ez2-XR-VKv"/>
+                        <outlet property="playVideoButton" destination="5gz-9Y-fxT" id="KId-iv-atF"/>
                         <outlet property="postHeightDT" destination="pDQ-wg-2W0" id="jqj-or-xDX"/>
                         <outlet property="postLB" destination="xZE-di-tg8" id="Pr3-Rd-fYE"/>
                         <outlet property="postNumberContentLB" destination="awD-aF-ABs" id="xDJ-HM-cpj"/>
@@ -386,7 +394,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="60c-3Z-3QI" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pNA-XZ-GHH">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pNA-XZ-GHH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -401,61 +409,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="6669A52D-F218-4C71-9D35-788E12F1A048" width="5" height="9">
-            <mutableData key="keyedArchiveRepresentation">
-YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
-GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
-c1dOU0NvbG9ygAKADRIgwAAAgAOAC1Z7NSwgOX3SFQoWGFpOUy5vYmplY3RzoReABIAK0hUKGh2iGxyA
-BYAGgAkQANIgCiEiXxAUTlNUSUZGUmVwcmVzZW50YXRpb26AB4AITxEJUk1NACoAAAC8AQEBAVlZWVmv
-r6+vXFxcXAEBAQFQUFBQq6urq3p6enqrq6urUFBQULGxsbGEhISEAAAAAICAgICxsbGxjY2NjaioqKhm
-ZmZmp6enp42NjY05OTk5tra2tru7u7u2tra2OTk5OQgICAiXl5eXurq6upiYmJgICAgIAAAAAFdXV1fB
-wcHBW1tbWwAAAAAAAAAAGRkZGZqampoaGhoaAAAAAAAAAAABAQEBNjY2NgEBAQEAAAAAAA4BAAADAAAA
-AQAFAAABAQADAAAAAQAJAAABAgADAAAABAAAAWoBAwADAAAAAQABAAABBgADAAAAAQACAAABEQAEAAAA
-AQAAAAgBEgADAAAAAQABAAABFQADAAAAAQAEAAABFgADAAAAAQAJAAABFwAEAAAAAQAAALQBHAADAAAA
-AQABAAABUgADAAAAAQABAAABUwADAAAABAAAAXKHcwAHAAAH2AAAAXoAAAAAAAgACAAIAAgAAQABAAEA
-AQAAB9hhcHBsAiAAAG1udHJSR0IgWFlaIAfZAAIAGQALABoAC2Fjc3BBUFBMAAAAAGFwcGwAAAAAAAAA
-AAAAAAAAAAAAAAD21gABAAAAANMtYXBwbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAC2Rlc2MAAAEIAAAAb2RzY20AAAF4AAAFnGNwcnQAAAcUAAAAOHd0cHQAAAdMAAAA
-FHJYWVoAAAdgAAAAFGdYWVoAAAd0AAAAFGJYWVoAAAeIAAAAFHJUUkMAAAecAAAADmNoYWQAAAesAAAA
-LGJUUkMAAAecAAAADmdUUkMAAAecAAAADmRlc2MAAAAAAAAAFEdlbmVyaWMgUkdCIFByb2ZpbGUAAAAA
-AAAAAAAAABRHZW5lcmljIFJHQiBQcm9maWxlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAABtbHVjAAAAAAAAAB8AAAAMc2tTSwAAACgAAAGEZGFESwAAAC4AAAGsY2FF
-UwAAACQAAAHadmlWTgAAACQAAAH+cHRCUgAAACYAAAIidWtVQQAAACoAAAJIZnJGVQAAACgAAAJyaHVI
-VQAAACgAAAKaemhUVwAAABYAAALCbmJOTwAAACYAAALYY3NDWgAAACIAAAL+aGVJTAAAAB4AAAMgaXRJ
-VAAAACgAAAM+cm9STwAAACQAAANmZGVERQAAACwAAAOKa29LUgAAABYAAAO2c3ZTRQAAACYAAALYemhD
-TgAAABYAAAPMamFKUAAAABoAAAPiZWxHUgAAACIAAAP8cHRQTwAAACYAAAQebmxOTAAAACgAAAREZXNF
-UwAAACYAAAQedGhUSAAAACQAAARsdHJUUgAAACIAAASQZmlGSQAAACgAAASyaHJIUgAAACgAAATacGxQ
-TAAAACwAAAUCcnVSVQAAACIAAAUuYXJFRwAAACYAAAVQZW5VUwAAACYAAAV2AFYBYQBlAG8AYgBlAGMA
-bgD9ACAAUgBHAEIAIABwAHIAbwBmAGkAbABHAGUAbgBlAHIAZQBsACAAUgBHAEIALQBiAGUAcwBrAHIA
-aQB2AGUAbABzAGUAUABlAHIAZgBpAGwAIABSAEcAQgAgAGcAZQBuAOgAcgBpAGMAQx6lAHUAIABoAOwA
-bgBoACAAUgBHAEIAIABDAGgAdQBuAGcAUABlAHIAZgBpAGwAIABSAEcAQgAgAEcAZQBuAOkAcgBpAGMA
-bwQXBDAEMwQwBDsETAQ9BDgEOQAgBD8EQAQ+BEQEMAQ5BDsAIABSAEcAQgBQAHIAbwBmAGkAbAAgAGcA
-6QBuAOkAcgBpAHEAdQBlACAAUgBWAEIAwQBsAHQAYQBsAOEAbgBvAHMAIABSAEcAQgAgAHAAcgBvAGYA
-aQBskBp1KAAgAFIARwBCACCCcl9pY8+P8ABHAGUAbgBlAHIAaQBzAGsAIABSAEcAQgAtAHAAcgBvAGYA
-aQBsAE8AYgBlAGMAbgD9ACAAUgBHAEIAIABwAHIAbwBmAGkAbAXkBegF1QXkBdkF3AAgAFIARwBCACAF
-2wXcBdwF2QBQAHIAbwBmAGkAbABvACAAUgBHAEIAIABnAGUAbgBlAHIAaQBjAG8AUAByAG8AZgBpAGwA
-IABSAEcAQgAgAGcAZQBuAGUAcgBpAGMAQQBsAGwAZwBlAG0AZQBpAG4AZQBzACAAUgBHAEIALQBQAHIA
-bwBmAGkAbMd8vBgAIABSAEcAQgAg1QS4XNMMx3xmbpAaACAAUgBHAEIAIGPPj/Blh072TgCCLAAgAFIA
-RwBCACAw1zDtMNUwoTCkMOsDkwO1A70DuQO6A8wAIAPAA8EDvwPGA68DuwAgAFIARwBCAFAAZQByAGYA
-aQBsACAAUgBHAEIAIABnAGUAbgDpAHIAaQBjAG8AQQBsAGcAZQBtAGUAZQBuACAAUgBHAEIALQBwAHIA
-bwBmAGkAZQBsDkIOGw4jDkQOHw4lDkwAIABSAEcAQgAgDhcOMQ5IDicORA4bAEcAZQBuAGUAbAAgAFIA
-RwBCACAAUAByAG8AZgBpAGwAaQBZAGwAZQBpAG4AZQBuACAAUgBHAEIALQBwAHIAbwBmAGkAaQBsAGkA
-RwBlAG4AZQByAGkBDQBrAGkAIABSAEcAQgAgAHAAcgBvAGYAaQBsAFUAbgBpAHcAZQByAHMAYQBsAG4A
-eQAgAHAAcgBvAGYAaQBsACAAUgBHAEIEHgQxBEkEOAQ5ACAEPwRABD4ERAQ4BDsETAAgAFIARwBCBkUG
-RAZBACAGKgY5BjEGSgZBACAAUgBHAEIAIAYnBkQGOQYnBkUARwBlAG4AZQByAGkAYwAgAFIARwBCACAA
-UAByAG8AZgBpAGwAZXRleHQAAAAAQ29weXJpZ2h0IDIwMDcgQXBwbGUgSW5jLiwgYWxsIHJpZ2h0cyBy
-ZXNlcnZlZC4AWFlaIAAAAAAAAPNSAAEAAAABFs9YWVogAAAAAAAAdE0AAD3uAAAD0FhZWiAAAAAAAABa
-dQAArHMAABc0WFlaIAAAAAAAACgaAAAVnwAAuDZjdXJ2AAAAAAAAAAEBzQAAc2YzMgAAAAAAAQxCAAAF
-3v//8yYAAAeSAAD9kf//+6L///2jAAAD3AAAwGzSJSYnKFokY2xhc3NuYW1lWCRjbGFzc2VzXxAQTlNC
-aXRtYXBJbWFnZVJlcKMnKSpaTlNJbWFnZVJlcFhOU09iamVjdNIlJiwtV05TQXJyYXmiLCrSJSYvMF5O
-U011dGFibGVBcnJheaMvLCrTMjMKNDU2V05TV2hpdGVcTlNDb2xvclNwYWNlRDAgMAAQA4AM0iUmODlX
-TlNDb2xvcqI4KtIlJjs8V05TSW1hZ2WiOypfEA9OU0tleWVkQXJjaGl2ZXLRP0BUcm9vdIABAAgAEQAa
-ACMALQAyADcARgBMAFcAXgBlAHIAeQCBAIMAhQCKAIwAjgCVAJoApQCnAKkAqwCwALMAtQC3ALkAuwDA
-ANcA2QDbCjEKNgpBCkoKXQphCmwKdQp6CoIKhQqKCpkKnQqkCqwKuQq+CsAKwgrHCs8K0grXCt8K4gr0
-CvcK/AAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAAAr+A
-</mutableData>
-        </image>
         <image name="back" width="8" height="14"/>
         <image name="display-empty.jpg" width="256" height="256"/>
+        <image name="icon_play_video" width="50" height="50"/>
     </resources>
 </document>
