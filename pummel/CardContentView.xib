@@ -91,8 +91,15 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6xv-ty-44m">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ljy-15-Tzq">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <state key="normal" image="icon_play_video"/>
+                                <connections>
+                                    <action selector="playVideoButtonClicked:" destination="7OI-A3-lXm" eventType="touchUpInside" id="Ysp-YI-EEl"/>
+                                </connections>
+                            </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="oya-QN-9qH">
                                 <rect key="frame" x="5" y="667" width="595" height="173"/>
                                 <collectionViewLayout key="collectionViewLayout" id="w37-Bx-eYS" customClass="FlowLayout" customModule="Pummel" customModuleProvider="target"/>
@@ -117,6 +124,8 @@
                         <constraints>
                             <constraint firstItem="35C-KK-Y1d" firstAttribute="trailing" secondItem="0jg-Kg-69V" secondAttribute="trailing" id="0AY-tS-agM"/>
                             <constraint firstItem="2ho-gc-eIM" firstAttribute="bottom" secondItem="0jg-Kg-69V" secondAttribute="bottom" constant="40" id="5bY-2j-H72"/>
+                            <constraint firstItem="ljy-15-Tzq" firstAttribute="centerY" secondItem="6xv-ty-44m" secondAttribute="centerY" id="ASn-pu-m9S"/>
+                            <constraint firstItem="ljy-15-Tzq" firstAttribute="width" secondItem="6xv-ty-44m" secondAttribute="width" id="Bxv-ex-M2e"/>
                             <constraint firstAttribute="trailing" secondItem="oya-QN-9qH" secondAttribute="trailing" id="CJy-G8-cGZ"/>
                             <constraint firstItem="nO6-Bh-E6Z" firstAttribute="leading" secondItem="8qQ-gL-UXu" secondAttribute="leading" constant="15" id="Ggr-RF-FjQ"/>
                             <constraint firstItem="SWE-7i-NON" firstAttribute="top" secondItem="0jg-Kg-69V" secondAttribute="bottom" constant="8" id="Mhe-qQ-3N4"/>
@@ -125,6 +134,7 @@
                             <constraint firstItem="oya-QN-9qH" firstAttribute="top" secondItem="H3R-NT-cZh" secondAttribute="bottom" constant="8" id="SBg-AV-DvZ"/>
                             <constraint firstItem="H3R-NT-cZh" firstAttribute="top" secondItem="SWE-7i-NON" secondAttribute="bottom" constant="6" id="VV7-GW-t5D"/>
                             <constraint firstItem="6xv-ty-44m" firstAttribute="width" secondItem="0jg-Kg-69V" secondAttribute="width" id="WeI-iK-mgP"/>
+                            <constraint firstItem="ljy-15-Tzq" firstAttribute="centerX" secondItem="6xv-ty-44m" secondAttribute="centerX" id="ZM8-MW-gwc"/>
                             <constraint firstItem="6xv-ty-44m" firstAttribute="centerY" secondItem="0jg-Kg-69V" secondAttribute="centerY" id="aLK-iT-pyZ"/>
                             <constraint firstItem="oya-QN-9qH" firstAttribute="leading" secondItem="8qQ-gL-UXu" secondAttribute="leading" constant="5" id="cEl-tN-kbF"/>
                             <constraint firstItem="6xv-ty-44m" firstAttribute="height" secondItem="0jg-Kg-69V" secondAttribute="height" id="g5i-D6-qee"/>
@@ -137,6 +147,7 @@
                             <constraint firstItem="0jg-Kg-69V" firstAttribute="leading" secondItem="8qQ-gL-UXu" secondAttribute="leading" id="ssu-G4-d4Z"/>
                             <constraint firstItem="0jg-Kg-69V" firstAttribute="top" secondItem="8qQ-gL-UXu" secondAttribute="top" id="wby-ww-kqk"/>
                             <constraint firstAttribute="trailing" secondItem="2ho-gc-eIM" secondAttribute="trailing" constant="20" id="wcL-Nv-OCH"/>
+                            <constraint firstItem="ljy-15-Tzq" firstAttribute="height" secondItem="6xv-ty-44m" secondAttribute="height" id="zcE-fb-j0l"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -166,12 +177,14 @@
                 <outlet property="cardView" destination="8qQ-gL-UXu" id="SbQ-y2-1Ic"/>
                 <outlet property="moreInfoLabel" destination="383-Vi-Qor" id="hhf-ct-TgJ"/>
                 <outlet property="moreInfoLeftView" destination="rok-13-CsH" id="etm-h2-oTg"/>
+                <outlet property="playVideoButton" destination="ljy-15-Tzq" id="9cQ-iX-T8C"/>
                 <outlet property="videoView" destination="6xv-ty-44m" id="qrx-Fn-0Vz"/>
             </connections>
             <point key="canvasLocation" x="304" y="1425"/>
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="icon_play_video" width="50" height="50"/>
         <image name="pin" width="5" height="9"/>
     </resources>
 </document>

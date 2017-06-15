@@ -21,6 +21,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     @IBOutlet weak var moreInfoLeftView: UIView!
     
     @IBOutlet weak var videoView: UIView!
+    @IBOutlet weak var playVideoButton: UIButton!
     
     var videoLayer: AVPlayer? = nil
     
@@ -34,6 +35,8 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         
         self.cardView.delegate = self
         self.cardView.registerTagCell()
+        
+        self.playVideoButton.hidden = true
     }
     
     func cardViewTagClicked() {
@@ -44,7 +47,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     
     func showVideo(videoURLString: String) {
         // Hiddle image background
-        self.videoView.backgroundColor = UIColor.whiteColor()
+        self.videoView.hidden = false
         
         // Show Video
         let videoURL = NSURL(string: videoURLString)
@@ -77,11 +80,13 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     
     func endVideoNotification() {
         // Remove video layer
-        self.videoView.backgroundColor = UIColor.clearColor()
-        if (self.videoView.layer.sublayers != nil) {
-            for layer in (self.videoView.layer.sublayers)! {
-                layer.removeFromSuperlayer()
-            }
-        }
+        self.videoView.hidden = true
+        self.playVideoButton.hidden = false
+        
+    }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        self.videoLayer?.play()
+        self.playVideoButton.hidden = true
     }
 }
