@@ -133,7 +133,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     func getListPhoto() {
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(userId)
-        prefix.appendContentsOf(kPM_PATH_PHOTO)
+        prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):

@@ -100,9 +100,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 //                let videoURL = coachDetail[kVideoURL] as? String
                 let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
                 if (videoURL.isEmpty == false) {
-                    
                     cell!.showVideo(videoURL)
-                    
                 }
             }
             

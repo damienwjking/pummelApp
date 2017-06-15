@@ -23,7 +23,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var playVideoButton: UIButton!
     
-    var videoLayer: AVPlayer? = nil
+    var videoPlayer: AVPlayer? = nil
     
     weak var delegate : CardViewCellDelegate? = nil
     
@@ -35,8 +35,6 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         
         self.cardView.delegate = self
         self.cardView.registerTagCell()
-        
-        self.playVideoButton.hidden = true
     }
     
     func cardViewTagClicked() {
@@ -46,47 +44,49 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     }
     
     func showVideo(videoURLString: String) {
-        // Hiddle image background
-        self.videoView.hidden = false
+        // show play button
+        self.playVideoButton.hidden = false
         
         // Show Video
         let videoURL = NSURL(string: videoURLString)
-        self.videoLayer = AVPlayer(URL: videoURL!)
-        self.videoLayer!.actionAtItemEnd = .None
-        self.videoLayer!.play()
-        let playerLayer = AVPlayerLayer(player: self.videoLayer
-        
-        )
+        self.videoPlayer = AVPlayer(URL: videoURL!)
+        self.videoPlayer!.actionAtItemEnd = .None
+        let playerLayer = AVPlayerLayer(player: self.videoPlayer)
         playerLayer.frame = self.videoView!.bounds
         
         self.videoView!.layer.addSublayer(playerLayer)
         
-        // Remove loop play video for
+        // Remove loop play video for reuser cell
         NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
         
         // Add notification for loop play video
         NSNotificationCenter.defaultCenter().addObserver(self,
                                                          selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
-                                                         object: nil)
+                                                         object: videoPlayer?.currentItem)
     }
     
     func stopPlayVideo() {
         // Remove notification
         NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
         
-        self.endVideoNotification()
+//        self.endVideoNotification()
+        self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+        self.videoPlayer?.pause()
     }
     
-    func endVideoNotification() {
-        // Remove video layer
-        self.videoView.hidden = true
+    func endVideoNotification(notification: NSNotification) {
         self.playVideoButton.hidden = false
+        
+        let playerItem = notification.object as! AVPlayerItem
+        playerItem.seekToTime(kCMTimeZero)
+        self.videoPlayer?.pause()
         
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.videoLayer?.play()
+        self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+        self.videoPlayer?.play()
         self.playVideoButton.hidden = true
     }
 }

@@ -341,7 +341,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     func getListImage() {
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
-        prefix.appendContentsOf(kPM_PATH_PHOTO)
+        prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
