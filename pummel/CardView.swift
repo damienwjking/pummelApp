@@ -44,12 +44,6 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         layer.shadowRadius = 4.0
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.mainScreen().scale
-        
-        // Corner Radius
-        //layer.cornerRadius = 5.0;
-        
-      //  businessIMV.layer.cornerRadius = 60
-      //  businessIMV.clipsToBounds = true
     }
     
     func registerTagCell() {
