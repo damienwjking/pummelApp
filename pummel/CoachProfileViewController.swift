@@ -217,6 +217,9 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        if let val = self.coachDetail[kId] as? Int {
+            TrackingPMAPI.sharedInstance.trackingProfileViewed("\(val)")
+        }
         self.checkConnect()
     }
     
@@ -582,6 +585,10 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                         if self.isFromChat {
                             self.dismissViewControllerAnimated(true, completion:nil)
                         } else {
+                            if let val = self.coachDetail[kId] as? Int {
+                                TrackingPMAPI.sharedInstance.trackingConnectButtonCLick("\(val)")
+                            }
+
                             self.performSegueWithIdentifier(kGoConnect, sender: self)
                         }
                 }
@@ -774,6 +781,10 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
+            
+            if let val = self.coachDetail[kId] as? Int {
+                TrackingPMAPI.sharedInstance.trackSocialFacebook("\(val)")
+            }
         }
     }
     
@@ -799,8 +810,12 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
+            }
+            
+            if let val = self.coachDetail[kId] as? Int {
+                TrackingPMAPI.sharedInstance.trackSocialTwitter("\(val)")
             }
         }
     }
@@ -819,8 +834,12 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             // Tracker mixpanel
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
+            }
+            
+            if let val = self.coachDetail[kId] as? Int {
+                TrackingPMAPI.sharedInstance.trackSocialInstagram("\(val)")
             }
         }
     }
