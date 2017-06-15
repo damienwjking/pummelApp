@@ -97,11 +97,17 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             let indexPath = NSIndexPath(forRow: cellIndex, inSection: 0)
             let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as? CardViewCell
             if (cell != nil) {
-                //                let videoURL = coachDetail[kVideoURL] as? String
-                let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
-                if (videoURL.isEmpty == false) {
-                    cell!.showVideo(videoURL)
+                let coachDetail = self.arrayResult[cellIndex]
+                let videoURL = coachDetail[kVideoURL] as? String
+                if (videoURL != nil && videoURL!.isEmpty == false) {
+                    cell!.showVideo(videoURL!)
                 }
+                
+                // Test
+//                let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
+//                if (videoURL.isEmpty == false) {
+//                    cell!.showVideo(videoURL)
+//                }
             }
             
             // Remove video layer

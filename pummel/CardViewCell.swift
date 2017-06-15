@@ -48,6 +48,8 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         self.avatarBorderView.layer.masksToBounds = true
         
         self.cardView.avatarIMV.layer.masksToBounds = true
+        
+        self.playVideoButton.hidden = true
     }
     
     func cardViewTagClicked() {
