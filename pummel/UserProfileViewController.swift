@@ -56,6 +56,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     var videoPlayer: AVPlayer? = nil
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    var isVideoPlaying = false
     
     var arrayPhotos: NSArray = []
     
@@ -107,7 +108,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutTV.editable = false
         
-        self.playVideoButton.hidden = true
+        self.playVideoButton.setImage(nil, forState: .Normal)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -159,6 +160,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         UIView.animateWithDuration(0.5, animations: {
             self.detailV.layoutIfNeeded()
         }) { (_) in
+            self.isVideoPlaying = true
             self.videoPlayer!.play()
             
             self.avatarIMV.hidden = true
@@ -183,19 +185,29 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.videoPlayer?.play()
+        self.isVideoPlaying = !self.isVideoPlaying
+        if (self.isVideoPlaying == true) {
+            self.videoPlayer?.play()
+            self.playVideoButton.setImage(nil, forState: .Normal)
+        } else {
+            self.videoPlayer?.pause()
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+        }
         
-        self.playVideoButton.hidden = true
-        self.avatarIMV.hidden = true
+        // Hidden item above video view
+        self.avatarIMV.hidden = self.isVideoPlaying
     }
     
     func endVideoNotification(notification: NSNotification) {
         let playerItem = notification.object as! AVPlayerItem
         
+        // Show first frame video
         playerItem.seekToTime(kCMTimeZero)
-        
         self.videoPlayer?.pause()
-        self.playVideoButton.hidden = false
+        self.isVideoPlaying = false
+        
+        // Show item above video view
+        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
         self.avatarIMV.hidden = false
     }
     

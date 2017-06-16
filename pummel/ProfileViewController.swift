@@ -111,6 +111,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     var videoPlayer: AVPlayer? = nil
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    var isVideoPlaying = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -207,7 +208,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         
         self.getDetail()
         
-        self.playVideoButton.hidden = true
+        self.playVideoButton.setImage(nil, forState: .Normal)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -263,6 +264,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             self.detailV.layoutIfNeeded()
             }) { (_) in
                 self.videoPlayer!.play()
+                self.isVideoPlaying = true
                 
                 // Hidden item above video view
                 self.avatarIMV.hidden = true
@@ -300,8 +302,9 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         // Show first frame video
         playerItem.seekToTime(kCMTimeZero)
         self.videoPlayer?.pause()
+        self.isVideoPlaying = false
         
-        self.playVideoButton.hidden = false
+        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
         
         // Show item above video view
         self.avatarIMV.hidden = false
@@ -1055,20 +1058,25 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.videoPlayer?.play()
-        
-        self.playVideoButton.hidden = true
+        self.isVideoPlaying = !self.isVideoPlaying
+        if (self.isVideoPlaying == true) {
+            self.videoPlayer?.play()
+            self.playVideoButton.setImage(nil, forState: .Normal)
+            self.locationView.alpha = 0 // Special case
+        } else {
+            self.videoPlayer?.pause()
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+            self.locationView.alpha = 1 // Special case
+        }
         
         // Hidden item above video view
-        self.avatarIMV.hidden = true
-        self.coachBorderV.hidden = true
-        self.coachBorderBackgroundV.hidden = true
+        self.avatarIMV.hidden = self.isVideoPlaying
+        self.coachBorderV.hidden = self.isVideoPlaying
+        self.coachBorderBackgroundV.hidden = self.isVideoPlaying
         
-        self.connectV.hidden = true
+        self.connectV.hidden = self.isVideoPlaying
         
-        self.cameraButton.hidden = true
-        
-        self.locationView.alpha = 0 // special key
+        self.cameraButton.hidden = self.isVideoPlaying
     }
     
     // MARK: UIImagePickerControllerDelegate

@@ -105,17 +105,6 @@
                                                     <constraint firstItem="QIu-Fg-mSu" firstAttribute="leading" secondItem="rLf-jv-zSr" secondAttribute="trailing" constant="6" id="kz2-cc-5OK"/>
                                                 </constraints>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="db4-N2-14n">
-                                                <rect key="frame" x="560" y="10" width="30" height="30"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="30" id="DSR-wn-CXo"/>
-                                                    <constraint firstAttribute="width" secondItem="db4-N2-14n" secondAttribute="height" multiplier="1:1" id="f8s-xx-kmE"/>
-                                                </constraints>
-                                                <state key="normal" image="cameraIcon"/>
-                                                <connections>
-                                                    <action selector="cameraButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="I8t-vl-uDa"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="51y-60-mKL">
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                                                 <state key="normal" image="icon_play_video"/>
@@ -123,10 +112,21 @@
                                                     <action selector="playVideoButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="htf-i4-hWl"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="db4-N2-14n">
+                                                <rect key="frame" x="540" y="0.0" width="60" height="60"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="60" id="DSR-wn-CXo"/>
+                                                    <constraint firstAttribute="width" secondItem="db4-N2-14n" secondAttribute="height" multiplier="1:1" id="f8s-xx-kmE"/>
+                                                </constraints>
+                                                <state key="normal" image="cameraIcon"/>
+                                                <connections>
+                                                    <action selector="cameraButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="I8t-vl-uDa"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.25882352939999997" green="0.18823529410000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="db4-N2-14n" firstAttribute="top" secondItem="dUz-At-R3A" secondAttribute="top" constant="10" id="0v1-75-o4I"/>
+                                            <constraint firstItem="db4-N2-14n" firstAttribute="top" secondItem="dUz-At-R3A" secondAttribute="top" id="0v1-75-o4I"/>
                                             <constraint firstItem="dwI-Ae-AUK" firstAttribute="centerY" secondItem="U88-8Z-7He" secondAttribute="centerY" id="1zB-zx-peJ"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerX" secondItem="2Qg-F7-KVb" secondAttribute="centerX" id="7Nb-vm-r9A"/>
                                             <constraint firstItem="dwI-Ae-AUK" firstAttribute="centerX" secondItem="U88-8Z-7He" secondAttribute="centerX" id="8qn-f8-Mbx"/>
@@ -152,7 +152,7 @@
                                             <constraint firstAttribute="bottom" secondItem="897-JI-yRT" secondAttribute="bottom" constant="40" id="pe0-4A-TgH"/>
                                             <constraint firstAttribute="height" constant="300" id="rus-GV-gMl"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="sW0-3i-KJg"/>
-                                            <constraint firstAttribute="trailing" secondItem="db4-N2-14n" secondAttribute="trailing" constant="10" id="twW-ZC-0AD"/>
+                                            <constraint firstAttribute="trailing" secondItem="db4-N2-14n" secondAttribute="trailing" id="twW-ZC-0AD"/>
                                             <constraint firstItem="2Qg-F7-KVb" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="yjc-O5-yty"/>
                                         </constraints>
                                     </view>
@@ -3379,7 +3379,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ey2-z7-s6W" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7N0-97-9tW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="7N0-97-9tW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

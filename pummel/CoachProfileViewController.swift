@@ -113,6 +113,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     var videoPlayer: AVPlayer? = nil
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    var isVideoPlaying = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -243,7 +244,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             self.showVideoLayout(videoURL!)
         }
         
-        self.playVideoButton.hidden = true
+        self.playVideoButton.setImage(nil, forState: .Normal)
     }
     
     func showVideoLayout(videoURLString: String) {
@@ -286,6 +287,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             self.detailV.layoutIfNeeded()
         }) { (_) in
             self.videoPlayer!.play()
+            self.isVideoPlaying = true
             
             // Hidden item above video view
             self.avatarIMV.hidden = true
@@ -316,18 +318,23 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.videoPlayer?.play()
+        self.isVideoPlaying = !self.isVideoPlaying
+        if (self.isVideoPlaying == true) {
+            self.videoPlayer?.play()
+            self.playVideoButton.setImage(nil, forState: .Normal)
+            self.locationView.alpha = 0 // Special case
+        } else {
+            self.videoPlayer?.pause()
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+            self.locationView.alpha = 1 // Special case
+        }
         
         // Hidden item above video view
-        self.playVideoButton.hidden = true
+        self.avatarIMV.hidden = self.isVideoPlaying
+        self.coachBorderV.hidden = self.isVideoPlaying
+        self.coachBorderBackgroundV.hidden = self.isVideoPlaying
         
-        self.avatarIMV.hidden = true
-        self.coachBorderV.hidden = true
-        self.coachBorderBackgroundV.hidden = true
-        
-        self.actionView.hidden = true
-        
-        self.locationView.alpha = 0 // special key
+        self.actionView.hidden = self.isVideoPlaying
     }
     
     func endVideoNotification(notification: NSNotification) {
@@ -338,7 +345,7 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.videoPlayer?.pause()
         
         // Show item above video view
-        self.playVideoButton.hidden = false
+        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
         
         self.avatarIMV.hidden = false
         self.coachBorderV.hidden = false
