@@ -230,11 +230,11 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         state = placeMark.administrativeArea!
                     }
                     
-                    let stateCity =  String(format: "&%@=%@&%@=%@", kState, state, kCity, city.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+                    let stateCity =  String(format: "&%@=%@&%@=%@", kState, state.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, kCity, city.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
                     
                     
                     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                    appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(self.locationManager.location?.coordinate.longitude)!, "long":(self.locationManager.location?.coordinate.latitude)!, "state": state, "city": city]
+                    appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(self.locationManager.location?.coordinate.latitude)!, "long":(self.locationManager.location?.coordinate.longitude)!, "state": state, "city": city]
                     
                     self.prefix.appendContentsOf(stateCity)
                     

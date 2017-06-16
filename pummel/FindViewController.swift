@@ -217,7 +217,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, aVariable[kLong] as! Float, kLat, aVariable[kLat] as! Float)
             prefix.appendContentsOf(coordinateParams)
             
-            let stateCity =  String(format: "&%@=%@&%@=%@", "state",  aVariable[kState] as! String, "city", (aVariable[kCity] as! String).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+            let stateCity =  String(format: "&%@=%@&%@=%@", "state",  (aVariable[kState] as! String).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, "city", (aVariable[kCity] as! String).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
             prefix.appendContentsOf(stateCity)
             
             Alamofire.request(.GET, prefix)
