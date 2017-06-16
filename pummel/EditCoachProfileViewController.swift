@@ -607,18 +607,18 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             self.imagePicker.cameraDevice = .Front
             self.presentViewController(self.imagePicker, animated: true, completion: nil)
         }
-        let takeVideoFromLibrary = { (action:UIAlertAction!) -> Void in
-            self.imagePicker.allowsEditing = false
-            self.imagePicker.sourceType = .PhotoLibrary
-            self.imagePicker.mediaTypes = ["public.movie"]
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
-        }
+//        let takeVideoFromLibrary = { (action:UIAlertAction!) -> Void in
+//            self.imagePicker.allowsEditing = false
+//            self.imagePicker.sourceType = .PhotoLibrary
+//            self.imagePicker.mediaTypes = ["public.movie"]
+//            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+//        }
         
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectImageFromLibrary))
         alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kTakeVideo, style: UIAlertActionStyle.Destructive, handler: takeVideoFromLibrary))
+//        alertController.addAction(UIAlertAction(title: kTakeVideo, style: UIAlertActionStyle.Destructive, handler: takeVideoFromLibrary))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }

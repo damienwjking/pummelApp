@@ -65,13 +65,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     }
     
     override func viewWillAppear(animated: Bool) {
-            
         // Do any additional setup after loading the view.
-        self.bigBigIndicatorView.alpha = 0.005
-        self.bigIndicatorView.alpha = 0.01
-        self.medIndicatorView.alpha = 0.025
-        self.smallIndicatorView.alpha = 0.05
-        
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
         self.bigIndicatorView.layer.cornerRadius = 312/2
         self.medIndicatorView.layer.cornerRadius = 240/2
@@ -123,11 +117,10 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         self.scrollView.scrollEnabled = true
         
         // check Video URL
-        //        let videoURL = self.userDetail[kVideoURL] as? String
-        let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
-        //        if (videoURL?.isEmpty == false && self.isShowVideo == true) {
-        if (videoURL.isEmpty == false) {
-            self.showVideoLayout(videoURL)
+        let videoURL = self.userDetail[kVideoURL] as? String
+//        let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
+        if (videoURL?.isEmpty == false && self.isShowVideo == true) {
+            self.showVideoLayout(videoURL!)
         }
     }
     
@@ -167,6 +160,8 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
             self.detailV.layoutIfNeeded()
         }) { (_) in
             self.videoPlayer!.play()
+            
+            self.avatarIMV.hidden = true
         }
         
         // Add indicator for video
@@ -191,6 +186,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         self.videoPlayer?.play()
         
         self.playVideoButton.hidden = true
+        self.avatarIMV.hidden = true
     }
     
     func endVideoNotification(notification: NSNotification) {
@@ -200,6 +196,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         
         self.videoPlayer?.pause()
         self.playVideoButton.hidden = false
+        self.avatarIMV.hidden = false
     }
     
     func setting() {

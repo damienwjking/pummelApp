@@ -28,7 +28,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="grt-By-SEN">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X78-pq-RP6">
+                                            <view alpha="0.0050000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X78-pq-RP6">
                                                 <rect key="frame" x="113" y="-37" width="374" height="374"/>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
@@ -36,7 +36,7 @@
                                                     <constraint firstAttribute="height" constant="374" id="jPW-NX-Nfi"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5rs-Ur-ieW">
+                                            <view alpha="0.01" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5rs-Ur-ieW">
                                                 <rect key="frame" x="144" y="-6" width="312" height="312"/>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
@@ -44,7 +44,7 @@
                                                     <constraint firstAttribute="height" constant="312" id="fvK-Ya-6NM"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfY-PC-eLb">
+                                            <view alpha="0.025000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfY-PC-eLb">
                                                 <rect key="frame" x="180" y="30" width="240" height="240"/>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
@@ -52,7 +52,7 @@
                                                     <constraint firstAttribute="width" constant="240" id="yxx-Gk-m01"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ceF-hX-Vgq">
+                                            <view alpha="0.050000000000000003" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ceF-hX-Vgq">
                                                 <rect key="frame" x="210" y="60" width="180" height="180"/>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
@@ -68,7 +68,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0MQ-br-Jdy">
-                                                <rect key="frame" x="50" y="15" width="500" height="39"/>
+                                                <rect key="frame" x="60" y="15" width="490" height="39"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="39" id="Tcz-kf-FKe"/>
                                                 </constraints>
@@ -84,9 +84,9 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d2S-A4-FWH">
-                                                <rect key="frame" x="0.0" y="20" width="46" height="30"/>
+                                                <rect key="frame" x="0.0" y="20" width="56" height="30"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="46" id="BYo-1a-zqO"/>
+                                                    <constraint firstAttribute="width" constant="56" id="BYo-1a-zqO"/>
                                                     <constraint firstAttribute="height" constant="30" id="MgO-xH-ktY"/>
                                                 </constraints>
                                                 <state key="normal" image="back"/>
@@ -394,7 +394,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="60c-3Z-3QI" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pNA-XZ-GHH">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pNA-XZ-GHH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

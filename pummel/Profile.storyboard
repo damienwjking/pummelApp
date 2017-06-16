@@ -722,6 +722,7 @@
                         <outlet property="interestHeightDT" destination="9n6-61-0tV" id="vH0-sb-3AG"/>
                         <outlet property="interestLB" destination="Rgf-jJ-cvo" id="Fk3-YB-yC0"/>
                         <outlet property="interestV" destination="uEh-DN-xjd" id="EbU-BQ-xVU"/>
+                        <outlet property="locationView" destination="897-JI-yRT" id="qUA-o7-17I"/>
                         <outlet property="medIndicatorView" destination="dwI-Ae-AUK" id="ak8-pE-MC9"/>
                         <outlet property="playVideoButton" destination="51y-60-mKL" id="Lcd-if-uxt"/>
                         <outlet property="postHeightDT" destination="M23-lU-MhQ" id="e3f-Ll-AAr"/>
@@ -3378,7 +3379,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ey2-z7-s6W" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="7N0-97-9tW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7N0-97-9tW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

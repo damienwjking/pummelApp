@@ -9,9 +9,14 @@
 import UIKit
 import Alamofire
 import Mixpanel
+import AVKit
+import AVFoundation
 
 
 class CoachProfileViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
 
     @IBOutlet weak var titleCoachLB: UILabel!
     @IBOutlet weak var smallIndicatorView: UIView!
@@ -22,10 +27,13 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var coachBorderV: UIView!
     @IBOutlet weak var coachBorderBackgroundV: UIView!
+    @IBOutlet weak var playVideoButton: UIButton!
     @IBOutlet weak var actionViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var actionView: UIView!
     @IBOutlet weak var phoneBT: UIButton!
     @IBOutlet weak var connectBT : UIButton!
     @IBOutlet weak var addressLB: UILabel!
+    @IBOutlet weak var locationView: UIView!
     @IBOutlet weak var interestLB: UILabel!
     @IBOutlet weak var specialitiesLB: UILabel!
     @IBOutlet weak var aboutLB: UILabel!
@@ -101,6 +109,11 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
     
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     
+    var videoView: UIView? = nil
+    var videoPlayer: AVPlayer? = nil
+    var isShowVideo: Bool = true
+    let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -109,11 +122,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.aboutTV.scrollEnabled = false
         self.qualificationTV.backgroundColor = .clearColor()
         self.qualificationTV.scrollEnabled = false
-        
-        self.bigBigIndicatorView.alpha = 0.005
-        self.bigIndicatorView.alpha = 0.01
-        self.medIndicatorView.alpha = 0.025
-        self.smallIndicatorView.alpha = 0.05
         
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
         self.bigIndicatorView.layer.cornerRadius = 312/2
@@ -138,8 +146,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         self.coachBorderV.layer.cornerRadius = 135/2
         self.coachBorderBackgroundV.layer.cornerRadius = 129/2
         self.avatarIMV.clipsToBounds = true
-        self.coachBorderBackgroundV.hidden = true
-        self.coachBorderV.hidden = true
         self.scrollView.scrollsToTop = false
         self.interestCollectionView.delegate = self
         self.interestCollectionView.dataSource = self
@@ -229,6 +235,118 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
         self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
         self.scrollView.scrollEnabled = true
+        
+        // check Video URL
+        let videoURL = self.coachDetail[kVideoURL] as? String
+//        let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
+        if (videoURL?.isEmpty == false && self.isShowVideo == true) {
+            self.showVideoLayout(videoURL!)
+        }
+        
+        self.playVideoButton.hidden = true
+    }
+    
+    func showVideoLayout(videoURLString: String) {
+        // Move avatar to top left
+        let newAvatarSize: CGFloat = 37.0
+        let leftMargin: CGFloat = 15.0
+        let topMargin: CGFloat = 55.0
+        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + leftMargin
+        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
+        self.avatarIMVWidthConstraint.constant = newAvatarSize
+        
+        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
+        
+        
+        self.coachBorderV.layer.cornerRadius = (newAvatarSize + 10)/2
+        self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
+        
+        // Hidden indicator view
+        self.smallIndicatorView.hidden = true
+        self.medIndicatorView.hidden = true
+        self.bigIndicatorView.hidden = true
+        self.bigBigIndicatorView.hidden = true
+        
+        // Show video
+        if (self.videoView?.superview != nil) {
+            self.videoView?.removeFromSuperview()
+        }
+        self.videoView = UIView.init(frame: self.detailV.bounds)
+        let videoURL = NSURL(string: videoURLString)
+        self.videoPlayer = AVPlayer(URL: videoURL!)
+        self.videoPlayer!.actionAtItemEnd = .None
+        let playerLayer = AVPlayerLayer(player: self.videoPlayer)
+        playerLayer.frame = self.videoView!.bounds
+        self.videoView!.layer.addSublayer(playerLayer)
+        
+        self.detailV.insertSubview(self.videoView!, atIndex: 0)
+        
+        // Animation
+        UIView.animateWithDuration(0.5, animations: {
+            self.detailV.layoutIfNeeded()
+        }) { (_) in
+            self.videoPlayer!.play()
+            
+            // Hidden item above video view
+            self.avatarIMV.hidden = true
+            self.coachBorderV.hidden = true
+            self.coachBorderBackgroundV.hidden = true
+            
+            self.actionView.hidden = true
+            
+            self.locationView.alpha = 0 // special key
+        }
+        
+        // Add indicator for video
+        if (self.videoIndicator.superview != nil) {
+            self.videoIndicator.removeFromSuperview()
+        }
+        self.videoIndicator.startAnimating()
+        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
+        
+        // Remove loop play video for
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        
+        // Add notification for loop play video
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.endVideoNotification),
+                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         object: self.videoPlayer!.currentItem)
+    }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        self.videoPlayer?.play()
+        
+        // Hidden item above video view
+        self.playVideoButton.hidden = true
+        
+        self.avatarIMV.hidden = true
+        self.coachBorderV.hidden = true
+        self.coachBorderBackgroundV.hidden = true
+        
+        self.actionView.hidden = true
+        
+        self.locationView.alpha = 0 // special key
+    }
+    
+    func endVideoNotification(notification: NSNotification) {
+        let playerItem = notification.object as! AVPlayerItem
+        
+        // Show first video frame
+        playerItem.seekToTime(kCMTimeZero)
+        self.videoPlayer?.pause()
+        
+        // Show item above video view
+        self.playVideoButton.hidden = false
+        
+        self.avatarIMV.hidden = false
+        self.coachBorderV.hidden = false
+        self.coachBorderBackgroundV.hidden = false
+        
+        self.actionView.hidden = false
+        
+        self.locationView.alpha = 1 // special key
     }
     
     func getBusinessImage() {
@@ -302,8 +420,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
             let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
             self.avatarIMV.image = imageRes
-            self.coachBorderBackgroundV.hidden = false
-            self.coachBorderV.hidden = false
         } else {
             Alamofire.request(.GET, prefix)
                 .responseImage { response in
@@ -311,8 +427,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                         let imageRes = response.result.value! as UIImage
                         self.avatarIMV.image = imageRes
                         NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                        self.coachBorderBackgroundV.hidden = false
-                        self.coachBorderV.hidden = false
                     }
             }
         }
@@ -389,7 +503,10 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
                 self.ratingContentLB.text = String(format:"%0.f", totalPoint)
                 
                 if !(coachInformationTotal[kServiceArea] is NSNull) {
+                    self.locationView.hidden = false
                     self.addressLB.text = coachInformationTotal[kServiceArea] as? String
+                } else {
+                    self.locationView.hidden = true
                 }
                 
                 if !(coachInformation[kBio] is NSNull) {

@@ -81,6 +81,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var achivementTVHeightDT: NSLayoutConstraint!
     @IBOutlet weak var specifiesDT: NSLayoutConstraint!
     
+    @IBOutlet weak var locationView: UIView!
+    
     @IBOutlet weak var ratingLB: UILabel!
     @IBOutlet weak var ratingContentLB: UILabel!
     
@@ -261,6 +263,17 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             self.detailV.layoutIfNeeded()
             }) { (_) in
                 self.videoPlayer!.play()
+                
+                // Hidden item above video view
+                self.avatarIMV.hidden = true
+                self.coachBorderV.hidden = true
+                self.coachBorderBackgroundV.hidden = true
+                
+                self.connectV.hidden = true
+                
+                self.cameraButton.hidden = true
+                
+                self.locationView.alpha = 0;
         }
         
         // Add indicator for video
@@ -284,10 +297,22 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     func endVideoNotification(notification: NSNotification) {
         let playerItem = notification.object as! AVPlayerItem
         
+        // Show first frame video
         playerItem.seekToTime(kCMTimeZero)
-        
         self.videoPlayer?.pause()
+        
         self.playVideoButton.hidden = false
+        
+        // Show item above video view
+        self.avatarIMV.hidden = false
+        self.coachBorderV.hidden = false
+        self.coachBorderBackgroundV.hidden = false
+        
+        self.connectV.hidden = false
+        
+        self.cameraButton.hidden = false
+        
+        self.locationView.alpha = 1 // special key
     }
     
     func setting() {
@@ -553,7 +578,10 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                 self.ratingContentLB.text = String(format:"%0.f", totalPoint)
                 
                 if !(coachInformationTotal[kServiceArea] is NSNull) {
+                    self.locationView.hidden = false
                     self.addressLB.text = coachInformationTotal[kServiceArea] as? String
+                } else {
+                    self.locationView.hidden = true
                 }
                 
                 if !(coachInformation[kBio] is NSNull) {
@@ -1030,6 +1058,17 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.videoPlayer?.play()
         
         self.playVideoButton.hidden = true
+        
+        // Hidden item above video view
+        self.avatarIMV.hidden = true
+        self.coachBorderV.hidden = true
+        self.coachBorderBackgroundV.hidden = true
+        
+        self.connectV.hidden = true
+        
+        self.cameraButton.hidden = true
+        
+        self.locationView.alpha = 0 // special key
     }
     
     // MARK: UIImagePickerControllerDelegate
