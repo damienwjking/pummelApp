@@ -1049,12 +1049,29 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     @IBAction func cameraButtonClicked(sender: AnyObject) {
-        imagePickerController.allowsEditing = false
-        imagePickerController.sourceType = .PhotoLibrary
-        imagePickerController.delegate = self
-        imagePickerController.mediaTypes = ["public.movie"]
+        let selectVideoFromLibrary = { (action:UIAlertAction!) -> Void in
+            self.imagePickerController.allowsEditing = false
+            self.imagePickerController.sourceType = .PhotoLibrary
+            self.imagePickerController.delegate = self
+            self.imagePickerController.mediaTypes = ["public.movie"]
+            
+            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
+        }
+        let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
+            self.imagePickerController.allowsEditing = false
+            self.imagePickerController.sourceType = .Camera
+            self.imagePickerController.delegate = self
+            self.imagePickerController.mediaTypes = ["public.movie"]
+            
+            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
+        }
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         
-        presentViewController(imagePickerController, animated: true, completion: nil)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectVideoFromLibrary))
+        alertController.addAction(UIAlertAction(title: kTakeVideo, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
@@ -1081,68 +1098,79 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     
     // MARK: UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        // send video by method mutipart to server
-        let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-        let videoData = NSData(contentsOfURL: videoPath)
-        let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
-        let videoType = "video/" + videoExtend
-        let videoName = "video." + videoExtend
+        let type = info[UIImagePickerControllerMediaType] as! String
         
-        // Insert activity indicator
-        self.view.makeToastActivity(message: "Uploading")
-        
-        // send video by method mutipart to server
-        var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        prefix.appendContentsOf(kPM_PATH_VIDEO)
-        var parameters = [String:AnyObject]()
-        
-        self.isShowVideo = false
-        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
-        Alamofire.upload(
-            .POST,
-            prefix,
-            multipartFormData: { multipartFormData in
-                multipartFormData.appendBodyPart(data: videoData!,
-                    name: "file",
-                    fileName:videoName,
-                    mimeType:videoType)
-                for (key, value) in parameters {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                }
+        if (type == "public.movie") {
+            // send video by method mutipart to server
+            let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
+            let videoData = NSData(contentsOfURL: videoPath)
+            let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+            let videoType = "video/" + videoExtend
+            let videoName = "video." + videoExtend
+            
+            // Insert activity indicator
+            self.view.makeToastActivity(message: "Uploading")
+            
+            // send video by method mutipart to server
+            var prefix = kPMAPIUSER
+            let defaults = NSUserDefaults.standardUserDefaults()
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPM_PATH_VIDEO)
+            var parameters = [String:AnyObject]()
+            
+            self.isShowVideo = false
+            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+            Alamofire.upload(
+                .POST,
+                prefix,
+                multipartFormData: { multipartFormData in
+                    multipartFormData.appendBodyPart(data: videoData!,
+                                                     name: "file",
+                                                     fileName:videoName,
+                                                     mimeType:videoType)
+                    for (key, value) in parameters {
+                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                    }
             },
-            encodingCompletion: { encodingResult in
-                switch encodingResult {
-                    
-                case .Success(let upload, _, _):
-                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                    }
-                    upload.validate()
-                    upload.responseJSON { response in
-                        self.view.hideToastActivity()
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
                         
-                        if (response.response?.statusCode == 200) {
-                            let dictionary = response.result.value as! [NSDictionary]
-                            let videoURL = dictionary.first![kVideoURL] as! String
-                            
-                            // Update videoURL for coach detail
-                            let newCoachDetail = NSMutableDictionary.init(dictionary: self.coachDetail)
-                            newCoachDetail.setValue(videoURL, forKey: KVideoUrl)
-                            self.coachDetail = newCoachDetail
-                            
-                            self.isShowVideo = true
-                            self.showVideoLayout(videoURL)
+                    case .Success(let upload, _, _):
+                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
                         }
+                        upload.validate()
+                        upload.responseJSON { response in
+                            self.view.hideToastActivity()
+                            
+                            if (response.response?.statusCode == 200) {
+                                let dictionary = response.result.value as! [NSDictionary]
+                                let videoURL = dictionary.first![kVideoURL] as! String
+                                
+                                // Update videoURL for coach detail
+                                let newCoachDetail = NSMutableDictionary.init(dictionary: self.coachDetail)
+                                newCoachDetail.setValue(videoURL, forKey: KVideoUrl)
+                                self.coachDetail = newCoachDetail
+                                
+                                self.isShowVideo = true
+                                self.showVideoLayout(videoURL)
+                            } else {
+                                let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
+                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                    // TODO: LOGOUT
+                                }
+                                alertController.addAction(OKAction)
+                                self.presentViewController(alertController, animated: true) {
+                                    // ...
+                                }
+                            }
+                        }
+                        
+                    case .Failure( _): break
+                        // Do nothing
                     }
-                    
-                case .Failure( _): break
-                    // Do nothing
-                }
-            }
-        )
-        
-        
-        imagePickerController.dismissViewControllerAnimated(true, completion: nil)
+            })
+            
+            imagePickerController.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
 }
