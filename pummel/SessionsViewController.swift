@@ -252,6 +252,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                                     if (localMessageID != nil && messageID != nil) {
                                         if (localMessageID == messageID) {
                                             isExist = true
+                                            break
                                         }
                                     }
                                 }
@@ -435,7 +436,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                     }
             }
             
-            
             i = i + 1
         }
     }
@@ -446,13 +446,22 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-            if (tableView == self.horizontalTableView) {
+        if (tableView == self.horizontalTableView) {
+            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
                 return 96
             }
+        } else {
+            let message = arrayMessages[indexPath.row]
+            let text = message[kText] as? String
+            if (text == nil || text?.isEmpty == true || text == " ") {
+                return 0
+            }
+            
+            return 120
+            // Ceiling this value fixes disappearing separators
         }
-        return 120
-        // Ceiling this value fixes disappearing separators
+        
+        return 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

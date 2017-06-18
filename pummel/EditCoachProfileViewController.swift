@@ -596,9 +596,10 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     }
     
     func showPopupToSelectProfileAvatar() {
-        let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
+        let selectImageFromLibrary = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = true
             self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.mediaTypes = ["public.image"]
             self.presentViewController(self.imagePicker, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
@@ -606,9 +607,18 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             self.imagePicker.cameraDevice = .Front
             self.presentViewController(self.imagePicker, animated: true, completion: nil)
         }
+//        let takeVideoFromLibrary = { (action:UIAlertAction!) -> Void in
+//            self.imagePicker.allowsEditing = false
+//            self.imagePicker.sourceType = .PhotoLibrary
+//            self.imagePicker.mediaTypes = ["public.movie"]
+//            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+//        }
+        
+        
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectImageFromLibrary))
         alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
+//        alertController.addAction(UIAlertAction(title: kTakeVideo, style: UIAlertActionStyle.Destructive, handler: takeVideoFromLibrary))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
@@ -682,99 +692,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                     }
             }
         }
-    }
-    
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
-            activityView.center = self.view.center
-            activityView.startAnimating()
-            avatarIMW.addSubview(activityView)
-            avatarIMW.contentMode = .ScaleAspectFill
-            var imageData : NSData!
-            let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
-            var type : String!
-            var filename: String!
-            if assetPath.absoluteString!.hasSuffix("JPG") {
-                type = imageJpeg
-                filename = jpgeFile
-                imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
-            } else if assetPath.absoluteString!.hasSuffix("PNG") {
-                type = imagePng
-                filename = pngFile
-                imageData = UIImagePNGRepresentation(pickedImage)
-            }
-            
-            if (imageData == nil) {
-                dispatch_async(dispatch_get_main_queue(),{
-                    activityView.stopAnimating()
-                    activityView.removeFromSuperview()
-                    //Your main thread code goes in here
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .Alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                })
-                
-            } else {
-                var prefix = kPMAPIUSER
-                let defaults = NSUserDefaults.standardUserDefaults()
-                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                var parameters = [String:AnyObject]()
-                parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
-                Alamofire.upload(
-                    .POST,
-                    prefix,
-                    multipartFormData: { multipartFormData in
-                        multipartFormData.appendBodyPart(data: imageData, name: "file",
-                                                         fileName:filename, mimeType:type)
-                        for (key, value) in parameters {
-                            multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                        }
-                    },
-                    encodingCompletion: { encodingResult in
-                        switch encodingResult {
-                            
-                        case .Success(let upload, _, _):
-                            upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                            }
-                            upload.validate()
-                            upload.responseJSON { response in
-                                if response.result.error != nil {
-                                    // failure
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                } else {
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                    self.avatarIMW.image = pickedImage
-                                }
-                            }
-                            
-                        case .Failure(let _):
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
-                        }
-                    }
-                )
-            }
-            
-        }
-        
-        
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func checkRuleInputData() -> Bool {
@@ -960,6 +877,149 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         let randomBlue:CGFloat = CGFloat(drand48())
         
         return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
+    
+    // MARK: UIImagePickerControllerDelegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let mediType = info[UIImagePickerControllerMediaType] as! String
+        
+        if (mediType == "public.image") {
+            if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+                let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+                activityView.center = self.view.center
+                activityView.startAnimating()
+                avatarIMW.addSubview(activityView)
+                avatarIMW.contentMode = .ScaleAspectFill
+                var imageData : NSData!
+                let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
+                var type : String!
+                var filename: String!
+                if assetPath.absoluteString!.hasSuffix("JPG") {
+                    type = imageJpeg
+                    filename = jpgeFile
+                    imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+                } else if assetPath.absoluteString!.hasSuffix("PNG") {
+                    type = imagePng
+                    filename = pngFile
+                    imageData = UIImagePNGRepresentation(pickedImage)
+                }
+                
+                if (imageData == nil) {
+                    dispatch_async(dispatch_get_main_queue(),{
+                        activityView.stopAnimating()
+                        activityView.removeFromSuperview()
+                        //Your main thread code goes in here
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .Alert)
+                        
+                        
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            // ...
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    })
+                    
+                } else {
+                    var prefix = kPMAPIUSER
+                    let defaults = NSUserDefaults.standardUserDefaults()
+                    prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                    prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
+                    var parameters = [String:AnyObject]()
+                    parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
+                    Alamofire.upload(
+                        .POST,
+                        prefix,
+                        multipartFormData: { multipartFormData in
+                            multipartFormData.appendBodyPart(data: imageData, name: "file",
+                                fileName:filename, mimeType:type)
+                            for (key, value) in parameters {
+                                multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                            }
+                        },
+                        encodingCompletion: { encodingResult in
+                            switch encodingResult {
+                                
+                            case .Success(let upload, _, _):
+                                upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                                }
+                                upload.validate()
+                                upload.responseJSON { response in
+                                    if response.result.error != nil {
+                                        // failure
+                                        activityView.stopAnimating()
+                                        activityView.removeFromSuperview()
+                                    } else {
+                                        activityView.stopAnimating()
+                                        activityView.removeFromSuperview()
+                                        self.avatarIMW.image = pickedImage
+                                    }
+                                }
+                                
+                            case .Failure(let _):
+                                activityView.stopAnimating()
+                                activityView.removeFromSuperview()
+                            }
+                        }
+                    )
+                }
+                
+            }
+        } else if (mediType == "public.movie") {
+            let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
+            let videoData = NSData(contentsOfURL: videoPath)
+            let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+            let videoType = "video/" + videoExtend
+            let videoName = "video." + videoExtend
+            
+            // Insert activity indicator
+            self.view.makeToastActivity(message: "Uploading")
+            
+            // send video by method mutipart to server
+            var prefix = kPMAPIUSER
+            let defaults = NSUserDefaults.standardUserDefaults()
+            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPM_PATH_VIDEO)
+            var parameters = [String:AnyObject]()
+            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+            Alamofire.upload(
+                .POST,
+                prefix,
+                multipartFormData: { multipartFormData in
+                    multipartFormData.appendBodyPart(data: videoData!,
+                        name: "file",
+                        fileName:videoName,
+                        mimeType:videoType)
+                    for (key, value) in parameters {
+                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                    }
+                },
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                        
+                    case .Success(let upload, _, _):
+                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                        }
+                        upload.validate()
+                        upload.responseJSON { response in
+                            // Do nothing
+                            self.view.hideToastActivity()
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
+                        
+                    case .Failure(let _): break
+                        // Do nothing
+                    }
+                }
+            )
+        }
+        
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
 }
 

@@ -191,6 +191,9 @@ class ConnectViewController: BaseViewController {
         }
 
         self.moveToMessageScreenWithMessage("")
+        if let val = coachDetail[kId] as? Int {
+            TrackingPMAPI.sharedInstance.trackingMessageButtonCLick("\(val)")
+        }
     }
     
     @IBAction func requestCallBack(sender: AnyObject) {
@@ -200,6 +203,10 @@ class ConnectViewController: BaseViewController {
             let mixpanel = Mixpanel.sharedInstance()
             let properties = ["Name": "Request Call Back", "Label":"\(firstName.uppercaseString)"]
             mixpanel.track("IOS.SendMessageToCoach", properties: properties)
+        }
+        
+        if let val = coachDetail[kId] as? Int {
+            TrackingPMAPI.sharedInstance.trackingCallBackButtonClick("\(val)")
         }
         
         self.requestCallBackBT.userInteractionEnabled = false

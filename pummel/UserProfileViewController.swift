@@ -8,8 +8,13 @@
 
 import UIKit
 import Alamofire
+import AVKit
+import AVFoundation
 
 class UserProfileViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
+    @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
     
     //@IBOutlet weak var titleUserLB: UILabel!
     @IBOutlet weak var smallIndicatorView: UIView!
@@ -17,7 +22,9 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     @IBOutlet weak var bigIndicatorView: UIView!
     @IBOutlet weak var bigBigIndicatorView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var detailV: UIView!
     @IBOutlet weak var avatarIMV: UIImageView!
+    @IBOutlet weak var playVideoButton: UIButton!
     @IBOutlet weak var aboutLB: UILabel!
     @IBOutlet weak var postLB: UILabel!
     @IBOutlet weak var aboutCollectionView: UICollectionView!
@@ -45,6 +52,12 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     var sizingCell: TagCell?
     var tags = [Tag]()
     
+    var videoView: UIView? = nil
+    var videoPlayer: AVPlayer? = nil
+    var isShowVideo: Bool = true
+    let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    var isVideoPlaying = false
+    
     var arrayPhotos: NSArray = []
     
     override func viewDidLoad() {
@@ -53,13 +66,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     }
     
     override func viewWillAppear(animated: Bool) {
-            
         // Do any additional setup after loading the view.
-        self.bigBigIndicatorView.alpha = 0.005
-        self.bigIndicatorView.alpha = 0.01
-        self.medIndicatorView.alpha = 0.025
-        self.smallIndicatorView.alpha = 0.05
-        
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
         self.bigIndicatorView.layer.cornerRadius = 312/2
         self.medIndicatorView.layer.cornerRadius = 240/2
@@ -100,6 +107,108 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutTV.editable = false
+        
+        self.playVideoButton.setImage(nil, forState: .Normal)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
+        self.scrollView.scrollEnabled = true
+        
+        // check Video URL
+        let videoURL = self.userDetail[kVideoURL] as? String
+//        let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
+        if (videoURL?.isEmpty == false && self.isShowVideo == true) {
+            self.showVideoLayout(videoURL!)
+        }
+    }
+    
+    func showVideoLayout(videoURLString: String) {
+        // Move avatar to top left
+        let newAvatarSize: CGFloat = 37.0
+        let leftMargin: CGFloat = 10.0
+        let topMargin: CGFloat = 50.0
+        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + leftMargin
+        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
+        self.avatarIMVWidthConstraint.constant = newAvatarSize
+        
+        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
+        
+        // Hidden indicator view
+        self.smallIndicatorView.hidden = true
+        self.medIndicatorView.hidden = true
+        self.bigIndicatorView.hidden = true
+        self.bigBigIndicatorView.hidden = true
+        
+        // Show video
+        if (self.videoView?.superview != nil) {
+            self.videoView?.removeFromSuperview()
+        }
+        self.videoView = UIView.init(frame: self.detailV.bounds)
+        let videoURL = NSURL(string: videoURLString)
+        self.videoPlayer = AVPlayer(URL: videoURL!)
+        self.videoPlayer!.actionAtItemEnd = .None
+        let playerLayer = AVPlayerLayer(player: self.videoPlayer)
+        playerLayer.frame = self.videoView!.bounds
+        self.videoView!.layer.addSublayer(playerLayer)
+        
+        self.detailV.insertSubview(self.videoView!, atIndex: 0)
+        
+        // Animation
+        UIView.animateWithDuration(0.5, animations: {
+            self.detailV.layoutIfNeeded()
+        }) { (_) in
+            self.isVideoPlaying = true
+            self.videoPlayer!.play()
+            
+            self.avatarIMV.hidden = true
+        }
+        
+        // Add indicator for video
+        if (self.videoIndicator.superview != nil) {
+            self.videoIndicator.removeFromSuperview()
+        }
+        self.videoIndicator.startAnimating()
+        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
+        
+        // Remove loop play video for
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        
+        // Add notification for loop play video
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.endVideoNotification),
+                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         object: self.videoPlayer!.currentItem)
+    }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        self.isVideoPlaying = !self.isVideoPlaying
+        if (self.isVideoPlaying == true) {
+            self.videoPlayer?.play()
+            self.playVideoButton.setImage(nil, forState: .Normal)
+        } else {
+            self.videoPlayer?.pause()
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+        }
+        
+        // Hidden item above video view
+        self.avatarIMV.hidden = self.isVideoPlaying
+    }
+    
+    func endVideoNotification(notification: NSNotification) {
+        let playerItem = notification.object as! AVPlayerItem
+        
+        // Show first frame video
+        playerItem.seekToTime(kCMTimeZero)
+        self.videoPlayer?.pause()
+        self.isVideoPlaying = false
+        
+        // Show item above video view
+        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+        self.avatarIMV.hidden = false
     }
     
     func setting() {
@@ -133,7 +242,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     func getListPhoto() {
         var prefix = kPMAPIUSER
         prefix.appendContentsOf(userId)
-        prefix.appendContentsOf(kPM_PATH_PHOTO)
+        prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -197,13 +306,6 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-        self.scrollView.scrollEnabled = true
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
