@@ -86,8 +86,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     override func viewWillAppear(animated: Bool) {
         self.initNavigationBar()
-        NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
-        NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
         
         self.listMessageTB.reloadData()
         
@@ -127,8 +125,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     func refreshControlTable() {
         if (self.isLoadingMessage == false) {
-            NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
             self.listMessageTB.contentOffset = CGPointZero
             
             self.gotNewMessage()
@@ -509,11 +505,13 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             // Check New or old
             let lastOpen = message[kLastOpenAt] as? String
             if lastOpen?.isEmpty == true {
+                cell.isNewMessage = true
                 cell.nameLB.font = .pmmMonReg13()
                 cell.messageLB.font = .pmmMonReg16()
                 cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
             } else {
                 if lastOpen == "0" {
+                    cell.isNewMessage = true
                     cell.nameLB.font = .pmmMonReg13()
                     cell.messageLB.font = .pmmMonReg16()
                     cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
@@ -764,9 +762,19 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         var properties = ["Name": "Navigation Click", "Label":"Go Chat"]
         
         if (tableView == listMessageTB) {
-            NSUserDefaults.standardUserDefaults().setInteger(-1, forKey: "MESSAGE_BADGE_VALUE")
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
+            // Check new message here
+            let cell = tableView.cellForRowAtIndexPath(indexPath) as! MessageTableViewCell
+//            if (cell.isNewMessage == true) {
+//                var bageValue = NSUserDefaults.standardUserDefaults().integerForKey("MESSAGE_BADGE_VALUE")
+//                bageValue = bageValue - 2
+//                NSUserDefaults.standardUserDefaults().setInteger(bageValue, forKey: "MESSAGE_BADGE_VALUE")
+//                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
+//            }
+            
+            
             self.clickOnConnectionImage(indexPath)
+            
+            
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
             

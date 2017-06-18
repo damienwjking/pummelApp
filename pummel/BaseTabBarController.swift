@@ -20,8 +20,8 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showFeed), name: k_PM_SHOW_FEED, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showSession), name: k_PM_SHOW_SHOW_SESSIONS, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showClients), name: k_PM_SHOW_SHOW_CLIENTS, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadgeWithoutRefresh), name: k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadgeWithoutRefresh), name: k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
         
         self.delegate = self
     }
@@ -58,7 +58,7 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
         var badgeV = NSUserDefaults.standardUserDefaults().integerForKey("MESSAGE_BADGE_VALUE")
         badgeV += 1
         NSUserDefaults.standardUserDefaults().setInteger(badgeV, forKey: "MESSAGE_BADGE_VALUE")
-        if (badgeV != 0) {
+        if (badgeV > 0) {
             self.tabBar.items![3].badgeValue = String(badgeV)
         } else {
             self.tabBar.items![3].badgeValue = nil
