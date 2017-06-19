@@ -109,6 +109,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     let imagePickerController = UIImagePickerController()
     var videoView: UIView? = nil
     var videoPlayer: AVPlayer? = nil
+    var videoPlayerLayer: AVPlayerLayer? = nil
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
     var isVideoPlaying = false
@@ -247,9 +248,11 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             let videoURL = NSURL(string: videoURLString)
             self.videoPlayer = AVPlayer(URL: videoURL!)
             self.videoPlayer!.actionAtItemEnd = .None
-            let playerLayer = AVPlayerLayer(player: self.videoPlayer)
-            playerLayer.frame = self.videoView!.bounds
-            self.videoView!.layer.addSublayer(playerLayer)
+            self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
+            self.videoPlayerLayer!.frame = self.videoView!.bounds
+            self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
+            
+            self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
             
             self.detailV.insertSubview(self.videoView!, atIndex: 0)
         }
@@ -289,6 +292,19 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                                                          selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
                                                          object: self.videoPlayer!.currentItem)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        print("observed \(keyPath) \(change)")
+        let currentItem = object as! AVPlayerItem
+        if currentItem.status == .ReadyToPlay {
+            let videoRect = self.videoPlayerLayer?.videoRect
+            if (videoRect?.width > videoRect?.height) {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+            } else {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            }
+        }
     }
     
     func endVideoNotification(notification: NSNotification) {
@@ -1096,6 +1112,17 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         let type = info[UIImagePickerControllerMediaType] as! String
         
         if (type == "public.movie") {
+            // Remove current video layer
+            if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
+                for layer in (self.videoView?.layer.sublayers)! {
+                    layer.removeFromSuperlayer()
+                }
+                
+                self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+                
+                self.videoView = nil
+            }
+            
             // send video by method mutipart to server
             let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
             let videoData = NSData(contentsOfURL: videoPath)
@@ -1147,6 +1174,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                                 self.coachDetail = newCoachDetail
                                 
                                 self.isShowVideo = true
+                                
                                 self.showVideoLayout(videoURL)
                             } else {
                                 let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)

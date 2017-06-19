@@ -54,6 +54,7 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     
     var videoView: UIView? = nil
     var videoPlayer: AVPlayer? = nil
+    var videoPlayerLayer: AVPlayerLayer? = nil
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
     var isVideoPlaying = false
@@ -125,6 +126,20 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         }
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // pause video and move time to 0
+        if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
+            self.videoPlayer?.pause()
+            
+            // Remove video view
+            self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+            
+            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+        }
+    }
+    
     func showVideoLayout(videoURLString: String) {
         // Move avatar to top left
         let newAvatarSize: CGFloat = 37.0
@@ -150,9 +165,11 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         let videoURL = NSURL(string: videoURLString)
         self.videoPlayer = AVPlayer(URL: videoURL!)
         self.videoPlayer!.actionAtItemEnd = .None
-        let playerLayer = AVPlayerLayer(player: self.videoPlayer)
-        playerLayer.frame = self.videoView!.bounds
-        self.videoView!.layer.addSublayer(playerLayer)
+        self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
+        self.videoPlayerLayer!.frame = self.videoView!.bounds
+        self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
+        
+        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
         
         self.detailV.insertSubview(self.videoView!, atIndex: 0)
         
@@ -182,6 +199,19 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
                                                          selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
                                                          object: self.videoPlayer!.currentItem)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        print("observed \(keyPath) \(change)")
+        let currentItem = object as! AVPlayerItem
+        if currentItem.status == .ReadyToPlay {
+            let videoRect = self.videoPlayerLayer?.videoRect
+            if (videoRect?.width > videoRect?.height) {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+            } else {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            }
+        }
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {

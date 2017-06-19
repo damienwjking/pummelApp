@@ -46,57 +46,57 @@
                                     <constraint firstAttribute="height" constant="44" id="RDQ-GA-NCs"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" image="close.png"/>
+                                <state key="normal" image="close"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcI-0D-vqa">
-                                <rect key="frame" x="59.5" y="530" width="46" height="46"/>
+                                <rect key="frame" x="58.5" y="529.5" width="47" height="47"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="gcI-0D-vqa" secondAttribute="height" id="FAi-xG-vew"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="Retake"/>
                             </button>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yNl-UZ-sYj">
-                                <rect key="frame" x="161.5" y="527" width="52" height="52"/>
+                                <rect key="frame" x="161" y="526.5" width="53" height="53"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2q0-dA-OAq">
-                                <rect key="frame" x="170" y="536" width="34.5" height="34.5"/>
+                                <rect key="frame" x="169.5" y="535.5" width="35.5" height="35.5"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9pY-uM-LaL">
-                                <rect key="frame" x="164.5" y="530" width="46" height="46"/>
+                                <rect key="frame" x="164" y="529.5" width="47" height="47"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" image="icon_play.png">
+                                <state key="normal" image="icon_play">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40M-RG-bfP">
-                                <rect key="frame" x="270" y="530" width="46" height="46"/>
+                                <rect key="frame" x="269.5" y="529.5" width="47" height="47"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="rotatecamera.png"/>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u7J-Tj-GLa">
-                                <rect key="frame" x="0.0" y="530" width="59.5" height="46"/>
+                                <rect key="frame" x="0.0" y="529.5" width="58.5" height="47"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ys8-px-ckD">
-                                <rect key="frame" x="105.5" y="530" width="59" height="46"/>
+                                <rect key="frame" x="105.5" y="529.5" width="58.5" height="47"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EMf-Xk-xbG">
-                                <rect key="frame" x="210.5" y="530" width="59.5" height="46"/>
+                                <rect key="frame" x="211" y="529.5" width="58.5" height="47"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="paf-Kh-eDg">
-                                <rect key="frame" x="59.5" y="439" width="46" height="91"/>
+                                <rect key="frame" x="58.5" y="439" width="47" height="90.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4SB-gY-1k1">
-                                <rect key="frame" x="59.5" y="576" width="46" height="91"/>
+                                <rect key="frame" x="58.5" y="576.5" width="47" height="90.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IgI-tA-fP9">
-                                <rect key="frame" x="316" y="530" width="59" height="46"/>
+                                <rect key="frame" x="316.5" y="529.5" width="58.5" height="47"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -158,8 +158,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="close.png" width="11" height="11"/>
-        <image name="icon_play.png" width="24" height="24"/>
+        <image name="close" width="11" height="11"/>
+        <image name="icon_play" width="24" height="24"/>
         <image name="rotatecamera.png" width="24" height="24"/>
         <image name="square_kwickie_thumnail_gradient.png" width="1125" height="462"/>
     </resources>
