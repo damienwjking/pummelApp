@@ -105,17 +105,19 @@ enum ImageRouter: URLRequestConvertible {
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
-                    
-                    if (userDetail[kImageUrl] != nil) {
-                        let imageURLString = userDetail[kImageUrl] as! String
+                    if response.response?.statusCode == 200 {
+                        let userDetail = JSON as! NSDictionary
                         
-                        ImageRouter.getImage(posString: imageURLString, sizeString: self.imageSize, completed: { (result, error) in
-                            self.comletedBlock(result: result, error: error)
-                        }).fetchdata()
-                    } else {
-                        let defaultImage = UIImage(named: "display-empty.jpg")
-                        self.comletedBlock(result:  defaultImage, error: nil)
+                        if (userDetail[kImageUrl] != nil) {
+                            let imageURLString = userDetail[kImageUrl] as! String
+                            
+                            ImageRouter.getImage(posString: imageURLString, sizeString: self.imageSize, completed: { (result, error) in
+                                self.comletedBlock(result: result, error: error)
+                            }).fetchdata()
+                        } else {
+                            let defaultImage = UIImage(named: "display-empty.jpg")
+                            self.comletedBlock(result:  defaultImage, error: nil)
+                        }
                     }
                 case .Failure(let error):
                     // TODO: check status code 401 : cookie expire
@@ -131,7 +133,6 @@ enum ImageRouter: URLRequestConvertible {
                     self.comletedBlock(result:  nil, error: error)
                 }
             })
-            
         case .getImage:
             let image = self.getCacheImageWithLink(self.path)
             if (image != nil) {

@@ -171,28 +171,22 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
             if !(feed[kImageUrl] is NSNull) {
                 let imageContentLink = feed[kImageUrl] as! String
-                var photoContentLink = kPMAPI
-                photoContentLink.appendContentsOf(imageContentLink)
                 let postfixContent = widthEqual.stringByAppendingString(String(self.view.frame.size.width*2)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width*2))
-                photoContentLink.appendContentsOf(postfixContent)
-                if (NSCache.sharedInstance.objectForKey(photoContentLink) != nil) {
-                    let imageRes = NSCache.sharedInstance.objectForKey(photoContentLink) as! UIImage
-                    cell.imageContentIMV.image = imageRes
-                } else {
-                    Alamofire.request(.GET, photoContentLink)
-                        .responseImage { response in
-                            if (response.response?.statusCode == 200) {
-                                let imageRes = response.result.value! as UIImage
-                                NSCache.sharedInstance.setObject(imageRes, forKey: photoContentLink)
-                                let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                dispatch_async(dispatch_get_main_queue(),{
-                                    if updateCell != nil {
-                                        cell.imageContentIMV.image = imageRes
-                                    }
-                                })
-                            }
+                
+                ImageRouter.getImage(posString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
+                    if (error == nil) {
+                        let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        
+                        if (isUpdateCell) {
+                            let imageRes = result as! UIImage
+                            dispatch_async(dispatch_get_main_queue(),{
+                                cell.imageContentIMV.image = imageRes
+                            })
+                        }
+                    } else {
+                        print("Request failed with error: \(error)")
                     }
-                }
+                }).fetchdata()
             }
         
             // Check Coach
@@ -204,58 +198,62 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             cell.avatarBT.layer.borderWidth = 0
             cell.coachLB.text = ""
             cell.coachLBTraillingConstraint.constant = 0
-            Alamofire.request(.GET, coachLink)
-                .responseJSON { response in
+        
+            UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
+                let isCoach = result as! Bool
+                let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                
+                if (isUpdateCell) {
                     cell.userInteractionEnabled = true
+                    cell.isCoach = false
                     
-                    if response.response?.statusCode == 200 {
-                        cell.isCoach = true
-                        cell.avatarBT.layer.borderWidth = 2
-                        
-                        cell.coachLBTraillingConstraint.constant = 5
-                        UIView.animateWithDuration(0.3, animations: {
-                            cell.coachLB.layoutIfNeeded()
-                            cell.coachLB.text = kCoach.uppercaseString
-                        })
+                    if (error == nil) {
+                        if (isCoach == true) {
+                            cell.isCoach = true
+                            cell.avatarBT.layer.borderWidth = 2
+                            
+                            cell.coachLBTraillingConstraint.constant = 5
+                            UIView.animateWithDuration(0.3, animations: {
+                                cell.coachLB.layoutIfNeeded()
+                                cell.coachLB.text = kCoach.uppercaseString
+                            })
+                        }
                     } else {
-                        cell.isCoach = false
+                        print("Request failed with error: \(error)")
                     }
-            }
+                }
+        }.fetchdata()
         
             cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
         
             //Get Likes
 //            cell.likeBT.userInteractionEnabled = true
 //            cell.imageContentIMV.userInteractionEnabled = true
-            var likeLink  = kPMAPI_LIKE
-            likeLink.appendContentsOf(String(format:"%0.f", feed[kId]!.doubleValue))
-            likeLink.appendContentsOf(kPM_PATH_LIKE)
-            Alamofire.request(.GET, likeLink)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        let likeJson = response.result.value as! NSDictionary
-                        var likeNumber = String(format:"%0.f", likeJson[kCount]!.doubleValue)
-                        likeNumber.appendContentsOf(" likes")
-                        cell.likeLB.text = likeNumber
-                        let rows = likeJson[kRows] as! [NSDictionary]
-                        let defaults = NSUserDefaults.standardUserDefaults()
-                        let currentId = defaults.objectForKey(k_PM_CURRENT_ID) as! String
-                        for row in rows {
-                            if (String(format:"%0.f", row[kUserId]!.doubleValue) == currentId){
-                               let updateCell = tableView .cellForRowAtIndexPath(indexPath)
-                                dispatch_async(dispatch_get_main_queue(),{
-                                    if updateCell != nil {
-                                        cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
-//                                        cell.likeBT.userInteractionEnabled = false
-//                                        cell.imageContentIMV.userInteractionEnabled = false
-                                    }
-                                })
-                                break
-                            }
+        let feedID = String(format:"%0.f", feed[kId]!.doubleValue)
+        
+        FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
+            if (error == nil) {
+                let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                
+                if (isUpdateCell) {
+                    dispatch_async(dispatch_get_main_queue(),{
+                        let likeJson = result as! NSDictionary
+                        
+                        // Update like number
+                        let likeNumber = String(format:"%0.f", likeJson["likeNumber"]!.doubleValue)
+                        cell.likeLB.text = likeNumber + " likes"
+                        
+                        // Update current user liked
+                        let userLikedFeed = likeJson["currentUserLiked"] as! Bool
+                        if (userLikedFeed == true) {
+                            cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
                         }
-                    } else {
-                    }
+                    })
+                }
+            } else {
+                print("Request failed with error: \(error)")
             }
+        }.fetchdata()
         
             cell.layoutIfNeeded()
             cell.firstContentCommentTV.layoutIfNeeded()
@@ -323,16 +321,24 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     func showListContext(sender: UIButton) {
         let selectReport = { (action:UIAlertAction!) -> Void in
-            
             let feed = self.arrayFeeds[sender.tag]
             let postId = String(format:"%0.f", feed[kId]!.doubleValue)
-            Alamofire.request(.PUT, kPMAPI_REPORT, parameters: ["postId":postId])
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        self.arrayFeeds.removeAtIndex(sender.tag)
-                        self.tableFeed.reloadData()
-                    }
-            }
+//            Alamofire.request(.PUT, kPMAPI_REPORT, parameters: ["postId":postId])
+//                .responseJSON { response in
+//                    if response.response?.statusCode == 200 {
+//                        self.arrayFeeds.removeAtIndex(sender.tag)
+//                        self.tableFeed.reloadData()
+//                    }
+//            }
+            
+            FeedRouter.reportFeed(param: ["postId":postId], completed: { (result, error) in
+                if (error == nil) {
+                    self.arrayFeeds.removeAtIndex(sender.tag)
+                    self.tableFeed.reloadData()
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
 
         }
         let share = { (action:UIAlertAction!) -> Void in

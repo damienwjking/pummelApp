@@ -68,10 +68,10 @@ import Foundation
 //-----------------------------PRODUCTION------------------------------------//
 
 // Product
-let kPMAPI                          = "http://api.pummel.fit"
+//let kPMAPI                          = "http://api.pummel.fit"
 
 // Developer
-//let kPMAPI                          = "http://dev.pummel.fit"
+let kPMAPI                          = "http://dev.pummel.fit"
 
 
 // PM API Link
