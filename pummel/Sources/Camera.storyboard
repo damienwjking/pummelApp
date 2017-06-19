@@ -11,10 +11,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Camera View Controller-->
         <scene sceneID="67O-BF-l1k">
             <objects>
-                <viewController id="ZRG-JB-Ut0" sceneMemberID="viewController">
+                <viewController id="ZRG-JB-Ut0" customClass="CameraViewController" customModule="Pummel" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Son-Ho-d80"/>
                         <viewControllerLayoutGuide type="bottom" id="DKH-hr-Fcp"/>

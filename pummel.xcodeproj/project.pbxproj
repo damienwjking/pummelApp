@@ -43,6 +43,7 @@
 		BA8884C11EEA4F1800FFD734 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C01EEA4F1800FFD734 /* Camera.storyboard */; };
 		BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */; };
 		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
+		BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		E84890A31EEE5733003201A9 /* FeedDiscountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84890A21EEE5733003201A9 /* FeedDiscountView.swift */; };
 		E8499E6D1EEF89A7008A65C2 /* DiscountColectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8499E6B1EEF89A7008A65C2 /* DiscountColectionViewCell.swift */; };
@@ -251,6 +252,7 @@
 		BA8884C01EEA4F1800FFD734 /* Camera.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square_kwickie_thumnail_gradient.png; sourceTree = "<group>"; };
 		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
+		BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		E84890A21EEE5733003201A9 /* FeedDiscountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedDiscountView.swift; sourceTree = "<group>"; };
 		E8499E6B1EEF89A7008A65C2 /* DiscountColectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscountColectionViewCell.swift; sourceTree = "<group>"; };
@@ -558,6 +560,7 @@
 				F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */,
 				E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */,
 				F98D5DA81E417764002C0C7A /* ChangePasswordViewController.swift */,
+				BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -1139,6 +1142,7 @@
 				F9FE14591CEBD29B004ABE34 /* FSCameraView.swift in Sources */,
 				F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */,
 				F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */,
+				BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */,
 				F9CF54E11D7F9BFD00BE144F /* NewPostViewController.swift in Sources */,
 				9C8FF4101C84751A00449A54 /* GetStarted2ViewController.swift in Sources */,
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
