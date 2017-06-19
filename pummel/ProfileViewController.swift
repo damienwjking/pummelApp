@@ -214,16 +214,12 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // Remove video layer
+        // pause video and move time to 0
         if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
-            for layer in (self.videoView?.layer.sublayers)! {
-                layer.removeFromSuperlayer()
-            }
-            
             self.videoPlayer?.pause()
             
             // Remove video view
-            self.videoView?.removeFromSuperview()
+            self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
         }
     }
     
@@ -246,18 +242,17 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.bigBigIndicatorView.hidden = true
         
         // Show video
-        if (self.videoView?.superview != nil) {
-            self.videoView?.removeFromSuperview()
+        if (self.videoView == nil) {
+            self.videoView = UIView.init(frame: self.detailV.bounds)
+            let videoURL = NSURL(string: videoURLString)
+            self.videoPlayer = AVPlayer(URL: videoURL!)
+            self.videoPlayer!.actionAtItemEnd = .None
+            let playerLayer = AVPlayerLayer(player: self.videoPlayer)
+            playerLayer.frame = self.videoView!.bounds
+            self.videoView!.layer.addSublayer(playerLayer)
+            
+            self.detailV.insertSubview(self.videoView!, atIndex: 0)
         }
-        self.videoView = UIView.init(frame: self.detailV.bounds)
-        let videoURL = NSURL(string: videoURLString)
-        self.videoPlayer = AVPlayer(URL: videoURL!)
-        self.videoPlayer!.actionAtItemEnd = .None
-        let playerLayer = AVPlayerLayer(player: self.videoPlayer)
-        playerLayer.frame = self.videoView!.bounds
-        self.videoView!.layer.addSublayer(playerLayer)
-        
-        self.detailV.insertSubview(self.videoView!, atIndex: 0)
         
         // Animation
         UIView.animateWithDuration(0.5, animations: {
