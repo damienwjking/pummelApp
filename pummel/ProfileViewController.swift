@@ -113,6 +113,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
     var isVideoPlaying = false
+    var isUploadingVideo = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -210,6 +211,12 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.getDetail()
         
         self.playVideoButton.setImage(nil, forState: .Normal)
+        
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.cameraButton.hidden = false
+        } else {
+            self.cameraButton.hidden = true
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -295,7 +302,6 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        print("observed \(keyPath) \(change)")
         let currentItem = object as! AVPlayerItem
         if currentItem.status == .ReadyToPlay {
             let videoRect = self.videoPlayerLayer?.videoRect
@@ -304,6 +310,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             } else {
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             }
+            
+            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
         }
     }
     
@@ -1086,25 +1094,27 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.isVideoPlaying = !self.isVideoPlaying
-        if (self.isVideoPlaying == true) {
-            self.videoPlayer?.play()
-            self.playVideoButton.setImage(nil, forState: .Normal)
-            self.locationView.alpha = 0 // Special case
-        } else {
-            self.videoPlayer?.pause()
-            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-            self.locationView.alpha = 1 // Special case
+        if self.isUploadingVideo == false {
+            self.isVideoPlaying = !self.isVideoPlaying
+            if (self.isVideoPlaying == true) {
+                self.videoPlayer?.play()
+                self.playVideoButton.setImage(nil, forState: .Normal)
+                self.locationView.alpha = 0 // Special case
+            } else {
+                self.videoPlayer?.pause()
+                self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+                self.locationView.alpha = 1 // Special case
+            }
+            
+            // Hidden item above video view
+            self.avatarIMV.hidden = self.isVideoPlaying
+            self.coachBorderV.hidden = self.isVideoPlaying
+            self.coachBorderBackgroundV.hidden = self.isVideoPlaying
+            
+            self.connectV.hidden = self.isVideoPlaying
+            
+            self.cameraButton.hidden = self.isVideoPlaying
         }
-        
-        // Hidden item above video view
-        self.avatarIMV.hidden = self.isVideoPlaying
-        self.coachBorderV.hidden = self.isVideoPlaying
-        self.coachBorderBackgroundV.hidden = self.isVideoPlaying
-        
-        self.connectV.hidden = self.isVideoPlaying
-        
-        self.cameraButton.hidden = self.isVideoPlaying
     }
     
     // MARK: UIImagePickerControllerDelegate
@@ -1114,13 +1124,11 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         if (type == "public.movie") {
             // Remove current video layer
             if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
-                for layer in (self.videoView?.layer.sublayers)! {
-                    layer.removeFromSuperlayer()
-                }
-                
-                self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+                self.videoPlayerLayer?.removeFromSuperlayer()
                 
                 self.videoView = nil
+                
+                self.isUploadingVideo = true
             }
             
             // send video by method mutipart to server
@@ -1163,6 +1171,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                         upload.validate()
                         upload.responseJSON { response in
                             self.view.hideToastActivity()
+                            
+                            self.isUploadingVideo = false
                             
                             if (response.response?.statusCode == 200) {
                                 let dictionary = response.result.value as! [NSDictionary]

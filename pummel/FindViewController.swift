@@ -104,7 +104,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                 }
                 
                 // Test
-//                let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
+//                let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497421626868-0.mov"
 //                if (videoURL.isEmpty == false) {
 //                    cell!.showVideo(videoURL)
 //                }
@@ -516,6 +516,13 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         
         self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[(indexPath?.row)!])
     }
+    
+    func cardViewCellMoreInfoClicked(cell: CardViewCell) {
+        let indexPath = self.collectionView.indexPathForCell(cell)
+        
+        self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[(indexPath?.row)!])
+    }
+    
 }
 
 extension UIImageView {

@@ -12,6 +12,7 @@ import AVFoundation
 
 @objc protocol CardViewCellDelegate {
     func cardViewCellTagClicked(cell: CardViewCell)
+    func cardViewCellMoreInfoClicked(cell: CardViewCell)
 }
 
 class CardViewCell: UICollectionViewCell, CardViewDelegate {
@@ -25,7 +26,11 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var playVideoButton: UIButton!
     
+    var firstShowVideo = false
     var videoPlayer: AVPlayer? = nil
+    var videoPlayerLayer: AVPlayerLayer? = nil
+    var isVideoPlaying = false
+    
     
     weak var delegate : CardViewCellDelegate? = nil
     
@@ -76,41 +81,65 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     }
     
     func showVideo(videoURLString: String) {
-        // check Video URL
-        if (videoURLString.isEmpty == true) {
-            return
+        if (self.firstShowVideo == false) {
+            self.firstShowVideo = true
+            // check Video URL
+            if (videoURLString.isEmpty == true) {
+                return
+            }
+            
+            self.showVideoLayout()
+            
+            // show play button
+            self.playVideoButton.hidden = false
+            
+            // Show Video
+            let videoURL = NSURL(string: videoURLString)
+            self.videoPlayer = AVPlayer(URL: videoURL!)
+            self.videoPlayer!.actionAtItemEnd = .None
+            self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
+            self.videoPlayerLayer?.frame = self.videoView!.bounds
+            
+            self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
+            
+            self.videoPlayer?.currentItem?.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+            
+            // Remove loop play video for reuser cell
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+            
+            // Add notification for loop play video
+            NSNotificationCenter.defaultCenter().addObserver(self,
+                                                             selector: #selector(self.endVideoNotification),
+                                                             name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                             object: videoPlayer?.currentItem)
         }
-        
-        self.showVideoLayout()
-        
-        // show play button
-        self.playVideoButton.hidden = false
-        
-        // Show Video
-        let videoURL = NSURL(string: videoURLString)
-        self.videoPlayer = AVPlayer(URL: videoURL!)
-        self.videoPlayer!.actionAtItemEnd = .None
-        let playerLayer = AVPlayerLayer(player: self.videoPlayer)
-        playerLayer.frame = self.videoView!.bounds
-        
-        self.videoView!.layer.addSublayer(playerLayer)
-        
-        // Remove loop play video for reuser cell
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
-        
-        // Add notification for loop play video
-        NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.endVideoNotification),
-                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
-                                                         object: videoPlayer?.currentItem)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        let currentItem = object as! AVPlayerItem
+        if currentItem.status == .ReadyToPlay {
+            let videoRect = self.videoPlayerLayer?.videoRect
+            if (videoRect?.width > videoRect?.height) {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+            } else {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            }
+            
+            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+        }
     }
     
     func stopPlayVideo() {
-        // Remove notification
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
-        
-        self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
-        self.videoPlayer?.pause()
+        if (self.videoPlayer != nil )  {
+            // Remove notification
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+            
+            self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+            self.videoPlayer?.pause()
+            
+            self.isVideoPlaying = true // Set for stop play video
+            self.playVideoButtonClicked(self.playVideoButton)
+        }
     }
     
     func endVideoNotification(notification: NSNotification) {
@@ -123,17 +152,31 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         playerItem.seekToTime(kCMTimeZero)
         self.videoPlayer?.pause()
         
+        self.isVideoPlaying = false
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        if (self.playVideoButton.imageView != nil) {
-            // Play video in 0
-            self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+        self.isVideoPlaying = !self.isVideoPlaying
+        if (self.isVideoPlaying == true) {
             self.videoPlayer?.play()
             
             // Hidden play button + info view
             self.playVideoButton.setImage(nil, forState: .Normal)
-            self.moreInfoView.hidden = true
+        } else {
+            self.videoPlayer?.pause()
+            
+            // Show play button + info view
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+        }
+        
+        self.moreInfoView.hidden = self.isVideoPlaying
+        self.cardView.avatarIMV.hidden = self.isVideoPlaying
+        self.avatarBorderView.hidden = self.isVideoPlaying
+    }
+    
+    @IBAction func moreInfoViewClicked(sender: AnyObject) {
+        if (self.delegate != nil) {
+            self.delegate?.cardViewCellMoreInfoClicked(self)
         }
     }
 }

@@ -119,11 +119,12 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         self.scrollView.scrollEnabled = true
         
         // check Video URL
-        let videoURL = self.userDetail[kVideoURL] as? String
-//        let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4"
-        if (videoURL?.isEmpty == false && self.isShowVideo == true) {
-            self.showVideoLayout(videoURL!)
-        }
+//        let videoURL = self.userDetail[kVideoURL] as? String
+//        let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497331500201-0.mp4" // test
+        
+//        if (videoURL?.isEmpty == false && self.isShowVideo == true) {
+//            self.showVideoLayout(videoURL!)
+//        }
     }
     
     override func viewWillDisappear(animated: Bool) {
