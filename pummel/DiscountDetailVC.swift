@@ -36,6 +36,10 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.lbText.textColor = UIColor.whiteColor()
         self.lbText.font = UIFont.pmmMonLight16()
         
+        self.lbDescription.font = UIFont.pmmMonLight16()
+        self.lbFullText.font = UIFont.pmmMonLight16()
+        self.tvLink.font = .pmmMonLight16()
+        
         self.btnDiscount.layer.borderColor = UIColor.whiteColor().CGColor
         self.btnDiscount.layer.cornerRadius = 15
         self.btnDiscount.layer.borderWidth = 1
@@ -67,6 +71,9 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     }
     
     func updateData() {
+        self.imgLogo.layer.cornerRadius = 75
+        self.imgLogo.clipsToBounds = true
+        
         let postfix = widthEqual.stringByAppendingString(String(self.imgCover.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.imgCover.bounds.height))
         if !(discountDetail[kImageUrl] is NSNull) {
             let imageLink = discountDetail[kImageUrl] as! String
@@ -112,6 +119,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         if let val = discountDetail[kWebsite] as? String {
             self.tvLink.text = val
         }
+        self.tvLink.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
         
         if let val = discountDetail[kFullText] as? String {
             self.lbFullText.text = val
@@ -133,12 +141,6 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     }
     
     func fillData() {
-        self.lbDescription.font = UIFont.pmmMonReg16()
-        self.imgLogo.layer.cornerRadius = 75
-        self.imgLogo.clipsToBounds = true
-        
-        self.tvLink.font = .pmmMonReg16()
-        self.tvLink.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
         
         let postfix = widthEqual.stringByAppendingString(String(self.imgLogo.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.imgLogo.bounds.height))
         if !(businessDetail[kImageUrl] is NSNull) {
