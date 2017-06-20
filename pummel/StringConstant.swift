@@ -168,6 +168,8 @@ let kSubTitle = "subtitle"
 let kDiscount = "discount"
 let kDescription = "description"
 let kWebsite = "website"
+let kSubText = "subtext"
+let kFullText = "fulltext"
 
 // String
 let kLogoutSuccess = "Logout successful"

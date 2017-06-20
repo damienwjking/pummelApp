@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 import Alamofire
 import Mixpanel
+import MapKit
 
-class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, FeedDiscountViewDelegate {
+class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, FeedDiscountViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
@@ -30,6 +31,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     var isGoFeedDetail : Bool = false
     var isGoProfileDetail : Bool = false
     var headerDiscount:FeedDiscountView!
+    var locationManager: CLLocationManager!
+    var coordinate:CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,6 +78,48 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         }
     }
     
+    func setupLocation() {
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        if (CLLocationManager.locationServicesEnabled())
+        {
+            switch(CLLocationManager.authorizationStatus()) {
+            case .Restricted, .Denied:
+                self.getListDiscount()
+                break
+            case .AuthorizedAlways, .AuthorizedWhenInUse: break
+            default: break
+            }
+        } else {
+            self.getListDiscount()
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    {
+        let location = locations.last! as CLLocation
+        if self.coordinate == nil {
+            self.coordinate = location.coordinate
+            self.getListDiscount()
+        }
+        self.coordinate = location.coordinate
+    }
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        switch(status) {
+        case .Restricted, .Denied:
+            self.getListDiscount()
+            break
+        case .AuthorizedAlways, .AuthorizedWhenInUse: break
+        default: break
+        }
+
+    }
+    
     func refresh() {
         self.tableFeed.hidden = true
         self.arrayFeeds.removeAll()
@@ -85,7 +130,11 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             self.isLoadDiscount = false
             self.offset = 0
             self.offsetDiscount = 0
-            self.getListDiscount()
+            if self.coordinate != nil {
+                self.getListDiscount()
+            } else {
+                self.setupLocation()
+            }
             self.getListFeeds()
         }
     }
@@ -99,6 +148,45 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func getListDiscount() {
         var prefix = "\(kPMAPI)\(kPMAPI_DISCOUNTS)"
         prefix.appendContentsOf(String(offsetDiscount))
+        
+        if self.coordinate != nil {
+            prefix.appendContentsOf("&")
+            let coordinateParams = String(format: "%@=%f&%@=%f", kLong, self.coordinate!.longitude, kLat, self.coordinate!.latitude)
+            prefix.appendContentsOf(coordinateParams)
+            
+            let geoCoder = CLGeocoder()
+            if locationManager.location != nil {
+                geoCoder.reverseGeocodeLocation(locationManager.location!, completionHandler: { (placemarks, error) -> Void in
+                    // Place details
+                    var placeMark: CLPlacemark!
+                    placeMark = placemarks?[0]
+                    if ((placeMark) != nil) {
+                        var state = ""
+                        var city = ""
+                        if ((placeMark.administrativeArea) != nil) {
+                            if placeMark.locality != nil {
+                                city = placeMark.locality!
+                            } else if placeMark.subAdministrativeArea != nil {
+                                city = placeMark.subAdministrativeArea!
+                            }
+                            state = placeMark.administrativeArea!
+                        }
+                        
+                        let stateCity =  String(format: "&%@=%@&%@=%@", kState, state.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, kCity, city.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+                        
+                        prefix.appendContentsOf(stateCity)
+                        self.callAPIDiscount(prefix)
+                    }
+                })
+            } else {
+                self.callAPIDiscount(prefix)
+            }
+        } else {
+            self.callAPIDiscount(prefix)
+        }
+    }
+    
+    func callAPIDiscount(prefix:String) {
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 self.isLoadDiscount = false
@@ -178,6 +266,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func goToDetailDiscount(discountDetail: NSDictionary) {
+        self.isGoFeedDetail = true
         self.performSegueWithIdentifier(kGoDiscount, sender:discountDetail)
     }
     

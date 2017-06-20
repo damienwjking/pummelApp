@@ -14,9 +14,13 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     @IBOutlet weak var imgCover:UIImageView!
     @IBOutlet weak var imgLogo:UIImageView!
     @IBOutlet weak var lbTitle:UILabel!
+    @IBOutlet weak var lbSubTitle:UILabel!
+    @IBOutlet weak var lbText:UILabel!
+    
     @IBOutlet weak var btnDiscount:UIButton!
     @IBOutlet weak var lbDescription:UILabel!
     @IBOutlet weak var tvLink:UITextView!
+    @IBOutlet weak var lbFullText:UILabel!
     
     var businessDetail:NSDictionary!
     var discountDetail:NSDictionary!
@@ -26,16 +30,30 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.lbTitle.font = UIFont.pmmMonReg20()
         self.lbTitle.textColor = UIColor.whiteColor()
         
+        self.lbSubTitle.font = UIFont.pmmMonReg16()
+        self.lbSubTitle.textColor = UIColor.whiteColor()
+        
+        self.lbText.textColor = UIColor.whiteColor()
+        self.lbText.font = UIFont.pmmMonLight16()
+        
         self.btnDiscount.layer.borderColor = UIColor.whiteColor().CGColor
         self.btnDiscount.layer.cornerRadius = 15
         self.btnDiscount.layer.borderWidth = 1
         self.btnDiscount.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         
+        self.lbTitle.text = ""
+        self.lbSubTitle.text = ""
+        self.lbText.text = ""
         self.tvLink.delegate = self
         self.tvLink.text = ""
         self.lbDescription.text = ""
+        self.lbFullText.text = ""
         
         self.updateData()
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -74,9 +92,29 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
             self.lbTitle.text = val
         }
         
+        if let val = discountDetail[kSubTitle] as? String {
+            self.lbSubTitle.text = val
+        }
+        
+        if let val = discountDetail[kText] as? String {
+            self.lbText.text = val
+        }
+        
         if let val = discountDetail[kDiscount] as? String {
             self.btnDiscount.setTitle(val, forState: .Normal)
             self.btnDiscount.hidden = false
+        }
+        
+        if let val = discountDetail[kSubText] as? String {
+            self.lbDescription.text = val
+        }
+        
+        if let val = discountDetail[kWebsite] as? String {
+            self.tvLink.text = val
+        }
+        
+        if let val = discountDetail[kFullText] as? String {
+            self.lbFullText.text = val
         }
         
         // Get bussiness
@@ -89,7 +127,6 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
                     if let jsonBusiness = response.result.value as? NSDictionary {
                         self.businessDetail = jsonBusiness
                         self.fillData()
-                        print(jsonBusiness)
                     }
                 }
         }
@@ -123,20 +160,28 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
                 }
             }
         }
-        
-        if let val = businessDetail[kDescription] as? String {
-            self.lbDescription.text = val
-        }
-        
-        if let val = businessDetail[kWebsite] as? String {
-            self.tvLink.text = val
-        }
     }
     
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-        self.performSegueWithIdentifier(kClickURLLink, sender: URL)
-        
+        self.openWebview()
         return false
+    }
+    
+    func openWebview() {
+        if let val = discountDetail[kWebsite] as? String {
+            let urlWeb = NSURL(string: val)
+            if urlWeb != nil {
+                self.performSegueWithIdentifier(kClickURLLink, sender: urlWeb)
+            }
+        }
+    }
+    
+    @IBAction func logoClicked() {
+        self.openWebview()
+    }
+    
+    @IBAction func buttonDiscountClicked() {
+        self.openWebview()
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
