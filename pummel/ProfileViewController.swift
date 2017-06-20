@@ -359,8 +359,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "goEdit")
-        {
+        if (segue.identifier == "goEdit") {
             let destinationVC = segue.destinationViewController as! EditProfileViewController
             destinationVC.userInfo = self.coachDetail
         } else if (segue.identifier == "goEdit") {
@@ -376,6 +375,10 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             if let feed = sender as? NSDictionary {
                 destination.feedDetail = feed
             }
+        } else if segue.identifier == "showCamera" {
+            let destination = segue.destinationViewController as! CameraViewController
+            
+            destination.videoURL = sender as? NSURL
         }
     }
     
@@ -1077,12 +1080,14 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             self.presentViewController(self.imagePickerController, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-            self.imagePickerController.allowsEditing = false
-            self.imagePickerController.sourceType = .Camera
-            self.imagePickerController.delegate = self
-            self.imagePickerController.mediaTypes = ["public.movie"]
+//            self.imagePickerController.allowsEditing = false
+//            self.imagePickerController.sourceType = .Camera
+//            self.imagePickerController.delegate = self
+//            self.imagePickerController.mediaTypes = ["public.movie"]
+//            
+//            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
             
-            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
+            self.performSegueWithIdentifier("showCamera", sender: nil)
         }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         
@@ -1128,82 +1133,90 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
                 
                 self.videoView = nil
                 
-                self.isUploadingVideo = true
+//                self.isUploadingVideo = true
             }
             
             // send video by method mutipart to server
             let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-            let videoData = NSData(contentsOfURL: videoPath)
-            let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
-            let videoType = "video/" + videoExtend
-            let videoName = "video." + videoExtend
             
-            // Insert activity indicator
-            self.view.makeToastActivity(message: "Uploading")
             
-            // send video by method mutipart to server
-            var prefix = kPMAPIUSER
-            let defaults = NSUserDefaults.standardUserDefaults()
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            prefix.appendContentsOf(kPM_PATH_VIDEO)
-            var parameters = [String:AnyObject]()
             
-            self.isShowVideo = false
-            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
-            Alamofire.upload(
-                .POST,
-                prefix,
-                multipartFormData: { multipartFormData in
-                    multipartFormData.appendBodyPart(data: videoData!,
-                                                     name: "file",
-                                                     fileName:videoName,
-                                                     mimeType:videoType)
-                    for (key, value) in parameters {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                    }
-            },
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                        
-                    case .Success(let upload, _, _):
-                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                        }
-                        upload.validate()
-                        upload.responseJSON { response in
-                            self.view.hideToastActivity()
-                            
-                            self.isUploadingVideo = false
-                            
-                            if (response.response?.statusCode == 200) {
-                                let dictionary = response.result.value as! [NSDictionary]
-                                let videoURL = dictionary.first![kVideoURL] as! String
-                                
-                                // Update videoURL for coach detail
-                                let newCoachDetail = NSMutableDictionary.init(dictionary: self.coachDetail)
-                                newCoachDetail.setValue(videoURL, forKey: KVideoUrl)
-                                self.coachDetail = newCoachDetail
-                                
-                                self.isShowVideo = true
-                                
-                                self.showVideoLayout(videoURL)
-                            } else {
-                                let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
-                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                                    // TODO: LOGOUT
-                                }
-                                alertController.addAction(OKAction)
-                                self.presentViewController(alertController, animated: true) {
-                                    // ...
-                                }
-                            }
-                        }
-                        
-                    case .Failure( _): break
-                        // Do nothing
-                    }
+            
+            
+            
+//            let videoData = NSData(contentsOfURL: videoPath)
+//            let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+//            let videoType = "video/" + videoExtend
+//            let videoName = "video." + videoExtend
+//            
+//            // Insert activity indicator
+//            self.view.makeToastActivity(message: "Uploading")
+//            
+//            // send video by method mutipart to server
+//            var prefix = kPMAPIUSER
+//            let defaults = NSUserDefaults.standardUserDefaults()
+//            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+//            prefix.appendContentsOf(kPM_PATH_VIDEO)
+//            var parameters = [String:AnyObject]()
+//            
+//            self.isShowVideo = false
+//            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+//            Alamofire.upload(
+//                .POST,
+//                prefix,
+//                multipartFormData: { multipartFormData in
+//                    multipartFormData.appendBodyPart(data: videoData!,
+//                                                     name: "file",
+//                                                     fileName:videoName,
+//                                                     mimeType:videoType)
+//                    for (key, value) in parameters {
+//                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+//                    }
+//            },
+//                encodingCompletion: { encodingResult in
+//                    switch encodingResult {
+//                        
+//                    case .Success(let upload, _, _):
+//                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+//                        }
+//                        upload.validate()
+//                        upload.responseJSON { response in
+//                            self.view.hideToastActivity()
+//                            
+//                            self.isUploadingVideo = false
+//                            
+//                            if (response.response?.statusCode == 200) {
+//                                let dictionary = response.result.value as! [NSDictionary]
+//                                let videoURL = dictionary.first![kVideoURL] as! String
+//                                
+//                                // Update videoURL for coach detail
+//                                let newCoachDetail = NSMutableDictionary.init(dictionary: self.coachDetail)
+//                                newCoachDetail.setValue(videoURL, forKey: KVideoUrl)
+//                                self.coachDetail = newCoachDetail
+//                                
+//                                self.isShowVideo = true
+//                                
+//                                self.showVideoLayout(videoURL)
+//                            } else {
+//                                let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
+//                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+//                                    // TODO: LOGOUT
+//                                }
+//                                alertController.addAction(OKAction)
+//                                self.presentViewController(alertController, animated: true) {
+//                                    // ...
+//                                }
+//                            }
+//                        }
+//                        
+//                    case .Failure( _): break
+//                        // Do nothing
+//                    }
+//            })
+//            
+            imagePickerController.dismissViewControllerAnimated(true, completion: { 
+                self.performSegueWithIdentifier("showCamera", sender: videoPath)
             })
-            
-            imagePickerController.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 }

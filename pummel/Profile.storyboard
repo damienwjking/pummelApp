@@ -755,6 +755,7 @@
                         <segue destination="bGk-Pb-VjG" kind="push" identifier="goSetting" id="vIr-9q-nx3"/>
                         <segue destination="a9g-f1-zvO" kind="show" identifier="goEditCoach" id="gWq-AW-JKH"/>
                         <segue destination="Ey2-z7-s6W" kind="show" identifier="goToFeedDetail" id="9KE-GK-Txi"/>
+                        <segue destination="Vs9-sk-5r4" kind="presentation" identifier="showCamera" id="tuE-Dx-0uG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TRW-qQ-UbN" userLabel="First Responder" sceneMemberID="firstResponder"/>
