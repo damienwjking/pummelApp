@@ -11,6 +11,9 @@ import AVKit
 import AVFoundation
 import PhotosUI
 
+enum RecordStatus: Int {
+    case pending, recording, finish, uploading
+}
 
 class CameraViewController: UIViewController {
     var videoURL:NSURL? = nil
@@ -26,7 +29,29 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var playBorderBigView: UIView!
     @IBOutlet weak var playBorderSmallView: UIView!
     
-    var isRecording = false
+    var videoPlayer: AVPlayer? = nil
+    var videoPlayerLayer: AVPlayerLayer? = nil
+    
+    var needRemoveKVO = false
+    
+    var recordStatus: RecordStatus = .pending {
+        didSet {
+            if (self.recordStatus == .pending) {
+                let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
+                self.playButton.setImage(playImage, forState: .Normal)
+            } else if (self.recordStatus == .recording) {
+                let pauseImage = UIImage(named: "icon_pause")?.imageWithRenderingMode(.AlwaysTemplate)
+                self.playButton.setImage(pauseImage, forState: .Normal)
+            } else if (self.recordStatus == .finish) {
+                let uploadImage = UIImage(named: "icon_upload")?.imageWithRenderingMode(.AlwaysTemplate)
+                self.playButton.setImage(uploadImage, forState: .Normal)
+            } else if (self.recordStatus == .uploading) {
+//                let uploadImage = nil
+                self.playButton.setImage(nil, forState: .Normal)
+            }
+            
+        }
+    }
     
     var cameraSession: AVCaptureSession = {
         let s = AVCaptureSession()
@@ -46,7 +71,7 @@ class CameraViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupLayout()
+        self.setupBasicLayout()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -56,11 +81,64 @@ class CameraViewController: UIViewController {
             self.setupCameraSession()
             self.cameraView.layer.addSublayer(previewLayer)
             cameraSession.startRunning()
+        } else {
+            // Stop camera and show video from video URL
+            cameraSession.stopRunning()
+            
+            self.showVideoLayout()
+            
+            // Change record status
+            self.recordStatus = .finish
         }
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if (self.needRemoveKVO) {
+            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+            self.needRemoveKVO = false
+        }
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        let currentItem = object as! AVPlayerItem
+        if currentItem.status == .ReadyToPlay {
+            let videoRect = self.videoPlayerLayer?.videoRect
+            if (videoRect?.width > videoRect?.height) {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+            } else {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            }
+            
+            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+            self.needRemoveKVO = false
+        }
+    }
+
+    
     //MARK: - Private function
-    func setupLayout() {
+    func showVideoLayout() {
+        // Show Video URL in border view
+        self.videoPlayer = AVPlayer(URL: self.videoURL!)
+        self.videoPlayer!.actionAtItemEnd = .None
+        self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
+        self.videoPlayerLayer!.frame = self.cameraBorderView.bounds
+        
+        self.videoPlayer?.play()
+        
+        self.cameraBorderView.layer.addSublayer(self.videoPlayerLayer!)
+        
+        // Catch size of video and crop
+        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+        self.needRemoveKVO = true
+    }
+    
+    func setupBasicLayout() {
+        // Border camera view
+        self.cameraBorderView.layer.borderColor = UIColor.whiteColor().CGColor
+        self.cameraBorderView.layer.borderWidth = 1.0
+        
         // Close button
         let closeImage = UIImage(named: "close")?.imageWithRenderingMode(.AlwaysTemplate)
         self.closeButton.setImage(closeImage, forState: .Normal)
@@ -80,10 +158,10 @@ class CameraViewController: UIViewController {
         // Change Camera button
     }
     
-    func exportVideo() {
+    func removeTemplateVideo() {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
-//        let filePath = "\(documentsPath)/tempFile.mp4";
-        let exportPath: NSString = documentsPath.stringByAppendingFormat("/xvideo.mov")
+        //        let filePath = "\(documentsPath)/tempFile.mp4";
+        let exportPath: NSString = documentsPath.stringByAppendingFormat("/video.mov")
         
         // Remove file at template path
         let fileManager = NSFileManager.defaultManager()
@@ -94,17 +172,25 @@ class CameraViewController: UIViewController {
                 print("Could not clear temp folder: \(error)")
             }
         }
+    }
+    
+    func exportVideo() {
+        self.removeTemplateVideo()
         
-        let videoSize: CGFloat = 600
         let asset: AVAsset = AVAsset(URL: self.videoURL!)
-        let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide")[0]
+        let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
+        
+        var videoSize: CGFloat = 0
+        if (assetTrack.naturalSize.height > assetTrack.naturalSize.width) {
+            videoSize = assetTrack.naturalSize.width
+        }
         
         let videoComposition: AVMutableVideoComposition = AVMutableVideoComposition()
-        videoComposition.frameDuration = CMTimeMake(1, 60)
+        videoComposition.frameDuration = CMTimeMake(1, 60) // Frame 1/60
         videoComposition.renderSize = CGSizeMake(videoSize, videoSize)
         
         let instruction: AVMutableVideoCompositionInstruction = AVMutableVideoCompositionInstruction()
-        instruction.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(60, 30))
+        instruction.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(60, 30)) // Total video time by 30 minute
         
         let transformer: AVMutableVideoCompositionLayerInstruction =
             AVMutableVideoCompositionLayerInstruction(assetTrack: assetTrack)
@@ -116,6 +202,10 @@ class CameraViewController: UIViewController {
         
         instruction.layerInstructions = NSArray(object: transformer) as! [AVVideoCompositionLayerInstruction]
         videoComposition.instructions = NSArray(object: instruction) as! [AVVideoCompositionInstructionProtocol]
+        
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
+        //        let filePath = "\(documentsPath)/tempFile.mp4";
+        let exportPath: NSString = documentsPath.stringByAppendingFormat("/video.mov")
         
         let exportUrl: NSURL = NSURL.fileURLWithPath(exportPath as String)
         
@@ -129,10 +219,6 @@ class CameraViewController: UIViewController {
             let outputURL:NSURL = exporter!.outputURL!;
             let asset:AVURLAsset = AVURLAsset(URL: outputURL, options: nil)
             let newPlayerItem:AVPlayerItem = AVPlayerItem(asset: asset)
-            
-            
-            
-            let videoImageUrl = "https://pummel-prod.s3.amazonaws.com/videos/1497421626868-0.mov"
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
                 let url = NSURL(string: outputURL.absoluteString!);
@@ -156,7 +242,9 @@ class CameraViewController: UIViewController {
     // MARK: - Outlet function
     
     @IBAction func closeButtonClicked(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        if (self.recordStatus != .uploading) {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     @IBAction func retakeButtonClicked(sender: AnyObject) {
@@ -165,36 +253,48 @@ class CameraViewController: UIViewController {
     
     @IBAction func playButtonClicked(sender: AnyObject) {
 //        self.exportVideo()
-        
-        if (self.isRecording == false) {
-            self.isRecording = true
+        if (self.recordStatus == .pending) {
+            self.recordStatus = .recording
             
-            // Delete template if exist
-            let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
-            //        let filePath = "\(documentsPath)/tempFile.mp4";
-            let templatePath = documentsPath.stringByAppendingFormat("/video.mov")
-            let videoTemplateURL = NSURL.fileURLWithPath(templatePath)
+            // Start record video
+            self.startRecordVideo()
+        } else if (self.recordStatus == .recording) {
+            self.recordStatus = .finish
             
-            let fileManager = NSFileManager.defaultManager()
-            if (fileManager.fileExistsAtPath(videoTemplateURL.absoluteString!)) {
-                do {
-                    try fileManager.removeItemAtURL(videoTemplateURL)
-                } catch {
-                    print("Could not clear temp folder: \(error)")
-                }
-            }
-            
-            // Record video to template file
-            self.cameraOutput.startRecordingToOutputFileURL(videoTemplateURL, recordingDelegate: self)
-//            self.audioOutput.startRecordingToOutputFileURL(videoTemplateURL, recordingDelegate: self)
-        } else {
-            self.isRecording = false
+            // Stop record video
             self.cameraOutput.stopRecording()
+        } else if (self.recordStatus == .finish) {
+            self.recordStatus = .uploading
+            // Check render video
+            // Crop video and upload to server
+            // Upload video to server
+            
         }
     }
     
     @IBAction func changeCameraButtonClicked(sender: AnyObject) {
 //        self.cameraSession
+    }
+    
+    func startRecordVideo() {
+        // Delete template if exist
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
+        //        let filePath = "\(documentsPath)/tempFile.mp4";
+        let templatePath = documentsPath.stringByAppendingFormat("/video.mov")
+        let videoTemplateURL = NSURL.fileURLWithPath(templatePath)
+        
+        let fileManager = NSFileManager.defaultManager()
+        if (fileManager.fileExistsAtPath(videoTemplateURL.absoluteString!)) {
+            do {
+                try fileManager.removeItemAtURL(videoTemplateURL)
+            } catch {
+                print("Could not clear temp folder: \(error)")
+            }
+        }
+        
+        // Record video to template file
+        self.cameraOutput.startRecordingToOutputFileURL(videoTemplateURL, recordingDelegate: self)
+        //            self.audioOutput.startRecordingToOutputFileURL(videoTemplateURL, recordingDelegate: self)
     }
 }
 

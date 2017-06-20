@@ -27,15 +27,15 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2ba-bm-dVd">
-                                <rect key="frame" x="0.0" y="-1" width="375" height="93"/>
+                                <rect key="frame" x="0.0" y="-1" width="375" height="147"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gAE-fV-UMz">
-                                <rect key="frame" x="-0.5" y="467" width="375" height="200"/>
+                                <rect key="frame" x="-0.5" y="521" width="375" height="146"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C8A-NQ-Is3">
-                                <rect key="frame" x="0.0" y="92" width="375" height="375"/>
+                                <rect key="frame" x="0.0" y="146" width="375" height="375"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="C8A-NQ-Is3" secondAttribute="height" multiplier="1:1" id="Csn-Ld-0jZ"/>
@@ -53,18 +53,18 @@
                                     <action selector="closeButtonClicked:" destination="ZRG-JB-Ut0" eventType="touchUpInside" id="JXa-Um-ZWX"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcI-0D-vqa">
-                                <rect key="frame" x="58.5" y="543.5" width="47" height="47"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcI-0D-vqa">
+                                <rect key="frame" x="67" y="576" width="36" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="gcI-0D-vqa" secondAttribute="height" id="FAi-xG-vew"/>
                                 </constraints>
-                                <state key="normal" title="Retake"/>
+                                <state key="normal" image="cameraRetake"/>
                                 <connections>
                                     <action selector="retakeButtonClicked:" destination="ZRG-JB-Ut0" eventType="touchUpInside" id="4rb-co-RbY"/>
                                 </connections>
                             </button>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yNl-UZ-sYj">
-                                <rect key="frame" x="161" y="539.5" width="54" height="54"/>
+                                <rect key="frame" x="160.5" y="567" width="54" height="54"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="54" id="4tD-WC-5gs"/>
@@ -72,7 +72,7 @@
                                 </constraints>
                             </view>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2q0-dA-OAq">
-                                <rect key="frame" x="170" y="548.5" width="36" height="36"/>
+                                <rect key="frame" x="169.5" y="576" width="36" height="36"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="36" id="Nh3-2T-ucC"/>
@@ -80,7 +80,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9pY-uM-LaL">
-                                <rect key="frame" x="164" y="543.5" width="47" height="47"/>
+                                <rect key="frame" x="169.5" y="576" width="36" height="36"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="icon_play">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -90,7 +90,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40M-RG-bfP">
-                                <rect key="frame" x="269.5" y="543.5" width="47" height="47"/>
+                                <rect key="frame" x="272.5" y="576" width="36" height="36"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="rotatecamera.png"/>
                                 <connections>
@@ -98,27 +98,27 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u7J-Tj-GLa" userLabel="Space View">
-                                <rect key="frame" x="0.0" y="543.5" width="58.5" height="47"/>
+                                <rect key="frame" x="0.0" y="576" width="67" height="36"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ys8-px-ckD" userLabel="Space View">
-                                <rect key="frame" x="105.5" y="543.5" width="58.5" height="47"/>
+                                <rect key="frame" x="103" y="576" width="66.5" height="36"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EMf-Xk-xbG" userLabel="Space View">
-                                <rect key="frame" x="211" y="543.5" width="58.5" height="47"/>
+                                <rect key="frame" x="205.5" y="576" width="67" height="36"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="paf-Kh-eDg" userLabel="Space View">
-                                <rect key="frame" x="58.5" y="467" width="47" height="76.5"/>
+                                <rect key="frame" x="67" y="521" width="36" height="55"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4SB-gY-1k1" userLabel="Space View">
-                                <rect key="frame" x="58.5" y="590.5" width="47" height="76.5"/>
+                                <rect key="frame" x="67" y="612" width="36" height="55"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IgI-tA-fP9" userLabel="Space View">
-                                <rect key="frame" x="316.5" y="543.5" width="58.5" height="47"/>
+                                <rect key="frame" x="308.5" y="576" width="66.5" height="36"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -127,6 +127,7 @@
                             <constraint firstItem="C8A-NQ-Is3" firstAttribute="centerX" secondItem="LDg-QV-cTo" secondAttribute="centerX" id="2hz-B3-eQ0"/>
                             <constraint firstItem="paf-Kh-eDg" firstAttribute="width" secondItem="4SB-gY-1k1" secondAttribute="width" id="3u6-aQ-D9U"/>
                             <constraint firstItem="IgI-tA-fP9" firstAttribute="centerY" secondItem="EMf-Xk-xbG" secondAttribute="centerY" id="52H-3T-VgT"/>
+                            <constraint firstItem="C8A-NQ-Is3" firstAttribute="centerY" secondItem="LDg-QV-cTo" secondAttribute="centerY" id="57M-lw-P9w"/>
                             <constraint firstItem="g3o-8J-Skd" firstAttribute="height" secondItem="LDg-QV-cTo" secondAttribute="height" id="5hW-zQ-iXq"/>
                             <constraint firstItem="40M-RG-bfP" firstAttribute="height" secondItem="9pY-uM-LaL" secondAttribute="height" id="6TR-fJ-Xxn"/>
                             <constraint firstItem="g3o-8J-Skd" firstAttribute="centerY" secondItem="LDg-QV-cTo" secondAttribute="centerY" id="7QV-zs-3CD"/>
@@ -165,7 +166,6 @@
                             <constraint firstItem="gAE-fV-UMz" firstAttribute="width" secondItem="LDg-QV-cTo" secondAttribute="width" id="lpz-an-Nzk"/>
                             <constraint firstItem="paf-Kh-eDg" firstAttribute="centerX" secondItem="gcI-0D-vqa" secondAttribute="centerX" id="mpX-q0-XKQ"/>
                             <constraint firstItem="EMf-Xk-xbG" firstAttribute="width" secondItem="IgI-tA-fP9" secondAttribute="width" id="nvN-ZR-bLl"/>
-                            <constraint firstItem="C8A-NQ-Is3" firstAttribute="top" secondItem="Son-Ho-d80" secondAttribute="bottom" constant="72" id="oNK-CV-AMJ"/>
                             <constraint firstItem="gAE-fV-UMz" firstAttribute="centerX" secondItem="LDg-QV-cTo" secondAttribute="centerX" id="oVN-tH-tVg"/>
                             <constraint firstItem="ys8-px-ckD" firstAttribute="width" secondItem="EMf-Xk-xbG" secondAttribute="width" id="owA-4a-fvg"/>
                             <constraint firstItem="2q0-dA-OAq" firstAttribute="centerY" secondItem="9pY-uM-LaL" secondAttribute="centerY" id="ph3-qT-X2J"/>
@@ -198,6 +198,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="cameraRetake" width="36" height="36"/>
         <image name="close" width="11" height="11"/>
         <image name="icon_play" width="24" height="24"/>
         <image name="rotatecamera.png" width="24" height="24"/>
