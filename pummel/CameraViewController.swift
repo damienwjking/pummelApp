@@ -309,9 +309,11 @@ class CameraViewController: UIViewController {
         let exportUrl: NSURL = NSURL.fileURLWithPath(exportPath)
         
         let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-        exporter!.videoComposition = videoComposition
-        exporter!.outputFileType = AVFileTypeQuickTimeMovie
+       // exporter!.videoComposition = videoComposition
+        exporter!.outputFileType = AVFileTypeMPEG4
         exporter!.outputURL = exportUrl
+        exporter?.shouldOptimizeForNetworkUse = true
+        exporter?.timeRange =  CMTimeRangeMake(CMTimeMakeWithSeconds(0.0, 0), asset.duration)
         
         exporter?.exportAsynchronouslyWithCompletionHandler({
             let outputURL:NSURL = exporter!.outputURL!
