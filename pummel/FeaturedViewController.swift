@@ -194,9 +194,10 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     if let arr = response.result.value as? [NSDictionary] {
                         self.offsetDiscount += 10
                         self.arrayDiscount += arr
-                        print(arr)
                         if arr.count > 0 {
-                            if self.headerDiscount != nil {
+                            if self.arrayDiscount.count == arr.count {
+                                self.tableFeed.reloadData()
+                            } else if self.headerDiscount != nil {
                                 self.headerDiscount.arrayResult = self.arrayDiscount
                             } else {
                                 self.tableFeed.reloadData()
@@ -286,6 +287,10 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             return nil
         }
         
+        if self.arrayDiscount.count == 0 {
+            return nil
+        }
+        
         if headerDiscount == nil {
             headerDiscount = FeedDiscountView.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
             headerDiscount.delegate = self
@@ -296,7 +301,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
+        if section == 0 && self.arrayDiscount.count > 0 {
             return 200
         }
         return 0.001
