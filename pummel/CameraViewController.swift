@@ -286,7 +286,7 @@ class CameraViewController: UIViewController {
         instruction.layerInstructions = NSArray(object: transformer) as! [AVVideoCompositionLayerInstruction]
         videoComposition.instructions = NSArray(object: instruction) as! [AVVideoCompositionInstructionProtocol]
         
-        let exportPath = self.getTempVideoPath("/library.mov")
+        let exportPath = self.getTempVideoPath("/library.mp4")
         
         let exportUrl: NSURL = NSURL.fileURLWithPath(exportPath)
         
@@ -338,7 +338,7 @@ class CameraViewController: UIViewController {
         return orientation;
     }
     
-    func cropAndSaveVideo() {
+    func cropAndUploadToServer() {
         self.cropVideoCenterToSquare { (exportURL) in
             self.uploadCurrentVideo(exportURL)
             
@@ -353,7 +353,7 @@ class CameraViewController: UIViewController {
             let urlData = NSData(contentsOfURL: url!);
             if(urlData != nil) {
                 dispatch_async(dispatch_get_main_queue(), {
-                    let exportPath = self.getTempVideoPath("/libraryTemp.mov")
+                    let exportPath = self.getTempVideoPath("/libraryTemp.mp4")
                     
                     urlData?.writeToFile(exportPath as String, atomically: true);
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
@@ -406,6 +406,8 @@ class CameraViewController: UIViewController {
                         self.view.hideToastActivity()
                         
                         if (response.response?.statusCode == 200) {
+                            NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
+                            
                             self.dismissViewControllerAnimated(true, completion: nil)
                         } else {
                             let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
@@ -463,7 +465,7 @@ class CameraViewController: UIViewController {
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
             
             // Check render video
-            self.cropAndSaveVideo()
+            self.cropAndUploadToServer()
         }
     }
     
@@ -519,7 +521,7 @@ class CameraViewController: UIViewController {
     
     func startRecordVideo() {
         // Delete template if exist
-        let videoTemplatePath = self.getTempVideoPath("/video.mov")
+        let videoTemplatePath = self.getTempVideoPath("/video.mp4")
         let videoTemplateURL = NSURL.fileURLWithPath(videoTemplatePath)
         
         // Record video to template file
@@ -540,7 +542,7 @@ extension CameraViewController:AVCaptureFileOutputRecordingDelegate {
             if(urlData != nil)
             {
                 let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
-                let filePath="\(documentsPath)/tempFile.mov";
+                let filePath="\(documentsPath)/tempFile.mp4";
                 dispatch_async(dispatch_get_main_queue(), {
                     urlData?.writeToFile(filePath, atomically: true);
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({

@@ -193,6 +193,9 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
+        
+        // Add notification for update video url
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.profileGetNewDetail), name: "profileGetDetail", object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -241,6 +244,16 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
             
             // Remove video view
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+        }
+    }
+    
+    func profileGetNewDetail() {
+        if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
+            self.videoPlayerLayer?.removeFromSuperlayer()
+            
+            self.videoView = nil
+            
+            self.getDetail()
         }
     }
     
@@ -1022,8 +1035,6 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                 self.videoPlayerLayer?.removeFromSuperlayer()
                 
                 self.videoView = nil
-                
-//                self.isUploadingVideo = true
             }
             
             // send video by method mutipart to server
