@@ -13,7 +13,7 @@ import AVKit
 import AVFoundation
 
 
-class CoachProfileViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class CoachProfileViewController: BaseViewController {
     @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
@@ -260,130 +260,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             
             self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
         }
-    }
-    
-    func showVideoLayout(videoURLString: String) {
-        // Move avatar to top left
-        let newAvatarSize: CGFloat = 37.0
-        let leftMargin: CGFloat = 15.0
-        let topMargin: CGFloat = 55.0
-        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + leftMargin
-        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
-        self.avatarIMVWidthConstraint.constant = newAvatarSize
-        
-        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
-        
-        
-        self.coachBorderV.layer.cornerRadius = (newAvatarSize + 10)/2
-        self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
-        
-        // Hidden indicator view
-        self.smallIndicatorView.hidden = true
-        self.medIndicatorView.hidden = true
-        self.bigIndicatorView.hidden = true
-        self.bigBigIndicatorView.hidden = true
-        
-        // Show video
-        if (self.videoView?.superview != nil) {
-            self.videoView?.removeFromSuperview()
-        }
-        self.videoView = UIView.init(frame: self.detailV.bounds)
-        let videoURL = NSURL(string: videoURLString)
-        self.videoPlayer = AVPlayer(URL: videoURL!)
-        self.videoPlayer!.actionAtItemEnd = .None
-        self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
-        self.videoPlayerLayer!.frame = self.videoView!.bounds
-        self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
-        
-        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
-        
-        self.detailV.insertSubview(self.videoView!, atIndex: 0)
-        
-        // Animation
-        UIView.animateWithDuration(0.5, animations: {
-            self.detailV.layoutIfNeeded()
-        }) { (_) in
-            self.videoPlayer!.play()
-            self.isVideoPlaying = true
-            
-            // Hidden item above video view
-            self.avatarIMV.hidden = true
-            self.coachBorderV.hidden = true
-            self.coachBorderBackgroundV.hidden = true
-            
-            self.actionView.hidden = true
-            
-            self.locationView.alpha = 0 // special key
-        }
-        
-        // Add indicator for video
-        if (self.videoIndicator.superview != nil) {
-            self.videoIndicator.removeFromSuperview()
-        }
-        self.videoIndicator.startAnimating()
-        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
-        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
-        
-        // Remove loop play video for
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
-        
-        // Add notification for loop play video
-        NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.endVideoNotification),
-                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
-                                                         object: self.videoPlayer!.currentItem)
-    }
-    
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        print("observed \(keyPath) \(change)")
-        let currentItem = object as! AVPlayerItem
-        if currentItem.status == .ReadyToPlay {
-            let videoRect = self.videoPlayerLayer?.videoRect
-            if (videoRect?.width > videoRect?.height) {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-            } else {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            }
-        }
-    }
-    
-    @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.isVideoPlaying = !self.isVideoPlaying
-        if (self.isVideoPlaying == true) {
-            self.videoPlayer?.play()
-            self.playVideoButton.setImage(nil, forState: .Normal)
-            self.locationView.alpha = 0 // Special case
-        } else {
-            self.videoPlayer?.pause()
-            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-            self.locationView.alpha = 1 // Special case
-        }
-        
-        // Hidden item above video view
-        self.avatarIMV.hidden = self.isVideoPlaying
-        self.coachBorderV.hidden = self.isVideoPlaying
-        self.coachBorderBackgroundV.hidden = self.isVideoPlaying
-        
-        self.actionView.hidden = self.isVideoPlaying
-    }
-    
-    func endVideoNotification(notification: NSNotification) {
-        let playerItem = notification.object as! AVPlayerItem
-        
-        // Show first video frame
-        playerItem.seekToTime(kCMTimeZero)
-        self.videoPlayer?.pause()
-        
-        // Show item above video view
-        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-        
-        self.avatarIMV.hidden = false
-        self.coachBorderV.hidden = false
-        self.coachBorderBackgroundV.hidden = false
-        
-        self.actionView.hidden = false
-        
-        self.locationView.alpha = 1 // special key
     }
     
     func getBusinessImage() {
@@ -819,105 +695,6 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
         }
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (collectionView == self.interestCollectionView) {
-            return tags.count
-        } else {
-            return arrayPhotos.count
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        if (collectionView == self.interestCollectionView) {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-            self.configureCell(cell, forIndexPath: indexPath)
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
-            self.configureAboutCell(cell, forIndexPath: indexPath)
-            return cell
-        }
-        
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-         if (collectionView == self.interestCollectionView) {
-            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-            var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-            
-            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-                cellSize.width += 10;
-            }
-            
-            return cellSize
-         } else {
-            return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        self.view.makeToastActivity()
-        var prefix = kPMAPI
-        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
-        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arr = JSON as? NSArray {
-                    if arr.count > 0 {
-                        if let dic = arr.objectAtIndex(0) as? NSDictionary {
-                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
-                            self.view.hideToastActivity()
-                            return
-                        }
-                    }
-                }
-                
-                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    // ...
-                }
-                alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
-                    // ...
-                }
-                self.view.hideToastActivity()
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
-                self.view.hideToastActivity()
-        }
-    }
-
-//    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-//        if (collectionView == self.interestCollectionView) {
-//            collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-//            tags[indexPath.row].selected = !tags[indexPath.row].selected
-//            collectionView.reloadData()
-//        }
-//    }
-    
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
-        cell.tagName.textColor = UIColor.blackColor()
-        cell.layer.borderColor = UIColor.clearColor().CGColor
-    }
-    
-    func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-            var prefix = kPMAPI
-            let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-            let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
-            var link = photo.objectForKey(kImageUrl) as! String
-            link.appendContentsOf(postfix)
-            prefix.appendContentsOf(link)
-            Alamofire.request(.GET, prefix)
-                .responseImage { response in
-                    let imageRes = response.result.value! as UIImage
-                    cell.imageCell.image = imageRes
-            }
-    }
-    
     @IBAction func clickOnFacebook() {
         if (self.facebookLink != "") {
             let facebookUrl = NSURL(string: self.facebookLink!)
@@ -995,6 +772,234 @@ class CoachProfileViewController: BaseViewController, UICollectionViewDataSource
             if let val = self.coachDetail[kId] as? Int {
                 TrackingPMAPI.sharedInstance.trackSocialInstagram("\(val)")
             }
+        }
+    }
+    
+    //MARK: - Video
+    func videoPlayerSetPlay(isPlay: Bool) {
+        if (isPlay == true) {
+            self.videoPlayer!.play()
+            
+            self.playVideoButton.setImage(nil, forState: .Normal)
+            
+            self.locationView.alpha = 0
+        } else {
+            self.videoPlayer?.pause()
+            
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+            
+            self.locationView.alpha = 1
+        }
+        
+        self.isVideoPlaying = isPlay
+        
+        // Show/Hidden item above video view
+        self.avatarIMV.hidden = isPlay
+        self.coachBorderV.hidden = isPlay
+        self.coachBorderBackgroundV.hidden = isPlay
+        self.actionView.hidden = isPlay
+    }
+    
+    
+    func showVideoLayout(videoURLString: String) {
+        // Move avatar to top left
+        let newAvatarSize: CGFloat = 37.0
+        let leftMargin: CGFloat = 15.0
+        let topMargin: CGFloat = 55.0
+        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + leftMargin
+        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
+        self.avatarIMVWidthConstraint.constant = newAvatarSize
+        
+        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
+        
+        
+        self.coachBorderV.layer.cornerRadius = (newAvatarSize + 10)/2
+        self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
+        
+        // Hidden indicator view
+        self.smallIndicatorView.hidden = true
+        self.medIndicatorView.hidden = true
+        self.bigIndicatorView.hidden = true
+        self.bigBigIndicatorView.hidden = true
+        
+        // Show video
+        if (self.videoView?.superview != nil) {
+            self.videoView?.removeFromSuperview()
+        }
+        self.videoView = UIView.init(frame: self.detailV.bounds)
+        let videoURL = NSURL(string: videoURLString)
+        self.videoPlayer = AVPlayer(URL: videoURL!)
+        self.videoPlayer!.actionAtItemEnd = .None
+        self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
+        self.videoPlayerLayer!.frame = self.videoView!.bounds
+        self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
+        
+        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+        
+        self.detailV.insertSubview(self.videoView!, atIndex: 0)
+        
+        // Animation
+        UIView.animateWithDuration(0.5, animations: {
+            self.detailV.layoutIfNeeded()
+        }) { (_) in
+            self.videoPlayerSetPlay(false)
+        }
+        
+        // Add indicator for video
+        if (self.videoIndicator.superview != nil) {
+            self.videoIndicator.removeFromSuperview()
+        }
+        self.videoIndicator.startAnimating()
+        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
+        
+        // Remove loop play video for
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        
+        // Add notification for loop play video
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.endVideoNotification),
+                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         object: self.videoPlayer!.currentItem)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        print("observed \(keyPath) \(change)")
+        let currentItem = object as! AVPlayerItem
+        if currentItem.status == .ReadyToPlay {
+            let videoRect = self.videoPlayerLayer?.videoRect
+            if (videoRect?.width > videoRect?.height) {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+            } else {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            }
+            
+            self.videoPlayerSetPlay(false)
+        }
+    }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        self.isVideoPlaying = !self.isVideoPlaying
+        self.videoPlayerSetPlay(self.isVideoPlaying)
+    }
+    
+    func endVideoNotification(notification: NSNotification) {
+        let playerItem = notification.object as! AVPlayerItem
+        
+        // Show first video frame
+        playerItem.seekToTime(kCMTimeZero)
+        self.videoPlayer?.pause()
+        
+        // Show item above video view
+        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+        
+        self.avatarIMV.hidden = false
+        self.coachBorderV.hidden = false
+        self.coachBorderBackgroundV.hidden = false
+        
+        self.actionView.hidden = false
+        
+        self.locationView.alpha = 1 // special key
+    }
+}
+
+extension CoachProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if (collectionView == self.interestCollectionView) {
+            return tags.count
+        } else {
+            return arrayPhotos.count
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        if (collectionView == self.interestCollectionView) {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
+            self.configureCell(cell, forIndexPath: indexPath)
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
+            self.configureAboutCell(cell, forIndexPath: indexPath)
+            return cell
+        }
+        
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        if (collectionView == self.interestCollectionView) {
+            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
+            var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+            
+            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+                cellSize.width += 10;
+            }
+            
+            return cellSize
+        } else {
+            return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        self.view.makeToastActivity()
+        var prefix = kPMAPI
+        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
+        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
+        Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                if let arr = JSON as? NSArray {
+                    if arr.count > 0 {
+                        if let dic = arr.objectAtIndex(0) as? NSDictionary {
+                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
+                            self.view.hideToastActivity()
+                            return
+                        }
+                    }
+                }
+                
+                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    // ...
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+                self.view.hideToastActivity()
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+                self.view.hideToastActivity()
+        }
+    }
+    
+    //    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    //        if (collectionView == self.interestCollectionView) {
+    //            collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+    //            tags[indexPath.row].selected = !tags[indexPath.row].selected
+    //            collectionView.reloadData()
+    //        }
+    //    }
+    
+    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
+        let tag = tags[indexPath.row]
+        cell.tagName.text = tag.name
+        cell.tagName.textColor = UIColor.blackColor()
+        cell.layer.borderColor = UIColor.clearColor().CGColor
+    }
+    
+    func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
+        var prefix = kPMAPI
+        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
+        let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
+        var link = photo.objectForKey(kImageUrl) as! String
+        link.appendContentsOf(postfix)
+        prefix.appendContentsOf(link)
+        Alamofire.request(.GET, prefix)
+            .responseImage { response in
+                let imageRes = response.result.value! as UIImage
+                cell.imageCell.image = imageRes
         }
     }
 }

@@ -36,11 +36,25 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C8A-NQ-Is3">
                                 <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="cPb-2N-MIA">
+                                        <rect key="frame" x="169" y="169" width="37" height="37"/>
+                                    </activityIndicatorView>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="C8A-NQ-Is3" secondAttribute="height" multiplier="1:1" id="Csn-Ld-0jZ"/>
+                                    <constraint firstItem="cPb-2N-MIA" firstAttribute="centerX" secondItem="C8A-NQ-Is3" secondAttribute="centerX" id="TL6-XY-6Z7"/>
+                                    <constraint firstItem="cPb-2N-MIA" firstAttribute="centerY" secondItem="C8A-NQ-Is3" secondAttribute="centerY" id="voc-tW-jM4"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccb-Dz-3TW">
+                                <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                                <state key="normal" image="icon_play_video"/>
+                                <connections>
+                                    <action selector="playVideoButtonClicked:" destination="ZRG-JB-Ut0" eventType="touchUpInside" id="cg9-6q-qZD"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bE5-GP-YkF">
                                 <rect key="frame" x="-8" y="20" width="88" height="44"/>
                                 <constraints>
@@ -89,6 +103,9 @@
                                     <action selector="playButtonClicked:" destination="ZRG-JB-Ut0" eventType="touchUpInside" id="1LQ-Cg-bbW"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="PJY-TH-YV7">
+                                <rect key="frame" x="177" y="584" width="20" height="20"/>
+                            </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40M-RG-bfP">
                                 <rect key="frame" x="272.5" y="576" width="36" height="36"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -136,11 +153,15 @@
                             <constraint firstAttribute="trailingMargin" secondItem="IgI-tA-fP9" secondAttribute="trailing" constant="-16" id="BpK-pc-Bzu"/>
                             <constraint firstItem="9pY-uM-LaL" firstAttribute="height" secondItem="gcI-0D-vqa" secondAttribute="height" id="CYP-As-yrU"/>
                             <constraint firstItem="paf-Kh-eDg" firstAttribute="width" secondItem="gcI-0D-vqa" secondAttribute="width" id="CsG-fv-SL7"/>
+                            <constraint firstItem="Ccb-Dz-3TW" firstAttribute="centerX" secondItem="C8A-NQ-Is3" secondAttribute="centerX" id="DZ8-hy-vZQ"/>
                             <constraint firstItem="C8A-NQ-Is3" firstAttribute="top" secondItem="2ba-bm-dVd" secondAttribute="bottom" id="FOw-W0-awR"/>
                             <constraint firstItem="2ba-bm-dVd" firstAttribute="width" secondItem="LDg-QV-cTo" secondAttribute="width" id="FyO-Fc-huh"/>
                             <constraint firstItem="ys8-px-ckD" firstAttribute="leading" secondItem="gcI-0D-vqa" secondAttribute="trailing" id="GYr-Ma-Lbr"/>
+                            <constraint firstItem="Ccb-Dz-3TW" firstAttribute="width" secondItem="C8A-NQ-Is3" secondAttribute="width" id="IBg-k0-ipQ"/>
+                            <constraint firstItem="PJY-TH-YV7" firstAttribute="centerY" secondItem="9pY-uM-LaL" secondAttribute="centerY" id="Inc-66-Fdz"/>
                             <constraint firstItem="9pY-uM-LaL" firstAttribute="leading" secondItem="ys8-px-ckD" secondAttribute="trailing" id="KCN-jl-U7p"/>
                             <constraint firstItem="DKH-hr-Fcp" firstAttribute="top" secondItem="gAE-fV-UMz" secondAttribute="bottom" id="KIE-md-rSb"/>
+                            <constraint firstItem="Ccb-Dz-3TW" firstAttribute="height" secondItem="C8A-NQ-Is3" secondAttribute="height" id="KKW-tM-H5S"/>
                             <constraint firstItem="9pY-uM-LaL" firstAttribute="centerY" secondItem="gcI-0D-vqa" secondAttribute="centerY" id="M9d-oN-Zfm"/>
                             <constraint firstItem="40M-RG-bfP" firstAttribute="centerY" secondItem="9pY-uM-LaL" secondAttribute="centerY" id="N9Y-Pa-VlZ"/>
                             <constraint firstItem="ys8-px-ckD" firstAttribute="centerY" secondItem="u7J-Tj-GLa" secondAttribute="centerY" id="NJs-Fk-Sxq"/>
@@ -155,6 +176,7 @@
                             <constraint firstItem="yNl-UZ-sYj" firstAttribute="centerY" secondItem="2q0-dA-OAq" secondAttribute="centerY" id="XNc-yn-aLU"/>
                             <constraint firstItem="2ba-bm-dVd" firstAttribute="top" secondItem="Son-Ho-d80" secondAttribute="bottom" constant="-21" id="Xck-lF-iQZ"/>
                             <constraint firstItem="4SB-gY-1k1" firstAttribute="top" secondItem="gcI-0D-vqa" secondAttribute="bottom" id="YTv-00-aqo"/>
+                            <constraint firstItem="Ccb-Dz-3TW" firstAttribute="centerY" secondItem="C8A-NQ-Is3" secondAttribute="centerY" id="aNJ-1i-wRA"/>
                             <constraint firstItem="bE5-GP-YkF" firstAttribute="top" secondItem="Son-Ho-d80" secondAttribute="bottom" id="b79-pK-I3L"/>
                             <constraint firstItem="9pY-uM-LaL" firstAttribute="width" secondItem="40M-RG-bfP" secondAttribute="width" id="bJu-LO-3yh"/>
                             <constraint firstItem="IgI-tA-fP9" firstAttribute="height" secondItem="EMf-Xk-xbG" secondAttribute="height" id="doH-xm-dTU"/>
@@ -165,6 +187,7 @@
                             <constraint firstItem="u7J-Tj-GLa" firstAttribute="centerY" secondItem="gcI-0D-vqa" secondAttribute="centerY" id="lY7-M6-23j"/>
                             <constraint firstItem="gAE-fV-UMz" firstAttribute="width" secondItem="LDg-QV-cTo" secondAttribute="width" id="lpz-an-Nzk"/>
                             <constraint firstItem="paf-Kh-eDg" firstAttribute="centerX" secondItem="gcI-0D-vqa" secondAttribute="centerX" id="mpX-q0-XKQ"/>
+                            <constraint firstItem="PJY-TH-YV7" firstAttribute="centerX" secondItem="9pY-uM-LaL" secondAttribute="centerX" id="nOT-f2-gXk"/>
                             <constraint firstItem="EMf-Xk-xbG" firstAttribute="width" secondItem="IgI-tA-fP9" secondAttribute="width" id="nvN-ZR-bLl"/>
                             <constraint firstItem="gAE-fV-UMz" firstAttribute="centerX" secondItem="LDg-QV-cTo" secondAttribute="centerX" id="oVN-tH-tVg"/>
                             <constraint firstItem="ys8-px-ckD" firstAttribute="width" secondItem="EMf-Xk-xbG" secondAttribute="width" id="owA-4a-fvg"/>
@@ -183,12 +206,15 @@
                     </view>
                     <connections>
                         <outlet property="cameraBorderView" destination="C8A-NQ-Is3" id="lIf-Cw-czk"/>
+                        <outlet property="cameraIndicatorView" destination="cPb-2N-MIA" id="qUe-jl-Cuo"/>
                         <outlet property="cameraView" destination="g3o-8J-Skd" id="e1L-wE-h8h"/>
                         <outlet property="changeCameraButton" destination="40M-RG-bfP" id="50M-Lr-uJV"/>
                         <outlet property="closeButton" destination="bE5-GP-YkF" id="WNs-n6-BPr"/>
                         <outlet property="playBorderBigView" destination="yNl-UZ-sYj" id="hzz-vM-7vg"/>
                         <outlet property="playBorderSmallView" destination="2q0-dA-OAq" id="Z3a-LB-sIW"/>
                         <outlet property="playButton" destination="9pY-uM-LaL" id="wDA-yS-xpM"/>
+                        <outlet property="playButtonIndicatorView" destination="PJY-TH-YV7" id="3EE-kj-5Br"/>
+                        <outlet property="playVideoButton" destination="Ccb-Dz-3TW" id="ttS-tt-0YD"/>
                         <outlet property="retakeButton" destination="gcI-0D-vqa" id="Ajc-lw-hed"/>
                     </connections>
                 </viewController>
@@ -201,6 +227,7 @@
         <image name="cameraRetake" width="36" height="36"/>
         <image name="close" width="11" height="11"/>
         <image name="icon_play" width="24" height="24"/>
+        <image name="icon_play_video" width="50" height="50"/>
         <image name="rotatecamera.png" width="24" height="24"/>
     </resources>
 </document>

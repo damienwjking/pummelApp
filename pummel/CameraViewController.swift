@@ -20,6 +20,7 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var cameraBorderView: UIView!
     @IBOutlet weak var playVideoButton: UIButton!
+    @IBOutlet weak var cameraIndicatorView: UIActivityIndicatorView!
 
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var retakeButton: UIButton!
@@ -32,6 +33,7 @@ class CameraViewController: UIViewController {
     
     var videoPlayer: AVPlayer? = nil
     var videoPlayerLayer: AVPlayerLayer? = nil
+    var isRecordByCamera = false
     
     var needRemoveKVO = false
     
@@ -53,7 +55,9 @@ class CameraViewController: UIViewController {
         didSet {
             // Hidden indicator
             self.playButtonIndicatorView.hidden = true
+            self.cameraIndicatorView.hidden = true
             
+            // Setup play button image
             if (self.recordStatus == .pending) {
                 let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
                 self.playButton.setImage(playImage, forState: .Normal)
@@ -63,6 +67,8 @@ class CameraViewController: UIViewController {
             } else if (self.recordStatus == .finish) {
                 let uploadImage = UIImage(named: "icon_upload")?.imageWithRenderingMode(.AlwaysTemplate)
                 self.playButton.setImage(uploadImage, forState: .Normal)
+                
+                self.cameraIndicatorView.hidden = false
             } else if (self.recordStatus == .uploading) {
                 self.playButton.setImage(nil, forState: .Normal)
                 
@@ -70,6 +76,14 @@ class CameraViewController: UIViewController {
                 self.playButtonIndicatorView.hidden = false
             }
             
+            // Retake button
+            if (self.retakeButton != nil) {
+                self.retakeButton.enabled = false
+                
+                if (self.recordStatus == .finish) {
+                    self.retakeButton.enabled = true
+                }
+            }
         }
     }
     
@@ -97,13 +111,20 @@ class CameraViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        
+        
         if (self.videoURL == nil) {
+            self.isRecordByCamera = true
+            
+            self.recordStatus = .pending
+            
             self.setupCameraSession()
             self.cameraView.layer.addSublayer(previewLayer)
             cameraSession.startRunning()
             
             self.playVideoButton.hidden = true
         } else {
+            self.isRecordByCamera = false
             // Stop camera and show video from video URL
             cameraSession.stopRunning()
             
@@ -133,6 +154,8 @@ class CameraViewController: UIViewController {
             } else {
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             }
+            
+            self.playButton.userInteractionEnabled = true
             
             if (self.needRemoveKVO) {
                 self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
@@ -226,11 +249,8 @@ class CameraViewController: UIViewController {
         let asset: AVAsset = AVAsset(URL: self.videoURL!)
         let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
         
-        let videoSize: CGFloat = min(assetTrack.naturalSize.width, assetTrack.naturalSize.height)
-        
         let videoComposition: AVMutableVideoComposition = AVMutableVideoComposition()
         videoComposition.frameDuration = CMTimeMake(1, 60) // Frame 1/60
-        videoComposition.renderSize = CGSizeMake(videoSize, videoSize)
         
         let instruction: AVMutableVideoCompositionInstruction = AVMutableVideoCompositionInstruction()
         instruction.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(60, 30)) // Total video time by 30 minute
@@ -238,13 +258,30 @@ class CameraViewController: UIViewController {
         let transformer: AVMutableVideoCompositionLayerInstruction =
             AVMutableVideoCompositionLayerInstruction(assetTrack: assetTrack)
         
-        let spaceLeft = (assetTrack.naturalSize.width - videoSize) / 2
-        let spaceTop = (assetTrack.naturalSize.height - videoSize) / 2
         
-        let finalTransform: CGAffineTransform = CGAffineTransformMakeTranslation(-spaceLeft, -spaceTop)
+        let minWidthHeightVideo = min(assetTrack.naturalSize.width, assetTrack.naturalSize.height)
+        let spaceLeft = (assetTrack.naturalSize.width - minWidthHeightVideo) / 2
+        let spaceTop = (assetTrack.naturalSize.height - minWidthHeightVideo) / 2
+        
+        var finalTransform = CGAffineTransformMakeTranslation(-spaceLeft, -spaceTop)
+        videoComposition.renderSize = CGSize(width: minWidthHeightVideo, height: minWidthHeightVideo)
+        
+        
+//        var videoSize: CGSize = CGSize(width: 0, height: 0)
+//        let orientation = self.orientationForTrack(assetTrack)
+//        let isPortrait = (orientation == .Portrait || orientation == .PortraitUpsideDown)
+//        let complimentSize = self.getComplimentSize(assetTrack.naturalSize.height)
+//        
+//        if(isPortrait) {
+//            videoSize = CGSize(width: assetTrack.naturalSize.height, height: complimentSize)
+//        } else {
+//            videoSize = CGSize(width: complimentSize, height: assetTrack.naturalSize.height)
+//        }
+        
+//        videoComposition.renderSize = videoSize
         
         transformer.setTransform(finalTransform, atTime: kCMTimeZero)
-        transformer.setCropRectangle(CGRect(x: spaceLeft, y: spaceTop, width: videoSize, height: videoSize), atTime: kCMTimeZero)
+        transformer.setCropRectangle(CGRect(x: spaceLeft, y: spaceTop, width: minWidthHeightVideo, height: minWidthHeightVideo), atTime: kCMTimeZero)
         
         instruction.layerInstructions = NSArray(object: transformer) as! [AVVideoCompositionLayerInstruction]
         videoComposition.instructions = NSArray(object: instruction) as! [AVVideoCompositionInstructionProtocol]
@@ -263,6 +300,42 @@ class CameraViewController: UIViewController {
             
             completionHandler(exportURL: outputURL)
         })
+    }
+    
+    func getComplimentSize(size: CGFloat) -> CGFloat {
+        let screenRect = UIScreen.mainScreen().bounds
+        var ratio = screenRect.size.height / screenRect.size.width
+        
+        // we have to adjust the ratio for 16:9 screens
+        if (ratio == 1.775) {
+            ratio = 1.77777777777778
+        }
+        
+        return size * ratio
+    }
+    
+    func orientationForTrack(videoTrack: AVAssetTrack) -> UIInterfaceOrientation {
+        var orientation: UIInterfaceOrientation = .Portrait;
+        let t: CGAffineTransform = videoTrack.preferredTransform;
+        
+        // Portrait
+        if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0) {
+            orientation = .Portrait;
+        }
+        // PortraitUpsideDown
+        if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0) {
+            orientation = .PortraitUpsideDown;
+        }
+        // LandscapeRight
+        if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {
+            orientation = .LandscapeRight;
+        }
+        // LandscapeLeft
+        if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {
+            orientation = .LandscapeLeft;
+        }
+        
+        return orientation;
     }
     
     func cropAndSaveVideo() {
@@ -286,8 +359,7 @@ class CameraViewController: UIViewController {
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
                         PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
                     }) { completed, error in
-                        // Upload video to server
-                        self.recordStatus = .pending
+                        self.dismissViewControllerAnimated(true, completion: nil)
                     }
                 })
             }
@@ -362,7 +434,14 @@ class CameraViewController: UIViewController {
     }
     
     @IBAction func retakeButtonClicked(sender: AnyObject) {
-        
+        if (self.isRecordByCamera) {
+            self.videoURL = nil
+            
+            self.recordStatus = .pending
+            
+            self.videoPlayerLayer?.removeFromSuperlayer()
+            
+        }
     }
     
     @IBAction func playButtonClicked(sender: AnyObject) {
@@ -383,14 +462,45 @@ class CameraViewController: UIViewController {
             self.videoPlayer?.pause()
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
             
-            
             // Check render video
             self.cropAndSaveVideo()
         }
     }
     
     @IBAction func changeCameraButtonClicked(sender: AnyObject) {
-//        self.cameraSession
+        for deviceInput in self.cameraSession.inputs {
+            if ((deviceInput as? AVCaptureDeviceInput) != nil) {
+                let input: AVCaptureDeviceInput = deviceInput as! AVCaptureDeviceInput
+                
+                self.cameraSession.beginConfiguration()
+                
+                // Remove current camera input
+                self.cameraSession.removeInput(input)
+                
+                // Check current camera position
+                var captureDevice: AVCaptureDevice? = nil
+                if (input.device.position == .Back) {
+                    captureDevice = self.cameraWithPosition(.Front)
+                } else {
+                    captureDevice = self.cameraWithPosition(.Back)
+                }
+                
+                // Add new camera input
+                do {
+                    let deviceInput = try AVCaptureDeviceInput(device: captureDevice!)
+                    
+                    if (self.cameraSession.canAddInput(deviceInput) == true) {
+                        self.cameraSession.addInput(deviceInput)
+                    }
+                }
+                catch let error as NSError {
+                    NSLog("\(error), \(error.localizedDescription)")
+                }
+                
+                self.cameraSession.commitConfiguration()
+            }
+        }
+        
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
@@ -405,7 +515,6 @@ class CameraViewController: UIViewController {
             let playImage = UIImage(named: "icon_play_video")
             self.playVideoButton.setImage(playImage, forState: .Normal)
         }
-        
     }
     
     func startRecordVideo() {
@@ -423,6 +532,8 @@ extension CameraViewController:AVCaptureFileOutputRecordingDelegate {
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         print("Finish record video")
         
+        self.playButton.userInteractionEnabled = false
+        
         // Save video to library
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
             let urlData = NSData(contentsOfURL: outputFileURL);
@@ -436,6 +547,9 @@ extension CameraViewController:AVCaptureFileOutputRecordingDelegate {
                         PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: filePath))
                     }) { completed, error in
                         self.videoURL = outputFileURL
+                        
+                        // Show video layout
+                        self.showVideoLayout()
                     }
                 })
             }
@@ -458,48 +572,66 @@ extension CameraViewController: AVCaptureAudioDataOutputSampleBufferDelegate {
 }
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
-    func setupCameraSession() {
-        let captureDevice = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo).first as! AVCaptureDevice
+    func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
+        let devices = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo)
         
-        do {
-            let deviceInput = try AVCaptureDeviceInput(device: captureDevice)
-            
-            self.cameraSession.beginConfiguration()
-            
-            if (self.cameraSession.canAddInput(deviceInput) == true) {
-                self.cameraSession.addInput(deviceInput)
+        for device in devices {
+            if ((device as? AVCaptureDevice) != nil) {
+                let device: AVCaptureDevice = device as! AVCaptureDevice
+                
+                if (device.position == position) {
+                    return device
+                }
             }
-            
-            let dataOutput = AVCaptureVideoDataOutput()
-            dataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(unsignedInt: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange as UInt32)]
-            dataOutput.alwaysDiscardsLateVideoFrames = true
-            
-            if (self.cameraSession.canAddOutput(dataOutput) == true) {
-                self.cameraSession.addOutput(dataOutput)
-            }
-            
-            let audioOutput: AVCaptureAudioDataOutput = AVCaptureAudioDataOutput()
-            
-            if (self.cameraSession.canAddOutput(audioOutput) == true) {
-                self.cameraSession.addOutput(audioOutput)
-            }
-            
-            // Add video output and audio output
-            if (self.cameraSession.canAddOutput(self.cameraOutput)) {
-                self.cameraSession.addOutput(self.cameraOutput)
-            }
-            
-            self.cameraSession.commitConfiguration()
-            
-            let queue = dispatch_queue_create("com.invasivecode.videoQueue", DISPATCH_QUEUE_SERIAL)
-            dataOutput.setSampleBufferDelegate(self, queue: queue)
-            
-            let audioqueue = dispatch_queue_create("com.invasivecode.audioQueue", DISPATCH_QUEUE_SERIAL)
-            audioOutput.setSampleBufferDelegate(self, queue: audioqueue)
-            
         }
-        catch let error as NSError {
-            NSLog("\(error), \(error.localizedDescription)")
+        
+        return nil
+    }
+    
+    
+    func setupCameraSession() {
+        let captureDevice = self.cameraWithPosition(.Back)
+        let audioCaptureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
+        
+        if (captureDevice != nil) {
+            do {
+                let deviceInput = try AVCaptureDeviceInput(device: captureDevice)
+                let audioInput = try AVCaptureDeviceInput(device: audioCaptureDevice)
+                
+                self.cameraSession.beginConfiguration()
+                
+                // Add Camera input
+                if (self.cameraSession.canAddInput(deviceInput) == true) {
+                    self.cameraSession.addInput(deviceInput)
+                }
+                
+                // Add Audio input
+                if (self.cameraSession.canAddInput(audioInput) == true) {
+                    self.cameraSession.addInput(audioInput)
+                }
+                
+                let dataOutput = AVCaptureVideoDataOutput()
+                dataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(unsignedInt: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange as UInt32)]
+                dataOutput.alwaysDiscardsLateVideoFrames = true
+                
+                if (self.cameraSession.canAddOutput(dataOutput) == true) {
+                    self.cameraSession.addOutput(dataOutput)
+                }
+            
+                // Add video output
+                if (self.cameraSession.canAddOutput(self.cameraOutput)) {
+                    self.cameraSession.addOutput(self.cameraOutput)
+                }
+                
+                self.cameraSession.commitConfiguration()
+                
+                let queue = dispatch_queue_create("com.invasivecode.videoQueue", DISPATCH_QUEUE_SERIAL)
+                dataOutput.setSampleBufferDelegate(self, queue: queue)
+                
+            }
+            catch let error as NSError {
+                NSLog("\(error), \(error.localizedDescription)")
+            }
         }
     }
     
