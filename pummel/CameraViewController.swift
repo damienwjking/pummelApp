@@ -226,8 +226,8 @@ class CameraViewController: UIViewController {
     }
     
     func getTempVideoPath(fileName: String) -> String {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
-        //        let filePath = "\(documentsPath)/tempFile.mp4";
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        //        let filePath = "\(documentsPath)/tempFile.mp4"
         let templatePath = documentsPath.stringByAppendingFormat(fileName)
         
         // Remove file at template path
@@ -258,30 +258,48 @@ class CameraViewController: UIViewController {
         let transformer: AVMutableVideoCompositionLayerInstruction =
             AVMutableVideoCompositionLayerInstruction(assetTrack: assetTrack)
         
-        
+        // Square param
         let minWidthHeightVideo = min(assetTrack.naturalSize.width, assetTrack.naturalSize.height)
-        let spaceLeft = (assetTrack.naturalSize.width - minWidthHeightVideo) / 2
-        let spaceTop = (assetTrack.naturalSize.height - minWidthHeightVideo) / 2
+        let cropOffX = (assetTrack.naturalSize.width - minWidthHeightVideo) / 2
+        let cropOffY = (assetTrack.naturalSize.height - minWidthHeightVideo) / 2
+        let cropWidth = minWidthHeightVideo
+        let cropHeight = minWidthHeightVideo
         
-        var finalTransform = CGAffineTransformMakeTranslation(-spaceLeft, -spaceTop)
-        videoComposition.renderSize = CGSize(width: minWidthHeightVideo, height: minWidthHeightVideo)
+        videoComposition.renderSize = CGSizeMake(cropWidth, cropHeight)
         
         
-//        var videoSize: CGSize = CGSize(width: 0, height: 0)
-//        let orientation = self.orientationForTrack(assetTrack)
-//        let isPortrait = (orientation == .Portrait || orientation == .PortraitUpsideDown)
-//        let complimentSize = self.getComplimentSize(assetTrack.naturalSize.height)
-//        
-//        if(isPortrait) {
-//            videoSize = CGSize(width: assetTrack.naturalSize.height, height: complimentSize)
-//        } else {
-//            videoSize = CGSize(width: complimentSize, height: assetTrack.naturalSize.height)
-//        }
+        let videoOrientation = self.orientationForTrack(assetTrack)
+        var t1 = CGAffineTransformIdentity
+        var t2 = CGAffineTransformIdentity
         
-//        videoComposition.renderSize = videoSize
+        switch (videoOrientation) {
+        case .Portrait:
+            t1 = CGAffineTransformMakeTranslation(assetTrack.naturalSize.height - cropOffX, 0 - cropOffX)
+            t2 = CGAffineTransformRotate(t1, CGFloat(M_PI_2))
+            
+//            transformer.setCropRectangle(CGRect(x: cropOffX, y: cropOffX, width: cropWidth, height: cropHeight), atTime: kCMTimeZero)
+            break
+        case .PortraitUpsideDown:
+            t1 = CGAffineTransformMakeTranslation(0 - cropOffX, assetTrack.naturalSize.width - cropOffY ) // not fixed width is the real height in upside down
+            t2 = CGAffineTransformRotate(t1, CGFloat(-M_PI_2))
+            break
+        case .LandscapeRight:
+            t1 = CGAffineTransformMakeTranslation(0 - cropOffX, 0 - cropOffY )
+            t2 = CGAffineTransformRotate(t1, 0)
+            
+            transformer.setCropRectangle(CGRect(x: cropOffX, y: cropOffY, width: cropWidth, height: cropHeight), atTime: kCMTimeZero)
+            break
+        case .LandscapeLeft:
+            t1 = CGAffineTransformMakeTranslation(assetTrack.naturalSize.width - cropOffX, assetTrack.naturalSize.height - cropOffY )
+            t2 = CGAffineTransformRotate(t1, CGFloat(M_PI))
+            break
+        default:
+            print("no supported orientation has been found in this video")
+            break
+        }
         
+        let finalTransform = t2;
         transformer.setTransform(finalTransform, atTime: kCMTimeZero)
-        transformer.setCropRectangle(CGRect(x: spaceLeft, y: spaceTop, width: minWidthHeightVideo, height: minWidthHeightVideo), atTime: kCMTimeZero)
         
         instruction.layerInstructions = NSArray(object: transformer) as! [AVVideoCompositionLayerInstruction]
         videoComposition.instructions = NSArray(object: instruction) as! [AVVideoCompositionInstructionProtocol]
@@ -296,7 +314,7 @@ class CameraViewController: UIViewController {
         exporter!.outputURL = exportUrl
         
         exporter?.exportAsynchronouslyWithCompletionHandler({
-            let outputURL:NSURL = exporter!.outputURL!;
+            let outputURL:NSURL = exporter!.outputURL!
             
             completionHandler(exportURL: outputURL)
         })
@@ -315,27 +333,27 @@ class CameraViewController: UIViewController {
     }
     
     func orientationForTrack(videoTrack: AVAssetTrack) -> UIInterfaceOrientation {
-        var orientation: UIInterfaceOrientation = .Portrait;
-        let t: CGAffineTransform = videoTrack.preferredTransform;
+        var orientation: UIInterfaceOrientation = .Portrait
+        let t: CGAffineTransform = videoTrack.preferredTransform
         
         // Portrait
         if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0) {
-            orientation = .Portrait;
+            orientation = .Portrait
         }
         // PortraitUpsideDown
         if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0) {
-            orientation = .PortraitUpsideDown;
+            orientation = .PortraitUpsideDown
         }
         // LandscapeRight
         if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {
-            orientation = .LandscapeRight;
+            orientation = .LandscapeRight
         }
         // LandscapeLeft
         if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {
-            orientation = .LandscapeLeft;
+            orientation = .LandscapeLeft
         }
         
-        return orientation;
+        return orientation
     }
     
     func cropAndUploadToServer() {
@@ -349,13 +367,13 @@ class CameraViewController: UIViewController {
     
     func saveVideoToLibrary(exportURL: NSURL) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            let url = NSURL(string: exportURL.absoluteString!);
-            let urlData = NSData(contentsOfURL: url!);
+            let url = NSURL(string: exportURL.absoluteString!)
+            let urlData = NSData(contentsOfURL: url!)
             if(urlData != nil) {
                 dispatch_async(dispatch_get_main_queue(), {
                     let exportPath = self.getTempVideoPath("/libraryTemp.mp4")
                     
-                    urlData?.writeToFile(exportPath as String, atomically: true);
+                    urlData?.writeToFile(exportPath as String, atomically: true)
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
                         PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
                     }) { completed, error in
@@ -404,6 +422,8 @@ class CameraViewController: UIViewController {
                     upload.validate()
                     upload.responseJSON { response in
                         self.view.hideToastActivity()
+                        
+                        self.recordStatus = .pending
                         
                         if (response.response?.statusCode == 200) {
                             NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
@@ -538,13 +558,12 @@ extension CameraViewController:AVCaptureFileOutputRecordingDelegate {
         
         // Save video to library
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            let urlData = NSData(contentsOfURL: outputFileURL);
-            if(urlData != nil)
-            {
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
-                let filePath="\(documentsPath)/tempFile.mp4";
+            let urlData = NSData(contentsOfURL: outputFileURL)
+            if(urlData != nil) {
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+                let filePath="\(documentsPath)/tempFile.mp4"
                 dispatch_async(dispatch_get_main_queue(), {
-                    urlData?.writeToFile(filePath, atomically: true);
+                    urlData?.writeToFile(filePath, atomically: true)
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
                         PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: filePath))
                     }) { completed, error in

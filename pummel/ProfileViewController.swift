@@ -215,17 +215,17 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         
         self.playVideoButton.setImage(nil, forState: .Normal)
         
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            self.cameraButton.alpha = 1
-            self.cameraButton.userInteractionEnabled = true
-            self.coachBorderV.alpha = 1
-            self.coachBorderBackgroundV.alpha = 1
-        } else {
-            self.cameraButton.alpha = 0
-            self.cameraButton.userInteractionEnabled = false
-            self.coachBorderV.alpha = 0
-            self.coachBorderBackgroundV.alpha = 0
-        }
+//        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+//            self.cameraButton.alpha = 1
+//            self.cameraButton.userInteractionEnabled = true
+//            self.coachBorderV.alpha = 1
+//            self.coachBorderBackgroundV.alpha = 1
+//        } else {
+//            self.cameraButton.alpha = 0
+//            self.cameraButton.userInteractionEnabled = false
+//            self.coachBorderV.alpha = 0
+//            self.coachBorderBackgroundV.alpha = 0
+//        }
     }
     
     override func viewDidAppear(animated: Bool) {
