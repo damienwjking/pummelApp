@@ -16,7 +16,7 @@ import AVKit
 import AVFoundation
 import PhotosUI
 
-class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
@@ -219,12 +219,19 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
+        self.scrollView.scrollEnabled = true
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
         // pause video and move time to 0
         if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
-            self.videoPlayer?.pause()
+            self.videoPlayerSetPlay(false)
             
             // Remove video view
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
@@ -267,20 +274,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         // Animation
         UIView.animateWithDuration(0.5, animations: {
             self.detailV.layoutIfNeeded()
-            }) { (_) in
-                self.videoPlayer!.play()
-                self.isVideoPlaying = true
-                
-                // Hidden item above video view
-                self.avatarIMV.hidden = true
-                self.coachBorderV.hidden = true
-                self.coachBorderBackgroundV.hidden = true
-                
-                self.connectV.hidden = true
-                
-                self.cameraButton.hidden = true
-                
-                self.locationView.alpha = 0;
+        }) { (animation) in
+            self.videoPlayerSetPlay(false)
         }
         
         // Add indicator for video
@@ -312,6 +307,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             }
             
             self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+            
+            self.videoPlayerSetPlay(false)
         }
     }
     
@@ -320,21 +317,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         
         // Show first frame video
         playerItem.seekToTime(kCMTimeZero)
-        self.videoPlayer?.pause()
-        self.isVideoPlaying = false
         
-        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-        
-        // Show item above video view
-        self.avatarIMV.hidden = false
-        self.coachBorderV.hidden = false
-        self.coachBorderBackgroundV.hidden = false
-        
-        self.connectV.hidden = false
-        
-        self.cameraButton.hidden = false
-        
-        self.locationView.alpha = 1 // special key
+        self.videoPlayerSetPlay(false)
     }
     
     func setting() {
@@ -729,7 +713,6 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     func updateUIUser() {
-        
         self.interestHeightDT.constant = 0
         self.coachBorderBackgroundV.hidden = true
         self.coachBorderV.hidden = true
@@ -839,19 +822,33 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func videoPlayerSetPlay(isPlay: Bool) {
+        if (isPlay == true) {
+            self.videoPlayer!.play()
+            
+            self.playVideoButton.setImage(nil, forState: .Normal)
+            
+            self.locationView.alpha = 0
+        } else {
+            self.videoPlayer?.pause()
+            
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+            
+            self.locationView.alpha = 1
+        }
+        
+        self.isVideoPlaying = isPlay
+        // Show/Hidden item above video view
+        self.avatarIMV.hidden = isPlay
+        self.coachBorderV.hidden = isPlay
+        self.coachBorderBackgroundV.hidden = isPlay
+        
+        self.connectV.hidden = isPlay
+        
+        self.cameraButton.hidden = isPlay
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-        self.scrollView.scrollEnabled = true
-    }
-    
-    
+    // MARK: - Outlet func
     @IBAction func goBackToResult() {
         self.dismissViewControllerAnimated(true) {
         }
@@ -908,102 +905,6 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             frameV.origin.y = 0
             frameV.size.height -= self.oldPositionAboutV
             self.view.frame = frameV
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (collectionView == self.interestCollectionView) {
-            return tags.count
-        } else {
-            return arrayPhotos.count
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        if (collectionView == self.interestCollectionView) {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-            self.configureCell(cell, forIndexPath: indexPath)
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
-            self.configureAboutCell(cell, forIndexPath: indexPath)
-            return cell
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row == self.arrayPhotos.count - 1 && self.isStopGetListPhotos == false {
-            self.getListImage()
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        if (collectionView == self.interestCollectionView) {
-            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-            var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-            
-            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-                cellSize.width += 5;
-            }
-            
-            return cellSize
-        } else {
-            return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        self.view.makeToastActivity()
-        var prefix = kPMAPI
-        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
-        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arr = JSON as? NSArray {
-                    if arr.count > 0 {
-                        if let dic = arr.objectAtIndex(0) as? NSDictionary {
-                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
-                            self.view.hideToastActivity()
-                            return
-                        }
-                    }
-                }
-                
-                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    // ...
-                }
-                alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
-                    // ...
-                }
-                self.view.hideToastActivity()
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
-                self.view.hideToastActivity()
-        }
-    }
-    
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
-        cell.tagName.textColor = UIColor.blackColor()
-        cell.layer.borderColor = UIColor.clearColor().CGColor
-    }
-    
-    func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        var prefix = kPMAPI
-        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
-        var link = photo.objectForKey(kImageUrl) as! String
-        link.appendContentsOf(postfix)
-        prefix.appendContentsOf(link)
-        Alamofire.request(.GET, prefix)
-            .responseImage { response in
-                let imageRes = response.result.value! as UIImage
-                cell.imageCell.image = imageRes
         }
     }
     
@@ -1102,23 +1003,14 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         if self.isUploadingVideo == false {
             self.isVideoPlaying = !self.isVideoPlaying
             if (self.isVideoPlaying == true) {
-                self.videoPlayer?.play()
+                self.videoPlayerSetPlay(true)
+                
                 self.playVideoButton.setImage(nil, forState: .Normal)
-                self.locationView.alpha = 0 // Special case
             } else {
-                self.videoPlayer?.pause()
+                self.videoPlayerSetPlay(false)
+                
                 self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-                self.locationView.alpha = 1 // Special case
             }
-            
-            // Hidden item above video view
-            self.avatarIMV.hidden = self.isVideoPlaying
-            self.coachBorderV.hidden = self.isVideoPlaying
-            self.coachBorderBackgroundV.hidden = self.isVideoPlaying
-            
-            self.connectV.hidden = self.isVideoPlaying
-            
-            self.cameraButton.hidden = self.isVideoPlaying
         }
     }
     
@@ -1138,85 +1030,107 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             
             // send video by method mutipart to server
             let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-            
-            
-            
-            
-            
-            
-//            let videoData = NSData(contentsOfURL: videoPath)
-//            let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
-//            let videoType = "video/" + videoExtend
-//            let videoName = "video." + videoExtend
-//            
-//            // Insert activity indicator
-//            self.view.makeToastActivity(message: "Uploading")
-//            
-//            // send video by method mutipart to server
-//            var prefix = kPMAPIUSER
-//            let defaults = NSUserDefaults.standardUserDefaults()
-//            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-//            prefix.appendContentsOf(kPM_PATH_VIDEO)
-//            var parameters = [String:AnyObject]()
-//            
-//            self.isShowVideo = false
-//            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
-//            Alamofire.upload(
-//                .POST,
-//                prefix,
-//                multipartFormData: { multipartFormData in
-//                    multipartFormData.appendBodyPart(data: videoData!,
-//                                                     name: "file",
-//                                                     fileName:videoName,
-//                                                     mimeType:videoType)
-//                    for (key, value) in parameters {
-//                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-//                    }
-//            },
-//                encodingCompletion: { encodingResult in
-//                    switch encodingResult {
-//                        
-//                    case .Success(let upload, _, _):
-//                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-//                        }
-//                        upload.validate()
-//                        upload.responseJSON { response in
-//                            self.view.hideToastActivity()
-//                            
-//                            self.isUploadingVideo = false
-//                            
-//                            if (response.response?.statusCode == 200) {
-//                                let dictionary = response.result.value as! [NSDictionary]
-//                                let videoURL = dictionary.first![kVideoURL] as! String
-//                                
-//                                // Update videoURL for coach detail
-//                                let newCoachDetail = NSMutableDictionary.init(dictionary: self.coachDetail)
-//                                newCoachDetail.setValue(videoURL, forKey: KVideoUrl)
-//                                self.coachDetail = newCoachDetail
-//                                
-//                                self.isShowVideo = true
-//                                
-//                                self.showVideoLayout(videoURL)
-//                            } else {
-//                                let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
-//                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-//                                    // TODO: LOGOUT
-//                                }
-//                                alertController.addAction(OKAction)
-//                                self.presentViewController(alertController, animated: true) {
-//                                    // ...
-//                                }
-//                            }
-//                        }
-//                        
-//                    case .Failure( _): break
-//                        // Do nothing
-//                    }
-//            })
-//            
             imagePickerController.dismissViewControllerAnimated(true, completion: { 
                 self.performSegueWithIdentifier("showCamera", sender: videoPath)
             })
+        }
+    }
+}
+
+extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if (collectionView == self.interestCollectionView) {
+            return tags.count
+        } else {
+            return arrayPhotos.count
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        if (collectionView == self.interestCollectionView) {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
+            self.configureCell(cell, forIndexPath: indexPath)
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
+            self.configureAboutCell(cell, forIndexPath: indexPath)
+            return cell
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row == self.arrayPhotos.count - 1 && self.isStopGetListPhotos == false {
+            self.getListImage()
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        if (collectionView == self.interestCollectionView) {
+            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
+            var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+            
+            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+                cellSize.width += 5;
+            }
+            
+            return cellSize
+        } else {
+            return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        self.view.makeToastActivity()
+        var prefix = kPMAPI
+        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
+        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
+        Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
+            .responseJSON { response in switch response.result {
+            case .Success(let JSON):
+                if let arr = JSON as? NSArray {
+                    if arr.count > 0 {
+                        if let dic = arr.objectAtIndex(0) as? NSDictionary {
+                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
+                            self.view.hideToastActivity()
+                            return
+                        }
+                    }
+                }
+                
+                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    // ...
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+                self.view.hideToastActivity()
+            case .Failure(let error):
+                print("Request failed with error: \(error)")
+                }
+                self.view.hideToastActivity()
+        }
+    }
+    
+    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
+        let tag = tags[indexPath.row]
+        cell.tagName.text = tag.name
+        cell.tagName.textColor = UIColor.blackColor()
+        cell.layer.borderColor = UIColor.clearColor().CGColor
+    }
+    
+    func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
+        var prefix = kPMAPI
+        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
+        let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
+        var link = photo.objectForKey(kImageUrl) as! String
+        link.appendContentsOf(postfix)
+        prefix.appendContentsOf(link)
+        Alamofire.request(.GET, prefix)
+            .responseImage { response in
+                let imageRes = response.result.value! as UIImage
+                cell.imageCell.image = imageRes
         }
     }
 }

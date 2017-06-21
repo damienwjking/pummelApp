@@ -10,16 +10,16 @@ import UIKit
 import AVKit
 import AVFoundation
 import PhotosUI
+import Alamofire
 
 enum RecordStatus: Int {
     case pending, recording, finish, uploading
 }
 
 class CameraViewController: UIViewController {
-    var videoURL:NSURL? = nil
-    
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var cameraBorderView: UIView!
+    @IBOutlet weak var playVideoButton: UIButton!
 
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var retakeButton: UIButton!
@@ -28,14 +28,32 @@ class CameraViewController: UIViewController {
     
     @IBOutlet weak var playBorderBigView: UIView!
     @IBOutlet weak var playBorderSmallView: UIView!
+    @IBOutlet weak var playButtonIndicatorView: UIActivityIndicatorView!
     
     var videoPlayer: AVPlayer? = nil
     var videoPlayerLayer: AVPlayerLayer? = nil
     
     var needRemoveKVO = false
     
+    var videoURL:NSURL? = nil {
+        didSet {
+            if (playVideoButton != nil) {
+                if (self.videoURL == nil) {
+                    self.playVideoButton.hidden = true
+                } else {
+                    self.playVideoButton.hidden = false
+                }
+            }
+        }
+    }
+    
+    var isVideoPlaying = false
+    
     var recordStatus: RecordStatus = .pending {
         didSet {
+            // Hidden indicator
+            self.playButtonIndicatorView.hidden = true
+            
             if (self.recordStatus == .pending) {
                 let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
                 self.playButton.setImage(playImage, forState: .Normal)
@@ -46,8 +64,10 @@ class CameraViewController: UIViewController {
                 let uploadImage = UIImage(named: "icon_upload")?.imageWithRenderingMode(.AlwaysTemplate)
                 self.playButton.setImage(uploadImage, forState: .Normal)
             } else if (self.recordStatus == .uploading) {
-//                let uploadImage = nil
                 self.playButton.setImage(nil, forState: .Normal)
+                
+                // Show indicator for uploading
+                self.playButtonIndicatorView.hidden = false
             }
             
         }
@@ -81,6 +101,8 @@ class CameraViewController: UIViewController {
             self.setupCameraSession()
             self.cameraView.layer.addSublayer(previewLayer)
             cameraSession.startRunning()
+            
+            self.playVideoButton.hidden = true
         } else {
             // Stop camera and show video from video URL
             cameraSession.stopRunning()
@@ -89,6 +111,7 @@ class CameraViewController: UIViewController {
             
             // Change record status
             self.recordStatus = .finish
+            self.playVideoButton.hidden = false
         }
     }
     
@@ -127,13 +150,33 @@ class CameraViewController: UIViewController {
         self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
         self.videoPlayerLayer!.frame = self.cameraBorderView.bounds
         
-        self.videoPlayer?.play()
-        
         self.cameraBorderView.layer.addSublayer(self.videoPlayerLayer!)
         
         // Catch size of video and crop
         self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
         self.needRemoveKVO = true
+        
+        // Catch end video
+        // Remove loop play video for
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        
+        // Add notification for loop play video
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.endVideoNotification),
+                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         object: self.videoPlayer!.currentItem)
+    }
+    
+    func endVideoNotification(notification: NSNotification) {
+        let playerItem = notification.object as! AVPlayerItem
+        
+        // Show first frame video
+        playerItem.seekToTime(kCMTimeZero)
+        self.videoPlayer?.pause()
+        
+        self.isVideoPlaying = false
+        let playImage = UIImage(named: "icon_play_video")
+        self.playVideoButton.setImage(playImage, forState: .Normal)
     }
     
     func setupBasicLayout() {
@@ -150,9 +193,8 @@ class CameraViewController: UIViewController {
         
         
         // Play button
-        let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
-        self.playButton.setImage(playImage, forState: .Normal)
         self.playButton.tintColor = UIColor.whiteColor()
+        self.recordStatus = .pending
         
         self.playBorderBigView.layer.cornerRadius = 54/2
         self.playBorderSmallView.layer.cornerRadius = 36/2
@@ -160,25 +202,26 @@ class CameraViewController: UIViewController {
         // Change Camera button
     }
     
-    func removeTemplateVideo() {
+    func getTempVideoPath(fileName: String) -> String {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
         //        let filePath = "\(documentsPath)/tempFile.mp4";
-        let exportPath: NSString = documentsPath.stringByAppendingFormat("/video.mov")
+        let templatePath = documentsPath.stringByAppendingFormat(fileName)
         
         // Remove file at template path
         let fileManager = NSFileManager.defaultManager()
-        if (fileManager.fileExistsAtPath(exportPath as String)) {
+        if (fileManager.fileExistsAtPath(templatePath)) {
             do {
-                try fileManager.removeItemAtPath(exportPath as String)
+                try fileManager.removeItemAtPath(templatePath)
             } catch {
                 print("Could not clear temp folder: \(error)")
             }
         }
+        
+        return templatePath
     }
     
-    func exportVideo() {
-        self.removeTemplateVideo()
-        
+    func cropVideoCenterToSquare(completionHandler: (exportURL:NSURL) -> Void) {
+        //        self.getTempVideoPath()
         // Crop video to square
         let asset: AVAsset = AVAsset(URL: self.videoURL!)
         let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
@@ -195,48 +238,118 @@ class CameraViewController: UIViewController {
         let transformer: AVMutableVideoCompositionLayerInstruction =
             AVMutableVideoCompositionLayerInstruction(assetTrack: assetTrack)
         
-        let spaceLeft = assetTrack.naturalSize.width - videoSize
-        let spaceTop = assetTrack.naturalSize.height - videoSize
+        let spaceLeft = (assetTrack.naturalSize.width - videoSize) / 2
+        let spaceTop = (assetTrack.naturalSize.height - videoSize) / 2
         
-        let finalTransform: CGAffineTransform = CGAffineTransformMakeTranslation(spaceLeft, spaceTop)
+        let finalTransform: CGAffineTransform = CGAffineTransformMakeTranslation(-spaceLeft, -spaceTop)
         
         transformer.setTransform(finalTransform, atTime: kCMTimeZero)
-        transformer.setCropRectangle(CGRect(x: -spaceLeft, y: -spaceTop, width: videoSize, height: videoSize), atTime: kCMTimeZero)
+        transformer.setCropRectangle(CGRect(x: spaceLeft, y: spaceTop, width: videoSize, height: videoSize), atTime: kCMTimeZero)
         
         instruction.layerInstructions = NSArray(object: transformer) as! [AVVideoCompositionLayerInstruction]
         videoComposition.instructions = NSArray(object: instruction) as! [AVVideoCompositionInstructionProtocol]
         
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
-        //        let filePath = "\(documentsPath)/tempFile.mp4";
-        let exportPath: NSString = documentsPath.stringByAppendingFormat("/video.mov")
+        let exportPath = self.getTempVideoPath("/library.mov")
         
-        let exportUrl: NSURL = NSURL.fileURLWithPath(exportPath as String)
+        let exportUrl: NSURL = NSURL.fileURLWithPath(exportPath)
         
         let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
         exporter!.videoComposition = videoComposition
         exporter!.outputFileType = AVFileTypeQuickTimeMovie
         exporter!.outputURL = exportUrl
         
-        exporter?.exportAsynchronouslyWithCompletionHandler({ 
-            //display video after export is complete, for example...
+        exporter?.exportAsynchronouslyWithCompletionHandler({
             let outputURL:NSURL = exporter!.outputURL!;
-            let asset:AVURLAsset = AVURLAsset(URL: outputURL, options: nil)
-            let newPlayerItem:AVPlayerItem = AVPlayerItem(asset: asset)
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                let url = NSURL(string: outputURL.absoluteString!);
-                let urlData = NSData(contentsOfURL: url!);
-                if(urlData != nil) {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        urlData?.writeToFile(exportPath as String, atomically: true);
-                        PHPhotoLibrary.sharedPhotoLibrary().performChanges({
-                            PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
-                        }) { completed, error in
-                            // Upload video to server
-                        }
-                    })
+            completionHandler(exportURL: outputURL)
+        })
+    }
+    
+    func cropAndSaveVideo() {
+        self.cropVideoCenterToSquare { (exportURL) in
+            self.uploadCurrentVideo(exportURL)
+            
+            // Save Video to Library
+//            self.saveVideoToLibrary(exportURL)
+        }
+    }
+    
+    func saveVideoToLibrary(exportURL: NSURL) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            let url = NSURL(string: exportURL.absoluteString!);
+            let urlData = NSData(contentsOfURL: url!);
+            if(urlData != nil) {
+                dispatch_async(dispatch_get_main_queue(), {
+                    let exportPath = self.getTempVideoPath("/libraryTemp.mov")
+                    
+                    urlData?.writeToFile(exportPath as String, atomically: true);
+                    PHPhotoLibrary.sharedPhotoLibrary().performChanges({
+                        PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
+                    }) { completed, error in
+                        // Upload video to server
+                        self.recordStatus = .pending
+                    }
+                })
+            }
+        })
+    }
+    
+    func uploadCurrentVideo(videoURL: NSURL) {
+        let videoData = NSData(contentsOfURL: videoURL)
+        let videoExtend = (videoURL.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+        let videoType = "video/" + videoExtend
+        let videoName = "video." + videoExtend
+        
+        // Insert activity indicator
+        self.view.makeToastActivity(message: "Uploading")
+        
+        // send video by method mutipart to server
+        var prefix = kPMAPIUSER
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_VIDEO)
+        var parameters = [String:AnyObject]()
+        
+        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+                multipartFormData.appendBodyPart(data: videoData!,
+                    name: "file",
+                    fileName:videoName,
+                    mimeType:videoType)
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
                 }
-            })
+            },
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                    
+                case .Success(let upload, _, _):
+                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                    }
+                    upload.validate()
+                    upload.responseJSON { response in
+                        self.view.hideToastActivity()
+                        
+                        if (response.response?.statusCode == 200) {
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        } else {
+                            let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                // TODO: LOGOUT
+                            }
+                            alertController.addAction(OKAction)
+                            self.presentViewController(alertController, animated: true) {
+                                // ...
+                            }
+                        }
+                    }
+                    
+                case .Failure( _): break
+                    // Do nothing
+                }
         })
     }
     
@@ -266,9 +379,13 @@ class CameraViewController: UIViewController {
             self.cameraOutput.stopRecording()
         } else if (self.recordStatus == .finish) {
             self.recordStatus = .uploading
-            // Check render video
             
-            self.exportVideo()
+            self.videoPlayer?.pause()
+            self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+            
+            
+            // Check render video
+            self.cropAndSaveVideo()
         }
     }
     
@@ -276,21 +393,25 @@ class CameraViewController: UIViewController {
 //        self.cameraSession
     }
     
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        self.isVideoPlaying = !self.isVideoPlaying
+        
+        if (self.isVideoPlaying) {
+            self.videoPlayer?.play()
+            self.playVideoButton.setImage(nil, forState: .Normal)
+        } else {
+            self.videoPlayer?.pause()
+            
+            let playImage = UIImage(named: "icon_play_video")
+            self.playVideoButton.setImage(playImage, forState: .Normal)
+        }
+        
+    }
+    
     func startRecordVideo() {
         // Delete template if exist
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0];
-        //        let filePath = "\(documentsPath)/tempFile.mp4";
-        let templatePath = documentsPath.stringByAppendingFormat("/video.mov")
-        let videoTemplateURL = NSURL.fileURLWithPath(templatePath)
-        
-        let fileManager = NSFileManager.defaultManager()
-        if (fileManager.fileExistsAtPath(videoTemplateURL.absoluteString!)) {
-            do {
-                try fileManager.removeItemAtURL(videoTemplateURL)
-            } catch {
-                print("Could not clear temp folder: \(error)")
-            }
-        }
+        let videoTemplatePath = self.getTempVideoPath("/video.mov")
+        let videoTemplateURL = NSURL.fileURLWithPath(videoTemplatePath)
         
         // Record video to template file
         self.cameraOutput.startRecordingToOutputFileURL(videoTemplateURL, recordingDelegate: self)
