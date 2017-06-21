@@ -320,7 +320,8 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         if currentItem.status == .ReadyToPlay {
             let videoRect = self.videoPlayerLayer?.videoRect
             if (videoRect?.width > videoRect?.height) {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             } else {
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             }
