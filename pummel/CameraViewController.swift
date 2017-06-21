@@ -106,13 +106,15 @@ class CameraViewController: UIViewController {
         if currentItem.status == .ReadyToPlay {
             let videoRect = self.videoPlayerLayer?.videoRect
             if (videoRect?.width > videoRect?.height) {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             } else {
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             }
             
-            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
-            self.needRemoveKVO = false
+            if (self.needRemoveKVO) {
+                self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+                self.needRemoveKVO = false
+            }
         }
     }
 
@@ -177,13 +179,11 @@ class CameraViewController: UIViewController {
     func exportVideo() {
         self.removeTemplateVideo()
         
+        // Crop video to square
         let asset: AVAsset = AVAsset(URL: self.videoURL!)
         let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
         
-        var videoSize: CGFloat = 0
-        if (assetTrack.naturalSize.height > assetTrack.naturalSize.width) {
-            videoSize = assetTrack.naturalSize.width
-        }
+        let videoSize: CGFloat = min(assetTrack.naturalSize.width, assetTrack.naturalSize.height)
         
         let videoComposition: AVMutableVideoComposition = AVMutableVideoComposition()
         videoComposition.frameDuration = CMTimeMake(1, 60) // Frame 1/60
@@ -195,10 +195,13 @@ class CameraViewController: UIViewController {
         let transformer: AVMutableVideoCompositionLayerInstruction =
             AVMutableVideoCompositionLayerInstruction(assetTrack: assetTrack)
         
-        let finalTransform: CGAffineTransform = CGAffineTransformMakeTranslation(-100, -300)
+        let spaceLeft = assetTrack.naturalSize.width - videoSize
+        let spaceTop = assetTrack.naturalSize.height - videoSize
+        
+        let finalTransform: CGAffineTransform = CGAffineTransformMakeTranslation(spaceLeft, spaceTop)
         
         transformer.setTransform(finalTransform, atTime: kCMTimeZero)
-        transformer.setCropRectangle(CGRect(x: 100, y: 300, width: videoSize, height: videoSize), atTime: kCMTimeZero)
+        transformer.setCropRectangle(CGRect(x: -spaceLeft, y: -spaceTop, width: videoSize, height: videoSize), atTime: kCMTimeZero)
         
         instruction.layerInstructions = NSArray(object: transformer) as! [AVVideoCompositionLayerInstruction]
         videoComposition.instructions = NSArray(object: instruction) as! [AVVideoCompositionInstructionProtocol]
@@ -229,9 +232,7 @@ class CameraViewController: UIViewController {
                         PHPhotoLibrary.sharedPhotoLibrary().performChanges({
                             PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
                         }) { completed, error in
-                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                            self.closeButton.backgroundColor = UIColor.redColor()
-                            })
+                            // Upload video to server
                         }
                     })
                 }
@@ -266,9 +267,8 @@ class CameraViewController: UIViewController {
         } else if (self.recordStatus == .finish) {
             self.recordStatus = .uploading
             // Check render video
-            // Crop video and upload to server
-            // Upload video to server
             
+            self.exportVideo()
         }
     }
     
