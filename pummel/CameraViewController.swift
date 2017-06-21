@@ -243,10 +243,10 @@ class CameraViewController: UIViewController {
         return templatePath
     }
     
-    func cropVideoCenterToSquare(completionHandler: (exportURL:NSURL) -> Void) {
+    func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
         //        self.getTempVideoPath()
         // Crop video to square
-        let asset: AVAsset = AVAsset(URL: self.videoURL!)
+        let asset: AVAsset = AVAsset(URL: videoURL)
         let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
         
         let videoComposition: AVMutableVideoComposition = AVMutableVideoComposition()
@@ -359,12 +359,12 @@ class CameraViewController: UIViewController {
     }
     
     func cropAndUploadToServer() {
-        self.cropVideoCenterToSquare { (exportURL) in
+        self.cropVideoCenterToSquare(self.videoURL!, completionHandler: { (exportURL) in
             self.uploadCurrentVideo(exportURL)
             
             // Save Video to Library
-//            self.saveVideoToLibrary(exportURL)
-        }
+            //            self.saveVideoToLibrary(exportURL)
+            })
     }
     
     func saveVideoToLibrary(exportURL: NSURL) {

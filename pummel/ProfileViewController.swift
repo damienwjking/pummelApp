@@ -215,17 +215,17 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         
         self.playVideoButton.setImage(nil, forState: .Normal)
         
-//        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-//            self.cameraButton.alpha = 1
-//            self.cameraButton.userInteractionEnabled = true
-//            self.coachBorderV.alpha = 1
-//            self.coachBorderBackgroundV.alpha = 1
-//        } else {
-//            self.cameraButton.alpha = 0
-//            self.cameraButton.userInteractionEnabled = false
-//            self.coachBorderV.alpha = 0
-//            self.coachBorderBackgroundV.alpha = 0
-//        }
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.cameraButton.alpha = 1
+            self.cameraButton.userInteractionEnabled = true
+            self.coachBorderV.alpha = 1
+            self.coachBorderBackgroundV.alpha = 1
+        } else {
+            self.cameraButton.alpha = 0
+            self.cameraButton.userInteractionEnabled = false
+            self.coachBorderV.alpha = 0
+            self.coachBorderBackgroundV.alpha = 0
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -1039,10 +1039,73 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
             
             // send video by method mutipart to server
             let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-            imagePickerController.dismissViewControllerAnimated(true, completion: { 
-                self.performSegueWithIdentifier("showCamera", sender: videoPath)
-            })
+//            imagePickerController.dismissViewControllerAnimated(true, completion: { 
+//                self.performSegueWithIdentifier("showCamera", sender: videoPath)
+//            })
+            
+            self.uploadCurrentVideo(picker.view, videoURL: videoPath)
         }
+    }
+    
+    func uploadCurrentVideo(pickerView: UIView, videoURL: NSURL) {
+        let videoData = NSData(contentsOfURL: videoURL)
+        let videoExtend = (videoURL.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+        let videoType = "video/" + videoExtend
+        let videoName = "video." + videoExtend
+        
+        // Insert activity indicator
+        pickerView.makeToastActivity(message: "Uploading")
+        
+        // send video by method mutipart to server
+        var prefix = kPMAPIUSER
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_VIDEO)
+        var parameters = [String:AnyObject]()
+        
+        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+                multipartFormData.appendBodyPart(data: videoData!,
+                    name: "file",
+                    fileName:videoName,
+                    mimeType:videoType)
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                }
+            },
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                    
+                case .Success(let upload, _, _):
+                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                    }
+                    upload.validate()
+                    upload.responseJSON { response in
+                        pickerView.hideToastActivity()
+                        
+                        if (response.response?.statusCode == 200) {
+                            NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
+                            
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        } else {
+                            let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                self.dismissViewControllerAnimated(true, completion: nil)
+                            }
+                            alertController.addAction(OKAction)
+                            self.presentViewController(alertController, animated: true) {
+                                
+                            }
+                        }
+                    }
+                    
+                case .Failure( _): break
+                    // Do nothing
+                }
+        })
     }
 }
 
