@@ -16,7 +16,7 @@ import AVKit
 import AVFoundation
 import PhotosUI
 
-class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
@@ -193,6 +193,9 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
+        
+        // Add notification for update video url
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.profileGetNewDetail), name: "profileGetDetail", object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -213,10 +216,23 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         self.playVideoButton.setImage(nil, forState: .Normal)
         
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            self.cameraButton.hidden = false
+            self.cameraButton.alpha = 1
+            self.cameraButton.userInteractionEnabled = true
+            self.coachBorderV.alpha = 1
+            self.coachBorderBackgroundV.alpha = 1
         } else {
-            self.cameraButton.hidden = true
+            self.cameraButton.alpha = 0
+            self.cameraButton.userInteractionEnabled = false
+            self.coachBorderV.alpha = 0
+            self.coachBorderBackgroundV.alpha = 0
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
+        self.scrollView.scrollEnabled = true
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -224,10 +240,20 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         
         // pause video and move time to 0
         if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
-            self.videoPlayer?.pause()
+            self.videoPlayerSetPlay(false)
             
             // Remove video view
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+        }
+    }
+    
+    func profileGetNewDetail() {
+        if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
+            self.videoPlayerLayer?.removeFromSuperlayer()
+            
+            self.videoView = nil
+            
+            self.getDetail()
         }
     }
     
@@ -267,20 +293,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         // Animation
         UIView.animateWithDuration(0.5, animations: {
             self.detailV.layoutIfNeeded()
-            }) { (_) in
-                self.videoPlayer!.play()
-                self.isVideoPlaying = true
-                
-                // Hidden item above video view
-                self.avatarIMV.hidden = true
-                self.coachBorderV.hidden = true
-                self.coachBorderBackgroundV.hidden = true
-                
-                self.connectV.hidden = true
-                
-                self.cameraButton.hidden = true
-                
-                self.locationView.alpha = 0;
+        }) { (animation) in
+            self.videoPlayerSetPlay(false)
         }
         
         // Add indicator for video
@@ -312,6 +326,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             }
             
             self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+            
+            self.videoPlayerSetPlay(false)
         }
     }
     
@@ -320,21 +336,8 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         
         // Show first frame video
         playerItem.seekToTime(kCMTimeZero)
-        self.videoPlayer?.pause()
-        self.isVideoPlaying = false
         
-        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-        
-        // Show item above video view
-        self.avatarIMV.hidden = false
-        self.coachBorderV.hidden = false
-        self.coachBorderBackgroundV.hidden = false
-        
-        self.connectV.hidden = false
-        
-        self.cameraButton.hidden = false
-        
-        self.locationView.alpha = 1 // special key
+        self.videoPlayerSetPlay(false)
     }
     
     func setting() {
@@ -359,8 +362,7 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "goEdit")
-        {
+        if (segue.identifier == "goEdit") {
             let destinationVC = segue.destinationViewController as! EditProfileViewController
             destinationVC.userInfo = self.coachDetail
         } else if (segue.identifier == "goEdit") {
@@ -376,6 +378,10 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             if let feed = sender as? NSDictionary {
                 destination.feedDetail = feed
             }
+        } else if segue.identifier == "showCamera" {
+            let destination = segue.destinationViewController as! CameraViewController
+            
+            destination.videoURL = sender as? NSURL
         }
     }
     
@@ -726,7 +732,6 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
     }
     
     func updateUIUser() {
-        
         self.interestHeightDT.constant = 0
         self.coachBorderBackgroundV.hidden = true
         self.coachBorderV.hidden = true
@@ -836,19 +841,33 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func videoPlayerSetPlay(isPlay: Bool) {
+        if (isPlay == true) {
+            self.videoPlayer!.play()
+            
+            self.playVideoButton.setImage(nil, forState: .Normal)
+            
+            self.locationView.alpha = 0
+        } else {
+            self.videoPlayer?.pause()
+            
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+            
+            self.locationView.alpha = 1
+        }
+        
+        self.isVideoPlaying = isPlay
+        // Show/Hidden item above video view
+        self.avatarIMV.hidden = isPlay
+        self.coachBorderV.hidden = isPlay
+        self.coachBorderBackgroundV.hidden = isPlay
+        
+        self.connectV.hidden = isPlay
+        
+        self.cameraButton.hidden = isPlay
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-        self.scrollView.scrollEnabled = true
-    }
-    
-    
+    // MARK: - Outlet func
     @IBAction func goBackToResult() {
         self.dismissViewControllerAnimated(true) {
         }
@@ -908,6 +927,189 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
         }
     }
     
+    @IBAction func clickOnFacebook() {
+        if (self.facebookLink != "") {
+            let facebookUrl = NSURL(string: self.facebookLink!)
+            
+            if UIApplication.sharedApplication().canOpenURL(facebookUrl!)
+            {
+                UIApplication.sharedApplication().openURL(facebookUrl!)
+                
+            } else {
+                //redirect to safari because the user doesn't have Instagram
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://facebook.com/")!)
+            }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
+            }
+        }
+    }
+    
+    @IBAction func clickOnTwitter() {
+        if (self.twitterLink != "") {
+            let twitterUrl = NSURL(string: self.twitterLink!)
+            
+            if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
+            {
+                UIApplication.sharedApplication().openURL(twitterUrl!)
+                
+            } else {
+                //redirect to safari because the user doesn't have Instagram
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://twitter.com/")!)
+            }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
+            }
+        }
+    }
+    
+    @IBAction func clickOnInstagram() {
+        if (self.instagramLink  != "") {
+            let instagramUrl = NSURL(string: self.instagramLink!)
+           
+            if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
+            {
+                UIApplication.sharedApplication().openURL(instagramUrl!)
+                
+            } else {
+                //redirect to safari because the user doesn't have Instagram
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!)
+            }
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SocialClick", properties: properties)
+            }
+        }
+    }
+    
+    @IBAction func cameraButtonClicked(sender: AnyObject) {
+        let selectVideoFromLibrary = { (action:UIAlertAction!) -> Void in
+            self.imagePickerController.allowsEditing = false
+            self.imagePickerController.sourceType = .PhotoLibrary
+            self.imagePickerController.delegate = self
+            self.imagePickerController.mediaTypes = ["public.movie"]
+            
+            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
+        }
+        let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
+//            self.imagePickerController.allowsEditing = false
+//            self.imagePickerController.sourceType = .Camera
+//            self.imagePickerController.delegate = self
+//            self.imagePickerController.mediaTypes = ["public.movie"]
+//            
+//            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
+            
+            self.performSegueWithIdentifier("showCamera", sender: nil)
+        }
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectVideoFromLibrary))
+        alertController.addAction(UIAlertAction(title: kTakeVideo, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        if self.isUploadingVideo == false {
+            self.isVideoPlaying = !self.isVideoPlaying
+            self.videoPlayerSetPlay(self.isVideoPlaying)
+        }
+    }
+    
+    // MARK: UIImagePickerControllerDelegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let type = info[UIImagePickerControllerMediaType] as! String
+        
+        if (type == "public.movie") {
+            // Remove current video layer
+            if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
+                self.videoPlayerLayer?.removeFromSuperlayer()
+                
+                self.videoView = nil
+            }
+            
+            // send video by method mutipart to server
+            let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
+//            imagePickerController.dismissViewControllerAnimated(true, completion: { 
+//                self.performSegueWithIdentifier("showCamera", sender: videoPath)
+//            })
+            
+            self.uploadCurrentVideo(picker.view, videoURL: videoPath)
+        }
+    }
+    
+    func uploadCurrentVideo(pickerView: UIView, videoURL: NSURL) {
+        let videoData = NSData(contentsOfURL: videoURL)
+        let videoExtend = (videoURL.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+        let videoType = "video/" + videoExtend
+        let videoName = "video." + videoExtend
+        
+        // Insert activity indicator
+        pickerView.makeToastActivity(message: "Uploading")
+        
+        // send video by method mutipart to server
+        var prefix = kPMAPIUSER
+        let defaults = NSUserDefaults.standardUserDefaults()
+        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(kPM_PATH_VIDEO)
+        var parameters = [String:AnyObject]()
+        
+        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+        Alamofire.upload(
+            .POST,
+            prefix,
+            multipartFormData: { multipartFormData in
+                multipartFormData.appendBodyPart(data: videoData!,
+                    name: "file",
+                    fileName:videoName,
+                    mimeType:videoType)
+                for (key, value) in parameters {
+                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                }
+            },
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                    
+                case .Success(let upload, _, _):
+                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                    }
+                    upload.validate()
+                    upload.responseJSON { response in
+                        pickerView.hideToastActivity()
+                        
+                        if (response.response?.statusCode == 200) {
+                            NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
+                            
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        } else {
+                            let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                self.dismissViewControllerAnimated(true, completion: nil)
+                            }
+                            alertController.addAction(OKAction)
+                            self.presentViewController(alertController, animated: true) {
+                                
+                            }
+                        }
+                    }
+                    
+                case .Failure( _): break
+                    // Do nothing
+                }
+        })
+    }
+}
+
+extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.interestCollectionView) {
             return tags.count
@@ -1001,209 +1203,6 @@ class ProfileViewController:  BaseViewController, UICollectionViewDataSource, UI
             .responseImage { response in
                 let imageRes = response.result.value! as UIImage
                 cell.imageCell.image = imageRes
-        }
-    }
-    
-    @IBAction func clickOnFacebook() {
-        if (self.facebookLink != "") {
-            let facebookUrl = NSURL(string: self.facebookLink!)
-            
-            if UIApplication.sharedApplication().canOpenURL(facebookUrl!)
-            {
-                UIApplication.sharedApplication().openURL(facebookUrl!)
-                
-            } else {
-                //redirect to safari because the user doesn't have Instagram
-                UIApplication.sharedApplication().openURL(NSURL(string: "http://facebook.com/")!)
-            }
-            // Tracker mixpanel
-            if let firstName = coachDetail[kFirstname] as? String {
-                let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("IOS.SocialClick", properties: properties)
-            }
-        }
-    }
-    
-    @IBAction func clickOnTwitter() {
-        if (self.twitterLink != "") {
-            let twitterUrl = NSURL(string: self.twitterLink!)
-            
-            if UIApplication.sharedApplication().canOpenURL(twitterUrl!)
-            {
-                UIApplication.sharedApplication().openURL(twitterUrl!)
-                
-            } else {
-                //redirect to safari because the user doesn't have Instagram
-                UIApplication.sharedApplication().openURL(NSURL(string: "http://twitter.com/")!)
-            }
-            // Tracker mixpanel
-            if let firstName = coachDetail[kFirstname] as? String {
-                let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("IOS.SocialClick", properties: properties)
-            }
-        }
-    }
-    
-    @IBAction func clickOnInstagram() {
-        if (self.instagramLink  != "") {
-            let instagramUrl = NSURL(string: self.instagramLink!)
-           
-            if UIApplication.sharedApplication().canOpenURL(instagramUrl!)
-            {
-                UIApplication.sharedApplication().openURL(instagramUrl!)
-                
-            } else {
-                //redirect to safari because the user doesn't have Instagram
-                UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!)
-            }
-            // Tracker mixpanel
-            if let firstName = coachDetail[kFirstname] as? String {
-                let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
-                mixpanel.track("IOS.SocialClick", properties: properties)
-            }
-        }
-    }
-    
-    @IBAction func cameraButtonClicked(sender: AnyObject) {
-        let selectVideoFromLibrary = { (action:UIAlertAction!) -> Void in
-            self.imagePickerController.allowsEditing = false
-            self.imagePickerController.sourceType = .PhotoLibrary
-            self.imagePickerController.delegate = self
-            self.imagePickerController.mediaTypes = ["public.movie"]
-            
-            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
-        }
-        let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-            self.imagePickerController.allowsEditing = false
-            self.imagePickerController.sourceType = .Camera
-            self.imagePickerController.delegate = self
-            self.imagePickerController.mediaTypes = ["public.movie"]
-            
-            self.presentViewController(self.imagePickerController, animated: true, completion: nil)
-        }
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectVideoFromLibrary))
-        alertController.addAction(UIAlertAction(title: kTakeVideo, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
-        
-        self.presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        if self.isUploadingVideo == false {
-            self.isVideoPlaying = !self.isVideoPlaying
-            if (self.isVideoPlaying == true) {
-                self.videoPlayer?.play()
-                self.playVideoButton.setImage(nil, forState: .Normal)
-                self.locationView.alpha = 0 // Special case
-            } else {
-                self.videoPlayer?.pause()
-                self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-                self.locationView.alpha = 1 // Special case
-            }
-            
-            // Hidden item above video view
-            self.avatarIMV.hidden = self.isVideoPlaying
-            self.coachBorderV.hidden = self.isVideoPlaying
-            self.coachBorderBackgroundV.hidden = self.isVideoPlaying
-            
-            self.connectV.hidden = self.isVideoPlaying
-            
-            self.cameraButton.hidden = self.isVideoPlaying
-        }
-    }
-    
-    // MARK: UIImagePickerControllerDelegate
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let type = info[UIImagePickerControllerMediaType] as! String
-        
-        if (type == "public.movie") {
-            // Remove current video layer
-            if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
-                self.videoPlayerLayer?.removeFromSuperlayer()
-                
-                self.videoView = nil
-                
-                self.isUploadingVideo = true
-            }
-            
-            // send video by method mutipart to server
-            let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-            let videoData = NSData(contentsOfURL: videoPath)
-            let videoExtend = (videoPath.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
-            let videoType = "video/" + videoExtend
-            let videoName = "video." + videoExtend
-            
-            // Insert activity indicator
-            self.view.makeToastActivity(message: "Uploading")
-            
-            // send video by method mutipart to server
-            var prefix = kPMAPIUSER
-            let defaults = NSUserDefaults.standardUserDefaults()
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            prefix.appendContentsOf(kPM_PATH_VIDEO)
-            var parameters = [String:AnyObject]()
-            
-            self.isShowVideo = false
-            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
-            Alamofire.upload(
-                .POST,
-                prefix,
-                multipartFormData: { multipartFormData in
-                    multipartFormData.appendBodyPart(data: videoData!,
-                                                     name: "file",
-                                                     fileName:videoName,
-                                                     mimeType:videoType)
-                    for (key, value) in parameters {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                    }
-            },
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                        
-                    case .Success(let upload, _, _):
-                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                        }
-                        upload.validate()
-                        upload.responseJSON { response in
-                            self.view.hideToastActivity()
-                            
-                            self.isUploadingVideo = false
-                            
-                            if (response.response?.statusCode == 200) {
-                                let dictionary = response.result.value as! [NSDictionary]
-                                let videoURL = dictionary.first![kVideoURL] as! String
-                                
-                                // Update videoURL for coach detail
-                                let newCoachDetail = NSMutableDictionary.init(dictionary: self.coachDetail)
-                                newCoachDetail.setValue(videoURL, forKey: KVideoUrl)
-                                self.coachDetail = newCoachDetail
-                                
-                                self.isShowVideo = true
-                                
-                                self.showVideoLayout(videoURL)
-                            } else {
-                                let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
-                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                                    // TODO: LOGOUT
-                                }
-                                alertController.addAction(OKAction)
-                                self.presentViewController(alertController, animated: true) {
-                                    // ...
-                                }
-                            }
-                        }
-                        
-                    case .Failure( _): break
-                        // Do nothing
-                    }
-            })
-            
-            imagePickerController.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 }

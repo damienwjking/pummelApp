@@ -11,7 +11,7 @@ import Alamofire
 import AVKit
 import AVFoundation
 
-class UserProfileViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
+class UserProfileViewController: BaseViewController  {
     @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
@@ -61,6 +61,8 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
     
     var arrayPhotos: NSArray = []
     
+    
+    // MARK: - Function
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -139,107 +141,6 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
             
             self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
         }
-    }
-    
-    func showVideoLayout(videoURLString: String) {
-        // Move avatar to top left
-        let newAvatarSize: CGFloat = 37.0
-        let leftMargin: CGFloat = 10.0
-        let topMargin: CGFloat = 50.0
-        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + leftMargin
-        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
-        self.avatarIMVWidthConstraint.constant = newAvatarSize
-        
-        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
-        
-        // Hidden indicator view
-        self.smallIndicatorView.hidden = true
-        self.medIndicatorView.hidden = true
-        self.bigIndicatorView.hidden = true
-        self.bigBigIndicatorView.hidden = true
-        
-        // Show video
-        if (self.videoView?.superview != nil) {
-            self.videoView?.removeFromSuperview()
-        }
-        self.videoView = UIView.init(frame: self.detailV.bounds)
-        let videoURL = NSURL(string: videoURLString)
-        self.videoPlayer = AVPlayer(URL: videoURL!)
-        self.videoPlayer!.actionAtItemEnd = .None
-        self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
-        self.videoPlayerLayer!.frame = self.videoView!.bounds
-        self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
-        
-        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
-        
-        self.detailV.insertSubview(self.videoView!, atIndex: 0)
-        
-        // Animation
-        UIView.animateWithDuration(0.5, animations: {
-            self.detailV.layoutIfNeeded()
-        }) { (_) in
-            self.isVideoPlaying = true
-            self.videoPlayer!.play()
-            
-            self.avatarIMV.hidden = true
-        }
-        
-        // Add indicator for video
-        if (self.videoIndicator.superview != nil) {
-            self.videoIndicator.removeFromSuperview()
-        }
-        self.videoIndicator.startAnimating()
-        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
-        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
-        
-        // Remove loop play video for
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
-        
-        // Add notification for loop play video
-        NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.endVideoNotification),
-                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
-                                                         object: self.videoPlayer!.currentItem)
-    }
-    
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        print("observed \(keyPath) \(change)")
-        let currentItem = object as! AVPlayerItem
-        if currentItem.status == .ReadyToPlay {
-            let videoRect = self.videoPlayerLayer?.videoRect
-            if (videoRect?.width > videoRect?.height) {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-            } else {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            }
-        }
-    }
-    
-    @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.isVideoPlaying = !self.isVideoPlaying
-        if (self.isVideoPlaying == true) {
-            self.videoPlayer?.play()
-            self.playVideoButton.setImage(nil, forState: .Normal)
-        } else {
-            self.videoPlayer?.pause()
-            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-        }
-        
-        // Hidden item above video view
-        self.avatarIMV.hidden = self.isVideoPlaying
-    }
-    
-    func endVideoNotification(notification: NSNotification) {
-        let playerItem = notification.object as! AVPlayerItem
-        
-        // Show first frame video
-        playerItem.seekToTime(kCMTimeZero)
-        self.videoPlayer?.pause()
-        self.isVideoPlaying = false
-        
-        // Show item above video view
-        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-        self.avatarIMV.hidden = false
     }
     
     func setting() {
@@ -335,9 +236,113 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    // MARK: - Video 
+    func showVideoLayout(videoURLString: String) {
+        // Move avatar to top left
+        let newAvatarSize: CGFloat = 37.0
+        let leftMargin: CGFloat = 10.0
+        let topMargin: CGFloat = 50.0
+        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + leftMargin
+        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
+        self.avatarIMVWidthConstraint.constant = newAvatarSize
+        
+        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
+        
+        // Hidden indicator view
+        self.smallIndicatorView.hidden = true
+        self.medIndicatorView.hidden = true
+        self.bigIndicatorView.hidden = true
+        self.bigBigIndicatorView.hidden = true
+        
+        // Show video
+        if (self.videoView?.superview != nil) {
+            self.videoView?.removeFromSuperview()
+        }
+        self.videoView = UIView.init(frame: self.detailV.bounds)
+        let videoURL = NSURL(string: videoURLString)
+        self.videoPlayer = AVPlayer(URL: videoURL!)
+        self.videoPlayer!.actionAtItemEnd = .None
+        self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
+        self.videoPlayerLayer!.frame = self.videoView!.bounds
+        self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
+        
+        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+        
+        self.detailV.insertSubview(self.videoView!, atIndex: 0)
+        
+        // Animation
+        UIView.animateWithDuration(0.5, animations: {
+            self.detailV.layoutIfNeeded()
+        }) { (_) in
+            self.videoPlayerSetPlay(false)
+        }
+        
+        // Add indicator for video
+        if (self.videoIndicator.superview != nil) {
+            self.videoIndicator.removeFromSuperview()
+        }
+        self.videoIndicator.startAnimating()
+        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
+        
+        // Remove loop play video for
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        
+        // Add notification for loop play video
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.endVideoNotification),
+                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         object: self.videoPlayer!.currentItem)
     }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        print("observed \(keyPath) \(change)")
+        let currentItem = object as! AVPlayerItem
+        if currentItem.status == .ReadyToPlay {
+            let videoRect = self.videoPlayerLayer?.videoRect
+            if (videoRect?.width > videoRect?.height) {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+            } else {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            }
+        }
+    }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        self.isVideoPlaying = !self.isVideoPlaying
+        self.videoPlayerSetPlay(self.isVideoPlaying)
+    }
+    
+    func endVideoNotification(notification: NSNotification) {
+        let playerItem = notification.object as! AVPlayerItem
+        
+        // Show first frame video
+        playerItem.seekToTime(kCMTimeZero)
+        
+        self.videoPlayerSetPlay(false)
+    }
+    
+    func videoPlayerSetPlay(isPlay: Bool) {
+        if (isPlay == true) {
+            self.videoPlayer!.play()
+            
+            self.playVideoButton.setImage(nil, forState: .Normal)
+        } else {
+            self.videoPlayer?.pause()
+            
+            let playImage = UIImage(named: "icon_play_video")
+            self.playVideoButton.setImage(playImage, forState: .Normal)
+            
+        }
+        
+        // Show item above video view
+        self.isVideoPlaying = isPlay
+        self.avatarIMV.hidden = isPlay
+    }
+}
+
+extension UserProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrayPhotos.count
@@ -402,4 +407,3 @@ class UserProfileViewController: BaseViewController, UICollectionViewDataSource,
         }
     }
 }
-
