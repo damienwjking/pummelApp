@@ -170,6 +170,7 @@ let kDescription = "description"
 let kWebsite = "website"
 let kSubText = "subText"
 let kFullText = "fullText"
+let kCountry = "country"
 
 // String
 let kLogoutSuccess = "Logout successful"

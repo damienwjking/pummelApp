@@ -162,17 +162,14 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     placeMark = placemarks?[0]
                     if ((placeMark) != nil) {
                         var state = ""
-                        var city = ""
+                        var country = ""
                         if ((placeMark.administrativeArea) != nil) {
-                            if placeMark.locality != nil {
-                                city = placeMark.locality!
-                            } else if placeMark.subAdministrativeArea != nil {
-                                city = placeMark.subAdministrativeArea!
-                            }
                             state = placeMark.administrativeArea!
+                            country = placeMark.country!
                         }
                         
-                        let stateCity =  String(format: "&%@=%@&%@=%@", kState, state.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, kCity, city.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+                        let trimCountry = country.stringByReplacingOccurrencesOfString(" ", withString: "")
+                        let stateCity =  String(format: "&%@=%@&%@=%@", kState, state.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, kCountry, trimCountry.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
                         
                         prefix.appendContentsOf(stateCity)
                         self.callAPIDiscount(prefix)
