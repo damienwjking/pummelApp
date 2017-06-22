@@ -47,17 +47,7 @@ class CameraViewController: UIViewController {
     
     var needRemoveKVO = false
     
-    var videoURL:NSURL? = nil {
-        didSet {
-            if (playVideoButton != nil) {
-                if (self.videoURL == nil) {
-                    self.playVideoButton.hidden = true
-                } else {
-                    self.playVideoButton.hidden = false
-                }
-            }
-        }
-    }
+    var videoURL:NSURL? = nil
     
     var isVideoPlaying = false
     
@@ -127,8 +117,6 @@ class CameraViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        
-        
         if (self.videoURL == nil) {
             self.isRecordByCamera = true
             
@@ -148,7 +136,6 @@ class CameraViewController: UIViewController {
             
             // Change record status
             self.recordStatus = .finish
-            self.playVideoButton.hidden = false
         }
     }
     
@@ -191,6 +178,8 @@ class CameraViewController: UIViewController {
         
         self.cameraBorderView.layer.addSublayer(self.videoPlayerLayer!)
         
+        self.playVideoButton.hidden = false
+        
         // Catch size of video and crop
         self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
         self.needRemoveKVO = true
@@ -213,9 +202,7 @@ class CameraViewController: UIViewController {
         playerItem.seekToTime(kCMTimeZero)
         self.videoPlayer?.pause()
         
-        self.isVideoPlaying = false
-        let playImage = UIImage(named: "icon_play_video")
-        self.playVideoButton.setImage(playImage, forState: .Normal)
+        self.videoPlayerSetPlay(false)
     }
     
     func setupBasicLayout() {
@@ -450,7 +437,7 @@ class CameraViewController: UIViewController {
                         } else {
                             let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
                             let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                                // TODO: LOGOUT
+                                self.recordStatus = .finish
                             }
                             alertController.addAction(OKAction)
                             self.presentViewController(alertController, animated: true) {
@@ -463,6 +450,20 @@ class CameraViewController: UIViewController {
                     // Do nothing
                 }
         })
+    }
+    
+    func videoPlayerSetPlay(isPlay: Bool) {
+        if (isPlay) {
+            self.videoPlayer?.play()
+            self.playVideoButton.setImage(nil, forState: .Normal)
+        } else {
+            self.videoPlayer?.pause()
+            
+            let playImage = UIImage(named: "icon_play_video")
+            self.playVideoButton.setImage(playImage, forState: .Normal)
+        }
+        
+        self.isVideoPlaying = isPlay
     }
     
     // MARK: - Outlet function
@@ -550,16 +551,7 @@ class CameraViewController: UIViewController {
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
         self.isVideoPlaying = !self.isVideoPlaying
-        
-        if (self.isVideoPlaying) {
-            self.videoPlayer?.play()
-            self.playVideoButton.setImage(nil, forState: .Normal)
-        } else {
-            self.videoPlayer?.pause()
-            
-            let playImage = UIImage(named: "icon_play_video")
-            self.playVideoButton.setImage(playImage, forState: .Normal)
-        }
+        self.videoPlayerSetPlay(self.isVideoPlaying)
     }
     
     func startRecordVideo() {

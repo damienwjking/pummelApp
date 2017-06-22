@@ -1070,7 +1070,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
 //            })
             
             self.cropVideoCenterToSquare(videoURL, completionHandler: { (exportURL) in
-                self.uploadCurrentVideo(picker.view, videoURL: exportURL)
+                self.uploadCurrentVideo(picker, videoURL: exportURL)
             })
         }
     }
@@ -1116,7 +1116,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         return templatePath
     }
     
-    func uploadCurrentVideo(pickerView: UIView, videoURL: NSURL) {
+    func uploadCurrentVideo(picker: UIImagePickerController, videoURL: NSURL) {
         let videoData = NSData(contentsOfURL: videoURL)
         let videoExtend = (videoURL.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
         let videoType = "video/" + videoExtend
@@ -1124,7 +1124,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         
         // Insert activity indicator
         dispatch_async(dispatch_get_main_queue(),{
-            pickerView.makeToastActivity(message: "Uploading")
+            picker.view.makeToastActivity(message: "Uploading")
         })
         
         
@@ -1157,23 +1157,23 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                     upload.validate()
                     upload.responseJSON { response in
                         dispatch_async(dispatch_get_main_queue(),{
-                            pickerView.hideToastActivity()
-                        })
-                        
-                        if (response.response?.statusCode == 200) {
-                            NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
+                            picker.view.hideToastActivity()
                             
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        } else {
-                            let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
-                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                                self.dismissViewControllerAnimated(true, completion: nil)
-                            }
-                            alertController.addAction(OKAction)
-                            self.presentViewController(alertController, animated: true) {
+                            if (response.response?.statusCode == 200) {
+                                NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
                                 
+                                picker.dismissViewControllerAnimated(true, completion: nil)
+                            } else {
+                                let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
+                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                    self.dismissViewControllerAnimated(true, completion: nil)
+                                }
+                                alertController.addAction(OKAction)
+                                picker.presentViewController(alertController, animated: true) {
+                                    
+                                }
                             }
-                        }
+                        })
                     }
                     
                 case .Failure( _): break
