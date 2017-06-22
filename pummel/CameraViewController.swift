@@ -599,7 +599,9 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
                         self.videoURL = outputFileURL
                         
                         // Show video layout
-                        self.showVideoLayout()
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.showVideoLayout()
+                        })
                     }
                 })
             }
