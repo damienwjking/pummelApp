@@ -1040,11 +1040,11 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
             
             // send video by method mutipart to server
             let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-//            imagePickerController.dismissViewControllerAnimated(true, completion: { 
-//                self.performSegueWithIdentifier("showCamera", sender: videoPath)
-//            })
+            imagePickerController.dismissViewControllerAnimated(true, completion: { 
+                self.performSegueWithIdentifier("showCamera", sender: videoPath)
+            })
             
-            self.uploadCurrentVideo(picker.view, videoURL: videoPath)
+//            self.uploadCurrentVideo(picker.view, videoURL: videoPath)
         }
     }
     

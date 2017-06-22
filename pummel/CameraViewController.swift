@@ -204,8 +204,8 @@ class CameraViewController: UIViewController {
     
     func setupBasicLayout() {
         // Border camera view
-        self.cameraBorderView.layer.borderColor = UIColor.whiteColor().CGColor
-        self.cameraBorderView.layer.borderWidth = 1.0
+//        self.cameraBorderView.layer.borderColor = UIColor.whiteColor().CGColor
+//        self.cameraBorderView.layer.borderWidth = 1.0
         
         // Close button
         let closeImage = UIImage(named: "close")?.imageWithRenderingMode(.AlwaysTemplate)
