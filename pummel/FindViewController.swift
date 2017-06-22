@@ -110,6 +110,13 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
 //                }
             }
             
+            // Tracking show video
+            if (cellIndex < self.arrayResult.count) {
+                let coachDetail = self.arrayResult[cellIndex]
+                let coachID = String(format: "%.0f", coachDetail[kUserId] as! Double)
+                TrackingPMAPI.sharedInstance.trackingProfileCard(coachID)
+            }
+            
             // Remove video layer
             if (cellIndex > 0) {
                 let preCellIndex = NSIndexPath(forRow: cellIndex - 1, inSection: 0)
