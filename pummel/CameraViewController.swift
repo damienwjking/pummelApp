@@ -67,27 +67,29 @@ class CameraViewController: UIViewController {
             self.playButtonIndicatorView.hidden = true
             self.cameraIndicatorView.hidden = true
             
-            self.cameraBorderView.backgroundColor = UIColor.blackColor()
+            self.cameraBorderView.backgroundColor = UIColor.clearColor()
             
-            // Setup play button image
-            if (self.recordStatus == .pending) {
-                let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
-                self.playButton.setImage(playImage, forState: .Normal)
-            } else if (self.recordStatus == .recording) {
-                let pauseImage = UIImage(named: "icon_pause")?.imageWithRenderingMode(.AlwaysTemplate)
-                self.playButton.setImage(pauseImage, forState: .Normal)
-            } else if (self.recordStatus == .finish) {
-                let uploadImage = UIImage(named: "icon_upload")?.imageWithRenderingMode(.AlwaysTemplate)
-                self.playButton.setImage(uploadImage, forState: .Normal)
-                
-                self.cameraIndicatorView.hidden = false
-                
-                self.cameraBorderView.backgroundColor = UIColor.clearColor()
-            } else if (self.recordStatus == .uploading) {
-                self.playButton.setImage(nil, forState: .Normal)
-                
-                // Show indicator for uploading
-                self.playButtonIndicatorView.hidden = false
+            UIView.animateWithDuration(0.3) { 
+                // Setup play button image
+                if (self.recordStatus == .pending) {
+                    let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
+                    self.playButton.setImage(playImage, forState: .Normal)
+                } else if (self.recordStatus == .recording) {
+                    let pauseImage = UIImage(named: "icon_pause")?.imageWithRenderingMode(.AlwaysTemplate)
+                    self.playButton.setImage(pauseImage, forState: .Normal)
+                } else if (self.recordStatus == .finish) {
+                    let uploadImage = UIImage(named: "icon_upload")?.imageWithRenderingMode(.AlwaysTemplate)
+                    self.playButton.setImage(uploadImage, forState: .Normal)
+                    
+                    self.cameraIndicatorView.hidden = false
+                    
+                    self.cameraBorderView.backgroundColor = UIColor.blackColor()
+                } else if (self.recordStatus == .uploading) {
+                    self.playButton.setImage(nil, forState: .Normal)
+                    
+                    // Show indicator for uploading
+                    self.playButtonIndicatorView.hidden = false
+                }
             }
             
             // Retake button
