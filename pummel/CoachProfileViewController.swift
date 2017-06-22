@@ -13,7 +13,7 @@ import AVKit
 import AVFoundation
 
 
-class CoachProfileViewController: BaseViewController {
+class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
@@ -151,6 +151,7 @@ class CoachProfileViewController: BaseViewController {
         self.scrollView.scrollsToTop = false
         self.interestCollectionView.delegate = self
         self.interestCollectionView.dataSource = self
+        self.webTV.delegate = self
         
         let imageLink = coachDetail[kImageUrl] as? String
         if (imageLink?.isEmpty == false) {
@@ -1002,6 +1003,13 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
                 let imageRes = response.result.value! as UIImage
                 cell.imageCell.image = imageRes
         }
+    }
+    
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        if let val = self.coachDetail[kId] as? Int {
+            TrackingPMAPI.sharedInstance.trackSocialWeb("\(val)")
+        }
+        return true
     }
 }
 

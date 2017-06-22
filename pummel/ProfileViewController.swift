@@ -16,7 +16,7 @@ import AVKit
 import AVFoundation
 import PhotosUI
 
-class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
@@ -168,6 +168,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.aboutLeftDT.constant = 10
         self.businessIMV.layer.cornerRadius = 50
         self.businessIMV.clipsToBounds = true
+        self.webTV.delegate = self
         
         self.interestFlowLayout.smaller = true
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
@@ -876,6 +877,12 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
     
     @IBAction func goConnection() {
         self.performSegueWithIdentifier(kGoConnect, sender: self)
+        
+        if defaults.boolForKey(k_PM_IS_COACH) == true {
+            if let val = self.coachDetail[kId] as? Int {
+                TrackingPMAPI.sharedInstance.trackingConnectButtonCLick("\(val)")
+            }
+        }
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -946,6 +953,12 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                 let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
+            
+            if defaults.boolForKey(k_PM_IS_COACH) == true {
+                if let val = self.coachDetail[kId] as? Int {
+                    TrackingPMAPI.sharedInstance.trackSocialFacebook("\(val)")
+                }
+            }
         }
     }
     
@@ -967,6 +980,12 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                 let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
+            
+            if defaults.boolForKey(k_PM_IS_COACH) == true {
+                if let val = self.coachDetail[kId] as? Int {
+                    TrackingPMAPI.sharedInstance.trackSocialTwitter("\(val)")
+                }
+            }
         }
     }
     
@@ -987,6 +1006,12 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
+            }
+            
+            if defaults.boolForKey(k_PM_IS_COACH) == true {
+                if let val = self.coachDetail[kId] as? Int {
+                    TrackingPMAPI.sharedInstance.trackSocialInstagram("\(val)")
+                }
             }
         }
     }
@@ -1253,5 +1278,14 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
                 let imageRes = response.result.value! as UIImage
                 cell.imageCell.image = imageRes
         }
+    }
+    
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        if defaults.boolForKey(k_PM_IS_COACH) == true {
+            if let val = self.coachDetail[kId] as? Int {
+                TrackingPMAPI.sharedInstance.trackSocialWeb("\(val)")
+            }
+        }
+        return true
     }
 }
