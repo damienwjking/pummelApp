@@ -1039,13 +1039,56 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
             }
             
             // send video by method mutipart to server
-            let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-            imagePickerController.dismissViewControllerAnimated(true, completion: { 
-                self.performSegueWithIdentifier("showCamera", sender: videoPath)
-            })
+            let videoURL = info[UIImagePickerControllerMediaURL] as! NSURL
+//            imagePickerController.dismissViewControllerAnimated(true, completion: { 
+//                self.performSegueWithIdentifier("showCamera", sender: videoPath)
+//            })
             
-//            self.uploadCurrentVideo(picker.view, videoURL: videoPath)
+            self.cropVideoCenterToSquare(videoURL, completionHandler: { (exportURL) in
+                self.uploadCurrentVideo(picker.view, videoURL: exportURL)
+            })
         }
+    }
+    
+    func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
+        //        self.getTempVideoPath()
+        // Crop video to square
+        let asset: AVAsset = AVAsset(URL: videoURL)
+        let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
+        
+        let exportPath = self.getTempVideoPath("/library.mp4")
+        
+        let exportUrl: NSURL = NSURL.fileURLWithPath(exportPath)
+        
+        let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+        exporter!.outputFileType = AVFileTypeMPEG4
+        exporter!.outputURL = exportUrl
+        exporter?.shouldOptimizeForNetworkUse = true
+        exporter?.timeRange =  CMTimeRangeMake(CMTimeMakeWithSeconds(0.0, 0), asset.duration)
+        
+        exporter?.exportAsynchronouslyWithCompletionHandler({
+            let outputURL:NSURL = exporter!.outputURL!
+            
+            completionHandler(exportURL: outputURL)
+        })
+    }
+    
+    func getTempVideoPath(fileName: String) -> String {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        //        let filePath = "\(documentsPath)/tempFile.mp4"
+        let templatePath = documentsPath.stringByAppendingFormat(fileName)
+        
+        // Remove file at template path
+        let fileManager = NSFileManager.defaultManager()
+        if (fileManager.fileExistsAtPath(templatePath)) {
+            do {
+                try fileManager.removeItemAtPath(templatePath)
+            } catch {
+                print("Could not clear temp folder: \(error)")
+            }
+        }
+        
+        return templatePath
     }
     
     func uploadCurrentVideo(pickerView: UIView, videoURL: NSURL) {
@@ -1055,7 +1098,10 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         let videoName = "video." + videoExtend
         
         // Insert activity indicator
-        pickerView.makeToastActivity(message: "Uploading")
+        dispatch_async(dispatch_get_main_queue(),{
+            pickerView.makeToastActivity(message: "Uploading")
+        })
+        
         
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
@@ -1085,7 +1131,9 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                     }
                     upload.validate()
                     upload.responseJSON { response in
-                        pickerView.hideToastActivity()
+                        dispatch_async(dispatch_get_main_queue(),{
+                            pickerView.hideToastActivity()
+                        })
                         
                         if (response.response?.statusCode == 200) {
                             NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)

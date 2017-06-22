@@ -35,6 +35,16 @@ class CameraViewController: UIViewController {
     var videoPlayerLayer: AVPlayerLayer? = nil
     var isRecordByCamera = false
     
+    var pickerController: UIImagePickerController = {
+        let imagePicker = UIImagePickerController()
+        
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.mediaTypes = ["public.movie"]
+        
+        return imagePicker
+    }()
+    
     var needRemoveKVO = false
     
     var videoURL:NSURL? = nil {
@@ -57,6 +67,8 @@ class CameraViewController: UIViewController {
             self.playButtonIndicatorView.hidden = true
             self.cameraIndicatorView.hidden = true
             
+            self.cameraBorderView.backgroundColor = UIColor.blackColor()
+            
             // Setup play button image
             if (self.recordStatus == .pending) {
                 let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
@@ -69,6 +81,8 @@ class CameraViewController: UIViewController {
                 self.playButton.setImage(uploadImage, forState: .Normal)
                 
                 self.cameraIndicatorView.hidden = false
+                
+                self.cameraBorderView.backgroundColor = UIColor.clearColor()
             } else if (self.recordStatus == .uploading) {
                 self.playButton.setImage(nil, forState: .Normal)
                 
@@ -465,6 +479,11 @@ class CameraViewController: UIViewController {
             
             self.videoPlayerLayer?.removeFromSuperlayer()
             
+        } else {
+            self.pickerController.delegate = self
+            self.presentViewController(self.pickerController, animated: true, completion: { 
+                // Do nothing
+            })
         }
     }
     
@@ -552,7 +571,13 @@ class CameraViewController: UIViewController {
     }
 }
 
-extension CameraViewController:AVCaptureFileOutputRecordingDelegate {
+extension CameraViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+    }
+}
+
+extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         print("Finish record video")
         
