@@ -135,6 +135,9 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.medIndicatorView.clipsToBounds = true
         self.smallIndicatorView.clipsToBounds = true
         
+        self.locationView.layer.cornerRadius = 2
+        self.locationView.layer.masksToBounds = true
+        
         self.connectV.layer.cornerRadius = 55/2
         self.connectV.clipsToBounds = true
         self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
@@ -194,6 +197,10 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
+        
+        let cameraImage = UIImage(named: "profile_video")?.imageWithRenderingMode(.AlwaysTemplate)
+        self.cameraButton.setImage(cameraImage, forState: .Normal)
+        self.cameraButton.tintColor = UIColor.pmmBrightOrangeColor()
         
         // Add notification for update video url
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.profileGetNewDetail), name: "profileGetDetail", object: nil)

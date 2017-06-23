@@ -98,11 +98,20 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             let indexPath = NSIndexPath(forRow: cellIndex, inSection: 0)
             let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as? CardViewCell
             if (cell != nil) {
+                // Show video layout
                 let coachDetail = self.arrayResult[cellIndex]
                 let videoURL = coachDetail[kVideoURL] as? String
                 if (videoURL != nil && videoURL!.isEmpty == false) {
-                    cell!.showVideo(videoURL!)
+                    cell?.playVideoButton.hidden = false
+                    cell?.playVideoButton.userInteractionEnabled = false
                 }
+                
+                // Show video layout < 23/06
+//                let coachDetail = self.arrayResult[cellIndex]
+//                let videoURL = coachDetail[kVideoURL] as? String
+//                if (videoURL != nil && videoURL!.isEmpty == false) {
+//                    cell!.showVideo(videoURL!)
+//                }
                 
                 // Test
 //                let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497421626868-0.mov"

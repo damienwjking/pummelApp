@@ -138,6 +138,9 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.titleCoachLB.font = .pmmMonReg13()
         self.titleCoachLB.text = (coachDetail[kFirstname] as! String).uppercaseString
         
+        self.locationView.layer.cornerRadius = 2
+        self.locationView.layer.masksToBounds = true
+        
         self.connectBT.layer.cornerRadius = 55/2
         self.connectBT.clipsToBounds = true
         self.connectBT.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
@@ -881,8 +884,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.isVideoPlaying = !self.isVideoPlaying
-        self.videoPlayerSetPlay(self.isVideoPlaying)
+        if (self.videoPlayer != nil) {
+            self.isVideoPlaying = !self.isVideoPlaying
+            self.videoPlayerSetPlay(self.isVideoPlaying)
+        }
     }
     
     func endVideoNotification(notification: NSNotification) {
@@ -893,15 +898,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.videoPlayer?.pause()
         
         // Show item above video view
-        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-        
-        self.avatarIMV.hidden = false
-        self.coachBorderV.hidden = false
-        self.coachBorderBackgroundV.hidden = false
-        
-        self.actionView.hidden = false
-        
-        self.locationView.alpha = 1 // special key
+        self.videoPlayerSetPlay(false)
     }
 }
 

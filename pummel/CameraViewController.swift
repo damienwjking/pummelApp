@@ -56,6 +56,7 @@ class CameraViewController: UIViewController {
             // Hidden indicator
             self.playButtonIndicatorView.hidden = true
             self.cameraIndicatorView.hidden = true
+            self.playVideoButton.hidden = true
             
             self.cameraBorderView.backgroundColor = UIColor.clearColor()
             
@@ -72,6 +73,7 @@ class CameraViewController: UIViewController {
                     self.playButton.setImage(uploadImage, forState: .Normal)
                     
                     self.cameraIndicatorView.hidden = false
+                    self.playVideoButton.hidden = false
                     
                     self.cameraBorderView.backgroundColor = UIColor.blackColor()
                 } else if (self.recordStatus == .uploading) {
@@ -125,8 +127,6 @@ class CameraViewController: UIViewController {
             self.setupCameraSession()
             self.cameraView.layer.addSublayer(previewLayer)
             cameraSession.startRunning()
-            
-            self.playVideoButton.hidden = true
         } else {
             self.isRecordByCamera = false
             // Stop camera and show video from video URL
@@ -178,8 +178,6 @@ class CameraViewController: UIViewController {
         
         self.cameraBorderView.layer.addSublayer(self.videoPlayerLayer!)
         
-        self.playVideoButton.hidden = false
-        
         // Catch size of video and crop
         self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
         self.needRemoveKVO = true
@@ -200,7 +198,6 @@ class CameraViewController: UIViewController {
         
         // Show first frame video
         playerItem.seekToTime(kCMTimeZero)
-        self.videoPlayer?.pause()
         
         self.videoPlayerSetPlay(false)
     }
@@ -482,6 +479,8 @@ class CameraViewController: UIViewController {
             
             self.videoPlayerLayer?.removeFromSuperlayer()
             
+            self.videoPlayerSetPlay(false)
+            
         } else {
             self.pickerController.delegate = self
             self.presentViewController(self.pickerController, animated: true, completion: { 
@@ -505,7 +504,7 @@ class CameraViewController: UIViewController {
         } else if (self.recordStatus == .finish) {
             self.recordStatus = .uploading
             
-            self.videoPlayer?.pause()
+            self.videoPlayerSetPlay(false)
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
             
             // Check render video
