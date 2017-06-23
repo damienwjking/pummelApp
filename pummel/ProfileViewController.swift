@@ -198,7 +198,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
         
-        let cameraImage = UIImage(named: "profile_video")?.imageWithRenderingMode(.AlwaysTemplate)
+        let cameraImage = UIImage(named: "profile_camera")?.imageWithRenderingMode(.AlwaysTemplate)
         self.cameraButton.setImage(cameraImage, forState: .Normal)
         self.cameraButton.tintColor = UIColor.pmmBrightOrangeColor()
         

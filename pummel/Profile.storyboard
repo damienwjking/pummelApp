@@ -123,7 +123,7 @@
                                                     <constraint firstAttribute="width" constant="60" id="DSR-wn-CXo"/>
                                                     <constraint firstAttribute="width" secondItem="db4-N2-14n" secondAttribute="height" multiplier="1:1" id="f8s-xx-kmE"/>
                                                 </constraints>
-                                                <state key="normal" image="cameraIcon"/>
+                                                <state key="normal" image="profile_camera"/>
                                                 <connections>
                                                     <action selector="cameraButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="I8t-vl-uDa"/>
                                                 </connections>
@@ -3403,12 +3403,12 @@
         <image name="add.png" width="13" height="13"/>
         <image name="address_background" width="1125" height="462"/>
         <image name="blackArrow.png" width="8" height="14"/>
-        <image name="cameraIcon" width="24" height="19"/>
         <image name="display-empty.jpg" width="256" height="256"/>
         <image name="edit" width="19" height="18"/>
         <image name="icon_play_video" width="50" height="50"/>
         <image name="pinGray" width="5" height="9"/>
         <image name="profile.png" width="22" height="22"/>
+        <image name="profile_camera" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="okc-uz-SIC"/>
