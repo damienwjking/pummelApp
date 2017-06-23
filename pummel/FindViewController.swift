@@ -26,6 +26,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     var widthCell : CGFloat = 0.0
     var currentOffset: CGPoint = CGPointZero
     var touchPoint: CGPoint = CGPointZero
+    var loadmoreTime = 1
     
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
@@ -220,7 +221,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             }
             
             prefix.appendContentsOf("limit=30")
-            prefix.appendContentsOf("&offset=".stringByAppendingString(String(self.arrayResult.count)))
+            prefix.appendContentsOf("&offset=".stringByAppendingString(String(self.loadmoreTime * 30)))
             let coordinateParams = String(format: "&%@=%f&%@=%f", kLong, aVariable[kLong] as! Float, kLat, aVariable[kLat] as! Float)
             prefix.appendContentsOf(coordinateParams)
             
@@ -236,7 +237,9 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
                             let rArray = response.result.value as! [NSDictionary]
                             self.arrayResult += rArray
                             
-                            self.collectionView.reloadData()
+                            self.collectionView.reloadData({ 
+                                self.loadmoreTime = self.loadmoreTime + 1
+                            })
                         }
                     }
             }
