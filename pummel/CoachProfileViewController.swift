@@ -34,6 +34,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     @IBOutlet weak var connectBT : UIButton!
     @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var locationView: UIView!
+    @IBOutlet weak var locationBackgroundImageView: UIImageView!
     @IBOutlet weak var interestLB: UILabel!
     @IBOutlet weak var specialitiesLB: UILabel!
     @IBOutlet weak var aboutLB: UILabel!
@@ -825,6 +826,9 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.medIndicatorView.hidden = true
         self.bigIndicatorView.hidden = true
         self.bigBigIndicatorView.hidden = true
+        
+        // Show location background
+        self.locationBackgroundImageView.hidden = false
         
         // Show video
         if (self.videoView?.superview != nil) {

@@ -78,7 +78,7 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ypZ-hz-omP" userLabel="Location View">
                                                 <rect key="frame" x="291" y="240" width="18" height="20"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="address_background" translatesAutoresizingMaskIntoConstraints="NO" id="004-lo-E8C">
+                                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="address_background" translatesAutoresizingMaskIntoConstraints="NO" id="004-lo-E8C">
                                                         <rect key="frame" x="-553.5" y="-221" width="1125" height="462"/>
                                                     </imageView>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinGray" translatesAutoresizingMaskIntoConstraints="NO" id="4gT-PK-0Gi">
@@ -742,6 +742,7 @@
                         <outlet property="interestHeightDT" destination="HzK-Ld-BW3" id="Jk6-d5-QJx"/>
                         <outlet property="interestLB" destination="pPt-HV-aTe" id="P7Z-F0-8N6"/>
                         <outlet property="interestV" destination="289-ua-YUI" id="FTX-bJ-EyD"/>
+                        <outlet property="locationBackgroundImageView" destination="004-lo-E8C" id="UnL-hY-Gow"/>
                         <outlet property="locationView" destination="ypZ-hz-omP" id="Enb-OX-DO1"/>
                         <outlet property="medIndicatorView" destination="0N0-oE-kow" id="fdD-Jy-q2A"/>
                         <outlet property="phoneBT" destination="7F4-eX-Wc2" id="0Mg-Ys-8m2"/>
@@ -804,7 +805,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xEo-ch-oqR" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="crm-Qf-dgO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="crm-Qf-dgO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

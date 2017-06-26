@@ -82,6 +82,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
     @IBOutlet weak var specifiesDT: NSLayoutConstraint!
     
     @IBOutlet weak var locationView: UIView!
+    @IBOutlet weak var locationBackgroundImageView: UIImageView!
     
     @IBOutlet weak var ratingLB: UILabel!
     @IBOutlet weak var ratingContentLB: UILabel!
@@ -198,7 +199,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
         
-        let cameraImage = UIImage(named: "profile_camera")?.imageWithRenderingMode(.AlwaysTemplate)
+        let cameraImage = UIImage(named: "profile_camera")
         self.cameraButton.setImage(cameraImage, forState: .Normal)
         self.cameraButton.tintColor = UIColor.pmmBrightOrangeColor()
         
@@ -282,6 +283,9 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.medIndicatorView.hidden = true
         self.bigIndicatorView.hidden = true
         self.bigBigIndicatorView.hidden = true
+        
+        // Show background View
+        self.locationBackgroundImageView.hidden = false
         
         // Show video
         if (self.videoView == nil) {

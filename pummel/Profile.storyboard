@@ -78,7 +78,7 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="897-JI-yRT">
                                                 <rect key="frame" x="293" y="240" width="14" height="20"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="246" verticalHuggingPriority="249" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" placeholderIntrinsicWidth="1125" placeholderIntrinsicHeight="14" image="address_background" translatesAutoresizingMaskIntoConstraints="NO" id="BDG-ei-Tgb">
+                                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="246" verticalHuggingPriority="249" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" placeholderIntrinsicWidth="1125" placeholderIntrinsicHeight="14" image="address_background" translatesAutoresizingMaskIntoConstraints="NO" id="BDG-ei-Tgb">
                                                         <rect key="frame" x="-555.5" y="3" width="1125" height="14"/>
                                                     </imageView>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinGray" translatesAutoresizingMaskIntoConstraints="NO" id="rLf-jv-zSr">
@@ -727,6 +727,7 @@
                         <outlet property="interestHeightDT" destination="9n6-61-0tV" id="vH0-sb-3AG"/>
                         <outlet property="interestLB" destination="Rgf-jJ-cvo" id="Fk3-YB-yC0"/>
                         <outlet property="interestV" destination="uEh-DN-xjd" id="EbU-BQ-xVU"/>
+                        <outlet property="locationBackgroundImageView" destination="BDG-ei-Tgb" id="ZFq-mf-EUW"/>
                         <outlet property="locationView" destination="897-JI-yRT" id="qUA-o7-17I"/>
                         <outlet property="medIndicatorView" destination="dwI-Ae-AUK" id="ak8-pE-MC9"/>
                         <outlet property="playVideoButton" destination="51y-60-mKL" id="Lcd-if-uxt"/>
@@ -2399,7 +2400,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mH3-BG-64I">
-                                                    <rect key="frame" x="20" y="24.5" width="560" height="26.5"/>
+                                                    <rect key="frame" x="20" y="24" width="560" height="27"/>
                                                     <string key="text">Would you like to become a verified Pummel Fitness professional?  Fill in this form to setup your Mobile profile and start finding new customers.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3385,7 +3386,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ey2-z7-s6W" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="7N0-97-9tW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7N0-97-9tW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3408,7 +3409,7 @@
         <image name="icon_play_video" width="50" height="50"/>
         <image name="pinGray" width="5" height="9"/>
         <image name="profile.png" width="22" height="22"/>
-        <image name="profile_camera" width="25" height="25"/>
+        <image name="profile_camera" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="okc-uz-SIC"/>
