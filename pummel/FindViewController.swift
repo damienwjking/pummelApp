@@ -217,7 +217,7 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         if (self.stopSearch == false) {
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
-            var prefix = kPMAPICOACH_SEARCH
+            var prefix = kPMAPICOACH_SEARCHV3
             if ((aVariable[kGender] as! String) != kDontCare){
                 prefix.appendContentsOf("?gender=".stringByAppendingString((aVariable[kGender] as! String)).stringByAppendingString("&"))
             } else {

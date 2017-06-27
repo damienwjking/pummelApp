@@ -32,7 +32,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
 
     var limit: Int = 0
     var offset: Int = 0
-    var prefix = kPMAPICOACH_SEARCH
+    var prefix = kPMAPICOACH_SEARCHV3
     
     override func viewDidLoad() {
         super.viewDidLoad()
