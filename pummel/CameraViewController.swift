@@ -63,8 +63,7 @@ class CameraViewController: UIViewController {
             UIView.animateWithDuration(0.3) { 
                 // Setup play button image
                 if (self.recordStatus == .pending) {
-                    let playImage = UIImage(named: "icon_play")?.imageWithRenderingMode(.AlwaysTemplate)
-                    self.playButton.setImage(playImage, forState: .Normal)
+                    self.playButton.setImage(nil, forState: .Normal)
                 } else if (self.recordStatus == .recording) {
                     let pauseImage = UIImage(named: "icon_pause")?.imageWithRenderingMode(.AlwaysTemplate)
                     self.playButton.setImage(pauseImage, forState: .Normal)

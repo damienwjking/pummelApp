@@ -234,6 +234,8 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             TrackingPMAPI.sharedInstance.trackingProfileViewed("\(val)")
         }
         self.checkConnect()
+        
+        self.playVideoButton.setImage(nil, forState: .Normal)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -249,8 +251,6 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         if (videoURL?.isEmpty == false && self.isShowVideo == true) {
             self.showVideoLayout(videoURL!)
         }
-        
-        self.playVideoButton.setImage(nil, forState: .Normal)
     }
     
     override func viewWillDisappear(animated: Bool) {
