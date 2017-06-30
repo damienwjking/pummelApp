@@ -24,6 +24,9 @@
 		9C8FF4121C8476C800449A54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C8FF4111C8476C800449A54 /* Main.storyboard */; };
 		9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */; };
 		9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */; };
+		BA003AA01EEE3241002FE038 /* FeedRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA003A9F1EEE3241002FE038 /* FeedRouter.swift */; };
+		BA003AA41EEE5532002FE038 /* PMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA003AA31EEE5532002FE038 /* PMHelper.swift */; };
+		BA02EE2B1EE7B14300495943 /* UserRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA02EE2A1EE7B14300495943 /* UserRouter.swift */; };
 		BA0314911E155FC000982622 /* intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0314901E155FC000982622 /* intensity.png */; };
 		BA0314941E157C0300982622 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0314931E157C0300982622 /* Session.swift */; };
 		BA04AB691E252BAC00F987BD /* ContactUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */; };
@@ -42,6 +45,7 @@
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA8884C11EEA4F1800FFD734 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C01EEA4F1800FFD734 /* Camera.storyboard */; };
 		BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */; };
+		BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageRouter.swift */; };
 		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
 		BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
@@ -233,6 +237,9 @@
 		9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Client.storyboard; path = ../Client.storyboard; sourceTree = "<group>"; };
 		9CE72E111C8466E50075F5D1 /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		A23FD1E636ACA8E6CDC611DF /* Pods-pummel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pummel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pummel/Pods-pummel.debug.xcconfig"; sourceTree = "<group>"; };
+		BA003A9F1EEE3241002FE038 /* FeedRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedRouter.swift; sourceTree = "<group>"; };
+		BA003AA31EEE5532002FE038 /* PMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMHelper.swift; sourceTree = "<group>"; };
+		BA02EE2A1EE7B14300495943 /* UserRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRouter.swift; sourceTree = "<group>"; };
 		BA0314901E155FC000982622 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
 		BA0314931E157C0300982622 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUserViewController.swift; sourceTree = "<group>"; };
@@ -251,6 +258,7 @@
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA8884C01EEA4F1800FFD734 /* Camera.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square_kwickie_thumnail_gradient.png; sourceTree = "<group>"; };
+		BA81A4421EE68CA5002D626E /* ImageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRouter.swift; sourceTree = "<group>"; };
 		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
 		BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
@@ -477,6 +485,7 @@
 		9C1C54031C7938070083E47B /* pummel */ = {
 			isa = PBXGroup;
 			children = (
+				BA81A4411EE68C71002D626E /* Services */,
 				F9ABEAF91DC4C88E0084B70E /* Base */,
 				F9EAE8EE1D6F0BAE00FD32BE /* Feed */,
 				F95835A31D6DFACC00D6D483 /* Profile */,
@@ -522,6 +531,17 @@
 				BA0314931E157C0300982622 /* Session.swift */,
 			);
 			name = SessionList;
+			sourceTree = "<group>";
+		};
+		BA81A4411EE68C71002D626E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BA81A4421EE68CA5002D626E /* ImageRouter.swift */,
+				BA02EE2A1EE7B14300495943 /* UserRouter.swift */,
+				BA003A9F1EEE3241002FE038 /* FeedRouter.swift */,
+				BA003AA31EEE5532002FE038 /* PMHelper.swift */,
+			);
+			name = Services;
 			sourceTree = "<group>";
 		};
 		F92031F71CEBFBB400CC6876 /* Cell */ = {
@@ -1091,7 +1111,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		C36C68F28B8E0C40E470A4C7 /* [CP] Copy Pods Resources */ = {
@@ -1168,6 +1188,7 @@
 				E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */,
 				F9CF54E51D801F2100BE144F /* UserProfileViewController.swift in Sources */,
 				BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */,
+				BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */,
 				F970A2A61D26384400932BFC /* Scheduler.swift in Sources */,
 				F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */,
 				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
@@ -1224,9 +1245,12 @@
 				9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */,
 				F970A2A81D26384400932BFC /* ZLSwipeableView.swift in Sources */,
 				9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */,
+				BA003AA41EEE5532002FE038 /* PMHelper.swift in Sources */,
+				BA003AA01EEE3241002FE038 /* FeedRouter.swift in Sources */,
 				BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */,
 				F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */,
 				F9FE145C1CEBD29B004ABE34 /* FSImageCropView.swift in Sources */,
+				BA02EE2B1EE7B14300495943 /* UserRouter.swift in Sources */,
 				F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */,
 				F9CF54D91D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift in Sources */,
 				F98C40AA1CF2586100ECC66E /* SendPhotoViewController.swift in Sources */,

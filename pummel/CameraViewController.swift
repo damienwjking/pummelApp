@@ -123,7 +123,8 @@ class CameraViewController: UIViewController {
             
             self.recordStatus = .pending
             
-            self.setupCameraSession()
+            self.checkPermissionDeviceInput()
+            
             self.cameraView.layer.addSublayer(previewLayer)
             cameraSession.startRunning()
         } else {
@@ -630,6 +631,42 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         return nil
     }
     
+    func checkPermissionDeviceInput() {
+        self.playButton.userInteractionEnabled = false
+        var notAuthorize = false
+        
+        // Micro permission
+        let microAuthStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio)
+        if(microAuthStatus != .Authorized) {
+            notAuthorize = true
+        }
+        
+        // Camera permission
+        let cameraAuthStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+        
+        if(cameraAuthStatus != .Authorized) {
+            notAuthorize = true
+        }
+        
+        if (notAuthorize == false) {
+            self.playButton.userInteractionEnabled = true
+            self.setupCameraSession()
+        } else {
+            let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .Alert)
+            let okAction = UIAlertAction(title: kOk, style: .Cancel, handler: { (_) in
+                // Do nothing
+            })
+            
+            let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (action) in
+                UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
+            }
+            
+            alertController.addAction(okAction)
+            alertController.addAction(settingsAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
     
     func setupCameraSession() {
         let captureDevice = self.cameraWithPosition(.Back)

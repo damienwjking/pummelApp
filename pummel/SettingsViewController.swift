@@ -577,8 +577,7 @@ class SettingsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func sliderValueDidChange(sender:UISlider!)
-    {
+    func sliderValueDidChange(sender:UISlider!) {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             let indexpath = NSIndexPath(forRow: 4, inSection: 0)
             let cellDistance = self.settingTableView.cellForRowAtIndexPath(indexpath) as! SettingMaxDistanceTableViewCell

@@ -59,6 +59,7 @@ let passWordMinCharacter = "Password must have at least 8 characters. Please try
 let passWordNotMatch = "New password does not match with retype new password"
 let curPassWrong = "Current password does not match, please retype"
 let notfindPhoto = "This post is no longer available"
+let kNoCameraPermission = "Please turn on micro/camera settings for record video"
 
 // Key String
 let k_PM_IS_LOGINED = "isLogined"

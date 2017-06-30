@@ -69,38 +69,44 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                 targetUserId = "\(val)"
             }
         }
-        
-        cell.nameUser.text = "Name"
-        var prefixUser = kPMAPIUSER
-        prefixUser.appendContentsOf(targetUserId)
-        Alamofire.request(.GET, prefixUser)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                cell.btnAdd.hidden = false
-                if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-                    cell.btnAdd.hidden = true
-                }
-                
-                if let userInfo = JSON as? NSDictionary {
-                    let name = userInfo.objectForKey(kFirstname) as! String
-                    cell.nameUser.text = name.uppercaseString
-                    self.arrayCoachesInfo[indexPath.row] = userInfo
-                    var link = kPMAPI
-                    if !(JSON[kImageUrl] is NSNull) {
-                        link.appendContentsOf(JSON[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight160)
-                        Alamofire.request(.GET, link)
-                            .responseImage { response in
-                                let imageRes = response.result.value! as UIImage
-                                cell.imgAvatar.image = imageRes
+    
+        UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
+            if (error == nil) {
+                let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
+                if (updateCell != nil) {
+                    cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
+                    cell.btnAdd.hidden = false
+                    if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+                        cell.btnAdd.hidden = true
+                    }
+                    
+                    if let userInfo = result as? NSDictionary {
+                        let name = userInfo.objectForKey(kFirstname) as! String
+                        cell.nameUser.text = name.uppercaseString
+                        self.arrayCoachesInfo[indexPath.row] = userInfo
+                        
+                        if (userInfo[kImageUrl] is NSNull == false) {
+                            let imageURLString = userInfo[kImageUrl] as! String
+                            
+                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                if (error == nil) {
+                                    let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
+                                    if (updateCell != nil) {
+                                        let imageRes = result as! UIImage
+                                        cell.imgAvatar.image = imageRes
+                                    }
+                                } else {
+                                    print("Request failed with error: \(error)")
+                                }
+                            }).fetchdata()
                         }
                     }
                 }
-            case .Failure(let error):
+            } else {
                 print("Request failed with error: \(error)")
-                }
-        }
+            }
+        }.fetchdata()
+        
         return cell
     }
     
