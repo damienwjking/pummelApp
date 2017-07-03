@@ -100,7 +100,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             if (cell != nil) {
                 // Show video layout
                 let coachDetail = self.arrayResult[cellIndex]
-                let videoURL = coachDetail[kVideoURL] as? String
+                let userDetail = coachDetail[kUser] as! NSDictionary
+                let videoURL = userDetail[kVideoURL] as? String
                 if (videoURL != nil && videoURL!.isEmpty == false) {
                     cell?.playVideoButton.hidden = false
                     cell?.playVideoButton.userInteractionEnabled = false
