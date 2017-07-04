@@ -9,6 +9,11 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Light.ttf">
+            <string>Montserrat-Light</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Profile View Controller-->
         <scene sceneID="J1R-XM-CVo">
@@ -128,6 +133,12 @@
                                                     <action selector="cameraButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="I8t-vl-uDa"/>
                                                 </connections>
                                             </button>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QAR-l9-0fJ">
+                                                <rect key="frame" x="588" y="30" width="0.0" height="0.0"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="13"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" red="0.25882352939999997" green="0.18823529410000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
@@ -139,10 +150,12 @@
                                             <constraint firstItem="QKN-pI-WDt" firstAttribute="centerY" secondItem="2Qg-F7-KVb" secondAttribute="centerY" id="DDd-5p-E86"/>
                                             <constraint firstItem="T7h-3e-Ut7" firstAttribute="centerY" secondItem="2Qg-F7-KVb" secondAttribute="centerY" id="FyG-cp-JXK"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerY" secondItem="2Qg-F7-KVb" secondAttribute="centerY" id="Kw8-zG-evl"/>
+                                            <constraint firstItem="QAR-l9-0fJ" firstAttribute="centerY" secondItem="db4-N2-14n" secondAttribute="centerY" id="M2c-hH-tIZ"/>
                                             <constraint firstItem="Pss-Fx-2Jc" firstAttribute="centerY" secondItem="H39-IH-xZm" secondAttribute="centerY" id="OG4-Nt-dRl"/>
                                             <constraint firstItem="QKN-pI-WDt" firstAttribute="leading" secondItem="T7h-3e-Ut7" secondAttribute="leading" constant="3" id="QDz-uD-jNf"/>
                                             <constraint firstItem="2Qg-F7-KVb" firstAttribute="leading" secondItem="QKN-pI-WDt" secondAttribute="leading" constant="2" id="ShR-gH-jvJ"/>
                                             <constraint firstItem="H39-IH-xZm" firstAttribute="centerY" secondItem="dwI-Ae-AUK" secondAttribute="centerY" id="T74-gU-6qN"/>
+                                            <constraint firstAttribute="trailing" secondItem="QAR-l9-0fJ" secondAttribute="trailing" constant="12" id="T9z-kT-cLA"/>
                                             <constraint firstItem="51y-60-mKL" firstAttribute="height" secondItem="dUz-At-R3A" secondAttribute="height" id="Yrl-Bp-K2r"/>
                                             <constraint firstItem="Pss-Fx-2Jc" firstAttribute="centerX" secondItem="H39-IH-xZm" secondAttribute="centerX" id="b27-Sf-Hin"/>
                                             <constraint firstItem="T7h-3e-Ut7" firstAttribute="centerX" secondItem="2Qg-F7-KVb" secondAttribute="centerX" id="cnf-Hc-NTs"/>
@@ -754,6 +767,7 @@
                         <outlet property="twiterBT" destination="F92-UJ-cTI" id="534-NW-trB"/>
                         <outlet property="twiterDT" destination="4o0-W4-zfW" id="uuC-0D-NI1"/>
                         <outlet property="twiterV" destination="yMW-Ed-Tt4" id="Cmz-cT-pe3"/>
+                        <outlet property="uploadingLabel" destination="QAR-l9-0fJ" id="FoW-Iz-CDu"/>
                         <outlet property="webHeightDT" destination="VN6-gd-yXv" id="ubd-HU-Wgb"/>
                         <outlet property="webTV" destination="4Yg-Xu-Qca" id="CP6-4q-cHB"/>
                         <outlet property="webTVHeightDT" destination="yVR-Du-Hk4" id="wLe-V5-ZgS"/>
@@ -2400,7 +2414,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mH3-BG-64I">
-                                                    <rect key="frame" x="20" y="24" width="560" height="27"/>
+                                                    <rect key="frame" x="20" y="24.5" width="560" height="26.5"/>
                                                     <string key="text">Would you like to become a verified Pummel Fitness professional?  Fill in this form to setup your Mobile profile and start finding new customers.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3386,7 +3400,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ey2-z7-s6W" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7N0-97-9tW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="7N0-97-9tW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3409,7 +3423,7 @@
         <image name="icon_play_video" width="50" height="50"/>
         <image name="pinGray" width="5" height="9"/>
         <image name="profile.png" width="22" height="22"/>
-        <image name="profile_camera" width="30" height="30"/>
+        <image name="profile_camera" width="37" height="37"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="okc-uz-SIC"/>

@@ -16,7 +16,11 @@ import AVKit
 import AVFoundation
 import PhotosUI
 
-class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
+enum UploadVideoStatus: Int {
+    case normal, uploading
+}
+
+class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var avatarIMVCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
@@ -32,6 +36,7 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
     @IBOutlet weak var connectV : UIView!
     @IBOutlet weak var connectBT : UIView!
     @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var uploadingLabel: UILabel!
     @IBOutlet weak var playVideoButton: UIButton!
     @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var addressIconIMV: UIImageView!
@@ -114,10 +119,27 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
     var isShowVideo: Bool = true
     let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
     var isVideoPlaying = false
-    var isUploadingVideo = false
+    var isUploadingVideo: UploadVideoStatus = .normal {
+        didSet {
+            if (self.cameraButton != nil && self.uploadingLabel != nil) {
+                dispatch_async(dispatch_get_main_queue(),{
+                    if (self.isUploadingVideo == .normal) {
+                        self.cameraButton.hidden = false
+                        self.uploadingLabel.hidden = true
+                    } else {
+                        self.cameraButton.hidden = true
+                        self.uploadingLabel.hidden = false
+                    }
+                })
+            }
+        }
+    }
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
+
+    
+    // MARK: View life circle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -295,9 +317,10 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
             self.videoPlayer!.actionAtItemEnd = .None
             self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
             self.videoPlayerLayer!.frame = self.videoView!.bounds
+            self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
             
-            self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+//            self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
             
             self.detailV.insertSubview(self.videoView!, atIndex: 0)
         }
@@ -838,8 +861,6 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         self.coachBorderBackgroundV.hidden = isPlay
         
         self.connectV.hidden = isPlay
-        
-        self.cameraButton.hidden = isPlay
     }
     
     // MARK: - Outlet func
@@ -1018,13 +1039,15 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        if self.isUploadingVideo == false {
+        if self.isUploadingVideo == .normal {
             self.isVideoPlaying = !self.isVideoPlaying
             self.videoPlayerSetPlay(self.isVideoPlaying)
         }
     }
-    
-    // MARK: UIImagePickerControllerDelegate
+}
+
+// MARK: UIImagePickerControllerDelegate
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let type = info[UIImagePickerControllerMediaType] as! String
         
@@ -1036,23 +1059,22 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                 self.videoView = nil
             }
             
+            // Dismiss video pickerview
+            picker.dismissViewControllerAnimated(true, completion: nil)
+            
             // send video by method mutipart to server
             let videoURL = info[UIImagePickerControllerMediaURL] as! NSURL
-//            imagePickerController.dismissViewControllerAnimated(true, completion: { 
-//                self.performSegueWithIdentifier("showCamera", sender: videoPath)
-//            })
             
-            self.cropVideoCenterToSquare(videoURL, completionHandler: { (exportURL) in
-                self.uploadCurrentVideo(picker, videoURL: exportURL)
+            self.convertVideoToMP4(videoURL, completionHandler: { (exportURL) in
+                self.uploadCurrentVideo(exportURL)
             })
         }
     }
     
-    func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
+    func convertVideoToMP4(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
         //        self.getTempVideoPath()
         // Crop video to square
         let asset: AVAsset = AVAsset(URL: videoURL)
-        let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
         
         let exportPath = self.getTempVideoPath("/library.mp4")
         
@@ -1089,17 +1111,14 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
         return templatePath
     }
     
-    func uploadCurrentVideo(picker: UIImagePickerController, videoURL: NSURL) {
+    func uploadCurrentVideo(videoURL: NSURL) {
         let videoData = NSData(contentsOfURL: videoURL)
         let videoExtend = (videoURL.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
         let videoType = "video/" + videoExtend
         let videoName = "video." + videoExtend
         
         // Insert activity indicator
-        dispatch_async(dispatch_get_main_queue(),{
-            picker.view.makeToastActivity(message: "Uploading")
-        })
-        
+        self.isUploadingVideo = .uploading
         
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
@@ -1126,31 +1145,34 @@ class ProfileViewController:  BaseViewController,  UIImagePickerControllerDelega
                     
                 case .Success(let upload, _, _):
                     upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
+                        
+                        dispatch_async(dispatch_get_main_queue(),{
+                            let percentWritten = (CGFloat(totalBytesWritten) / CGFloat(totalBytesExpectedToWrite)) * 100
+                            self.uploadingLabel.text = String(format: "Uploading %0.0f%@", percentWritten, "%")
+                        })
                     }
                     upload.validate()
                     upload.responseJSON { response in
                         dispatch_async(dispatch_get_main_queue(),{
-                            picker.view.hideToastActivity()
+                            self.isUploadingVideo = .normal
                             
                             if (response.response?.statusCode == 200) {
                                 NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
-                                
-                                picker.dismissViewControllerAnimated(true, completion: nil)
                             } else {
                                 let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
                                 let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                                     self.dismissViewControllerAnimated(true, completion: nil)
                                 }
                                 alertController.addAction(OKAction)
-                                picker.presentViewController(alertController, animated: true) {
+                                self.presentViewController(alertController, animated: true) {
                                     
                                 }
                             }
                         })
                     }
                     
-                case .Failure( _): break
-                    // Do nothing
+                case .Failure( _):
+                    self.isUploadingVideo = .normal
                 }
         })
     }

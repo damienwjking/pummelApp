@@ -820,9 +820,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.videoPlayer!.actionAtItemEnd = .None
         self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
         self.videoPlayerLayer!.frame = self.videoView!.bounds
+        self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
         self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
         
-        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+//        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
         
         self.detailV.insertSubview(self.videoView!, atIndex: 0)
         
