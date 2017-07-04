@@ -931,10 +931,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        if self.isUploadingVideo == .normal {
+//        if self.isUploadingVideo == .normal {
             self.isVideoPlaying = !self.isVideoPlaying
             self.videoPlayerSetPlay(self.isVideoPlaying)
-        }
+//        }
     }
     
     // MARK: - Video
