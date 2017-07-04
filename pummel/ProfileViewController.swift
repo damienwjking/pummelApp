@@ -126,6 +126,9 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     if (self.isUploadingVideo == .normal) {
                         self.cameraButton.hidden = false
                         self.uploadingLabel.hidden = true
+                        
+                        // Remove for next time upload
+                        self.uploadingLabel.text = ""
                     } else {
                         self.cameraButton.hidden = true
                         self.uploadingLabel.hidden = false
@@ -227,6 +230,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         // Add notification for update video url
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.profileGetNewDetail), name: "profileGetDetail", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.uploadVideoWithNotification), name: "profileUploadVideo", object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -286,94 +290,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             
             self.getDetail()
         }
-    }
-    
-    func showVideoLayout(videoURLString: String) {
-        // Move avatar to top left
-        let newAvatarSize: CGFloat = 37.0
-        let margin: CGFloat = 10.0
-        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + margin
-        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + margin
-        self.avatarIMVWidthConstraint.constant = newAvatarSize
-        
-        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
-        self.coachBorderV.layer.cornerRadius = (newAvatarSize + 10)/2
-        self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
-        
-        // Hidden indicator view
-        self.smallIndicatorView.hidden = true
-        self.medIndicatorView.hidden = true
-        self.bigIndicatorView.hidden = true
-        self.bigBigIndicatorView.hidden = true
-        
-        // Show background View
-        self.locationBackgroundImageView.hidden = false
-        
-        // Show video
-        if (self.videoView == nil) {
-            self.videoView = UIView.init(frame: self.detailV.bounds)
-            let videoURL = NSURL(string: videoURLString)
-            self.videoPlayer = AVPlayer(URL: videoURL!)
-            self.videoPlayer!.actionAtItemEnd = .None
-            self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
-            self.videoPlayerLayer!.frame = self.videoView!.bounds
-            self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
-            
-//            self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
-            
-            self.detailV.insertSubview(self.videoView!, atIndex: 0)
-        }
-        
-        // Animation
-        UIView.animateWithDuration(0.5, animations: {
-            self.detailV.layoutIfNeeded()
-        }) { (animation) in
-            self.videoPlayerSetPlay(false)
-        }
-        
-        // Add indicator for video
-        if (self.videoIndicator.superview != nil) {
-            self.videoIndicator.removeFromSuperview()
-        }
-        self.videoIndicator.startAnimating()
-        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
-        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
-        
-        // Remove loop play video for 
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
-        
-        // Add notification for loop play video
-        NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(self.endVideoNotification),
-                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
-                                                         object: self.videoPlayer!.currentItem)
-    }
-    
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        let currentItem = object as! AVPlayerItem
-        if currentItem.status == .ReadyToPlay {
-            let videoRect = self.videoPlayerLayer?.videoRect
-            if (videoRect?.width > videoRect?.height) {
-//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            } else {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            }
-            
-            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
-            
-            self.videoPlayerSetPlay(false)
-        }
-    }
-    
-    func endVideoNotification(notification: NSNotification) {
-        let playerItem = notification.object as! AVPlayerItem
-        
-        // Show first frame video
-        playerItem.seekToTime(kCMTimeZero)
-        
-        self.videoPlayerSetPlay(false)
     }
     
     func setting() {
@@ -839,31 +755,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    func videoPlayerSetPlay(isPlay: Bool) {
-        if (isPlay == true) {
-            self.videoPlayer!.play()
-            
-            self.playVideoButton.setImage(nil, forState: .Normal)
-            
-            self.locationView.alpha = 0
-        } else {
-            self.videoPlayer?.pause()
-            
-            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
-            
-            self.locationView.alpha = 1
-        }
-        
-        self.isVideoPlaying = isPlay
-        // Show/Hidden item above video view
-        self.avatarIMV.hidden = isPlay
-        self.coachBorderV.hidden = isPlay
-        self.coachBorderBackgroundV.hidden = isPlay
-        
-        self.connectV.hidden = isPlay
-    }
-    
-    // MARK: - Outlet func
+    // MARK: - Outlet function
     @IBAction func goBackToResult() {
         self.dismissViewControllerAnimated(true) {
         }
@@ -1044,34 +936,122 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.videoPlayerSetPlay(self.isVideoPlaying)
         }
     }
-}
-
-// MARK: UIImagePickerControllerDelegate
-extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let type = info[UIImagePickerControllerMediaType] as! String
+    
+    // MARK: - Video
+    func videoPlayerSetPlay(isPlay: Bool) {
+        if (isPlay == true) {
+            self.videoPlayer!.play()
+            
+            self.playVideoButton.setImage(nil, forState: .Normal)
+            
+            self.locationView.alpha = 0
+        } else {
+            self.videoPlayer?.pause()
+            
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+            
+            self.locationView.alpha = 1
+        }
         
-        if (type == "public.movie") {
-            // Remove current video layer
-            if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
-                self.videoPlayerLayer?.removeFromSuperlayer()
-                
-                self.videoView = nil
+        self.isVideoPlaying = isPlay
+        // Show/Hidden item above video view
+        self.avatarIMV.hidden = isPlay
+        self.coachBorderV.hidden = isPlay
+        self.coachBorderBackgroundV.hidden = isPlay
+        
+        self.connectV.hidden = isPlay
+    }
+    
+    func showVideoLayout(videoURLString: String) {
+        // Move avatar to top left
+        let newAvatarSize: CGFloat = 37.0
+        let margin: CGFloat = 10.0
+        self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + margin
+        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + margin
+        self.avatarIMVWidthConstraint.constant = newAvatarSize
+        
+        self.avatarIMV.layer.cornerRadius = newAvatarSize/2
+        self.coachBorderV.layer.cornerRadius = (newAvatarSize + 10)/2
+        self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
+        
+        // Hidden indicator view
+        self.smallIndicatorView.hidden = true
+        self.medIndicatorView.hidden = true
+        self.bigIndicatorView.hidden = true
+        self.bigBigIndicatorView.hidden = true
+        
+        // Show background View
+        self.locationBackgroundImageView.hidden = false
+        
+        // Show video
+        if (self.videoView == nil) {
+            self.videoView = UIView.init(frame: self.detailV.bounds)
+            let videoURL = NSURL(string: videoURLString)
+            self.videoPlayer = AVPlayer(URL: videoURL!)
+            self.videoPlayer!.actionAtItemEnd = .None
+            self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
+            self.videoPlayerLayer!.frame = self.videoView!.bounds
+            self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
+            
+            //            self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+            
+            self.detailV.insertSubview(self.videoView!, atIndex: 0)
+        }
+        
+        // Animation
+        UIView.animateWithDuration(0.5, animations: {
+            self.detailV.layoutIfNeeded()
+        }) { (animation) in
+            self.videoPlayerSetPlay(false)
+        }
+        
+        // Add indicator for video
+        if (self.videoIndicator.superview != nil) {
+            self.videoIndicator.removeFromSuperview()
+        }
+        self.videoIndicator.startAnimating()
+        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
+        
+        // Remove loop play video for
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        
+        // Add notification for loop play video
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(self.endVideoNotification),
+                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         object: self.videoPlayer!.currentItem)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        let currentItem = object as! AVPlayerItem
+        if currentItem.status == .ReadyToPlay {
+            let videoRect = self.videoPlayerLayer?.videoRect
+            if (videoRect?.width > videoRect?.height) {
+                //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+            } else {
+                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             }
             
-            // Dismiss video pickerview
-            picker.dismissViewControllerAnimated(true, completion: nil)
+            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
             
-            // send video by method mutipart to server
-            let videoURL = info[UIImagePickerControllerMediaURL] as! NSURL
-            
-            self.convertVideoToMP4(videoURL, completionHandler: { (exportURL) in
-                self.uploadCurrentVideo(exportURL)
-            })
+            self.videoPlayerSetPlay(false)
         }
     }
     
-    func convertVideoToMP4(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
+    func endVideoNotification(notification: NSNotification) {
+        let playerItem = notification.object as! AVPlayerItem
+        
+        // Show first frame video
+        playerItem.seekToTime(kCMTimeZero)
+        
+        self.videoPlayerSetPlay(false)
+    }
+    
+//    func convertVideoToMP4(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
+    func convertVideoToMP4AndUploadToServer(videoURL: NSURL) {
         //        self.getTempVideoPath()
         // Crop video to square
         let asset: AVAsset = AVAsset(URL: videoURL)
@@ -1089,7 +1069,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         exporter?.exportAsynchronouslyWithCompletionHandler({
             let outputURL:NSURL = exporter!.outputURL!
             
-            completionHandler(exportURL: outputURL)
+            self.uploadVideo(outputURL)
         })
     }
     
@@ -1111,7 +1091,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         return templatePath
     }
     
-    func uploadCurrentVideo(videoURL: NSURL) {
+    func uploadVideo(videoURL: NSURL) {
         let videoData = NSData(contentsOfURL: videoURL)
         let videoExtend = (videoURL.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
         let videoType = "video/" + videoExtend
@@ -1175,6 +1155,36 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
                     self.isUploadingVideo = .normal
                 }
         })
+    }
+    
+    func uploadVideoWithNotification(notification: NSNotification) {
+        let videoURL = notification.object as! NSURL
+        
+        self.convertVideoToMP4AndUploadToServer(videoURL)
+    }
+}
+
+// MARK: UIImagePickerControllerDelegate
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let type = info[UIImagePickerControllerMediaType] as! String
+        
+        if (type == "public.movie") {
+            // Remove current video layer
+            if (self.videoView != nil && self.videoView?.layer != nil && self.videoView?.layer.sublayers != nil) {
+                self.videoPlayerLayer?.removeFromSuperlayer()
+                
+                self.videoView = nil
+            }
+            
+            // Dismiss video pickerview
+            picker.dismissViewControllerAnimated(true, completion: nil)
+            
+            // send video by method mutipart to server
+            let videoURL = info[UIImagePickerControllerMediaURL] as! NSURL
+            
+            self.convertVideoToMP4AndUploadToServer(videoURL)
+        }
     }
 }
 

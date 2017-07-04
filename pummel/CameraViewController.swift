@@ -508,7 +508,11 @@ class CameraViewController: UIViewController {
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
             
             // Check render video
-            self.cropAndUploadToServer()
+//            profileUploadVideo
+            NSNotificationCenter.defaultCenter().postNotificationName("profileUploadVideo", object: self.videoURL)
+//            self.cropAndUploadToServer()
+            
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
     
@@ -650,7 +654,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         if (notAuthorize == false) {
             self.playButton.userInteractionEnabled = true
-            self.setupCameraSession()
+            self.setupCameraSession(.Back)
         } else {
             let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .Alert)
             let okAction = UIAlertAction(title: kOk, style: .Cancel, handler: { (_) in
@@ -668,8 +672,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
     
-    func setupCameraSession() {
-        let captureDevice = self.cameraWithPosition(.Back)
+    func setupCameraSession(cameraPosition: AVCaptureDevicePosition) {
+        let captureDevice = self.cameraWithPosition(cameraPosition)
         let audioCaptureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
         
         if (captureDevice != nil) {
