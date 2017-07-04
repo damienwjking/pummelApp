@@ -57,6 +57,7 @@ class CameraViewController: UIViewController {
             self.playButtonIndicatorView.hidden = true
             self.cameraIndicatorView.hidden = true
             self.playVideoButton.hidden = true
+            self.changeCameraButton.hidden = true
             
             self.cameraBorderView.backgroundColor = UIColor.clearColor()
             
@@ -64,6 +65,7 @@ class CameraViewController: UIViewController {
                 // Setup play button image
                 if (self.recordStatus == .pending) {
                     self.playButton.setImage(nil, forState: .Normal)
+                    self.changeCameraButton.hidden = false
                 } else if (self.recordStatus == .recording) {
                     let pauseImage = UIImage(named: "icon_pause")?.imageWithRenderingMode(.AlwaysTemplate)
                     self.playButton.setImage(pauseImage, forState: .Normal)
@@ -81,14 +83,14 @@ class CameraViewController: UIViewController {
                     // Show indicator for uploading
                     self.playButtonIndicatorView.hidden = false
                 }
-            }
-            
-            // Retake button
-            if (self.retakeButton != nil) {
-                self.retakeButton.enabled = false
                 
-                if (self.recordStatus == .finish) {
-                    self.retakeButton.enabled = true
+                // Retake button
+                if (self.retakeButton != nil) {
+                    self.retakeButton.hidden = true
+                    
+                    if (self.recordStatus == .finish) {
+                        self.retakeButton.hidden = false
+                    }
                 }
             }
         }
@@ -521,35 +523,40 @@ class CameraViewController: UIViewController {
             if ((deviceInput as? AVCaptureDeviceInput) != nil) {
                 let input: AVCaptureDeviceInput = deviceInput as! AVCaptureDeviceInput
                 
-                self.cameraSession.beginConfiguration()
-                
-                // Remove current camera input
-                self.cameraSession.removeInput(input)
-                
-                // Check current camera position
-                var captureDevice: AVCaptureDevice? = nil
-                if (input.device.position == .Back) {
-                    captureDevice = self.cameraWithPosition(.Front)
-                } else {
-                    captureDevice = self.cameraWithPosition(.Back)
-                }
-                
-                // Add new camera input
-                do {
-                    let deviceInput = try AVCaptureDeviceInput(device: captureDevice!)
-                    
-                    if (self.cameraSession.canAddInput(deviceInput) == true) {
-                        self.cameraSession.addInput(deviceInput)
+                if #available(iOS 10.0, *) {
+                    if (input.device.deviceType == "AVCaptureDeviceTypeBuiltInWideAngleCamera") {
+                        self.cameraSession.beginConfiguration()
+                        
+                        // Remove current camera input
+                        self.cameraSession.removeInput(input)
+                        
+                        // Check current camera position
+                        var captureDevice: AVCaptureDevice? = nil
+                        if (input.device.position == .Back) {
+                            captureDevice = self.cameraWithPosition(.Front)
+                        } else {
+                            captureDevice = self.cameraWithPosition(.Back)
+                        }
+                        
+                        // Add new camera input
+                        do {
+                            let deviceInput = try AVCaptureDeviceInput(device: captureDevice!)
+                            
+                            if (self.cameraSession.canAddInput(deviceInput) == true) {
+                                self.cameraSession.addInput(deviceInput)
+                            }
+                        }
+                        catch let error as NSError {
+                            NSLog("\(error), \(error.localizedDescription)")
+                        }
+                        
+                        self.cameraSession.commitConfiguration()
                     }
+                } else {
+                    // Fallback on earlier versions
                 }
-                catch let error as NSError {
-                    NSLog("\(error), \(error.localizedDescription)")
-                }
-                
-                self.cameraSession.commitConfiguration()
             }
         }
-        
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
