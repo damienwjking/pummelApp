@@ -6,8 +6,9 @@
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
-import Foundation
+import Mixpanel
 import Alamofire
+import Foundation
 
 typealias CompletionBlock = (result: AnyObject?, error: NSError?) -> Void
 
@@ -120,15 +121,10 @@ enum ImageRouter: URLRequestConvertible {
                         }
                     }
                 case .Failure(let error):
-                    // TODO: check status code 401 : cookie expire
-//                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-//                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-//                        // TODO: LOGOUT
-//                    }
-//                    alertController.addAction(OKAction)
-//                    self.presentViewController(alertController, animated: true) {
-//                        // ...
-//                    }
+                    // check status code 401 : cookie expire
+                    if (response.response?.statusCode == 401) {
+                        self.logout()
+                    }
                     
                     self.comletedBlock(result:  nil, error: error)
                 }
@@ -155,5 +151,47 @@ enum ImageRouter: URLRequestConvertible {
         }
         
         return nil
+    }
+    
+    func logout() {
+        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // LOGOUT
+                NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
+                Alamofire.request(.DELETE, kPMAPI_LOGOUT).response { (req, res, data, error) -> Void in
+                    print(res)
+                    
+                    let defaults = NSUserDefaults.standardUserDefaults()
+                    
+                    let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
+                    if ((outputString?.containsString(kLogoutSuccess)) != nil) {
+                        defaults.setObject(false, forKey: k_PM_IS_LOGINED)
+                        defaults.setObject(false, forKey: k_PM_IS_COACH)
+                        let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+                        for cookie in storage.cookies! {
+                            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
+                            storage.deleteCookie(cookie)
+                        }
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                        
+                        topController.dismissViewControllerAnimated(true, completion: nil)
+                    }
+                }
+                
+                // Tracker mixpanel
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Name": "Navigation Click", "Label":"Logout"]
+                mixpanel.track("IOS.Profile.Setting", properties: properties)
+            }
+            
+            alertController.addAction(OKAction)
+            
+            topController.presentViewController(alertController, animated: true, completion: nil)
+        }
     }
 }
