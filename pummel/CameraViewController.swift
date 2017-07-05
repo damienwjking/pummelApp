@@ -125,7 +125,14 @@ class CameraViewController: UIViewController {
             
             self.recordStatus = .pending
             
-            self.checkPermissionDeviceInput()
+            let permission = self.checkPermissionDeviceInput()
+            
+            if (permission == true) {
+                self.setupCameraSession(.Back)
+            } else {
+                self.showSettingAlert()
+            }
+            
             
             self.cameraView.layer.addSublayer(previewLayer)
             cameraSession.startRunning()
@@ -465,6 +472,18 @@ class CameraViewController: UIViewController {
         self.isVideoPlaying = isPlay
     }
     
+    func showSettingAlert() {
+        let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .Alert)
+        
+        let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (action) in
+            UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
+        }
+        
+        alertController.addAction(settingsAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
     // MARK: - Outlet function
     
     @IBAction func closeButtonClicked(sender: AnyObject) {
@@ -492,29 +511,32 @@ class CameraViewController: UIViewController {
     }
     
     @IBAction func playButtonClicked(sender: AnyObject) {
-//        self.exportVideo()
-        if (self.recordStatus == .pending) {
-            self.recordStatus = .recording
-            
-            // Start record video
-            self.startRecordVideo()
-        } else if (self.recordStatus == .recording) {
-            self.recordStatus = .finish
-            
-            // Stop record video
-            self.cameraOutput.stopRecording()
-        } else if (self.recordStatus == .finish) {
-            self.recordStatus = .uploading
-            
-            self.videoPlayerSetPlay(false)
-            self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
-            
-            // Check render video
-//            profileUploadVideo
-            NSNotificationCenter.defaultCenter().postNotificationName("profileUploadVideo", object: self.videoURL)
-//            self.cropAndUploadToServer()
-            
-            self.dismissViewControllerAnimated(true, completion: nil)
+        let permission = self.checkPermissionDeviceInput()
+        
+        if (permission == true) {
+            if (self.recordStatus == .pending) {
+                self.recordStatus = .recording
+                
+                // Start record video
+                self.startRecordVideo()
+            } else if (self.recordStatus == .recording) {
+                self.recordStatus = .finish
+                
+                // Stop record video
+                self.cameraOutput.stopRecording()
+            } else if (self.recordStatus == .finish) {
+                self.recordStatus = .uploading
+                
+                self.videoPlayerSetPlay(false)
+                self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+                
+                // Notification for upload video in background
+                NSNotificationCenter.defaultCenter().postNotificationName("profileUploadVideo", object: self.videoURL)
+                
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        } else {
+            self.showSettingAlert()
         }
     }
     
@@ -642,9 +664,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         return nil
     }
     
-    func checkPermissionDeviceInput() {
-        self.playButton.userInteractionEnabled = false
-        var notAuthorize = false
+    func checkPermissionDeviceInput() -> Bool {
+        var permission = true
         
         // Micro permission
         let microAuthStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio)
@@ -656,27 +677,10 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             microAuthStatus == .Denied ||
             cameraAuthStatus == .Restricted ||
             cameraAuthStatus == .Denied) {
-            notAuthorize = true
+            permission = false
         }
         
-        if (notAuthorize == false) {
-            self.playButton.userInteractionEnabled = true
-            self.setupCameraSession(.Back)
-        } else {
-            let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .Alert)
-            let okAction = UIAlertAction(title: kOk, style: .Cancel, handler: { (_) in
-                // Do nothing
-            })
-            
-            let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (action) in
-                UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
-            }
-            
-            alertController.addAction(okAction)
-            alertController.addAction(settingsAction)
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
-        }
+        return permission
     }
     
     func setupCameraSession(cameraPosition: AVCaptureDevicePosition) {
