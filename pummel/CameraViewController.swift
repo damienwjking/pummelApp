@@ -648,14 +648,14 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         // Micro permission
         let microAuthStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio)
-        if(microAuthStatus != .Authorized) {
-            notAuthorize = true
-        }
         
         // Camera permission
         let cameraAuthStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
         
-        if(cameraAuthStatus != .Authorized) {
+        if (microAuthStatus == .Restricted ||
+            microAuthStatus == .Denied ||
+            cameraAuthStatus == .Restricted ||
+            cameraAuthStatus == .Denied) {
             notAuthorize = true
         }
         

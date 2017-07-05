@@ -345,18 +345,20 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             let name = userInfo.objectForKey(kFirstname) as! String
                             cell.nameLB.text = name.uppercaseString
                             
-                            let imageURLString = userInfo[kImageUrl] as! String
-                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight120, completed: { (result, error) in
-                                if (error == nil) {
-                                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-                                    if visibleCell == true {
-                                        let imageRes = result as! UIImage
-                                        cell.avatarIMV.image = imageRes
+                            let imageURLString = userInfo[kImageUrl] as? String
+                            if (imageURLString?.isEmpty == false) {
+                                ImageRouter.getImage(posString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
+                                    if (error == nil) {
+                                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                        if visibleCell == true {
+                                            let imageRes = result as! UIImage
+                                            cell.avatarIMV.image = imageRes
+                                        }
+                                    } else {
+                                        print("Request failed with error: \(error)")
                                     }
-                                } else {
-                                    print("Request failed with error: \(error)")
-                                }
-                            }).fetchdata()
+                                }).fetchdata()
+                            }
                         }
                     } else {
                         print("Request failed with error: \(error)")
@@ -406,12 +408,13 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     func avatarClicked() {
         var coachLink  = kPMAPICOACH
-        let coachId = String(format:"%0.f", self.targerUser[kId]!.doubleValue)
+        let coachId = self.userIdTarget
         coachLink.appendContentsOf(coachId)
         Alamofire.request(.GET, coachLink)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
-                    self.performSegueWithIdentifier(kGoProfile, sender: nil)
+                    let coachDetail = response.result.value as! NSDictionary
+                    self.performSegueWithIdentifier(kGoProfile, sender: coachDetail[kUser])
                 } else {
                     self.performSegueWithIdentifier(kGoUserProfile, sender: nil)
                 }
@@ -441,7 +444,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             destination.userDetail = self.targerUser
         } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
-            destination.coachDetail = self.targerUser
+            destination.coachDetail = sender as! NSDictionary
             destination.isFromChat = true
         }
     }

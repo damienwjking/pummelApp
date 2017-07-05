@@ -19,7 +19,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     var tags = [Tag]()
     var arrayFeeds : [NSDictionary] = []
     var arrayDiscount : [NSDictionary] = []
-    var currentFeedDetail: NSDictionary!
     var isStopFetch: Bool!
     var offset: Int = 0
     var offsetDiscount: Int = 0
@@ -526,17 +525,24 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func goProfile(sender: UIButton) {
-        let cell = tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 1)) as! FeaturedFeedTableViewCell
-        self.isGoProfileDetail = true
-        if (cell.isCoach == true) {
-            self.performSegueWithIdentifier(kGoProfile, sender:sender)
-        } else {
-            self.performSegueWithIdentifier(kGoUserProfile, sender:sender)
-        }
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier(kGoProfile, sender: indexPath.row - 1)
+        let feed = arrayFeeds[sender.tag]
+        let userID = feed[kUserId] as! Double
+        let userIDString = String(format: "%0.0f", userID)
+        UserRouter.getUserInfo(userID: userIDString) { (result, error) in
+            if (error == nil) {
+                let cell = self.tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 1)) as! FeaturedFeedTableViewCell
+                self.isGoProfileDetail = true
+                
+                let userDetail = result as! NSDictionary
+                if (cell.isCoach == true) {
+                    self.performSegueWithIdentifier(kGoProfile, sender:userDetail)
+                } else {
+                    self.performSegueWithIdentifier(kGoUserProfile, sender:userDetail)
+                }
+            } else {
+                print("Request failed with error: \(error)")
+            }
+        }.fetchdata()
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -582,32 +588,28 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let destination = segue.destinationViewController as! ConnectViewController
             let tag = sender.tag
             let feed = arrayFeeds[tag] 
-            currentFeedDetail = feed[kUser] as! NSDictionary
+            let currentFeedDetail = feed[kUser] as! NSDictionary
             destination.coachDetail = currentFeedDetail
             destination.isFromFeed = true
         } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
-            let feed = arrayFeeds[sender.tag] 
-            currentFeedDetail = feed[kUser] as! NSDictionary
-            destination.coachDetail = currentFeedDetail
-            destination.coachTotalDetail = feed
+            destination.coachDetail = sender as! NSDictionary
             destination.isFromFeed = true
         } else if (segue.identifier == kGoUserProfile) {
             let destination = segue.destinationViewController as! UserProfileViewController
-            let feed = arrayFeeds[sender.tag] 
-            currentFeedDetail = feed[kUser] as! NSDictionary
+            let currentFeedDetail = sender as! NSDictionary
             destination.userDetail = currentFeedDetail
             destination.userId = String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
         } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destinationViewController as! ChatMessageViewController
             
-//            let coachDetail = (sender as! NSArray)[0]
+            let coachDetail = (sender as! NSArray)[0]
             let message = (sender as! NSArray)[1] as! String
             
-            destination.coachName = ((currentFeedDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercaseString
+            destination.coachName = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercaseString
             destination.typeCoach = true
-            destination.coachId = String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
-            destination.userIdTarget =  String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
+            destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
+            destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
             destination.preMessage = message
         } else if (segue.identifier == "goToFeedDetail") {
             let destination = segue.destinationViewController as! FeedViewController

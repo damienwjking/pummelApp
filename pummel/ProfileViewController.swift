@@ -1023,20 +1023,20 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        let currentItem = object as! AVPlayerItem
-        if currentItem.status == .ReadyToPlay {
-            let videoRect = self.videoPlayerLayer?.videoRect
-            if (videoRect?.width > videoRect?.height) {
-                //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            } else {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            }
-            
-            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
-            
-            self.videoPlayerSetPlay(false)
-        }
+//        let currentItem = object as! AVPlayerItem
+//        if currentItem.status == .ReadyToPlay {
+//            let videoRect = self.videoPlayerLayer?.videoRect
+//            if (videoRect?.width > videoRect?.height) {
+//                //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+//            } else {
+//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+//            }
+//            
+////            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+//            
+//            self.videoPlayerSetPlay(false)
+//        }
     }
     
     func endVideoNotification(notification: NSNotification) {

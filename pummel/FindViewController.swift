@@ -65,11 +65,11 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        for indexPath in self.collectionView.indexPathsForVisibleItems() {
-            let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as! CardViewCell
-            
-            cell.stopPlayVideo()
-        }
+//        for indexPath in self.collectionView.indexPathsForVisibleItems() {
+//            let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as! CardViewCell
+//            
+//            cell.stopPlayVideo()
+//        }
     }
     
     func setupCollectionView() {
@@ -122,28 +122,28 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             }
             
             // Tracking show video
-            if (cellIndex < self.arrayResult.count) {
-                let coachDetail = self.arrayResult[cellIndex]
-                let coachID = String(format: "%.0f", coachDetail[kUserId] as! Double)
-                TrackingPMAPI.sharedInstance.trackingProfileCard(coachID)
-            }
-            
-            // Remove video layer
-            if (cellIndex > 0) {
-                let preCellIndex = NSIndexPath(forRow: cellIndex - 1, inSection: 0)
-                let preCell = self.collectionView.cellForItemAtIndexPath(preCellIndex) as? CardViewCell
-                if (preCell != nil) {
-                    preCell!.stopPlayVideo()
-                }
-            }
-            
-            if (cellIndex < self.arrayResult.count - 1) {
-                let posCellIndex = NSIndexPath(forRow: cellIndex + 1, inSection: 0)
-                let posCell = self.collectionView.cellForItemAtIndexPath(posCellIndex) as? CardViewCell
-                if (posCell != nil) {
-                    posCell!.stopPlayVideo()
-                }
-            }
+//            if (cellIndex < self.arrayResult.count) {
+//                let coachDetail = self.arrayResult[cellIndex]
+//                let coachID = String(format: "%.0f", coachDetail[kUserId] as! Double)
+//                TrackingPMAPI.sharedInstance.trackingProfileCard(coachID)
+//            }
+//            
+//            // Remove video layer
+//            if (cellIndex > 0) {
+//                let preCellIndex = NSIndexPath(forRow: cellIndex - 1, inSection: 0)
+//                let preCell = self.collectionView.cellForItemAtIndexPath(preCellIndex) as? CardViewCell
+//                if (preCell != nil) {
+//                    preCell!.stopPlayVideo()
+//                }
+//            }
+//            
+//            if (cellIndex < self.arrayResult.count - 1) {
+//                let posCellIndex = NSIndexPath(forRow: cellIndex + 1, inSection: 0)
+//                let posCell = self.collectionView.cellForItemAtIndexPath(posCellIndex) as? CardViewCell
+//                if (posCell != nil) {
+//                    posCell!.stopPlayVideo()
+//                }
+//            }
         })
     }
     
@@ -328,7 +328,6 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
             let destination = segue.destinationViewController as! CoachProfileViewController
             let totalDetail = sender as! NSDictionary
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
-            destination.coachTotalDetail = totalDetail
             
             if destination.coachDetail != nil {
                 if let firstName = destination.coachDetail[kFirstname] as? String {

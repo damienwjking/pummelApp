@@ -97,7 +97,6 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     var oldPositionAboutV: CGFloat!
     var statusBarDefault: Bool!
     var coachDetail: NSDictionary!
-    var coachTotalDetail: NSDictionary!
     var sizingCell: TagCell?
     var tags = [Tag]()
     var arrayPhotos: NSArray = []
@@ -137,7 +136,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.smallIndicatorView.clipsToBounds = true
 
         self.titleCoachLB.font = .pmmMonReg13()
-        self.titleCoachLB.text = (coachDetail[kFirstname] as! String).uppercaseString
+        self.titleCoachLB.text = (self.coachDetail[kFirstname] as! String).uppercaseString
         
         self.locationView.layer.cornerRadius = 2
         self.locationView.layer.masksToBounds = true
@@ -157,7 +156,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.interestCollectionView.dataSource = self
         self.webTV.delegate = self
         
-        let imageLink = coachDetail[kImageUrl] as? String
+        let imageLink = self.coachDetail[kImageUrl] as? String
         if (imageLink?.isEmpty == false) {
             self.setCoachAvatar()
         }
@@ -166,29 +165,29 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.aboutLeftDT.constant = 10
         self.businessIMV.layer.cornerRadius = 50
         self.businessIMV.clipsToBounds = true
-        if (coachDetail[kBusinessId] != nil) {
+        if (self.coachDetail[kBusinessId] != nil) {
             self.getBusinessImage()
         } else {
-            var prefix = kPMAPIUSER
-            prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
-            
-            Alamofire.request(.GET, prefix).responseJSON(completionHandler: { (response) in
-                if response.response?.statusCode == 200 {
-                    let jsonBusiness = response.result.value as! NSDictionary
+            let userID = String(format:"%0.f", self.coachDetail[kId]!.doubleValue)
+            UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
+                if (error == nil) {
+                    let jsonBusiness = result as! NSDictionary
                     if (jsonBusiness[kBusinessId] != nil) {
                         let dictionary: NSMutableDictionary = NSMutableDictionary(dictionary: self.coachDetail)
                         dictionary[kBusinessId] = jsonBusiness[kBusinessId]!.doubleValue
                         self.coachDetail = dictionary
                         self.getBusinessImage()
                     }
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-            })
+            }).fetchdata()
         }
 
-        if (coachDetail[kTags] == nil) {
+        if (self.coachDetail[kTags] == nil) {
             self.getCoachTags()
         } else {
-            let coachListTags = coachDetail[kTags] as! NSArray
+            let coachListTags = self.coachDetail[kTags] as! NSArray
             self.tags.removeAll()
             for i in 0 ..< coachListTags.count {
                 let tagContent = coachListTags[i] as! NSDictionary
@@ -263,13 +262,13 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             // Remove video view
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
             
-            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+//            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
         }
     }
     
     func getBusinessImage() {
-        if (coachDetail[kBusinessId] is NSNull == false) {
-            let businessID = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+        if (self.coachDetail[kBusinessId] is NSNull == false) {
+            let businessID = String(format:"%0.f", self.coachDetail[kBusinessId]!.doubleValue)
             
             ImageRouter.getBusinessLogo(businessID: businessID, sizeString: widthHeight120, completed: { (result, error) in
                 if (error == nil) {
@@ -286,7 +285,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     func getCoachTags() {
-        let feedId = String(format:"%0.f", coachDetail[kId]!.doubleValue)
+        let feedId = String(format:"%0.f", self.coachDetail[kId]!.doubleValue)
         var tagLink = kPMAPIUSER
         tagLink.appendContentsOf(feedId)
         tagLink.appendContentsOf("/tags")
@@ -310,7 +309,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     func setCoachAvatar() {
-        let imageLink = coachDetail[kImageUrl] as! String
+        let imageLink = self.coachDetail[kImageUrl] as! String
         var prefix = kPMAPI
         prefix.appendContentsOf(imageLink)
         let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
@@ -355,7 +354,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     
     func getListImage() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
+        prefix.appendContentsOf(String(format:"%0.f", self.coachDetail[kId]!.doubleValue))
         prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -373,7 +372,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     
     func updateUI() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
+        prefix.appendContentsOf(String(format:"%0.f", self.coachDetail[kId]!.doubleValue))
         self.view.makeToastActivity(message: "Loading")
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -521,7 +520,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         let prefix = kPMAPICHECKUSERCONNECT
         let param = [
             kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-            kCoachId : coachDetail[kId]!
+            kCoachId : self.coachDetail[kId]!
         ]
         
         self.connectBT.userInteractionEnabled = false
@@ -581,8 +580,8 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     
     @IBAction func goConnection() {
         // Tracker mixpanel
-        if coachDetail != nil {
-            if let firstName = coachDetail[kFirstname] as? String {
+        if self.coachDetail != nil {
+            if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SendMessageToCoach", properties: properties)
@@ -593,7 +592,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
                 prefix.appendContentsOf(kPMAPI_LEAD)
                 prefix.appendContentsOf("/")
-                Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:coachDetail[kId]!])
+                Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:self.coachDetail[kId]!])
                     .responseJSON { response in
                         self.view.hideToastActivity()
                         
@@ -614,7 +613,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == kGoConnect) {
             let destimation = segue.destinationViewController as! ConnectViewController
-            destimation.coachDetail = coachDetail
+            destimation.coachDetail = self.coachDetail
             destimation.isFromProfile = true
             destimation.isFromFeed = self.isFromFeed
             destimation.isConnected = self.isConnected
@@ -692,7 +691,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://facebook.com/")!)
             }
             // Tracker mixpanel
-            if let firstName = coachDetail[kFirstname] as? String {
+            if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
@@ -724,7 +723,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://twitter.com/")!)
             }
             // Tracker mixpanel
-            if let firstName = coachDetail[kFirstname] as? String {
+            if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
@@ -748,7 +747,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 UIApplication.sharedApplication().openURL(NSURL(string: "http://instagram.com/")!) 
             }
             // Tracker mixpanel
-            if let firstName = coachDetail[kFirstname] as? String {
+            if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
@@ -853,19 +852,19 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        print("observed \(keyPath) \(change)")
-        let currentItem = object as! AVPlayerItem
-        if currentItem.status == .ReadyToPlay {
-            let videoRect = self.videoPlayerLayer?.videoRect
-            if (videoRect?.width > videoRect?.height) {
-//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            } else {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            }
-            
-            self.videoPlayerSetPlay(false)
-        }
+//        print("observed \(keyPath) \(change)")
+//        let currentItem = object as! AVPlayerItem
+//        if currentItem.status == .ReadyToPlay {
+//            let videoRect = self.videoPlayerLayer?.videoRect
+//            if (videoRect?.width > videoRect?.height) {
+////                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+//            } else {
+//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+//            }
+//            
+//            self.videoPlayerSetPlay(false)
+//        }
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {

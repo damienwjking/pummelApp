@@ -367,7 +367,6 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
             destination.coachDetail = userFeed
-            destination.coachTotalDetail = feedDetail
             destination.isFromFeed = true
         } else if (segue.identifier == "goNewPost") {
             let destination = segue.destinationViewController as! NewCommentImageViewController
