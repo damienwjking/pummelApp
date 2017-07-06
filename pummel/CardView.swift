@@ -43,7 +43,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         layer.shadowOffset = CGSizeMake(0, 1.5)
         layer.shadowRadius = 4.0
         layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.mainScreen().scale
+        layer.rasterizationScale = SCREEN_SCALE
     }
     
     func registerTagCell() {

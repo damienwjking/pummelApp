@@ -84,6 +84,19 @@ class LogTableViewCell: UITableViewCell {
             }
         }.fetchdata()
         
+        UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
+            if (error == nil) {
+                let isCoach = result as! Bool
+                
+                if isCoach {
+                    self.avatarIMV.layer.borderWidth = 3
+                    self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+                }
+            } else {
+                print("Request failed with error: \(error)")
+            }
+        }.fetchdata()
+        
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
     }
     

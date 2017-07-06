@@ -332,7 +332,7 @@ class CameraViewController: UIViewController {
     }
     
     func getComplimentSize(size: CGFloat) -> CGFloat {
-        let screenRect = UIScreen.mainScreen().bounds
+        let screenRect = SCREEN_BOUND
         var ratio = screenRect.size.height / screenRect.size.width
         
         // we have to adjust the ratio for 16:9 screens

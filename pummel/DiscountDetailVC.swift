@@ -22,6 +22,8 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     @IBOutlet weak var tvLink:UITextView!
     @IBOutlet weak var lbFullText:UILabel!
     
+    @IBOutlet weak var tvLinkHeightConstraint: NSLayoutConstraint!
+    
     var businessDetail:NSDictionary!
     var discountDetail:NSDictionary!
     
@@ -52,8 +54,6 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.tvLink.text = ""
         self.lbDescription.text = ""
         self.lbFullText.text = ""
-        
-        self.updateData()
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -63,6 +63,8 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        
+        self.updateData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -118,8 +120,21 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         
         if let val = discountDetail[kWebsite] as? String {
             self.tvLink.text = val
+            
+            // Set color for link
+            self.tvLink.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg16(),
+                                              NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(),
+                                              NSUnderlineStyleAttributeName: NSNumber(int: 1)]
+            
+            // Set height for link
+            let textMarginVertical = self.tvLink.layoutMargins.left + self.tvLink.layoutMargins.right
+            let textMarginHorizontal = self.tvLink.layoutMargins.top + self.tvLink.layoutMargins.bottom
+            
+            let textWidth = self.tvLink.frame.size.width - textMarginVertical
+            let heightLinkText = val.heightWithConstrainedWidth(textWidth, font: self.tvLink.font!)
+            
+            self.tvLinkHeightConstraint.constant = heightLinkText + textMarginHorizontal
         }
-        self.tvLink.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
         
         if let val = discountDetail[kFullText] as? String {
             self.lbFullText.text = val

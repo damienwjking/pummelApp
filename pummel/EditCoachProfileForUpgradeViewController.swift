@@ -84,7 +84,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     var currentId : String = ""
     var settingCV:SettingsViewController!
     
-    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    let SCREEN_MAX_LENGTH = max(SCREEN_WIDTH, SCREEN_HEIGHT)
     var location: Location? {
         didSet {
         }

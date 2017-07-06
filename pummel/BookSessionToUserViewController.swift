@@ -432,7 +432,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
     }
     
     func cropAndSave() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, SCREEN_SCALE)
         let offset = imageScrolView.contentOffset
         
         CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)

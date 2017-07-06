@@ -81,8 +81,8 @@ class FindViewController: BaseViewController, UICollectionViewDataSource, UIColl
         self.collectionView.registerNib(noResultNibName, forCellWithReuseIdentifier: "SearchNoCoach")
         
         // setup cell
-        self.widthCell = (UIScreen.mainScreen().bounds.size.width - 30)
-        self.collectionViewLayout.itemSize = CGSize(width: (UIScreen.mainScreen().bounds.size.width - 40), height: (UIScreen.mainScreen().bounds.size.height - 160))
+        self.widthCell = (SCREEN_WIDTH - 30)
+        self.collectionViewLayout.itemSize = CGSize(width: (SCREEN_WIDTH - 40), height: (SCREEN_HEIGHT - 160))
         self.collectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 20, 0, 0)
         self.collectionViewLayout.minimumLineSpacing = 10
         

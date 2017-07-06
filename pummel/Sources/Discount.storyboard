@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="dKF-bp-0kB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="dKF-bp-0kB">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -91,7 +91,7 @@
                                                             <action selector="buttonDiscountClicked" destination="dKF-bp-0kB" eventType="touchUpInside" id="Z54-3P-PLA"/>
                                                         </connections>
                                                     </button>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="https://test.vn" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Grq-CA-8OO">
+                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="https://test.vn" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Grq-CA-8OO">
                                                         <rect key="frame" x="15" y="509" width="345" height="30"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <constraints>
@@ -198,6 +198,7 @@
                         <outlet property="lbText" destination="uTY-XT-QUG" id="zbL-bF-4XD"/>
                         <outlet property="lbTitle" destination="3yF-Wr-9H4" id="Wrc-eH-i5x"/>
                         <outlet property="tvLink" destination="Grq-CA-8OO" id="iex-ws-xCs"/>
+                        <outlet property="tvLinkHeightConstraint" destination="h5F-o5-laO" id="TSt-lC-Tgu"/>
                         <segue destination="XGx-21-XE7" kind="show" identifier="clickURLLink" id="XhD-R8-T9U"/>
                     </connections>
                 </viewController>

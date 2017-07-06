@@ -47,6 +47,7 @@
 		BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageRouter.swift */; };
 		BA8884C11EEA4F1800FFD734 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C01EEA4F1800FFD734 /* Camera.storyboard */; };
 		BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */; };
+		BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA439561F0DE8CC001D122A /* NumberConstant.swift */; };
 		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
 		BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
@@ -261,6 +262,7 @@
 		BA81A4421EE68CA5002D626E /* ImageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRouter.swift; sourceTree = "<group>"; };
 		BA8884C01EEA4F1800FFD734 /* Camera.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square_kwickie_thumnail_gradient.png; sourceTree = "<group>"; };
+		BAA439561F0DE8CC001D122A /* NumberConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberConstant.swift; sourceTree = "<group>"; };
 		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
 		BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
@@ -695,6 +697,7 @@
 				F9ABEADA1DC347B90084B70E /* URLConstant.swift */,
 				F9ABEADC1DC34F250084B70E /* ColorConstant.swift */,
 				F9ABEADE1DC367620084B70E /* StringConstant.swift */,
+				BAA439561F0DE8CC001D122A /* NumberConstant.swift */,
 				F9ABEAE01DC36C3B0084B70E /* FontConstant.swift */,
 				BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */,
 			);
@@ -1244,6 +1247,7 @@
 				BA04AB691E252BAC00F987BD /* ContactUserViewController.swift in Sources */,
 				E8499E701EEFBDE7008A65C2 /* DiscountDetailVC.swift in Sources */,
 				F9EAE8E31D6EFA0900FD32BE /* SettingNotificationHeaderTableViewCell.swift in Sources */,
+				BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */,
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
 				F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */,
 				F917276A1DB3DF5600C6E612 /* Spinner.swift in Sources */,

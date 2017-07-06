@@ -26,7 +26,7 @@ class ActivityCell: UICollectionViewCell {
         self.tagName.textColor = UIColor.whiteColor()
         self.tagName.font = .pmmMonLight14()
         
-        self.tagNameMaxWidthConstraint.constant = UIScreen.mainScreen().bounds.width - 9
+        self.tagNameMaxWidthConstraint.constant = SCREEN_WIDTH - 9
     }
     
     func getRandomColor() -> UIColor{

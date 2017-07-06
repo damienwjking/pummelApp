@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+class LogSessionSelectUserViewController: BaseViewController {
     
     @IBOutlet weak var tbView: UITableView!
     var arrayNew: [NSDictionary] = []
@@ -104,6 +104,22 @@ class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegat
         // Dispose of any resources that can be recreated.
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "goLogSessionDetail" {
+            let destination = segue.destinationViewController as! LogSessionClientDetailViewController
+            destination.tag = self.tag!
+            destination.userInfoSelect = self.userInfoSelect
+        }
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 3
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return arrayNew.count
@@ -111,10 +127,6 @@ class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegat
             return arrayCurrent.count
         }
         return arrayOld.count
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 3
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -163,6 +175,7 @@ class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegat
         cell.lbName.text = "..."
         cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
         
+        // Get name and image
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
             if (error == nil) {
                 let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
@@ -171,21 +184,40 @@ class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegat
                         let name = userInfo.objectForKey(kFirstname) as! String
                         cell.lbName.text = name.uppercaseString
                         
-                        let imageURLString = userInfo[kImageUrl] as! String
+                        let imageURLString = userInfo[kImageUrl] as? String
                         
-                        ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                            let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-                            if visibleCell == true {
-                                if (error == nil) {
-                                    let imageRes = result as! UIImage
-                                    cell.imgAvatar.image = imageRes
-                                } else {
-                                    print("Request failed with error: \(error)")
+                        if (imageURLString?.isEmpty == false) {
+                            ImageRouter.getImage(posString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
+                                let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                if visibleCell == true {
+                                    if (error == nil) {
+                                        let imageRes = result as! UIImage
+                                        cell.imgAvatar.image = imageRes
+                                    } else {
+                                        print("Request failed with error: \(error)")
+                                    }
                                 }
-                            }
-                        }).fetchdata()
+                            }).fetchdata()
+                        }
+                        
+                        
                     }
                 }
+            } else {
+                print("Request failed with error: \(error)")
+            }
+            }.fetchdata()
+        
+        // Check coach
+        UserRouter.checkCoachOfUser(userID: targetUserId) { (result, error) in
+            if (error == nil) {
+                let isCoach = result as! Bool
+                
+                if (isCoach) {
+                    cell.imgAvatar.layer.borderWidth = 3
+                    cell.imgAvatar.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+                }
+                
             } else {
                 print("Request failed with error: \(error)")
             }
@@ -209,14 +241,4 @@ class LogSessionSelectUserViewController: BaseViewController, UITableViewDelegat
         self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
         self.tbView.deselectRowAtIndexPath(indexPath, animated: false)
     }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "goLogSessionDetail" {
-            let destination = segue.destinationViewController as! LogSessionClientDetailViewController
-            destination.tag = self.tag!
-            destination.userInfoSelect = self.userInfoSelect
-        }
-    }
-    
 }
-

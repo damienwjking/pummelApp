@@ -13,7 +13,7 @@ import AlamofireImage
 import EventKit
 import CVCalendar
 
-class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, LogCellDelegate, CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
+class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
     
     @IBOutlet weak var selectSegment: UISegmentedControl!
     
@@ -196,207 +196,6 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         }
     }
     
-    // MARK: UITableView
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.selectedSessionList.count > 0 {
-            self.noSessionV.hidden = true
-        } else {
-            self.noSessionV.hidden = false
-        }
-        
-        return self.selectedSessionList.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let session = self.selectedSessionList[indexPath.row]
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
-        
-        let now = NSDate()
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = kFullDateFormat
-        let sessionDate = dateFormatter.dateFromString(session.datetime!)
-        
-        if now.compare(sessionDate!) == .OrderedAscending {
-            cell.setData(session, isUpComing: true)
-        } else {
-            cell.setData(session, isUpComing: false)
-        }
-        
-        cell.logCellDelegate = self
-        
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if self.sessionList.count == 0 {
-            return 0.01
-        }
-        
-        return 0
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
-        let session = self.selectedSessionList[indexPath.row]
-        
-        self.performSegueWithIdentifier("coachSessionDetail", sender: session)
-    }
-    
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { (action, indexPath) in
-            if indexPath.row < self.selectedSessionList.count {
-                let session = self.selectedSessionList[indexPath.row]
-                
-                let prefix = kPMAPIDELETEACTIVITY
-                let param = ["activityId":session.id!]
-                
-                Alamofire.request(.POST, prefix, parameters: param)
-                    .responseJSON { response in
-                        if response.response?.statusCode == 200 {
-                            self.selectedSessionList.removeAtIndex(indexPath.row)
-                            tableView.reloadData()
-                            
-                            self.sessionList.removeAll()
-                            self.canLoadMore = true
-                            self.getListSession()
-                            
-                            self.calendarView.contentController.refreshPresentedMonth()
-                            
-                        }
-                }
-            }
-            
-        }
-        deleteRowAction.backgroundColor = UIColor.pmmBrightOrangeColor()
-        
-        
-        return [deleteRowAction]
-    }
-    
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        // Call to show editing action
-    }
-    
-    // MARK: CVCalendarViewDelegate
-    func presentationMode() -> CalendarMode {
-        return .MonthView
-    }
-    
-    func firstWeekday() -> Weekday {
-        return .Sunday
-    }
-    
-    func presentedDateUpdated(date: Date) {
-        self.calendarView.contentController.refreshPresentedMonth()
-        
-        // update month label
-        let monthDateFormatter = NSDateFormatter()
-        monthDateFormatter.dateFormat = "yyyy M"
-        let dateString = String(format:"%ld %ld", date.year, date.month)
-        let convertDate = monthDateFormatter.dateFromString(dateString)
-        
-        let convertDateFormatter = NSDateFormatter()
-        convertDateFormatter.dateFormat = "LLLL yyyy"
-        self.monthLabel.text = convertDateFormatter.stringFromDate(convertDate!)
-        
-        // update session list
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
-        //let eventDateString = dateFormatter.stringFromDate(date)
-        
-        let calendarString = String(format:"%ld%ld%ld%ld%ld", date.year, date.month/10, date.month%10, date.day/10, date.day%10)
-        
-        let fullDateFormatter = NSDateFormatter()
-        fullDateFormatter.dateFormat = kFullDateFormat
-        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
-        
-        var i = 0
-        self.selectedSessionList.removeAll()
-        while i < self.sessionList.count {
-            let session = self.sessionList[i]
-            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
-            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
-            
-            if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
-                self.selectedSessionList.append(session)
-            }
-            
-            i = i + 1
-        }
-        
-        self.sortSession(true)
-        self.sessionTableView.reloadData()
-    }
-    
-    func dayLabelFont(by weekDay: Weekday, status: CVStatus, present: CVPresent) -> UIFont {
-        return UIFont.pmmMonLight13()
-    }
-    
-    func dayLabelWeekdayHighlightedBackgroundColor() -> UIColor {
-        return UIColor.pmmBrightOrangeColor()
-    }
-    
-    func dayLabelWeekdaySelectedBackgroundColor() -> UIColor {
-        return UIColor.pmmBrightOrangeColor()
-    }
-    
-    func dayLabelPresentWeekdayHighlightedBackgroundColor() -> UIColor {
-        return UIColor.pmmBrightOrangeColor()
-    }
-    
-    func dayLabelPresentWeekdaySelectedBackgroundColor() -> UIColor {
-        return UIColor.pmmBrightOrangeColor()
-    }
-    
-    func dayLabelPresentWeekdayTextColor() -> UIColor {
-        return UIColor.pmmBrightOrangeColor()
-    }
-    
-    func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
-        //let eventDateString = dateFormatter.stringFromDate(date)
-        
-        let calendarString = String(format:"%ld%ld%ld%ld%ld", dayView.date.year, dayView.date.month/10, dayView.date.month%10, dayView.date.day/10, dayView.date.day%10)
-        
-        let fullDateFormatter = NSDateFormatter()
-        fullDateFormatter.dateFormat = kFullDateFormat
-        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
-        
-        var i = 0
-        var showDotMarker = false
-        while i < self.sessionList.count {
-            let session = self.sessionList[i]
-            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
-            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
-            
-            if NSDate().compare(sessionDate!) == .OrderedAscending &&  calendarString == sessionDateString {
-                showDotMarker = true
-                break;
-            }
-            
-            i = i + 1
-        }
-        
-        return showDotMarker
-    }
-    
-    func dotMarker(moveOffsetOnDayView dayView: DayView) -> CGFloat {
-        return 9
-    }
-    
-    func dotMarker(colorOnDayView dayView: DayView) -> [UIColor] {
-        return [UIColor.pmmBrightOrangeColor()]
-    }
-    
     // MARK: Outlet function
     func rightButtonClicked() {
         let logAction = UIAlertAction(title: kLog, style: UIAlertActionStyle.Destructive, handler: { (action:UIAlertAction!) -> Void in
@@ -510,7 +309,225 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
         }
     }
     
-    // MARK: LogCellDelegate
+    // MARK: Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "coachSessionDetail" {
+            let destination = segue.destinationViewController as! DetailSessionViewController
+            destination.session = sender as! Session
+        }
+    }
+}
+
+extension SessionCoachViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.selectedSessionList.count > 0 {
+            self.noSessionV.hidden = true
+        } else {
+            self.noSessionV.hidden = false
+        }
+        
+        return self.selectedSessionList.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let session = self.selectedSessionList[indexPath.row]
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
+        
+        let now = NSDate()
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = kFullDateFormat
+        let sessionDate = dateFormatter.dateFromString(session.datetime!)
+        
+        if now.compare(sessionDate!) == .OrderedAscending {
+            cell.setData(session, isUpComing: true)
+        } else {
+            cell.setData(session, isUpComing: false)
+        }
+        
+        cell.logCellDelegate = self
+        
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if self.sessionList.count == 0 {
+            return 0.01
+        }
+        
+        return 0
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        let session = self.selectedSessionList[indexPath.row]
+        
+        self.performSegueWithIdentifier("coachSessionDetail", sender: session)
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { (action, indexPath) in
+            if indexPath.row < self.selectedSessionList.count {
+                let session = self.selectedSessionList[indexPath.row]
+                let userID = self.defaults.objectForKey(k_PM_CURRENT_ID) as! String
+                
+                var prefix = kPMAPIUSER
+                prefix = prefix.stringByAppendingString(userID)
+                prefix = prefix.stringByAppendingString(kPM_PATH_DELETEACTIVITY)
+                
+                let param = ["activityId":session.id!]
+                
+                Alamofire.request(.POST, prefix, parameters: param)
+                    .responseJSON { response in
+                        if response.response?.statusCode == 200 {
+                            self.selectedSessionList.removeAtIndex(indexPath.row)
+                            tableView.reloadData()
+                            
+                            self.sessionList.removeAll()
+                            self.canLoadMore = true
+                            self.getListSession()
+                            
+                            self.calendarView.contentController.refreshPresentedMonth()
+                            
+                        }
+                }
+            }
+            
+        }
+        deleteRowAction.backgroundColor = UIColor.pmmBrightOrangeColor()
+        
+        
+        return [deleteRowAction]
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        // Call to show editing action
+    }
+}
+
+// MARK: CVCalendarViewDelegate
+extension SessionCoachViewController: CVCalendarViewDelegate {
+    func presentationMode() -> CalendarMode {
+        return .MonthView
+    }
+    
+    func firstWeekday() -> Weekday {
+        return .Sunday
+    }
+    
+    func presentedDateUpdated(date: Date) {
+        self.calendarView.contentController.refreshPresentedMonth()
+        
+        // update month label
+        let monthDateFormatter = NSDateFormatter()
+        monthDateFormatter.dateFormat = "yyyy M"
+        let dateString = String(format:"%ld %ld", date.year, date.month)
+        let convertDate = monthDateFormatter.dateFromString(dateString)
+        
+        let convertDateFormatter = NSDateFormatter()
+        convertDateFormatter.dateFormat = "LLLL yyyy"
+        self.monthLabel.text = convertDateFormatter.stringFromDate(convertDate!)
+        
+        // update session list
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        //let eventDateString = dateFormatter.stringFromDate(date)
+        
+        let calendarString = String(format:"%ld%ld%ld%ld%ld", date.year, date.month/10, date.month%10, date.day/10, date.day%10)
+        
+        let fullDateFormatter = NSDateFormatter()
+        fullDateFormatter.dateFormat = kFullDateFormat
+        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        
+        var i = 0
+        self.selectedSessionList.removeAll()
+        while i < self.sessionList.count {
+            let session = self.sessionList[i]
+            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            
+            if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
+                self.selectedSessionList.append(session)
+            }
+            
+            i = i + 1
+        }
+        
+        self.sortSession(true)
+        self.sessionTableView.reloadData()
+    }
+    
+    func dayLabelFont(by weekDay: Weekday, status: CVStatus, present: CVPresent) -> UIFont {
+        return UIFont.pmmMonLight13()
+    }
+    
+    func dayLabelWeekdayHighlightedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelWeekdaySelectedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelPresentWeekdayHighlightedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelPresentWeekdaySelectedBackgroundColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dayLabelPresentWeekdayTextColor() -> UIColor {
+        return UIColor.pmmBrightOrangeColor()
+    }
+    
+    func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        //let eventDateString = dateFormatter.stringFromDate(date)
+        
+        let calendarString = String(format:"%ld%ld%ld%ld%ld", dayView.date.year, dayView.date.month/10, dayView.date.month%10, dayView.date.day/10, dayView.date.day%10)
+        
+        let fullDateFormatter = NSDateFormatter()
+        fullDateFormatter.dateFormat = kFullDateFormat
+        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        
+        var i = 0
+        var showDotMarker = false
+        while i < self.sessionList.count {
+            let session = self.sessionList[i]
+            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            
+            if NSDate().compare(sessionDate!) == .OrderedAscending &&  calendarString == sessionDateString {
+                showDotMarker = true
+                break;
+            }
+            
+            i = i + 1
+        }
+        
+        return showDotMarker
+    }
+    
+    func dotMarker(moveOffsetOnDayView dayView: DayView) -> CGFloat {
+        return 9
+    }
+    
+    func dotMarker(colorOnDayView dayView: DayView) -> [UIColor] {
+        return [UIColor.pmmBrightOrangeColor()]
+    }
+}
+
+// MARK: LogCellDelegate
+extension SessionCoachViewController: LogCellDelegate {
     func LogCellClickAddCalendar(cell: LogTableViewCell) {
         let indexPath = self.sessionTableView.indexPathForCell(cell)
         let session = self.sessionList[indexPath!.row]
@@ -557,13 +574,4 @@ class SessionCoachViewController: BaseViewController, UITableViewDelegate, UITab
             }
         })
     }
-    
-    // MARK: Segue
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "coachSessionDetail" {
-            let destination = segue.destinationViewController as! DetailSessionViewController
-            destination.session = sender as! Session
-        }
-    }
-    
 }

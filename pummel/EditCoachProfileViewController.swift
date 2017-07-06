@@ -75,7 +75,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     let defaults = NSUserDefaults.standardUserDefaults()
     var currentId : String = ""
     
-    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    let SCREEN_MAX_LENGTH = max(SCREEN_WIDTH, SCREEN_HEIGHT)
     
     override func viewDidLoad() {
         super.viewDidLoad()

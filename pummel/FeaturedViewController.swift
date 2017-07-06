@@ -313,21 +313,24 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             // Avatar
             if (userFeed[kImageUrl] is NSNull == false) {
                 cell.avatarBT.setBackgroundImage(nil, forState: .Normal)
-                let imageLink = userFeed[kImageUrl] as! String
-                ImageRouter.getImage(posString: imageLink, sizeString: widthHeight120) { (result, error) in
-                    if (error == nil) {
-                        let imageRes = result as! UIImage
-                        
-                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-                        if visibleCell == true {
-                            dispatch_async(dispatch_get_main_queue(),{
-                                cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
-                            })
+                let imageLink = userFeed[kImageUrl] as? String
+                
+                if (imageLink?.isEmpty == false) {
+                    ImageRouter.getImage(posString: imageLink!, sizeString: widthHeight120) { (result, error) in
+                        if (error == nil) {
+                            let imageRes = result as! UIImage
+                            
+                            let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                            if visibleCell == true {
+                                dispatch_async(dispatch_get_main_queue(),{
+                                    cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
+                                })
+                            }
+                        } else {
+                            print("Request failed with error: \(error)")
                         }
-                    } else {
-                        print("Request failed with error: \(error)")
-                    }
-                }.fetchdata()
+                        }.fetchdata()
+                }
             } else {
                 cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
             }

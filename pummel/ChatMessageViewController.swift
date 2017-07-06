@@ -321,18 +321,22 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             } else {
                 let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageImageTableViewCell, forIndexPath: indexPath) as! ChatMessageImageTableViewCell
                 
-                let imageURLString = message.objectForKey(kImageUrl) as! String
-                ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight640, completed: { (result, error) in
-                    if (error == nil) {
-                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-                        if visibleCell == true {
-                            let imageRes = result as! UIImage
-                            cell.photoIMW.image = imageRes
+                let imageURLString = message.objectForKey(kImageUrl) as? String
+                
+                if (imageURLString?.isEmpty == false) {
+                    ImageRouter.getImage(posString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
+                        if (error == nil) {
+                            let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                            if visibleCell == true {
+                                let imageRes = result as! UIImage
+                                cell.photoIMW.image = imageRes
+                            }
+                        } else {
+                            print("Request failed with error: \(error)")
                         }
-                    } else {
-                        print("Request failed with error: \(error)")
-                    }
-                }).fetchdata()
+                    }).fetchdata()
+                }
+                
                 
                 let userID = String(format:"%0.f",message[kUserId]!.doubleValue)
                 

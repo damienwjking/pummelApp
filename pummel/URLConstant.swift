@@ -60,6 +60,7 @@ let kPM_PATH_CONVERSATION           = "/conversations"
 let kPM_PATH_CONVERSATION_V2        = "/conversationsV2"
 let kPM_PATH_CONVERSATION_OFFSET_V2 = "/conversationsVersion2?offset="
 //let kPM_PATH_CONVERSATION_OFFSET    = "/conversations?offset="    // No use
+let kPM_PATH_DELETEACTIVITY         = "/activities/deleteActivity"
 let kPM_PATH_DEVICES                = "/devices"
 let kPM_PARTH_MESSAGE               = "/messages"
 let kPM_PARTH_MESSAGE_V2            = "/messagesV2"
