@@ -42,6 +42,7 @@
 		BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */; };
 		BA1DA3DC1E5DD59F00E3BF7A /* CardViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */; };
 		BA22A2CA1F0C8E7B008FD47F /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA22A2C91F0C8E7B008FD47F /* UserModel.swift */; };
+		BA29B1391F132C530059AE9A /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29B1381F132C530059AE9A /* Extension.swift */; };
 		BA48F9BF1EF23A0400F55F05 /* DiskRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageRouter.swift */; };
@@ -257,6 +258,7 @@
 		BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionTableViewCell.swift; sourceTree = "<group>"; };
 		BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewCell.swift; sourceTree = "<group>"; };
 		BA22A2C91F0C8E7B008FD47F /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Model/UserModel.swift; sourceTree = "<group>"; };
+		BA29B1381F132C530059AE9A /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskRecorder.swift; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA81A4421EE68CA5002D626E /* ImageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRouter.swift; sourceTree = "<group>"; };
@@ -700,6 +702,7 @@
 				BAA439561F0DE8CC001D122A /* NumberConstant.swift */,
 				F9ABEAE01DC36C3B0084B70E /* FontConstant.swift */,
 				BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */,
+				BA29B1381F132C530059AE9A /* Extension.swift */,
 			);
 			name = Others;
 			sourceTree = "<group>";
@@ -1174,6 +1177,7 @@
 				F9EAE8ED1D6EFF2700FD32BE /* SettingLogoutTableViewCell.swift in Sources */,
 				F9ABEADB1DC347B90084B70E /* URLConstant.swift in Sources */,
 				BA22A2CA1F0C8E7B008FD47F /* UserModel.swift in Sources */,
+				BA29B1391F132C530059AE9A /* Extension.swift in Sources */,
 				F9FE14591CEBD29B004ABE34 /* FSCameraView.swift in Sources */,
 				F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */,
 				F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */,

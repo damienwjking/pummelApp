@@ -1,0 +1,47 @@
+//
+//  Extension.swift
+//  pummel
+//
+//  Created by Nguyễn Tấn Phúc on 7/10/17.
+//  Copyright © 2017 pummel. All rights reserved.
+//
+
+import UIKit
+import Foundation
+
+
+extension UIImageView {
+    func roundCorners(corners:UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.CGPath
+        self.layer.mask = mask
+    }
+}
+
+extension NSData {
+    var dataType: String? {
+        
+        // Ensure data length is at least 1 byte
+        guard self.length > 0 else { return nil }
+        
+        // Get first byte
+        var c = [UInt8](count: 1, repeatedValue: 0)
+        c.withUnsafeMutableBufferPointer { buffer in
+            getBytes(buffer.baseAddress, length: 1)
+        }
+        // Identify data type
+        switch (c[0]) {
+        case 0xFF:
+            return "jpg"
+        case 0x89:
+            return "png"
+        case 0x47:
+            return "gif"
+        case 0x49, 0x4D:
+            return "tiff"
+        default:
+            return nil //unknown
+        }
+    }
+}

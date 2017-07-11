@@ -32,10 +32,11 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
 
     var limit: Int = 0
     var offset: Int = 0
-    var prefix = kPMAPICOACH_SEARCHV3
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.afterSearch), name: "AFTER_SEARCH_PAGE", object: nil)
     }
     
     func animationIndicator() {
@@ -188,30 +189,17 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
 
     }
     
-    func search() {
-        let limitParams = String(format: "?%@=30&%@=0", kLimit, kOffset)
-        prefix.appendContentsOf(limitParams)
-        if (gender != kDontCare) {
-            prefix.appendContentsOf("&gender=".stringByAppendingString(gender).stringByAppendingString("&"))
-        } else {
-            prefix.appendContentsOf("&")
-            
+    func afterSearch() {
+        let presentViewController = self.presentingViewController
+        
+        if (presentViewController != nil) {
+            self.dismissViewControllerAnimated(true, completion: {
+                presentViewController!.dismissViewControllerAnimated(true, completion: nil)
+            })
         }
+    }
     
-        for id in tagIdsArray {
-            prefix.appendContentsOf("&")
-
-            prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
-             prefix.appendContentsOf("&")
-        }
-        let coordinateParams = String(format: "%@=%f&%@=%f", kLong, (locationManager.location?.coordinate.longitude)!, kLat, (locationManager.location?.coordinate.latitude)!)
-        prefix.appendContentsOf(coordinateParams)
-        
-        // TODO: Get current state & current city
-        // let state =
-        // let city =
-        // let stateCity =  String(format: "&%@=%@&%@=%@", "state", state, "city", city)
-        
+    func search() {
         let geoCoder = CLGeocoder()
         if locationManager.location != nil {
             geoCoder.reverseGeocodeLocation(locationManager.location!, completionHandler: { (placemarks, error) -> Void in
@@ -230,51 +218,15 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         state = placeMark.administrativeArea!
                     }
                     
-                    let stateCity =  String(format: "&%@=%@&%@=%@", kState, state.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, kCity, city.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
-                    
                     
                     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                    appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray, "lat":(self.locationManager.location?.coordinate.latitude)!, "long":(self.locationManager.location?.coordinate.longitude)!, "state": state, "city": city]
+                    appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray,
+                        kLat:(self.locationManager.location?.coordinate.latitude)!,
+                        kLong:(self.locationManager.location?.coordinate.longitude)!,
+                        kState: state,
+                        kCity: city]
                     
-                    self.prefix.appendContentsOf(stateCity)
-                    
-                    Alamofire.request(.GET, self.prefix)
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                                if (response.result.value == nil) {return}
-                                // if (self.stopAnimation == true) {
-                                self.getResultSearch = true
-                                let presentingViewController = self.presentingViewController
-                                let secondsWait = 2.0
-                                let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                                let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                                dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                                    
-                                    self.dismissViewControllerAnimated(false, completion: {
-                                        let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-                                        let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                                        findVC.arrayResult.removeAll()
-                                        findVC.arrayResult = response.result.value  as! [NSDictionary]
-                                        findVC.viewDidLayoutSubviews()
-                                        findVC.showLetUsHelp = false
-                                        findVC.viewDidLayoutSubviews()
-                                        findVC.collectionView.contentOffset = CGPointZero
-                                        presentingViewController!.dismissViewControllerAnimated(true, completion: {})
-                                    })
-                                });
-                            } else if response.response?.statusCode == 401 {
-                                let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                                    // TODO: LOGOUT
-                                }
-                                alertController.addAction(OKAction)
-                                self.presentViewController(alertController, animated: true) {
-                                    // ...
-                                }
-                                
-                            }
-                    }
-                    
+                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_FIRST_SEARCH_COACH, object: nil)
                 }
             })
         }

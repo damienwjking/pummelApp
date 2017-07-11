@@ -81,6 +81,7 @@ let k_PM_REFRESH_SESSION = "refreshSession"
 let k_PM_REFRESH_CLIENTS = "refreshClients"
 let k_PM_IS_UP_COMING = "isUpComing"
 let k_PM_UPDATE_SESSION_NOTIFICATION = "updateSessionNotification"
+let k_PM_FIRST_SEARCH_COACH = "firstSearchCoach"
 
 let k_PM_3D_TOUCH = "3DTouch"
 let k_PM_3D_TOUCH_NOTIFICATION = "3DTouchNotification"
