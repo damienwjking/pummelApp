@@ -62,25 +62,19 @@ class DiscountColectionViewCell: UICollectionViewCell {
             self.bntDiscount.hidden = false
         }
         
-        let postfix = widthEqual.stringByAppendingString(String(self.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.bounds.height))
-        if !(discountDetail[kImageUrl] is NSNull) {
+        
+        if (discountDetail[kImageUrl] is NSNull == false) {
             let imageLink = discountDetail[kImageUrl] as! String
-            var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                self.imgCover.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.imgCover.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                        }
+            let imageSizeString = widthEqual.stringByAppendingString(String(self.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.bounds.height))
+            
+            ImageRouter.getImage(posString: imageLink, sizeString: imageSizeString, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.imgCover.image = imageRes
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-            }
+            }).fetchdata()
         }
     }
 }

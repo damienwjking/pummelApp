@@ -12,8 +12,6 @@ class BaseViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
     }
     
     
@@ -28,7 +26,39 @@ class BaseViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        
+        // Get messasge notification + session notification
+        UserRouter.getCurrentUserInfo { (result, error) in
+            if (error == nil) {
+                let userDetail = result as! NSDictionary
+                
+                let mNotiNumber = userDetail["messageNotification"] as? Int
+                let sNotiNumber = userDetail["sessionNotification"] as? Int
+                
+                var totalBadge = 0
+                // Set message number
+                if (mNotiNumber != nil && mNotiNumber > 0) {
+                    let messageTabItem = self.tabBarController?.tabBar.items![3]
+                    messageTabItem?.badgeValue = String(format: "%d", mNotiNumber!)
+                    
+                    totalBadge = totalBadge + mNotiNumber!
+                }
+                
+                // Set session number
+                if (sNotiNumber != nil && sNotiNumber > 0) {
+                    let sessionTabItem = self.tabBarController?.tabBar.items![1]
+                    sessionTabItem?.badgeValue = String(format: "%d", sNotiNumber!)
+                    
+                    totalBadge = totalBadge + sNotiNumber!
+                }
+                
+                // Set app badge number
+                if (totalBadge > 0) {
+                    UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
+                }
+            } else {
+                print("Request failed with error: \(error)")
+            }
+        }.fetchdata()
     }
     
     override func viewWillDisappear(animated: Bool) {
