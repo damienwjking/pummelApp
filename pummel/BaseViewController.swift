@@ -52,9 +52,7 @@ class BaseViewController: UIViewController {
                 }
                 
                 // Set app badge number
-                if (totalBadge > 0) {
-                    UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
-                }
+                UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
             } else {
                 print("Request failed with error: \(error)")
             }
