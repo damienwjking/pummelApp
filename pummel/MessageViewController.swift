@@ -648,8 +648,11 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(messageId)
         
+        let param = [kConversationId:messageId,
+                     kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String]
+        
         self.view.makeToastActivity(message: "Loading")
-        Alamofire.request(.PUT, prefix, parameters: [kConversationId:messageId, kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+        Alamofire.request(.PUT, prefix, parameters: param)
             .responseJSON { response in
                 self.view.hideToastActivity()
                 
@@ -849,13 +852,15 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 let lead = self.arrayListLead[indexPath.row]
                 let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
                 
+                let param = [kUserId: self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                             kUserIdRequest: targetUserId]
                 
                 var prefix = kPMAPICOACHES
                 prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
                 prefix.appendContentsOf(kPMAPICOACH_CURRENT)
                 prefix.appendContentsOf("/")
                 print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-                Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:targetUserId])
+                Alamofire.request(.PUT, prefix, parameters: param)
                     .responseJSON { response in
                         self.view.hideToastActivity()
                         
