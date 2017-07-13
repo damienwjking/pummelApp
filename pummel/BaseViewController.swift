@@ -77,7 +77,7 @@ class BaseViewController: UIViewController {
                         sessionTabItem?.badgeValue = nil
                     }
                     
-//                    UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
+                    UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
                 }
             } else {
                 print("Request failed with error: \(error)")
