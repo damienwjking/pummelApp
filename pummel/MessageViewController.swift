@@ -654,24 +654,18 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 self.view.hideToastActivity()
                 
                 if response.response?.statusCode == 200 {
-                    let isLastOpenString =  message[kLastOpenAt] as! String
-                    if (isLastOpenString == "0") {
-                        // New message
-                        self.decreaseMBadge()
+                    let numberBadge = response.result.value as? Int
+                    let messageTabItem = self.tabBarController?.tabBar.items![3]
+                    if (numberBadge != nil && numberBadge > 0) {
+                        messageTabItem?.badgeValue = String(format: "%d", numberBadge!)
+                    } else {
+                        messageTabItem?.badgeValue = nil
                     }
                     
                     self.isGoToMessageDetail = true
                     self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
                 } else {
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                    
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
+                    PMHeler.showDoAgainAlert()
                 }
         }
     }
@@ -838,7 +832,6 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         
         if (tableView == listMessageTB) {
             // Check new message here
-            let cell = tableView.cellForRowAtIndexPath(indexPath) as! MessageTableViewCell
             self.clickOnConnectionImage(indexPath)
             
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]

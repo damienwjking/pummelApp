@@ -99,7 +99,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.calendarView.presentedDate = CVDate(date: NSDate())
         self.updateLayout()
         
-        self.resetSBadge()
+//        self.resetSBadge()
     }
     
     override func viewWillDisappear(animated: Bool) {

@@ -141,6 +141,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         let alert = userInfo["aps"]!["alert"] as! String
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
+        
         if (UIApplication.sharedApplication().applicationState != .Active) {
             // Update badge app
 //            let totalBadge = userInfo["aps"]!["badge"] as! Int

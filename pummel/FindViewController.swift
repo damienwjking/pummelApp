@@ -51,6 +51,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         refineSearchBT.layer.cornerRadius = 5
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.searchCoachPage), name: k_PM_FIRST_SEARCH_COACH, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateSMBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {

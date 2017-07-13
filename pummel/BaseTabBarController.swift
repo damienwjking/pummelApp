@@ -20,7 +20,6 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showFeed), name: k_PM_SHOW_FEED, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showSession), name: k_PM_SHOW_SHOW_SESSIONS, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showClients), name: k_PM_SHOW_SHOW_CLIENTS, object: nil)
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
 //        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadgeWithoutRefresh), name: k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
         
         self.delegate = self
