@@ -1,5 +1,5 @@
 //
-//  SessionsViewController.swift
+//  MessageViewController.swift
 //  pummel
 //
 //  Created by Damien King on 21/02/2016.
@@ -16,7 +16,7 @@ import Contacts
 import AddressBook
 import Mixpanel
 
-class SessionsViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+class MessageViewController: BaseViewController {
     
     @IBOutlet var listMessageTB: UITableView!
 //    @IBOutlet var listMessageTBTopDistance : NSLayoutConstraint?
@@ -117,7 +117,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         let image = UIImage(named: "newmessage")!.imageWithRenderingMode(.AlwaysOriginal)
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(SessionsViewController.newMessage))
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(self.newMessage))
         let selectedImage = UIImage(named: "messagesSelcted")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
@@ -148,26 +148,6 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
             self.isStopLoadMessage = false
             self.offset = 0
             self.getMessage()
-        }
-    }
-    
-    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
-            if (scrollView == self.listMessageTB) {
-                if (self.arrayListLead.count == 0) {
-                    self.horizontalViewHeightConstraint!.constant = 0
-                } else {
-                    if(velocity.y > 0){
-                        self.horizontalViewHeightConstraint!.constant = 0
-                    } else {
-                        self.horizontalViewHeightConstraint!.constant = 180
-                    }
-                    
-                    UIView.animateWithDuration(0.3, animations: {
-                        self.view.layoutIfNeeded()
-                    })
-                }
-            }
         }
     }
     
@@ -430,9 +410,88 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == "checkChatMessage") {
+            let destinationVC = segue.destinationViewController as! ChatMessageViewController
+            let indexPathRow = sender as! Int
+            let message = arrayMessages[indexPathRow]
+            message[kLastOpenAt] = "1"
+            let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
+            
+            destinationVC.userIdTarget = cell.targetId
+            destinationVC.messageId = String(format:"%0.f", message[kId]!.doubleValue)
+        }
+        
+        if (segue.identifier == kGoUserProfile) {
+            let destination = segue.destinationViewController as! UserProfileViewController
+            
+            let indexPathRow = sender as! Int
+            
+            let lead = self.arrayListLead[indexPathRow]
+            let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
+            
+            destination.userId = targetUserId
+            destination.userDetail = lead
+        }
+    }
+
+    func timeAgoSinceDate(date:NSDate) -> String {
+        let calendar = NSCalendar.currentCalendar()
+        let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
+        let now = NSDate()
+        let earliest = now.earlierDate(date)
+        let latest = (earliest == now) ? date : now
+        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendarOptions.MatchPreviousTimePreservingSmallerUnits)
+        
+        if (components.year >= 2) {
+            return "\(components.year)y"
+        } else if (components.year >= 1){
+            return "1y"
+        } else if (components.month >= 2) {
+            return "\(components.month)month"
+        } else if (components.month >= 1){
+            return "1m"
+        } else if (components.day >= 2) {
+            return "\(components.day)d"
+        } else if (components.day >= 1){
+            return "1d"
+        } else if (components.hour >= 2) {
+            return "\(components.hour)hr"
+        } else if (components.hour >= 1){
+            return "1hr"
+        } else if (components.minute >= 2) {
+            return "\(components.minute)m"
+        } else if (components.minute >= 1){
+            return "1m"
+        } else if (components.second >= 20) {
+            return "\(components.second)s"
+        } else {
+            return "Just now"
+        }
+    }
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+            if (scrollView == self.listMessageTB) {
+                if (self.arrayListLead.count == 0) {
+                    self.horizontalViewHeightConstraint!.constant = 0
+                } else {
+                    if(velocity.y > 0){
+                        self.horizontalViewHeightConstraint!.constant = 0
+                    } else {
+                        self.horizontalViewHeightConstraint!.constant = 180
+                    }
+                    
+                    UIView.animateWithDuration(0.3, animations: {
+                        self.view.layoutIfNeeded()
+                    })
+                }
+            }
+        }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -595,6 +654,12 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.view.hideToastActivity()
                 
                 if response.response?.statusCode == 200 {
+                    let isLastOpenString =  message[kLastOpenAt] as! String
+                    if (isLastOpenString == "0") {
+                        // New message
+                        self.decreaseMBadge()
+                    }
+                    
                     self.isGoToMessageDetail = true
                     self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
                 } else {
@@ -611,6 +676,11 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func decreaseMBadge() {
+        NotificationRouter.decreaseMBadge { (result, error) in
+            self.updateSMBadge()
+            }.fetchdata()
+    }
     
     func clickOnRowMessage(indexPath: NSIndexPath) {
         let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
@@ -769,20 +839,10 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         if (tableView == listMessageTB) {
             // Check new message here
             let cell = tableView.cellForRowAtIndexPath(indexPath) as! MessageTableViewCell
-//            if (cell.isNewMessage == true) {
-//                var bageValue = NSUserDefaults.standardUserDefaults().integerForKey("MESSAGE_BADGE_VALUE")
-//                bageValue = bageValue - 2
-//                NSUserDefaults.standardUserDefaults().setInteger(bageValue, forKey: "MESSAGE_BADGE_VALUE")
-//                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
-//            }
-            
-            
             self.clickOnConnectionImage(indexPath)
-            
             
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
-            
             let addToIphoneContact = { (action:UIAlertAction!) -> Void in
                 self.clickOnRowMessage(indexPath)
             }
@@ -795,7 +855,7 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
                 self.view.makeToast(message: "Setting")
                 let lead = self.arrayListLead[indexPath.row]
                 let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
-               
+                
                 
                 var prefix = kPMAPICOACHES
                 prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -824,65 +884,5 @@ class SessionsViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         mixpanel.track("IOS.Message", properties: properties)
     }
-    
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "checkChatMessage") {
-            let destinationVC = segue.destinationViewController as! ChatMessageViewController
-            let indexPathRow = sender as! Int
-            let message = arrayMessages[indexPathRow]
-            message[kLastOpenAt] = "1"
-            let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
-            
-            destinationVC.userIdTarget = cell.targetId
-            destinationVC.messageId = String(format:"%0.f", message[kId]!.doubleValue)
-        }
-        
-        if (segue.identifier == kGoUserProfile) {
-            let destination = segue.destinationViewController as! UserProfileViewController
-            
-            let indexPathRow = sender as! Int
-            
-            let lead = self.arrayListLead[indexPathRow]
-            let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
-            
-            destination.userId = targetUserId
-            destination.userDetail = lead
-        }
-    }
-
-    func timeAgoSinceDate(date:NSDate) -> String {
-        let calendar = NSCalendar.currentCalendar()
-        let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
-        let now = NSDate()
-        let earliest = now.earlierDate(date)
-        let latest = (earliest == now) ? date : now
-        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendarOptions.MatchPreviousTimePreservingSmallerUnits)
-        
-        if (components.year >= 2) {
-            return "\(components.year)y"
-        } else if (components.year >= 1){
-            return "1y"
-        } else if (components.month >= 2) {
-            return "\(components.month)month"
-        } else if (components.month >= 1){
-            return "1m"
-        } else if (components.day >= 2) {
-            return "\(components.day)d"
-        } else if (components.day >= 1){
-            return "1d"
-        } else if (components.hour >= 2) {
-            return "\(components.hour)hr"
-        } else if (components.hour >= 1){
-            return "1hr"
-        } else if (components.minute >= 2) {
-            return "\(components.minute)m"
-        } else if (components.minute >= 1){
-            return "1m"
-        } else if (components.second >= 20) {
-            return "\(components.second)s"
-        } else {
-            return "Just now"
-        }
-    }
 }
+

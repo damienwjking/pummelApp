@@ -15,7 +15,7 @@
 		9C1C54271C7938070083E47B /* pummelUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54261C7938070083E47B /* pummelUITests.swift */; };
 		9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54341C793A4F0083E47B /* ProfileViewController.swift */; };
 		9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54361C793AA70083E47B /* ProgressViewController.swift */; };
-		9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543A1C793AF30083E47B /* SessionsViewController.swift */; };
+		9C1C543B1C793AF30083E47B /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543A1C793AF30083E47B /* MessageViewController.swift */; };
 		9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543C1C793B280083E47B /* FindViewController.swift */; };
 		9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543E1C793D070083E47B /* SettingsViewController.swift */; };
 		9C3B5EBC1C86CA810071093D /* ForgottenPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */; };
@@ -43,6 +43,7 @@
 		BA1DA3DC1E5DD59F00E3BF7A /* CardViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */; };
 		BA22A2CA1F0C8E7B008FD47F /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA22A2C91F0C8E7B008FD47F /* UserModel.swift */; };
 		BA29B1391F132C530059AE9A /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29B1381F132C530059AE9A /* Extension.swift */; };
+		BA2FA9621F1693A2004164D5 /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */; };
 		BA48F9BF1EF23A0400F55F05 /* DiskRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageRouter.swift */; };
@@ -230,7 +231,7 @@
 		9C1C54281C7938070083E47B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C1C54341C793A4F0083E47B /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		9C1C54361C793AA70083E47B /* ProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
-		9C1C543A1C793AF30083E47B /* SessionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionsViewController.swift; sourceTree = "<group>"; };
+		9C1C543A1C793AF30083E47B /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		9C1C543C1C793B280083E47B /* FindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindViewController.swift; sourceTree = "<group>"; };
 		9C1C543E1C793D070083E47B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		9C3B5EBB1C86CA810071093D /* ForgottenPasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgottenPasswordController.swift; sourceTree = "<group>"; };
@@ -259,6 +260,7 @@
 		BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewCell.swift; sourceTree = "<group>"; };
 		BA22A2C91F0C8E7B008FD47F /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Model/UserModel.swift; sourceTree = "<group>"; };
 		BA29B1381F132C530059AE9A /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
 		BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskRecorder.swift; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA81A4421EE68CA5002D626E /* ImageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRouter.swift; sourceTree = "<group>"; };
@@ -554,6 +556,7 @@
 				BA81A4421EE68CA5002D626E /* ImageRouter.swift */,
 				BA02EE2A1EE7B14300495943 /* UserRouter.swift */,
 				BA003A9F1EEE3241002FE038 /* FeedRouter.swift */,
+				BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */,
 				BA003AA31EEE5532002FE038 /* PMHelper.swift */,
 			);
 			name = Services;
@@ -576,7 +579,7 @@
 			isa = PBXGroup;
 			children = (
 				F9B064CA1DB277620041D201 /* View */,
-				9C1C543A1C793AF30083E47B /* SessionsViewController.swift */,
+				9C1C543A1C793AF30083E47B /* MessageViewController.swift */,
 				F9F3CC3E1CE1F386007F68A5 /* NewMessageViewController.swift */,
 				F9F3CC421CE7C6AC007F68A5 /* ChatMessageViewController.swift */,
 				F98C40A91CF2586100ECC66E /* SendPhotoViewController.swift */,
@@ -1193,6 +1196,7 @@
 				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */,
 				BA0E98791E6673BF0019A24A /* NoResultCell.swift in Sources */,
+				BA2FA9621F1693A2004164D5 /* NotificationRouter.swift in Sources */,
 				F9EAE8F51D6FE86E00FD32BE /* NaviLazyTableView.swift in Sources */,
 				F9EAE8E71D6EFA7A00FD32BE /* SettingNewConnectionsTableViewCell.swift in Sources */,
 				F9CA4A0C1D21466600E8A585 /* TagCell.swift in Sources */,
@@ -1200,7 +1204,7 @@
 				F9FE13C81CEAF5F9004ABE34 /* MessageTableViewCell.swift in Sources */,
 				F9F3CC431CE7C6AC007F68A5 /* ChatMessageViewController.swift in Sources */,
 				E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */,
-				9C1C543B1C793AF30083E47B /* SessionsViewController.swift in Sources */,
+				9C1C543B1C793AF30083E47B /* MessageViewController.swift in Sources */,
 				F9EAE8E51D6EFA4900FD32BE /* SettingHelpSupportTableViewCell.swift in Sources */,
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,

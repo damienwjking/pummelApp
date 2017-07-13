@@ -26,7 +26,7 @@ class PMHeler {
         return visibleCell
     }
     
-    class func logout() {
+    class func showLogoutAlert() {
         if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
@@ -60,6 +60,24 @@ class PMHeler {
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Navigation Click", "Label":"Logout"]
                 mixpanel.track("IOS.Profile.Setting", properties: properties)
+            }
+            
+            alertController.addAction(OKAction)
+            
+            topController.presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    class func showDoAgainAlert() {
+        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+            
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
             }
             
             alertController.addAction(OKAction)

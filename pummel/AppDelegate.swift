@@ -142,6 +142,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         let alert = userInfo["aps"]!["alert"] as! String
         if (UIApplication.sharedApplication().applicationState != .Active) {
+            // Update badge app
+//            let totalBadge = userInfo["aps"]!["badge"] as! Int
+//            UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
+            
+            // check message
             if (alert.containsString("Hey you have a new message")) {
                 NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
             }
@@ -155,94 +160,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_SESSIONS, object: nil)
             }
         } else {
+            // Prepare router navigation
+            var pushNotification = ""
             if (alert.containsString("Hey you have a new message")) {
-//                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
-                let notification = MessageView.viewFromNib(layout: .CardView)
-                                notification.configureTheme(.Success)
-                                notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
-                                notification.configureDropShadow()
-                                notification.configureContent(title: "Pummel", body: alert)
-                                notification.button?.hidden = true
-                                notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
-                                var notificationConfig = SwiftMessages.defaultConfig
-                                notificationConfig.duration = .Seconds(seconds: 3);
-                                notificationConfig.presentationStyle = .Top
-                                notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
-                                SwiftMessages.show(config: notificationConfig, view: notification)
-                
-                                let foregroundButton = UIButton(action: { (UIControl) in
-                                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
-                                    }, forControlEvents: .TouchUpInside)
-                                foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
-                                
-                                notification.addSubview(foregroundButton)
-            }
-            
-            if (alert.containsString("you have a new comment in your post:")) {
-                let notification = MessageView.viewFromNib(layout: .CardView)
-                notification.configureTheme(.Success)
-                notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
-                notification.configureDropShadow()
-                notification.configureContent(title: "Pummel", body: alert)
-                notification.button?.hidden = true
-                notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
-                var notificationConfig = SwiftMessages.defaultConfig
-                notificationConfig.duration = .Seconds(seconds: 3);
-                notificationConfig.presentationStyle = .Top
-                notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
-                SwiftMessages.show(config: notificationConfig, view: notification)
-                
-                let foregroundButton = UIButton(action: { (UIControl) in
-                     NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_FEED, object: nil)
-                    }, forControlEvents: .TouchUpInside)
-                foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
-                
-                notification.addSubview(foregroundButton)
-            }
-            if (alert.containsString("You have a new Lead")) {
-                // TODO: OPEN CLIENT SCREEN (ONLY COACH)
-                let notification = MessageView.viewFromNib(layout: .CardView)
-                notification.configureTheme(.Success)
-                notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
-                notification.configureDropShadow()
-                notification.configureContent(title: "Pummel", body: alert)
-                notification.button?.hidden = true
-                notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
-                var notificationConfig = SwiftMessages.defaultConfig
-                notificationConfig.duration = .Seconds(seconds: 3);
-                notificationConfig.presentationStyle = .Top
-                notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
-                SwiftMessages.show(config: notificationConfig, view: notification)
-                
-                let foregroundButton = UIButton(action: { (UIControl) in
-                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_CLIENTS, object: nil)
-                    }, forControlEvents: .TouchUpInside)
-                foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
-                
-                notification.addSubview(foregroundButton)
+                // OPEN MESSAGE TAB
+                pushNotification = k_PM_SHOW_LIST_MESSAGE_SCREEN
+            } else if (alert.containsString("you have a new comment in your post:")) {
+                // OPEN FEED TAB
+                pushNotification = k_PM_SHOW_FEED
+            } else if (alert.containsString("You have a new Lead")) {
+                // OPEN CLIENT SCREEN (ONLY COACH)
+                pushNotification = k_PM_SHOW_SHOW_CLIENTS
             }
             if (alert.containsString("You have a new booking")){
-                // TODO:OPEN INCOMING SESSION SCREEN
-                let notification = MessageView.viewFromNib(layout: .CardView)
-                notification.configureTheme(.Success)
-                notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
-                notification.configureDropShadow()
-                notification.configureContent(title: "Pummel", body: alert)
-                notification.button?.hidden = true
-                notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
-                var notificationConfig = SwiftMessages.defaultConfig
-                notificationConfig.duration = .Seconds(seconds: 3);
-                notificationConfig.presentationStyle = .Top
-                notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
-                SwiftMessages.show(config: notificationConfig, view: notification)
-                
-                let foregroundButton = UIButton(action: { (UIControl) in
-                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_SESSIONS, object: nil)
-                    }, forControlEvents: .TouchUpInside)
-                foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
-                
-                notification.addSubview(foregroundButton)
+                // OPEN INCOMING SESSION SCREEN
+                pushNotification = k_PM_SHOW_SHOW_SESSIONS
             }
+            
+            // Show push notification
+            let notification = MessageView.viewFromNib(layout: .CardView)
+            notification.configureTheme(.Success)
+            notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
+            notification.configureDropShadow()
+            notification.configureContent(title: "Pummel", body: alert)
+            notification.button?.hidden = true
+            notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
+            var notificationConfig = SwiftMessages.defaultConfig
+            notificationConfig.duration = .Seconds(seconds: 3);
+            notificationConfig.presentationStyle = .Top
+            notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
+            SwiftMessages.show(config: notificationConfig, view: notification)
+            
+            let foregroundButton = UIButton(action: { (UIControl) in
+                NSNotificationCenter.defaultCenter().postNotificationName(pushNotification, object: nil)
+                }, forControlEvents: .TouchUpInside)
+            foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
+            
+            notification.addSubview(foregroundButton)
         }
     }
 

@@ -202,7 +202,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                             }
                         }
                     } else if response.response?.statusCode == 401 {
-                        PMHeler.logout()
+                        PMHeler.showLogoutAlert()
                     }
             }
         } else {

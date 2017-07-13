@@ -27,36 +27,7 @@ class BaseViewController: UIViewController {
         super.viewWillAppear(animated)
         
         // Get messasge notification + session notification
-        UserRouter.getCurrentUserInfo { (result, error) in
-            if (error == nil) {
-                let userDetail = result as! NSDictionary
-                
-                let mNotiNumber = userDetail["messageNotification"] as? Int
-                let sNotiNumber = userDetail["sessionNotification"] as? Int
-                
-                var totalBadge = 0
-                // Set message number
-                if (mNotiNumber != nil && mNotiNumber > 0) {
-                    let messageTabItem = self.tabBarController?.tabBar.items![3]
-                    messageTabItem?.badgeValue = String(format: "%d", mNotiNumber!)
-                    
-                    totalBadge = totalBadge + mNotiNumber!
-                }
-                
-                // Set session number
-                if (sNotiNumber != nil && sNotiNumber > 0) {
-                    let sessionTabItem = self.tabBarController?.tabBar.items![1]
-                    sessionTabItem?.badgeValue = String(format: "%d", sNotiNumber!)
-                    
-                    totalBadge = totalBadge + sNotiNumber!
-                }
-                
-                // Set app badge number
-                UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
-            } else {
-                print("Request failed with error: \(error)")
-            }
-        }.fetchdata()
+        self.updateSMBadge()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -64,10 +35,54 @@ class BaseViewController: UIViewController {
         
         NSNotificationCenter.defaultCenter().removeObserver(self, name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func updateSMBadge() {
+        NotificationRouter.getMBadgeSBadge { (result, error) in
+            if (error == nil) {
+                let dataArray = result as? NSArray
+                
+                let sessionTabItem = self.tabBarController?.tabBar.items![1]
+                let messageTabItem = self.tabBarController?.tabBar.items![3]
+                if (dataArray == nil) {
+                    // Get no data
+                    sessionTabItem?.badgeValue = nil
+                    messageTabItem?.badgeValue = nil
+                    UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+                    
+                } else {
+                    let mBadge = dataArray![0] as? Int
+                    let sBadge = dataArray![1] as? Int
+                    var totalBadge = 0
+                    
+                    // Message badge
+                    if (mBadge != nil && mBadge > 0) {
+                        messageTabItem?.badgeValue = String(format: "%d", mBadge!)
+                        
+                        totalBadge = totalBadge + mBadge!
+                    } else {
+                        messageTabItem?.badgeValue = nil
+                    }
+                    
+                    // Session badge
+                    if (sBadge != nil && sBadge > 0) {
+                        sessionTabItem?.badgeValue = String(format: "%d", sBadge!)
+                        
+                        totalBadge = totalBadge + sBadge!
+                    } else {
+                        sessionTabItem?.badgeValue = nil
+                    }
+                    
+//                    UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
+                }
+            } else {
+                print("Request failed with error: \(error)")
+            }
+            }.fetchdata()
     }
     
     func checkMoveScreen() {
@@ -103,7 +118,7 @@ class BaseViewController: UIViewController {
                         self.tabBarController?.selectedIndex = 1
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_3 {
-                    if (self.isKindOfClass(SessionsViewController) == true ){
+                    if (self.isKindOfClass(MessageViewController) == true ){
                         
                     } else {
                         self.tabBarController?.selectedIndex = 3
@@ -127,7 +142,7 @@ class BaseViewController: UIViewController {
                         self.tabBarController?.selectedIndex = 2
                     }
                 }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE {
-                    if (self.isKindOfClass(SessionsViewController) == true ){
+                    if (self.isKindOfClass(MessageViewController) == true ){
                         
                     } else {
                         self.tabBarController?.selectedIndex = 3

@@ -123,7 +123,7 @@ enum ImageRouter: URLRequestConvertible {
                 case .Failure(let error):
                     // check status code 401 : cookie expire
                     if (response.response?.statusCode == 401) {
-                        PMHeler.logout()
+                        PMHeler.showLogoutAlert()
                     }
                     
                     self.comletedBlock(result:  nil, error: error)

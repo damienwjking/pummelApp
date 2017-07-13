@@ -71,6 +71,10 @@ let kPM_PATH_LIMIT_ONE              = "&limit=1"
 let kPM_PATH_LOG_ACTIVITIES_USER    = "/activitiesuserV2"
 let kPM_PATH_LOG_ACTIVITIES_COACH   = "/activitiescoachV2"
 let kPM_PATH_ACTIVITIES_USER        = "/activitiesuser?offset="
+let kPM_PATH_M_BADGE_S_BADGE        = "/numberofNewMessageAndNewSession"
+let kPM_PATH_RESET_S_BADGE          = "/resetNotificationBadge"
+let kPM_PATH_DECREASE_M_BADGE       = "/decreasemNotificationBadge"
+
 let kPMAPICOACH_LEADS               = "/leads?offset="
 let kPMAPICOACH_CURRENT             = "/current?offset="
 let kPMAPICOACH_OLD                 = "/old?offset="
@@ -81,6 +85,8 @@ let kPMAPICOACH_BOOK                = "/bookV2"
 let kPMAPI_LEAD                     = "/lead"
 let kPMAPI_CHANGEPASS               = "/password"
 let kPMAPI_POSTOFPHOTO              = "/api/postOfPhoto"
+
+
 // Discount
 let kPMAPI_DISCOUNTS                = "/api/discounts/?offset="
 

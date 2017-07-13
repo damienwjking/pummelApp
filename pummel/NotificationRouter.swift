@@ -1,38 +1,38 @@
 //
-//  UserRouter.swift
+//  NotificationRouter.swift
 //  pummel
 //
-//  Created by Nguyễn Tấn Phúc on 6/7/17.
+//  Created by Nguyễn Tấn Phúc on 7/13/17.
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
 import Foundation
 import Alamofire
 
-enum UserRouter: URLRequestConvertible {
-    case getCurrentUserInfo(completed: CompletionBlock)
-    case getUserInfo(userID : String, completed: CompletionBlock)
-    case checkCoachOfUser(userID : String, completed: CompletionBlock)
+enum NotificationRouter: URLRequestConvertible {
+    case getMBadgeSBadge(completed: CompletionBlock)
+    case resetSBadge(completed: CompletionBlock)
+    case decreaseMBadge(completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
-        case .getCurrentUserInfo(let completed):
+        case .getMBadgeSBadge(let completed):
             return completed
-        case .getUserInfo(_, let completed):
+        case .resetSBadge(let completed):
             return completed
-        case .checkCoachOfUser(_, let completed):
+        case .decreaseMBadge(let completed):
             return completed
         }
     }
     
     var method: Alamofire.Method {
         switch self {
-        case .getCurrentUserInfo:
+        case .getMBadgeSBadge:
             return .GET
-        case .getUserInfo:
-            return .GET
-        case .checkCoachOfUser:
-            return .GET
+        case .resetSBadge:
+            return .PUT
+        case .decreaseMBadge:
+            return .PUT
         }
     }
     
@@ -42,14 +42,14 @@ enum UserRouter: URLRequestConvertible {
         
         var prefix = ""
         switch self {
-        case .getCurrentUserInfo:
-            prefix = kPMAPIUSER + currentUserID
+        case .getMBadgeSBadge(_):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_M_BADGE_S_BADGE
             
-        case .getUserInfo(let userID, _):
-            prefix = kPMAPIUSER + userID
+        case .resetSBadge(_):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_RESET_S_BADGE
             
-        case .checkCoachOfUser(let userID, _):
-            prefix = kPMAPICOACH + userID
+        case .decreaseMBadge(_):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_DECREASE_M_BADGE
         }
         
         return prefix
@@ -68,19 +68,19 @@ enum UserRouter: URLRequestConvertible {
     
     func fetchdata() {
         switch self {
-        case .getCurrentUserInfo, .getUserInfo:
+        case .getMBadgeSBadge:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
+                    let result = JSON as! NSArray
                     
-                    self.comletedBlock(result: userDetail, error: nil)
+                    self.comletedBlock(result: result, error: nil)
                 case .Failure(let error):
                     self.comletedBlock(result: nil, error: error)
                 }
             })
             
-        case checkCoachOfUser:
+        case .resetSBadge, .decreaseMBadge:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 if response.response?.statusCode == 200 {
                     self.comletedBlock(result: true, error: nil)

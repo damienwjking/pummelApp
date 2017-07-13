@@ -98,6 +98,8 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         // Update Calendar
         self.calendarView.presentedDate = CVDate(date: NSDate())
         self.updateLayout()
+        
+        self.resetSBadge()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -124,6 +126,12 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(self.logButtonClicked))
         self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.blackColor()
+    }
+    
+    func resetSBadge() {
+        NotificationRouter.resetSBadge { (result, error) in
+            self.updateSMBadge()
+        }.fetchdata()
     }
     
     // MARK: Private function

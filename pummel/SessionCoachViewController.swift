@@ -100,6 +100,8 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
         // Update Calendar
         self.calendarView.presentedDate = CVDate(date: NSDate())
         self.updateLayout()
+        
+        self.resetSBadge()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -126,6 +128,14 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(self.rightButtonClicked))
         self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.blackColor()
+    }
+    
+    
+    
+    func resetSBadge() {
+        NotificationRouter.resetSBadge { (result, error) in
+            self.updateSMBadge()
+            }.fetchdata()
     }
     
     // MARK: Private function
