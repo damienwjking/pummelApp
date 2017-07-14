@@ -59,6 +59,7 @@ class MessageViewController: BaseViewController {
         self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.refreshControlTable), name: "SEND_CHAT_MESSAGE", object: nil)
         
         self.connectionsLB!.font = .pmmMonReg13()
@@ -78,8 +79,6 @@ class MessageViewController: BaseViewController {
         self.refreshControl.addTarget(self, action: #selector(refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
         self.listMessageTB.addSubview(self.refreshControl)
         
-        self.getMessage()
-        
         self.getListLead()
         self.horizontalViewHeightConstraint!.constant = 0
     }
@@ -96,6 +95,8 @@ class MessageViewController: BaseViewController {
         } else {
             self.noMessageTitleLB.text = "Get Connections With Your Coaches"
         }
+        
+        self.getMessage()
     }
     
     override func viewDidAppear(animated: Bool) {
