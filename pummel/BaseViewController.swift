@@ -27,7 +27,7 @@ class BaseViewController: UIViewController {
         super.viewWillAppear(animated)
         
         // Get messasge notification + session notification
-        self.updateSMBadge()
+        self.updateSMLCBadge()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -41,13 +41,40 @@ class BaseViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    func updateSMBadge() {
-        NotificationRouter.getMBadgeSBadge { (result, error) in
+    func resetSBadge() {
+        NotificationRouter.resetSBadge { (result, error) in
+            self.updateSMLCBadge()
+            }.fetchdata()
+    }
+    
+    func resetLBadge() {
+        NotificationRouter.resetLBadge { (result, error) in
+            self.updateSMLCBadge()
+            }.fetchdata()
+    }
+    
+    func resetCBadge() {
+        NotificationRouter.resetCBadge { (result, error) in
+            self.updateSMLCBadge()
+            }.fetchdata()
+    }
+    
+    func updateSMLCBadge() {
+        NotificationRouter.getNotificationBadge { (result, error) in
             if (error == nil) {
                 let dataArray = result as? NSArray
                 
+                let feedTabItem = self.tabBarController?.tabBar.items![0]
                 let sessionTabItem = self.tabBarController?.tabBar.items![1]
                 let messageTabItem = self.tabBarController?.tabBar.items![3]
+                
+                if #available(iOS 10.0, *) {
+                    feedTabItem?.badgeColor = UIColor.pmmBrightOrangeColor()
+                    sessionTabItem?.badgeColor = UIColor.pmmBrightOrangeColor()
+                    messageTabItem?.badgeColor = UIColor.pmmBrightOrangeColor()
+                }
+                
+                
                 if (dataArray == nil) {
                     // Get no data
                     sessionTabItem?.badgeValue = nil
@@ -55,9 +82,22 @@ class BaseViewController: UIViewController {
                     UIApplication.sharedApplication().applicationIconBadgeNumber = 0
                     
                 } else {
+                    // [Message] [Session] [Lead] [Comment]
                     let mBadge = dataArray![0] as? Int
                     let sBadge = dataArray![1] as? Int
+                    let lBadge = dataArray![2] as? Int
+                    let cBadge = dataArray![3] as? Int
+                    
                     var totalBadge = 0
+                    
+                    // Comment badge
+                    if (cBadge != nil && cBadge > 0) {
+                        feedTabItem?.badgeValue = String(format: "%d", cBadge!)
+                        
+                        totalBadge = totalBadge + cBadge!
+                    } else {
+                        feedTabItem?.badgeValue = nil
+                    }
                     
                     // Message badge
                     if (mBadge != nil && mBadge > 0) {
@@ -76,6 +116,12 @@ class BaseViewController: UIViewController {
                     } else {
                         sessionTabItem?.badgeValue = nil
                     }
+                    
+                    // Lead Badge
+                    if (lBadge != nil && lBadge > 0) {
+                        totalBadge = totalBadge + lBadge!
+                    }
+                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_UPDATE_LEAD_BADGE, object: lBadge)
                     
                     UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
                 }

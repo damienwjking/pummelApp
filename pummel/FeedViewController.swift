@@ -17,7 +17,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     var userFeed : NSDictionary!
    
     @IBOutlet var textBox: RSKGrowingTextView!
-    @IBOutlet var backButton: UIButton!
+    @IBOutlet weak var postButton: UIButton!
     
     @IBOutlet var cursorView: UIView!
     @IBOutlet var leftMarginLeftChatCT: NSLayoutConstraint!
@@ -453,30 +453,28 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func addComment() {
-        let postId = String(format:"%0.f",feedDetail[kId]!.doubleValue)
         let text = self.textBox.text
-        self.cursorView.userInteractionEnabled = true
-        var link = kPMAPI
-        link.appendContentsOf("/api/posts/")
-        link.appendContentsOf(String(postId))
-        link.appendContentsOf("/comments")
-        Alamofire.request(.POST, link, parameters: [kPostId:postId, kText:text])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    self.textBox.text = ""
-                    self.cursorView.userInteractionEnabled = false
-                    self.getLastComment()
-                }else {
-                    self.cursorView.userInteractionEnabled = false
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // ...
+        
+        if (text.isEmpty == false) {
+            let postId = String(format:"%0.f",feedDetail[kId]!.doubleValue)
+            var link = kPMAPI
+            link.appendContentsOf("/api/posts/")
+            link.appendContentsOf(String(postId))
+            link.appendContentsOf("/comments")
+            
+            self.postButton.userInteractionEnabled = false
+            
+            Alamofire.request(.POST, link, parameters: [kPostId:postId, kText:text])
+                .responseJSON { response in
+                    self.postButton.userInteractionEnabled = true
+                    
+                    if response.response?.statusCode == 200 {
+                        self.textBox.text = ""
+                        self.getLastComment()
+                    } else {
+                        PMHeler.showDoAgainAlert()
                     }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
-                }
+            }
         }
     }
     

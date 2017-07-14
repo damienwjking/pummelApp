@@ -10,28 +10,33 @@ import Foundation
 import Alamofire
 
 enum NotificationRouter: URLRequestConvertible {
-    case getMBadgeSBadge(completed: CompletionBlock)
+    case getNotificationBadge(completed: CompletionBlock)
     case resetSBadge(completed: CompletionBlock)
-    case decreaseMBadge(completed: CompletionBlock)
+    case resetLBadge(completed: CompletionBlock)
+    case resetCBadge(completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
-        case .getMBadgeSBadge(let completed):
+        case .getNotificationBadge(let completed):
             return completed
         case .resetSBadge(let completed):
             return completed
-        case .decreaseMBadge(let completed):
+        case .resetLBadge(let completed):
+            return completed
+        case .resetCBadge(let completed):
             return completed
         }
     }
     
     var method: Alamofire.Method {
         switch self {
-        case .getMBadgeSBadge:
+        case .getNotificationBadge:
             return .GET
         case .resetSBadge:
             return .PUT
-        case .decreaseMBadge:
+        case .resetLBadge:
+            return .PUT
+        case .resetCBadge:
             return .PUT
         }
     }
@@ -42,16 +47,19 @@ enum NotificationRouter: URLRequestConvertible {
         
         var prefix = ""
         switch self {
-        case .getMBadgeSBadge(_):
+        case .getNotificationBadge(_):
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_M_BADGE_S_BADGE
             
         case .resetSBadge(_):
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_RESET_S_BADGE
             
-        case .decreaseMBadge(_):
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_DECREASE_M_BADGE
+        case .resetLBadge(_):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_RESET_L_BADGE
+            
+        case .resetCBadge(_):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_RESET_C_BADGE
         }
-        
+    
         return prefix
     }
     
@@ -68,24 +76,30 @@ enum NotificationRouter: URLRequestConvertible {
     
     func fetchdata() {
         switch self {
-        case .getMBadgeSBadge:
+        case .getNotificationBadge:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .Success(let JSON):
+                    // [Message] [Session] [Lead] [Comment]
+                    
                     let result = JSON as! NSArray
                     
                     self.comletedBlock(result: result, error: nil)
                 case .Failure(let error):
-                    self.comletedBlock(result: nil, error: error)
+                    if (response.response?.statusCode == 401) {
+                        PMHeler.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(result: nil, error: error)
+                    }
                 }
             })
             
-        case .resetSBadge, .decreaseMBadge:
+        case .resetSBadge, .resetLBadge, .resetCBadge:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
-                if response.response?.statusCode == 200 {
-                    self.comletedBlock(result: true, error: nil)
+                if (response.response?.statusCode == 401) {
+                    PMHeler.showLogoutAlert()
                 } else {
-                    self.comletedBlock(result: false, error: nil)
+                    self.comletedBlock(result: nil, error: nil)
                 }
             })
         }

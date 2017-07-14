@@ -76,7 +76,11 @@ enum UserRouter: URLRequestConvertible {
                     
                     self.comletedBlock(result: userDetail, error: nil)
                 case .Failure(let error):
-                    self.comletedBlock(result: nil, error: error)
+                    if (response.response?.statusCode == 401) {
+                        PMHeler.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(result: nil, error: error)
+                    }
                 }
             })
             
@@ -85,7 +89,11 @@ enum UserRouter: URLRequestConvertible {
                 if response.response?.statusCode == 200 {
                     self.comletedBlock(result: true, error: nil)
                 } else {
-                    self.comletedBlock(result: false, error: nil)
+                    if (response.response?.statusCode == 401) {
+                        PMHeler.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(result: false, error: nil)
+                    }
                 }
             })
         }

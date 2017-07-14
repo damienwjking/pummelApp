@@ -124,9 +124,9 @@ enum ImageRouter: URLRequestConvertible {
                     // check status code 401 : cookie expire
                     if (response.response?.statusCode == 401) {
                         PMHeler.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(result:  nil, error: error)
                     }
-                    
-                    self.comletedBlock(result:  nil, error: error)
                 }
             })
         case .getImage:

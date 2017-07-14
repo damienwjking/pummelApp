@@ -674,12 +674,6 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func decreaseMBadge() {
-        NotificationRouter.decreaseMBadge { (result, error) in
-            self.updateSMBadge()
-            }.fetchdata()
-    }
-    
     func clickOnRowMessage(indexPath: NSIndexPath) {
         let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
         ABAddressBookRequestAccessWithCompletion(addressBookRef) {

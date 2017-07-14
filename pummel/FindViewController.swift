@@ -28,6 +28,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     var currentOffset: CGPoint = CGPointZero
     var touchPoint: CGPoint = CGPointZero
     var loadmoreTime = 0
+    let badgeLabel = UILabel()
     
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
@@ -42,6 +43,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         super.viewDidLoad()
         self.showLetUsHelp = false
         self.navigationController!.navigationBar.translucent = false
+        self.tabBarController?.navigationController?.navigationBar.addSubview(self.badgeLabel)
         
         self.setupCollectionView()
         
@@ -51,7 +53,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         refineSearchBT.layer.cornerRadius = 5
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.searchCoachPage), name: k_PM_FIRST_SEARCH_COACH, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateSMBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateSMLCBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateLBadge(_:)), name: k_PM_UPDATE_LEAD_BADGE, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -77,6 +80,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.stopSearch = false
         self.loadmoreTime = 0
         
+        self.badgeLabel.alpha = 1
+        
         self.endPagingCarousel(self.collectionView)
     }
     
@@ -98,11 +103,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         NSNotificationCenter.defaultCenter().removeObserver(self, name: "SELECTED_MIDDLE_TAB", object: nil)
 
-//        for indexPath in self.collectionView.indexPathsForVisibleItems() {
-//            let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as! CardViewCell
-//            
-//            cell.stopPlayVideo()
-//        }
+        self.badgeLabel.alpha = 0
     }
     
     func setupLayout() {
@@ -116,9 +117,17 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         // Left button
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CLIENTS", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnClientClick))
+            let leftBarButtonItem = UIBarButtonItem(title:"CLIENTS",
+                                                    style: UIBarButtonItemStyle.Plain,
+                                                    target: self,
+                                                    action: #selector(FindViewController.btnClientClick))
+            self.tabBarController?.navigationItem.leftBarButtonItem = leftBarButtonItem
         } else {
-            self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"COACHES", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FindViewController.btnCoachsClick))
+            let leftBarButtonItem = UIBarButtonItem(title:"COACHES",
+                                                    style: UIBarButtonItemStyle.Plain,
+                                                    target: self,
+                                                    action: #selector(FindViewController.btnCoachsClick))
+            self.tabBarController?.navigationItem.leftBarButtonItem = leftBarButtonItem
         }
     }
     
@@ -252,6 +261,33 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Refine"]
         mixpanel.track("IOS.Search", properties: properties)
+    }
+    
+    func updateLBadge(notification: NSNotification) {
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            let badgeValue = notification.object as? Int
+            
+            if (badgeValue != nil && badgeValue > 0) {
+                // Create badge label
+                self.badgeLabel.textColor = UIColor.whiteColor()
+                self.badgeLabel.font = UIFont.systemFontOfSize(12)
+                self.badgeLabel.backgroundColor = UIColor.pmmBrightOrangeColor()
+                self.badgeLabel.textAlignment = .Center
+                
+                // Add badge label value & layout
+                self.badgeLabel.text = String(format: "%d", badgeValue!)
+                self.badgeLabel.sizeToFit()
+                
+                let maxSize = max(badgeLabel.frame.width, badgeLabel.frame.height)
+                self.badgeLabel.layer.cornerRadius = maxSize / 2
+                self.badgeLabel.layer.masksToBounds = true
+                self.badgeLabel.frame = CGRect(x: 70, y: 5, width: maxSize, height: maxSize)
+                
+                self.badgeLabel.hidden = false
+            } else {
+                self.badgeLabel.hidden = true
+            }
+        }
     }
     
     func btnClientClick() {

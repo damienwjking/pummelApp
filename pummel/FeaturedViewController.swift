@@ -65,6 +65,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         }
         self.noActivityYetLB.font = .pmmPlayFairReg18()
         self.connectWithCoachLB.font = .pmmMonLight13()
+        
+        self.resetCBadge()
     }
     
     override func viewDidAppear(animated: Bool) {

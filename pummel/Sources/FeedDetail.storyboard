@@ -553,6 +553,7 @@
                         <outlet property="avatarTextBox" destination="MJ2-ru-EjU" id="JJ4-xN-fjh"/>
                         <outlet property="cursorView" destination="44b-7e-kzU" id="glQ-pK-feT"/>
                         <outlet property="leftMarginLeftChatCT" destination="Khv-Xw-h1E" id="pxR-RV-emH"/>
+                        <outlet property="postButton" destination="o2E-EX-DaY" id="SaA-34-jh7"/>
                         <outlet property="tableView" destination="jo1-xj-DFh" id="FHD-hF-kTh"/>
                         <outlet property="textBox" destination="MKb-r3-Z0L" id="YYQ-O7-Zi1"/>
                         <segue destination="vmi-Cl-kb2" kind="show" identifier="goNewPost" id="BUm-2M-dlN"/>

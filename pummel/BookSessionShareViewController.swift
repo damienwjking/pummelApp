@@ -41,6 +41,8 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.title = kClients.uppercaseString
+        
+        self.resetLBadge()
     }
 
     override func didReceiveMemoryWarning() {

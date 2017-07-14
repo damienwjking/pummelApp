@@ -125,7 +125,10 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
     }
     
     func post() {
-        if (self.isPosting == true) {return}
+        if (self.isPosting == true) {
+            return
+        }
+        
         if (self.imageSelected!.image != nil) {
             self.isPosting = true
             self.navigationItem.rightBarButtonItem?.enabled = false

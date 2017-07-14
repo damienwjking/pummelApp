@@ -130,14 +130,6 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
         self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.blackColor()
     }
     
-    
-    
-    func resetSBadge() {
-        NotificationRouter.resetSBadge { (result, error) in
-            self.updateSMBadge()
-            }.fetchdata()
-    }
-    
     // MARK: Private function
     func getListSession() {
         if (self.canLoadMore == true && self.isloading == false) {
