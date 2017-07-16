@@ -52,7 +52,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
         refineSearchBT.layer.cornerRadius = 5
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.searchCoachPage), name: k_PM_FIRST_SEARCH_COACH, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.startSearchCoachNotification), name: k_PM_FIRST_SEARCH_COACH, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateSMLCBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateLBadge(_:)), name: k_PM_UPDATE_LEAD_BADGE, object: nil)
     }
@@ -78,7 +78,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
         
         self.stopSearch = false
-        self.loadmoreTime = 0
         
         self.badgeLabel.alpha = 1
         
@@ -149,6 +148,13 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.collectionView.dataSource = self
     }
     
+    func startSearchCoachNotification() {
+        self.stopSearch = false
+        self.loadmoreTime = 0
+        
+        self.searchCoachPage()
+    }
+    
     func searchCoachPage() {
         if (self.stopSearch == false) {
             var param : [String: AnyObject] = [:];
@@ -178,6 +184,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                         }
                         
                         // First time search
+                        var needReloadCollection = true
+                        
                         if (self.loadmoreTime == 0) {
                             let secondsWait = 2.0
                             let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
@@ -192,24 +200,23 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                                 
                                 // Post notification for dismiss search animation screen
                                 NSNotificationCenter.defaultCenter().postNotificationName("AFTER_SEARCH_PAGE", object: nil)
-                                
-                                // Increase load more time and reload page
-                                self.collectionView.reloadData({
-                                    self.loadmoreTime = self.loadmoreTime + 1
-                                })
                             });
                         } else {
                             if ((response.result.value as! NSArray).count == 0) {
                                 self.stopSearch = true
+                                
+                                needReloadCollection = false
                             } else {
                                 let rArray = response.result.value as! [NSDictionary]
                                 self.arrayResult += rArray
-                                
-                                // Increase load more time and reload page
-                                self.collectionView.reloadData({
-                                    self.loadmoreTime = self.loadmoreTime + 1
-                                })
                             }
+                        }
+                        
+                        if (needReloadCollection == true) {
+                            // Increase load more time and reload page
+                            self.collectionView.reloadData({
+                                self.loadmoreTime = self.loadmoreTime + 1
+                            })
                         }
                     } else if response.response?.statusCode == 401 {
                         PMHeler.showLogoutAlert()

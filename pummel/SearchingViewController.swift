@@ -218,7 +218,6 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         state = placeMark.administrativeArea!
                     }
                     
-                    
                     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
                     appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray,
                         kLat:(self.locationManager.location?.coordinate.latitude)!,
