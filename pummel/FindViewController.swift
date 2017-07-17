@@ -161,18 +161,34 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
-            let prefix = kPMAPICOACH_SEARCHV3
+            var prefix = kPMAPICOACH_SEARCHV3
             
             if ((aVariable[kGender] as! String) != kDontCare) {
                 param["gender"] = aVariable[kGender]
             }
-            param["tagIds"] = aVariable["tagIds"]
             param["limit"] = 30
             param["offset"] = self.loadmoreTime * 30
             param[kLong] = aVariable[kLong]
             param[kLat] = aVariable[kLat]
             param[kState] = aVariable[kState]
             param[kCity] = aVariable[kCity]
+            
+            let tagArray = aVariable["tagIds"] as? NSArray
+            if (tagArray != nil) {
+                var index = 0
+                for id in tagArray! {
+                    if (index == 0) {
+                        prefix.appendContentsOf("?")
+                    } else {
+                        prefix.appendContentsOf("&")
+                    }
+                    
+                    index = index + 1
+                    
+                    prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
+                    
+                }
+            }
             
             Alamofire.request(.GET, prefix, parameters: param)
                 .responseJSON { response in
@@ -220,6 +236,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                         }
                     } else if response.response?.statusCode == 401 {
                         PMHeler.showLogoutAlert()
+                    } else {
+                        NSNotificationCenter.defaultCenter().postNotificationName("AFTER_SEARCH_PAGE", object: nil)
                     }
             }
         } else {
