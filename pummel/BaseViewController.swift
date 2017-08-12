@@ -14,20 +14,19 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.viewDidAppear(_:)), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
-        
-        self.checkMoveScreen()
-    }
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.viewDidAppear(_:)), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        
         // Get messasge notification + session notification
         self.updateSMLCBadge()
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.moveScreen()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -131,7 +130,7 @@ class BaseViewController: UIViewController {
             }.fetchdata()
     }
     
-    func checkMoveScreen() {
+    func moveScreen() {
         let defaults = NSUserDefaults.standardUserDefaults()
         
         if (defaults.objectForKey(k_PM_MOVE_SCREEN) != nil) {
@@ -175,25 +174,25 @@ class BaseViewController: UIViewController {
                     } else {
                         self.tabBarController?.selectedIndex = 0
                     }
-                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_FEED {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_FEED {
                     if (self.isKindOfClass(FeaturedViewController) == true ){
                         
                     } else {
                         self.tabBarController?.selectedIndex = 0
                     }
-                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_NEW_LEAD {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_NEW_LEAD {
                     if (self.isKindOfClass(FindViewController) == true) {
                         
                     } else {
                         self.tabBarController?.selectedIndex = 2
                     }
-                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE {
                     if (self.isKindOfClass(MessageViewController) == true ){
                         
                     } else {
                         self.tabBarController?.selectedIndex = 3
                     }
-                }  else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION {
                     if (self.isKindOfClass(ProgressViewController) == true) {
                         
                     } else if (self.isKindOfClass(LogSessionClientViewController) == true) {
@@ -205,9 +204,14 @@ class BaseViewController: UIViewController {
                     } else {
                         self.tabBarController?.selectedIndex = 1
                     }
-                }
-                
-                else {
+                } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_SEARCH {
+                    self.tabBarController?.selectedIndex = 2
+                } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_LOGIN {
+                    // Check in GetStartedViewController
+                } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_PROFILE {
+                    // Change tab to feed screen
+                    self.tabBarController?.selectedIndex = 0
+                } else {
                     defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
                 }
             }

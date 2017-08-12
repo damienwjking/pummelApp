@@ -89,11 +89,11 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
         return cell
     }
     
-    func selectUserWithID(userId:String, typeGroup:Int) {
+    func selectUserWithID(userId: String, typeGroup: Int) {
         if typeGroup == TypeGroup.Current.rawValue {
             self.showAlertMovetoOldAction(userId)
         } else {
-            self.showAlertMovetoCurrentAction(userId,typeGroup: typeGroup)
+            self.showAlertMovetoCurrentAction(userId, typeGroup: typeGroup)
         }
     }
     
@@ -130,14 +130,14 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Remove client", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
+        alertController.addAction(UIAlertAction(title: "Remove Client", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
         alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfile))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
     }
     
-    func showAlertMovetoCurrentAction(userID:String,typeGroup:Int) {
+    func showAlertMovetoCurrentAction(userID: String, typeGroup: Int) {
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
             var prefix = kPMAPICOACHES
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -159,20 +159,37 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
             }
         }
         
-        let viewProfile = { (action:UIAlertAction!) -> Void in
+        // Email action
+        let emailClientAction = { (action:UIAlertAction!) -> Void in
             self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
             
         }
         
-//        goUserProfile
-//        let clickShare = { (action:UIAlertAction!) -> Void in
-//            self.userIdSelected = userID
-//            self.tbView.reloadData()
-//        }
+        // Call action
+        let callClientAction = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+            
+        }
+        
+        // Send message action
+        let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+            
+        }
+        
+        let viewProfileAction = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+        }
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Add to Clients", style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
-        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfile))
+        alertController.addAction(UIAlertAction(title: "Accept Client", style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
+        alertController.addAction(UIAlertAction(title: "Email Client", style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+        
+        // Check exist phone number
+        alertController.addAction(UIAlertAction(title: "Call Client", style: UIAlertActionStyle.Destructive, handler: callClientAction))
+        
+        alertController.addAction(UIAlertAction(title: "Send Message", style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }

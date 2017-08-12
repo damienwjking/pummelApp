@@ -79,6 +79,37 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             self.sharePummel()
         } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_FEED {
             self.refresh()
+        } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_PROFILE {
+            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            
+            // Get user information + add to navigation
+            let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE) as? String
+            defaults.setObject("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
+            if (userID != nil && userID?.isEmpty == false) {
+                self.view.makeToastActivity(message: "Loading")
+                
+                UserRouter.getUserInfo(userID: userID!) { (result, error) in
+                    if (error == nil) {
+                        self.isGoProfileDetail = true
+                        
+                        let userDetail = result as! NSDictionary
+                        
+                        UserRouter.checkCoachOfUser(userID: userID!) { (result, error) in
+                            self.view.hideToastActivity()
+                            let isCoach = result as! Bool
+                            
+                            if (isCoach == true) {
+                                self.performSegueWithIdentifier(kGoProfile, sender:userDetail)
+                            } else {
+                                self.performSegueWithIdentifier(kGoUserProfile, sender:userDetail)
+                            }
+                            }.fetchdata()
+                        
+                    } else {
+                        print("Request failed with error: \(error)")
+                    }
+                    }.fetchdata()
+            }
         }
     }
     
@@ -373,30 +404,30 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             cell.coachLB.text = ""
             cell.coachLBTraillingConstraint.constant = 0
         
-            UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
-                let isCoach = result as! Bool
-                let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+        UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
+            let isCoach = result as! Bool
+            let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+            
+            if (isUpdateCell) {
+                cell.userInteractionEnabled = true
+                cell.isCoach = false
                 
-                if (isUpdateCell) {
-                    cell.userInteractionEnabled = true
-                    cell.isCoach = false
-                    
-                    if (error == nil) {
-                        if (isCoach == true) {
-                            cell.isCoach = true
-                            cell.avatarBT.layer.borderWidth = 2
-                            
-                            cell.coachLBTraillingConstraint.constant = 5
-                            UIView.animateWithDuration(0.3, animations: {
-                                cell.coachLB.layoutIfNeeded()
-                                cell.coachLB.text = kCoach.uppercaseString
-                            })
-                        }
-                    } else {
-                        print("Request failed with error: \(error)")
+                if (error == nil) {
+                    if (isCoach == true) {
+                        cell.isCoach = true
+                        cell.avatarBT.layer.borderWidth = 2
+                        
+                        cell.coachLBTraillingConstraint.constant = 5
+                        UIView.animateWithDuration(0.3, animations: {
+                            cell.coachLB.layoutIfNeeded()
+                            cell.coachLB.text = kCoach.uppercaseString
+                        })
                     }
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-        }.fetchdata()
+            }
+            }.fetchdata()
         
             cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
         

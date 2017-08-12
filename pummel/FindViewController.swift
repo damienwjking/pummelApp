@@ -92,6 +92,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             self.refind()
         }
         
+        if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_SEARCH {
+            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+        }
+        
         self.collectionView.reloadData { 
             self.checkPlayVideoOnPresentCell()
         }

@@ -72,9 +72,13 @@ enum UserRouter: URLRequestConvertible {
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 switch response.result {
                 case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
-                    
-                    self.comletedBlock(result: userDetail, error: nil)
+                    if (JSON is NSNull == false) {
+                        let userDetail = JSON as! NSDictionary
+                        
+                        self.comletedBlock(result: userDetail, error: nil)
+                    } else {
+                        self.comletedBlock(result: nil, error: NSError())
+                    }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHeler.showLogoutAlert()

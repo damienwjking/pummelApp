@@ -84,9 +84,6 @@ let k_PM_IS_UP_COMING = "isUpComing"
 let k_PM_UPDATE_SESSION_NOTIFICATION = "updateSessionNotification"
 let k_PM_FIRST_SEARCH_COACH = "firstSearchCoach"
 
-let k_PM_3D_TOUCH = "3DTouch"
-let k_PM_3D_TOUCH_NOTIFICATION = "3DTouchNotification"
-
 let k_PM_MOVE_SCREEN = "moveScreen"
 let k_PM_MOVE_SCREEN_NO_MOVE = "moveScreenNoMove"
 let k_PM_MOVE_SCREEN_NOTIFICATION = "moveScreenNotification"
@@ -95,6 +92,10 @@ let k_PM_MOVE_SCREEN_3D_TOUCH_1 = "3dTouch_1"
 let k_PM_MOVE_SCREEN_3D_TOUCH_2 = "3dTouch_2"
 let k_PM_MOVE_SCREEN_3D_TOUCH_3 = "3dTouch_3"
 let k_PM_MOVE_SCREEN_3D_TOUCH_4 = "3dTouch_4"
+
+let k_PM_MOVE_SCREEN_DEEPLINK_SEARCH = "deepLink_search"
+let k_PM_MOVE_SCREEN_DEEPLINK_LOGIN = "deepLink_login"
+let k_PM_MOVE_SCREEN_DEEPLINK_PROFILE = "deepLink_profile"
 
 let k_PM_MOVE_SCREEN_NOTI_FEED = "noti_feed"
 let k_PM_MOVE_SCREEN_NOTI_NEW_LEAD = "noti_new_lead"

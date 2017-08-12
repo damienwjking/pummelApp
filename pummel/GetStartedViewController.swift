@@ -57,8 +57,29 @@ class GetStartedViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.signinNotification), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+    }
+    
+    func signinNotification() {
+        self.navigationController?.popToRootViewControllerAnimated(true)
+        
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let moveScreenType = userDefaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_LOGIN {
+            userDefaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            userDefaults.synchronize()
+            
+            self.gotSignin(UIButton()) // UIButton : to call function
+        }
+    }
+    
     // Button Action
     @IBAction func gotSignin(sender:UIButton!) {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        
         let defaults = NSUserDefaults.standardUserDefaults()
         if (defaults.objectForKey(k_PM_IS_LOGINED) == nil) {
             performSegueWithIdentifier("toSignin", sender: nil)

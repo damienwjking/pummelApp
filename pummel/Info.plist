@@ -37,6 +37,10 @@
 				<string>pummel</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>pummel</string>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>16</string>

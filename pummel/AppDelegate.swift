@@ -50,15 +50,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
 
-    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        return FBSDKApplicationDelegate.sharedInstance().application(app, openURL: url, sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey] as! String!, annotation: nil)
+//    @available(iOS 10.0, *)
+//    internal func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
+//        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
+//    }
+    
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        // pass the url to the handle deep link call
+        Branch.getInstance().handleDeepLink(url);
+        
+        // do other deep link routing for the Facebook SDK, Pinterest SDK, etc
+        return true
     }
     
+    // Respond to Universal Links
+    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
+        Branch.getInstance().continueUserActivity(userActivity)
+        
+        return true
+    }
+}
+
+// MARK: - Life circle
+extension AppDelegate {
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
-
+    
     func applicationDidEnterBackground(application: UIApplication) {
         let defaults = NSUserDefaults.standardUserDefaults()
         if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
@@ -70,12 +89,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
     }
-
+    
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    //     NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
+        //     NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
     }
-
+    
     func applicationDidBecomeActive(application: UIApplication) {
         FBSDKAppEvents.activateApp()
         // Remove badge
@@ -89,26 +108,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             Alamofire.request(.PUT, prefix, parameters: [:])
                 .responseJSON { response in
             }
-
+            
         }
     }
-
+    
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
-    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
-        let type = shortcutItem.type.componentsSeparatedByString(".").last!
-        
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(type, forKey: k_PM_3D_TOUCH)
-        
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_3D_TOUCH_NOTIFICATION, object: nil)
+}
+
+// MARK: - URL
+extension AppDelegate {
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        if ((url.absoluteString?.contains("pummel://deeplink")) != nil) {
+            let userDefaults = NSUserDefaults.standardUserDefaults()
+            if ((url.path?.contains("search")) == true) {
+                // Open Pummel
+                userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_SEARCH, forKey: k_PM_MOVE_SCREEN)
+            } else if ((url.path?.contains("login")) == true) {
+                // Allow me to Login/Register
+                let logined = userDefaults.valueForKey(k_PM_IS_LOGINED)
+                
+                if (logined as? Bool != nil && logined as? Bool == false) {
+                    userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_LOGIN, forKey: k_PM_MOVE_SCREEN)
+                }
+            } else if ((url.absoluteString?.contains("coach?userId=")) == true) {
+                // Take me directly to my coaches Profile and connect me to him automatically.
+                userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE, forKey: k_PM_MOVE_SCREEN)
+                
+                let userID = url.absoluteString?.componentsSeparatedByString("=")[1]
+                if (userID?.isEmpty == false) {
+                    userDefaults.setObject(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
+                }
+            }
+            
+            userDefaults.synchronize()
+            
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+            }
+            
+            return true
         }
+        
+        return FBSDKApplicationDelegate.sharedInstance().application(app, openURL: url, sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey] as! String!, annotation: nil)
     }
-    
+}
+
+// MARK: - Notification
+extension AppDelegate {
     // implemented in your application delegate
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         let deviceTokenString = deviceToken.hexString
@@ -146,8 +195,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         if (UIApplication.sharedApplication().applicationState != .Active) {
             // Update badge app
-//            let totalBadge = userInfo["aps"]!["badge"] as! Int
-//            UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
+            //            let totalBadge = userInfo["aps"]!["badge"] as! Int
+            //            UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
             
             // check message
             if (alert.containsString("Hey you have a new message")) {
@@ -202,28 +251,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             notification.addSubview(foregroundButton)
         }
     }
-
-//    @available(iOS 10.0, *)
-//    internal func userNotificationCenter(center: UNUserNotificationCenter, didReceiveNotificationResponse response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
-//        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
-//    }
-    
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        // pass the url to the handle deep link call
-        Branch.getInstance().handleDeepLink(url);
-        
-        // do other deep link routing for the Facebook SDK, Pinterest SDK, etc
-        return true
-    }
-    
-    // Respond to Universal Links
-    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
-        Branch.getInstance().continueUserActivity(userActivity)
-        
-        return true
-    }
 }
 
+// MARK: - 3D Touch
+extension AppDelegate {
+    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        let type = shortcutItem.type.componentsSeparatedByString(".").last!
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(type, forKey: k_PM_MOVE_SCREEN)
+        defaults.synchronize()
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        }
+    }
+}
 
 extension NSData {
     var hexString: String {
