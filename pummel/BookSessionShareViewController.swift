@@ -106,7 +106,7 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
                 }
                 
                 if typeGroup == TypeGroup.Current.rawValue {
-                    self.showAlertMovetoOldAction(userId)
+                    self.showAlertMovetoOldAction(userInfo, canAddCallOption: canAddCallOption)
                 } else {
                     self.showAlertMovetoCurrentAction(userInfo, typeGroup: typeGroup, canAddCallOption: canAddCallOption)
                 }
@@ -121,7 +121,11 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
         self.tbView.reloadData()
     }
     
-    func showAlertMovetoOldAction(userID:String) {
+    func showAlertMovetoOldAction(userInfo:NSDictionary, canAddCallOption: Bool) {
+        let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
+        let userMail = userInfo[kEmail] as! String
+        let phoneNumber = userInfo[kMobile] as! String
+        
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
             var prefix = kPMAPICOACHES
             prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
@@ -138,19 +142,51 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
             }
         }
         
-        let viewProfile = { (action:UIAlertAction!) -> Void in
+        // Email action
+        let emailClientAction = { (action:UIAlertAction!) -> Void in
+            var urlString = "mailto:"
+            urlString = urlString.stringByAppendingString(userMail)
+            
+            let mailURL = NSURL(string: urlString)
+            if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
+                UIApplication.sharedApplication().openURL(mailURL!)
+            }
+        }
+        
+        // Call action
+        let callClientAction = { (action:UIAlertAction!) -> Void in
+            var urlString = "tel:///"
+            urlString = urlString.stringByAppendingString(phoneNumber)
+            
+            let tellURL = NSURL(string: urlString)
+            if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
+                UIApplication.sharedApplication().openURL(tellURL!)
+            }
+        }
+        
+        // Send message action
+        let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
+            self.tabBarController?.selectedIndex = 3
+        }
+        
+        let viewProfileAction = { (action:UIAlertAction!) -> Void in
             self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
             
         }
         
-        let clickShare = { (action:UIAlertAction!) -> Void in
-            self.userIdSelected = userID
-            self.tbView.reloadData()
-        }
-        
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         alertController.addAction(UIAlertAction(title: "Remove Client", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
-        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfile))
+        
+        alertController.addAction(UIAlertAction(title: "Email Client", style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+        
+        // Check exist phone number
+        if (canAddCallOption == true) {
+            alertController.addAction(UIAlertAction(title: "Call Client", style: UIAlertActionStyle.Destructive, handler: callClientAction))
+        }
+        
+        alertController.addAction(UIAlertAction(title: "Send Message", style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        
+        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
@@ -207,8 +243,6 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
             self.tabBarController?.selectedIndex = 3
-            
-            
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
