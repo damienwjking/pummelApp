@@ -77,7 +77,8 @@ enum UserRouter: URLRequestConvertible {
                         
                         self.comletedBlock(result: userDetail, error: nil)
                     } else {
-                        self.comletedBlock(result: nil, error: NSError())
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock(result: nil, error: error)
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
