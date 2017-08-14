@@ -26,11 +26,13 @@ class ContactUserCell : UITableViewCell {
     }
 }
 
-class ContactUserViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate {
+class ContactUserViewController: BaseViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var contacts: [CNContact] = []
+    var filterContacts: [CNContact] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,12 +93,15 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
             }
         }
         
-        self.tableView.reloadData()
+        self.filterPhoneNumber("")
     }
+}
+
+// MARK: UITableView
+extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: UITableViewDataSource
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.contacts.count;
+        return self.filterContacts.count;
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -106,7 +111,7 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("kContactUserCell")
         
-        let contact = self.contacts[indexPath.row]
+        let contact = self.filterContacts[indexPath.row]
         
         if (contact.thumbnailImageData == nil) {
             cell?.imageView?.image = UIImage(named: "avatar")
@@ -121,14 +126,12 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
         return cell!
     }
     
-    
-    
-    // MARK: UITableViewDelegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.searchBar.resignFirstResponder()
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
         if MFMessageComposeViewController.canSendText() {
-            let contact = self.contacts[indexPath.row]
-            let messageImage = UIImage(named: "shareLogo.png")
-            let messageImageData = UIImagePNGRepresentation(messageImage!)
+            let contact = self.filterContacts[indexPath.row]
             
             var phoneNumberString = ""
             if contact.phoneNumbers.count != 0 {
@@ -136,20 +139,47 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
                 phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
             }
             
-            let controller = MFMessageComposeViewController()
-            controller.body = kMessageInviteContact
-            controller.recipients = [phoneNumberString]
-            controller.addAttachmentData(messageImageData!, typeIdentifier: "public.data", filename: "image.png")
+            let messageCompose = MFMessageComposeViewController()
+            messageCompose.body = kMessageInviteContact
+            messageCompose.recipients = [phoneNumberString]
             
-            controller.messageComposeDelegate = self
-            self.presentViewController(controller, animated: true, completion: nil)
+            messageCompose.messageComposeDelegate = self
+            self.presentViewController(messageCompose, animated: true, completion: nil)
         }
     }
     
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        self.searchBar.resignFirstResponder()
+    }
+}
+
+extension ContactUserViewController: UISearchBarDelegate {
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        self.filterPhoneNumber(searchText)
+    }
     
-    // MARK: MFMessageComposeViewControllerDelegate
+    func filterPhoneNumber(phoneNumber: String) {
+        self.filterContacts = self.contacts.filter({ (contact) -> Bool in
+            if (phoneNumber.isEmpty == true) {
+                return true
+            }
+            
+            var phoneNumberString = ""
+            if contact.phoneNumbers.count != 0 {
+                let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+                phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+            }
+            
+            return phoneNumberString.contains(phoneNumber)
+        })
+        
+        self.tableView.reloadData()
+    }
+}
+
+// MARK: MFMessageComposeViewControllerDelegate
+extension ContactUserViewController: MFMessageComposeViewControllerDelegate {
     func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
-    
 }
