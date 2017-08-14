@@ -114,17 +114,7 @@ class ContactUserViewController: BaseViewController, UITableViewDelegate, UITabl
             cell?.imageView?.image = UIImage(data: contact.thumbnailImageData!)
         }
         
-        var contactName : String = ""
-        if contact.givenName.isEmpty == false {
-            contactName = contact.givenName
-        } else {
-            if contact.familyName.isEmpty == false {
-                contactName = contact.familyName
-            } else {
-                contactName = contact.organizationName
-            }
-        }
-        
+        let contactName = contact.givenName + " " + contact.familyName
         
         cell?.textLabel?.text = contactName.uppercaseString
         

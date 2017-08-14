@@ -812,6 +812,7 @@
 				F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */,
 				E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */,
 				E84D63871E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift */,
+				BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */,
 			);
 			name = Session;
 			sourceTree = "<group>";
@@ -828,7 +829,6 @@
 				F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */,
 				F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */,
 				E8C444E91E20AA19006F0548 /* ListCoachsViewController.swift */,
-				BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
