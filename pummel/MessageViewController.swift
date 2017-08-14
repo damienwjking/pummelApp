@@ -96,6 +96,8 @@ class MessageViewController: BaseViewController {
             self.noMessageTitleLB.text = "Get Connections With Your Coaches"
         }
         
+        self.isGoToMessageDetail = false
+        
         self.getMessage()
     }
     
@@ -103,9 +105,18 @@ class MessageViewController: BaseViewController {
         super.viewDidAppear(animated)
         
         let moveScreenType = self.defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
-        if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_3 {
+        if (moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_3) {
             defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             self.newMessage()
+        } else if (moveScreenType == k_PM_MOVE_SCREEN_MESSAGE_DETAIL) {
+            self.defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            
+            // Get message data and separate to ID + name
+            let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_MESSAGE_DETAIL) as! String
+            self.defaults.removeObjectForKey(k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            
+            self.isGoToMessageDetail = true
+            self.performSegueWithIdentifier("checkChatMessage", sender: userID)
         }
     }
     
@@ -414,16 +425,21 @@ class MessageViewController: BaseViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "checkChatMessage") {
             let destinationVC = segue.destinationViewController as! ChatMessageViewController
-            let indexPathRow = sender as! Int
-            let message = arrayMessages[indexPathRow]
-            message[kLastOpenAt] = "1"
-            let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
             
-            destinationVC.userIdTarget = cell.targetId
-            destinationVC.messageId = String(format:"%0.f", message[kId]!.doubleValue)
-        }
-        
-        if (segue.identifier == kGoUserProfile) {
+            if (self.isGoToMessageDetail == false) {
+                let indexPathRow = sender as! Int
+                let message = arrayMessages[indexPathRow]
+                message[kLastOpenAt] = "1"
+                let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
+                
+                destinationVC.userIdTarget = cell.targetId
+                destinationVC.messageId = String(format:"%0.f", message[kId]!.doubleValue)
+            } else {
+                let userID = sender as! String
+                destinationVC.userIdTarget = userID
+            }
+            
+        } else if (segue.identifier == kGoUserProfile) {
             let destination = segue.destinationViewController as! UserProfileViewController
             
             let indexPathRow = sender as! Int
@@ -666,7 +682,6 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         messageTabItem?.badgeValue = nil
                     }
                     
-                    self.isGoToMessageDetail = true
                     self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
                 } else {
                     PMHeler.showDoAgainAlert()
@@ -683,7 +698,6 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     //TODO: show message not enable contact
                 } else {
                     self.saveIndexPath = indexPath
-                    self.isGoToMessageDetail = true
                     self.listMessageTB.deselectRowAtIndexPath(indexPath, animated: false)
                     let cell = self.horizontalTableView.cellForRowAtIndexPath(indexPath) as! HorizontalCell
                     

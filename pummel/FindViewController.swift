@@ -90,10 +90,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_1 {
             self.refind()
-        }
-        
-        if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_SEARCH {
-            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+        } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_SEARCH {
+            self.defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
         }
         
         self.collectionView.reloadData { 

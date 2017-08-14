@@ -102,6 +102,8 @@ let k_PM_MOVE_SCREEN_NOTI_NEW_LEAD = "noti_new_lead"
 let k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE = "noti_new_message"
 let k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION = "noti_incoming_session"
 
+let k_PM_MOVE_SCREEN_MESSAGE_DETAIL = "moveScreenMessageDetail"
+
 // Key Json
 let kConversationId = "conversationId"
 let kServiceArea = "serviceArea"

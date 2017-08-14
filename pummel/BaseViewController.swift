@@ -211,6 +211,8 @@ class BaseViewController: UIViewController {
                 } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_PROFILE {
                     // Change tab to feed screen
                     self.tabBarController?.selectedIndex = 0
+                } else if moveScreenType == k_PM_MOVE_SCREEN_MESSAGE_DETAIL {
+                    self.tabBarController?.selectedIndex = 3
                 } else {
                     defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
                 }

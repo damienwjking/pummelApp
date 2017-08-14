@@ -166,7 +166,11 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
         
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
-            self.tabBarController?.selectedIndex = 3
+            // Special case: can not call tabbarviewcontroller
+            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            
+            self.navigationController?.popToRootViewControllerAnimated(true)
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
@@ -242,7 +246,11 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
         
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
-            self.tabBarController?.selectedIndex = 3
+            // Special case: can not call tabbarviewcontroller
+            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            
+            self.navigationController?.popToRootViewControllerAnimated(true)
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
