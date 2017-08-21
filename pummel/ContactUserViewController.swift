@@ -20,7 +20,13 @@ class ContactUserCell : UITableViewCell {
         
         self.textLabel?.font = UIFont.pmmMonReg13()
         self.textLabel?.textColor = UIColor.darkGrayColor()
-        self.textLabel?.frame = CGRectMake(60, 0, self.frame.width, self.frame.height)
+        self.textLabel?.frame = CGRectMake(60, 5, self.frame.width - 60, self.frame.height - 15)
+        
+        self.detailTextLabel?.font = UIFont.pmmMonReg11()
+        self.detailTextLabel?.textColor = UIColor.lightGrayColor()
+        self.detailTextLabel?.frame = CGRectMake(60, self.frame.height - 25, self.frame.width - 60, 20)
+        
+        self.bringSubviewToFront(self.textLabel!)
         
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
     }
@@ -123,6 +129,13 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         
         cell?.textLabel?.text = contactName.uppercaseString
         
+        var phoneNumberString = ""
+        if contact.phoneNumbers.count != 0 {
+            let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+            phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+        }
+        cell?.detailTextLabel?.text = phoneNumberString
+        
         return cell!
     }
     
@@ -158,9 +171,9 @@ extension ContactUserViewController: UISearchBarDelegate {
         self.filterPhoneNumber(searchText)
     }
     
-    func filterPhoneNumber(phoneNumber: String) {
+    func filterPhoneNumber(filterString: String) {
         self.filterContacts = self.contacts.filter({ (contact) -> Bool in
-            if (phoneNumber.isEmpty == true) {
+            if (filterString.isEmpty == true) {
                 return true
             }
             
@@ -169,8 +182,16 @@ extension ContactUserViewController: UISearchBarDelegate {
                 let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
                 phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
             }
+            var isFilterNumber = phoneNumberString.contains(filterString)
+            isFilterNumber = false // only search name
             
-            return phoneNumberString.contains(phoneNumber)
+            
+            
+            let phoneName = contact.givenName + " " + contact.familyName
+            let isFilterName = phoneName.contains(filterString)
+            
+            
+            return (isFilterNumber || isFilterName) // search phone number or name
         })
         
         self.tableView.reloadData()
