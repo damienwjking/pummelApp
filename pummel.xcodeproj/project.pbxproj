@@ -44,6 +44,11 @@
 		BA22A2CA1F0C8E7B008FD47F /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA22A2C91F0C8E7B008FD47F /* UserModel.swift */; };
 		BA29B1391F132C530059AE9A /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29B1381F132C530059AE9A /* Extension.swift */; };
 		BA2FA9621F1693A2004164D5 /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */; };
+		BA2FEA6C1F4F388D00146529 /* CreateBridgFile.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */; };
+		BA2FEA6D1F4F399200146529 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863751E4CD5D500E09CA7 /* Bolts.framework */; };
+		BA2FEA6E1F4F399200146529 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */; };
+		BA2FEA6F1F4F399200146529 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */; };
+		BA2FEA701F4F399200146529 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */; };
 		BA48F9BF1EF23A0400F55F05 /* DiskRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageRouter.swift */; };
@@ -62,10 +67,6 @@
 		E84D638B1E1D5D4E00CF8B67 /* BookUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D63881E1D5D4E00CF8B67 /* BookUserTableViewCell.swift */; };
 		E84D638C1E1D5D4E00CF8B67 /* BookUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E84D63891E1D5D4E00CF8B67 /* BookUserTableViewCell.xib */; };
 		E84D638E1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84D638D1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift */; };
-		E85863761E4CD5D500E09CA7 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863751E4CD5D500E09CA7 /* Bolts.framework */; };
-		E85863781E4CD5E900E09CA7 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */; };
-		E858637A1E4CD5FC00E09CA7 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */; };
-		E858637C1E4CD60300E09CA7 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */; };
 		E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A65D31E0BD80400FF2935 /* LeadAddedTableViewCell.swift */; };
 		E86A65D61E0BD80400FF2935 /* LeadAddedTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E86A65D41E0BD80400FF2935 /* LeadAddedTableViewCell.xib */; };
 		E86A65D91E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A65D71E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift */; };
@@ -261,6 +262,8 @@
 		BA22A2C91F0C8E7B008FD47F /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Model/UserModel.swift; sourceTree = "<group>"; };
 		BA29B1381F132C530059AE9A /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
+		BA2FEA6A1F4F388D00146529 /* pummel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pummel-Bridging-Header.h"; sourceTree = "<group>"; };
+		BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateBridgFile.m; sourceTree = "<group>"; };
 		BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskRecorder.swift; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA81A4421EE68CA5002D626E /* ImageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRouter.swift; sourceTree = "<group>"; };
@@ -422,11 +425,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA2FEA6D1F4F399200146529 /* Bolts.framework in Frameworks */,
+				BA2FEA6E1F4F399200146529 /* FBSDKCoreKit.framework in Frameworks */,
+				BA2FEA6F1F4F399200146529 /* FBSDKLoginKit.framework in Frameworks */,
+				BA2FEA701F4F399200146529 /* FBSDKShareKit.framework in Frameworks */,
 				3554D936ED34E385800FB7D6 /* Pods_pummel.framework in Frameworks */,
-				E85863781E4CD5E900E09CA7 /* FBSDKCoreKit.framework in Frameworks */,
-				E858637C1E4CD60300E09CA7 /* FBSDKShareKit.framework in Frameworks */,
-				E858637A1E4CD5FC00E09CA7 /* FBSDKLoginKit.framework in Frameworks */,
-				E85863761E4CD5D500E09CA7 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,9 +453,9 @@
 		3FAF085B267BE895D2297A0E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */,
 				E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */,
 				E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */,
+				E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */,
 				E85863751E4CD5D500E09CA7 /* Bolts.framework */,
 				ECF3AC316E8A623466EFD1B3 /* Pods_pummel.framework */,
 			);
@@ -511,7 +514,9 @@
 				9C1C54121C7938070083E47B /* Info.plist */,
 				F911B23E1E55288600F464B2 /* GoogleService-Info.plist */,
 				F91C17571DBEDC42004D4789 /* Pummel.entitlements */,
+				BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */,
 				F964FEC21D21E049008F7C94 /* Images.xcassets */,
+				BA2FEA6A1F4F388D00146529 /* pummel-Bridging-Header.h */,
 			);
 			path = pummel;
 			sourceTree = "<group>";
@@ -990,6 +995,7 @@
 					9C1C54001C7938060083E47B = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = YW7P88KVE4;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1217,6 +1223,7 @@
 				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
 				F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */,
 				E8C444EA1E20AA19006F0548 /* ListCoachsViewController.swift in Sources */,
+				BA2FEA6C1F4F388D00146529 /* CreateBridgFile.m in Sources */,
 				F9EAE8E91D6EFC3400FD32BE /* SettingSmallSeperateTableViewCell.swift in Sources */,
 				F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
@@ -1447,6 +1454,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1462,6 +1470,8 @@
 				PRODUCT_NAME = Pummel;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "pummel/pummel-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1473,6 +1483,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1488,6 +1499,7 @@
 				PRODUCT_NAME = Pummel;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "pummel/pummel-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

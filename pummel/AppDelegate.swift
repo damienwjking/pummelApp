@@ -10,13 +10,14 @@
 
 
 import UIKit
-import UserNotifications
-import SwiftMessages
+import Firebase
 import Mixpanel
 import Alamofire
 import FBSDKCoreKit
-import Branch
-import Firebase
+import FBSDKLoginKit
+import FBSDKShareKit
+import SwiftMessages
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -28,26 +29,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
     //    Mixpanel.initialize(token: "9007be62479ca54acb05b03991f1e56e")
+        
         NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
+        
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
         let token = "9007be62479ca54acb05b03991f1e56e"
         _ = Mixpanel.sharedInstanceWithToken(token)
         
-        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
-        
-        let branch: Branch = Branch.getInstance()
-        branch.initSessionWithLaunchOptions(launchOptions, automaticallyDisplayDeepLinkController: true) { (params, error) in
-            if error == nil {
-                // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
-                // params will be empty if no data found
-                // ... insert custom logic here ...
-                print("params: %@", params!.description)
-            }
-        }
        
         FIRApp.configure()
         
-        return true
+        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
 //    @available(iOS 10.0, *)
@@ -55,19 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //        UIApplication.sharedApplication().applicationIconBadgeNumber == 0
 //    }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        // pass the url to the handle deep link call
-        Branch.getInstance().handleDeepLink(url);
-        
-        // do other deep link routing for the Facebook SDK, Pinterest SDK, etc
-        return true
-    }
     
-    // Respond to Universal Links
-    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
-        Branch.getInstance().continueUserActivity(userActivity)
-        
-        return true
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
     }
 }
 
@@ -96,9 +78,9 @@ extension AppDelegate {
     }
     
     func applicationDidBecomeActive(application: UIApplication) {
-        FBSDKAppEvents.activateApp()
         // Remove badge
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        
         // Reset badge in server
         let defaults = NSUserDefaults.standardUserDefaults()
         if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
@@ -114,25 +96,28 @@ extension AppDelegate {
     
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        
+        let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+        loginManager.logOut()
     }
 }
 
 // MARK: - URL
 extension AppDelegate {
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        if ((url.absoluteString?.contains("pummel://deeplink")) != nil) {
+        if (url.absoluteString != nil && (url.absoluteString?.contains("pummel://deeplink")) == true) {
             let userDefaults = NSUserDefaults.standardUserDefaults()
-            if ((url.path?.contains("search")) == true) {
+            if ((url.path?.lowercaseString.contains("search")) == true) {
                 // Open Pummel
                 userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_SEARCH, forKey: k_PM_MOVE_SCREEN)
-            } else if ((url.path?.contains("login")) == true) {
+            } else if ((url.path?.lowercaseString.contains("login")) == true) {
                 // Allow me to Login/Register
                 let logined = userDefaults.valueForKey(k_PM_IS_LOGINED)
                 
                 if (logined as? Bool != nil && logined as? Bool == false) {
                     userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_LOGIN, forKey: k_PM_MOVE_SCREEN)
                 }
-            } else if ((url.absoluteString?.contains("coach?userId=")) == true) {
+            } else if ((url.absoluteString?.lowercaseString.contains("coach?userid=")) == true) {
                 // Take me directly to my coaches Profile and connect me to him automatically.
                 userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE, forKey: k_PM_MOVE_SCREEN)
                 
@@ -152,7 +137,7 @@ extension AppDelegate {
             return true
         }
         
-        return FBSDKApplicationDelegate.sharedInstance().application(app, openURL: url, sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey] as! String!, annotation: nil)
+        return FBSDKApplicationDelegate.sharedInstance().application(app, openURL: url, options: options)
     }
 }
 

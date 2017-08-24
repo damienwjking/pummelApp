@@ -8,8 +8,11 @@
 
 import UIKit
 import Alamofire
+import FBSDKCoreKit
+import FBSDKShareKit
+import FBSDKLoginKit
 
-class SigninViewController: UIViewController, UITextFieldDelegate {
+class SigninViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate {
 
     @IBOutlet var emailTF : UITextField!
     @IBOutlet var passwordTF : UITextField!
@@ -67,15 +70,54 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.signinBT.updateConstraintsIfNeeded()
+        
+        var fbButtonFrame = self.signinBT.frame
+        fbButtonFrame.origin.y = self.signinBT.frame.origin.y + self.signinBT.frame.size.height + 30
+        
+        let FBButton = FBSDKLoginButton(frame: fbButtonFrame)
+        FBButton.delegate = self
+        FBButton.readPermissions = ["public_profile", "email", "user_friends"]
+        FBButton.loginBehavior = .SystemAccount
+        self.view.addSubview(FBButton)
+    }
+    
+    
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        print("declined: \(result.declinedPermissions)")
+        print("granted:  \(result.grantedPermissions)")
+        print("isCan:    \(result.isCancelled)")
+        print("token:    \(result.token)")
+        
+        if ((error) != nil) {
+            print("error: ", error)
+        } else if result.isCancelled {
+            print("login facebook cancel")
+        } else {
+            print("login success")
+            
+            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: FBSDKAccessToken.currentAccessToken().tokenString, version: nil, HTTPMethod: "GET")
+            req.startWithCompletionHandler({ (connection, result, error : NSError!) -> Void in
+                if(error == nil) {
+                    print("result \(result)")
+                } else {
+                    print("error \(error)")
+                }
+            })
+        }
+    }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        
         return true
     }
-    
-    
 }
+
