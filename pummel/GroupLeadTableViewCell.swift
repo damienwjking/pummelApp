@@ -15,7 +15,7 @@ enum TypeGroup:Int {
 
 @objc protocol GroupLeadTableViewCellDelegate: class {
     optional func selectUserWithID(userId:String, typeGroup:Int)
-    optional func selectUserWithID(coachInfo:NSDictionary)
+    optional func selectUserWithCoachInfo(coachInfo:NSDictionary)
 }
 
 
@@ -135,7 +135,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                 targetUserId = "\(val)"
             }
             if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-                self.delegateGroupLeadTableViewCell?.selectUserWithID!(self.arrayCoachesInfo[indexPath.row])
+                self.delegateGroupLeadTableViewCell?.selectUserWithCoachInfo!(self.arrayCoachesInfo[indexPath.row])
                 return
             }
             self.delegateGroupLeadTableViewCell?.selectUserWithID!(targetUserId, typeGroup: self.typeGroup.rawValue)

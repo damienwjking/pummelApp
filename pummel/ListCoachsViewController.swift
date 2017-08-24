@@ -88,7 +88,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         return 0.01
     }
     
-    func selectUserWithID(coachInfo:NSDictionary) {
+    func selectUserWithCoachInfo(coachInfo: NSDictionary) {
         self.performSegueWithIdentifier(kGoProfile, sender:coachInfo)
     }
     

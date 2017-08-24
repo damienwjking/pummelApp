@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class BookSessionShareViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
+class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
 
     @IBOutlet weak var tbView: UITableView!
     var image:UIImage?
@@ -56,37 +56,6 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
     
     func cancel() {
         self.navigationController?.popViewControllerAnimated(true)
-    }
-    
-    //MARK: TableView
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 140
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
-        if indexPath.row == 0 {
-            cell.titleHeader.text = "NEW LEADS"
-            cell.typeGroup = TypeGroup.NewLead
-        } else if indexPath.row == 1 {
-            cell.titleHeader.text = "EXISTING CLIENTS"
-            cell.typeGroup = TypeGroup.Current
-        } else if indexPath.row == 2 {
-            cell.titleHeader.text = "PAST CLIENTS"
-            cell.typeGroup = TypeGroup.Old
-        }
-        cell.userIdSelected = self.userIdSelected
-        cell.delegateGroupLeadTableViewCell = self
-        if cell.arrayMessages.count <= 0 || self.forceUpdate == true {
-            cell.getMessage()
-        } else {
-            cell.cv.reloadData()
-        }
-        return cell
     }
     
     func selectUserWithID(userId: String, typeGroup: Int) {
@@ -283,5 +252,37 @@ class BookSessionShareViewController: BaseViewController, UITableViewDelegate, U
             destination.userId = String(format:"%0.f", sender!.doubleValue)
         }
     }
+}
 
+//MARK: TableView
+extension BookSessionShareViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 140
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
+        if indexPath.row == 0 {
+            cell.titleHeader.text = "NEW LEADS"
+            cell.typeGroup = TypeGroup.NewLead
+        } else if indexPath.row == 1 {
+            cell.titleHeader.text = "EXISTING CLIENTS"
+            cell.typeGroup = TypeGroup.Current
+        } else if indexPath.row == 2 {
+            cell.titleHeader.text = "PAST CLIENTS"
+            cell.typeGroup = TypeGroup.Old
+        }
+        cell.userIdSelected = self.userIdSelected
+        cell.delegateGroupLeadTableViewCell = self
+        if cell.arrayMessages.count <= 0 || self.forceUpdate == true {
+            cell.getMessage()
+        } else {
+            cell.cv.reloadData()
+        }
+        return cell
+    }
 }

@@ -704,28 +704,22 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     if (cell.imageV.image != nil) {
                         self.view.makeToastActivity(message: "Loading")
                         
-                        let message = self.arrayMessages[indexPath.row]
-                        let conversations = message[kConversation] as! NSDictionary
-                        let conversationUsers = conversations[kConversationUser] as! NSArray
-                        var targetUser = conversationUsers[0] as! NSDictionary
-                        let currentUserid = self.defaults.objectForKey(k_PM_CURRENT_ID) as! String
-                        var targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-                        if (currentUserid == targetUserId){
-                            targetUser = conversationUsers[1] as! NSDictionary
-                            targetUserId = String(format:"%0.f", targetUser[kUserId]!.doubleValue)
-                        }
-                        var prefixUser = kPMAPIUSER
-                        prefixUser.appendContentsOf(targetUserId)
-                        Alamofire.request(.GET, prefixUser)
-                            .responseJSON { response in switch response.result {
-                            case .Success(let JSON):
-                                self.view.hideToastActivity()
-                                
-                                let userInfo = JSON as! NSDictionary
+                        let userNumber = self.arrayListLead[indexPath.row]["userId"] as! Double
+                        let targetUserId = String(format:"%0.f", userNumber)
+                        
+                        UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
+                            self.view.hideToastActivity()
+                            
+                            if (error == nil) {
+                                let userInfo = result as! NSDictionary
                                 
                                 let firstName = userInfo.objectForKey(kFirstname) as? String
                                 let lastName = userInfo.objectForKey(kLastName) as? String
-                                let fullName = String(format: "%@ %@", firstName!, lastName!)
+                                
+                                var fullName = firstName
+                                if (lastName != nil && lastName?.isEmpty == false) {
+                                    fullName = String(format: "%@ %@", firstName!, lastName!)
+                                }
                                 
                                 var phoneNumber = userInfo.objectForKey(kMobile) as? String
                                 if phoneNumber == nil {
@@ -757,7 +751,10 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 let newContact = CNMutableContact()
                                 
                                 newContact.givenName = firstName!
-                                newContact.middleName = lastName!
+                                if (lastName != nil && lastName?.isEmpty == false) {
+                                    newContact.middleName = lastName!
+                                }
+                                
                                 if let image = cell.imageV.image,
                                     let data = UIImagePNGRepresentation(image) {
                                     newContact.imageData = data
@@ -792,7 +789,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 do {
                                     let store = CNContactStore()
                                     
-                                    let contacts = try store.unifiedContactsMatchingPredicate(CNContact.predicateForContactsMatchingName(fullName), keysToFetch:[CNContactGivenNameKey, CNContactFamilyNameKey])
+                                    let contacts = try store.unifiedContactsMatchingPredicate(CNContact.predicateForContactsMatchingName(fullName!), keysToFetch:[CNContactGivenNameKey, CNContactFamilyNameKey])
                                     
                                     if (contacts.count == 0) {
                                         try store.executeSaveRequest(request)
@@ -808,13 +805,10 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                     alert.message = pleaseDoItAgain
                                     self.presentViewController(alert, animated: true, completion: nil)
                                 }
-                                
-                            case .Failure(let error):
-                                self.view.hideToastActivity()
-                                
+                            } else {
                                 print("Request failed with error: \(error)")
-                                }
-                        }
+                            }
+                        }).fetchdata()
                     }
                 }
             }
