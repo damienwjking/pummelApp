@@ -12,7 +12,7 @@ import FBSDKCoreKit
 import FBSDKShareKit
 import FBSDKLoginKit
 
-class SigninViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate {
+class SigninViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet var emailTF : UITextField!
     @IBOutlet var passwordTF : UITextField!
@@ -85,7 +85,15 @@ class SigninViewController: UIViewController, UITextFieldDelegate, FBSDKLoginBut
         self.view.addSubview(FBButton)
     }
     
-    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        return true
+    }
+}
+
+
+extension SigninViewController: FBSDKLoginButtonDelegate {
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         print("declined: \(result.declinedPermissions)")
         print("granted:  \(result.grantedPermissions)")
@@ -145,11 +153,4 @@ class SigninViewController: UIViewController, UITextFieldDelegate, FBSDKLoginBut
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
         
     }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        
-        return true
-    }
 }
-
