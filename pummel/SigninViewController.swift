@@ -99,10 +99,39 @@ class SigninViewController: UIViewController, UITextFieldDelegate, FBSDKLoginBut
         } else {
             print("login success")
             
-            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: FBSDKAccessToken.currentAccessToken().tokenString, version: nil, HTTPMethod: "GET")
+            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,birthday,cover,picture.type(large)"], tokenString: FBSDKAccessToken.currentAccessToken().tokenString, version: nil, HTTPMethod: "GET")
             req.startWithCompletionHandler({ (connection, result, error : NSError!) -> Void in
                 if(error == nil) {
-                    print("result \(result)")
+                    let fbData = result as! NSDictionary
+                    
+                    let fbID = fbData["id"] as? String
+                    let email = fbData["email"] as? String
+                    let firstName = fbData["first_name"] as? String
+                    let lastName = fbData["last_name"] as? String
+                    
+                    var gender = fbData["gender"] as? String
+                    if (gender != nil) {
+                        gender = gender?.capitalizedString
+                    }
+                    
+                    var pictureURL = ""
+                    let picture = fbData["picture"] as? NSDictionary
+                    if (picture != nil) {
+                        let pictureData = picture!["data"] as! NSDictionary
+                        pictureURL = pictureData["url"] as! String
+                    }
+                    
+                    UserRouter.authenticateFacebook(fbID: fbID, email: email, firstName: firstName, lastName: lastName, avatarURL: pictureURL, gender: gender, completed: { (result, error) in
+                        if (error == nil) {
+                            let successLogin = result as! Bool
+                            
+                            if (successLogin == true) {
+                                self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                            }
+                        } else {
+                            print("Request failed with error: \(error)")
+                        }
+                    }).fetchdata()
                 } else {
                     print("error \(error)")
                 }

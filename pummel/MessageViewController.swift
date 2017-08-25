@@ -351,7 +351,7 @@ class MessageViewController: BaseViewController {
                                 if (JSON[kImageUrl] is NSNull == false) {
                                     let imageURLString = JSON[kImageUrl] as! String
                                     
-                                    ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                    ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                         if (error == nil) {
                                             dispatch_async(dispatch_get_main_queue(),{
                                                 let imageRes = result as! UIImage
@@ -628,7 +628,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         
                         if (userInfo[kImageUrl] is NSNull == false) {
                             let imageURLString = userInfo[kImageUrl] as! String
-                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                            ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
                                     let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
                                     if visibleCell == true {

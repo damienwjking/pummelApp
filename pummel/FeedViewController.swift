@@ -153,7 +153,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
             if (userFeed[kImageUrl] is NSNull == false) {
                 let imageLink = userFeed[kImageUrl] as! String
                 
-                ImageRouter.getImage(posString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
+                ImageRouter.getImage(imageURLString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
                     if (error == nil) {
                         let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
                         if visibleCell == true {

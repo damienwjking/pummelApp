@@ -88,7 +88,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                         if (userInfo[kImageUrl] is NSNull == false) {
                             let imageURLString = userInfo[kImageUrl] as! String
                             
-                            ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                            ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
                                     let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
                                     if (updateCell != nil) {

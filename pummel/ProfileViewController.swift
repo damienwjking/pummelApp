@@ -352,7 +352,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.defaults.setObject(self.coachDetail["sessionNotification"] as! Int == 0 ? false : true, forKey: kSessions)
                     self.defaults.setObject(self.coachDetail[kUnits], forKey: kUnit)
                     self.defaults.setObject(self.coachDetail[kFirstname], forKey: kFirstname)
-                    kFirstname
+                    
                     self.setAvatar()
                     if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
                         self.setBusiness()
@@ -386,7 +386,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         if (coachDetail[kImageUrl] is NSNull == false) {
             let imageLink = coachDetail[kImageUrl] as! String
             
-            ImageRouter.getImage(posString: imageLink, sizeString: widthHeight250, completed: { (result, error) in
+            ImageRouter.getImage(imageURLString: imageLink, sizeString: widthHeight250, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMV.image = imageRes
@@ -1270,16 +1270,20 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        var prefix = kPMAPI
         let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
         let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
-        var link = photo.objectForKey(kImageUrl) as! String
-        link.appendContentsOf(postfix)
-        prefix.appendContentsOf(link)
-        Alamofire.request(.GET, prefix)
-            .responseImage { response in
-                let imageRes = response.result.value! as UIImage
-                cell.imageCell.image = imageRes
+        
+        if (photo[kImageUrl] is NSNull == false) {
+            let imageURLString = photo.objectForKey(kImageUrl) as! String
+            
+            ImageRouter.getImage(imageURLString: imageURLString, sizeString: postfix, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    cell.imageCell.image = imageRes
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
         }
     }
     

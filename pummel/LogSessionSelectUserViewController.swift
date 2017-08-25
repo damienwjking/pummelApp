@@ -187,7 +187,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                         let imageURLString = userInfo[kImageUrl] as? String
                         
                         if (imageURLString?.isEmpty == false) {
-                            ImageRouter.getImage(posString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
+                            ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
                                 let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
                                 if visibleCell == true {
                                     if (error == nil) {

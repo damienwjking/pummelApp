@@ -103,7 +103,7 @@ class ConnectViewController: BaseViewController {
                     if (JSON[kImageUrl] is NSNull == false) {
                         let imageURLString = JSON[kImageUrl] as! String
                         
-                        ImageRouter.getImage(posString: imageURLString, sizeString: widthHeight236, completed: { (result, error) in
+                        ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight236, completed: { (result, error) in
                             if (error == nil) {
                                 let imageRes = result as! UIImage
                                 self.meAvatarIMV.image = imageRes
@@ -117,7 +117,7 @@ class ConnectViewController: BaseViewController {
         
         let imageLink = coachDetail[kImageUrl] as? String
         if (imageLink?.isEmpty == false) {
-            ImageRouter.getImage(posString: imageLink!, sizeString: widthHeight236, completed: { (result, error) in
+            ImageRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight236, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.youAvatarIMV.image = imageRes

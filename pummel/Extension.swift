@@ -17,6 +17,7 @@ extension UIImageView {
         mask.path = path.CGPath
         self.layer.mask = mask
     }
+    
 }
 
 extension NSData {
@@ -44,4 +45,28 @@ extension NSData {
             return nil //unknown
         }
     }
+    
+}
+
+extension String {
+    func stringByAddingPercentEncodingForURLQueryValue() -> String? {
+        let allowedCharacters = NSCharacterSet(charactersInString: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
+        
+        return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacters)
+    }
+    
+}
+
+
+extension Dictionary {
+    func stringFromHttpParameters() -> String {
+        let parameterArray = self.map { (key, value) -> String in
+            let percentEscapedKey = (key as! String).stringByAddingPercentEncodingForURLQueryValue()!
+            let percentEscapedValue = (value as! String).stringByAddingPercentEncodingForURLQueryValue()!
+            return "\(percentEscapedKey)=\(percentEscapedValue)"
+        }
+        
+        return parameterArray.joinWithSeparator("&")
+    }
+    
 }

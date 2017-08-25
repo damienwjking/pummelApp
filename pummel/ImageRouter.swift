@@ -11,13 +11,14 @@ import Alamofire
 import Foundation
 
 typealias CompletionBlock = (result: AnyObject?, error: NSError?) -> Void
+//typealias ResponseCompletionBlock = (response:  Response<AnyObject, NSError>, error: NSError?) -> Void
 
 enum ImageRouter: URLRequestConvertible {
     case getCurrentUserAvatar(sizeString: String, completed: CompletionBlock)
     case getUserAvatar(userID : String, sizeString: String, completed: CompletionBlock)
     case getCoachAvatar(coachID : String, sizeString: String, completed: CompletionBlock)
     case getBusinessLogo(businessID : String, sizeString: String, completed: CompletionBlock)
-    case getImage(posString: String, sizeString: String, completed: CompletionBlock)
+    case getImage(imageURLString: String, sizeString: String, completed: CompletionBlock)
     
     var imageSize: String {
         switch self {
@@ -82,8 +83,16 @@ enum ImageRouter: URLRequestConvertible {
         case .getBusinessLogo(let businessID, _, _):
             prefix = kPMAPI_BUSINESS + businessID
             
-        case .getImage(let posString, let sizeString, _):
-            prefix = kPMAPI + posString + sizeString
+        case .getImage(let imageURLString, let sizeString, _):
+            if (imageURLString.isEmpty == false) {
+                if (imageURLString.contains("scontent.xx.fbcdn.net")) {
+                    prefix = imageURLString
+                } else {
+                    prefix = kPMAPI + imageURLString + sizeString
+                }
+            } else {
+                prefix = ""
+            }
         }
         
         return prefix
@@ -112,7 +121,7 @@ enum ImageRouter: URLRequestConvertible {
                         if (userDetail[kImageUrl] is NSNull == false) {
                             let imageURLString = userDetail[kImageUrl] as! String
                             
-                            ImageRouter.getImage(posString: imageURLString, sizeString: self.imageSize, completed: { (result, error) in
+                            ImageRouter.getImage(imageURLString: imageURLString, sizeString: self.imageSize, completed: { (result, error) in
                                 self.comletedBlock(result: result, error: error)
                             }).fetchdata()
                         } else {
@@ -130,16 +139,21 @@ enum ImageRouter: URLRequestConvertible {
                 }
             })
         case .getImage:
-            let image = self.getCacheImageWithLink(self.path)
-            if (image != nil) {
-                self.comletedBlock(result:  image, error: nil)
-            } else {
-                Alamofire.request(.GET, self.path).responseImage { response in
-                    let imageRes = response.result.value! as UIImage
-                    NSCache.sharedInstance.setObject(imageRes, forKey: self.path)
-                    
-                    self.comletedBlock(result:  imageRes, error: nil)
+            if (self.path.isEmpty == false) {
+                let image = self.getCacheImageWithLink(self.path)
+                if (image != nil) {
+                    self.comletedBlock(result: image, error: nil)
+                } else {
+                    Alamofire.request(.GET, self.path).responseImage { response in
+                        let imageRes = response.result.value! as UIImage
+                        NSCache.sharedInstance.setObject(imageRes, forKey: self.path)
+                        
+                        self.comletedBlock(result: imageRes, error: nil)
+                    }
                 }
+            } else {
+                let error = NSError(domain: "Pummel", code: 500, userInfo: nil) // Simple error
+                self.comletedBlock(result: nil, error: error)
             }
         }
     }

@@ -70,6 +70,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        
+        
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -148,53 +150,13 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         
         Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
             .responseJSON { response in
+                self.view.hideToastActivity()
+                
                 if response.response?.statusCode == 200 {
-                    //TODO: Save access token here
                     let JSON = response.result.value
-                    self.updateCookies(response)
+        
+                    UserRouter.saveCurrentUserInfo(response)
                     let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
-                    
-                    self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
-                    self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
-                    // Check Coach
-                    var coachLink  = kPMAPICOACH
-                    let coachId = currentId
-                    coachLink.appendContentsOf(coachId)
-                    Alamofire.request(.GET, coachLink)
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                                self.defaults.setObject(true, forKey: k_PM_IS_COACH)
-                            } else {
-                                self.defaults.setObject(false, forKey: k_PM_IS_COACH)
-                            }
-                    }
-                    
-                    // Send token
-                    if ((self.defaults.objectForKey(k_PM_PUSH_TOKEN)) != nil) {
-                        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
-                        let deviceTokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN) as! String
-                        
-                        let param = [kUserId:currentId,
-                            kProtocol:"APNS",
-                            kToken: deviceTokenString]
-                        
-                        var linkPostNotif = kPMAPIUSER
-                        linkPostNotif.appendContentsOf(currentId)
-                        linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
-                        Alamofire.request(.POST, linkPostNotif, parameters: param)
-                            .responseJSON { response in
-                                if response.response?.statusCode == 200 {
-                                    print("Already push tokenString")
-                                } else {
-                                    print("Can't push tokenString")
-                                }
-                        }
-                    } else {
-                        let application = UIApplication.sharedApplication()
-                        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-                        application.registerUserNotificationSettings(settings)
-                        application.registerForRemoteNotifications()
-                    }
                     
                     let mixpanel = Mixpanel.sharedInstance()
                     if mixpanel.distinctId != "" {
@@ -215,10 +177,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                     }
                     
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
-                    self.view.hideToastActivity()
                     FBSDKAppEvents.logEvent("Login")
-                }else {
-                    self.view.hideToastActivity()
+                } else {
                     let alertController = UIAlertController(title: pmmNotice, message: signInNotice, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                         // ...
@@ -281,39 +241,9 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                         Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail!, kPassword:userPassword!])
                             .responseJSON { response in
                                 if response.response?.statusCode == 200 {
-                                    //TODO: Save access token here
                                     let JSON = response.result.value
-                                    self.updateCookies(response)
-                                    let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
-                                    self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
-                                    self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
-                                   
-                                    // Send token
-                                    if ((self.defaults.objectForKey(k_PM_PUSH_TOKEN)) != nil) {
-                                        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
-                                        let deviceTokenString = self.defaults.objectForKey(k_PM_PUSH_TOKEN) as! String
-                                        
-                                        let param = [kUserId:currentId,
-                                            kProtocol:"APNS",
-                                            kToken: deviceTokenString]
-                                        
-                                        var linkPostNotif = kPMAPIUSER
-                                        linkPostNotif.appendContentsOf(currentId)
-                                        linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
-                                        Alamofire.request(.POST, linkPostNotif, parameters: param)
-                                            .responseJSON { response in
-                                                if response.response?.statusCode == 200 {
-                                                    print("Already push tokenString")
-                                                } else {
-                                                    print("Can't push tokenString")
-                                                }
-                                        }
-                                    } else {
-                                        let application = UIApplication.sharedApplication()
-                                        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-                                        application.registerUserNotificationSettings(settings)
-                                        application.registerForRemoteNotifications()
-                                    }
+                                    
+                                    UserRouter.saveCurrentUserInfo(response)
                                     
                                     if (self.cameraProfileIconIMV.hidden) {
                                         var prefix = kPMAPIUSER

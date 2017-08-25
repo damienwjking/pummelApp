@@ -287,7 +287,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             if (userInfo[kImageUrl] is NSNull == false) {
                                 let userImageURL = userInfo[kImageUrl] as! String
                                 
-                                ImageRouter.getImage(posString: userImageURL, sizeString: widthHeight160, completed: { (result, error) in
+                                ImageRouter.getImage(imageURLString: userImageURL, sizeString: widthHeight160, completed: { (result, error) in
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
                                         
@@ -324,7 +324,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 let imageURLString = message.objectForKey(kImageUrl) as? String
                 
                 if (imageURLString?.isEmpty == false) {
-                    ImageRouter.getImage(posString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
+                    ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
                         if (error == nil) {
                             let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
                             if visibleCell == true {
@@ -351,7 +351,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             
                             let imageURLString = userInfo[kImageUrl] as? String
                             if (imageURLString?.isEmpty == false) {
-                                ImageRouter.getImage(posString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
+                                ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
                                     if (error == nil) {
                                         let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
                                         if visibleCell == true {

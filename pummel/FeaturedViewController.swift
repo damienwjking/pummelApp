@@ -349,7 +349,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                 let imageLink = userFeed[kImageUrl] as? String
                 
                 if (imageLink?.isEmpty == false) {
-                    ImageRouter.getImage(posString: imageLink!, sizeString: widthHeight120) { (result, error) in
+                    ImageRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
                         if (error == nil) {
                             let imageRes = result as! UIImage
                             
@@ -378,7 +378,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                 let imageContentLink = feed[kImageUrl] as! String
                 let postfixContent = widthEqual.stringByAppendingString(String(self.view.frame.size.width*2)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width*2))
                 
-                ImageRouter.getImage(posString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
+                ImageRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
                     if (error == nil) {
                         let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
                         
