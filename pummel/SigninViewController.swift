@@ -19,6 +19,9 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var forgotPasswordBT : UIButton!
     @IBOutlet var signinBT : UIButton!
     @IBOutlet var signinDistantCT: NSLayoutConstraint!
+    
+    var FBButton = FBSDKLoginButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNeedsStatusBarAppearanceUpdate()
@@ -73,16 +76,14 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.signinBT.updateConstraintsIfNeeded()
-        
         var fbButtonFrame = self.signinBT.frame
         fbButtonFrame.origin.y = self.signinBT.frame.origin.y + self.signinBT.frame.size.height + 30
         
-        let FBButton = FBSDKLoginButton(frame: fbButtonFrame)
-        FBButton.delegate = self
-        FBButton.readPermissions = ["public_profile", "email", "user_friends"]
-        FBButton.loginBehavior = .SystemAccount
-        self.view.addSubview(FBButton)
+        self.FBButton.frame = fbButtonFrame
+        self.FBButton.delegate = self
+        self.FBButton.readPermissions = ["public_profile", "email", "user_friends"]
+        self.FBButton.loginBehavior = .SystemAccount
+        self.view.addSubview(self.FBButton)
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
