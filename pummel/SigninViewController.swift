@@ -126,7 +126,6 @@ class SigninViewController: UIViewController, UITextFieldDelegate, FBSDKLoginBut
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                self.navigationController?.popToRootViewControllerAnimated(true)
                                 NSNotificationCenter.defaultCenter().postNotificationName("LOGINFACEBOOKSUCCESS", object: nil)
                             }
                         } else {
