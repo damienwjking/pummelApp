@@ -34,6 +34,9 @@ class PMHeler {
             
             let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
             let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+                loginManager.logOut()
+                
                 // LOGOUT
                 NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
                 Alamofire.request(.DELETE, kPMAPI_LOGOUT).response { (req, res, data, error) -> Void in

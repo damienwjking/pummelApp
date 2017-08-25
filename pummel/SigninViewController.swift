@@ -126,9 +126,13 @@ class SigninViewController: UIViewController, UITextFieldDelegate, FBSDKLoginBut
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                                self.navigationController?.popToRootViewControllerAnimated(true)
+                                NSNotificationCenter.defaultCenter().postNotificationName("LOGINFACEBOOKSUCCESS", object: nil)
                             }
                         } else {
+                            let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+                            loginManager.logOut()
+                            
                             print("Request failed with error: \(error)")
                         }
                     }).fetchdata()

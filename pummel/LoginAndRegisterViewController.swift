@@ -71,11 +71,16 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.loginFacebookSuccess), name: "LOGINFACEBOOKSUCCESS", object: nil)
+    }
+    
+    func loginFacebookSuccess() {
+        self.performSegueWithIdentifier("showClientSegue", sender: nil)
     }
     
     override func viewDidDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
