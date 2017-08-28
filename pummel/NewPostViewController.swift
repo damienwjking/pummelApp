@@ -110,7 +110,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
     }
     
     func setAvatar() {
-        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight120) { (result, error) in
+        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight200) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.avatarIMV.image = imageRes

@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class EditCoachProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class EditCoachProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMW: UIImageView!
@@ -275,56 +275,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         }
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tags.count
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-        self.configureCell(cell, forIndexPath: indexPath)
-        if (indexPath.row == tags.count - 1) {
-            self.getListTags()
-        }
-        return cell
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-        
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-            cellSize.width += 5;
-        }
-        
-        return cellSize
-    }
-    
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-        tags[indexPath.row].selected = !tags[indexPath.row].selected
-        let tag = tags[indexPath.row]
-        if (tag.selected) {
-            self.selectNewTag(tag)
-            tagIdsArray.addObject(tag.tagId!)
-        } else {
-            self.deleteATagUser(tag)
-            tagIdsArray.removeObject(tag.tagId!)
-        }
-        let contentOffset = self.scrollView.contentOffset
-        self.collectionView.reloadData()
-        scrollView.setContentOffset(contentOffset, animated: false)
-    }
-    
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
-        cell.tagName.textColor =  tag.selected ? UIColor.whiteColor() : UIColor.pmmWarmGreyColor()
-        cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
-        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
-        cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
-    }
-
-    
     func updateUI() {
         if (self.userInfo == nil) {
             var prefix = kPMAPIUSER
@@ -334,12 +284,12 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                     if response.response?.statusCode == 200 {
                         if (response.result.value == nil) {return}
                         self.userInfo = response.result.value as! NSDictionary
-                        if !(self.userInfo[kLastName] is NSNull) {
+                        if (self.userInfo[kLastName] is NSNull == false) {
                             self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
                         } else {
                             self.nameContentTF.text = self.userInfo[kFirstname] as? String
                         }
-                        if !(self.userInfo[kBio] is NSNull) {
+                        if (self.userInfo[kBio] is NSNull == false) {
                             self.aboutContentTV.text = self.userInfo[kBio] as! String
                         } else {
                             self.aboutContentTV.text = ""
@@ -351,88 +301,82 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                         self.genderContentTF.text = self.userInfo[kGender] as? String
                         self.emailContentTF.text = self.userInfo[kEmail] as? String
                         
-                        if !(self.userInfo[kDob] is NSNull) {
+                        if (self.userInfo[kDob] is NSNull == false) {
                             let stringDob = self.userInfo[kDob] as! String
                             self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
                         }
                         
-                        if !(self.userInfo[kMobile] is NSNull) {
+                        if (self.userInfo[kMobile] is NSNull == false) {
                             self.mobileContentTF.text = self.userInfo[kMobile] as? String
                         }
                         
-                        if !(self.userInfo[kFacebookUrl] is NSNull) {
+                        if (self.userInfo[kFacebookUrl] is NSNull == false) {
                             self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
                         }
                         
-                        if !(self.userInfo[kInstagramUrl] is NSNull) {
+                        if (self.userInfo[kInstagramUrl] is NSNull == false) {
                             self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
                         }
                         
-                        if !(self.userInfo[kTwitterUrl] is NSNull) {
+                        if (self.userInfo[kTwitterUrl] is NSNull == false) {
                             self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
                         }
                         
-                        if !(self.userInfo[kEmergencyName] is NSNull) {
+                        if (self.userInfo[kEmergencyName] is NSNull == false) {
                             self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
                         }
                         
-                        if !(self.userInfo[kEmergencyMobile] is NSNull) {
+                        if (self.userInfo[kEmergencyMobile] is NSNull == false) {
                             self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
                         }
-                    }else if response.response?.statusCode == 401 {
-                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                            // TODO: LOGOUT
-                        }
-                        alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
-                            // ...
-                        }
-                        
+                    } else if response.response?.statusCode == 401 {
+                        PMHeler.showLogoutAlert()
                     }
             }
         } else {
-            if !(self.userInfo[kLastName] is NSNull) {
+            if (self.userInfo[kLastName] is NSNull == false) {
                 self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
             } else {
                 self.nameContentTF.text = self.userInfo[kFirstname] as? String
             }
-            if !(self.userInfo[kBio] is NSNull) {
+            
+            if (self.userInfo[kBio] is NSNull == false) {
                 self.aboutContentTV.text = self.userInfo[kBio] as! String
             } else {
                 self.aboutContentTV.text = ""
             }
+            
             let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
 //            self.aboutContentDT.constant = sizeAboutTV.height + 20
             self.genderContentTF.text = self.userInfo[kGender] as? String
             self.emailContentTF.text = self.userInfo[kEmail] as? String
             
-            if !(self.userInfo[kDob] is NSNull) {
+            if (self.userInfo[kDob] is NSNull == false) {
                 let stringDob = self.userInfo[kDob] as! String
                 self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
             }
             
-            if !(self.userInfo[kMobile] is NSNull) {
+            if (self.userInfo[kMobile] is NSNull == false) {
                 self.mobileContentTF.text = self.userInfo[kMobile] as? String
             }
             
-            if !(self.userInfo[kFacebookUrl] is NSNull) {
+            if (self.userInfo[kFacebookUrl] is NSNull == false) {
                 self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
             }
             
-            if !(self.userInfo[kInstagramUrl] is NSNull) {
+            if (self.userInfo[kInstagramUrl] is NSNull == false) {
                 self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
             }
             
-            if !(self.userInfo[kTwitterUrl] is NSNull) {
+            if (self.userInfo[kTwitterUrl] is NSNull == false) {
                 self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
             }
             
-            if !(self.userInfo[kEmergencyName] is NSNull) {
+            if (self.userInfo[kEmergencyName] is NSNull == false) {
                 self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
             }
             
-            if !(self.userInfo[kEmergencyMobile] is NSNull) {
+            if (self.userInfo[kEmergencyMobile] is NSNull == false) {
                 self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
             }
         }
@@ -444,7 +388,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             case .Success(let JSON):
                 let coachInformationTotal = JSON as! NSDictionary
                 
-                if !(coachInformationTotal[kQualification] is NSNull) {
+                if (coachInformationTotal[kQualification] is NSNull == false) {
                     let qualificationText = coachInformationTotal[kQualification] as! String
                     self.qualificationContentTF.text = qualificationText
 //                    let sizeQualificationTV = self.qualificationContentTF.sizeThatFits(self.qualificationContentTF.frame.size)
@@ -453,7 +397,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                     self.qualificationContentTF.text = ""
                 }
                 
-                if !(coachInformationTotal[kAchievement] is NSNull) {
+                if (coachInformationTotal[kAchievement] is NSNull == false) {
                     let achivementText = coachInformationTotal[kAchievement] as! String
                     self.achivementContentTF.text = achivementText
 //                    let sizeAchivementTV = self.achivementContentTF.sizeThatFits(self.achivementContentTF.frame.size)
@@ -462,8 +406,10 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                     self.achivementContentTF.text = ""
                 }
                 
-                if !(coachInformationTotal[kWebsiteUrl] is NSNull) {
+                if (coachInformationTotal[kWebsiteUrl] is NSNull == false) {
                     self.websiteUrlTF.text = coachInformationTotal[kWebsiteUrl] as? String
+                } else {
+                    self.websiteUrlTF.text = ""
                 }
                 
             case .Failure(let error):
@@ -624,74 +570,22 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.presentViewController(alertController, animated: true) { }
     }
     
-    func imageTapped()
-    {
+    func imageTapped() {
         showPopupToSelectProfileAvatar()
     }
     
     func setAvatar() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) != true) {
-            var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userDetail = JSON as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        var link = kPMAPI
-                        link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight200)
-                        
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            self.avatarIMW.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    self.avatarIMW.image = imageRes
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                            }
-                        }
-                    } else {
-                        self.avatarIMW.image = UIImage(named:"display-empty.jpg")
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
+        let currentID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+        
+        ImageRouter.getUserAvatar(userID: currentID, sizeString: widthHeight200, completed: { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.avatarIMW.image = imageRes
+            } else {
+                print("Request failed with error: \(error)")
             }
-            
-        } else {
-            var prefix = kPMAPICOACH
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let userDetailFull = JSON as! NSDictionary
-                    let userDetail = userDetailFull[kUser] as! NSDictionary
-                    if !(userDetail[kImageUrl] is NSNull) {
-                        var link = kPMAPI
-                        link.appendContentsOf(userDetail[kImageUrl] as! String)
-                        link.appendContentsOf(widthHeight100)
-                        
-                        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-                            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
-                            self.avatarIMW.image = imageRes
-                        } else {
-                            Alamofire.request(.GET, link)
-                                .responseImage { response in
-                                    let imageRes = response.result.value! as UIImage
-                                    self.avatarIMW.image = imageRes
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: link)
-                            }
-                        }
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    }
-            }
-        }
+        }).fetchdata()
     }
     
     func checkRuleInputData() -> Bool {
@@ -761,40 +655,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         }
     }
     
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        if (textField.isEqual(self.nameContentTF)) {
-            self.isFirstTVS = true
-        }
-        if textField.isEqual(self.genderContentTF) == true {
-            self.dobContentTF.resignFirstResponder()
-            self.emailContentTF.resignFirstResponder()
-            self.nameContentTF.resignFirstResponder()
-            self.mobileContentTF.resignFirstResponder()
-            self.aboutContentTV.resignFirstResponder()
-            self.achivementContentTF.resignFirstResponder()
-            self.qualificationContentTF.resignFirstResponder()
-            self.showPopupToSelectGender()
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func textViewDidBeginEditing(textView: UITextView) {
-        if (textView.isEqual(self.aboutContentTV)) {
-            self.isFirstTVS = true
-        }
-    }
-    
-    @IBAction func textFieldEditingWithSender(sender: UITextField) {
-        let datePickerView:UIDatePicker = UIDatePicker()
-        datePickerView.backgroundColor = UIColor.blackColor()
-        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
-        datePickerView.datePickerMode = UIDatePickerMode.Date
-        sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(EditProfileViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-    }
-    
     func datePickerValueChanged(sender:UIDatePicker) {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "YYYY-MM-dd"
@@ -815,20 +675,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
                                                                   attributes:[NSForegroundColorAttributeName:  UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
         }
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        if textField.isEqual(self.emailContentTF) == true {
-            if (self.isValidEmail(self.emailContentTF.text!) == false) {
-                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                        attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-            } else {
-                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                        attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
-            }
-        }
-        return true
     }
     
     func selectNewTag(tag: Tag) {
@@ -1023,3 +869,105 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     }
 }
 
+// MARK: - UICollectionViewDataSource
+extension EditCoachProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tags.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
+        self.configureCell(cell, forIndexPath: indexPath)
+        if (indexPath.row == tags.count - 1) {
+            self.getListTags()
+        }
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
+        var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            cellSize.width += 5;
+        }
+        
+        return cellSize
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+        tags[indexPath.row].selected = !tags[indexPath.row].selected
+        let tag = tags[indexPath.row]
+        if (tag.selected) {
+            self.selectNewTag(tag)
+            tagIdsArray.addObject(tag.tagId!)
+        } else {
+            self.deleteATagUser(tag)
+            tagIdsArray.removeObject(tag.tagId!)
+        }
+        let contentOffset = self.scrollView.contentOffset
+        self.collectionView.reloadData()
+        scrollView.setContentOffset(contentOffset, animated: false)
+    }
+    
+    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
+        let tag = tags[indexPath.row]
+        cell.tagName.text = tag.name
+        cell.tagName.textColor =  tag.selected ? UIColor.whiteColor() : UIColor.pmmWarmGreyColor()
+        cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
+        cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
+    }
+}
+
+// MARK: - UITextFieldDelegate, UITextViewDelegate
+extension EditCoachProfileViewController: UITextFieldDelegate, UITextViewDelegate {
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        if (textField.isEqual(self.nameContentTF)) {
+            self.isFirstTVS = true
+        }
+        if textField.isEqual(self.genderContentTF) == true {
+            self.dobContentTF.resignFirstResponder()
+            self.emailContentTF.resignFirstResponder()
+            self.nameContentTF.resignFirstResponder()
+            self.mobileContentTF.resignFirstResponder()
+            self.aboutContentTV.resignFirstResponder()
+            self.achivementContentTF.resignFirstResponder()
+            self.qualificationContentTF.resignFirstResponder()
+            self.showPopupToSelectGender()
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    @IBAction func textFieldEditingWithSender(sender: UITextField) {
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.backgroundColor = UIColor.blackColor()
+        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
+        datePickerView.datePickerMode = UIDatePickerMode.Date
+        sender.inputView = datePickerView
+        datePickerView.addTarget(self, action:#selector(EditProfileViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        if textField.isEqual(self.emailContentTF) == true {
+            if (self.isValidEmail(self.emailContentTF.text!) == false) {
+                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
+                                                                        attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+            } else {
+                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
+                                                                        attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+            }
+        }
+        return true
+    }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        if (textView.isEqual(self.aboutContentTV)) {
+            self.isFirstTVS = true
+        }
+    }
+}

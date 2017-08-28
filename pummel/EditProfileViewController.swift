@@ -178,6 +178,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
     }
     
+    
+    
     override func viewDidDisappear(animated: Bool) {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }

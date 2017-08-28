@@ -67,17 +67,10 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
             if (error == nil) {
                 let userInfo = result as! NSDictionary
                 
-                let mobileNumber = userInfo["mobile"] as! String
-                
-                var canAddCallOption = false
-                if (mobileNumber.isEmpty == false) {
-                    canAddCallOption = true
-                }
-                
                 if typeGroup == TypeGroup.Current.rawValue {
-                    self.showAlertMovetoOldAction(userInfo, canAddCallOption: canAddCallOption)
+                    self.showAlertMovetoOldAction(userInfo)
                 } else {
-                    self.showAlertMovetoCurrentAction(userInfo, typeGroup: typeGroup, canAddCallOption: canAddCallOption)
+                    self.showAlertMovetoCurrentAction(userInfo, typeGroup: typeGroup)
                 }
             } else {
                 print("Request failed with error: \(error)")
@@ -89,159 +82,6 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
         userIdSelected = ""
         self.tbView.reloadData()
     }
-    
-    func showAlertMovetoOldAction(userInfo:NSDictionary, canAddCallOption: Bool) {
-        let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
-        let userMail = userInfo[kEmail] as! String
-        let phoneNumber = userInfo[kMobile] as! String
-        
-        let clickMoveToOld = { (action:UIAlertAction!) -> Void in
-            var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            prefix.appendContentsOf(kPMAPICOACH_OLD)
-            prefix.appendContentsOf("/")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
-                .responseJSON { response in
-                    self.view.hideToastActivity()
-                    if response.response?.statusCode == 200 {
-                        self.forceUpdate = true
-                        self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
-                        self.forceUpdate = false
-                    }
-            }
-        }
-        
-        // Email action
-        let emailClientAction = { (action:UIAlertAction!) -> Void in
-            var urlString = "mailto:"
-            urlString = urlString.stringByAppendingString(userMail)
-            
-            let mailURL = NSURL(string: urlString)
-            if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
-                UIApplication.sharedApplication().openURL(mailURL!)
-            }
-        }
-        
-        // Call action
-        let callClientAction = { (action:UIAlertAction!) -> Void in
-            var urlString = "tel:///"
-            urlString = urlString.stringByAppendingString(phoneNumber)
-            
-            let tellURL = NSURL(string: urlString)
-            if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
-                UIApplication.sharedApplication().openURL(tellURL!)
-            }
-        }
-        
-        // Send message action
-        let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
-            // Special case: can not call tabbarviewcontroller
-            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
-            
-            self.navigationController?.popToRootViewControllerAnimated(true)
-        }
-        
-        let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
-            
-        }
-        
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Remove Client", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
-        
-        alertController.addAction(UIAlertAction(title: "Email Client", style: UIAlertActionStyle.Destructive, handler: emailClientAction))
-        
-        // Check exist phone number
-        if (canAddCallOption == true) {
-            alertController.addAction(UIAlertAction(title: "Call Client", style: UIAlertActionStyle.Destructive, handler: callClientAction))
-        }
-        
-        alertController.addAction(UIAlertAction(title: "Send Message", style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
-        
-        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
-        
-        self.presentViewController(alertController, animated: true) { }
-    }
-    
-    func showAlertMovetoCurrentAction(userInfo: NSDictionary, typeGroup: Int, canAddCallOption: Bool) {
-        let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
-        let userMail = userInfo[kEmail] as! String
-        let phoneNumber = userInfo[kMobile] as! String
-        
-        let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
-            var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            prefix.appendContentsOf(kPMAPICOACH_CURRENT)
-            prefix.appendContentsOf("/")
-            print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
-                .responseJSON { response in
-                    self.view.hideToastActivity()
-                    if response.response?.statusCode == 200 {
-                        self.forceUpdate = true
-                        if typeGroup == TypeGroup.NewLead.rawValue {
-                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 0, inSection: 0),NSIndexPath(forItem: 1, inSection: 0)], withRowAnimation: .None)
-                        } else {
-                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
-                        }
-                        self.forceUpdate = false
-                    }
-            }
-        }
-        
-        // Email action
-        let emailClientAction = { (action:UIAlertAction!) -> Void in
-            var urlString = "mailto:"
-            urlString = urlString.stringByAppendingString(userMail)
-            
-            let mailURL = NSURL(string: urlString)
-            if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
-                UIApplication.sharedApplication().openURL(mailURL!)
-            }
-        }
-        
-        // Call action
-        let callClientAction = { (action:UIAlertAction!) -> Void in
-            var urlString = "tel:///"
-            urlString = urlString.stringByAppendingString(phoneNumber)
-            
-            let tellURL = NSURL(string: urlString)
-            if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
-                UIApplication.sharedApplication().openURL(tellURL!)
-            }
-        }
-        
-        // Send message action
-        let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
-            // Special case: can not call tabbarviewcontroller
-            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
-            
-            self.navigationController?.popToRootViewControllerAnimated(true)
-        }
-        
-        let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
-        }
-        
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Accept Client", style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
-        alertController.addAction(UIAlertAction(title: "Email Client", style: UIAlertActionStyle.Destructive, handler: emailClientAction))
-        
-        // Check exist phone number
-        if (canAddCallOption == true) {
-            alertController.addAction(UIAlertAction(title: "Call Client", style: UIAlertActionStyle.Destructive, handler: callClientAction))
-        }
-        
-        alertController.addAction(UIAlertAction(title: "Send Message", style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
-        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
-        
-        self.presentViewController(alertController, animated: true) { }
-    }
-    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == kGoUserProfile {
@@ -284,5 +124,209 @@ extension BookSessionShareViewController: UITableViewDelegate, UITableViewDataSo
             cell.cv.reloadData()
         }
         return cell
+    }
+}
+
+extension BookSessionShareViewController {
+    func showAlertMovetoOldAction(userInfo:NSDictionary) {
+        let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
+        
+        let clickMoveToOld = { (action:UIAlertAction!) -> Void in
+            var prefix = kPMAPICOACHES
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPMAPICOACH_OLD)
+            prefix.appendContentsOf("/")
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+                .responseJSON { response in
+                    self.view.hideToastActivity()
+                    if response.response?.statusCode == 200 {
+                        self.forceUpdate = true
+                        self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
+                        self.forceUpdate = false
+                    }
+            }
+        }
+        
+        // Email action
+        let userMail = userInfo[kEmail] as! String
+        let emailClientAction = { (action:UIAlertAction!) -> Void in
+            UserRouter.getCurrentUserInfo(completed: { (result, error) in
+                if (error == nil) {
+                    let currentInfo = result as! NSDictionary
+                    let currentMail = currentInfo[kEmail] as! String
+                    let coachFirstName = currentInfo[kFirstname] as! String
+                    let userFirstName = userInfo[kFirstname] as! String
+                    
+                    var urlString = "mailto:"
+                    urlString = urlString.stringByAppendingString(userMail)
+                    
+                    urlString = urlString.stringByAppendingString("?subject=")
+                    urlString = urlString.stringByAppendingString("Come%20join%20me%20on%20Pummel%20Fitness")
+                    
+                    urlString = urlString.stringByAppendingString("&from=")
+                    urlString = urlString.stringByAppendingString(currentMail)
+                    
+                    urlString = urlString.stringByAppendingString("&body=")
+                    urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
+                    
+                    let mailURL = NSURL(string: urlString)
+                    if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
+                        UIApplication.sharedApplication().openURL(mailURL!)
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
+        }
+        
+        // Call action
+        let phoneNumber = userInfo[kMobile] as! String
+        let callClientAction = { (action:UIAlertAction!) -> Void in
+            var urlString = "tel:///"
+            urlString = urlString.stringByAppendingString(phoneNumber)
+            
+            let tellURL = NSURL(string: urlString)
+            if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
+                UIApplication.sharedApplication().openURL(tellURL!)
+            }
+        }
+        
+        // Send message action
+        let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
+            // Special case: can not call tabbarviewcontroller
+            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            
+            self.navigationController?.popToRootViewControllerAnimated(true)
+        }
+        
+        let viewProfileAction = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+            
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Remove Client", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
+        
+        // Check exist email
+        if (userMail.isEmpty == false) {
+            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+        }
+        
+        // Check exist phone number
+        if (phoneNumber.isEmpty == false) {
+            alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
+        }
+        
+        alertController.addAction(UIAlertAction(title: "Send Message", style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        
+        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        
+        self.presentViewController(alertController, animated: true) { }
+    }
+    
+    func showAlertMovetoCurrentAction(userInfo: NSDictionary, typeGroup: Int) {
+        let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
+        
+        let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
+            var prefix = kPMAPICOACHES
+            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(kPMAPICOACH_CURRENT)
+            prefix.appendContentsOf("/")
+            print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+                .responseJSON { response in
+                    self.view.hideToastActivity()
+                    if response.response?.statusCode == 200 {
+                        self.forceUpdate = true
+                        if typeGroup == TypeGroup.NewLead.rawValue {
+                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 0, inSection: 0),NSIndexPath(forItem: 1, inSection: 0)], withRowAnimation: .None)
+                        } else {
+                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
+                        }
+                        self.forceUpdate = false
+                    }
+            }
+        }
+        
+        // Email action
+        let userMail = userInfo[kEmail] as! String
+        let emailClientAction = { (action:UIAlertAction!) -> Void in
+            UserRouter.getCurrentUserInfo(completed: { (result, error) in
+                if (error == nil) {
+                    let currentInfo = result as! NSDictionary
+                    let currentMail = currentInfo[kEmail] as! String
+                    let coachFirstName = currentInfo[kFirstname] as! String
+                    let userFirstName = userInfo[kFirstname] as! String
+                    
+                    var urlString = "mailto:"
+                    urlString = urlString.stringByAppendingString(userMail)
+                    
+                    urlString = urlString.stringByAppendingString("?subject=")
+                    urlString = urlString.stringByAppendingString("Come%20join%20me%20on%20Pummel%20Fitness")
+                    
+                    urlString = urlString.stringByAppendingString("&from=")
+                    urlString = urlString.stringByAppendingString(currentMail)
+                    
+                    urlString = urlString.stringByAppendingString("&body=")
+                    urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
+                    
+                    let mailURL = NSURL(string: urlString)
+                    if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
+                        UIApplication.sharedApplication().openURL(mailURL!)
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
+        }
+        
+        // Call action
+        let phoneNumber = userInfo[kMobile] as! String
+        let callClientAction = { (action:UIAlertAction!) -> Void in
+            let phoneNumber = userInfo[kMobile] as! String
+            var urlString = "tel:///"
+            urlString = urlString.stringByAppendingString(phoneNumber)
+            
+            let tellURL = NSURL(string: urlString)
+            if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
+                UIApplication.sharedApplication().openURL(tellURL!)
+            }
+        }
+        
+        // Send message action
+        let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
+            // Special case: can not call tabbarviewcontroller
+            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            
+            self.navigationController?.popToRootViewControllerAnimated(true)
+        }
+        
+        let viewProfileAction = { (action:UIAlertAction!) -> Void in
+            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
+        
+        // Check exist email
+        if (userMail.isEmpty == false) {
+            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+        }
+        
+        // Check exist phone number
+        if (phoneNumber.isEmpty == false) {
+            alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
+        }
+        
+        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        
+        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        
+        self.presentViewController(alertController, animated: true) { }
     }
 }

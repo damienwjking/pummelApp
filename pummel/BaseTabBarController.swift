@@ -93,8 +93,8 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
             properties = ["Name": "Navigation Click", "Label":"SessionTabbar"]
             break
         case 2:
-            let slectedVC = self.selectedViewController as! FindViewController
-            slectedVC.refind()
+//            let slectedVC = self.selectedViewController as! FindViewController
+//            slectedVC.refind()
             properties = ["Name": "Navigation Click", "Label":"SearchTabbar"]
             break
         case 3:

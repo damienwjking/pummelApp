@@ -56,6 +56,8 @@
 		BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */; };
 		BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA439561F0DE8CC001D122A /* NumberConstant.swift */; };
 		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
+		BAC670C41F53BEC300D5EA28 /* TestimonialCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC670C21F53BEC300D5EA28 /* TestimonialCell.swift */; };
+		BAC670C51F53BEC300D5EA28 /* TestimonialCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAC670C31F53BEC300D5EA28 /* TestimonialCell.xib */; };
 		BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		E84890A31EEE5733003201A9 /* FeedDiscountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84890A21EEE5733003201A9 /* FeedDiscountView.swift */; };
@@ -271,6 +273,8 @@
 		BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square_kwickie_thumnail_gradient.png; sourceTree = "<group>"; };
 		BAA439561F0DE8CC001D122A /* NumberConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberConstant.swift; sourceTree = "<group>"; };
 		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
+		BAC670C21F53BEC300D5EA28 /* TestimonialCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestimonialCell.swift; sourceTree = "<group>"; };
+		BAC670C31F53BEC300D5EA28 /* TestimonialCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestimonialCell.xib; sourceTree = "<group>"; };
 		BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		E84890A21EEE5733003201A9 /* FeedDiscountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedDiscountView.swift; sourceTree = "<group>"; };
@@ -598,8 +602,9 @@
 				F9EAE8DB1D6EF88500FD32BE /* Cell */,
 				9C1C543E1C793D070083E47B /* SettingsViewController.swift */,
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
-				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
 				F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */,
+				F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */,
+				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
 				F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */,
 				E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */,
 				F98D5DA81E417764002C0C7A /* ChangePasswordViewController.swift */,
@@ -832,7 +837,6 @@
 				F9CA4A041D21021D00E8A585 /* LetUsHelpViewConntroller.swift */,
 				F964FEC01D215E33008F7C94 /* SearchingViewController.swift */,
 				F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */,
-				F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */,
 				E8C444E91E20AA19006F0548 /* ListCoachsViewController.swift */,
 			);
 			name = Search;
@@ -861,6 +865,8 @@
 				F9EAE8E61D6EFA7A00FD32BE /* SettingNewConnectionsTableViewCell.swift */,
 				F9EAE8E81D6EFC3400FD32BE /* SettingSmallSeperateTableViewCell.swift */,
 				F9EAE8EA1D6EFC6F00FD32BE /* SettingBigSeperateTableViewCell.swift */,
+				BAC670C21F53BEC300D5EA28 /* TestimonialCell.swift */,
+				BAC670C31F53BEC300D5EA28 /* TestimonialCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -1045,6 +1051,7 @@
 				F91727641DB3343200C6E612 /* HorizontalCell.xib in Resources */,
 				F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */,
 				F9C17B821E4354E000CE3A8B /* shareLogo.png in Resources */,
+				BAC670C51F53BEC300D5EA28 /* TestimonialCell.xib in Resources */,
 				F9FE13CC1CEB1B3E004ABE34 /* Montserrat-Light.ttf in Resources */,
 				F921CA751E1FB87000C223D7 /* distance.png in Resources */,
 				F9CA4A101D2153CE00E8A585 /* TagCell.xib in Resources */,
@@ -1250,6 +1257,7 @@
 				F9EAE8EB1D6EFC6F00FD32BE /* SettingBigSeperateTableViewCell.swift in Sources */,
 				E8C1930C1EF14E4D0073C452 /* TrackingPMAPI.swift in Sources */,
 				E84D638E1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift in Sources */,
+				BAC670C41F53BEC300D5EA28 /* TestimonialCell.swift in Sources */,
 				F9CA4A051D21021D00E8A585 /* LetUsHelpViewConntroller.swift in Sources */,
 				F9D35AB61D266C6C00F47709 /* ConnectViewController.swift in Sources */,
 				F9827F481CBD242900841BF1 /* SigninViewController.swift in Sources */,
