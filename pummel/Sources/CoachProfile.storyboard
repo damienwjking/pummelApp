@@ -82,14 +82,14 @@
                                                         <rect key="frame" x="-553.5" y="-221" width="1125" height="462"/>
                                                     </imageView>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinGray" translatesAutoresizingMaskIntoConstraints="NO" id="4gT-PK-0Gi">
-                                                        <rect key="frame" x="5" y="5.5" width="6" height="9"/>
+                                                        <rect key="frame" x="5" y="6" width="6" height="9"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="6" id="AyH-wo-g39"/>
                                                             <constraint firstAttribute="height" constant="9" id="vZJ-b3-mBa"/>
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nza-qG-J6E">
-                                                        <rect key="frame" x="13" y="3.5" width="0.0" height="13"/>
+                                                        <rect key="frame" x="13" y="4" width="0.0" height="13"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="13" id="xNk-SF-nsc"/>
                                                         </constraints>
@@ -323,11 +323,11 @@
                                             <constraint firstAttribute="trailing" secondItem="kmw-lN-6m9" secondAttribute="trailing" constant="16" id="qfr-EI-a90"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="32r-I3-iwI">
-                                        <rect key="frame" x="0.0" y="647" width="600" height="200"/>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="32r-I3-iwI">
+                                        <rect key="frame" x="0.0" y="647" width="600" height="244"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TESTIMONIAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHv-Qt-h0K">
-                                                <rect key="frame" x="16" y="15" width="74.5" height="21"/>
+                                                <rect key="frame" x="16" y="15" width="75" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="FyS-hR-FZV"/>
                                                 </constraints>
@@ -335,34 +335,40 @@
                                                 <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.5568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a68-4h-QAt">
-                                                <rect key="frame" x="0.0" y="44" width="600" height="156"/>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a68-4h-QAt">
+                                                <rect key="frame" x="8" y="44" width="592" height="200"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QEA-iA-SwM">
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="200" id="Rok-ik-CfA"/>
+                                                </constraints>
+                                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QEA-iA-SwM">
                                                     <size key="itemSize" width="50" height="50"/>
                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                 </collectionViewFlowLayout>
                                                 <cells/>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="cHG-mo-slS" id="rB2-Z9-VZO"/>
+                                                    <outlet property="delegate" destination="cHG-mo-slS" id="gnn-PA-d8q"/>
+                                                </connections>
                                             </collectionView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="a68-4h-QAt" firstAttribute="leading" secondItem="32r-I3-iwI" secondAttribute="leading" id="97I-fI-rVP"/>
+                                            <constraint firstItem="a68-4h-QAt" firstAttribute="leading" secondItem="32r-I3-iwI" secondAttribute="leading" constant="8" id="97I-fI-rVP"/>
                                             <constraint firstItem="zHv-Qt-h0K" firstAttribute="leading" secondItem="32r-I3-iwI" secondAttribute="leading" constant="16" id="I1D-8C-Msq"/>
-                                            <constraint firstItem="a68-4h-QAt" firstAttribute="width" secondItem="32r-I3-iwI" secondAttribute="width" id="NQh-Zz-ULA"/>
+                                            <constraint firstAttribute="trailing" secondItem="a68-4h-QAt" secondAttribute="trailing" id="Mcq-j9-mlv"/>
                                             <constraint firstItem="a68-4h-QAt" firstAttribute="top" secondItem="zHv-Qt-h0K" secondAttribute="bottom" constant="8" id="S7c-O8-h0N"/>
                                             <constraint firstItem="zHv-Qt-h0K" firstAttribute="top" secondItem="32r-I3-iwI" secondAttribute="top" constant="15" id="W70-4y-g2d"/>
-                                            <constraint firstAttribute="height" constant="200" id="d4d-1P-TCc"/>
-                                            <constraint firstAttribute="bottom" secondItem="a68-4h-QAt" secondAttribute="bottom" id="sPD-bN-vCf"/>
+                                            <constraint firstAttribute="height" constant="244" id="d4d-1P-TCc"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HbL-Sh-JwB">
-                                        <rect key="frame" x="0.0" y="847" width="600" height="128"/>
+                                        <rect key="frame" x="0.0" y="891" width="600" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WEBSITE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1N-Vi-PMy">
-                                                <rect key="frame" x="16" y="15" width="48.5" height="21"/>
+                                                <rect key="frame" x="16" y="15" width="49" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="Xtf-pH-uI1"/>
                                                 </constraints>
@@ -393,7 +399,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LR7-xd-al5">
-                                        <rect key="frame" x="0.0" y="975" width="600" height="128"/>
+                                        <rect key="frame" x="0.0" y="1019" width="600" height="128"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="xyU-VD-87e">
                                                 <rect key="frame" x="16" y="44" width="568" height="76"/>
@@ -428,7 +434,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvy-kH-VvY">
-                                        <rect key="frame" x="0.0" y="1103" width="600" height="128"/>
+                                        <rect key="frame" x="0.0" y="1147" width="600" height="128"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="urz-Zk-kbm">
                                                 <rect key="frame" x="16" y="46" width="568" height="76"/>
@@ -462,7 +468,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WjU-Wz-OJ0">
-                                        <rect key="frame" x="0.0" y="1325" width="600" height="50"/>
+                                        <rect key="frame" x="0.0" y="1369" width="600" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="POST" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="naZ-4w-LBs">
                                                 <rect key="frame" x="16" y="14" width="44" height="21"/>
@@ -509,7 +515,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="S1X-vx-wK2" secondAttribute="height" multiplier="1:1" id="QpP-6R-KkN"/>
                                                 </constraints>
-                                                <state key="normal" image="connect"/>
+                                                <state key="normal" image="BCE36940-9823-4035-8C41-E2669915524A"/>
                                                 <connections>
                                                     <action selector="goConnection" destination="cHG-mo-slS" eventType="touchUpInside" id="V38-aW-gaY"/>
                                                 </connections>
@@ -528,7 +534,7 @@
                                         </constraints>
                                     </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OJD-JP-fA0">
-                                        <rect key="frame" x="0.0" y="1375" width="600" height="153"/>
+                                        <rect key="frame" x="0.0" y="1419" width="600" height="153"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="153" id="Ab9-Fm-4YX"/>
                                         </constraints>
@@ -564,7 +570,7 @@
                                         </cells>
                                     </collectionView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Epj-9f-bf1">
-                                        <rect key="frame" x="0.0" y="1231" width="600" height="94"/>
+                                        <rect key="frame" x="0.0" y="1275" width="600" height="94"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SOCIAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lpB-ia-ESn">
                                                 <rect key="frame" x="16" y="8" width="170" height="21"/>
@@ -804,6 +810,9 @@
                         <outlet property="socalDT" destination="Cnr-Jc-gwy" id="z5f-O5-F1I"/>
                         <outlet property="specialitiesLB" destination="pPt-HV-aTe" id="JXt-QI-B23"/>
                         <outlet property="specifiesDT" destination="8JO-UX-yRk" id="G3X-Og-9aO"/>
+                        <outlet property="testimonialCollectionView" destination="a68-4h-QAt" id="JHC-dj-Ngs"/>
+                        <outlet property="testimonialView" destination="32r-I3-iwI" id="ZKJ-N6-vKZ"/>
+                        <outlet property="testimonialViewHeightConstraint" destination="d4d-1P-TCc" id="c57-mK-r8c"/>
                         <outlet property="titleCoachLB" destination="LY5-Ye-xHU" id="QkZ-Nb-pdu"/>
                         <outlet property="twiterBT" destination="2mX-yN-ZLt" id="WUJ-2J-zxP"/>
                         <outlet property="twiterDT" destination="bo4-xx-Zc8" id="Hde-Qk-d0B"/>
@@ -842,7 +851,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xEo-ch-oqR" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="crm-Qf-dgO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="crm-Qf-dgO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -857,9 +866,91 @@
         </scene>
     </scenes>
     <resources>
+        <image name="BCE36940-9823-4035-8C41-E2669915524A" width="22" height="22">
+            <mutableData key="keyedArchiveRepresentation">
+YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
+GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
+c1dOU0NvbG9ygAKADRIgwAAAgAOAC1h7MjIsIDIyfdIVChYYWk5TLm9iamVjdHOhF4AEgArSFQoaHaIb
+HIAFgAaACRAA0iAKISJfEBROU1RJRkZSZXByZXNlbnRhdGlvboAHgAhPERAuTU0AKgAAB5gAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg4ODg4ODg4MAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AIODg4ODg4ODAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDg4ODg4ODgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg4OD
+g4ODg4MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIODg4ODg4ODAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDg4ODg4OD
+gwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAg4ODg4ODg4MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIODg4ODg4ODAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAACDg4ODg4ODgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfX19fX19fX0AAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4OD
+g4ODg4ODg4ODg4ODg8PDw8PDw8PDg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4OD
+g4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4PDw8PDw8PDw4ODg4ODg4ODg4OD
+g4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAfX19fX19fX0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIODg4ODg4ODAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAACDg4ODg4ODgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg4ODg4ODg4MAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AIODg4ODg4ODAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDg4ODg4ODgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg4OD
+g4ODg4MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIODg4ODg4ODAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDg4ODg4OD
+gwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAg4ODg4ODg4MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAA4BAAADAAAAAQAWAAABAQADAAAAAQAWAAABAgADAAAABAAACEYBAwADAAAAAQABAAAB
+BgADAAAAAQACAAABEQAEAAAAAQAAAAgBEgADAAAAAQABAAABFQADAAAAAQAEAAABFgADAAAAAQAWAAAB
+FwAEAAAAAQAAB5ABHAADAAAAAQABAAABUgADAAAAAQABAAABUwADAAAABAAACE6HcwAHAAAH2AAACFYA
+AAAAAAgACAAIAAgAAQABAAEAAQAAB9hhcHBsAiAAAG1udHJSR0IgWFlaIAfZAAIAGQALABoAC2Fjc3BB
+UFBMAAAAAGFwcGwAAAAAAAAAAAAAAAAAAAAAAAD21gABAAAAANMtYXBwbAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2Rlc2MAAAEIAAAAb2RzY20AAAF4AAAFnGNwcnQA
+AAcUAAAAOHd0cHQAAAdMAAAAFHJYWVoAAAdgAAAAFGdYWVoAAAd0AAAAFGJYWVoAAAeIAAAAFHJUUkMA
+AAecAAAADmNoYWQAAAesAAAALGJUUkMAAAecAAAADmdUUkMAAAecAAAADmRlc2MAAAAAAAAAFEdlbmVy
+aWMgUkdCIFByb2ZpbGUAAAAAAAAAAAAAABRHZW5lcmljIFJHQiBQcm9maWxlAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABtbHVjAAAAAAAAAB8AAAAMc2tTSwAAACgA
+AAGEZGFESwAAAC4AAAGsY2FFUwAAACQAAAHadmlWTgAAACQAAAH+cHRCUgAAACYAAAIidWtVQQAAACoA
+AAJIZnJGVQAAACgAAAJyaHVIVQAAACgAAAKaemhUVwAAABYAAALCbmJOTwAAACYAAALYY3NDWgAAACIA
+AAL+aGVJTAAAAB4AAAMgaXRJVAAAACgAAAM+cm9STwAAACQAAANmZGVERQAAACwAAAOKa29LUgAAABYA
+AAO2c3ZTRQAAACYAAALYemhDTgAAABYAAAPMamFKUAAAABoAAAPiZWxHUgAAACIAAAP8cHRQTwAAACYA
+AAQebmxOTAAAACgAAAREZXNFUwAAACYAAAQedGhUSAAAACQAAARsdHJUUgAAACIAAASQZmlGSQAAACgA
+AASyaHJIUgAAACgAAATacGxQTAAAACwAAAUCcnVSVQAAACIAAAUuYXJFRwAAACYAAAVQZW5VUwAAACYA
+AAV2AFYBYQBlAG8AYgBlAGMAbgD9ACAAUgBHAEIAIABwAHIAbwBmAGkAbABHAGUAbgBlAHIAZQBsACAA
+UgBHAEIALQBiAGUAcwBrAHIAaQB2AGUAbABzAGUAUABlAHIAZgBpAGwAIABSAEcAQgAgAGcAZQBuAOgA
+cgBpAGMAQx6lAHUAIABoAOwAbgBoACAAUgBHAEIAIABDAGgAdQBuAGcAUABlAHIAZgBpAGwAIABSAEcA
+QgAgAEcAZQBuAOkAcgBpAGMAbwQXBDAEMwQwBDsETAQ9BDgEOQAgBD8EQAQ+BEQEMAQ5BDsAIABSAEcA
+QgBQAHIAbwBmAGkAbAAgAGcA6QBuAOkAcgBpAHEAdQBlACAAUgBWAEIAwQBsAHQAYQBsAOEAbgBvAHMA
+IABSAEcAQgAgAHAAcgBvAGYAaQBskBp1KAAgAFIARwBCACCCcl9pY8+P8ABHAGUAbgBlAHIAaQBzAGsA
+IABSAEcAQgAtAHAAcgBvAGYAaQBsAE8AYgBlAGMAbgD9ACAAUgBHAEIAIABwAHIAbwBmAGkAbAXkBegF
+1QXkBdkF3AAgAFIARwBCACAF2wXcBdwF2QBQAHIAbwBmAGkAbABvACAAUgBHAEIAIABnAGUAbgBlAHIA
+aQBjAG8AUAByAG8AZgBpAGwAIABSAEcAQgAgAGcAZQBuAGUAcgBpAGMAQQBsAGwAZwBlAG0AZQBpAG4A
+ZQBzACAAUgBHAEIALQBQAHIAbwBmAGkAbMd8vBgAIABSAEcAQgAg1QS4XNMMx3xmbpAaACAAUgBHAEIA
+IGPPj/Blh072TgCCLAAgAFIARwBCACAw1zDtMNUwoTCkMOsDkwO1A70DuQO6A8wAIAPAA8EDvwPGA68D
+uwAgAFIARwBCAFAAZQByAGYAaQBsACAAUgBHAEIAIABnAGUAbgDpAHIAaQBjAG8AQQBsAGcAZQBtAGUA
+ZQBuACAAUgBHAEIALQBwAHIAbwBmAGkAZQBsDkIOGw4jDkQOHw4lDkwAIABSAEcAQgAgDhcOMQ5IDicO
+RA4bAEcAZQBuAGUAbAAgAFIARwBCACAAUAByAG8AZgBpAGwAaQBZAGwAZQBpAG4AZQBuACAAUgBHAEIA
+LQBwAHIAbwBmAGkAaQBsAGkARwBlAG4AZQByAGkBDQBrAGkAIABSAEcAQgAgAHAAcgBvAGYAaQBsAFUA
+bgBpAHcAZQByAHMAYQBsAG4AeQAgAHAAcgBvAGYAaQBsACAAUgBHAEIEHgQxBEkEOAQ5ACAEPwRABD4E
+RAQ4BDsETAAgAFIARwBCBkUGRAZBACAGKgY5BjEGSgZBACAAUgBHAEIAIAYnBkQGOQYnBkUARwBlAG4A
+ZQByAGkAYwAgAFIARwBCACAAUAByAG8AZgBpAGwAZXRleHQAAAAAQ29weXJpZ2h0IDIwMDcgQXBwbGUg
+SW5jLiwgYWxsIHJpZ2h0cyByZXNlcnZlZC4AWFlaIAAAAAAAAPNSAAEAAAABFs9YWVogAAAAAAAAdE0A
+AD3uAAAD0FhZWiAAAAAAAABadQAArHMAABc0WFlaIAAAAAAAACgaAAAVnwAAuDZjdXJ2AAAAAAAAAAEB
+zQAAc2YzMgAAAAAAAQxCAAAF3v//8yYAAAeSAAD9kf//+6L///2jAAAD3AAAwGzSJSYnKFokY2xhc3Nu
+YW1lWCRjbGFzc2VzXxAQTlNCaXRtYXBJbWFnZVJlcKMnKSpaTlNJbWFnZVJlcFhOU09iamVjdNIlJiwt
+V05TQXJyYXmiLCrSJSYvMF5OU011dGFibGVBcnJheaMvLCrTMjMKNDU2V05TV2hpdGVcTlNDb2xvclNw
+YWNlRDAgMAAQA4AM0iUmODlXTlNDb2xvcqI4KtIlJjs8V05TSW1hZ2WiOypfEA9OU0tleWVkQXJjaGl2
+ZXLRP0BUcm9vdIABAAgAEQAaACMALQAyADcARgBMAFcAXgBlAHIAeQCBAIMAhQCKAIwAjgCXAJwApwCp
+AKsArQCyALUAtwC5ALsAvQDCANkA2wDdEQ8RFBEfESgROxE/EUoRUxFYEWARYxFoEXcRexGCEYoRlxGc
+EZ4RoBGlEa0RsBG1Eb0RwBHSEdUR2gAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAABHcA
+</mutableData>
+        </image>
         <image name="address_background" width="1125" height="462"/>
         <image name="back" width="8" height="14"/>
-        <image name="connect" width="22" height="22"/>
         <image name="display-empty.jpg" width="256" height="256"/>
         <image name="icon_phone" width="55" height="55"/>
         <image name="icon_play_video" width="50" height="50"/>

@@ -51,7 +51,22 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
     }
     
     func invite() {
-        self.performSegueWithIdentifier("inviteContactUser", sender: nil)
+        let inviteSMSAction = UIAlertAction(title: kInviteSMS, style: .Destructive) { (_) in
+            self.performSegueWithIdentifier("inviteContactUser", sender: kSMS)
+        }
+        
+        let inviteMailAction = UIAlertAction(title: kInviteEmail, style: .Destructive) { (_) in
+            self.performSegueWithIdentifier("inviteContactUser", sender: kEmail)
+        }
+        
+        let cancelAction = UIAlertAction(title: kCancle, style: .Cancel, handler: nil)
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(inviteSMSAction)
+        alertController.addAction(inviteMailAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     func cancel() {
@@ -90,6 +105,11 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
 //            currentFeedDetail = feed[kUser] as! NSDictionary
 //            destination.userDetail = currentFeedDetail
             destination.userId = String(format:"%0.f", sender!.doubleValue)
+        } else if (segue.identifier == "inviteContactUser") {
+            let destination = segue.destinationViewController as! ContactUserViewController
+            
+            let styleInvite = sender as! String
+            destination.styleInvite = styleInvite
         }
     }
 }

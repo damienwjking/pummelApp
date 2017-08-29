@@ -39,6 +39,7 @@ class ContactUserViewController: BaseViewController {
     
     var contacts: [CNContact] = []
     var filterContacts: [CNContact] = []
+    var styleInvite = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,15 +127,22 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         }
         
         let contactName = contact.givenName + " " + contact.familyName
-        
         cell?.textLabel?.text = contactName.uppercaseString
         
-        var phoneNumberString = ""
-        if contact.phoneNumbers.count != 0 {
-            let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-            phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+        if (self.styleInvite == kSMS) {
+            var phoneNumberString = ""
+            if contact.phoneNumbers.count != 0 {
+                let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+                phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+            }
+            
+            cell?.detailTextLabel?.text = phoneNumberString
+        } else {
+            let emailString = contact.emailAddresses[0].value as! String
+            
+            cell?.detailTextLabel?.text = emailString
         }
-        cell?.detailTextLabel?.text = phoneNumberString
+        
         
         return cell!
     }
@@ -143,22 +151,60 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         self.searchBar.resignFirstResponder()
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        if MFMessageComposeViewController.canSendText() {
-            let contact = self.filterContacts[indexPath.row]
-            
-            var phoneNumberString = ""
-            if contact.phoneNumbers.count != 0 {
-                let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-                phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+        if (self.styleInvite == kSMS) {
+            if MFMessageComposeViewController.canSendText() {
+                let contact = self.filterContacts[indexPath.row]
+                
+                var phoneNumberString = ""
+                if contact.phoneNumbers.count != 0 {
+                    let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+                    phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+                }
+                
+                let messageCompose = MFMessageComposeViewController()
+                messageCompose.body = kMessageInviteContact
+                messageCompose.recipients = [phoneNumberString]
+                
+                messageCompose.messageComposeDelegate = self
+                self.presentViewController(messageCompose, animated: true, completion: nil)
             }
+        } else if (self.styleInvite == kEmail) {
+            self.view.makeToastActivity()
             
-            let messageCompose = MFMessageComposeViewController()
-            messageCompose.body = kMessageInviteContact
-            messageCompose.recipients = [phoneNumberString]
-            
-            messageCompose.messageComposeDelegate = self
-            self.presentViewController(messageCompose, animated: true, completion: nil)
+            UserRouter.getCurrentUserInfo(completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                if (error == nil) {
+                    let currentInfo = result as! NSDictionary
+                    let currentMail = currentInfo[kEmail] as! String
+                    let coachFirstName = currentInfo[kFirstname] as! String
+                    
+                    let contact = self.filterContacts[indexPath.row]
+                    let userFirstName = contact.givenName.stringByReplacingOccurrencesOfString(" ", withString: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                    let userMail = contact.emailAddresses[0].value as! String
+                    
+                    var urlString = "mailto:"
+                    urlString = urlString.stringByAppendingString(userMail)
+                    
+                    urlString = urlString.stringByAppendingString("?subject=")
+                    urlString = urlString.stringByAppendingString("Come%20join%20me%20on%20Pummel%20Fitness")
+                    
+                    urlString = urlString.stringByAppendingString("&from=")
+                    urlString = urlString.stringByAppendingString(currentMail)
+                    
+                    urlString = urlString.stringByAppendingString("&body=")
+                    urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
+                    
+                    let mailURL = NSURL(string: urlString)
+                    if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
+                        UIApplication.sharedApplication().openURL(mailURL!)
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
         }
+        
     }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -171,27 +217,47 @@ extension ContactUserViewController: UISearchBarDelegate {
         self.filterPhoneNumber(searchText)
     }
     
-    func filterPhoneNumber(filterString: String) {
+    func filterPhoneNumber(filterValue: String) {
+        let filterString = filterValue.lowercaseString
+        
         self.filterContacts = self.contacts.filter({ (contact) -> Bool in
-            if (filterString.isEmpty == true) {
-                return true
+            var isFilterNumber = false
+            var isFilterName = false
+            var isFilterEmail = false
+            
+            if (self.styleInvite == kSMS) {
+                if (filterString.isEmpty == true) {
+                    return true
+                }
+                
+                var phoneNumberString = ""
+                if contact.phoneNumbers.count != 0 {
+                    let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+                    phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+                }
+                isFilterNumber = phoneNumberString.contains(filterString)
+                isFilterNumber = false // not available filter number now
+                
+                var phoneName = contact.givenName + " " + contact.familyName
+                phoneName = phoneName.lowercaseString
+                isFilterName = phoneName.contains(filterString)
+            } else if (self.styleInvite == kEmail) {
+                if (contact.emailAddresses.count > 0) {
+                    if (filterString.isEmpty == true) {
+                        return true
+                    }
+                    
+                    var phoneName = contact.givenName + " " + contact.familyName
+                    phoneName = phoneName.lowercaseString
+                    isFilterName = phoneName.contains(filterString)
+                    
+                    var email = contact.emailAddresses[0].value as! String
+                    email = email.lowercaseString
+                    isFilterEmail = email.contains(filterString)
+                }
             }
             
-            var phoneNumberString = ""
-            if contact.phoneNumbers.count != 0 {
-                let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-                phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
-            }
-            var isFilterNumber = phoneNumberString.contains(filterString)
-            isFilterNumber = false // only search name
-            
-            
-            
-            let phoneName = contact.givenName + " " + contact.familyName
-            let isFilterName = phoneName.contains(filterString)
-            
-            
-            return (isFilterNumber || isFilterName) // search phone number or name
+            return (isFilterNumber || isFilterName || isFilterEmail) // search phone number or name
         })
         
         self.tableView.reloadData()

@@ -91,6 +91,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     @IBOutlet weak var postNumberLB: UILabel!
     @IBOutlet weak var postNumberContentLB: UILabel!
     
+    @IBOutlet weak var testimonialView: UIView!
+    @IBOutlet weak var testimonialCollectionView: UICollectionView!
+    @IBOutlet weak var testimonialViewHeightConstraint: NSLayoutConstraint!
+    
     var instagramLink: String? = ""
     var twitterLink: String? = ""
     var facebookLink: String? = ""
@@ -99,7 +103,9 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     var coachDetail: NSDictionary!
     var sizingCell: TagCell?
     var tags = [Tag]()
-    var arrayPhotos: NSArray = []
+    var photoArray: NSArray = []
+    var testimonialArray = [TestimonialModel]()
+    var testimonialOffset = 0
     var isFromFeed: Bool = false
     var isFromChat: Bool = false
     var isFromListCoaches: Bool = false
@@ -224,6 +230,9 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         if self.isFromListCoaches == true {
             self.navigationController?.navigationBar.hidden = true
         }
+        
+        let testimonialXib = UINib(nibName: kTestimonialCell, bundle: nil)
+        self.testimonialCollectionView.registerNib(testimonialXib, forCellWithReuseIdentifier: kTestimonialCell)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -233,6 +242,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             TrackingPMAPI.sharedInstance.trackingProfileViewed("\(val)")
         }
         self.checkConnect()
+        self.getTestimonial()
         
         self.playVideoButton.setImage(nil, forState: .Normal)
     }
@@ -285,9 +295,9 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     func getCoachTags() {
-        let feedId = String(format:"%0.f", self.coachDetail[kId]!.doubleValue)
+        let userID = String(format:"%0.f", self.coachDetail[kId]!.doubleValue)
         var tagLink = kPMAPIUSER
-        tagLink.appendContentsOf(feedId)
+        tagLink.appendContentsOf(userID)
         tagLink.appendContentsOf("/tags")
         Alamofire.request(.GET, tagLink)
             .responseJSON { response in
@@ -306,6 +316,39 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     })
                 }
         }
+    }
+    
+    func getTestimonial() {
+        let userID = self.defaults.stringForKey(k_PM_CURRENT_ID)
+        
+        UserRouter.getTestimonial(userID: userID!, offset: self.testimonialOffset) { (result, error) in
+            if (error == nil) {
+                let testimonialDicts = result as! NSArray
+                
+                for testimonialDict in testimonialDicts {
+                    let testimo = TestimonialModel()
+                    
+                    testimo.parseData(testimonialDict as! NSDictionary)
+                    
+                    var isExist = false
+                    for test in self.testimonialArray {
+                        if (test.id == testimo.id) {
+                            isExist = true
+                            break
+                        }
+                    }
+                    
+                    if (isExist == false) {
+                        self.testimonialArray.append(testimo)
+                    }
+                }
+                
+                self.testimonialOffset = self.testimonialOffset + 20
+                self.testimonialCollectionView.reloadData()
+            } else {
+                print("Request failed with error: \(error)")
+            }
+            }.fetchdata()
     }
     
     func setCoachAvatar() {
@@ -359,7 +402,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
-                self.arrayPhotos = JSON as! NSArray
+                self.photoArray = JSON as! NSArray
                 self.aboutCollectionView.reloadData()
                 self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
                 self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
@@ -377,6 +420,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
+                if (JSON is NSNull == true) {
+                    return
+                }
+                
                 let coachInformationTotal = JSON as! NSDictionary
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
                 
@@ -536,7 +583,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     
                     if (resultString.isEmpty == false) {
                         if (resultString == "Connected") {
-                            self.connectBT.setImage(UIImage(named: "connected"), forState: .Normal)
+                            self.connectBT.setImage(UIImage(named: "mail"), forState: .Normal)
                             self.connectBT.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
                             self.isConnected = true
                             
@@ -758,8 +805,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             }
         }
     }
-    
-    //MARK: - Video
+}
+
+//MARK: - Video
+extension CoachProfileViewController {
     func videoPlayerSetPlay(isPlay: Bool) {
         if (isPlay == true) {
             self.videoPlayer!.play()
@@ -822,7 +871,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
         self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
         
-//        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+        //        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
         
         self.detailV.insertSubview(self.videoView!, atIndex: 0)
         
@@ -852,19 +901,19 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-//        print("observed \(keyPath) \(change)")
-//        let currentItem = object as! AVPlayerItem
-//        if currentItem.status == .ReadyToPlay {
-//            let videoRect = self.videoPlayerLayer?.videoRect
-//            if (videoRect?.width > videoRect?.height) {
-////                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-//            } else {
-//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-//            }
-//            
-//            self.videoPlayerSetPlay(false)
-//        }
+        //        print("observed \(keyPath) \(change)")
+        //        let currentItem = object as! AVPlayerItem
+        //        if currentItem.status == .ReadyToPlay {
+        //            let videoRect = self.videoPlayerLayer?.videoRect
+        //            if (videoRect?.width > videoRect?.height) {
+        ////                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+        //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+        //            } else {
+        //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+        //            }
+        //
+        //            self.videoPlayerSetPlay(false)
+        //        }
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
@@ -886,12 +935,22 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
 }
 
+// MARK: - UICollectionViewDataSource
 extension CoachProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.interestCollectionView) {
             return tags.count
+        } else if (collectionView == self.testimonialCollectionView) {
+            if (self.testimonialArray.count > 0) {
+                
+                self.testimonialViewHeightConstraint.constant = 244
+            } else {
+                self.testimonialViewHeightConstraint.constant = 0
+            }
+            
+            return self.testimonialArray.count
         } else {
-            return arrayPhotos.count
+            return photoArray.count
         }
     }
     
@@ -900,12 +959,22 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
             self.configureCell(cell, forIndexPath: indexPath)
             return cell
+        } else if (collectionView == self.testimonialCollectionView) {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTestimonialCell, forIndexPath: indexPath) as! TestimonialCell
+            
+            let testimonial = self.testimonialArray[indexPath.row]
+            cell.setupData(testimonial)
+            
+            if (indexPath.row == self.testimonialArray.count - 2) {
+                self.getTestimonial()
+            }
+            
+            return cell
         } else {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
             self.configureAboutCell(cell, forIndexPath: indexPath)
             return cell
         }
-        
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
@@ -918,52 +987,53 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
             }
             
             return cellSize
+        } else if (collectionView == self.testimonialCollectionView) {
+            return CGSize(width: 275, height: 200)
         } else {
             return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
         }
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        self.view.makeToastActivity()
-        var prefix = kPMAPI
-        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
-        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arr = JSON as? NSArray {
-                    if arr.count > 0 {
-                        if let dic = arr.objectAtIndex(0) as? NSDictionary {
-                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
-                            self.view.hideToastActivity()
-                            return
+        if (collectionView == self.interestCollectionView) {
+            // Do nothing
+        } else if (collectionView == self.testimonialCollectionView) {
+            // Do nothing
+        } else {
+            self.view.makeToastActivity()
+            
+            var prefix = kPMAPI
+            prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
+            let photo = self.photoArray[indexPath.row] as! NSDictionary
+            Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    if let arr = JSON as? NSArray {
+                        if arr.count > 0 {
+                            if let dic = arr.objectAtIndex(0) as? NSDictionary {
+                                self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
+                                self.view.hideToastActivity()
+                                return
+                            }
                         }
                     }
-                }
-                
-                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    // ...
-                }
-                alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
-                    // ...
-                }
-                self.view.hideToastActivity()
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
-                self.view.hideToastActivity()
+                    
+                    let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                    self.view.hideToastActivity()
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+                    self.view.hideToastActivity()
+            }
         }
     }
-    
-    //    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    //        if (collectionView == self.interestCollectionView) {
-    //            collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-    //            tags[indexPath.row].selected = !tags[indexPath.row].selected
-    //            collectionView.reloadData()
-    //        }
-    //    }
     
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
@@ -973,16 +1043,20 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
     }
     
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        var prefix = kPMAPI
-        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
-        var link = photo.objectForKey(kImageUrl) as! String
-        link.appendContentsOf(postfix)
-        prefix.appendContentsOf(link)
-        Alamofire.request(.GET, prefix)
-            .responseImage { response in
-                let imageRes = response.result.value! as UIImage
-                cell.imageCell.image = imageRes
+        let photo = self.photoArray[indexPath.row] as! NSDictionary
+        
+        if (photo.objectForKey(kImageUrl) is NSNull == false) {
+            let link = photo.objectForKey(kImageUrl) as! String
+            let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
+            
+            ImageRouter.getImage(imageURLString: link, sizeString: postfix) { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    cell.imageCell.image = imageRes
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+                }.fetchdata()
         }
     }
     

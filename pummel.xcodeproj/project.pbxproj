@@ -39,6 +39,7 @@
 		BA1404181E2E5F700075CC3A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1404171E2E5F700075CC3A /* BaseViewController.swift */; };
 		BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */; };
 		BA141CB81E0ADD3A0076D4B8 /* ActivityCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */; };
+		BA15EBB61F551A8300B0A515 /* TestimonialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA15EBB51F551A8300B0A515 /* TestimonialModel.swift */; };
 		BA16B4901E099E3A0093FBD9 /* LogSessionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */; };
 		BA1DA3DC1E5DD59F00E3BF7A /* CardViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */; };
 		BA22A2CA1F0C8E7B008FD47F /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA22A2C91F0C8E7B008FD47F /* UserModel.swift */; };
@@ -259,6 +260,7 @@
 		BA1404171E2E5F700075CC3A /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
 		BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityCell.xib; sourceTree = "<group>"; };
+		BA15EBB51F551A8300B0A515 /* TestimonialModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestimonialModel.swift; path = Model/TestimonialModel.swift; sourceTree = "<group>"; };
 		BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionTableViewCell.swift; sourceTree = "<group>"; };
 		BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewCell.swift; sourceTree = "<group>"; };
 		BA22A2C91F0C8E7B008FD47F /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Model/UserModel.swift; sourceTree = "<group>"; };
@@ -555,6 +557,7 @@
 			isa = PBXGroup;
 			children = (
 				BA22A2C91F0C8E7B008FD47F /* UserModel.swift */,
+				BA15EBB51F551A8300B0A515 /* TestimonialModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1276,6 +1279,7 @@
 				F917276A1DB3DF5600C6E612 /* Spinner.swift in Sources */,
 				BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
+				BA15EBB61F551A8300B0A515 /* TestimonialModel.swift in Sources */,
 				F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */,
 				F9FE14551CEBD29B004ABE34 /* FSAlbumView.swift in Sources */,
 				F96051B21DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift in Sources */,

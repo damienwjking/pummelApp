@@ -14,8 +14,9 @@ enum UserRouter: URLRequestConvertible {
     case getUserInfo(userID : String, completed: CompletionBlock)
     case checkCoachOfUser(userID : String, completed: CompletionBlock)
     case authenticateFacebook(fbID : String?, email : String?, firstName : String?, lastName : String?, avatarURL : String?, gender : String?, completed: CompletionBlock)
+    case getTestimonial(userID: String, offset: Int, completed: CompletionBlock)
     
-    var comletedBlock: CompletionBlock {
+    var comletedBlock: CompletionBlock? {
         switch self {
         case .getCurrentUserInfo(let completed):
             return completed
@@ -25,6 +26,9 @@ enum UserRouter: URLRequestConvertible {
             return completed
         case .authenticateFacebook(_, _, _, _, _, _, let completed):
             return completed
+        case .getTestimonial(_, _, let completed):
+            return completed
+            
         }
     }
     
@@ -38,6 +42,9 @@ enum UserRouter: URLRequestConvertible {
             return .GET
         case .authenticateFacebook:
             return .POST
+        case .getTestimonial:
+            return .GET
+            
         }
     }
     
@@ -59,39 +66,42 @@ enum UserRouter: URLRequestConvertible {
             
         case .authenticateFacebook:
             prefix = kPMAPIAUTHENTICATEFACEBOOK
+            
+        case .getTestimonial(let userID, let offset, _):
+            let offsetString = String(format: "%ld", offset)
+            prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL_OFFSET + offsetString
         }
         
         return prefix
     }
     
     var param : [String: AnyObject]? {
-        var param : [String : AnyObject
-            ]? = [:]
+        var param : [String : AnyObject] = [:]
         
         switch self {
         case .authenticateFacebook(let fbID, let email, let firstName, let lastName, let avatarURL, let gender, _):
             if (fbID != nil) {
-                param!["fbId"] = fbID!
+                param["fbId"] = fbID!
             }
             
             if (email != nil) {
-                param!["email"] = email!
+                param["email"] = email!
             }
             
             if (firstName != nil) {
-                param!["firstname"] = firstName!
+                param["firstname"] = firstName!
             }
             
             if (lastName != nil) {
-                param!["lastname"] = lastName!
+                param["lastname"] = lastName!
             }
             
             if (avatarURL != nil) {
-                param!["imageUrl"] = avatarURL!
+                param["imageUrl"] = avatarURL!
             }
             
             if (gender != nil) {
-                param!["gender"] = gender!
+                param["gender"] = gender!
             }
             
         default:
@@ -122,16 +132,16 @@ enum UserRouter: URLRequestConvertible {
                     if (JSON is NSNull == false) {
                         let userDetail = JSON as! NSDictionary
                         
-                        self.comletedBlock(result: userDetail, error: nil)
+                        self.comletedBlock!(result: userDetail, error: nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock(result: nil, error: error)
+                        self.comletedBlock!(result: nil, error: error)
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHeler.showLogoutAlert()
                     } else {
-                        self.comletedBlock(result: nil, error: error)
+                        self.comletedBlock!(result: nil, error: error)
                     }
                 }
             })
@@ -139,12 +149,12 @@ enum UserRouter: URLRequestConvertible {
         case checkCoachOfUser:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 if response.response?.statusCode == 200 {
-                    self.comletedBlock(result: true, error: nil)
+                    self.comletedBlock!(result: true, error: nil)
                 } else {
                     if (response.response?.statusCode == 401) {
                         PMHeler.showLogoutAlert()
                     } else {
-                        self.comletedBlock(result: false, error: nil)
+                        self.comletedBlock!(result: false, error: nil)
                     }
                 }
             })
@@ -156,19 +166,42 @@ enum UserRouter: URLRequestConvertible {
                     if (JSON is NSNull == false) {
                         UserRouter.saveCurrentUserInfo(response)
                         
-                        self.comletedBlock(result: true, error: nil)
+                        self.comletedBlock!(result: true, error: nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock(result: false, error: error)
+                        self.comletedBlock!(result: false, error: error)
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHeler.showLogoutAlert()
                     } else {
-                        self.comletedBlock(result: false, error: error)
+                        self.comletedBlock!(result: false, error: error)
                     }
                 }
             })
+            
+        case getTestimonial:
+            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                switch response.result {
+                case .Success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let userDetail = JSON as! NSArray
+                        
+                        self.comletedBlock!(result: userDetail, error: nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(result: nil, error: error)
+                    }
+                case .Failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHeler.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(result: nil, error: error)
+                    }
+                }
+            })
+            
+            
         }
     }
     

@@ -15,9 +15,11 @@ class TestimonialCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var ratingImageView: UIImageView!
 
+    @IBOutlet weak var ratingViewWidthConstraint: NSLayoutConstraint!
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        self.avatarImageView.clipsToBounds = true
         self.avatarImageView.layer.masksToBounds = true
         self.avatarImageView.layer.cornerRadius = 25
         
@@ -28,4 +30,30 @@ class TestimonialCell: UICollectionViewCell {
         self.titleLabel.font = UIFont.pmmMonLight11()
     }
 
+    func setupData(testimonial: TestimonialModel) {
+        self.titleLabel.text = "" // no tilte 
+        
+        self.userNameLabel.text = testimonial.userCommentName
+        self.descriptionLabel.text = testimonial.descript
+        
+        if (testimonial.rating >= 0 && testimonial.rating <= 5) {
+            // Width of rating star is 32
+            self.ratingViewWidthConstraint.constant = 32 * CGFloat(testimonial.rating)
+            
+            self.ratingImageView.layoutIfNeeded()
+        }
+        
+        ImageRouter.getImage(imageURLString: testimonial.userCommentUrl, sizeString: widthHeight120) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.avatarImageView.image = imageRes
+            } else {
+                self.avatarImageView.image = UIImage(named: "display-empty.jpg")
+                
+                print("Request failed with error: \(error)")
+            }
+        }.fetchdata()
+        
+    }
+    
 }

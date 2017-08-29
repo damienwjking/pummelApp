@@ -98,6 +98,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var postNumberLB: UILabel!
     @IBOutlet weak var postNumberContentLB: UILabel!
     
+    @IBOutlet weak var testimonialView: UIView!
+    @IBOutlet weak var testimonialCollectionView: UICollectionView!
+    @IBOutlet weak var testimonialViewHeightConstraint: NSLayoutConstraint!
+    
     var instagramLink: String? = ""
     var twitterLink: String? = ""
     var facebookLink: String? = ""
@@ -106,9 +110,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var coachDetail: NSDictionary!
     var sizingCell: TagCell?
     var tags = [Tag]()
-    var arrayPhotos: NSMutableArray = []
+    var photoArray: NSMutableArray = []
+    var testimonialArray = [TestimonialModel]()
     var isFromFeed: Bool = false
     var offset: Int = 0
+    var testimonialOffset = 0
     var isStopGetListPhotos : Bool = false
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     
@@ -231,6 +237,9 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         // Add notification for update video url
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.profileGetNewDetail), name: "profileGetDetail", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.uploadVideoWithNotification), name: "profileUploadVideo", object: nil)
+        
+        let testimonialXib = UINib(nibName: kTestimonialCell, bundle: nil)
+        self.testimonialCollectionView.registerNib(testimonialXib, forCellWithReuseIdentifier: kTestimonialCell)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -247,6 +256,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
         
         self.getDetail()
+        self.getTestimonial()
         
         self.playVideoButton.setImage(nil, forState: .Normal)
         
@@ -471,7 +481,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 if let arrayphoto = JSON as? NSArray {
                     if arrayphoto.count > 0 {
                         self.offset += 10
-                        self.arrayPhotos.addObjectsFromArray(arrayphoto as [AnyObject])
+                        self.photoArray.addObjectsFromArray(arrayphoto as [AnyObject])
                         self.getListImage()
                     } else {
                         self.isStopGetListPhotos = true
@@ -485,6 +495,39 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 print("Request failed with error: \(error)")
                 }
         }
+    }
+    
+    func getTestimonial() {
+        let userID = self.defaults.stringForKey(k_PM_CURRENT_ID)
+        
+        UserRouter.getTestimonial(userID: userID!, offset: self.testimonialOffset) { (result, error) in
+            if (error == nil) {
+                let testimonialDicts = result as! NSArray
+                
+                for testimonialDict in testimonialDicts {
+                    let testimo = TestimonialModel()
+                    
+                    testimo.parseData(testimonialDict as! NSDictionary)
+                    
+                    var isExist = false
+                    for test in self.testimonialArray {
+                        if (test.id == testimo.id) {
+                            isExist = true
+                            break
+                        }
+                    }
+                    
+                    if (isExist == false) {
+                        self.testimonialArray.append(testimo)
+                    }
+                }
+                
+                self.testimonialOffset = self.testimonialOffset + 20
+                self.testimonialCollectionView.reloadData()
+            } else {
+                print("Request failed with error: \(error)")
+            }
+            }.fetchdata()
     }
     
     func updateUI() {
@@ -1186,12 +1229,22 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     }
 }
 
+// MARK: - UICollectionViewDataSource
 extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.interestCollectionView) {
             return tags.count
+        } else if (collectionView == self.testimonialCollectionView) {
+            if (self.testimonialArray.count > 0) {
+                
+                self.testimonialViewHeightConstraint.constant = 244
+            } else {
+                self.testimonialViewHeightConstraint.constant = 0
+            }
+            
+            return self.testimonialArray.count
         } else {
-            return arrayPhotos.count
+            return photoArray.count
         }
     }
     
@@ -1200,15 +1253,25 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
             self.configureCell(cell, forIndexPath: indexPath)
             return cell
+        } else if (collectionView == self.testimonialCollectionView) {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTestimonialCell, forIndexPath: indexPath) as! TestimonialCell
+            
+            let testimonial = self.testimonialArray[indexPath.row]
+            cell.setupData(testimonial)
+            
+            if (indexPath.row == self.testimonialArray.count - 2) {
+                self.getTestimonial()
+            }
+            
+            return cell
         } else {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
             self.configureAboutCell(cell, forIndexPath: indexPath)
             return cell
-        }
-    }
+        }    }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row == self.arrayPhotos.count - 1 && self.isStopGetListPhotos == false {
+        if indexPath.row == self.photoArray.count - 1 && self.isStopGetListPhotos == false {
             self.getListImage()
         }
     }
@@ -1223,42 +1286,51 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             }
             
             return cellSize
+        } else if (collectionView == self.testimonialCollectionView) {
+            return CGSize(width: 275, height: 200)
         } else {
             return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
         }
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        self.view.makeToastActivity()
-        var prefix = kPMAPI
-        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
-        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arr = JSON as? NSArray {
-                    if arr.count > 0 {
-                        if let dic = arr.objectAtIndex(0) as? NSDictionary {
-                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
-                            self.view.hideToastActivity()
-                            return
+        if (collectionView == self.interestCollectionView) {
+            // Do nothing
+        } else if (collectionView == self.testimonialCollectionView) {
+            // Do nothing
+        } else {
+            self.view.makeToastActivity()
+            
+            var prefix = kPMAPI
+            prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
+            let photo = self.photoArray[indexPath.row] as! NSDictionary
+            Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    if let arr = JSON as? NSArray {
+                        if arr.count > 0 {
+                            if let dic = arr.objectAtIndex(0) as? NSDictionary {
+                                self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
+                                self.view.hideToastActivity()
+                                return
+                            }
                         }
                     }
-                }
-                
-                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    // ...
-                }
-                alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
-                    // ...
-                }
-                self.view.hideToastActivity()
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
-                self.view.hideToastActivity()
+                    
+                    let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                    self.view.hideToastActivity()
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+                    self.view.hideToastActivity()
+            }
         }
     }
     
@@ -1270,7 +1342,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
+        let photo = self.photoArray[indexPath.row] as! NSDictionary
         let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
         
         if (photo[kImageUrl] is NSNull == false) {

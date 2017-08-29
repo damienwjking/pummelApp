@@ -145,10 +145,15 @@ enum ImageRouter: URLRequestConvertible {
                     self.comletedBlock(result: image, error: nil)
                 } else {
                     Alamofire.request(.GET, self.path).responseImage { response in
-                        let imageRes = response.result.value! as UIImage
-                        NSCache.sharedInstance.setObject(imageRes, forKey: self.path)
-                        
-                        self.comletedBlock(result: imageRes, error: nil)
+                        if (response.result.isSuccess) {
+                            let imageRes = response.result.value! as UIImage
+                            NSCache.sharedInstance.setObject(imageRes, forKey: self.path)
+                            
+                            self.comletedBlock(result: imageRes, error: nil)
+                        } else {
+                            let error = NSError(domain: "Pummel", code: 1000, userInfo: nil) // simple error
+                            self.comletedBlock(result: nil, error: error)
+                        }
                     }
                 }
             } else {
