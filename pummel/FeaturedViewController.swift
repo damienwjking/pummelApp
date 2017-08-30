@@ -12,7 +12,7 @@ import Alamofire
 import Mixpanel
 import MapKit
 
-class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, FeedDiscountViewDelegate, CLLocationManagerDelegate {
+class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITextViewDelegate, FeedDiscountViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
@@ -297,201 +297,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
-    }
-    
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 1 {
-            return nil
-        }
-        
-        if self.arrayDiscount.count == 0 {
-            return nil
-        }
-        
-        if headerDiscount == nil {
-            headerDiscount = FeedDiscountView.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
-            headerDiscount.delegate = self
-        }
-        headerDiscount.arrayResult = self.arrayDiscount
-        
-        return headerDiscount
-    }
-    
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 && self.arrayDiscount.count > 0 {
-            return 200
-        }
-        return 0.001
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 0
-        }
-        return self.arrayFeeds.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier(kFeaturedFeedTableViewCell) as! FeaturedFeedTableViewCell
-        
-            cell.separatorInset = UIEdgeInsetsZero;
-            let feed = arrayFeeds[indexPath.row]
-            let userFeed = feed[kUser] as! NSDictionary
-            // Name
-            let firstname = userFeed[kFirstname] as? String
-            cell.nameLB.text = firstname?.uppercaseString
-        
-            // Avatar
-            if (userFeed[kImageUrl] is NSNull == false) {
-                cell.avatarBT.setBackgroundImage(nil, forState: .Normal)
-                let imageLink = userFeed[kImageUrl] as? String
-                
-                if (imageLink?.isEmpty == false) {
-                    ImageRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
-                        if (error == nil) {
-                            let imageRes = result as! UIImage
-                            
-                            let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-                            if visibleCell == true {
-                                dispatch_async(dispatch_get_main_queue(),{
-                                    cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
-                                })
-                            }
-                        } else {
-                            print("Request failed with error: \(error)")
-                        }
-                        }.fetchdata()
-                }
-            } else {
-                cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
-            }
-            // Time
-            let timeAgo = feed[kCreateAt] as! String
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = kFullDateFormat
-            dateFormatter.timeZone = NSTimeZone(name: "UTC")
-            let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
-            cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
-            if (feed[kImageUrl] is NSNull == false) {
-                let imageContentLink = feed[kImageUrl] as! String
-                let postfixContent = widthEqual.stringByAppendingString(String(self.view.frame.size.width*2)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width*2))
-                
-                ImageRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
-                    if (error == nil) {
-                        let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-                        
-                        if (isUpdateCell) {
-                            let imageRes = result as! UIImage
-                            dispatch_async(dispatch_get_main_queue(),{
-                                cell.imageContentIMV.image = imageRes
-                            })
-                        }
-                    } else {
-                        print("Request failed with error: \(error)")
-                    }
-                }).fetchdata()
-            }
-        
-            // Check Coach
-            cell.userInteractionEnabled = false
-            var coachLink  = kPMAPICOACH
-            let coachId = String(format:"%0.f", userFeed[kId]!.doubleValue)
-            coachLink.appendContentsOf(coachId)
-        
-            cell.avatarBT.layer.borderWidth = 0
-            cell.coachLB.text = ""
-            cell.coachLBTraillingConstraint.constant = 0
-        
-        UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
-            let isCoach = result as! Bool
-            let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-            
-            if (isUpdateCell) {
-                cell.userInteractionEnabled = true
-                cell.isCoach = false
-                
-                if (error == nil) {
-                    if (isCoach == true) {
-                        cell.isCoach = true
-                        cell.avatarBT.layer.borderWidth = 2
-                        
-                        cell.coachLBTraillingConstraint.constant = 5
-                        UIView.animateWithDuration(0.3, animations: {
-                            cell.coachLB.layoutIfNeeded()
-                            cell.coachLB.text = kCoach.uppercaseString
-                        })
-                    }
-                } else {
-                    print("Request failed with error: \(error)")
-                }
-            }
-            }.fetchdata()
-        
-            cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
-        
-            //Get Likes
-//            cell.likeBT.userInteractionEnabled = true
-//            cell.imageContentIMV.userInteractionEnabled = true
-        let feedID = String(format:"%0.f", feed[kId]!.doubleValue)
-        
-        FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
-            if (error == nil) {
-                let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
-                
-                if (isUpdateCell) {
-                    dispatch_async(dispatch_get_main_queue(),{
-                        let likeJson = result as! NSDictionary
-                        
-                        // Update like number
-                        let likeNumber = String(format:"%0.f", likeJson["likeNumber"]!.doubleValue)
-                        cell.likeLB.text = likeNumber + " likes"
-                        
-                        // Update current user liked
-                        let userLikedFeed = likeJson["currentUserLiked"] as! Bool
-                        if (userLikedFeed == true) {
-                            cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
-                        }
-                    })
-                }
-            } else {
-                print("Request failed with error: \(error)")
-            }
-        }.fetchdata()
-        
-            cell.layoutIfNeeded()
-            cell.firstContentCommentTV.layoutIfNeeded()
-            cell.firstContentCommentTV.delegate = self
-            cell.firstContentCommentTV.text = feed[kText] as? String
-        
-            let marginTopBottom = cell.firstContentCommentTV.layoutMargins.top + cell.firstContentCommentTV.layoutMargins.bottom
-            let marginLeftRight = cell.firstContentCommentTV.layoutMargins.left + cell.firstContentCommentTV.layoutMargins.right
-            cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
-        
-            cell.firstUserCommentLB.text = firstname?.uppercaseString
-            cell.viewAllBT.tag = indexPath.row
-            cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        
-            cell.commentBT.tag = indexPath.row
-            cell.commentBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        
-            cell.shareBT.tag = indexPath.row
-            cell.shareBT.addTarget(self, action: #selector(FeaturedViewController.showListContext(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        
-            cell.avatarBT.tag = indexPath.row
-            cell.avatarBT.addTarget(self, action: #selector(FeaturedViewController.goProfile(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-            cell.likeBT.tag = indexPath.row
-            cell.postId = String(format:"%0.f", feed[kId]!.doubleValue)
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == self.arrayFeeds.count - 1 && isLoading == false) {
-             self.getListFeeds()
-        }
-    }
-    
     func sharePummel() {
         self.shareTextImageAndURL(pummelSlogan, sharingImage: UIImage(named: "shareLogo.png"), sharingURL: NSURL.init(string: kPM))
     }
@@ -702,13 +507,200 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
 }
 
-extension String {
-    func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: CGFloat.max)
+extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 1 {
+            return nil
+        }
         
-        let boundingBox = self.boundingRectWithSize(constraintRect, options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: font], context: nil)
+        if self.arrayDiscount.count == 0 {
+            return nil
+        }
         
-        return boundingBox.height
+        if headerDiscount == nil {
+            headerDiscount = FeedDiscountView.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
+            headerDiscount.delegate = self
+        }
+        headerDiscount.arrayResult = self.arrayDiscount
+        
+        return headerDiscount
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 && self.arrayDiscount.count > 0 {
+            return 200
+        }
+        return 0.001
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 0
+        }
+        return self.arrayFeeds.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(kFeaturedFeedTableViewCell) as! FeaturedFeedTableViewCell
+        
+        cell.separatorInset = UIEdgeInsetsZero;
+        let feed = arrayFeeds[indexPath.row]
+        let userFeed = feed[kUser] as! NSDictionary
+        // Name
+        let firstname = userFeed[kFirstname] as? String
+        cell.nameLB.text = firstname?.uppercaseString
+        
+        // Avatar
+        if (userFeed[kImageUrl] is NSNull == false) {
+            cell.avatarBT.setBackgroundImage(nil, forState: .Normal)
+            let imageLink = userFeed[kImageUrl] as? String
+            
+            if (imageLink?.isEmpty == false) {
+                ImageRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
+                    if (error == nil) {
+                        let imageRes = result as! UIImage
+                        
+                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        if visibleCell == true {
+                            dispatch_async(dispatch_get_main_queue(),{
+                                cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
+                            })
+                        }
+                    } else {
+                        print("Request failed with error: \(error)")
+                    }
+                    }.fetchdata()
+            }
+        } else {
+            cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
+        }
+        // Time
+        let timeAgo = feed[kCreateAt] as! String
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = kFullDateFormat
+        dateFormatter.timeZone = NSTimeZone(name: "UTC")
+        let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
+        cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
+        if (feed[kImageUrl] is NSNull == false) {
+            let imageContentLink = feed[kImageUrl] as! String
+            let postfixContent = widthEqual.stringByAppendingString(String(self.view.frame.size.width*2)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width*2))
+            
+            ImageRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
+                if (error == nil) {
+                    let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    
+                    if (isUpdateCell) {
+                        let imageRes = result as! UIImage
+                        dispatch_async(dispatch_get_main_queue(),{
+                            cell.imageContentIMV.image = imageRes
+                        })
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
+        }
+        
+        // Check Coach
+        cell.userInteractionEnabled = false
+        var coachLink  = kPMAPICOACH
+        let coachId = String(format:"%0.f", userFeed[kId]!.doubleValue)
+        coachLink.appendContentsOf(coachId)
+        
+        cell.avatarBT.layer.borderWidth = 0
+        cell.coachLB.text = ""
+        cell.coachLBTraillingConstraint.constant = 0
+        
+        UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
+            let isCoach = result as! Bool
+            let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+            
+            if (isUpdateCell) {
+                cell.userInteractionEnabled = true
+                cell.isCoach = false
+                
+                if (error == nil) {
+                    if (isCoach == true) {
+                        cell.isCoach = true
+                        cell.avatarBT.layer.borderWidth = 2
+                        
+                        cell.coachLBTraillingConstraint.constant = 5
+                        UIView.animateWithDuration(0.3, animations: {
+                            cell.coachLB.layoutIfNeeded()
+                            cell.coachLB.text = kCoach.uppercaseString
+                        })
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }
+            }.fetchdata()
+        
+        cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
+        
+        //Get Likes
+        //            cell.likeBT.userInteractionEnabled = true
+        //            cell.imageContentIMV.userInteractionEnabled = true
+        let feedID = String(format:"%0.f", feed[kId]!.doubleValue)
+        
+        FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
+            if (error == nil) {
+                let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                
+                if (isUpdateCell) {
+                    dispatch_async(dispatch_get_main_queue(),{
+                        let likeJson = result as! NSDictionary
+                        
+                        // Update like number
+                        let likeNumber = String(format:"%0.f", likeJson["likeNumber"]!.doubleValue)
+                        cell.likeLB.text = likeNumber + " likes"
+                        
+                        // Update current user liked
+                        let userLikedFeed = likeJson["currentUserLiked"] as! Bool
+                        if (userLikedFeed == true) {
+                            cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
+                        }
+                    })
+                }
+            } else {
+                print("Request failed with error: \(error)")
+            }
+            }.fetchdata()
+        
+        cell.layoutIfNeeded()
+        cell.firstContentCommentTV.layoutIfNeeded()
+        cell.firstContentCommentTV.delegate = self
+        cell.firstContentCommentTV.text = feed[kText] as? String
+        
+        let marginTopBottom = cell.firstContentCommentTV.layoutMargins.top + cell.firstContentCommentTV.layoutMargins.bottom
+        let marginLeftRight = cell.firstContentCommentTV.layoutMargins.left + cell.firstContentCommentTV.layoutMargins.right
+        cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
+        
+        cell.firstUserCommentLB.text = firstname?.uppercaseString
+        cell.viewAllBT.tag = indexPath.row
+        cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        cell.commentBT.tag = indexPath.row
+        cell.commentBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        cell.shareBT.tag = indexPath.row
+        cell.shareBT.addTarget(self, action: #selector(FeaturedViewController.showListContext(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        cell.avatarBT.tag = indexPath.row
+        cell.avatarBT.addTarget(self, action: #selector(FeaturedViewController.goProfile(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.likeBT.tag = indexPath.row
+        cell.postId = String(format:"%0.f", feed[kId]!.doubleValue)
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
+        if (indexPath.row == self.arrayFeeds.count - 1 && isLoading == false) {
+            self.getListFeeds()
+        }
     }
 }
 

@@ -256,6 +256,8 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
         
         self.getDetail()
+        
+        self.testimonialOffset = 0
         self.getTestimonial()
         
         self.playVideoButton.setImage(nil, forState: .Normal)

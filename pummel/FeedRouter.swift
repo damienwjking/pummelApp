@@ -79,6 +79,8 @@ enum FeedRouter: URLRequestConvertible {
         switch self {
         case .getListFeed:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 1")
+                
                 switch response.result {
                 case .Success(let JSON):
                     if response.response?.statusCode == 200 {
@@ -97,6 +99,8 @@ enum FeedRouter: URLRequestConvertible {
             
         case .getAndCheckFeedLike:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 2")
+                
                 switch response.result {
                 case .Success(let JSON):
                     if response.response?.statusCode == 200 {
@@ -131,6 +135,8 @@ enum FeedRouter: URLRequestConvertible {
             
         case .reportFeed:
             Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 3")
+                
                 if response.response?.statusCode == 200 {
                     self.comletedBlock(result: true, error: nil)
                 } else {

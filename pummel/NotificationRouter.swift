@@ -78,6 +78,8 @@ enum NotificationRouter: URLRequestConvertible {
         switch self {
         case .getNotificationBadge:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: NotificationRouter 1")
+                
                 switch response.result {
                 case .Success(let JSON):
                     // [Message] [Session] [Lead] [Comment]
@@ -96,6 +98,8 @@ enum NotificationRouter: URLRequestConvertible {
             
         case .resetSBadge, .resetLBadge, .resetCBadge:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: NotificationRouter 2")
+                
                 if (response.response?.statusCode == 401) {
                     PMHeler.showLogoutAlert()
                 } else {

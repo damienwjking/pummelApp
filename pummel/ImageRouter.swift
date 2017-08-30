@@ -113,6 +113,7 @@ enum ImageRouter: URLRequestConvertible {
         switch self {
         case .getCurrentUserAvatar, .getUserAvatar, .getCoachAvatar, .getBusinessLogo:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: ImageRouter 1")
                 switch response.result {
                 case .Success(let JSON):
                     if response.response?.statusCode == 200 {
@@ -145,6 +146,8 @@ enum ImageRouter: URLRequestConvertible {
                     self.comletedBlock(result: image, error: nil)
                 } else {
                     Alamofire.request(.GET, self.path).responseImage { response in
+                        print("PM: ImageRouter 2")
+                        
                         if (response.result.isSuccess) {
                             let imageRes = response.result.value! as UIImage
                             NSCache.sharedInstance.setObject(imageRes, forKey: self.path)

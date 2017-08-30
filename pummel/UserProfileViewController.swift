@@ -376,17 +376,21 @@ extension UserProfileViewController: UICollectionViewDataSource, UICollectionVie
         }
     }
     
-    func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        var prefix = kPMAPI
+    func configureAboutCell(cell: AboutCollectionViewCell?, forIndexPath indexPath: NSIndexPath) {
         let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
         let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
-        var link = photo.objectForKey(kImageUrl) as! String
-        link.appendContentsOf(postfix)
-        prefix.appendContentsOf(link)
-        Alamofire.request(.GET, prefix)
-            .responseImage { response in
-                let imageRes = response.result.value! as UIImage
-                cell.imageCell.image = imageRes
+        let link = photo.objectForKey(kImageUrl) as? String
+        
+        if (link != nil) {
+            ImageRouter.getImage(imageURLString: link!, sizeString: postfix, completed: { (result, error) in
+                if (error == nil && cell != nil) {
+                    let imageRes = result as! UIImage
+                    
+                    cell!.imageCell.image = imageRes
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
         }
     }
 }

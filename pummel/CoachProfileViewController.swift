@@ -242,6 +242,8 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             TrackingPMAPI.sharedInstance.trackingProfileViewed("\(val)")
         }
         self.checkConnect()
+        
+        self.testimonialOffset = 0
         self.getTestimonial()
         
         self.playVideoButton.setImage(nil, forState: .Normal)
@@ -319,9 +321,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     func getTestimonial() {
-        let userID = self.defaults.stringForKey(k_PM_CURRENT_ID)
+        let userIDNumber = self.coachDetail[kId] as! Double
+        let userID = String(format: "%0.f", userIDNumber)
         
-        UserRouter.getTestimonial(userID: userID!, offset: self.testimonialOffset) { (result, error) in
+        UserRouter.getTestimonial(userID: userID, offset: self.testimonialOffset) { (result, error) in
             if (error == nil) {
                 let testimonialDicts = result as! NSArray
                 

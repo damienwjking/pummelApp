@@ -62,7 +62,6 @@ enum UserRouter: URLRequestConvertible {
             
         case .checkCoachOfUser(let userID, _):
             prefix = kPMAPICOACH + userID
-            prefix = kPMAPIUSER + userID
             
         case .authenticateFacebook:
             prefix = kPMAPIAUTHENTICATEFACEBOOK
@@ -127,6 +126,8 @@ enum UserRouter: URLRequestConvertible {
         switch self {
         case .getCurrentUserInfo, .getUserInfo:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 1")
+                
                 switch response.result {
                 case .Success(let JSON):
                     if (JSON is NSNull == false) {
@@ -148,6 +149,8 @@ enum UserRouter: URLRequestConvertible {
             
         case checkCoachOfUser:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 2")
+                
                 if response.response?.statusCode == 200 {
                     self.comletedBlock!(result: true, error: nil)
                 } else {
@@ -161,6 +164,8 @@ enum UserRouter: URLRequestConvertible {
             
         case .authenticateFacebook:
             Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 3")
+                
                 switch response.result {
                 case .Success(let JSON):
                     if (JSON is NSNull == false) {
@@ -182,6 +187,8 @@ enum UserRouter: URLRequestConvertible {
             
         case getTestimonial:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 4")
+                
                 switch response.result {
                 case .Success(let JSON):
                     if (JSON is NSNull == false) {
