@@ -20,6 +20,8 @@ class TestimonialModel: NSObject {
     var userCommentUrl = ""
     var userCommentName = ""
     
+    var imageCache: UIImage? = nil // For scroll animation
+    
     func parseData(data: NSDictionary) {
         self.id = data["id"] as! Int
         self.rating = data["rating"] as! Double

@@ -515,7 +515,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="S1X-vx-wK2" secondAttribute="height" multiplier="1:1" id="QpP-6R-KkN"/>
                                                 </constraints>
-                                                <state key="normal" image="BCE36940-9823-4035-8C41-E2669915524A"/>
+                                                <state key="normal" image="7C73B5C8-4FF0-4B2B-94EC-DFC979C0E00B"/>
                                                 <connections>
                                                     <action selector="goConnection" destination="cHG-mo-slS" eventType="touchUpInside" id="V38-aW-gaY"/>
                                                 </connections>
@@ -731,14 +731,10 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Tpj-wg-Ba0" firstAttribute="leading" secondItem="B8a-FE-6FK" secondAttribute="leadingMargin" constant="-20" id="OS5-vK-2f7"/>
+                            <constraint firstItem="Tpj-wg-Ba0" firstAttribute="centerX" secondItem="B8a-FE-6FK" secondAttribute="centerX" id="F8a-Rg-i9z"/>
                             <constraint firstItem="Tpj-wg-Ba0" firstAttribute="top" secondItem="B8a-FE-6FK" secondAttribute="topMargin" id="PTk-zk-5kD"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Tpj-wg-Ba0" secondAttribute="trailing" constant="-20" id="etG-Nc-rWZ"/>
-                            <constraint firstItem="Tpj-wg-Ba0" firstAttribute="leading" secondItem="B8a-FE-6FK" secondAttribute="leadingMargin" constant="-20" id="jwW-bT-4fA"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Tpj-wg-Ba0" secondAttribute="trailing" constant="-20" id="nh5-fD-I2g"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Tpj-wg-Ba0" secondAttribute="trailing" constant="-20" id="t06-ef-E4U"/>
+                            <constraint firstItem="Tpj-wg-Ba0" firstAttribute="width" secondItem="B8a-FE-6FK" secondAttribute="width" id="RD6-Eg-ppu"/>
                             <constraint firstItem="P2F-7d-Pua" firstAttribute="top" secondItem="Tpj-wg-Ba0" secondAttribute="bottom" id="vpN-wu-nAd"/>
-                            <constraint firstItem="Tpj-wg-Ba0" firstAttribute="leading" secondItem="B8a-FE-6FK" secondAttribute="leadingMargin" constant="-20" id="zRU-pa-lqi"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="GQR-sQ-wPd"/>
@@ -774,7 +770,7 @@
                         <outlet property="connectionLB" destination="BgO-5S-1FW" id="gSG-AD-V1i"/>
                         <outlet property="detailV" destination="mes-GW-9mh" id="bMm-HM-hJc"/>
                         <outlet property="facebookBT" destination="XhQ-UY-2h3" id="OA0-1G-KvB"/>
-                        <outlet property="facebookDT" destination="2aY-Xk-Otb" id="jBO-nN-Y9n"/>
+                        <outlet property="facebookDT" destination="2aY-Xk-Otb" id="Hcq-sW-h1h"/>
                         <outlet property="facebookV" destination="WYz-ds-Ou5" id="k14-CG-y3j"/>
                         <outlet property="imageV" destination="AnQ-m1-GqG" id="SGd-TT-O9j"/>
                         <outlet property="instagramBT" destination="Ku4-kY-256" id="Fcc-db-9nc"/>
@@ -851,7 +847,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xEo-ch-oqR" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="crm-Qf-dgO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="crm-Qf-dgO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -866,7 +862,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="BCE36940-9823-4035-8C41-E2669915524A" width="22" height="22">
+        <image name="7C73B5C8-4FF0-4B2B-94EC-DFC979C0E00B" width="22" height="22">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

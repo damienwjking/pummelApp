@@ -449,23 +449,28 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 
                 self.ratingContentLB.text = String(format:"%0.f", totalPoint)
                 
-                if !(coachInformationTotal[kServiceArea] is NSNull) {
+                let areaText = coachInformationTotal[kServiceArea] as? String
+                if (areaText != nil && areaText?.isEmpty == false) {
                     self.locationView.hidden = false
-                    self.addressLB.text = coachInformationTotal[kServiceArea] as? String
+                    self.addressLB.text = areaText
                 } else {
                     self.locationView.hidden = true
                 }
                 
-                if !(coachInformation[kBio] is NSNull) {
+                let bioText = coachInformation[kBio] as? String
+                if (bioText != nil && bioText?.isEmpty == false) {
                     self.aboutTV.text = coachInformation[kBio] as! String
+                    
+                    let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
+                    self.aboutTVHeightDT.constant = sizeAboutTV.height
+                    self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+                } else {
+                    self.aboutTVHeightDT.constant = 0
+                    self.aboutHeightDT.constant = 0
                 }
                 
-                let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
-                self.aboutTVHeightDT.constant = sizeAboutTV.height
-                self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
-                
-                if !(coachInformationTotal[kQualification] is NSNull) {
-                    let qualificationText = coachInformationTotal[kQualification] as! String
+                let qualificationText = coachInformationTotal[kQualification] as? String
+                if (qualificationText != nil && qualificationText?.isEmpty == false) {
                     self.qualificationTV.text = qualificationText
                     let sizeQualificationTV = self.qualificationTV.sizeThatFits(self.qualificationTV.frame.size)
                     self.qualificationTVHeightDT.constant = sizeQualificationTV.height + 10
@@ -475,8 +480,8 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     self.qualificationDT.constant = 0
                 }
                 
-                if !(coachInformationTotal[kAchievement] is NSNull) {
-                    let achivementText = coachInformationTotal[kAchievement] as! String
+                let achivementText = coachInformationTotal[kAchievement] as? String
+                if (achivementText != nil && achivementText?.isEmpty == false) {
                     self.achivementTV.text = achivementText
                     let sizeAchivementTV = self.achivementTV.sizeThatFits(self.achivementTV.frame.size)
                     self.achivementTVHeightDT.constant = sizeAchivementTV.height + 10
@@ -486,9 +491,9 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     self.achivementDT.constant = 0
                 }
                 
-                if !(coachInformationTotal[kWebsiteUrl] is NSNull) {
-                    let achivementText = coachInformationTotal[kWebsiteUrl] as! String
-                    self.webTV.text = achivementText
+                let webText = coachInformationTotal[kWebsiteUrl] as? String
+                if (webText != nil && webText?.isEmpty == false) {
+                    self.webTV.text = webText
                     let sizeWebTV = self.webTV.sizeThatFits(self.webTV.frame.size)
                     self.webTVHeightDT.constant = sizeWebTV.height + 10
                     self.webHeightDT.constant = self.webTV.frame.origin.y + sizeWebTV.height

@@ -215,7 +215,11 @@ class UserProfileViewController: BaseViewController  {
         
         self.aboutTVHeightDT.constant = sizeAboutTV.height
         
-        self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+        if (self.aboutTV.text.isEmpty == false) {
+            self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+        } else {
+            self.aboutHeightDT.constant = 0
+        }
     }
     
     // MARK: - Video 

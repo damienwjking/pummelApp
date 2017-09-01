@@ -743,7 +743,6 @@
                         <constraints>
                             <constraint firstItem="kQo-ns-tiX" firstAttribute="top" secondItem="8AJ-1I-hAp" secondAttribute="top" id="IY5-c5-hWn"/>
                             <constraint firstAttribute="trailing" secondItem="kQo-ns-tiX" secondAttribute="trailing" id="POj-pG-hmo"/>
-                            <constraint firstItem="kQo-ns-tiX" firstAttribute="top" secondItem="8AJ-1I-hAp" secondAttribute="top" id="eXM-4d-pmW"/>
                             <constraint firstItem="xD0-dy-nta" firstAttribute="top" secondItem="kQo-ns-tiX" secondAttribute="bottom" id="mkD-xN-BXA"/>
                             <constraint firstItem="kQo-ns-tiX" firstAttribute="leading" secondItem="8AJ-1I-hAp" secondAttribute="leading" id="zsl-dH-KHU"/>
                         </constraints>
@@ -764,6 +763,7 @@
                         <outlet property="achivementDT" destination="OtQ-hv-M36" id="KLg-Gb-elO"/>
                         <outlet property="achivementTV" destination="geo-W6-3io" id="fxM-qI-YQg"/>
                         <outlet property="achivementTVHeightDT" destination="E8U-dr-dBz" id="rGU-VF-1sU"/>
+                        <outlet property="achivementV" destination="78j-T5-gZq" id="DGj-1P-eo4"/>
                         <outlet property="addressIconIMV" destination="rLf-jv-zSr" id="75c-qV-TIK"/>
                         <outlet property="addressLB" destination="QIu-Fg-mSu" id="rgv-Lf-Rln"/>
                         <outlet property="avatarIMV" destination="2Qg-F7-KVb" id="wip-2L-x5b"/>
@@ -827,6 +827,7 @@
                         <outlet property="webHeightDT" destination="VN6-gd-yXv" id="ubd-HU-Wgb"/>
                         <outlet property="webTV" destination="4Yg-Xu-Qca" id="CP6-4q-cHB"/>
                         <outlet property="webTVHeightDT" destination="yVR-Du-Hk4" id="wLe-V5-ZgS"/>
+                        <outlet property="webV" destination="iVC-Pn-vvT" id="OZY-pX-0C6"/>
                         <segue destination="5zb-qf-Rzl" kind="push" identifier="goEdit" id="F26-pE-l15"/>
                         <segue destination="bGk-Pb-VjG" kind="push" identifier="goSetting" id="vIr-9q-nx3"/>
                         <segue destination="a9g-f1-zvO" kind="show" identifier="goEditCoach" id="gWq-AW-JKH"/>

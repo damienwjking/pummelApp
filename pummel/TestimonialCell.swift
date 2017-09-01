@@ -43,17 +43,26 @@ class TestimonialCell: UICollectionViewCell {
             self.ratingImageView.layoutIfNeeded()
         }
         
-        ImageRouter.getImage(imageURLString: testimonial.userCommentUrl, sizeString: widthHeight120) { (result, error) in
-            if (error == nil) {
-                let imageRes = result as! UIImage
-                self.avatarImageView.image = imageRes
-            } else {
-                self.avatarImageView.image = UIImage(named: "display-empty.jpg")
-                
-                print("Request failed with error: \(error)")
-            }
-        }.fetchdata()
-        
+        if (testimonial.imageCache == nil) {
+            ImageRouter.getImage(imageURLString: testimonial.userCommentUrl, sizeString: widthHeight120) { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.avatarImageView.image = imageRes
+                    
+                    testimonial.imageCache = imageRes
+                } else {
+                    let imageRes = UIImage(named: "display-empty.jpg")
+                    self.avatarImageView.image = imageRes
+                    
+                    testimonial.imageCache = imageRes
+                    
+                    print("Request failed with error: \(error)")
+                }
+                }.fetchdata()
+
+        } else {
+            self.avatarImageView.image = testimonial.imageCache
+        }
     }
     
 }
