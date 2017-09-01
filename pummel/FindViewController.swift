@@ -22,8 +22,11 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     var resultIndex = 0
     var coachTotalDetail: NSDictionary!
     var arrayResult : [NSDictionary] = []
+    var coachArray: [UserModel] = []
+    var coachOffset = 0
     var arrayTags : NSArray!
     var stopSearch: Bool = false
+    var stopGetCoach: Bool = false
     var widthCell : CGFloat = 0.0
     var currentOffset: CGPoint = CGPointZero
     var touchPoint: CGPoint = CGPointZero
@@ -38,6 +41,13 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
     
+    @IBOutlet weak var horizontalView: UIView!
+    @IBOutlet weak var separeateline: UIView!
+    @IBOutlet weak var horizontalButton: UIButton!
+    @IBOutlet weak var horizontalTableView: UITableView!
+    @IBOutlet weak var horizontalViewHeightConstraint: NSLayoutConstraint!
+    
+    
     // MARK: - View controller circle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +56,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.tabBarController?.navigationController?.navigationBar.addSubview(self.badgeLabel)
         
         self.setupCollectionView()
+        self.setupHorizontalView()
         
         noResultLB.font = .pmmPlayFairReg18()
         noResultContentLB.font = .pmmMonLight13()
@@ -97,6 +108,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.collectionView.reloadData { 
             self.checkPlayVideoOnPresentCell()
         }
+        
+        self.coachOffset = 0
+        self.stopGetCoach = false
+        self.getCoachArray()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -130,6 +145,21 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                                                     action: #selector(FindViewController.btnCoachsClick))
             self.tabBarController?.navigationItem.leftBarButtonItem = leftBarButtonItem
         }
+    }
+    
+    func setupHorizontalView() {
+        self.horizontalTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
+        
+        self.separeateline!.backgroundColor = UIColor.pmmWhiteColor()
+        
+        self.horizontalButton.titleLabel?.font = UIFont.pmmMonLight11()
+        self.horizontalButton.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
+        self.horizontalButton.setTitle("Show List Coach", forState: .Normal)
+        
+        
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.horizontalViewSwipeUp))
+        swipeUp.direction = .Right // Up direction: horizontal table view tranform 90 degree
+        self.horizontalTableView.addGestureRecognizer(swipeUp)
     }
     
     func setupCollectionView() {
@@ -247,8 +277,36 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         }
     }
     
+    func getCoachArray() {
+        if (self.stopGetCoach == false) {
+            UserRouter.getFollowCoach(offset: self.coachOffset) { (result, error) in
+                if (error == nil) {
+                    let coachDetails = result as! [UserModel]
+                    
+                    if (coachDetails.count == 0) {
+                        self.stopGetCoach = true
+                    } else {
+                        for coachDetail in coachDetails {
+                            if (coachDetail.existInList(self.coachArray) == false) {
+                                self.coachArray.append(coachDetail)
+                            }
+                        }
+                    }
+                    
+                    self.coachOffset = self.coachOffset + 20
+                    self.horizontalTableView.reloadData()
+                } else {
+                    self.stopGetCoach = true
+                    
+                    print("Request failed with error: \(error)")
+                }
+                }.fetchdata()
+        }
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "letUsHelp") {
+            // Do nothing
         } else if (segue.identifier == kGoConnect) {
             let destination = segue.destinationViewController as! ConnectViewController
             let totalDetail = arrayResult[sender.tag]
@@ -267,9 +325,15 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
             let totalDetail = sender as! NSDictionary
-            destination.coachDetail = totalDetail[kUser] as! NSDictionary
             
-            if destination.coachDetail != nil {
+            var coachDetail = totalDetail[kUser] as? NSDictionary
+            if (coachDetail == nil) {
+                coachDetail = totalDetail
+            }
+
+            if (coachDetail != nil) {
+                destination.coachDetail = coachDetail
+                
                 if let firstName = destination.coachDetail[kFirstname] as? String {
                     // Tracker mixpanel
                     let mixpanel = Mixpanel.sharedInstance()
@@ -324,6 +388,38 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     func btnCoachsClick() {
         self.performSegueWithIdentifier("gotoCoachs", sender: nil)
     }
+    
+    @IBAction func horizontalViewClicked(sender: AnyObject) {
+        self.horizontalViewHeightConstraint.constant = 120
+        
+        self.separeateline.hidden = true // For animation
+        
+        UIView.animateWithDuration(0.3, animations: { 
+            self.horizontalTableView.alpha = 1
+            
+            self.horizontalButton.hidden = true
+            
+            self.horizontalView.layoutIfNeeded()
+        }) { (_) in
+            self.separeateline.hidden = false
+        }
+    }
+    
+    func horizontalViewSwipeUp() {
+        self.horizontalViewHeightConstraint.constant = 25
+        
+        self.separeateline.hidden = true // For animation
+        
+        UIView.animateWithDuration(0.3, animations: {
+            self.horizontalTableView.alpha = 0
+            
+            self.horizontalButton.hidden = false
+            
+            self.horizontalView.layoutIfNeeded()
+        }) { (_) in
+            self.separeateline.hidden = false
+        }
+    }
 }
 
 // MARK: - CardViewCellDelegate
@@ -338,6 +434,99 @@ extension FindViewController: CardViewCellDelegate {
         let indexPath = self.collectionView.indexPathForCell(cell)
         
         self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[(indexPath?.row)!])
+    }
+}
+
+extension FindViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (self.coachArray.count == 0) {
+            self.horizontalView.hidden = true
+        } else {
+            self.horizontalView.hidden = false
+        }
+        
+        return self.coachArray.count
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.horizontalViewHeightConstraint.constant = 0
+            
+            return 0
+        } else {
+            if (self.horizontalTableView.alpha == 1) {
+                self.horizontalViewHeightConstraint.constant = 120 // 96 for cell
+            }
+            
+            return 96
+        }
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if (indexPath.row == self.coachArray.count - 2) {
+            self.getCoachArray()
+        }
+        
+        let cellId = "HorizontalCell"
+        var cell:HorizontalCell? = tableView.dequeueReusableCellWithIdentifier(cellId) as? HorizontalCell
+        if cell == nil {
+            cell = NSBundle.mainBundle().loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
+            cell!.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 2.0))
+        }
+        cell!.addButton.hidden = true
+        cell?.imageV.image = UIImage(named: "display-empty.jpg")
+        
+        let coach = self.coachArray[indexPath.row]
+        let targetUserId = String(format:"%ld", coach.id)
+        
+        if (coach.firstname?.isEmpty == false) {
+            self.setupDataForCell(cell!, coach: coach)
+        } else {
+            UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
+                if (error == nil) {
+                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    if visibleCell == true {
+                        let userData = result as! NSDictionary
+                        coach.parseData(userData)
+                        
+                        self.setupDataForCell(cell!, coach: coach)
+                    }
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
+        }
+        
+        cell!.selectionStyle = .None
+        return cell!
+    }
+    
+    func setupDataForCell(cell: HorizontalCell, coach: UserModel) {
+        cell.name.text = coach.firstname!.uppercaseString
+        
+        if (coach.imageUrl != nil) {
+            let imageURLString = coach.imageUrl
+            
+            ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
+                if (error == nil) {
+                        let imageRes = result as! UIImage
+                        cell.imageV.image = imageRes
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+            }).fetchdata()
+        } else {
+            cell.imageV.image = UIImage(named: "display-empty.jpg")
+        }
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row < self.coachArray.count {
+            let cellIndex = indexPath.row
+            
+            let userDetail = self.coachArray[cellIndex].convertToDictionary()
+            self.performSegueWithIdentifier(kGoProfile, sender: userDetail)
+        }
     }
 }
 

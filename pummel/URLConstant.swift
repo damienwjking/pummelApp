@@ -78,6 +78,7 @@ let kPM_PATH_RESET_L_BADGE          = "/resetlNotificationBadge"
 let kPM_PATH_RESET_C_BADGE          = "/resetcNotificationBadge"
 let kPM_PATH_DECREASE_M_BADGE       = "/decreasemNotificationBadge"
 let kPM_PATH_TESTIMONIAL_OFFSET     = "/testimonial?limit=20&offset="
+let kPM_PATH_USERCOACH_OFFSET       = "/userCoach?limit=20&offset="
 
 let kPMAPICOACH_LEADS               = "/leads?offset="
 let kPMAPICOACH_CURRENT             = "/current?offset="

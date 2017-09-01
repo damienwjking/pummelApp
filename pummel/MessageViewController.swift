@@ -490,7 +490,6 @@ class MessageViewController: BaseViewController {
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if (defaults.boolForKey(k_PM_IS_COACH) == true) {
             if (scrollView == self.listMessageTB) {
