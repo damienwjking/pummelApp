@@ -33,6 +33,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     var loadmoreTime = 0
     let badgeLabel = UILabel()
     
+    @IBOutlet weak var noResultViewVerticalConstraint: NSLayoutConstraint! // default -32
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
     @IBOutlet weak var refineSearchBT: UIButton!
@@ -154,7 +155,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         self.horizontalButton.titleLabel?.font = UIFont.pmmMonLight11()
         self.horizontalButton.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
-        self.horizontalButton.setTitle("Show List Coach", forState: .Normal)
+//        self.horizontalButton.setTitle("Show List Coach", forState: .Normal)
         
         
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.horizontalViewSwipeUp))
@@ -386,39 +387,78 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     }
     
     func btnCoachsClick() {
-        self.performSegueWithIdentifier("gotoCoachs", sender: nil)
+//        self.performSegueWithIdentifier("gotoCoachs", sender: nil)
+        
+        self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = false
+        
+        if (self.horizontalTableView.alpha == 0) {
+            self.horizontalViewHeightConstraint.constant = 120
+            self.noResultViewVerticalConstraint.constant = -32 + 60 // Default vertical value
+            
+            self.separeateline.hidden = true // For animation
+            
+            UIView.animateWithDuration(0.3, animations: {
+                self.horizontalTableView.alpha = 1
+                
+                self.horizontalButton.hidden = true
+                
+                self.horizontalView.layoutIfNeeded()
+            }) { (_) in
+                self.separeateline.hidden = false
+                
+                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
+            }
+        } else {
+            self.horizontalViewHeightConstraint.constant = 0
+            self.noResultViewVerticalConstraint.constant = -32 // Default vertical value
+            
+            self.separeateline.hidden = true // For animation
+            
+            UIView.animateWithDuration(0.3, animations: {
+                self.horizontalTableView.alpha = 0
+                
+                self.horizontalButton.hidden = false
+                
+                self.horizontalView.layoutIfNeeded()
+            }) { (_) in
+                self.separeateline.hidden = false
+                
+                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
+            }
+        }
     }
     
     @IBAction func horizontalViewClicked(sender: AnyObject) {
-        self.horizontalViewHeightConstraint.constant = 120
-        
-        self.separeateline.hidden = true // For animation
-        
-        UIView.animateWithDuration(0.3, animations: { 
-            self.horizontalTableView.alpha = 1
-            
-            self.horizontalButton.hidden = true
-            
-            self.horizontalView.layoutIfNeeded()
-        }) { (_) in
-            self.separeateline.hidden = false
-        }
+        // For expand coach view
+//        self.horizontalViewHeightConstraint.constant = 120
+//        
+//        self.separeateline.hidden = true // For animation
+//        
+//        UIView.animateWithDuration(0.3, animations: { 
+//            self.horizontalTableView.alpha = 1
+//            
+//            self.horizontalButton.hidden = true
+//            
+//            self.horizontalView.layoutIfNeeded()
+//        }) { (_) in
+//            self.separeateline.hidden = false
+//        }
     }
     
     func horizontalViewSwipeUp() {
-        self.horizontalViewHeightConstraint.constant = 25
-        
-        self.separeateline.hidden = true // For animation
-        
-        UIView.animateWithDuration(0.3, animations: {
-            self.horizontalTableView.alpha = 0
-            
-            self.horizontalButton.hidden = false
-            
-            self.horizontalView.layoutIfNeeded()
-        }) { (_) in
-            self.separeateline.hidden = false
-        }
+//        self.horizontalViewHeightConstraint.constant = 0
+//        
+//        self.separeateline.hidden = true // For animation
+//        
+//        UIView.animateWithDuration(0.3, animations: {
+//            self.horizontalTableView.alpha = 0
+//            
+//            self.horizontalButton.hidden = false
+//            
+//            self.horizontalView.layoutIfNeeded()
+//        }) { (_) in
+//            self.separeateline.hidden = false
+//        }
     }
 }
 
@@ -456,6 +496,8 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             if (self.horizontalTableView.alpha == 1) {
                 self.horizontalViewHeightConstraint.constant = 120 // 96 for cell
+                
+                self.noResultViewVerticalConstraint.constant = -32 + 60 // Default vertical value
             }
             
             return 96
