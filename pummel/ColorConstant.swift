@@ -29,6 +29,10 @@ extension UIColor {
         return UIColor(red: 1.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
     }
     
+    class func pmmLightBrightOrangeColor() -> UIColor {
+        return UIColor(red: 1.0, green: 141.0 / 255.0, blue: 66.0 / 255.0, alpha: 1.0)
+    }
+    
     class func pmmWarmGreyTwoColor() -> UIColor {
         return UIColor(white: 151.0 / 255.0, alpha: 1.0)
     }

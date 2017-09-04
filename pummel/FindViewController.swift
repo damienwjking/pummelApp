@@ -389,42 +389,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     func btnCoachsClick() {
 //        self.performSegueWithIdentifier("gotoCoachs", sender: nil)
         
-        self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = false
-        
         if (self.horizontalTableView.alpha == 0) {
-            self.horizontalViewHeightConstraint.constant = 120
-            self.noResultViewVerticalConstraint.constant = -32 + 60 // Default vertical value
-            
-            self.separeateline.hidden = true // For animation
-            
-            UIView.animateWithDuration(0.3, animations: {
-                self.horizontalTableView.alpha = 1
-                
-                self.horizontalButton.hidden = true
-                
-                self.horizontalView.layoutIfNeeded()
-            }) { (_) in
-                self.separeateline.hidden = false
-                
-                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
-            }
+            self.expandCollapseCoachView(true)
         } else {
-            self.horizontalViewHeightConstraint.constant = 0
-            self.noResultViewVerticalConstraint.constant = -32 // Default vertical value
-            
-            self.separeateline.hidden = true // For animation
-            
-            UIView.animateWithDuration(0.3, animations: {
-                self.horizontalTableView.alpha = 0
-                
-                self.horizontalButton.hidden = false
-                
-                self.horizontalView.layoutIfNeeded()
-            }) { (_) in
-                self.separeateline.hidden = false
-                
-                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
-            }
+            self.expandCollapseCoachView(false)
         }
     }
     
@@ -446,19 +414,53 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     }
     
     func horizontalViewSwipeUp() {
-//        self.horizontalViewHeightConstraint.constant = 0
-//        
-//        self.separeateline.hidden = true // For animation
-//        
-//        UIView.animateWithDuration(0.3, animations: {
-//            self.horizontalTableView.alpha = 0
-//            
-//            self.horizontalButton.hidden = false
-//            
-//            self.horizontalView.layoutIfNeeded()
-//        }) { (_) in
-//            self.separeateline.hidden = false
-//        }
+        self.expandCollapseCoachView(false)
+    }
+    
+    func expandCollapseCoachView(isExpand: Bool) {
+        self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = false
+        
+        if (isExpand == true) {
+            self.horizontalViewHeightConstraint.constant = 120
+            self.noResultViewVerticalConstraint.constant = -32 + 60 // Default vertical value
+            
+            self.separeateline.hidden = true // For animation
+            
+            UIView.animateWithDuration(0.3, animations: {
+                self.horizontalTableView.alpha = 1
+                self.tabBarController?.navigationItem.leftBarButtonItem?.customView?.alpha = 1
+                
+                self.horizontalButton.hidden = true
+                
+                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmLightBrightOrangeColor()], forState: .Normal)
+                
+                self.horizontalView.layoutIfNeeded()
+            }) { (_) in
+                self.separeateline.hidden = false
+                
+                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
+            }
+        } else {
+            self.horizontalViewHeightConstraint.constant = 0
+            self.noResultViewVerticalConstraint.constant = -32 // Default vertical value
+            
+            self.separeateline.hidden = true // For animation
+            
+            UIView.animateWithDuration(0.3, animations: {
+                self.horizontalTableView.alpha = 0
+                self.tabBarController?.navigationItem.leftBarButtonItem?.customView?.alpha = 0.5
+                
+                self.horizontalButton.hidden = false
+                
+                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+                
+                self.horizontalView.layoutIfNeeded()
+            }) { (_) in
+                self.separeateline.hidden = false
+                
+                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
+            }
+        }
     }
 }
 
