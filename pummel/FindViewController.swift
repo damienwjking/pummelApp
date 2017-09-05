@@ -398,19 +398,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     
     @IBAction func horizontalViewClicked(sender: AnyObject) {
         // For expand coach view
-//        self.horizontalViewHeightConstraint.constant = 120
-//        
-//        self.separeateline.hidden = true // For animation
-//        
-//        UIView.animateWithDuration(0.3, animations: { 
-//            self.horizontalTableView.alpha = 1
-//            
-//            self.horizontalButton.hidden = true
-//            
-//            self.horizontalView.layoutIfNeeded()
-//        }) { (_) in
-//            self.separeateline.hidden = false
-//        }
+        self.expandCollapseCoachView(true)
     }
     
     func horizontalViewSwipeUp() {
@@ -497,9 +485,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
             return 0
         } else {
             if (self.horizontalTableView.alpha == 1) {
-                self.horizontalViewHeightConstraint.constant = 120 // 96 for cell
-                
-                self.noResultViewVerticalConstraint.constant = -32 + 60 // Default vertical value
+                self.expandCollapseCoachView(true)
             }
             
             return 96
