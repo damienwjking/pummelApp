@@ -946,6 +946,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                     
                     alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.Destructive, handler: acceptClientAction))
+                    
                     alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
                     
                     self.presentViewController(alertController, animated: true, completion: nil)

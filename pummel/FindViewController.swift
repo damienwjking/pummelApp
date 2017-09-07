@@ -185,6 +185,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.stopSearch = false
         self.loadmoreTime = 0
         
+        self.expandCollapseCoachView(false)
+        
         self.searchCoachPage()
     }
     
@@ -323,6 +325,17 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
             destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
             destination.preMessage = message
+            
+            if (message.isEmpty == true) {
+                destination.needOpenKeyboard = true
+            } else {
+                let messageSeparate = message.componentsSeparatedByString("can you please call me back on ")
+                let phoneNumber = messageSeparate[1]
+                
+                if (phoneNumber.isEmpty == true) {
+                    destination.needOpenKeyboard = true
+                }
+            }
         } else if (segue.identifier == kGoProfile) {
             let destination = segue.destinationViewController as! CoachProfileViewController
             let totalDetail = sender as! NSDictionary

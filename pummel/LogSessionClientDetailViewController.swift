@@ -10,9 +10,9 @@ import UIKit
 import Alamofire
 import Foundation
 
-class LogSessionClientDetailViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, FusumaDelegate, UITextFieldDelegate {
+class LogSessionClientDetailViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var tag: Tag = Tag()
-    var editSession = Session()
+    var editSession = SessionModel()
     var userInfoSelect:NSDictionary!
     
     @IBOutlet weak var tappedV: UIView!
@@ -123,7 +123,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         self.hourLB.text = "0"
         self.minuteLB.text = "0"
         
-        if self.editSession.id == nil {
+        if self.editSession.id == 0 {
             let title = self.tag.name?.componentsSeparatedByString(" ").joinWithSeparator("")
             self.titleButton.setTitle(String(format: "#%@", (title!.uppercaseString)), forState: .Normal)
         } else {
@@ -149,7 +149,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.initSessionData()
+        self.setupSessionData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -182,8 +182,8 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         }
     }
     
-    func initSessionData() {
-        if editSession.id != nil {
+    func setupSessionData() {
+        if editSession.id != 0 {
             self.imageSelectBtn.hidden = true
             
             let fullDateFormatter = NSDateFormatter()
@@ -193,19 +193,13 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             
             self.contentTV.text = self.editSession.text
             
-            if self.editSession.longtime == nil {
-                self.hourLB.text = "0"
-                self.minuteLB.text = "0"
-                self.longtimeSelected = "0"
-            } else {
-                let hour = self.editSession.longtime! / 60
-                let minute = self.editSession.longtime! % 60
-                
-                self.hourLB.text = String(format: "%ld", hour)
-                self.minuteLB.text = String(format: "%ld", minute)
-                
-                self.longtimeSelected = String(format: "%ld", self.editSession.longtime!)
-            }
+            let hour = self.editSession.longtime / 60
+            let minute = self.editSession.longtime % 60
+            
+            self.hourLB.text = String(format: "%ld", hour)
+            self.minuteLB.text = String(format: "%ld", minute)
+            
+            self.longtimeSelected = String(format: "%ld", self.editSession.longtime)
             
             if self.editSession.distance == nil {
                 self.distanceLB.text = "0"
@@ -225,11 +219,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 }
             }
             
-            if self.editSession.calorie == nil {
-                self.caloriesLB.text = "0"
-            } else {
-                self.caloriesLB.text = String(format: "%ld", self.editSession.calorie!)
-            }
+            self.caloriesLB.text = String(format: "%ld", self.editSession.calorie)
             
             if self.editSession.intensity == nil {
                 self.intensityLB.text = "Light"
@@ -270,7 +260,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(LogSessionClientDetailViewController.backClicked))
         
-        if self.editSession.id == nil {
+        if self.editSession.id == 0 {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.saveClicked))
         } else {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.editClicked))
@@ -532,7 +522,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     func editClicked() {
         self.view.makeToastActivity(message: "Saving")
         var prefix = kPMAPIACTIVITY
-        prefix.appendContentsOf(String(format:"%ld", self.editSession.id!))
+        prefix.appendContentsOf(String(format:"%ld", self.editSession.id))
         
         let dateSelected = self.convertLocalTimeToUTCTime(self.dateTF.text!)
         let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
@@ -550,7 +540,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         }
         
         let parameters = [
-            kActivityId : String(format:"%ld", self.editSession.id!),
+            kActivityId : String(format:"%ld", self.editSession.id),
             kText       : self.contentTV.text,
             kIntensity  : self.intensitySelected,
             kDistance   : distanceSelected,
@@ -567,10 +557,10 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                     self.navigationController?.popViewControllerAnimated(true)
                     
                     self.editSession.text = self.contentTV.text
-                    self.editSession.calorie = Int(calorieSelected)
+                    self.editSession.calorie = Int(calorieSelected)!
                     self.editSession.intensity = self.intensitySelected
                     
-                    self.editSession.longtime = Int(self.longtimeSelected)
+                    self.editSession.longtime = Int(self.longtimeSelected)!
                     
                     
                     let distanceUnit = self.defaults.objectForKey(kUnit) as? String
@@ -653,29 +643,22 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     
     func setAvatar() {
         // avatar of User
-        if self.editSession.userId == nil {
+        if self.editSession.userId == 0 {
             if !(coachDetail[kImageUrl] is NSNull) {
                 let imageLink = coachDetail[kImageUrl] as! String
-                var prefix = kPMAPI
-                prefix.appendContentsOf(imageLink)
-                let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
-                prefix.appendContentsOf(postfix)
-                if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                    let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
-                    self.avatarIMV.image = imageRes
-                } else {
-                    Alamofire.request(.GET, prefix)
-                        .responseImage { response in
-                            if (response.response?.statusCode == 200) {
-                                let imageRes = response.result.value! as UIImage
-                                self.avatarIMV.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                            }
+                let imageSize = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
+                
+                ImageRouter.getImage(imageURLString: imageLink, sizeString: imageSize, completed: { (result, error) in
+                    if (error == nil) {
+                        let imageRes = result as! UIImage
+                        self.avatarIMV.image = imageRes
+                    } else {
+                        print("Request failed with error: \(error)")
                     }
-                }
+                }).fetchdata()
             }
         } else {
-            let targetUserId = "\(self.editSession.userId!)"
+            let targetUserId = "\(self.editSession.userId)"
             
             ImageRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
@@ -691,7 +674,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         var targetUserId = ""
         self.avatarUserIMVWidth.constant = 40
         
-        if self.editSession.coachId == nil {
+        if self.editSession.coachId == 0 {
             if self.userInfoSelect == nil {
                 self.avatarUserIMVWidth.constant = 0
                 return
@@ -701,7 +684,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 }
             }
         } else {
-            targetUserId = "\(self.editSession.coachId!)"
+            targetUserId = "\(self.editSession.coachId)"
         }
         
         ImageRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
@@ -748,131 +731,10 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         fusuma.modeOrder = .CameraFirst
         self.presentViewController(fusuma, animated: true, completion: nil)
     }
-    
-    // MARK: UIPickerViewDelegate
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1;
-    }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView == self.distancePickerView {
-            return 100;
-        }
-        
-        if pickerView == self.intensityPickerView {
-            return 3;
-        }
-        
-        if pickerView == self.caloriesPickerView {
-            return 101;
-        }
-        
-        return 0
-    }
-    
-    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        var title = ""
-        
-        if pickerView == self.distancePickerView {
-            title = String(format: "%ld", row)
-//            self.distanceSelected = String(format: "%ld", self.distancePickerView.selectedRowInComponent(0) + 1)
-        }
-        
-        if pickerView == self.intensityPickerView {
-            title = self.intensityTitleArray[row]
-            self.intensitySelected = title
-        }
-        
-        if pickerView == self.caloriesPickerView {
-            title = String(format: "%ld", row * 5)
-            self.caloriesSelected = title
-        }
-        
-        let attString = NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
-        return attString;
-    }
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView == self.distancePickerView {
-            return String(format: "%ld", row)
-        }
-        
-        if pickerView == self.intensityPickerView {
-            return self.intensityTitleArray[row]
-        }
-        
-        if pickerView == self.caloriesPickerView {
-            return String(format: "%ld", row * 5)
-        }
-        
-        return "";
-    }
-    
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView == self.distancePickerView {
-            self.distanceLB.text = String(format: "%ld", row)
-            self.distanceSelected = String(format: "%ld", row)
-        }
-        
-        if pickerView == self.intensityPickerView {
-            self.intensityLB.text = self.intensityTitleArray[row]
-        }
-        
-        if pickerView == self.caloriesPickerView {
-            self.caloriesLB.text = String(format: "%ld", row * 5)
-        }
-    }
-    
-    // MARK: UITextFieldDelegate
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        self.tappedV.userInteractionEnabled = true
-        
-        return true
-    }
-    
-    func textFieldDidBeginEditing(textField: UITextField) {
-        if textField == self.caloriesTF {
-            self.caloriesPickerView.selectRow(50, inComponent: 0, animated: true)
-        }
-    }
-    
-    // MARK: UITextViewDelegate
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
-        self.tappedV.userInteractionEnabled = true
-        
-        return true
-    }
-    
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        
-        let currentText:NSString = textView.text
-        let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
-        if updatedText.isEmpty {
-            
-            textView.text = addAComment
-            textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
-            
-            textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
-            
-            return false
-        }
-        else if textView.textColor == UIColor(white:204.0/255.0, alpha: 1.0) && !text.isEmpty {
-            textView.text = nil
-            textView.textColor = UIColor.pmmWarmGreyTwoColor()
-        }
-        
-        return true
-    }
-    
-    func textViewDidChangeSelection(textView: UITextView) {
-        if self.view.window != nil {
-            if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
-            }
-        }
-    }
-    
-    // MARK: Fusuma delegate
+}
+
+// MARK: - FusumaDelegate
+extension LogSessionClientDetailViewController: FusumaDelegate {
     func fusumaImageSelected(image: UIImage) {
         self.imageSelected.image = image
         if (self.selectFromLibrary == true) {
@@ -937,3 +799,130 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         return scrollView.subviews[0] as! UIImageView
     }
 }
+
+// MARK: UIPickerViewDelegate
+extension LogSessionClientDetailViewController: UIPickerViewDelegate,UIPickerViewDataSource {
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1;
+    }
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if pickerView == self.distancePickerView {
+            return 100;
+        }
+        
+        if pickerView == self.intensityPickerView {
+            return 3;
+        }
+        
+        if pickerView == self.caloriesPickerView {
+            return 101;
+        }
+        
+        return 0
+    }
+    
+    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        var title = ""
+        
+        if pickerView == self.distancePickerView {
+            title = String(format: "%ld", row)
+            //            self.distanceSelected = String(format: "%ld", self.distancePickerView.selectedRowInComponent(0) + 1)
+        }
+        
+        if pickerView == self.intensityPickerView {
+            title = self.intensityTitleArray[row]
+            self.intensitySelected = title
+        }
+        
+        if pickerView == self.caloriesPickerView {
+            title = String(format: "%ld", row * 5)
+            self.caloriesSelected = title
+        }
+        
+        let attString = NSAttributedString(string: title, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+        return attString;
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if pickerView == self.distancePickerView {
+            return String(format: "%ld", row)
+        }
+        
+        if pickerView == self.intensityPickerView {
+            return self.intensityTitleArray[row]
+        }
+        
+        if pickerView == self.caloriesPickerView {
+            return String(format: "%ld", row * 5)
+        }
+        
+        return "";
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if pickerView == self.distancePickerView {
+            self.distanceLB.text = String(format: "%ld", row)
+            self.distanceSelected = String(format: "%ld", row)
+        }
+        
+        if pickerView == self.intensityPickerView {
+            self.intensityLB.text = self.intensityTitleArray[row]
+        }
+        
+        if pickerView == self.caloriesPickerView {
+            self.caloriesLB.text = String(format: "%ld", row * 5)
+        }
+    }
+}
+
+// MARK: UITextFieldDelegate - UITextViewDelegate
+extension LogSessionClientDetailViewController : UITextFieldDelegate, UITextViewDelegate{
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        self.tappedV.userInteractionEnabled = true
+        
+        return true
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        if textField == self.caloriesTF {
+            self.caloriesPickerView.selectRow(50, inComponent: 0, animated: true)
+        }
+    }
+    
+    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        self.tappedV.userInteractionEnabled = true
+        
+        return true
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        
+        let currentText:NSString = textView.text
+        let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
+        if updatedText.isEmpty {
+            
+            textView.text = addAComment
+            textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
+            
+            textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            
+            return false
+        }
+        else if textView.textColor == UIColor(white:204.0/255.0, alpha: 1.0) && !text.isEmpty {
+            textView.text = nil
+            textView.textColor = UIColor.pmmWarmGreyTwoColor()
+        }
+        
+        return true
+    }
+    
+    func textViewDidChangeSelection(textView: UITextView) {
+        if self.view.window != nil {
+            if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
+                textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            }
+        }
+    }
+}
+

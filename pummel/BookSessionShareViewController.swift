@@ -226,21 +226,25 @@ extension BookSessionShareViewController {
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Remove Client", style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
         
-        // Check exist email
-        if (userMail.isEmpty == false) {
-            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
-        }
+        
+        
+        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        
+        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
         
         // Check exist phone number
         if (phoneNumber.isEmpty == false) {
             alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
         }
         
-        alertController.addAction(UIAlertAction(title: "Send Message", style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        // Check exist email
+        if (userMail.isEmpty == false) {
+            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+        }
         
-        alertController.addAction(UIAlertAction(title: "View Profile", style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        alertController.addAction(UIAlertAction(title: kRemoveClient, style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
+        
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         
         self.presentViewController(alertController, animated: true) { }
@@ -329,21 +333,22 @@ extension BookSessionShareViewController {
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
         
-        // Check exist email
-        if (userMail.isEmpty == false) {
-            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
-        }
+        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        
+        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
         
         // Check exist phone number
         if (phoneNumber.isEmpty == false) {
             alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
         }
         
-        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        // Check exist email
+        if (userMail.isEmpty == false) {
+            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+        }
         
-        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
         
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
         

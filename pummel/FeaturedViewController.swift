@@ -452,6 +452,17 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
             destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
             destination.preMessage = message
+            
+            if (message.isEmpty == true) {
+                destination.needOpenKeyboard = true
+            } else {
+                let messageSeparate = message.componentsSeparatedByString("can you please call me back on ")
+                let phoneNumber = messageSeparate[1]
+                
+                if (phoneNumber.isEmpty == true) {
+                    destination.needOpenKeyboard = true
+                }
+            }
         } else if (segue.identifier == "goToFeedDetail") {
             let destination = segue.destinationViewController as! FeedViewController
             let feed = arrayFeeds[sender.tag] 
@@ -574,6 +585,8 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                         print("Request failed with error: \(error)")
                     }
                     }.fetchdata()
+            } else {
+                cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
             }
         } else {
             cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)

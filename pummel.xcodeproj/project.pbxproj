@@ -28,7 +28,7 @@
 		BA003AA41EEE5532002FE038 /* PMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA003AA31EEE5532002FE038 /* PMHelper.swift */; };
 		BA02EE2B1EE7B14300495943 /* UserRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA02EE2A1EE7B14300495943 /* UserRouter.swift */; };
 		BA0314911E155FC000982622 /* intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0314901E155FC000982622 /* intensity.png */; };
-		BA0314941E157C0300982622 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0314931E157C0300982622 /* Session.swift */; };
+		BA0314941E157C0300982622 /* SessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0314931E157C0300982622 /* SessionModel.swift */; };
 		BA04AB691E252BAC00F987BD /* ContactUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */; };
 		BA0DB1AB1E1EA31D00CBE586 /* icon_intensity.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0DB1A31E1EA31D00CBE586 /* icon_intensity.png */; };
 		BA0DB1AC1E1EA31D00CBE586 /* icon_insensity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA0DB1A41E1EA31D00CBE586 /* icon_insensity@2x.png */; };
@@ -249,7 +249,7 @@
 		BA003AA31EEE5532002FE038 /* PMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMHelper.swift; sourceTree = "<group>"; };
 		BA02EE2A1EE7B14300495943 /* UserRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRouter.swift; sourceTree = "<group>"; };
 		BA0314901E155FC000982622 /* intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intensity.png; sourceTree = "<group>"; };
-		BA0314931E157C0300982622 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		BA0314931E157C0300982622 /* SessionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionModel.swift; sourceTree = "<group>"; };
 		BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUserViewController.swift; sourceTree = "<group>"; };
 		BA0DB1A31E1EA31D00CBE586 /* icon_intensity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_intensity.png; sourceTree = "<group>"; };
 		BA0DB1A41E1EA31D00CBE586 /* icon_insensity@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_insensity@2x.png"; sourceTree = "<group>"; };
@@ -548,7 +548,6 @@
 		BA0314921E157BD600982622 /* SessionList */ = {
 			isa = PBXGroup;
 			children = (
-				BA0314931E157C0300982622 /* Session.swift */,
 			);
 			name = SessionList;
 			sourceTree = "<group>";
@@ -558,6 +557,7 @@
 			children = (
 				BA22A2C91F0C8E7B008FD47F /* UserModel.swift */,
 				BA15EBB51F551A8300B0A515 /* TestimonialModel.swift */,
+				BA0314931E157C0300982622 /* SessionModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1303,7 +1303,7 @@
 				F9ABEAE11DC36C3B0084B70E /* FontConstant.swift in Sources */,
 				F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */,
 				F977EC0D1DAD442F007024EB /* NewCommentImageViewController.swift in Sources */,
-				BA0314941E157C0300982622 /* Session.swift in Sources */,
+				BA0314941E157C0300982622 /* SessionModel.swift in Sources */,
 				F91727631DB3343200C6E612 /* HorizontalCell.swift in Sources */,
 				F9FE145B1CEBD29B004ABE34 /* FSConstants.swift in Sources */,
 				E8499E6D1EEF89A7008A65C2 /* DiscountColectionViewCell.swift in Sources */,

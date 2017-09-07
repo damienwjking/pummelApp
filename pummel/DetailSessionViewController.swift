@@ -40,7 +40,7 @@ class DetailSessionViewController: BaseViewController {
     
     @IBOutlet weak var tappedV: UIView!
     
-    var session = Session()
+    var session = SessionModel()
     var sessionTagColorString = "#FFFFFF"
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -88,7 +88,7 @@ class DetailSessionViewController: BaseViewController {
             self.sessionIMV.backgroundColor = UIColor.init(hexString: self.sessionTagColorString)
         }
         
-        if self.session.coachId != nil {
+        if self.session.coachId == 0 {
             self.setCoachAvatar()
             self.coachIMVWidthConstraint.constant = 40
             self.coachIMVLeadingConstraint.constant = 8;
@@ -117,8 +117,8 @@ class DetailSessionViewController: BaseViewController {
         self.centerV.hidden = true
         
         var numberInformation = 0;
-        if self.session.longtime != nil && self.session.longtime != 0 {
-            self.timeLB.text = String(format: "%ld minutes", self.session.longtime!)
+        if (self.session.longtime != 0) {
+            self.timeLB.text = String(format: "%ld minutes", self.session.longtime)
             self.timeV.hidden = false
             
             numberInformation = numberInformation + 1
@@ -153,8 +153,8 @@ class DetailSessionViewController: BaseViewController {
             self.distanceV.hidden = true
         }
         
-        if self.session.calorie != nil && self.session.calorie != 0 {
-            self.caloriesLB.text = String(format: "%ld", self.session.calorie!)
+        if (self.session.calorie != 0) {
+            self.caloriesLB.text = String(format: "%ld", self.session.calorie)
             self.caloriesV.hidden = false
             
             numberInformation = numberInformation + 1
@@ -197,7 +197,7 @@ class DetailSessionViewController: BaseViewController {
     
     func updateSession(notification: NSNotification) {
         if notification.object != nil {
-            let session = notification.object as! Session
+            let session = notification.object as! SessionModel
             self.session = session
             
             setData()
@@ -251,7 +251,7 @@ class DetailSessionViewController: BaseViewController {
     }
     
     func setUserAvatar() {
-        let userID = String(format: "%ld", self.session.userId!)
+        let userID = String(format: "%ld", self.session.userId)
         
         ImageRouter.getUserAvatar(userID: userID, sizeString: widthHeight120) { (result, error) in
             if (error == nil) {
@@ -264,7 +264,7 @@ class DetailSessionViewController: BaseViewController {
     }
     
     func setCoachAvatar() {
-        let coachID = String(format: "%ld", self.session.coachId!)
+        let coachID = String(format: "%ld", self.session.coachId)
         
         ImageRouter.getUserAvatar(userID: coachID, sizeString: widthHeight120) { (result, error) in
             if (error == nil) {
@@ -297,7 +297,7 @@ class DetailSessionViewController: BaseViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "editLogSession" {
             let destinationVC = segue.destinationViewController as! LogSessionClientViewController
-            destinationVC.editSession = sender as! Session
+            destinationVC.editSession = sender as! SessionModel
         }
     }
 

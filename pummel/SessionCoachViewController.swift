@@ -40,8 +40,9 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
     var isloading = false
     var canLoadMore = true
     
-    var sessionList = [Session]()
-    var selectedSessionList = [Session]()
+    var offset = 0
+    var sessionList = [SessionModel]()
+    var selectedSessionList = [SessionModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -138,27 +139,20 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
-            prefix.appendContentsOf(String(totalSession))
+            prefix.appendContentsOf(String(self.offset))
             
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     switch response.result {
                     case .Success(let JSON):
-                        let sessionInfo = JSON as! [NSDictionary]
-                        if (sessionInfo.count > 0) {
-                            for i in 0 ..< sessionInfo.count {
-                                let sessionContent = sessionInfo[i]
-                                let session = Session()
-                                session.parseDataWithDictionary(sessionContent)
+                        let sessionInfos = JSON as! [NSDictionary]
+                        
+                        if (sessionInfos.count > 0) {
+                            for sessionInfo in sessionInfos {
+                                let session = SessionModel()
+                                session.parseData(sessionInfo)
                                 
-                                var isNewSession = true
-                                for sessionItem in self.sessionList {
-                                    if session.id == sessionItem.id {
-                                        isNewSession = false
-                                    }
-                                }
-                                
-                                if isNewSession == true {
+                                if (session.existInList(self.sessionList) == false) {
                                     self.sessionList.append(session)
                                 }
                             }
@@ -170,6 +164,7 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
                         print("Request failed with error: \(error)")
                     }
                     
+                    self.offset = self.offset + 20
                     self.isloading = false
                     
                     self.getListSession()
@@ -315,7 +310,7 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "coachSessionDetail" {
             let destination = segue.destinationViewController as! DetailSessionViewController
-            destination.session = sender as! Session
+            destination.session = sender as! SessionModel
         }
     }
 }
@@ -382,7 +377,7 @@ extension SessionCoachViewController: UITableViewDelegate, UITableViewDataSource
                 prefix = prefix.stringByAppendingString(userID)
                 prefix = prefix.stringByAppendingString(kPM_PATH_DELETEACTIVITY)
                 
-                let param = ["activityId":session.id!]
+                let param = ["activityId":session.id]
                 
                 Alamofire.request(.POST, prefix, parameters: param)
                     .responseJSON { response in
@@ -549,7 +544,7 @@ extension SessionCoachViewController: LogCellDelegate {
                 dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
                 let startDate = dateFormatter.dateFromString(session.datetime!)
                 
-                let longTime = session.longtime! > 0 ? session.longtime! : 1
+                let longTime = session.longtime > 0 ? session.longtime : 1
                 let calendar = NSCalendar.currentCalendar()
                 let endDate = calendar.dateByAddingUnit(.Minute, value: longTime, toDate: startDate!, options: [])
                 

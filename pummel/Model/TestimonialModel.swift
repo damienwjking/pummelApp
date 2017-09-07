@@ -27,10 +27,30 @@ class TestimonialModel: NSObject {
         self.rating = data["rating"] as! Double
         self.userId = data["userId"] as! Int
         self.userCommentId = data["userCommentId"] as! Int
-        self.descript = data["description"] as! String
-        self.updatedAt = data["updatedAt"] as! String
-        self.createdAt = data["createdAt"] as! String
-        self.userCommentUrl = data["userCommentUrl"] as! String
-        self.userCommentName = data["userCommentName"] as! String
+        
+        let descript = data["description"] as? String
+        if (descript != nil && descript?.isEmpty == false) {
+            self.descript = descript!
+        }
+        
+        let updatedAt = data["updatedAt"] as? String
+        if (updatedAt != nil && updatedAt?.isEmpty == false) {
+            self.updatedAt = updatedAt!
+        }
+        
+        let createdAt = data["createdAt"] as? String
+        if (createdAt != nil && createdAt?.isEmpty == false) {
+            self.createdAt = createdAt!
+        }
+        
+        let userCommentUrl = data["userCommentUrl"] as? String
+        if (userCommentUrl != nil && userCommentUrl?.isEmpty == false) {
+            self.userCommentUrl = userCommentUrl!
+        }
+        
+        let userCommentName = data["userCommentName"] as? String
+        if (userCommentName != nil && userCommentName?.isEmpty == false) {
+            self.userCommentName = userCommentName!
+        }
     }
 }

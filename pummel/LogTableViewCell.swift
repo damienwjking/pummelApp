@@ -53,7 +53,7 @@ class LogTableViewCell: UITableViewCell {
         }
     }
     
-    func setData(session: Session, isUpComing: Bool) {
+    func setData(session: SessionModel, isUpComing: Bool) {
         self.textLB.text = session.text
         
         if session.datetime?.isEmpty == false {
@@ -74,7 +74,7 @@ class LogTableViewCell: UITableViewCell {
         
         self.typeLB.text = session.type
         
-        let userID = String(format:"%ld", session.userId!)
+        let userID = String(format:"%ld", session.userId)
         ImageRouter.getUserAvatar(userID: userID, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage

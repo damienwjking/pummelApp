@@ -14,6 +14,8 @@ enum UserRouter: URLRequestConvertible {
     case getUserInfo(userID : String, completed: CompletionBlock)
     case checkCoachOfUser(userID : String, completed: CompletionBlock)
     case authenticateFacebook(fbID : String?, email : String?, firstName : String?, lastName : String?, avatarURL : String?, gender : String?, completed: CompletionBlock)
+    case getUpcomingSession(offset: Int, completed: CompletionBlock)
+    case getCompletedSession(offset: Int, completed: CompletionBlock)
     case getTestimonial(userID: String, offset: Int, completed: CompletionBlock)
     case getFollowCoach(offset: Int, completed: CompletionBlock)
     
@@ -26,6 +28,10 @@ enum UserRouter: URLRequestConvertible {
         case .checkCoachOfUser(_, let completed):
             return completed
         case .authenticateFacebook(_, _, _, _, _, _, let completed):
+            return completed
+        case .getUpcomingSession(_, let completed):
+            return completed
+        case .getCompletedSession(_, let completed):
             return completed
         case .getTestimonial(_, _, let completed):
             return completed
@@ -45,6 +51,10 @@ enum UserRouter: URLRequestConvertible {
             return .GET
         case .authenticateFacebook:
             return .POST
+        case .getUpcomingSession:
+            return .GET
+        case .getCompletedSession:
+            return .GET
         case .getTestimonial:
             return .GET
         case .getFollowCoach:
@@ -70,6 +80,16 @@ enum UserRouter: URLRequestConvertible {
             
         case .authenticateFacebook:
             prefix = kPMAPIAUTHENTICATEFACEBOOK
+            
+        case .getUpcomingSession(let offset, _):
+            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            let offsetString = String(format: "%ld", offset)
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_UPCOMING_SESSION + offsetString
+            
+        case .getCompletedSession(let offset, _):
+            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            let offsetString = String(format: "%ld", offset)
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_COMPLETED_SESSION + offsetString
             
         case .getTestimonial(let userID, let offset, _):
             let offsetString = String(format: "%ld", offset)
@@ -196,9 +216,32 @@ enum UserRouter: URLRequestConvertible {
                 }
             })
             
-        case getTestimonial:
+        case .getUpcomingSession, .getCompletedSession:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 4")
+                
+                switch response.result {
+                case .Success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let userDetail = JSON as! NSDictionary
+                        
+                        self.comletedBlock!(result: userDetail, error: nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(result: nil, error: error)
+                    }
+                case .Failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHeler.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(result: nil, error: error)
+                    }
+                }
+            })
+            
+        case getTestimonial:
+            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 5")
                 
                 switch response.result {
                 case .Success(let JSON):
@@ -221,7 +264,7 @@ enum UserRouter: URLRequestConvertible {
             
         case getFollowCoach:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 5")
+                print("PM: UserRouter 6")
                 
                 switch response.result {
                 case .Success(let JSON):

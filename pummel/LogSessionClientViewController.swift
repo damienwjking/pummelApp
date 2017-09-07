@@ -22,7 +22,7 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
     var offset: Int = 0
     var sizingCell: ActivityCell?
     var bodyBuildingTag = Tag()
-    var editSession = Session()
+    var editSession = SessionModel()
     var isEditSession = false
     @IBOutlet weak var flowLayout: FlowLayout!
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
@@ -48,11 +48,11 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
         
         self.title = kLogSession
         
-        if (self.isEditSession == true && self.editSession.id == nil) {
+        if (self.isEditSession == true && self.editSession.id == 0) {
             self.navigationController?.popViewControllerAnimated(false)
         }
         
-        if self.editSession.id != nil {
+        if self.editSession.id != 0 {
             self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
         }
     }
@@ -225,7 +225,7 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
             
             if sender == nil {
                destination.editSession = self.editSession
-                self.editSession = Session()
+                self.editSession = SessionModel()
                 self.isEditSession = true
                 
                 let view = UIView(frame: self.view.bounds)

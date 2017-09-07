@@ -14,6 +14,13 @@ import CoreLocation
 import MapKit
 import Mixpanel
 
+enum SettingCellDefine: Int {
+    case unitOfMeasureCell
+    case unitOfMeasureValueCell
+    case titleCell
+}
+
+
 class SettingsViewController: BaseViewController {
 
     @IBOutlet weak var settingTableView: UITableView!
@@ -67,7 +74,6 @@ class SettingsViewController: BaseViewController {
         if self.defaults.objectForKey(kUnit) == nil {
             self.defaults.setObject(metric, forKey: kUnit)
         }
-
     }
     
     override func viewWillAppear(animated: Bool) {

@@ -34,6 +34,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     var isSending: Bool = false
     var isSendMessage = false
+    var needOpenKeyboard = false
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
@@ -73,6 +74,14 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.getArrayChat()
         
         self.textBox.text = self.preMessage
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if (self.needOpenKeyboard == true) {
+            self.textBox.becomeFirstResponder()
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {
