@@ -518,6 +518,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         }
         cell!.addButton.hidden = true
         cell?.imageV.image = UIImage(named: "display-empty.jpg")
+        cell?.imageV.layer.borderWidth = 2
         
         let coach = self.coachArray[indexPath.row]
         let targetUserId = String(format:"%ld", coach.id)

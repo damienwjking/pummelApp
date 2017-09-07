@@ -14,10 +14,41 @@ import CoreLocation
 import MapKit
 import Mixpanel
 
-enum SettingCellDefine: Int {
-    case unitOfMeasureCell
-    case unitOfMeasureValueCell
-    case titleCell
+enum SettingCellIndex: Int {
+    case unitOfMeasure_Title
+    case unitOfMeasure_Value
+    
+    case discovery_Title
+    case discovery_Location
+    case discovery_Distance
+    
+    case fitnessProfessional_Title
+    case fitnessProfessional_Message
+    
+    case applyNow_Button
+    
+    case notification_Title
+    case notification_NewLead
+    case notification_Message
+    case notification_Session
+    
+    case contactUs_Title
+    case contactUs_HelpSupport
+    case contactUs_FeedBack
+    case contactUs_SharePummel
+    case contactUs_InviteFriend
+    
+    case legal_Title
+    case legal_PrivacyPolicy
+    case legal_TermService
+    case legal_ChangePassword
+    
+    case logout_Button
+    
+    case pummel_Version
+    
+    case space_SmallSeparateLine
+    case space_BigSeparateLine
 }
 
 
@@ -40,6 +71,8 @@ class SettingsViewController: BaseViewController {
     var mapState = ""
     var mapCity = ""
     var distanceSliderValue : CGFloat = 0.0
+    
+    var settingCellArray : [SettingCellIndex] = []
     
     let defaults = NSUserDefaults.standardUserDefaults()
     var location: Location? {
@@ -74,6 +107,8 @@ class SettingsViewController: BaseViewController {
         if self.defaults.objectForKey(kUnit) == nil {
             self.defaults.setObject(metric, forKey: kUnit)
         }
+        
+        self.getSettingCell()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -110,8 +145,48 @@ class SettingsViewController: BaseViewController {
         }
     }
     
-    
-    
+    func getSettingCell() {
+        self.settingCellArray.append(.unitOfMeasure_Title)
+        self.settingCellArray.append(.unitOfMeasure_Value)
+        
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.settingCellArray.append(.discovery_Title)
+            self.settingCellArray.append(.discovery_Location)
+            self.settingCellArray.append(.discovery_Distance)
+        } else {
+            self.settingCellArray.append(.fitnessProfessional_Title)
+            self.settingCellArray.append(.fitnessProfessional_Message)
+            
+            self.settingCellArray.append(.applyNow_Button)
+        }
+        
+        self.settingCellArray.append(.notification_Title)
+        // Only show in coach
+        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.settingCellArray.append(.notification_NewLead)
+        }
+        
+        self.settingCellArray.append(.notification_Message)
+        self.settingCellArray.append(.notification_Session)
+        self.settingCellArray.append(.contactUs_Title)
+        self.settingCellArray.append(.contactUs_HelpSupport)
+        self.settingCellArray.append(.space_SmallSeparateLine)
+        self.settingCellArray.append(.contactUs_FeedBack)
+        self.settingCellArray.append(.space_SmallSeparateLine)
+        self.settingCellArray.append(.contactUs_SharePummel)
+        self.settingCellArray.append(.space_SmallSeparateLine)
+        self.settingCellArray.append(.contactUs_InviteFriend)
+        self.settingCellArray.append(.legal_Title)
+        self.settingCellArray.append(.legal_PrivacyPolicy)
+        self.settingCellArray.append(.space_SmallSeparateLine)
+        self.settingCellArray.append(.legal_TermService)
+        self.settingCellArray.append(.space_SmallSeparateLine)
+        self.settingCellArray.append(.legal_ChangePassword)
+        self.settingCellArray.append(.space_BigSeparateLine)
+        self.settingCellArray.append(.logout_Button)
+        self.settingCellArray.append(.pummel_Version)
+    }
+
     func updateLocationCoach() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
@@ -530,355 +605,234 @@ appversion.appendContentsOf(NSBundle.mainBundle().objectForInfoDictionaryKey("CF
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            return knumberOfRowCoach
-        } else {
-            return knumberOfRowUser
-        }
+        return self.settingCellArray.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            switch indexPath.row {
-            case 2:
-                return cellHeight49
-            case 3:
-                return cellHeight71
-            case 4:
-                return 100
-            case 0, 1, 5, 9, 15:
-                return cellHeight60
-            case 6, 7, 8, 10, 12, 14, 16, 18, 20, 22, 23, 24, 25:
-                return cellHeight50
-            case 11, 13, 17, 19, 21:
-                return cellHeight10
-            default:
-                return cellHeight30
-            }
-        } else {
-            switch indexPath.row {
-            case 4, 6, 7, 9, 11, 13, 15, 17, 19, 21, 22, 23, 24, 25:
-                return cellHeight50
-            case 0, 1, 2, 3, 5, 8, 14:
-                return cellHeight60
-            case 10, 12, 16, 18, 20:
-                return cellHeight10
-            default:
-                return cellHeight30
-            }
+        switch self.settingCellArray[indexPath.row] {
+        case .discovery_Title:
+            return cellHeight49
+            
+        case .unitOfMeasure_Title,
+             .unitOfMeasure_Value,
+             .fitnessProfessional_Title,
+             .fitnessProfessional_Message,
+             .notification_Title,
+             .contactUs_Title,
+             .legal_Title:
+            return cellHeight60
+            
+        case .discovery_Location:
+            return cellHeight71
+            
+        case .discovery_Distance:
+            return cellHeight100
+            
+        case .space_SmallSeparateLine:
+            return cellHeight10
+            
+        default:
+            return cellHeight50
         }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            switch indexPath.row {
-            case 0:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kUnitMeasure
-                return cell
-            case 1:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = self.defaults.objectForKey(kUnit) as? String
-                return cell
-            case 2:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingDiscoveryHeaderTableViewCell, forIndexPath: indexPath) as! SettingDiscoveryHeaderTableViewCell
-                cell.discoveryLB.font = .pmmMonReg11()
-                return cell
-            case 3:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLocationTableViewCell, forIndexPath: indexPath) as! SettingLocationTableViewCell
-                cell.locationLB.font = .pmmMonReg11()
-                cell.myCurrentLocationLB.font = .pmmMonReg11()
-                cell.locationContentLB.font = .pmmMonReg11()
-                self.configLocationCell(cell)
-                return cell
-            case 4:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingMaxDistanceTableViewCell, forIndexPath: indexPath) as! SettingMaxDistanceTableViewCell
-                cell.maxDistanceLB.font = .pmmMonReg11()
-                cell.maxDistanceContentLB.font = .pmmMonReg11()
-                cell.slider.maximumValue = 50
-                cell.slider.minimumValue = 0
-                self.configDistanceCell(cell)
-                return cell
-            case 5:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kNotification
-                return cell
-            case 6:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
-                cell.newConnectionsLB.font = .pmmMonReg11()
-                cell.newConnectionsLB.text = kNewConnections.uppercaseString
-                cell.switchBT.on = self.defaults.objectForKey(kNewConnections) as! Bool
-                self.newLeadCell = cell
-                return cell
-            case 7:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
-                cell.newConnectionsLB.font = .pmmMonReg11()
-                cell.newConnectionsLB.text = kMessage
-                cell.switchBT.on = self.defaults.objectForKey(kMessage) as! Bool
-                self.messageCell = cell
-                return cell
-            case 8:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
-                cell.newConnectionsLB.font = .pmmMonReg11()
-                cell.newConnectionsLB.text = kSessions
-                cell.switchBT.on = self.defaults.objectForKey(kSessions) as! Bool
-                self.sessionCell = cell
-                return cell
-            case 9:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kContactUs
-                return cell
-            case 10:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kHelpSupport
-                return cell
-            case 11, 13, 17:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingSmallSeperateTableViewCell, forIndexPath: indexPath) as! SettingSmallSeperateTableViewCell
-                return cell
-            case 12:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kFeedback
-                return cell
-            case 14:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kSharePummel
-                return cell
-            case 15:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kLegal
-                return cell
-            case 16:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kPrivacy
-                return cell
-            case 18:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kTermOfService
-                return cell
-            case 20:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kInviteFriend
-                return cell
-                
-            case 22:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kChangePassword
-                return cell
-            case 24:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLogoutTableViewCell, forIndexPath: indexPath) as! SettingLogoutTableViewCell
-                cell.logoutLB.font = .pmmMonReg11()
-                return cell
-            case 25:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = UIApplication.versionBuild()
-                cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
-                cell.selectionStyle = .None
-                return cell
-            default:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
-                return cell
-            }
-        } else {
-            switch indexPath.row {
-            case 0:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kUnitMeasure
-                return cell
-            case 1:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = self.defaults.objectForKey(kUnit) as? String
-                return cell
-            case 2:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kIAmFitnessProfessional
-                return cell
-            case 3:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.selectionStyle = .None
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kVerifiedFitnessProfessional
-                return cell
-            case 4:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.textColor = .pmmBrightOrangeColor()
-                cell.helpAndSupportLB.text = kApplyNow
-                return cell
-            case 5:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kNotification
-                return cell
-            case 6:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
-                cell.newConnectionsLB.font = .pmmMonReg11()
-                cell.newConnectionsLB.text = kMessage
-                cell.switchBT.on = self.defaults.objectForKey(kMessage) as! Bool
-                self.messageCell = cell
-                return cell
-            case 7:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
-                cell.newConnectionsLB.font = .pmmMonReg11()
-                cell.newConnectionsLB.text = kSessions
-                cell.switchBT.on = self.defaults.objectForKey(kSessions) as! Bool
-                self.sessionCell = cell
-                return cell
-            case 8:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kContactUs
-                return cell
-            case 9:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kHelpSupport
-                return cell
-            case 10, 12, 16:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingSmallSeperateTableViewCell, forIndexPath: indexPath) as! SettingSmallSeperateTableViewCell
-                return cell
-            case 11:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kFeedback
-                return cell
-            case 13:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kSharePummel
-                return cell
-            case 14:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
-                cell.notificationLB.font = .pmmMonReg11()
-                cell.notificationLB.text = kLegal
-                return cell
-            case 15:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kPrivacy
-                return cell
-            case 17:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kTermOfService
-                return cell
-            case 19:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kInviteFriend
-                return cell
-            case 21:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = kChangePassword
-                return cell
-            case 23:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLogoutTableViewCell, forIndexPath: indexPath) as! SettingLogoutTableViewCell
-                cell.logoutLB.font = .pmmMonReg11()
-                return cell
-            case 24:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
-                cell.helpAndSupportLB.font = .pmmMonReg11()
-                cell.helpAndSupportLB.textColor = UIColor.blackColor()
-                cell.helpAndSupportLB.text = UIApplication.versionBuild()
-                cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
-                cell.selectionStyle = .None
-                return cell
-            default:
-                let cell = tableView.dequeueReusableCellWithIdentifier(kSettingBigSeperateTableViewCell, forIndexPath: indexPath) as! SettingBigSeperateTableViewCell
-                return cell
-            }
+        switch self.settingCellArray[indexPath.row] {
+        case .unitOfMeasure_Title:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
+            cell.notificationLB.font = .pmmMonReg11()
+            cell.notificationLB.text = kUnitMeasure
+            return cell
+        case .unitOfMeasure_Value:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = self.defaults.objectForKey(kUnit) as? String
+            return cell
+            
+        case .discovery_Title:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingDiscoveryHeaderTableViewCell, forIndexPath: indexPath) as! SettingDiscoveryHeaderTableViewCell
+            cell.discoveryLB.font = .pmmMonReg11()
+            return cell
+        case .discovery_Location:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLocationTableViewCell, forIndexPath: indexPath) as! SettingLocationTableViewCell
+            cell.locationLB.font = .pmmMonReg11()
+            cell.myCurrentLocationLB.font = .pmmMonReg11()
+            cell.locationContentLB.font = .pmmMonReg11()
+            self.configLocationCell(cell)
+            return cell
+        case .discovery_Distance:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingMaxDistanceTableViewCell, forIndexPath: indexPath) as! SettingMaxDistanceTableViewCell
+            cell.maxDistanceLB.font = .pmmMonReg11()
+            cell.maxDistanceContentLB.font = .pmmMonReg11()
+            cell.slider.maximumValue = 50
+            cell.slider.minimumValue = 0
+            self.configDistanceCell(cell)
+            return cell
+            
+        case .fitnessProfessional_Title:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
+            cell.notificationLB.font = .pmmMonReg11()
+            cell.notificationLB.text = kIAmFitnessProfessional
+            return cell
+        case .fitnessProfessional_Message:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.selectionStyle = .None
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kVerifiedFitnessProfessional
+            return cell
+            
+        case .applyNow_Button:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.textColor = .pmmBrightOrangeColor()
+            cell.helpAndSupportLB.text = kApplyNow
+            return cell
+            
+        case .notification_Title:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
+            cell.notificationLB.font = .pmmMonReg11()
+            cell.notificationLB.text = kNotification
+            return cell
+        case .notification_NewLead:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
+            cell.newConnectionsLB.font = .pmmMonReg11()
+            cell.newConnectionsLB.text = kNewConnections.uppercaseString
+            cell.switchBT.on = self.defaults.objectForKey(kNewConnections) as! Bool
+            self.newLeadCell = cell
+            return cell
+        case .notification_Message:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
+            cell.newConnectionsLB.font = .pmmMonReg11()
+            cell.newConnectionsLB.text = kMessage
+            cell.switchBT.on = self.defaults.objectForKey(kMessage) as! Bool
+            self.messageCell = cell
+            return cell
+        case .notification_Session:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNewConnectionsTableViewCell, forIndexPath: indexPath) as! SettingNewConnectionsTableViewCell
+            cell.newConnectionsLB.font = .pmmMonReg11()
+            cell.newConnectionsLB.text = kSessions
+            cell.switchBT.on = self.defaults.objectForKey(kSessions) as! Bool
+            self.sessionCell = cell
+            return cell
+            
+        case .contactUs_Title:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
+            cell.notificationLB.font = .pmmMonReg11()
+            cell.notificationLB.text = kContactUs
+            return cell
+        case .contactUs_HelpSupport:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kHelpSupport
+            return cell
+        case .contactUs_FeedBack:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kFeedback
+            return cell
+        case .contactUs_SharePummel:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kSharePummel
+            return cell
+        case .contactUs_InviteFriend:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kInviteFriend
+            return cell
+            
+        case .legal_Title:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingNotificationHeaderTableViewCell, forIndexPath: indexPath) as! SettingNotificationHeaderTableViewCell
+            cell.notificationLB.font = .pmmMonReg11()
+            cell.notificationLB.text = kLegal
+            return cell
+        case .legal_PrivacyPolicy:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kPrivacy
+            return cell
+        case .legal_TermService:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kTermOfService
+            return cell
+        case .legal_ChangePassword:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = kChangePassword
+            return cell
+            
+        case .logout_Button:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingLogoutTableViewCell, forIndexPath: indexPath) as! SettingLogoutTableViewCell
+            cell.logoutLB.font = .pmmMonReg11()
+            return cell
+            
+        case .pummel_Version:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingHelpSupportTableViewCell, forIndexPath: indexPath) as! SettingHelpSupportTableViewCell
+            cell.helpAndSupportLB.font = .pmmMonReg11()
+            cell.helpAndSupportLB.textColor = UIColor.blackColor()
+            cell.helpAndSupportLB.text = UIApplication.versionBuild()
+            cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
+            cell.selectionStyle = .None
+            return cell
+            
+        case .space_SmallSeparateLine:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingSmallSeperateTableViewCell, forIndexPath: indexPath) as! SettingSmallSeperateTableViewCell
+            return cell
+            
+        case .space_BigSeparateLine:
+            let cell = tableView.dequeueReusableCellWithIdentifier(kSettingSmallSeperateTableViewCell, forIndexPath: indexPath) as! SettingSmallSeperateTableViewCell
+            return cell
         }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-            switch indexPath.row {
-            case 1:
-                self.selectMeasure()
-            case 3:
-                self.performSegueWithIdentifier("LocationPicker", sender: nil)
-                // Tracker mixpanel
-                let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Navigation Click", "Label":"Go Set Location"]
-                mixpanel.track("IOS.Profile.Setting", properties: properties)
-            case 10:
-                self.sendSupportEmail()
-            case 12:
-                self.sendFeedbackEmail()
-            case 14:
-                self.sharePummel()
-            case 16:
-                self.openPrivacy()
-            case 18:
-                self.openTerms()
-            case 20:
-                self.inviteFriend()
-            case 22:
-                self.performSegueWithIdentifier("changePassword", sender: nil)
-            case 24:
-                self.showMsgConfirmLogout()
-            default: break
-            }
-        } else {
-            switch indexPath.row {
-            case 1:
-                self.selectMeasure()
-            case 4:
-                self.upgradeToCoach()
-            case 9:
-                self.sendSupportEmail()
-            case 11:
-                self.sendFeedbackEmail()
-            case 13:
-                self.sharePummel()
-            case 15:
-                self.openPrivacy()
-            case 17:
-                self.openTerms()
-            case 19:
-                self.inviteFriend()
-            case 21:
-                self.performSegueWithIdentifier("changePassword", sender: nil)
-            case 23:
-                self.showMsgConfirmLogout()
-            default: break
-            }
+        
+        switch self.settingCellArray[indexPath.row] {
+        case .unitOfMeasure_Value:
+            self.selectMeasure()
+            
+        case .discovery_Location:
+            self.performSegueWithIdentifier("LocationPicker", sender: nil)
+            // Tracker mixpanel
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Name": "Navigation Click", "Label":"Go Set Location"]
+            mixpanel.track("IOS.Profile.Setting", properties: properties)
+            
+        case .applyNow_Button:
+            self.upgradeToCoach()
+            
+        case .contactUs_HelpSupport:
+            self.sendSupportEmail()
+        case .contactUs_FeedBack:
+            self.sendFeedbackEmail()
+        case .contactUs_SharePummel:
+            self.sharePummel()
+        case .contactUs_InviteFriend:
+            self.inviteFriend()
+            
+        case .legal_PrivacyPolicy:
+            self.openPrivacy()
+        case .legal_TermService:
+            self.openTerms()
+        case .legal_ChangePassword:
+            self.performSegueWithIdentifier("changePassword", sender: nil)
+            
+        case .logout_Button:
+            self.showMsgConfirmLogout()
+            
+        default: break
         }
     }
     
