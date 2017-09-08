@@ -17,7 +17,6 @@ import Cartography
 import UIColor_FlatColors
 
 class FindViewController: BaseViewController, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout{
-    var showLetUsHelp: Bool!
     var loadCardsFromXib = true
     var resultIndex = 0
     var coachTotalDetail: NSDictionary!
@@ -52,7 +51,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     // MARK: - View controller circle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.showLetUsHelp = false
         self.navigationController!.navigationBar.translucent = false
         self.tabBarController?.navigationController?.navigationBar.addSubview(self.badgeLabel)
         
@@ -74,13 +72,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         self.setupLayout()
         
-        if (NSUserDefaults.standardUserDefaults().boolForKey("SHOW_SEARCH_AFTER_REGISTER")) {
+        if (NSUserDefaults.standardUserDefaults().boolForKey("SHOW_SEARCH_AFTER_REGISTER") == true) {
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+            NSUserDefaults.standardUserDefaults().synchronize()
             performSegueWithIdentifier("letUsHelp", sender: nil)
-        } else {
-            if (showLetUsHelp == true) {
-                performSegueWithIdentifier("letUsHelp", sender: nil)
-            }
         }
         
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
@@ -244,8 +239,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                             dispatch_after(dispatchTime, dispatch_get_main_queue(), {
                                 self.arrayResult.removeAll()
                                 self.arrayResult = response.result.value  as! [NSDictionary]
-                                self.viewDidLayoutSubviews()
-                                self.showLetUsHelp = false
                                 self.viewDidLayoutSubviews()
                                 self.collectionView.contentOffset = CGPointZero
                                 

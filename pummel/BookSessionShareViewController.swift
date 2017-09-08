@@ -177,6 +177,15 @@ extension BookSessionShareViewController {
                     let coachFirstName = currentInfo[kFirstname] as! String
                     let userFirstName = userInfo[kFirstname] as! String
                     
+//                    if MFMailComposeViewController.canSendMail() {
+//                        let mail = MFMailComposeViewController()
+//                        mail.mailComposeDelegate = self
+//                        mail.setToRecipients(["hello@pummel.fit"])
+//                        mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
+//                        mail.setSubject("Come join me on Pummel Fitness")
+//                        self.presentViewController(mail, animated: true, completion: nil)
+//                    }
+                    
                     var urlString = "mailto:"
                     urlString = urlString.stringByAppendingString(userMail)
                     

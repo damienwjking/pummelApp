@@ -593,7 +593,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         if !(self.isValidEmail(emailContentTF.text!)) {
             returnValue = true
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
-                                                               attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                                                               attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
         } else {
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
                                                                attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
@@ -673,7 +673,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                                                                   attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
         } else {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
-                                                                  attributes:[NSForegroundColorAttributeName:  UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                                                                  attributes:[NSForegroundColorAttributeName:  UIColor.pmmRougeColor()])
         }
     }
     
@@ -956,7 +956,7 @@ extension EditCoachProfileViewController: UITextFieldDelegate, UITextViewDelegat
         if textField.isEqual(self.emailContentTF) == true {
             if (self.isValidEmail(self.emailContentTF.text!) == false) {
                 self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                        attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                                                                        attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
             } else {
                 self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
                                                                         attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])

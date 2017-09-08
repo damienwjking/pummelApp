@@ -137,7 +137,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             if (self.isValidEmail(self.emailTF.text!) == false) {
                 self.emailAttentionIM.hidden = false
                 self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                    attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
             } else {
                 self.emailAttentionIM.hidden = true
                 self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
@@ -149,7 +149,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
             if (self.passwordTF.text?.characters.count < 8) {
                 self.passwordAttentionIM.hidden = false
                 self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                    attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
                 let alertController = UIAlertController(title: pmmNotice, message: passwordNotice, preferredStyle: .Alert)
                 let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                     // ...

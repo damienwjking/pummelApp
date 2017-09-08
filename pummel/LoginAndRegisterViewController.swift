@@ -181,6 +181,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                         }
                     }
                     
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                     self.performSegueWithIdentifier("showClientSegue", sender: nil)
                     FBSDKAppEvents.logEvent("Login")
                 } else {
@@ -476,7 +477,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             returnValue = true
             signupVC.emailAttentionIM.hidden = false
             signupVC.emailTF.attributedText = NSAttributedString(string:signupVC.emailTF.text!,
-                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
         } else {
             signupVC.emailAttentionIM.hidden = true
             signupVC.emailTF.attributedText = NSAttributedString(string:signupVC.emailTF.text!,
@@ -487,7 +488,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
             returnValue = true
             signupVC.passwordAttentionIM.hidden = false
             signupVC.passwordTF.attributedText = NSAttributedString(string:signupVC.passwordTF.text!,
-                attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
+                attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
         } else {
             signupVC.passwordAttentionIM.hidden = true
             signupVC.passwordTF.attributedText = NSAttributedString(string:signupVC.passwordTF.text!,

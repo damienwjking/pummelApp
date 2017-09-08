@@ -15,7 +15,7 @@ import LocationPicker
 import CoreLocation
 import MapKit
 
-class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, MFMailComposeViewControllerDelegate,CLLocationManagerDelegate {
+class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailComposeViewControllerDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMW: UIImageView!
@@ -45,7 +45,6 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: FlowLayout!
     @IBOutlet weak var tagHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var scrollHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var choseAsManyLB: UILabel!
     @IBOutlet weak var tapView: UIView!
     @IBOutlet weak var facebookLB: UILabel!
@@ -68,7 +67,6 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     @IBOutlet weak var weightTF: UITextField!
     @IBOutlet weak var heightTF: UITextField!
     @IBOutlet weak var arrow: UIImageView!
-    var isFirstTVS : Bool = false
     var sizingCell: TagCell?
     
     var tags = [Tag]()
@@ -77,6 +75,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     var offset: Int = 0
     var isStopGetListTag : Bool = false
     var isStopGetListCoachTag: Bool = false
+    var haveAvatar = false
     var userInfo: NSDictionary!
     
     let imagePicker = UIImagePickerController()
@@ -94,17 +93,22 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.setAvatar()
+        self.updateUI()
+        self.getListTags()
+        
         currentId = defaults.objectForKey(k_PM_CURRENT_ID) as! String
         self.navigationItem.title = kNavEditProfile
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationController!.navigationBar.translucent = false;
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"APPLY NOW", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditCoachProfileForUpgradeViewController.done))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"APPLY NOW", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.applyNowAction))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditCoachProfileForUpgradeViewController.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
@@ -168,6 +172,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.emergencyMobileTF.delegate = self
         self.weightTF.delegate = self
         self.heightTF.delegate = self
+        self.qualificationContentTF.delegate = self
         self.achivementContentTF.maxHeight = 200
         self.aboutContentTV.maxHeight = 200
         self.qualificationContentTF.maxHeight = 200
@@ -212,6 +217,10 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     }
     
     func didTapView() {
+        if (self.emailContentTF.isFirstResponder()) {
+            self.validateEmail()
+        }
+        
         self.aboutContentTV.resignFirstResponder()
         self.achivementContentTF.resignFirstResponder()
         self.qualificationContentTF.resignFirstResponder()
@@ -267,12 +276,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.setAvatar()
-        self.updateUI()
         self.aboutDT.constant = self.view.frame.size.width - 30
         offset = 0
         isStopGetListTag = false
-        self.getListTags()
         
         //if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             if self.location != nil {
@@ -338,7 +344,6 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                         self.offset += 10
                         self.collectionView.reloadData({
                             self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize().height
-                            self.scrollHeightConstraint.constant = self.collectionView.frame.origin.y + self.tagHeightConstraint.constant
                         })
                     } else {
                         self.isStopGetListTag = true
@@ -381,56 +386,6 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
             self.isStopGetListTag = true
         }
     }
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tags.count
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-        self.configureCell(cell, forIndexPath: indexPath)
-        if (indexPath.row == tags.count - 1) {
-            self.getListTags()
-        }
-        return cell
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-        
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-            cellSize.width += 5;
-        }
-        
-        return cellSize
-    }
-    
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-        tags[indexPath.row].selected = !tags[indexPath.row].selected
-        let tag = tags[indexPath.row]
-        if (tag.selected) {
-            self.selectNewTag(tag)
-            tagIdsArray.addObject(tag.tagId!)
-        } else {
-            self.deleteATagUser(tag)
-            tagIdsArray.removeObject(tag.tagId!)
-        }
-        let contentOffset = self.scrollView.contentOffset
-        self.collectionView.reloadData()
-        scrollView.setContentOffset(contentOffset, animated: false)
-    }
-    
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
-        cell.tagName.textColor =  tag.selected ? UIColor.whiteColor() : UIColor.pmmWarmGreyColor()
-        cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
-        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
-        cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
-    }
-
     
     func updateUI() {
         if (self.userInfo == nil) {
@@ -595,19 +550,16 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     func keyboardWillShow(notification: NSNotification) {
         self.tapView.hidden = false
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
-            if (self.view.frame.origin.y >= 0 && self.isFirstTVS == false) {
-                self.view.frame.origin.y -= keyboardSize.height
+            if (self.view.frame.origin.y >= 0) {
+//                self.view.frame.origin.y -= keyboardSize.height
             }
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
         self.tapView.hidden = true
-        if (self.isFirstTVS == true) {
-            self.isFirstTVS = false
-        }
         if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
-            self.view.frame.origin.y = 64
+//            self.view.frame.origin.y = 64
         }
     }
     
@@ -639,20 +591,21 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         controller.dismissViewControllerAnimated(true, completion: {
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popToRootViewControllerAnimated(true)
         })
     }
     
     func callBasicInfoUpdate() {
-        if (self.checkRuleInputData() == false) {
+        if (self.checkRuleInputData() == true) {
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
+            var lastname = ""
             if (fullNameArr.count > 0) {
                 firstname = fullNameArr[0]
             }
-            var lastname = " "
             if fullNameArr.count >= 2 {
                 for i in 1 ..< fullNameArr.count {
                     lastname.appendContentsOf(fullNameArr[i])
@@ -667,14 +620,31 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
             let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
             mixpanel.track("IOS.Profile.EditProfile", properties: properties)
             
+            let userID = self.defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            
+            let gender = (self.genderContentTF.text?.uppercaseString)!
+            
             let weightString = self.weightTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
+            
             let heightString = self.heightTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
             
+            let param = [kUserId: userID,
+                         kFirstname: firstname,
+                         kLastName: lastname,
+                         kMobile: mobileContentTF.text!,
+                         kDob: dobContentTF.text!,
+                         kGender: gender,
+                         kBio: aboutContentTV.text,
+                         kFacebookUrl:facebookUrlTF.text!,
+                         kTwitterUrl:twitterUrlTF.text!,
+                         kInstagramUrl:instagramUrlTF.text!,
+                         kEmergencyName:emergencyNameTF.text!,
+                         kWeight: weightString!,
+                         kHeight: heightString!,
+                         kEmergencyMobile:emergencyMobileTF.text!]
+            
             self.view.makeToastActivity(message: "Saving")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kFirstname:firstname, kLastName: lastname, kMobile: mobileContentTF.text!, kDob: dobContentTF.text!, kGender:(genderContentTF.text?.uppercaseString)!, kBio: aboutContentTV.text, kFacebookUrl:facebookUrlTF.text!, kTwitterUrl:twitterUrlTF.text!, kInstagramUrl:instagramUrlTF.text!, kEmergencyName:emergencyNameTF.text!,
-                kWeight: weightString!,
-                kHeight: heightString!,
-                kEmergencyMobile:emergencyMobileTF.text!])
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
@@ -712,9 +682,10 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
         Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, "qualifications":qualStr, "achievements": achiveStr])
             .responseJSON { response in
+                self.view.hideToastActivity()
                 if response.response?.statusCode == 200 {
                     self.sendEmail()
-                }else {
+                } else {
                     let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
                     let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                         // ...
@@ -727,9 +698,78 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         }
     }
     
-    func done() {
-        // Upgrade coach
-        self.upgradeToCoach()
+    func applyNowAction() {
+        if (self.validatePreCondition() == true) {
+            // Upgrade coach
+            self.upgradeToCoach()
+        }
+    }
+    
+    func validatePreCondition() -> Bool {
+        var message = ""
+        
+        // Check AVATAR
+        if (self.haveAvatar == false) {
+            message = "Please add a profile image"
+            
+            PMHeler.showApplyAlert(message)
+            
+            return false
+        }
+        
+        // Check ABOUT
+        if (self.aboutContentTV.text.isEmpty == true) {
+            let offsetPoint = CGPoint(x: 0, y: self.aboutLB.frame.origin.y)
+            self.scrollView.setContentOffset(offsetPoint, animated: true)
+            
+            UIView.animateWithDuration(1, animations: {
+                self.aboutContentTV.backgroundColor = UIColor.pmmHighLightBrightOrangeColor()
+                }, completion: { (_) in
+                    self.aboutContentTV.becomeFirstResponder()
+            })
+            
+            return false
+        }
+        
+        // Check QUALIFICATIONS
+        if (self.qualificationContentTF.text.isEmpty == true) {
+            let offsetPoint = CGPoint(x: 0, y: self.qualificationLB.superview!.frame.origin.y)
+            self.scrollView.setContentOffset(offsetPoint, animated: true)
+            
+            UIView.animateWithDuration(1, animations: {
+                self.qualificationContentTF.backgroundColor = UIColor.pmmHighLightBrightOrangeColor()
+                }, completion: { (_) in
+                    self.qualificationContentTF.becomeFirstResponder()
+            })
+            
+            return false
+        }
+        
+        // Check SPECIALITIES
+        var selectedSpecialities = false
+        for tag in self.tags {
+            if (tag.selected == true) {
+                selectedSpecialities = true
+                
+                break
+            }
+        }
+        if (selectedSpecialities == false) {
+            message = "Please choose your specialities"
+            
+            PMHeler.showApplyAlert(message)
+            return false
+        }
+        
+        // Check LOCATION
+        if (self.locationName.text?.isEmpty == true || self.locationName.text == "...") {
+            message = "Please set your location"
+            
+            PMHeler.showApplyAlert(message)
+            return false
+        }
+        
+        return true
     }
     
     func upgradeToCoach() {
@@ -769,8 +809,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         self.presentViewController(alertController, animated: true) { }
     }
     
-    func imageTapped()
-    {
+    func imageTapped() {
         showPopupToSelectProfileAvatar()
     }
     
@@ -781,6 +820,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
+                    
+                    self.haveAvatar = true
                 } else {
                     print("Request failed with error: \(error)")
                 }
@@ -792,6 +833,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
+                    
+                    self.haveAvatar = true
                 } else {
                     print("Request failed with error: \(error)")
                 }
@@ -799,7 +842,288 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
         }
     }
     
+    func validateEmail() -> Bool{
+        if (self.isValidEmail(emailContentTF.text!) == false) {
+            emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
+                                                               attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
+            
+            return false
+        } else {
+            emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
+                                                               attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+            return true
+        }
+    }
     
+    func checkRuleInputData() -> Bool {
+        if (self.validateEmail() == false) {
+            return false
+            
+        }
+        
+        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
+            self.showMsgLinkInValid()
+            return false
+        }
+        
+        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase("twitter.com") {
+            self.showMsgLinkInValid()
+            return false
+        }
+        
+        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase("instagram.com") {
+            self.showMsgLinkInValid()
+            return false
+        }
+        
+        return true
+    }
+    
+    func showMsgLinkInValid() {
+        let alertController = UIAlertController(title: pmmNotice, message: linkInvalid, preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+        }
+        alertController.addAction(OKAction)
+        self.presentViewController(alertController, animated: true) {
+        }
+    }
+    
+    
+    func isValidEmail(testStr:String) -> Bool {
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
+        return emailTest.evaluateWithObject(testStr)
+    }
+    
+    func checkDateChanged(testStr:String) -> Bool {
+        if (testStr == "") {
+            return false
+        } else {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = kDateFormat
+            let dateDOB = dateFormatter.dateFromString(testStr)
+            
+            let date = NSDate()
+            let calendar = NSCalendar.currentCalendar()
+            let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+            let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+            let year =  components.year
+            let yearDOB = componentsDOB.year
+            
+            if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    
+    @IBAction func textFieldEditingWithSender(sender: UITextField) {
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.backgroundColor = UIColor.blackColor()
+        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
+        datePickerView.datePickerMode = UIDatePickerMode.Date
+        sender.inputView = datePickerView
+        datePickerView.addTarget(self, action:#selector(EditProfileViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+    }
+    
+    func datePickerValueChanged(sender:UIDatePicker) {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        self.dobContentTF.text = dateFormatter.stringFromDate(sender.date)
+        let dateDOB = dateFormatter.dateFromString(self.dobContentTF.text!)
+        
+        let date = NSDate()
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+        let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+        let year =  components.year
+        let yearDOB = componentsDOB.year
+        
+        if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
+            self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
+                                                                  attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+        } else {
+            self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
+                                                                  attributes:[NSForegroundColorAttributeName:  UIColor.pmmRougeColor()])
+        }
+    }
+    
+    func selectNewTag(tag: Tag) {
+        var linkAddTagToUser = kPMAPIUSER
+        linkAddTagToUser.appendContentsOf(currentId)
+        linkAddTagToUser.appendContentsOf("/tags")
+        Alamofire.request(.POST, linkAddTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
+                        .responseJSON { response in
+                            if response.response?.statusCode == 200 {
+                            }
+        }
+    }
+    
+    func deleteATagUser(tag: Tag) {
+        var linkDeleteTagToUser = kPMAPIUSER
+        linkDeleteTagToUser.appendContentsOf(currentId)
+        linkDeleteTagToUser.appendContentsOf("/tags/")
+        linkDeleteTagToUser.appendContentsOf(tag.tagId!)
+        Alamofire.request(.DELETE, linkDeleteTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
+            .responseJSON { response in
+                if response.response?.statusCode == 200 {
+                }
+        }
+    }
+    
+    
+
+    @IBAction func showPopupToSelectGender() {
+        let selectMale = { (action:UIAlertAction!) -> Void in
+            self.genderContentTF.text = kMale
+        }
+        
+        let selectFemale = { (action:UIAlertAction!) -> Void in
+            self.genderContentTF.text = kFemale
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        alertController.addAction(UIAlertAction(title: kMALEU, style: UIAlertActionStyle.Default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: kFemaleU, style: UIAlertActionStyle.Default, handler: selectFemale))
+        
+        self.presentViewController(alertController, animated: true) { }
+    }
+    
+    func getRandomColorString() -> String{
+        
+        let randomRed:CGFloat = CGFloat(drand48())
+        let randomGreen:CGFloat = CGFloat(drand48())
+        let randomBlue:CGFloat = CGFloat(drand48())
+        
+        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "LocationPicker" {
+            let locationPicker = segue.destinationViewController as! LocationPickerViewController
+            locationPicker.location = self.location
+            locationPicker.showCurrentLocationButton = true
+            locationPicker.useCurrentLocationAsHint = true
+            locationPicker.showCurrentLocationInitially = true
+            locationPicker.mapType = .Standard
+            
+            let backItem = UIBarButtonItem()
+            backItem.title = "BACK        "
+            backItem.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+            
+            navigationItem.backBarButtonItem = backItem
+            self.navigationController?.navigationBar.backIndicatorImage = UIImage()
+            self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
+            
+            locationPicker.completion = { self.location = $0 }
+        }
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tags.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
+        self.configureCell(cell, forIndexPath: indexPath)
+        if (indexPath.row == tags.count - 1) {
+            self.getListTags()
+        }
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
+        var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            cellSize.width += 5;
+        }
+        
+        return cellSize
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+        tags[indexPath.row].selected = !tags[indexPath.row].selected
+        let tag = tags[indexPath.row]
+        if (tag.selected) {
+            self.selectNewTag(tag)
+            tagIdsArray.addObject(tag.tagId!)
+        } else {
+            self.deleteATagUser(tag)
+            tagIdsArray.removeObject(tag.tagId!)
+        }
+        let contentOffset = self.scrollView.contentOffset
+        self.collectionView.reloadData()
+        scrollView.setContentOffset(contentOffset, animated: false)
+    }
+    
+    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
+        let tag = tags[indexPath.row]
+        cell.tagName.text = tag.name
+        cell.tagName.textColor =  tag.selected ? UIColor.whiteColor() : UIColor.pmmWarmGreyColor()
+        cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
+        cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
+    }
+}
+
+// MARK: - UITextFieldDelegate, UITextViewDelegate
+extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextViewDelegate {
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        if textField.isEqual(self.genderContentTF) == true {
+            self.didTapView()
+            
+            self.showPopupToSelectGender()
+            
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        if (textField == self.nameContentTF) {
+            self.aboutContentTV.becomeFirstResponder()
+        } else if (textField == self.aboutContentTV) {
+            self.emailContentTF.becomeFirstResponder()
+        } else if (textField == self.emailContentTF) {
+            self.validateEmail()
+            
+            self.mobileContentTF.becomeFirstResponder()
+        } else if (textField == self.mobileContentTF) {
+            self.gotoGetLocation()
+        } else if (textField == self.emergencyNameTF) {
+            self.emergencyMobileTF.becomeFirstResponder()
+        } else if (textField == self.emergencyMobileTF) {
+            self.genderContentTF.becomeFirstResponder()
+        } else if (textField == self.facebookUrlTF) {
+            self.instagramUrlTF.becomeFirstResponder()
+        } else if (textField == self.instagramUrlTF) {
+            self.twitterUrlTF.becomeFirstResponder()
+        } else if (textField == self.twitterUrlTF) {
+            self.qualificationContentTF.becomeFirstResponder()
+        } else if (textField == self.qualificationContentTF) {
+            self.achivementContentTF.becomeFirstResponder()
+        }
+        
+        return true
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        textView.backgroundColor = UIColor.whiteColor()
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
@@ -850,7 +1174,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                     prefix,
                     multipartFormData: { multipartFormData in
                         multipartFormData.appendBodyPart(data: imageData, name: "file",
-                                                         fileName:filename, mimeType:type)
+                            fileName:filename, mimeType:type)
                         for (key, value) in parameters {
                             multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
                         }
@@ -871,10 +1195,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
                                     activityView.stopAnimating()
                                     activityView.removeFromSuperview()
                                     self.avatarIMW.image = pickedImage
+                                    
+                                    self.haveAvatar = true
                                 }
                             }
                             
-                        case .Failure(let encodingError):
+                        case .Failure(let _):
                             activityView.stopAnimating()
                             activityView.removeFromSuperview()
                         }
@@ -891,212 +1217,6 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, UIImagePicke
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
     }
-    
-    func checkRuleInputData() -> Bool {
-        var returnValue  = false
-        if !(self.isValidEmail(emailContentTF.text!)) {
-            returnValue = true
-            emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
-                                                               attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-        } else {
-            emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
-                                                               attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
-        }
-        
-        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
-            self.showMsgLinkInValid()
-            return true
-        }
-        
-        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase("twitter.com") {
-            self.showMsgLinkInValid()
-            return true
-        }
-        
-        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase("instagram.com") {
-            self.showMsgLinkInValid()
-            return true
-        }
-        
-        return returnValue
-    }
-    
-    func showMsgLinkInValid() {
-        let alertController = UIAlertController(title: pmmNotice, message: linkInvalid, preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-        }
-        alertController.addAction(OKAction)
-        self.presentViewController(alertController, animated: true) {
-        }
-    }
-    
-    
-    func isValidEmail(testStr:String) -> Bool {
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
-        return emailTest.evaluateWithObject(testStr)
-    }
-    
-    func checkDateChanged(testStr:String) -> Bool {
-        if (testStr == "") {
-            return false
-        } else {
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = kDateFormat
-            let dateDOB = dateFormatter.dateFromString(testStr)
-            
-            let date = NSDate()
-            let calendar = NSCalendar.currentCalendar()
-            let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-            let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
-            let year =  components.year
-            let yearDOB = componentsDOB.year
-            
-            if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
-                return true
-            } else {
-                return false
-            }
-        }
-    }
-    
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        if (textField.isEqual(self.nameContentTF)) {
-            self.isFirstTVS = true
-        }
-        if textField.isEqual(self.genderContentTF) == true {
-            self.dobContentTF.resignFirstResponder()
-            self.emailContentTF.resignFirstResponder()
-            self.nameContentTF.resignFirstResponder()
-            self.mobileContentTF.resignFirstResponder()
-            self.aboutContentTV.resignFirstResponder()
-            self.achivementContentTF.resignFirstResponder()
-            self.qualificationContentTF.resignFirstResponder()
-            self.showPopupToSelectGender()
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func textViewDidBeginEditing(textView: UITextView) {
-        if (textView.isEqual(self.aboutContentTV)) {
-            self.isFirstTVS = true
-        }
-    }
-    
-    @IBAction func textFieldEditingWithSender(sender: UITextField) {
-        let datePickerView:UIDatePicker = UIDatePicker()
-        datePickerView.backgroundColor = UIColor.blackColor()
-        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
-        datePickerView.datePickerMode = UIDatePickerMode.Date
-        sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(EditProfileViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-    }
-    
-    func datePickerValueChanged(sender:UIDatePicker) {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "YYYY-MM-dd"
-        self.dobContentTF.text = dateFormatter.stringFromDate(sender.date)
-        let dateDOB = dateFormatter.dateFromString(self.dobContentTF.text!)
-        
-        let date = NSDate()
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-        let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
-        let year =  components.year
-        let yearDOB = componentsDOB.year
-        
-        if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
-            self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
-                                                                  attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
-        } else {
-            self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
-                                                                  attributes:[NSForegroundColorAttributeName:  UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-        }
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        if textField.isEqual(self.emailContentTF) == true {
-            if (self.isValidEmail(self.emailContentTF.text!) == false) {
-                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                        attributes:[NSForegroundColorAttributeName: UIColor(red: 190.0/255.0, green: 23.0/255.0, blue: 46.0/255.0, alpha: 1.0)])
-            } else {
-                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                        attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
-            }
-        }
-        return true
-    }
-    
-    func selectNewTag(tag: Tag) {
-        var linkAddTagToUser = kPMAPIUSER
-        linkAddTagToUser.appendContentsOf(currentId)
-        linkAddTagToUser.appendContentsOf("/tags")
-        Alamofire.request(.POST, linkAddTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                            }
-        }
-    }
-    
-    func deleteATagUser(tag: Tag) {
-        var linkDeleteTagToUser = kPMAPIUSER
-        linkDeleteTagToUser.appendContentsOf(currentId)
-        linkDeleteTagToUser.appendContentsOf("/tags/")
-        linkDeleteTagToUser.appendContentsOf(tag.tagId!)
-        Alamofire.request(.DELETE, linkDeleteTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                }
-        }
-    }
-    
-    
-
-    @IBAction func showPopupToSelectGender() {
-        let selectMale = { (action:UIAlertAction!) -> Void in
-            self.genderContentTF.text = kMale
-        }
-        let selectFemale = { (action:UIAlertAction!) -> Void in
-            self.genderContentTF.text = kFemale
-        }
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kMALEU, style: UIAlertActionStyle.Default, handler: selectMale))
-        alertController.addAction(UIAlertAction(title: kFemaleU, style: UIAlertActionStyle.Default, handler: selectFemale))
-        
-        self.presentViewController(alertController, animated: true) { }
-    }
-    
-    func getRandomColorString() -> String{
-        
-        let randomRed:CGFloat = CGFloat(drand48())
-        let randomGreen:CGFloat = CGFloat(drand48())
-        let randomBlue:CGFloat = CGFloat(drand48())
-        
-        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        if segue.identifier == "LocationPicker" {
-            let locationPicker = segue.destinationViewController as! LocationPickerViewController
-            locationPicker.location = self.location
-            locationPicker.showCurrentLocationButton = true
-            locationPicker.useCurrentLocationAsHint = true
-            locationPicker.showCurrentLocationInitially = true
-            locationPicker.mapType = .Standard
-            
-            let backItem = UIBarButtonItem()
-            backItem.title = "BACK        "
-            backItem.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
-            
-            navigationItem.backBarButtonItem = backItem
-            self.navigationController?.navigationBar.backIndicatorImage = UIImage()
-            self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
-            
-            locationPicker.completion = { self.location = $0 }
-        }
-    }
 }
+
 

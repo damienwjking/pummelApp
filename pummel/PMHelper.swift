@@ -89,6 +89,24 @@ class PMHeler {
         }
     }
     
+    class func showApplyAlert(message: String) {
+        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            let alertController = UIAlertController(title: kApply, message: message, preferredStyle: .Alert)
+            
+            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                // ...
+            }
+            
+            alertController.addAction(OKAction)
+            
+            topController.presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
+    
     class func actionWithDelaytime(delayTime: Double, delayAction: Void -> Void) {
         let delay = delayTime * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))

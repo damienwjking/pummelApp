@@ -134,6 +134,13 @@ enum UserRouter: URLRequestConvertible {
                 param["gender"] = gender!
             }
             
+        case .getUpcomingSession, .getCompletedSession:
+            let dateFormater = NSDateFormatter()
+            dateFormater.dateFormat = "yyyy-MM-dd hh:mm:ss"
+            let dateString = dateFormater.stringFromDate(NSDate())
+            
+            param["currentDate"] = dateString
+            
         default:
             break
         }
@@ -217,15 +224,15 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getUpcomingSession, .getCompletedSession:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 4")
                 
                 switch response.result {
                 case .Success(let JSON):
                     if (JSON is NSNull == false) {
-                        let userDetail = JSON as! NSDictionary
+                        let sessionArray = JSON as! NSArray
                         
-                        self.comletedBlock!(result: userDetail, error: nil)
+                        self.comletedBlock!(result: sessionArray, error: nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
                         self.comletedBlock!(result: nil, error: error)
@@ -238,7 +245,6 @@ enum UserRouter: URLRequestConvertible {
                     }
                 }
             })
-            
         case getTestimonial:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 5")

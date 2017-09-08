@@ -133,6 +133,17 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     func getListSession() {
         if (self.canLoadMore == true && self.isloading == false) {
             self.isloading = true
+            
+            
+//            UserRouter.getCompletedSession(offset: 0, completed: { (result, error) in
+//                if (error == nil) {
+//                    
+//                } else {
+//                    print("Request failed with error: \(error)")
+//                }
+//            }).fetchdata()
+            
+//            
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
             prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
