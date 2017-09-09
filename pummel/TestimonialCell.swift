@@ -37,8 +37,8 @@ class TestimonialCell: UICollectionViewCell {
         self.descriptionLabel.text = testimonial.descript
         
         if (testimonial.rating >= 0 && testimonial.rating <= 5) {
-            // Width of rating star is 32
-            self.ratingViewWidthConstraint.constant = 32 * CGFloat(testimonial.rating)
+            // Width of rating star is 20
+            self.ratingViewWidthConstraint.constant = 20 * CGFloat(testimonial.rating)
             
             self.ratingImageView.layoutIfNeeded()
         }

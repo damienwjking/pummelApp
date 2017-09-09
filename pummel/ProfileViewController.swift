@@ -1243,7 +1243,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         } else if (collectionView == self.testimonialCollectionView) {
             if (self.testimonialArray.count > 0) {
                 
-                self.testimonialViewHeightConstraint.constant = 244
+                self.testimonialViewHeightConstraint.constant = 294
             } else {
                 self.testimonialViewHeightConstraint.constant = 0
             }
@@ -1293,7 +1293,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             
             return cellSize
         } else if (collectionView == self.testimonialCollectionView) {
-            return CGSize(width: 275, height: 200)
+            return CGSize(width: 175, height: 250)
         } else {
             return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
         }
