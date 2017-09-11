@@ -101,6 +101,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var postNumberContentLB: UILabel!
     
     @IBOutlet weak var testimonialView: UIView!
+    @IBOutlet weak var testimonialTitle: UILabel!
     @IBOutlet weak var testimonialCollectionView: UICollectionView!
     @IBOutlet weak var testimonialViewHeightConstraint: NSLayoutConstraint!
     
@@ -384,14 +385,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                         self.showVideoLayout(videoURL!)
                     }
                 } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
-                        // ...
-                    }
+                    PMHeler.showLogoutAlert()
                 }
         }
     }
@@ -555,6 +549,13 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 
                         totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
                     }
+                }
+                
+                let totalTestimonial = coachInformationTotal[kTotalTestimonial] as? Int
+                if (totalTestimonial == nil) {
+                    self.testimonialTitle.text = "TESTIMONIALS"
+                } else {
+                    self.testimonialTitle.text = "TESTIMONIALS (\(totalTestimonial!))"
                 }
                 
                 if (coachInformation[kPostCount] is NSNull) {
@@ -1243,7 +1244,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         } else if (collectionView == self.testimonialCollectionView) {
             if (self.testimonialArray.count > 0) {
                 
-                self.testimonialViewHeightConstraint.constant = 294
+                self.testimonialViewHeightConstraint.constant = 324
             } else {
                 self.testimonialViewHeightConstraint.constant = 0
             }
@@ -1293,7 +1294,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             
             return cellSize
         } else if (collectionView == self.testimonialCollectionView) {
-            return CGSize(width: 175, height: 250)
+            return CGSize(width: 175, height: 280)
         } else {
             return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
         }

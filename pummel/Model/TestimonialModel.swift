@@ -19,6 +19,7 @@ class TestimonialModel: NSObject {
     var createdAt = ""
     var userCommentUrl = ""
     var userCommentName = ""
+    var userCommentLocation = ""
     
     var imageCache: UIImage? = nil // For scroll animation
     
@@ -30,7 +31,12 @@ class TestimonialModel: NSObject {
         
         let descript = data["description"] as? String
         if (descript != nil && descript?.isEmpty == false) {
-            self.descript = descript!
+            let descriptString: NSString = NSString(string: descript!)
+//            if (descriptString.length > 300) {
+//                descriptString = descriptString.substringToIndex(300)
+//            }
+            
+            self.descript = descriptString as String
         }
         
         let updatedAt = data["updatedAt"] as? String
@@ -51,6 +57,11 @@ class TestimonialModel: NSObject {
         let userCommentName = data["userCommentName"] as? String
         if (userCommentName != nil && userCommentName?.isEmpty == false) {
             self.userCommentName = userCommentName!
+        }
+        
+        let userCommentLocation = data["userCommentLocation"] as? String
+        if (userCommentLocation != nil && userCommentLocation?.isEmpty == false) {
+            self.userCommentLocation = userCommentLocation!
         }
     }
 }

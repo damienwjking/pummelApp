@@ -12,10 +12,12 @@ class TestimonialCell: UICollectionViewCell {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var userNameLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var ratingImageView: UIImageView!
 
     @IBOutlet weak var ratingViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var descriptionLabelHeightConstraint: NSLayoutConstraint!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -27,14 +29,22 @@ class TestimonialCell: UICollectionViewCell {
         
         self.userNameLabel.font = UIFont.pmmMonReg11()
         
-        self.titleLabel.font = UIFont.pmmMonLight11()
+        self.locationLabel.font = UIFont.pmmMonLight11()
     }
 
     func setupData(testimonial: TestimonialModel) {
-        self.titleLabel.text = "" // no tilte 
+        self.locationLabel.text = testimonial.userCommentLocation // change title to location
         
         self.userNameLabel.text = testimonial.userCommentName
+        
+        // 167: width of description text
+        // 150: height of description text
         self.descriptionLabel.text = testimonial.descript
+        var descriptionHeightText = testimonial.descript.heightWithConstrainedWidth(167, font: self.descriptionLabel.font)
+        if (descriptionHeightText > 160) {
+            descriptionHeightText = 160
+        }
+        self.descriptionLabelHeightConstraint.constant = descriptionHeightText
         
         if (testimonial.rating >= 0 && testimonial.rating <= 5) {
             // Width of rating star is 20

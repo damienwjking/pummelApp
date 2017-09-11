@@ -324,10 +324,10 @@
                                         </constraints>
                                     </view>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="32r-I3-iwI">
-                                        <rect key="frame" x="0.0" y="647" width="600" height="294"/>
+                                        <rect key="frame" x="0.0" y="647" width="600" height="324"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TESTIMONIALS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHv-Qt-h0K">
-                                                <rect key="frame" x="16" y="15" width="81.5" height="21"/>
+                                                <rect key="frame" x="16" y="15" width="82" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="FyS-hR-FZV"/>
                                                 </constraints>
@@ -336,10 +336,10 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a68-4h-QAt">
-                                                <rect key="frame" x="8" y="44" width="592" height="250"/>
+                                                <rect key="frame" x="8" y="44" width="592" height="280"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="250" id="Rok-ik-CfA"/>
+                                                    <constraint firstAttribute="height" constant="280" id="Rok-ik-CfA"/>
                                                 </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QEA-iA-SwM">
                                                     <size key="itemSize" width="50" height="50"/>
@@ -361,11 +361,11 @@
                                             <constraint firstAttribute="trailing" secondItem="a68-4h-QAt" secondAttribute="trailing" id="Mcq-j9-mlv"/>
                                             <constraint firstItem="a68-4h-QAt" firstAttribute="top" secondItem="zHv-Qt-h0K" secondAttribute="bottom" constant="8" id="S7c-O8-h0N"/>
                                             <constraint firstItem="zHv-Qt-h0K" firstAttribute="top" secondItem="32r-I3-iwI" secondAttribute="top" constant="15" id="W70-4y-g2d"/>
-                                            <constraint firstAttribute="height" constant="294" id="d4d-1P-TCc"/>
+                                            <constraint firstAttribute="height" constant="324" id="d4d-1P-TCc"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HbL-Sh-JwB">
-                                        <rect key="frame" x="0.0" y="941" width="600" height="128"/>
+                                        <rect key="frame" x="0.0" y="971" width="600" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WEBSITE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T1N-Vi-PMy">
                                                 <rect key="frame" x="16" y="15" width="49" height="21"/>
@@ -399,7 +399,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LR7-xd-al5">
-                                        <rect key="frame" x="0.0" y="1069" width="600" height="128"/>
+                                        <rect key="frame" x="0.0" y="1099" width="600" height="128"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="xyU-VD-87e">
                                                 <rect key="frame" x="16" y="44" width="568" height="76"/>
@@ -434,7 +434,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvy-kH-VvY">
-                                        <rect key="frame" x="0.0" y="1197" width="600" height="128"/>
+                                        <rect key="frame" x="0.0" y="1227" width="600" height="128"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="urz-Zk-kbm">
                                                 <rect key="frame" x="16" y="46" width="568" height="76"/>
@@ -468,7 +468,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WjU-Wz-OJ0">
-                                        <rect key="frame" x="0.0" y="1419" width="600" height="50"/>
+                                        <rect key="frame" x="0.0" y="1449" width="600" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="POST" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="naZ-4w-LBs">
                                                 <rect key="frame" x="16" y="14" width="44" height="21"/>
@@ -515,7 +515,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="S1X-vx-wK2" secondAttribute="height" multiplier="1:1" id="QpP-6R-KkN"/>
                                                 </constraints>
-                                                <state key="normal" image="5B6E9E8F-81F0-4714-8860-180E3629EC59"/>
+                                                <state key="normal" image="B4C9CD34-6385-4CFA-9240-4DC85FC2339E"/>
                                                 <connections>
                                                     <action selector="goConnection" destination="cHG-mo-slS" eventType="touchUpInside" id="V38-aW-gaY"/>
                                                 </connections>
@@ -534,7 +534,7 @@
                                         </constraints>
                                     </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OJD-JP-fA0">
-                                        <rect key="frame" x="0.0" y="1469" width="600" height="153"/>
+                                        <rect key="frame" x="0.0" y="1499" width="600" height="153"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="153" id="Ab9-Fm-4YX"/>
                                         </constraints>
@@ -570,7 +570,7 @@
                                         </cells>
                                     </collectionView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Epj-9f-bf1">
-                                        <rect key="frame" x="0.0" y="1325" width="600" height="94"/>
+                                        <rect key="frame" x="0.0" y="1355" width="600" height="94"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SOCIAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lpB-ia-ESn">
                                                 <rect key="frame" x="16" y="8" width="170" height="21"/>
@@ -807,6 +807,7 @@
                         <outlet property="specialitiesLB" destination="pPt-HV-aTe" id="JXt-QI-B23"/>
                         <outlet property="specifiesDT" destination="8JO-UX-yRk" id="G3X-Og-9aO"/>
                         <outlet property="testimonialCollectionView" destination="a68-4h-QAt" id="JHC-dj-Ngs"/>
+                        <outlet property="testimonialTitle" destination="zHv-Qt-h0K" id="T6x-U1-igl"/>
                         <outlet property="testimonialView" destination="32r-I3-iwI" id="ZKJ-N6-vKZ"/>
                         <outlet property="testimonialViewHeightConstraint" destination="d4d-1P-TCc" id="c57-mK-r8c"/>
                         <outlet property="titleCoachLB" destination="LY5-Ye-xHU" id="QkZ-Nb-pdu"/>
@@ -862,7 +863,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="5B6E9E8F-81F0-4714-8860-180E3629EC59" width="22" height="22">
+        <image name="B4C9CD34-6385-4CFA-9240-4DC85FC2339E" width="22" height="22">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
