@@ -119,6 +119,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var offset: Int = 0
     var testimonialOffset = 0
     var isStopGetListPhotos : Bool = false
+    var isStopGetTestimonial = false
     let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     
     let imagePickerController = UIImagePickerController()
@@ -260,6 +261,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         self.getDetail()
         
+        self.isStopGetTestimonial = false
         self.testimonialOffset = 0
         self.getTestimonial()
         
@@ -496,36 +498,43 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     func getTestimonial() {
-        let userID = self.defaults.stringForKey(k_PM_CURRENT_ID)
-        
-        UserRouter.getTestimonial(userID: userID!, offset: self.testimonialOffset) { (result, error) in
-            if (error == nil) {
-                let testimonialDicts = result as! NSArray
-                
-                for testimonialDict in testimonialDicts {
-                    let testimo = TestimonialModel()
+        if (self.isStopGetTestimonial == false) {
+            let userID = self.defaults.stringForKey(k_PM_CURRENT_ID)
+            
+            UserRouter.getTestimonial(userID: userID!, offset: self.testimonialOffset) { (result, error) in
+                if (error == nil) {
+                    let testimonialDicts = result as! NSArray
                     
-                    testimo.parseData(testimonialDict as! NSDictionary)
+                    if (testimonialDicts.count == 0) {
+                        self.isStopGetTestimonial = true
+                    }
                     
-                    var isExist = false
-                    for test in self.testimonialArray {
-                        if (test.id == testimo.id) {
-                            isExist = true
-                            break
+                    for testimonialDict in testimonialDicts {
+                        let testimo = TestimonialModel()
+                        
+                        testimo.parseData(testimonialDict as! NSDictionary)
+                        
+                        var isExist = false
+                        for test in self.testimonialArray {
+                            if (test.id == testimo.id) {
+                                isExist = true
+                                break
+                            }
+                        }
+                        
+                        if (isExist == false) {
+                            self.testimonialArray.append(testimo)
                         }
                     }
                     
-                    if (isExist == false) {
-                        self.testimonialArray.append(testimo)
-                    }
+                    self.testimonialOffset = self.testimonialOffset + 20
+                    
+                    self.testimonialCollectionView.reloadData()
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-                
-                self.testimonialOffset = self.testimonialOffset + 20
-                self.testimonialCollectionView.reloadData()
-            } else {
-                print("Request failed with error: \(error)")
-            }
-            }.fetchdata()
+                }.fetchdata()
+        }
     }
     
     func updateUI() {
