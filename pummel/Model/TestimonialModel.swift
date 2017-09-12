@@ -17,11 +17,11 @@ class TestimonialModel: NSObject {
     var descript = ""
     var updatedAt = ""
     var createdAt = ""
-    var userCommentUrl = ""
-    var userCommentName = ""
+//    var userCommentUrl = ""
     var userCommentLocation = ""
     
     var imageCache: UIImage? = nil // For scroll animation
+    var nameCache = ""
     
     func parseData(data: NSDictionary) {
         self.id = data["id"] as! Int
@@ -49,15 +49,15 @@ class TestimonialModel: NSObject {
             self.createdAt = createdAt!
         }
         
-        let userCommentUrl = data["userCommentUrl"] as? String
-        if (userCommentUrl != nil && userCommentUrl?.isEmpty == false) {
-            self.userCommentUrl = userCommentUrl!
-        }
-        
-        let userCommentName = data["userCommentName"] as? String
-        if (userCommentName != nil && userCommentName?.isEmpty == false) {
-            self.userCommentName = userCommentName!
-        }
+//        let userCommentUrl = data["userCommentUrl"] as? String
+//        if (userCommentUrl != nil && userCommentUrl?.isEmpty == false) {
+//            self.userCommentUrl = userCommentUrl!
+//        }
+//        
+//        let userCommentName = data["userCommentName"] as? String
+//        if (userCommentName != nil && userCommentName?.isEmpty == false) {
+//            self.userCommentName = userCommentName!
+//        }
         
         let userCommentLocation = data["userCommentLocation"] as? String
         if (userCommentLocation != nil && userCommentLocation?.isEmpty == false) {

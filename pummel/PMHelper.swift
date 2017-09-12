@@ -107,6 +107,42 @@ class PMHeler {
         }
     }
     
+    class func showCoachOrUserView(userID: String) {
+        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            topController.view.makeToastActivity()
+            
+            UserRouter.getUserInfo(userID: userID) { (result, error) in
+                if (error == nil) {
+                    let userInfo = result as! NSDictionary
+                    
+                    UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
+                        topController.view.hideToastActivity()
+                        
+                        if (error == nil) {
+                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
+                            
+                            coachProfileVC.coachDetail = userInfo
+                            
+                            topController.presentViewController(coachProfileVC, animated: true, completion: nil)
+                        } else {
+                            let userProfileVC = UIStoryboard(name: "UserProfile", bundle: nil).instantiateInitialViewController() as! UserProfileViewController
+                            
+                            userProfileVC.userDetail = userInfo
+                            
+                            topController.presentViewController(userProfileVC, animated: true, completion: nil)
+                        }
+                        }.fetchdata()
+                } else {
+                    print("Request failed with error: \(error)")
+                }
+                }.fetchdata()
+        }
+    }
+    
     class func actionWithDelaytime(delayTime: Double, delayAction: Void -> Void) {
         let delay = delayTime * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
