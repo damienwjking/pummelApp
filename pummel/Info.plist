@@ -36,11 +36,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>17</string>
+	<string>18</string>
 	<key>FacebookAppID</key>
-	<string>1501383979941997</string>
+	<string>259753017780610</string>
 	<key>FacebookDisplayName</key>
-	<string>TestLogin</string>
+	<string>Pummel</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -180,7 +182,5 @@
 	</dict>
 	<key>privacy - location usage description</key>
 	<string>Pummel uses your location to give you correct result</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 </dict>
 </plist>
