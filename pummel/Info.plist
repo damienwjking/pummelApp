@@ -180,5 +180,7 @@
 	</dict>
 	<key>privacy - location usage description</key>
 	<string>Pummel uses your location to give you correct result</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
