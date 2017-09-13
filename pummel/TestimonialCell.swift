@@ -23,11 +23,15 @@ class TestimonialCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        self.layer.cornerRadius = 10
+        self.layer.borderWidth = 0.5
+        self.layer.borderColor = UIColor.init(white: 0.8, alpha: 0.25).CGColor
+        
         self.avatarImageView.clipsToBounds = true
         self.avatarImageView.layer.masksToBounds = true
         self.avatarImageView.layer.cornerRadius = 25
         self.avatarImageView.layer.borderColor = UIColor.lightGrayColor().CGColor
-        self.avatarImageView.layer.borderWidth = 0.5
+        self.avatarImageView.layer.borderWidth = 0 // No border
         
         self.avatarImageView.userInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer { (_) in
@@ -69,7 +73,17 @@ class TestimonialCell: UICollectionViewCell {
             self.avatarImageView.image = testimonial.imageCache
         }
         
+        // Check coach
         let userID = String(format: "%ld", testimonial.userCommentId)
+        
+        UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
+            if (error == nil) {
+                self.avatarImageView.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+            } else {
+                self.avatarImageView.layer.borderColor = UIColor.lightGrayColor().CGColor
+            }
+        }.fetchdata()
+        
         UserRouter.getUserInfo(userID: userID) { (result, error) in
             if (error == nil) {
                 let userInfo = result as! NSDictionary
