@@ -17,8 +17,6 @@ class GetStartedViewController: UIViewController {
     @IBOutlet var imNewBT : UIButton!
     @IBOutlet var getStartedBT : UIButton!
     @IBOutlet var backgroundV : UIView!
-    @IBOutlet var imNewWidthCT: NSLayoutConstraint!
-    @IBOutlet var getStartWidthCT: NSLayoutConstraint!
     @IBOutlet var mainTextDistantCT: NSLayoutConstraint!
     
     override func viewDidLoad() {
@@ -41,7 +39,6 @@ class GetStartedViewController: UIViewController {
         self.imNewBT.layer.backgroundColor = UIColor.pmmBrightOrangeColor().CGColor
         self.imNewBT.titleLabel?.font = .pmmMonReg13()
         
-        self.updateUI()
         let defaults = NSUserDefaults.standardUserDefaults()
         if (defaults.objectForKey(k_PM_IS_LOGINED) == nil) {
             // Do Nothing
@@ -111,21 +108,5 @@ class GetStartedViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func updateUI() {
-        let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
-        let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
-        let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-            self.imNewWidthCT.constant = 137.0
-            self.getStartWidthCT.constant = 138.0
-            self.mainTextDistantCT.constant = 50
-        }
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 736.0) {
-            self.imNewWidthCT.constant = 180.0
-            self.getStartWidthCT.constant = 180.0
-            self.mainTextDistantCT.constant = 50
-        }
     }
 }

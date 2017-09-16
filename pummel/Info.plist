@@ -32,11 +32,12 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb259753017780610</string>
+				<string>pummel</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>18</string>
+	<string>20</string>
 	<key>FacebookAppID</key>
 	<string>259753017780610</string>
 	<key>FacebookDisplayName</key>

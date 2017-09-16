@@ -17,9 +17,8 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     var signupVC : SignupViewController = SignupViewController(nibName: "SignupViewController", bundle: nil)
     var isShowLogin : Bool!
     
-    @IBOutlet var loginUnderLineV: UIView!
-    @IBOutlet var resigterUnderLineV: UIView!
-    @IBOutlet var loginRegisterUnderLineV: UIView!
+    @IBOutlet var underLineView: UIView!
+    @IBOutlet weak var underLineViewLeadingContraint: NSLayoutConstraint!
     @IBOutlet var loginBT : UIButton!
     @IBOutlet var signupBT : UIButton!
     @IBOutlet var logoIMV: UIImageView!
@@ -46,7 +45,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         // Add loginVC
         self.addChildViewController(loginVC)
         loginVC.didMoveToParentViewController(self)
-        loginVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width, loginVC.view.frame.size.height)
+        loginVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width,  self.view.frame.size.height - 251)
         loginVC.forgotPasswordBT.addTarget(self, action:#selector(LoginAndRegisterViewController.forgotAction(_:)), forControlEvents:UIControlEvents.TouchUpInside)
         loginVC.signinBT.addTarget(self, action:#selector(LoginAndRegisterViewController.clickSigninAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(loginVC.view)
@@ -54,7 +53,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         // Add registerVC and hidden it for initial
         self.addChildViewController(signupVC)
         signupVC.didMoveToParentViewController(self)
-        signupVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width, signupVC.view.frame.size.height)
+        signupVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width, self.view.frame.size.height - 251)
         signupVC.signupBT.addTarget(self, action:#selector(LoginAndRegisterViewController.clickSignupAction(_:)), forControlEvents:UIControlEvents.TouchUpInside)
         self.view.addSubview(signupVC.view)
         
@@ -105,8 +104,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         if (self.isShowLogin == false) {
             loginVC.view.hidden = true
             signupVC.view.hidden = false
-            self.loginUnderLineV.hidden = true
-            self.resigterUnderLineV.hidden = false
+            self.underLineViewLeadingContraint.constant = self.view.frame.size.width/2
             self.addProfilePhototLB.hidden = false
             self.profileIMV.hidden = true
             self.logoIMV.hidden = false
@@ -118,14 +116,17 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         } else {
             signupVC.view.hidden = true
             loginVC.view.hidden = false
-            self.resigterUnderLineV.hidden = true
-            self.loginUnderLineV.hidden = false
+            self.underLineViewLeadingContraint.constant = 0
             self.addProfilePhototLB.hidden = true
             self.profileIMV.hidden = true
             self.logoIMV.hidden = false
             self.addProfileIMV.hidden = true
             self.addProfileIconIMV.hidden = true
             self.cameraProfileIconIMV.hidden = true
+        }
+        
+        UIView.animateWithDuration(0.3) { 
+            self.view.layoutIfNeeded()
         }
     }
 

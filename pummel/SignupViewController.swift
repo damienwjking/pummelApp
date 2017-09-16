@@ -13,6 +13,8 @@ import FBSDKLoginKit
 
 class SignupViewController: UIViewController, UITextFieldDelegate {
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     @IBOutlet var nameTF : UITextField!
     @IBOutlet var emailTF : UITextField!
     @IBOutlet var passwordTF : UITextField!
@@ -20,7 +22,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var signupBT : UIButton!
     @IBOutlet var continuingLB : UILabel!
     @IBOutlet var signinDistantCT: NSLayoutConstraint!
-    @IBOutlet var scrollViewHeightCT: NSLayoutConstraint!
+//    @IBOutlet var scrollViewHeightCT: NSLayoutConstraint!
     @IBOutlet var passwordAttentionIM: UIImageView!
     @IBOutlet var emailAttentionIM: UIImageView!
     @IBOutlet weak var termOfServiceBT: UIButton!
@@ -74,10 +76,8 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.emailAttentionIM.hidden = true
 
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(SignupViewController.dismissKeyboard)))
-        self.view.userInteractionEnabled = true
-        self.view.addGestureRecognizer(tapGestureRecognizer)
-        
-        self.updateUI()
+        self.scrollView.userInteractionEnabled = true
+        self.scrollView.addGestureRecognizer(tapGestureRecognizer)
         
         self.nameTF.keyboardAppearance = .Dark
         self.passwordTF.keyboardAppearance = .Dark
@@ -95,37 +95,9 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.FBButton.delegate = self
         self.FBButton.readPermissions = ["public_profile", "email", "user_friends"]
         self.FBButton.loginBehavior = .SystemAccount
-        self.view.addSubview(self.FBButton)
+        self.scrollView.addSubview(self.FBButton)
     }
     
-    func updateUI() {
-        let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
-        let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
-        let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-        
-        self.scrollViewHeightCT.constant = SCREEN_MAX_LENGTH
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-//            switch SCREEN_MAX_LENGTH {
-//            case 736.0:
-//                self.signinDistantCT.constant = 165.5
-//                break
-//                
-//            case 667.0:
-//                self.signinDistantCT.constant = 39.5
-//                break
-//                
-//            case 568.0:
-//                self.signinDistantCT.constant = 30
-//                self.scrollViewHeightCT.constant = 320
-//                break
-//                
-//            default:
-//                self.signinDistantCT.constant = 186.0
-//                break
-//            }
-        }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

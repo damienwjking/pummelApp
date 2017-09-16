@@ -13,6 +13,7 @@ import FBSDKShareKit
 import FBSDKLoginKit
 
 class SigninViewController: UIViewController, UITextFieldDelegate {
+    @IBOutlet weak var scrollView: UIScrollView!
 
     @IBOutlet var emailTF : UITextField!
     @IBOutlet var passwordTF : UITextField!
@@ -39,34 +40,8 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         self.signinBT.layer.borderWidth = 0.5
         self.signinBT.layer.borderColor = UIColor.whiteColor().CGColor
         self.signinBT.titleLabel?.font = .pmmMonReg13()
-        self.updateUI()
         self.emailTF.keyboardAppearance = .Dark
         self.passwordTF.keyboardAppearance = .Dark
-    }
-    
-    func updateUI() {
-        let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
-        let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
-        let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-//            switch SCREEN_MAX_LENGTH {
-//            case 736.0:
-//                self.signinDistantCT.constant = 250.0
-//                break
-//            
-//            case 667.0:
-//                self.signinDistantCT.constant = 186.0
-//                break
-//                
-//            case 568.0:
-//                self.signinDistantCT.constant = 80.0
-//                break
-//                
-//            default:
-//                self.signinDistantCT.constant = 186.0
-//                break
-//            }
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -83,7 +58,7 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         self.FBButton.delegate = self
         self.FBButton.readPermissions = ["public_profile", "email", "user_friends"]
         self.FBButton.loginBehavior = .SystemAccount
-        self.view.addSubview(self.FBButton)
+        self.scrollView.addSubview(self.FBButton)
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {

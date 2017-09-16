@@ -57,8 +57,8 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         self.getImageAvatarTextBox()
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -418,6 +418,9 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     func getImageAvatarTextBox() {
+        let avatarImage = UIImage(named: "display-empty.jpg")
+        self.avatarTextBox.image = avatarImage
+        
         ImageRouter.getCurrentUserAvatar(sizeString: widthHeight120, completed: { (result, error) in
             if (error == nil) {
                 let textBoxImage = result as! UIImage
