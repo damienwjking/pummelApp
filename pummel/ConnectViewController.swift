@@ -81,7 +81,8 @@ class ConnectViewController: BaseViewController {
         
         var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -209,7 +210,8 @@ class ConnectViewController: BaseViewController {
         
         var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 self.requestCallBackBT.userInteractionEnabled = true

@@ -144,7 +144,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         } else {
             self.view.makeToastActivity(message: "Saving")
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_BOOK)
             
             var imageData : NSData!
@@ -165,7 +165,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             var tagname = ""
             let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
             tagname = (self.tag?.name?.uppercaseString)!
-            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            parameters = [kUserId:PMHeler.getCurrentID(),
                           kText: textToPost,
                           kUserIdTarget:userIdSelected,
                           kType:"#\(tagname)",
@@ -272,7 +272,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
     
     func getDetail() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {

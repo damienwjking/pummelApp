@@ -79,7 +79,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        currentId = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+        currentId = PMHeler.getCurrentID()
+        
         self.navigationItem.title = kNavEditProfile
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
@@ -382,7 +383,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         }
         
         var prefixC = kPMAPICOACH
-        prefixC.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefixC.appendContentsOf(PMHeler.getCurrentID())
+        
         Alamofire.request(.GET, prefixC)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -440,7 +442,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     func basicInfoUpdate() {
         if (self.checkRuleInputData() == false) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
+            
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
             if (fullNameArr.count > 0) {
@@ -461,7 +464,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
             mixpanel.track("IOS.Profile.EditProfile", properties: properties)
             
-            let param = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            let param = [kUserId:PMHeler.getCurrentID(),
                          kFirstname:firstname,
                          kLastName: lastname,
                          kMobile: mobileContentTF.text!,
@@ -507,14 +510,16 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     
     func trainerInfoUpdate() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
         
-        let param = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+        let param = [kUserId:PMHeler.getCurrentID(),
                      kQualification:qualStr,
                      kAchievement: achiveStr,
                      kWebsiteUrl:websiteUrlTF.text!]
+        
         Alamofire.request(.PUT, prefix, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -575,8 +580,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     }
     
     func setAvatar() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let currentID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+        let currentID = PMHeler.getCurrentID()
         
         ImageRouter.getUserAvatar(userID: currentID, sizeString: widthHeight200, completed: { (result, error) in
             if (error == nil) {
@@ -770,10 +774,13 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 } else {
                     var prefix = kPMAPIUSER
                     let defaults = NSUserDefaults.standardUserDefaults()
-                    prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                    
+                    prefix.appendContentsOf(PMHeler.getCurrentID())
                     prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                    var parameters = [String:AnyObject]()
-                    parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
+                    
+                    let parameters = [kUserId:PMHeler.getCurrentID(),
+                                      kProfilePic: "1"]
+                    
                     Alamofire.upload(
                         .POST,
                         prefix,
@@ -825,10 +832,12 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             // send video by method mutipart to server
             var prefix = kPMAPIUSER
             let defaults = NSUserDefaults.standardUserDefaults()
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPM_PATH_VIDEO)
-            var parameters = [String:AnyObject]()
-            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+            
+            var parameters = [kUserId:PMHeler.getCurrentID(),
+                              kProfileVideo : "1"]
+            
             Alamofire.upload(
                 .POST,
                 prefix,

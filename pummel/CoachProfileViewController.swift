@@ -591,10 +591,8 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     func checkConnect() {
         self.view.makeToastActivity(message: "Loading")
         let prefix = kPMAPICHECKUSERCONNECT
-        let param = [
-            kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-            kCoachId : self.coachDetail[kId]!
-        ]
+        let param = [kUserId: PMHeler.getCurrentID(),
+                     kCoachId : self.coachDetail[kId]!]
         
         self.connectBT.userInteractionEnabled = false
         
@@ -662,10 +660,14 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 self.view.makeToastActivity(message: "Connecting")
                 
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPMAPI_LEAD)
                 prefix.appendContentsOf("/")
-                Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:self.coachDetail[kId]!])
+                
+                let param = [kUserId : PMHeler.getCurrentID(),
+                             kCoachId : self.coachDetail[kId]!]
+                
+                Alamofire.request(.POST, prefix, parameters: param)
                     .responseJSON { response in
                         self.view.hideToastActivity()
                         

@@ -150,10 +150,14 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         }
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
-        Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIds:values])
+        
+        let param = [kUserId:PMHeler.getCurrentID(),
+                     kUserIds:values]
+        
+        Alamofire.request(.POST, prefix, parameters: param as! [String : AnyObject])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value
@@ -172,7 +176,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         activityView.startAnimating()
         self.view.addSubview(activityView)
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)
@@ -225,12 +229,18 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
                             dateFormatter.dateFormat = kFullDateFormat
                             dateFormatter.timeZone = NSTimeZone(name: "UTC")
                             let dayCurrent = dateFormatter.stringFromDate(NSDate())
+                            
                             var prefixT = kPMAPIUSER
-                            prefixT.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                            prefixT.appendContentsOf(PMHeler.getCurrentID())
                             prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
                             prefixT.appendContentsOf("/")
                             prefixT.appendContentsOf(self.messageId as String)
-                            Alamofire.request(.PUT, prefixT, parameters: [kConversationId:self.messageId as String, kLastOpenAt:dayCurrent, kUserId: self.defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+                            
+                            let param = [kConversationId:self.messageId as String,
+                                kLastOpenAt:dayCurrent,
+                                kUserId: PMHeler.getCurrentID()]
+                            
+                            Alamofire.request(.PUT, prefixT, parameters: param)
                                 .responseJSON { response in
                                     if response.response?.statusCode == 200 {
                                         print ("Set lastOpenAt to New")

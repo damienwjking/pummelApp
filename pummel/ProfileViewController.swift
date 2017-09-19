@@ -368,8 +368,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     func getDetail() {
         self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = false
+        
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = true
@@ -511,7 +513,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     func getTestimonial() {
         if (self.isStopGetTestimonial == false) {
-            let userID = self.defaults.stringForKey(k_PM_CURRENT_ID)
+            let userID = PMHeler.getCurrentID()
             
             UserRouter.getTestimonial(userID: userID!, offset: self.testimonialOffset) { (result, error) in
                 if (error == nil) {
@@ -1214,11 +1216,13 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
         let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_VIDEO)
         var parameters = [String:AnyObject]()
         
-        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+        parameters = [kUserId:PMHeler.getCurrentID(),
+                      kProfileVideo : "1"]
+        
         Alamofire.upload(
             .POST,
             prefix,

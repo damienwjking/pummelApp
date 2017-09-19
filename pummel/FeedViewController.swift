@@ -211,7 +211,8 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                         let likeJson = response.result.value as! NSDictionary
                         let rows = likeJson[kRows] as! [NSDictionary]
                         let defaults = NSUserDefaults.standardUserDefaults()
-                        let currentId = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+                        let currentId = PMHeler.getCurrentID()
+                        
                         var like = false
                         for row in rows {
                             if (String(format:"%0.f", row[kUserId]!.doubleValue) == currentId){

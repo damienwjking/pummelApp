@@ -152,11 +152,14 @@ extension BookSessionShareViewController {
         let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
         
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
+            let param = [kUserId : PMHeler.getCurrentID(),
+                         kUserIdRequest : userID]
+            
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_OLD)
             prefix.appendContentsOf("/")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.view.hideToastActivity()
                     if response.response?.statusCode == 200 {
@@ -263,12 +266,15 @@ extension BookSessionShareViewController {
         let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
         
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
+            let param = [kUserId : PMHeler.getCurrentID(),
+                         kUserIdRequest : userID]
+            
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_CURRENT)
             prefix.appendContentsOf("/")
-            print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+            
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.view.hideToastActivity()
                     if response.response?.statusCode == 200 {

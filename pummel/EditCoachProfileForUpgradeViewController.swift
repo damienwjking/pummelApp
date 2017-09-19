@@ -98,7 +98,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         self.updateUI()
         self.getListTags()
         
-        currentId = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+        currentId = PMHeler.getCurrentID()
         self.navigationItem.title = kNavEditProfile
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
@@ -299,17 +299,18 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     func updateLocationCoach() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             
             var locationName = ""
             if (self.location?.name?.isEmpty == false) {
                 locationName = (self.location?.name)!
             }
             
-            let param = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            let param = [kUserId:PMHeler.getCurrentID(),
                          kServiceArea:locationName,
                          kLat:(self.location?.coordinate.latitude)!,
                          kLong:(self.location?.coordinate.longitude)!]
+            
             Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
                 .responseJSON { response in switch response.result {
                 case .Success(_): break
@@ -518,7 +519,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         }
         
         var prefixC = kPMAPICOACH
-        prefixC.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefixC.appendContentsOf(PMHeler.getCurrentID())
+        
         Alamofire.request(.GET, prefixC)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -598,7 +600,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     func callBasicInfoUpdate() {
         if (self.checkRuleInputData() == true) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
@@ -620,7 +622,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
             mixpanel.track("IOS.Profile.EditProfile", properties: properties)
             
-            let userID = self.defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            let userID = PMHeler.getCurrentID()
             
             let gender = (self.genderContentTF.text?.uppercaseString)!
             
@@ -677,10 +679,15 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func trainerInfoUpdate() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
-        Alamofire.request(.PUT, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, "qualifications":qualStr, "achievements": achiveStr])
+        
+        let param = [kUserId:PMHeler.getCurrentID(),
+                     "qualifications":qualStr, "achievements": achiveStr]
+        
+        Alamofire.request(.PUT, prefix, parameters: param)
             .responseJSON { response in
                 self.view.hideToastActivity()
                 if response.response?.statusCode == 200 {
@@ -774,8 +781,11 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func upgradeToCoach() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-        Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String])
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
+        let param = [kUserId:PMHeler.getCurrentID()]
+        
+        Alamofire.request(.PUT, prefix, parameters: param)
             .responseJSON { response in switch response.result {
             case .Success(_):
                 self.defaults.setBool(true, forKey: k_PM_IS_COACH)
@@ -827,7 +837,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                 }
             }).fetchdata()
         } else {
-            let coachID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            let coachID = PMHeler.getCurrentID()
             
             ImageRouter.getCoachAvatar(coachID: coachID, sizeString: widthHeight100, completed: { (result, error) in
                 if (error == nil) {
@@ -1164,11 +1174,11 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
                 
             } else {
                 var prefix = kPMAPIUSER
-                let defaults = NSUserDefaults.standardUserDefaults()
-                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                var parameters = [String:AnyObject]()
-                parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
+                
+                let parameters = [kUserId:PMHeler.getCurrentID(), kProfilePic: "1"]
+                
                 Alamofire.upload(
                     .POST,
                     prefix,

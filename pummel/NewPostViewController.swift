@@ -137,7 +137,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             let defaults = NSUserDefaults.standardUserDefaults()
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf("/posts/")
             
             var imageData : NSData!
@@ -150,8 +150,9 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             
             let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
             
-            var parameters = [String:AnyObject]()
-            parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kText: textPost]
+            var parameters = [kUserId:PMHeler.getCurrentID(),
+                              kText: textPost]
+            
             Alamofire.upload(
                 .POST,
                 prefix,

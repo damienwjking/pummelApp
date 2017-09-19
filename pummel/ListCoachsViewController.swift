@@ -104,10 +104,14 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     func showAlertMovetoOldAction(userID:String) {
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_OLD)
             prefix.appendContentsOf("/")
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+            
+            let param = [kUserId:PMHeler.getCurrentID(),
+                         kUserIdRequest:userID]
+            
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.view.hideToastActivity()
                     if response.response?.statusCode == 200 {
@@ -128,11 +132,14 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     func showAlertMovetoCurrentAction(userID:String,typeGroup:Int) {
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_CURRENT)
             prefix.appendContentsOf("/")
-            print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-            Alamofire.request(.PUT, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIdRequest:userID])
+            
+            let param = [kUserId:PMHeler.getCurrentID(),
+                         kUserIdRequest:userID]
+            
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.view.hideToastActivity()
                     if response.response?.statusCode == 200 {

@@ -254,10 +254,11 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                     
                                     if (self.cameraProfileIconIMV.hidden) {
                                         var prefix = kPMAPIUSER
-                                        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                                        prefix.appendContentsOf(PMHeler.getCurrentID())
                                         prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                                        var parameters = [String:AnyObject]()
-                                        parameters = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
+                                        var parameters = [kUserId:PMHeler.getCurrentID(),
+                                            kProfilePic: "1"]
+                                        
                                         Alamofire.upload(
                                             .POST,
                                             prefix,
@@ -327,7 +328,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                         FBSDKAppEvents.logEvent("Register")
                                         
                                         self.updateCookies(response)
-                                        let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
+                                        let currentId = String(format:"%0.f", JSON!.objectForKey(kUserId)!.doubleValue)
                                         self.defaults.setObject(true, forKey: k_PM_IS_LOGINED)
                                         self.defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
                                         

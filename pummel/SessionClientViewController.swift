@@ -145,7 +145,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             
 //            
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
             prefix.appendContentsOf(String(self.offset))
             

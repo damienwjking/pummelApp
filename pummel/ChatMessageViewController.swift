@@ -110,9 +110,10 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
 
     func getArrayChat() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
+        
         if (messageId != nil) {
             prefix.appendContentsOf(self.messageId as String)
             prefix.appendContentsOf(kPM_PARTH_MESSAGE)
@@ -201,31 +202,6 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             return UITableViewAutomaticDimension
         }
     }
-    
-//    func moveToOld() {
-//        let move = { (action:UIAlertAction!) -> Void in
-//            self.view.makeToast(message: "Setting")
-//            var prefix = kPMAPIUSER
-//            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
-//            prefix.appendContentsOf(kPMAPI_LEAD)
-//            prefix.appendContentsOf("/")
-//            Alamofire.request(.POST, prefix, parameters: [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, kCoachId:self.userIdTarget])
-//                .responseJSON { response in
-//                    self.view.hideToastActivity()
-//                    if response.response?.statusCode == 200 {
-//                    }
-//            }
-//        }
-//        
-//        let selectCancle = { (action:UIAlertAction!) -> Void in
-//        }
-//        
-//        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-//        alertController.addAction(UIAlertAction(title: kMoveToOld, style: UIAlertActionStyle.Destructive, handler: move))
-//        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: selectCancle))
-//        
-//        self.presentViewController(alertController, animated: true) { }
-//    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
@@ -468,10 +444,14 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         values = (self.typeCoach == true) ? [coachId] : [userIdTarget as String]
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
-        Alamofire.request(.POST, prefix, parameters: [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kUserIds:values])
+        
+        let param = [kUserId : PMHeler.getCurrentID(),
+                     kUserIds : values]
+        
+        Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value
@@ -491,13 +471,17 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     func addMessageToExistConverstation(){
         var prefix = kPMAPIUSER
-        
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)
         prefix.appendContentsOf(kPM_PARTH_MESSAGE_V2)
-        Alamofire.request(.POST, prefix, parameters: [kConversationId:self.messageId, kText:textBox.text, "file":"nodata".dataUsingEncoding(NSUTF8StringEncoding)!])
+        
+        let param = [kConversationId : self.messageId,
+                     kText : textBox.text,
+                     "file" : "nodata".dataUsingEncoding(NSUTF8StringEncoding)!]
+        
+        Alamofire.request(.POST, prefix, parameters: param as! [String : AnyObject])
             .responseJSON { response in
                 self.isSending = false
                 if response.response?.statusCode == 200 {

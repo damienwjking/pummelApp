@@ -74,7 +74,7 @@ enum FeedRouter: URLRequestConvertible {
     
     func fetchdata() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+        let currentUserID = PMHeler.getCurrentID()
         
         switch self {
         case .getListFeed:

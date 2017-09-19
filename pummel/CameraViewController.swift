@@ -406,12 +406,13 @@ class CameraViewController: UIViewController {
         
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_VIDEO)
         var parameters = [String:AnyObject]()
         
-        parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfileVideo : "1"]
+        parameters = [kUserId : PMHeler.getCurrentID(),
+                      kProfileVideo : "1"]
+        
         Alamofire.upload(
             .POST,
             prefix,

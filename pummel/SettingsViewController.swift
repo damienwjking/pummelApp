@@ -190,17 +190,18 @@ class SettingsViewController: BaseViewController {
     func updateLocationCoach() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             
             var locationName = ""
             if (self.location?.name?.isEmpty == false) {
                 locationName = (self.location?.name)!
             }
             
-            let param = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            let param = [kUserId:PMHeler.getCurrentID(),
                          kServiceArea:locationName,
                          kLat:(self.location?.coordinate.latitude)!,
                          kLong:(self.location?.coordinate.longitude)!]
+            
             Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
                 .responseJSON { response in switch response.result {
                 case .Success(_): break
@@ -219,21 +220,28 @@ class SettingsViewController: BaseViewController {
             self.defaults.setObject(self.newLeadCell.switchBT.on, forKey: kNewConnections)
             self.defaults.setObject(self.messageCell.switchBT.on, forKey: kMessage)
             self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
+            
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
+            
             self.view.makeToastActivity(message: "Saving")
             
-            let param = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            let param = [kUserId:PMHeler.getCurrentID(),
                          kDistance: self.distanceSliderValue,
                          kState: self.mapState,
                          kCity: self.mapCity]
+            
             Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
                 .responseJSON { response in switch response.result {
                 case .Success(_):
                     var prefixUser = kPMAPIUSER
-                    prefixUser.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                    prefixUser.appendContentsOf(PMHeler.getCurrentID())
                     prefixUser.appendContentsOf("/notification")
-                    let paramUser = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, "messageNotification": self.messageCell.switchBT.on ? "1" : "0", "newleadNotification": self.newLeadCell.switchBT.on ? "1" : "0", "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
+                    
+                    let paramUser = [kUserId:PMHeler.getCurrentID(),
+                        "messageNotification": self.messageCell.switchBT.on ? "1" : "0",
+                        "newleadNotification": self.newLeadCell.switchBT.on ? "1" : "0",
+                        "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
                     
                     Alamofire.request(.PUT, prefixUser, parameters: paramUser)
                         .responseJSON { response in
@@ -249,11 +257,16 @@ class SettingsViewController: BaseViewController {
         } else {
             self.defaults.setObject(self.messageCell.switchBT.on, forKey: kMessage)
             self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
+            
             self.view.makeToastActivity(message: "Saving")
+            
             var prefixUser = kPMAPIUSER
-            prefixUser.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefixUser.appendContentsOf(PMHeler.getCurrentID())
             prefixUser.appendContentsOf("/notification")
-            let paramUser = [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String, "messageNotification": self.messageCell.switchBT.on ? "1" : "0", "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
+            
+            let paramUser = [kUserId:PMHeler.getCurrentID(),
+                             "messageNotification": self.messageCell.switchBT.on ? "1" : "0",
+                             "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
             
             Alamofire.request(.PUT, prefixUser, parameters: paramUser)
                 .responseJSON { response in
@@ -411,13 +424,13 @@ class SettingsViewController: BaseViewController {
             self.defaults.setObject(metric, forKey: kUnit)
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             
-            Alamofire.request(.PUT, prefix, parameters:
-                [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-                    kFirstname:self.defaults.objectForKey(kFirstname) as! String,
-                    kUnits: metric,
-                ])
+            let param = [kUserId:PMHeler.getCurrentID(),
+                         kFirstname:self.defaults.objectForKey(kFirstname) as! String,
+                         kUnits: metric]
+            
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.navigationItem.rightBarButtonItem?.enabled = true
                     self.view.hideToastActivity()
@@ -432,13 +445,13 @@ class SettingsViewController: BaseViewController {
             self.defaults.setObject(imperial, forKey: kUnit)
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             
-            Alamofire.request(.PUT, prefix, parameters:
-                [kUserId:self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-                    kFirstname:self.defaults.objectForKey(kFirstname) as! String,
-                    kUnits: imperial,
-                ])
+            let param = [kUserId:PMHeler.getCurrentID(),
+                         kFirstname:self.defaults.objectForKey(kFirstname) as! String,
+                         kUnits: imperial]
+            
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.navigationItem.rightBarButtonItem?.enabled = true
                     self.view.hideToastActivity()
@@ -457,7 +470,7 @@ class SettingsViewController: BaseViewController {
         let alertController = UIAlertController(title: kApply, message: kWantToBecomeACoach, preferredStyle: .Alert)
         let OKAction = UIAlertAction(title: kContinue, style: .Default) { (action) in
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             
             self.performSegueWithIdentifier("upgradeCoach", sender: nil)
         }
@@ -838,7 +851,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func configLocationCell(cell: SettingLocationTableViewCell) {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -865,7 +879,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func configDistanceCell(cell: SettingMaxDistanceTableViewCell) {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):

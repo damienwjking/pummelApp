@@ -44,7 +44,7 @@ class LogSessionSelectUserViewController: BaseViewController {
     
     func loadDataWithPrefix(prefixAPI:String) {
         var prefix = kPMAPICOACHES
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(prefixAPI)
         if prefixAPI == kPMAPICOACH_LEADS {
             prefix.appendContentsOf("\(offsetNew)")

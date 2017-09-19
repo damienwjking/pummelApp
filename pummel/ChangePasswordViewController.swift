@@ -49,11 +49,16 @@ class ChangePasswordViewController : BaseViewController {
         if self.newPassTF.text == self.reTypePassTF.text {
             self.view.makeToastActivity()
             
-            var prefix = kPMAPIUSER
             let defaults = NSUserDefaults.standardUserDefaults()
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPMAPI_CHANGEPASS)
-            Alamofire.request(.PUT, prefix, parameters: [kPassword:self.curPassTF.text!, kPasswordNew: self.newPassTF.text!])
+            
+            let param = [kPassword:self.curPassTF.text!,
+                         kPasswordNew: self.newPassTF.text!]
+            
+            Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.view.hideToastActivity()
                     print(response.response?.statusCode)

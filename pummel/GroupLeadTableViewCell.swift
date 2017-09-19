@@ -147,7 +147,9 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
             prefix = kPMAPIUSER
         }
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        
+        prefix.appendContentsOf(PMHeler.getCurrentID())
+        
         if self.typeGroup == TypeGroup.NewLead {
             prefix.appendContentsOf(kPMAPICOACH_LEADS)
         } else if self.typeGroup == TypeGroup.Current {

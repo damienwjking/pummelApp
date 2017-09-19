@@ -165,10 +165,11 @@ class MessageViewController: BaseViewController {
     
     func getMessagetAtSaveIndexPathScrollView() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
         prefix.appendContentsOf(String((self.saveIndexPath?.row)!))
         prefix.appendContentsOf(kPM_PATH_LIMIT_ONE)
+        
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
@@ -199,7 +200,7 @@ class MessageViewController: BaseViewController {
     
     func getListLead() {
         var prefix = kPMAPICOACHES
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPMAPICOACH_LEADS)
         
         Alamofire.request(.GET, prefix)
@@ -224,10 +225,12 @@ class MessageViewController: BaseViewController {
                 self.view.makeToastActivity(message: "Loading")
             }
             isLoadingMessage = true
+            
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
             prefix.appendContentsOf(String(offset))
+            
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     switch response.result {
@@ -288,9 +291,8 @@ class MessageViewController: BaseViewController {
             let targetID: String? = message["targetId"] as? String
             
             if (targetID == nil || targetID?.isEmpty == true) {
-                let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(currentUserid)
+                prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_CONVERSATION)
                 prefix.appendContentsOf("/")
                 prefix.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
@@ -304,7 +306,7 @@ class MessageViewController: BaseViewController {
                         let conversationMe : NSDictionary!
                         let conversationTarget: NSDictionary!
                         let converstationTemp = conversationsUserArray[0] as! NSDictionary
-                        if (String(format:"%0.f", converstationTemp[kUserId]!.doubleValue) == self.defaults.objectForKey(k_PM_CURRENT_ID) as! String) {
+                        if (String(format:"%0.f", converstationTemp[kUserId]!.doubleValue) == PMHeler.getCurrentID()) {
                             conversationMe = conversationsUserArray[0] as! NSDictionary
                             conversationTarget = conversationsUserArray[1]  as! NSDictionary
                         } else {
@@ -382,7 +384,7 @@ class MessageViewController: BaseViewController {
             
             // Get message
             var prefixT = kPMAPIUSER
-            prefixT.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefixT.appendContentsOf(PMHeler.getCurrentID())
             prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
             prefixT.appendContentsOf("/")
             prefixT.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
@@ -533,7 +535,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         if (tableView == listMessageTB && arrayMessages.count != 0) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kMessageTableViewCell, forIndexPath: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
-            let currentUserid = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            let currentUserid = PMHeler.getCurrentID()
             
             // TargetID
             let targerID = message["targetId"] as? String
@@ -659,13 +661,13 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         let message = arrayMessages[indexPath.row]
         let messageId = String(format:"%0.f", message[kId]!.doubleValue)
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION_V2)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(messageId)
         
         let param = [kConversationId:messageId,
-                     kUserId: defaults.objectForKey(k_PM_CURRENT_ID) as! String]
+                     kUserId: PMHeler.getCurrentID()]
         
         self.view.makeToastActivity(message: "Loading")
         Alamofire.request(.PUT, prefix, parameters: param)
@@ -862,14 +864,14 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         let lead = self.arrayListLead[indexPath.row]
                         let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
                         
-                        let param = [kUserId: self.defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                        let param = [kUserId: PMHeler.getCurrentID(),
                             kUserIdRequest: targetUserId]
                         
                         var prefix = kPMAPICOACHES
-                        prefix.appendContentsOf(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                        prefix.appendContentsOf(PMHeler.getCurrentID())
                         prefix.appendContentsOf(kPMAPICOACH_CURRENT)
                         prefix.appendContentsOf("/")
-                        print(self.defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                        
                         Alamofire.request(.PUT, prefix, parameters: param)
                             .responseJSON { response in
                                 self.view.hideToastActivity()

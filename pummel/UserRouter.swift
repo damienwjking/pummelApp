@@ -70,11 +70,11 @@ enum UserRouter: URLRequestConvertible {
     
     var path: String {
         let defaults = NSUserDefaults.standardUserDefaults()
+        let currentUserID = PMHeler.getCurrentID()
         
         var prefix = ""
         switch self {
         case .getCurrentUserInfo:
-            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
             prefix = kPMAPIUSER + currentUserID
             
         case .getUserInfo(let userID, _):
@@ -87,12 +87,10 @@ enum UserRouter: URLRequestConvertible {
             prefix = kPMAPIAUTHENTICATEFACEBOOK
             
         case .getUpcomingSession(let offset, _):
-            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
             let offsetString = String(format: "%ld", offset)
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_UPCOMING_SESSION + offsetString
             
         case .getCompletedSession(let offset, _):
-            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
             let offsetString = String(format: "%ld", offset)
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_COMPLETED_SESSION + offsetString
             
@@ -104,7 +102,6 @@ enum UserRouter: URLRequestConvertible {
             prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL
             
         case .getFollowCoach (let offset, _):
-            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
             let offsetString = String(format: "%ld", offset)
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_USERCOACH_OFFSET + offsetString
             
@@ -115,7 +112,7 @@ enum UserRouter: URLRequestConvertible {
     
     var param : [String: AnyObject]? {
         var param : [String : AnyObject] = [:]
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let currentUserID = PMHeler.getCurrentID()
         
         switch self {
         case .authenticateFacebook(let fbID, let email, let firstName, let lastName, let avatarURL, let gender, _):
@@ -144,8 +141,6 @@ enum UserRouter: URLRequestConvertible {
             }
             
         case .postTestimonial(let userID, let description, let rating, _):
-            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
-            
             param["userId"] = userID
             param["userCommentId"] = currentUserID
             param["description"] = description
@@ -367,7 +362,7 @@ enum UserRouter: URLRequestConvertible {
         
         // Send token
         if ((defaults.objectForKey(k_PM_PUSH_TOKEN)) != nil) {
-            let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
+            let currentId = PMHeler.getCurrentID()
             let deviceTokenString = defaults.objectForKey(k_PM_PUSH_TOKEN) as! String
             
             let param = [kUserId:currentId,

@@ -407,7 +407,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         } else {
             self.view.makeToastActivity(message: "Saving")
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             
             var imageData : NSData!
             let type : String! = imageJpeg
@@ -419,7 +419,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                     userIdSelected = "\(val)"
                 }
                 prefix = kPMAPICOACH
-                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_LOG_ACTIVITIES_COACH)
             } else {
                 prefix.appendContentsOf(kPM_PATH_LOG_ACTIVITIES_USER)
@@ -441,7 +441,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             }
             
             let parameters = [
-                kUserId      :defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+                kUserId      :PMHeler.getCurrentID(),
                 kText        : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
                 kType        :String(format: "#%@", (self.tag.name?.uppercaseString)!),
                 kIntensity   : self.intensitySelected,
@@ -621,7 +621,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     
     func getDetail() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+        prefix.appendContentsOf(PMHeler.getCurrentID())
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {

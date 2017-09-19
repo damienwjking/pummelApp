@@ -195,7 +195,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         if (self.userInfo == nil) {
             var prefix = kPMAPIUSER
             let defaults = NSUserDefaults.standardUserDefaults()
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
+            
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
@@ -378,7 +379,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         if (self.checkRuleInputData() == false) {
             var prefix = kPMAPIUSER
             let defaults = NSUserDefaults.standardUserDefaults()
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
+            
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
             if (fullNameArr.count > 0) {
@@ -402,23 +404,23 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             let weightString = weightContentTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
             let heightString = heightContentTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
             
-            let param =
-                (dobContentTF.text! == "") ? [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
-                 kFirstname:firstname,
-                 kLastName: lastname,
-                 kMobile: mobileContentTF.text!,
-                 kDob: dobContentTF.text!,
-                 kGender:(genderContentTF.text?.uppercaseString)!,
-                 kBio: aboutContentTV.text,
-                 kWeight: weightString,
-                 kHeight: heightString,
-                 kFacebookUrl:facebookUrlTF.text!,
-                 kTwitterUrl:twitterUrlTF.text!,
-                 kInstagramUrl:instagramUrlTF.text!,
-                 kEmergencyName:emergencyNameTF.text!,
-                 kEmergencyMobile:emergencyMobileTF.text!] :
-                   
-                    [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String,
+            let param = (dobContentTF.text! == "") ?
+                    [kUserId:PMHeler.getCurrentID(),
+                     kFirstname:firstname,
+                     kLastName: lastname,
+                     kMobile: mobileContentTF.text!,
+                     kDob: dobContentTF.text!,
+                     kGender:(genderContentTF.text?.uppercaseString)!,
+                     kBio: aboutContentTV.text,
+                     kWeight: weightString,
+                     kHeight: heightString,
+                     kFacebookUrl:facebookUrlTF.text!,
+                     kTwitterUrl:twitterUrlTF.text!,
+                     kInstagramUrl:instagramUrlTF.text!,
+                     kEmergencyName:emergencyNameTF.text!,
+                     kEmergencyMobile:emergencyMobileTF.text!] :
+                    
+                    [kUserId:PMHeler.getCurrentID(),
                      kFirstname:firstname,
                      kLastName: lastname,
                      kMobile: mobileContentTF.text!,
@@ -526,10 +528,12 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             }  else {
                 var prefix = kPMAPIUSER
                 let defaults = NSUserDefaults.standardUserDefaults()
-                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                var parameters = [String:AnyObject]()
-                parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
+                
+                var parameters = [kUserId:PMHeler.getCurrentID(),
+                                  kProfilePic: "1"]
+                
                 Alamofire.upload(
                     .POST,
                     prefix,
@@ -607,9 +611,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 }
             }).fetchdata()
         } else {
-            let coachID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
-            
-            ImageRouter.getCoachAvatar(coachID: coachID, sizeString: widthHeight250, completed: { (result, error) in
+            ImageRouter.getCurrentUserAvatar(sizeString: widthHeight250, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
@@ -662,10 +664,12 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             } else {
                 var prefix = kPMAPIUSER
                 let defaults = NSUserDefaults.standardUserDefaults()
-                prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+                prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                var parameters = [String:AnyObject]()
-                parameters = [kUserId:defaults.objectForKey(k_PM_CURRENT_ID) as! String, kProfilePic: "1"]
+                
+                var parameters = [kUserId:PMHeler.getCurrentID(),
+                                  kProfilePic: "1"]
+                
                 Alamofire.upload(
                     .POST,
                     prefix,
