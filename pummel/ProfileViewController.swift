@@ -10,11 +10,12 @@
 
 
 import UIKit
-import Alamofire
-import Mixpanel
 import AVKit
-import AVFoundation
+import Mixpanel
 import PhotosUI
+import MessageUI
+import Alamofire
+import AVFoundation
 
 enum UploadVideoStatus: Int {
     case normal, uploading
@@ -102,6 +103,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     @IBOutlet weak var testimonialView: UIView!
     @IBOutlet weak var testimonialTitle: UILabel!
+    @IBOutlet weak var testimonialInviteButton: UIButton!
     @IBOutlet weak var testimonialCollectionView: UICollectionView!
     @IBOutlet weak var testimonialViewHeightConstraint: NSLayoutConstraint!
     
@@ -156,58 +158,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.bigBigIndicatorView.alpha = 0.005
-        self.bigIndicatorView.alpha = 0.01
-        self.medIndicatorView.alpha = 0.025
-        self.smallIndicatorView.alpha = 0.05
-        
-        self.bigBigIndicatorView.layer.cornerRadius = 374/2
-        self.bigIndicatorView.layer.cornerRadius = 312/2
-        self.medIndicatorView.layer.cornerRadius = 240/2
-        self.smallIndicatorView.layer.cornerRadius = 180/2
-        
-        self.bigBigIndicatorView.clipsToBounds = true
-        self.bigIndicatorView.clipsToBounds = true
-        self.medIndicatorView.clipsToBounds = true
-        self.smallIndicatorView.clipsToBounds = true
-        
-        self.locationView.layer.cornerRadius = 2
-        self.locationView.layer.masksToBounds = true
-        
-        self.connectV.layer.cornerRadius = 55/2
-        self.connectV.clipsToBounds = true
-        self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
-        self.addressLB.font = .pmmMonReg11()
-        self.interestLB.font = .pmmMonReg11()
-        self.specialitiesLB.font = .pmmMonLight11()
-        self.qualificationTV.font = .pmmMonLight13()
-        self.socailLB.font = .pmmMonLight11()
-        self.postLB.font = .pmmMonLight11()
-        self.aboutLB.font = .pmmMonLight11()
-        self.aboutTV.backgroundColor = .clearColor()
-        self.aboutTV.font = .pmmMonLight13()
-        self.aboutTV.scrollEnabled = false
-        self.qualificationTV.backgroundColor = .clearColor()
-        self.qualificationTV.font = .pmmMonLight13()
-        self.qualificationTV.scrollEnabled = false
-        self.facebookBT.titleLabel?.font = .pmmMonReg11()
-        self.twiterBT.titleLabel?.font = .pmmMonReg11()
-        self.instagramBT.titleLabel?.font = .pmmMonReg11()
-        self.avatarIMV.layer.cornerRadius = 125/2
-        self.coachBorderV.layer.cornerRadius = 135/2
-        self.coachBorderBackgroundV.layer.cornerRadius = 129/2
-        self.avatarIMV.clipsToBounds = true
-        self.coachBorderBackgroundV.hidden = true
-        self.coachBorderV.hidden = true
-        self.scrollView.scrollsToTop = false
-        self.interestCollectionView.delegate = self
-        self.interestCollectionView.dataSource = self
-        
-        self.businessIMV.hidden = true
-        self.aboutLeftDT.constant = 10
-        self.businessIMV.layer.cornerRadius = 50
-        self.businessIMV.clipsToBounds = true
-        self.webTV.delegate = self
+        self.setupUI()
         
         self.interestFlowLayout.smaller = true
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
@@ -228,7 +179,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.ratingLB.font = .pmmMonLight10()
         self.ratingContentLB.font = .pmmMonReg16()
         self.connectionLB.font = .pmmMonLight10()
-        self.connectionLB.text = (defaults.boolForKey(k_PM_IS_COACH)) ? "RATING" : "SESSIONS"
+        self.connectionLB.text = (self.defaults.boolForKey(k_PM_IS_COACH)) ? "RATING" : "SESSIONS"
         self.connectionContentLB.font = .pmmMonReg16()
         self.postNumberLB.font = .pmmMonLight10()
         self.postNumberContentLB.font = .pmmMonReg16()
@@ -272,11 +223,15 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.cameraButton.userInteractionEnabled = true
             self.coachBorderV.alpha = 1
             self.coachBorderBackgroundV.alpha = 1
+            
+            self.testimonialInviteButton.hidden = false
         } else {
             self.cameraButton.alpha = 0
             self.cameraButton.userInteractionEnabled = false
             self.coachBorderV.alpha = 0
             self.coachBorderBackgroundV.alpha = 0
+            
+            self.testimonialInviteButton.hidden = true
         }
     }
     
@@ -297,6 +252,63 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             // Remove video view
             self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
         }
+    }
+    
+    func setupUI() {
+        self.bigBigIndicatorView.alpha = 0.005
+        self.bigIndicatorView.alpha = 0.01
+        self.medIndicatorView.alpha = 0.025
+        self.smallIndicatorView.alpha = 0.05
+        
+        self.bigBigIndicatorView.layer.cornerRadius = 374/2
+        self.bigIndicatorView.layer.cornerRadius = 312/2
+        self.medIndicatorView.layer.cornerRadius = 240/2
+        self.smallIndicatorView.layer.cornerRadius = 180/2
+        
+        self.bigBigIndicatorView.clipsToBounds = true
+        self.bigIndicatorView.clipsToBounds = true
+        self.medIndicatorView.clipsToBounds = true
+        self.smallIndicatorView.clipsToBounds = true
+        
+        self.locationView.layer.cornerRadius = 2
+        self.locationView.layer.masksToBounds = true
+        
+        self.connectV.layer.cornerRadius = 55/2
+        self.connectV.clipsToBounds = true
+        self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
+        self.addressLB.font = .pmmMonReg11()
+        self.interestLB.font = .pmmMonReg11()
+        self.specialitiesLB.font = .pmmMonLight11()
+        self.qualificationTV.font = .pmmMonLight13()
+        self.socailLB.font = .pmmMonLight11()
+        self.postLB.font = .pmmMonLight11()
+        self.aboutLB.font = .pmmMonLight11()
+        self.aboutTV.backgroundColor = .clearColor()
+        self.aboutTV.font = .pmmMonLight13()
+        self.aboutTV.scrollEnabled = false
+        self.qualificationTV.backgroundColor = .clearColor()
+        self.qualificationTV.font = .pmmMonLight13()
+        self.qualificationTV.scrollEnabled = false
+        self.facebookBT.titleLabel?.font = .pmmMonReg11()
+        self.twiterBT.titleLabel?.font = .pmmMonReg11()
+        self.instagramBT.titleLabel?.font = .pmmMonReg11()
+        self.testimonialTitle.font = .pmmMonLight11()
+        self.testimonialInviteButton.titleLabel?.font = .pmmMonReg11()
+        self.avatarIMV.layer.cornerRadius = 125/2
+        self.coachBorderV.layer.cornerRadius = 135/2
+        self.coachBorderBackgroundV.layer.cornerRadius = 129/2
+        self.avatarIMV.clipsToBounds = true
+        self.coachBorderBackgroundV.hidden = true
+        self.coachBorderV.hidden = true
+        self.scrollView.scrollsToTop = false
+        self.interestCollectionView.delegate = self
+        self.interestCollectionView.dataSource = self
+        
+        self.businessIMV.hidden = true
+        self.aboutLeftDT.constant = 10
+        self.businessIMV.layer.cornerRadius = 50
+        self.businessIMV.clipsToBounds = true
+        self.webTV.delegate = self
     }
     
     func profileGetNewDetail() {
@@ -989,6 +1001,48 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
+    @IBAction func testimonialInviteButtonClicked(sender: AnyObject) {
+        let userID = self.coachDetail[kId] as? Int
+        if (userID != nil) {
+            let userIDString = String(format: "%ld", userID!)
+            
+            let SMSAction = UIAlertAction(title: kSMS, style: .Destructive, handler: { (_) in
+                if MFMessageComposeViewController.canSendText() {
+                    let messageCompose = MFMessageComposeViewController()
+                    messageCompose.messageComposeDelegate = self
+                    
+                    messageCompose.body = "Please give me a testimonial : pummel://givetestimonial/coachId=\(userIDString)"
+                    
+                    self.presentViewController(messageCompose, animated: true, completion: nil)
+                } else {
+                    PMHeler.showDoAgainAlert()
+                }
+            })
+            
+            let mailAction = UIAlertAction(title: kEmail.localizedCapitalizedString, style: .Destructive, handler: { (_) in
+                if MFMailComposeViewController.canSendMail() {
+                    let mail = MFMailComposeViewController()
+                    mail.mailComposeDelegate = self
+                    
+                    mail.setSubject("Please give me a testimonial")
+                    mail.setMessageBody("Please give me a testimonial : pummel://givetestimonial/coachId=\(userIDString)", isHTML: true)
+                    self.presentViewController(mail, animated: true, completion: nil)
+                } else {
+                    PMHeler.showDoAgainAlert()
+                }
+            })
+            
+            let cancelAction = UIAlertAction(title: kCancle, style: .Cancel, handler: nil)
+            
+            let alertViewController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+            alertViewController.addAction(SMSAction)
+            alertViewController.addAction(mailAction)
+            alertViewController.addAction(cancelAction)
+            
+            self.presentViewController(alertViewController, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
         self.isVideoPlaying = !self.isVideoPlaying
         self.videoPlayerSetPlay(self.isVideoPlaying)
@@ -1221,7 +1275,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
 }
 
-// MARK: UIImagePickerControllerDelegate
+// MARK: - UIImagePickerControllerDelegate
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let type = info[UIImagePickerControllerMediaType] as! String
@@ -1245,18 +1299,34 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     }
 }
 
+// MARK: - Mail + Message
+extension ProfileViewController: MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
 // MARK: - UICollectionViewDataSource
 extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.interestCollectionView) {
             return tags.count
         } else if (collectionView == self.testimonialCollectionView) {
-            if (self.testimonialArray.count > 0) {
-                
-                self.testimonialViewHeightConstraint.constant = 324
+            if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                if (self.testimonialArray.count > 0) {
+                    self.testimonialViewHeightConstraint.constant = 324
+                } else {
+                    // Title: 44, Cell 280 --> 324
+                    self.testimonialViewHeightConstraint.constant = 44
+                }
             } else {
                 self.testimonialViewHeightConstraint.constant = 0
             }
+            
             
             return self.testimonialArray.count
         } else {
@@ -1303,6 +1373,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             
             return cellSize
         } else if (collectionView == self.testimonialCollectionView) {
+            // Title: 44, Cell 280
             return CGSize(width: 175, height: 280)
         } else {
             return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)

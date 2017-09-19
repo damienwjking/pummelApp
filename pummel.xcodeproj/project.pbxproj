@@ -52,6 +52,8 @@
 		BA2FEA701F4F399200146529 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */; };
 		BA48F9BF1EF23A0400F55F05 /* DiskRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
+		BA54913C1F6FA29D001A2DEF /* PostTestimonial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA54913B1F6FA29D001A2DEF /* PostTestimonial.storyboard */; };
+		BA54913E1F6FB0C7001A2DEF /* PostTestimonialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA54913D1F6FB0C7001A2DEF /* PostTestimonialViewController.swift */; };
 		BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageRouter.swift */; };
 		BA8884C11EEA4F1800FFD734 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C01EEA4F1800FFD734 /* Camera.storyboard */; };
 		BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */; };
@@ -270,6 +272,8 @@
 		BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateBridgFile.m; sourceTree = "<group>"; };
 		BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskRecorder.swift; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
+		BA54913B1F6FA29D001A2DEF /* PostTestimonial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PostTestimonial.storyboard; sourceTree = "<group>"; };
+		BA54913D1F6FB0C7001A2DEF /* PostTestimonialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTestimonialViewController.swift; sourceTree = "<group>"; };
 		BA81A4421EE68CA5002D626E /* ImageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRouter.swift; sourceTree = "<group>"; };
 		BA8884C01EEA4F1800FFD734 /* Camera.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square_kwickie_thumnail_gradient.png; sourceTree = "<group>"; };
@@ -612,6 +616,7 @@
 				E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */,
 				F98D5DA81E417764002C0C7A /* ChangePasswordViewController.swift */,
 				BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */,
+				BA54913D1F6FB0C7001A2DEF /* PostTestimonialViewController.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -760,6 +765,7 @@
 				9C8FF4111C8476C800449A54 /* Main.storyboard */,
 				9CA7C07A1C97FCEC00BC9814 /* Client.storyboard */,
 				F9ABEAD01DC21FA20084B70E /* Profile.storyboard */,
+				BA54913B1F6FA29D001A2DEF /* PostTestimonial.storyboard */,
 				BA8884C01EEA4F1800FFD734 /* Camera.storyboard */,
 				F9ABEAE21DC4B4F50084B70E /* Session.storyboard */,
 				F96847101E06B726009EB06C /* LogSession.storyboard */,
@@ -1094,6 +1100,7 @@
 				F9FE14581CEBD29B004ABE34 /* FSAlbumViewCell.xib in Resources */,
 				BA0314911E155FC000982622 /* intensity.png in Resources */,
 				F9FE14611CEBD29B004ABE34 /* rotatecamera@3x.png in Resources */,
+				BA54913C1F6FA29D001A2DEF /* PostTestimonial.storyboard in Resources */,
 				BA8884C11EEA4F1800FFD734 /* Camera.storyboard in Resources */,
 				F9ADEFDB1CBF868D00991D68 /* tour1@3x.jpg in Resources */,
 				9CA7C07B1C97FCEC00BC9814 /* Client.storyboard in Resources */,
@@ -1235,6 +1242,7 @@
 				E8C444EA1E20AA19006F0548 /* ListCoachsViewController.swift in Sources */,
 				BA2FEA6C1F4F388D00146529 /* CreateBridgFile.m in Sources */,
 				F9EAE8E91D6EFC3400FD32BE /* SettingSmallSeperateTableViewCell.swift in Sources */,
+				BA54913E1F6FB0C7001A2DEF /* PostTestimonialViewController.swift in Sources */,
 				F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */,
 				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
 				F9827EC11CBC27CF00841BF1 /* LoginAndRegisterViewController.swift in Sources */,
@@ -1470,7 +1478,7 @@
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = YW7P88KVE4;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1499,7 +1507,7 @@
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = YW7P88KVE4;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

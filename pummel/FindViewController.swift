@@ -72,9 +72,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         self.setupLayout()
         
-        if (NSUserDefaults.standardUserDefaults().boolForKey("SHOW_SEARCH_AFTER_REGISTER") == true) {
-            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
-            NSUserDefaults.standardUserDefaults().synchronize()
+        let showSeachViewController = self.defaults.boolForKey("SHOW_SEARCH_AFTER_REGISTER")
+        if (showSeachViewController == true) {
+            self.defaults.setBool(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+            self.defaults.synchronize()
             performSegueWithIdentifier("letUsHelp", sender: nil)
         }
         

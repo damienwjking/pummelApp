@@ -17,6 +17,7 @@ enum UserRouter: URLRequestConvertible {
     case getUpcomingSession(offset: Int, completed: CompletionBlock)
     case getCompletedSession(offset: Int, completed: CompletionBlock)
     case getTestimonial(userID: String, offset: Int, completed: CompletionBlock)
+    case postTestimonial(userID: String, description: String, rating: Int, completed: CompletionBlock)
     case getFollowCoach(offset: Int, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock? {
@@ -34,6 +35,8 @@ enum UserRouter: URLRequestConvertible {
         case .getCompletedSession(_, let completed):
             return completed
         case .getTestimonial(_, _, let completed):
+            return completed
+        case .postTestimonial(_, _, _, let completed):
             return completed
         case .getFollowCoach(_, let completed):
             return completed
@@ -57,6 +60,8 @@ enum UserRouter: URLRequestConvertible {
             return .GET
         case .getTestimonial:
             return .GET
+        case .postTestimonial:
+            return .POST
         case .getFollowCoach:
             return .GET
             
@@ -94,6 +99,9 @@ enum UserRouter: URLRequestConvertible {
         case .getTestimonial(let userID, let offset, _):
             let offsetString = String(format: "%ld", offset)
             prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL_OFFSET + offsetString
+        
+        case .postTestimonial(let userID, _, _, _):
+            prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL
             
         case .getFollowCoach (let offset, _):
             let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
@@ -107,6 +115,7 @@ enum UserRouter: URLRequestConvertible {
     
     var param : [String: AnyObject]? {
         var param : [String : AnyObject] = [:]
+        let defaults = NSUserDefaults.standardUserDefaults()
         
         switch self {
         case .authenticateFacebook(let fbID, let email, let firstName, let lastName, let avatarURL, let gender, _):
@@ -133,6 +142,14 @@ enum UserRouter: URLRequestConvertible {
             if (gender != nil) {
                 param["gender"] = gender!
             }
+            
+        case .postTestimonial(let userID, let description, let rating, _):
+            let currentUserID = defaults.objectForKey(k_PM_CURRENT_ID) as! String
+            
+            param["userId"] = userID
+            param["userCommentId"] = currentUserID
+            param["description"] = description
+            param["rating"] = rating
             
         case .getUpcomingSession, .getCompletedSession:
             let dateFormater = NSDateFormatter()
@@ -268,9 +285,32 @@ enum UserRouter: URLRequestConvertible {
                 }
             })
             
+        case .postTestimonial:
+            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 6")
+                
+                switch response.result {
+                case .Success(let JSON):
+                    if (JSON is NSNull == false) {
+                        UserRouter.saveCurrentUserInfo(response)
+                        
+                        self.comletedBlock!(result: true, error: nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(result: false, error: error)
+                    }
+                case .Failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHeler.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(result: false, error: error)
+                    }
+                }
+            })
+            
         case getFollowCoach:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 6")
+                print("PM: UserRouter 7")
                 
                 switch response.result {
                 case .Success(let JSON):

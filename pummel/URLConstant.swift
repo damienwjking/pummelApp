@@ -11,10 +11,10 @@ import Foundation
 //-----------------------------PRODUCTION------------------------------------//
 
 // Product
-let kPMAPI                          = "http://api.pummel.fit"
+//let kPMAPI                          = "http://api.pummel.fit"
 
 // Developer
-//let kPMAPI                          = "http://dev.pummel.fit"
+let kPMAPI                          = "http://dev.pummel.fit"
 
 // PM API Link
 let kPMAPI_BUSINESS                 = kPMAPI + "//api/businesses/"
@@ -80,6 +80,7 @@ let kPM_PATH_RESET_S_BADGE          = "/resetsNotificationBadge"
 let kPM_PATH_RESET_L_BADGE          = "/resetlNotificationBadge"
 let kPM_PATH_RESET_C_BADGE          = "/resetcNotificationBadge"
 let kPM_PATH_DECREASE_M_BADGE       = "/decreasemNotificationBadge"
+let kPM_PATH_TESTIMONIAL            = "/testimonial"
 let kPM_PATH_TESTIMONIAL_OFFSET     = "/testimonial?limit=20&offset="
 let kPM_PATH_USERCOACH_OFFSET       = "/userCoach?limit=20&offset="
 

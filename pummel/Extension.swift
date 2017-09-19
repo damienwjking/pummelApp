@@ -9,6 +9,26 @@
 import UIKit
 import Foundation
 
+extension UIView {
+    func renderImage() -> UIImage? {
+        var viewSize = self.frame.size
+        if (viewSize.width > SCREEN_WIDTH) {
+            viewSize.width = SCREEN_WIDTH
+        }
+        if (viewSize.height > SCREEN_HEIGHT) {
+            viewSize.height = SCREEN_HEIGHT
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(viewSize, self.opaque, 0.0)
+        
+        self.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+}
 
 extension UIImageView {
     func roundCorners(corners:UIRectCorner, radius: CGFloat) {
@@ -18,6 +38,16 @@ extension UIImageView {
         self.layer.mask = mask
     }
     
+    func addBlurEffect(blurValue: CGFloat = 0.5) {
+        let blurEffect = UIBlurEffect(style: .Dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        
+        blurEffectView.frame = self.bounds
+        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        blurEffectView.alpha = blurValue
+        
+        self.addSubview(blurEffectView)
+    }
 }
 
 extension NSData {

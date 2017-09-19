@@ -13,6 +13,12 @@ import Foundation
 
 
 class PMHeler {
+    class func getCurrentID() -> String {
+        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
+        
+        return currentId
+    }
+    
     class func checkVisibleCell(tableView: UITableView, indexPath: NSIndexPath ) -> Bool {
         var visibleCell = false
         for indexP in (tableView.indexPathsForVisibleRows)! {

@@ -130,6 +130,24 @@ class BaseViewController: UIViewController {
             }.fetchdata()
     }
     
+    func showPostTestimonialViewController() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+        
+        // Get user information + add to navigation
+        let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL) as? String
+        defaults.setObject("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
+        
+        // Capture screen shot
+        let screenImage = self.view.renderImage()
+        
+        let postTestimonialVC = UIStoryboard(name: "PostTestimonial", bundle: nil).instantiateInitialViewController() as! PostTestimonialViewController
+        postTestimonialVC.userID = userID!
+        postTestimonialVC.backgroundImage = screenImage
+        
+        self.presentViewController(postTestimonialVC, animated: true, completion: nil)
+    }
+    
     func moveScreen() {
         let defaults = NSUserDefaults.standardUserDefaults()
         
@@ -211,6 +229,8 @@ class BaseViewController: UIViewController {
                 } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_PROFILE {
                     // Change tab to feed screen
                     self.tabBarController?.selectedIndex = 0
+                } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL {
+                    self.showPostTestimonialViewController()
                 } else if moveScreenType == k_PM_MOVE_SCREEN_MESSAGE_DETAIL {
                     self.tabBarController?.selectedIndex = 3
                 } else {

@@ -64,7 +64,7 @@ extension AppDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf("/resetNotificationBadge")
             Alamofire.request(.PUT, prefix, parameters: [:])
                 .responseJSON { response in
@@ -85,7 +85,7 @@ extension AppDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(defaults.objectForKey(k_PM_CURRENT_ID) as! String)
+            prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf("/resetNotificationBadge")
             Alamofire.request(.PUT, prefix, parameters: [:])
                 .responseJSON { response in
@@ -105,25 +105,39 @@ extension AppDelegate {
 // MARK: - URL
 extension AppDelegate {
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        if (url.absoluteString != nil && (url.absoluteString?.contains("pummel://deeplink")) == true) {
+        if (url.absoluteString != nil && (url.absoluteString?.contains("pummel://")) == true) {
             let userDefaults = NSUserDefaults.standardUserDefaults()
-            if ((url.path?.lowercaseString.contains("search")) == true) {
+            let urlPath = url.path?.lowercaseString
+            let urlAbsoluteString = url.absoluteString?.lowercaseString
+            
+            let kProfileKey = "coach?userId=".lowercaseString
+            let kTestimonialKey = "givetestimonial/coachId=".lowercaseString
+            
+            if ((urlPath!.contains("search")) == true) {
                 // Open Pummel
                 userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_SEARCH, forKey: k_PM_MOVE_SCREEN)
-            } else if ((url.path?.lowercaseString.contains("login")) == true) {
+            } else if ((urlPath!.contains("login")) == true) {
                 // Allow me to Login/Register
                 let logined = userDefaults.valueForKey(k_PM_IS_LOGINED)
                 
                 if (logined as? Bool != nil && logined as? Bool == false) {
                     userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_LOGIN, forKey: k_PM_MOVE_SCREEN)
                 }
-            } else if ((url.absoluteString?.lowercaseString.contains("coach?userid=")) == true) {
+            } else if ((urlAbsoluteString!.contains(kProfileKey)) == true) {
                 // Take me directly to my coaches Profile and connect me to him automatically.
                 userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE, forKey: k_PM_MOVE_SCREEN)
                 
                 let userID = url.absoluteString?.componentsSeparatedByString("=")[1]
                 if (userID?.isEmpty == false) {
                     userDefaults.setObject(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
+                }
+            } else if ((urlAbsoluteString!.contains(kTestimonialKey)) == true) {
+                // Show post testimonial view.
+                userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL, forKey: k_PM_MOVE_SCREEN)
+                
+                let userID = url.absoluteString?.componentsSeparatedByString("=")[1]
+                if (userID?.isEmpty == false) {
+                    userDefaults.setObject(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
                 }
             }
             
@@ -151,7 +165,7 @@ extension AppDelegate {
         let mixpanel = Mixpanel.sharedInstance()
         mixpanel.people.addPushDeviceToken(deviceToken)
         
-        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
+        let currentId = PMHeler.getCurrentID()
         let param = [kUserId:currentId,
                      kProtocol:"APNS",
                      kToken: deviceTokenString]
