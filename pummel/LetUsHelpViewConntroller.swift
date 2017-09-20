@@ -121,7 +121,6 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
 
     @IBAction func closeLetUsHelp(sender:UIButton!) {
         let tabbarVC = self.presentingViewController?.childViewControllers[0] as! BaseTabBarController
-        let findVC = tabbarVC.viewControllers![2] as! FindViewController
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

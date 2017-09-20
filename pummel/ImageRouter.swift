@@ -66,7 +66,6 @@ enum ImageRouter: URLRequestConvertible {
     }
     
     var path: String {
-        let defaults = NSUserDefaults.standardUserDefaults()
         let currentUserID = PMHeler.getCurrentID()
         
         var prefix = ""

@@ -194,7 +194,6 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func updateUI() {
         if (self.userInfo == nil) {
             var prefix = kPMAPIUSER
-            let defaults = NSUserDefaults.standardUserDefaults()
             prefix.appendContentsOf(PMHeler.getCurrentID())
             
             Alamofire.request(.GET, prefix)
@@ -378,7 +377,6 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func done() {
         if (self.checkRuleInputData() == false) {
             var prefix = kPMAPIUSER
-            let defaults = NSUserDefaults.standardUserDefaults()
             prefix.appendContentsOf(PMHeler.getCurrentID())
             
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
@@ -527,11 +525,10 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 })
             }  else {
                 var prefix = kPMAPIUSER
-                let defaults = NSUserDefaults.standardUserDefaults()
                 prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 
-                var parameters = [kUserId:PMHeler.getCurrentID(),
+                let parameters = [kUserId:PMHeler.getCurrentID(),
                                   kProfilePic: "1"]
                 
                 Alamofire.upload(
@@ -563,7 +560,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                                 }
                             }
                             
-                        case .Failure(let encodingError):
+                        case .Failure( _):
                             activityView.stopAnimating()
                             activityView.removeFromSuperview()
                         }
@@ -663,11 +660,10 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
 
             } else {
                 var prefix = kPMAPIUSER
-                let defaults = NSUserDefaults.standardUserDefaults()
                 prefix.appendContentsOf(PMHeler.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 
-                var parameters = [kUserId:PMHeler.getCurrentID(),
+                let parameters = [kUserId:PMHeler.getCurrentID(),
                                   kProfilePic: "1"]
                 
                 Alamofire.upload(
@@ -699,7 +695,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                                 }
                             }
                             
-                        case .Failure(let encodingError):
+                        case .Failure( _):
                             activityView.stopAnimating()
                             activityView.removeFromSuperview()
                         }

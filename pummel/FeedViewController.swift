@@ -210,7 +210,6 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                     if response.response?.statusCode == 200 {
                         let likeJson = response.result.value as! NSDictionary
                         let rows = likeJson[kRows] as! [NSDictionary]
-                        let defaults = NSUserDefaults.standardUserDefaults()
                         let currentId = PMHeler.getCurrentID()
                         
                         var like = false

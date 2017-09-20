@@ -256,7 +256,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                         var prefix = kPMAPIUSER
                                         prefix.appendContentsOf(PMHeler.getCurrentID())
                                         prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                                        var parameters = [kUserId:PMHeler.getCurrentID(),
+                                        let parameters = [kUserId:PMHeler.getCurrentID(),
                                             kProfilePic: "1"]
                                         
                                         Alamofire.upload(
@@ -301,7 +301,7 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                                         }
                                                     }
                                                     
-                                                case .Failure(let _):
+                                                case .Failure( _):
                                                     activityView.stopAnimating()
                                                     activityView.removeFromSuperview()
                                                     self.view.hideToastActivity()

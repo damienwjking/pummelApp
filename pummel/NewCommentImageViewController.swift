@@ -158,7 +158,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
                         self.isPosting = false
                         upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
                             dispatch_async(dispatch_get_main_queue()) {
-                                let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+//                                let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                             }
                         }
                         upload.validate()
@@ -184,7 +184,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
                             }
                         }
                         
-                    case .Failure(let encodingError):
+                    case .Failure(_):
                         self.isPosting = false
                         activityView.stopAnimating()
                         activityView.removeFromSuperview()

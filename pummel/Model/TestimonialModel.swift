@@ -20,6 +20,7 @@ class TestimonialModel: NSObject {
 //    var userCommentUrl = ""
     var userCommentLocation = ""
     
+    var needUpdate = true
     var imageCache: UIImage? = nil // For scroll animation
     var nameCache = ""
     

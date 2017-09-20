@@ -515,7 +515,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         if (self.isStopGetTestimonial == false) {
             let userID = PMHeler.getCurrentID()
             
-            UserRouter.getTestimonial(userID: userID!, offset: self.testimonialOffset) { (result, error) in
+            UserRouter.getTestimonial(userID: userID, offset: self.testimonialOffset) { (result, error) in
                 if (error == nil) {
                     let testimonialDicts = result as! NSArray
                     
@@ -1215,7 +1215,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(PMHeler.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_VIDEO)
         var parameters = [String:AnyObject]()

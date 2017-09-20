@@ -207,7 +207,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
                             }
                         }
                         
-                    case .Failure(let _):
+                    case .Failure( _):
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
                         let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
                             // ...

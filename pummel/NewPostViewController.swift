@@ -134,7 +134,6 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             self.navigationItem.rightBarButtonItem?.enabled = false
             self.view.makeToastActivity(message: "Posting")
             self.commentPhotoTV.resignFirstResponder()
-            let defaults = NSUserDefaults.standardUserDefaults()
             
             var prefix = kPMAPIUSER
             prefix.appendContentsOf(PMHeler.getCurrentID())
@@ -150,7 +149,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             
             let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
             
-            var parameters = [kUserId:PMHeler.getCurrentID(),
+            let parameters = [kUserId:PMHeler.getCurrentID(),
                               kText: textPost]
             
             Alamofire.upload(
@@ -169,7 +168,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
                     case .Success(let upload, _, _):
                         upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
                             dispatch_async(dispatch_get_main_queue()) {
-                                let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
+//                                let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
                             }
                         }
                         upload.validate()

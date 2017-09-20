@@ -43,6 +43,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.tabBarController?.title = kNavFeed
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]

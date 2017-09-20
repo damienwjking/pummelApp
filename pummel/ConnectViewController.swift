@@ -80,7 +80,6 @@ class ConnectViewController: BaseViewController {
         self.fourthConnectingIconV.layer.cornerRadius = 5
         
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(PMHeler.getCurrentID())
         
         Alamofire.request(.GET, prefix)
@@ -209,7 +208,6 @@ class ConnectViewController: BaseViewController {
         self.requestCallBackBT.userInteractionEnabled = false
         
         var prefix = kPMAPIUSER
-        let defaults = NSUserDefaults.standardUserDefaults()
         prefix.appendContentsOf(PMHeler.getCurrentID())
         
         Alamofire.request(.GET, prefix)

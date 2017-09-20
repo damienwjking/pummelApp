@@ -551,7 +551,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func keyboardWillShow(notification: NSNotification) {
         self.tapView.hidden = false
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()) != nil {
             if (self.view.frame.origin.y >= 0) {
 //                self.view.frame.origin.y -= keyboardSize.height
             }
@@ -1210,7 +1210,7 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
                                 }
                             }
                             
-                        case .Failure(let _):
+                        case .Failure( _):
                             activityView.stopAnimating()
                             activityView.removeFromSuperview()
                         }

@@ -12,13 +12,12 @@ class TestimonialCell: UICollectionViewCell {
     var userID = ""
     
     @IBOutlet weak var avatarImageView: UIImageView!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var ratingImageView: UIImageView!
 
     @IBOutlet weak var ratingViewWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var descriptionLabelHeightConstraint: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -38,12 +37,6 @@ class TestimonialCell: UICollectionViewCell {
             self.avatarImageViewClicked()
         }
         self.avatarImageView.addGestureRecognizer(tapGesture)
-        
-        self.descriptionLabel.font = UIFont.pmmMonLight11()
-        
-        self.userNameLabel.font = UIFont.pmmMonReg11()
-        
-        self.locationLabel.font = UIFont.pmmMonLight11()
     }
 
     func setupData(testimonial: TestimonialModel) {
@@ -51,14 +44,7 @@ class TestimonialCell: UICollectionViewCell {
         
         self.locationLabel.text = testimonial.userCommentLocation
         
-        // 167: width of description text
-        // 160: height of description text
-        self.descriptionLabel.text = testimonial.descript
-        var descriptionHeightText = testimonial.descript.heightWithConstrainedWidth(167, font: self.descriptionLabel.font) + 10
-        if (descriptionHeightText > 160) {
-            descriptionHeightText = 160
-        }
-        self.descriptionLabelHeightConstraint.constant = descriptionHeightText
+        self.descriptionTextView.text = testimonial.descript
         
         if (testimonial.rating >= 0 && testimonial.rating <= 5) {
             // Width of rating star is 20
@@ -73,55 +59,48 @@ class TestimonialCell: UICollectionViewCell {
             self.avatarImageView.image = testimonial.imageCache
         }
         
-        // Check coach
-        let userID = String(format: "%ld", testimonial.userCommentId)
-        
-        UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
-            if (error == nil) {
-                self.avatarImageView.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
-            } else {
-                self.avatarImageView.layer.borderColor = UIColor.lightGrayColor().CGColor
-            }
-        }.fetchdata()
-        
-        UserRouter.getUserInfo(userID: userID) { (result, error) in
-            if (error == nil) {
-                let userInfo = result as! NSDictionary
-                
-                let firstName = userInfo[kFirstname] as! String
-                let lastName = userInfo[kLastName] as? String
-                
-                self.userNameLabel.text = firstName
-                if (lastName != nil && lastName?.isEmpty == false) {
-                    self.userNameLabel.text = firstName + " " + lastName!
+        if (testimonial.needUpdate == true) {
+            UserRouter.getUserInfo(userID: userID) { (result, error) in
+                if (error == nil) {
+                    let userInfo = result as! NSDictionary
+                    
+                    let firstName = userInfo[kFirstname] as! String
+                    let lastName = userInfo[kLastName] as? String
+                    
+                    self.userNameLabel.text = firstName
+                    if (lastName != nil && lastName?.isEmpty == false) {
+                        self.userNameLabel.text = firstName + " " + lastName!
+                    }
+                    
+                    testimonial.nameCache = self.userNameLabel.text!
+                    
+                    let imageURL = userInfo[kImageUrl] as? String
+                    if (imageURL != nil && imageURL?.isEmpty == false) {
+                        ImageRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight120) { (result, error) in
+                            testimonial.needUpdate = false
+                            
+                            if (error == nil) {
+                                let imageRes = result as! UIImage
+                                self.avatarImageView.image = imageRes
+                                
+                                testimonial.imageCache = imageRes
+                            } else {
+                                let imageRes = UIImage(named: "display-empty.jpg")
+                                self.avatarImageView.image = imageRes
+                                
+                                testimonial.imageCache = imageRes
+                                
+                                print("Request failed with error: \(error)")
+                            }
+                            }.fetchdata()
+                    }
+                    
+                    
+                } else {
+                    print("Request failed with error: \(error)")
                 }
-                
-                testimonial.nameCache = self.userNameLabel.text!
-                
-                let imageURL = userInfo[kImageUrl] as? String
-                if (imageURL != nil && imageURL?.isEmpty == false) {
-                    ImageRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight120) { (result, error) in
-                        if (error == nil) {
-                            let imageRes = result as! UIImage
-                            self.avatarImageView.image = imageRes
-                            
-                            testimonial.imageCache = imageRes
-                        } else {
-                            let imageRes = UIImage(named: "display-empty.jpg")
-                            self.avatarImageView.image = imageRes
-                            
-                            testimonial.imageCache = imageRes
-                            
-                            print("Request failed with error: \(error)")
-                        }
-                        }.fetchdata()
-                }
-                
-                
-            } else {
-                print("Request failed with error: \(error)")
-            }
-        }.fetchdata()
+                }.fetchdata()
+        }
     }
     
     func avatarImageViewClicked() {

@@ -481,7 +481,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                      kText : textBox.text,
                      "file" : "nodata".dataUsingEncoding(NSUTF8StringEncoding)!]
         
-        Alamofire.request(.POST, prefix, parameters: param as! [String : AnyObject])
+        Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
             .responseJSON { response in
                 self.isSending = false
                 if response.response?.statusCode == 200 {

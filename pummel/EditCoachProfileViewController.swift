@@ -72,7 +72,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     var userInfo: NSDictionary!
     
     let imagePicker = UIImagePickerController()
-    let defaults = NSUserDefaults.standardUserDefaults()
     var currentId : String = ""
     
     let SCREEN_MAX_LENGTH = max(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -347,7 +346,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 self.aboutContentTV.text = ""
             }
             
-            let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
+            _ = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
 //            self.aboutContentDT.constant = sizeAboutTV.height + 20
             self.genderContentTF.text = self.userInfo[kGender] as? String
             self.emailContentTF.text = self.userInfo[kEmail] as? String
@@ -773,7 +772,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                     
                 } else {
                     var prefix = kPMAPIUSER
-                    let defaults = NSUserDefaults.standardUserDefaults()
                     
                     prefix.appendContentsOf(PMHeler.getCurrentID())
                     prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
@@ -810,7 +808,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                                     }
                                 }
                                 
-                            case .Failure(let _):
+                            case .Failure( _):
                                 activityView.stopAnimating()
                                 activityView.removeFromSuperview()
                             }
@@ -831,11 +829,10 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             
             // send video by method mutipart to server
             var prefix = kPMAPIUSER
-            let defaults = NSUserDefaults.standardUserDefaults()
             prefix.appendContentsOf(PMHeler.getCurrentID())
             prefix.appendContentsOf(kPM_PATH_VIDEO)
             
-            var parameters = [kUserId:PMHeler.getCurrentID(),
+            let parameters = [kUserId:PMHeler.getCurrentID(),
                               kProfileVideo : "1"]
             
             Alamofire.upload(
@@ -863,7 +860,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                             self.navigationController?.popViewControllerAnimated(true)
                         }
                         
-                    case .Failure(let _): break
+                    case .Failure( _): break
                         // Do nothing
                     }
                 }

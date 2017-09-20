@@ -8,6 +8,14 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Light.ttf">
+            <string>Montserrat-Light</string>
+        </array>
+        <array key="Montserrat-Regular.otf">
+            <string>Montserrat-Regular</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -30,13 +38,13 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pummel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="sn1-ca-9g9">
                                 <rect key="frame" x="4" y="0.0" width="167" height="14"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="11"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Spectrum Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="AHw-2o-bpK">
                                 <rect key="frame" x="4" y="14" width="167" height="14"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="11"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -50,6 +58,7 @@
                             <constraint firstItem="sn1-ca-9g9" firstAttribute="top" secondItem="Aee-Ym-f6J" secondAttribute="top" id="faR-hM-67z"/>
                             <constraint firstAttribute="bottom" secondItem="AHw-2o-bpK" secondAttribute="bottom" id="nYC-d5-SNM"/>
                             <constraint firstItem="sn1-ca-9g9" firstAttribute="width" secondItem="Aee-Ym-f6J" secondAttribute="width" constant="-8" id="qgt-EY-c03"/>
+                            <constraint firstAttribute="height" constant="28" id="xWK-x6-HzQ"/>
                         </constraints>
                     </view>
                     <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="testimonialNoStar" translatesAutoresizingMaskIntoConstraints="NO" id="Ps2-eK-JPZ">
@@ -77,41 +86,37 @@
                             <constraint firstAttribute="height" secondItem="Xgl-yD-mPG" secondAttribute="height" id="juQ-Ca-1lI"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KA-QT-KOS">
-                        <rect key="frame" x="4" y="116" width="167" height="160"/>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Ayb-Ys-YQ6">
+                        <rect key="frame" x="4" y="116" width="167" height="156"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="160" id="B5n-HO-Ah3"/>
+                            <constraint firstAttribute="height" constant="156" id="Rd4-Y7-fW0"/>
                         </constraints>
-                        <string key="text">It's time to be in charge of your own website! Become one and only manager of your website with the admin panel powered by MotoCMS. Use the whole functionality of this truly awesome web design and succeed in your business field. 
-
-
-Spectrum is an innovative solution that will help its owner to turn his own business from a common project into a noticeable and profitable enterprise. Choose this made-up website and see how it works.</string>
-                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                        <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="11"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="2KA-QT-KOS" firstAttribute="top" secondItem="Ps2-eK-JPZ" secondAttribute="bottom" constant="-4" id="BCF-u2-9c4"/>
-                <constraint firstItem="2KA-QT-KOS" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="BWw-K3-Jl6"/>
+                <constraint firstItem="Ayb-Ys-YQ6" firstAttribute="top" secondItem="Ps2-eK-JPZ" secondAttribute="bottom" constant="-4" id="Avf-0N-TAA"/>
                 <constraint firstItem="1Sq-j6-aPa" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="C8B-dL-LaZ"/>
-                <constraint firstItem="2KA-QT-KOS" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" constant="-8" id="Dqs-6w-da7"/>
                 <constraint firstItem="Aee-Ym-f6J" firstAttribute="centerX" secondItem="1Sq-j6-aPa" secondAttribute="centerX" id="Efg-eP-CIa"/>
                 <constraint firstItem="Aee-Ym-f6J" firstAttribute="top" secondItem="1Sq-j6-aPa" secondAttribute="bottom" constant="4" id="MIa-V5-4d9"/>
                 <constraint firstItem="Ps2-eK-JPZ" firstAttribute="height" secondItem="9Pk-ok-sgF" secondAttribute="height" id="OWO-sI-mQ8"/>
+                <constraint firstItem="Ayb-Ys-YQ6" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" constant="-8" id="bfQ-RP-YhS"/>
                 <constraint firstItem="1Sq-j6-aPa" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="8" id="lIj-5k-Q4e"/>
                 <constraint firstItem="Ps2-eK-JPZ" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="pgV-KA-x3J"/>
                 <constraint firstItem="Ps2-eK-JPZ" firstAttribute="top" secondItem="Aee-Ym-f6J" secondAttribute="bottom" constant="-6" id="sXh-bM-afx"/>
                 <constraint firstItem="Ps2-eK-JPZ" firstAttribute="leading" secondItem="9Pk-ok-sgF" secondAttribute="leading" id="tWf-zn-j9j"/>
                 <constraint firstItem="Ps2-eK-JPZ" firstAttribute="centerY" secondItem="9Pk-ok-sgF" secondAttribute="centerY" id="tyL-AB-CzE"/>
                 <constraint firstItem="Aee-Ym-f6J" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" id="xYa-Hy-Vq9"/>
+                <constraint firstItem="Ayb-Ys-YQ6" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="zaY-Is-BBM"/>
             </constraints>
             <size key="customSize" width="192" height="88"/>
             <connections>
                 <outlet property="avatarImageView" destination="1Sq-j6-aPa" id="M3Q-uu-s59"/>
-                <outlet property="descriptionLabel" destination="2KA-QT-KOS" id="BJS-2U-u58"/>
-                <outlet property="descriptionLabelHeightConstraint" destination="B5n-HO-Ah3" id="2D9-hN-3eQ"/>
+                <outlet property="descriptionTextView" destination="Ayb-Ys-YQ6" id="vfO-LJ-Mnj"/>
                 <outlet property="locationLabel" destination="AHw-2o-bpK" id="jDL-vT-Khg"/>
                 <outlet property="ratingImageView" destination="Xgl-yD-mPG" id="NoF-63-I2E"/>
                 <outlet property="ratingViewWidthConstraint" destination="14S-Ee-XBx" id="HTn-HG-GIa"/>

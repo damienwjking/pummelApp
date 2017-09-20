@@ -154,10 +154,10 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         
-        let param = [kUserId:PMHeler.getCurrentID(),
-                     kUserIds:values]
+        let param = [kUserId : PMHeler.getCurrentID(),
+                     kUserIds : values]
         
-        Alamofire.request(.POST, prefix, parameters: param as! [String : AnyObject])
+        Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value

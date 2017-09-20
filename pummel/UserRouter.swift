@@ -17,7 +17,7 @@ enum UserRouter: URLRequestConvertible {
     case getUpcomingSession(offset: Int, completed: CompletionBlock)
     case getCompletedSession(offset: Int, completed: CompletionBlock)
     case getTestimonial(userID: String, offset: Int, completed: CompletionBlock)
-    case postTestimonial(userID: String, description: String, rating: Int, completed: CompletionBlock)
+    case postTestimonial(userID: String, description: String, location: String, rating: CGFloat, completed: CompletionBlock)
     case getFollowCoach(offset: Int, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock? {
@@ -36,7 +36,7 @@ enum UserRouter: URLRequestConvertible {
             return completed
         case .getTestimonial(_, _, let completed):
             return completed
-        case .postTestimonial(_, _, _, let completed):
+        case .postTestimonial(_, _, _, _, let completed):
             return completed
         case .getFollowCoach(_, let completed):
             return completed
@@ -69,7 +69,6 @@ enum UserRouter: URLRequestConvertible {
     }
     
     var path: String {
-        let defaults = NSUserDefaults.standardUserDefaults()
         let currentUserID = PMHeler.getCurrentID()
         
         var prefix = ""
@@ -98,7 +97,7 @@ enum UserRouter: URLRequestConvertible {
             let offsetString = String(format: "%ld", offset)
             prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL_OFFSET + offsetString
         
-        case .postTestimonial(let userID, _, _, _):
+        case .postTestimonial(let userID, _, _, _, _):
             prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL
             
         case .getFollowCoach (let offset, _):
@@ -140,12 +139,13 @@ enum UserRouter: URLRequestConvertible {
                 param["gender"] = gender!
             }
             
-        case .postTestimonial(let userID, let description, let rating, _):
+        case .postTestimonial(let userID, let description, let location, let rating, _):
             param["userId"] = userID
             param["userCommentId"] = currentUserID
             param["description"] = description
-            param["rating"] = rating
-            
+            param["userCommentLocation"] = location
+            param["rating"] = String(format: "%0.1f", rating)
+
         case .getUpcomingSession, .getCompletedSession:
             let dateFormater = NSDateFormatter()
             dateFormater.dateFormat = "yyyy-MM-dd hh:mm:ss"
@@ -287,9 +287,9 @@ enum UserRouter: URLRequestConvertible {
                 switch response.result {
                 case .Success(let JSON):
                     if (JSON is NSNull == false) {
-                        UserRouter.saveCurrentUserInfo(response)
+                        let userDetails = JSON as! NSDictionary
                         
-                        self.comletedBlock!(result: true, error: nil)
+                        self.comletedBlock!(result: userDetails, error: nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
                         self.comletedBlock!(result: false, error: error)

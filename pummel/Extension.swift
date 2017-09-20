@@ -38,15 +38,27 @@ extension UIImageView {
         self.layer.mask = mask
     }
     
-    func addBlurEffect(blurValue: CGFloat = 0.5) {
+    func addBlurEffect(alpha: CGFloat = 0.5) {
         let blurEffect = UIBlurEffect(style: .Dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         
         blurEffectView.frame = self.bounds
         blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        blurEffectView.alpha = blurValue
+        blurEffectView.alpha = alpha
         
         self.addSubview(blurEffectView)
+    }
+    
+    func addVibrancyEffect(alpha: CGFloat = 0.5) {
+        let blurEffect = UIBlurEffect(style: .Dark)
+        let vibrancyEffect = UIVibrancyEffect(forBlurEffect: blurEffect)
+        let effectView = UIVisualEffectView(effect: vibrancyEffect)
+        
+        effectView.frame = self.bounds
+        effectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        effectView.alpha = alpha
+        
+        self.addSubview(effectView)
     }
 }
 
