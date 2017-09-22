@@ -190,14 +190,14 @@ class SettingsViewController: BaseViewController {
     func updateLocationCoach() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
             var locationName = ""
             if (self.location?.name?.isEmpty == false) {
                 locationName = (self.location?.name)!
             }
             
-            let param = [kUserId:PMHeler.getCurrentID(),
+            let param = [kUserId:PMHelper.getCurrentID(),
                          kServiceArea:locationName,
                          kLat:(self.location?.coordinate.latitude)!,
                          kLong:(self.location?.coordinate.longitude)!]
@@ -222,11 +222,11 @@ class SettingsViewController: BaseViewController {
             self.defaults.setObject(self.sessionCell.switchBT.on, forKey: kSessions)
             
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
             self.view.makeToastActivity(message: "Saving")
             
-            let param = [kUserId:PMHeler.getCurrentID(),
+            let param = [kUserId:PMHelper.getCurrentID(),
                          kDistance: self.distanceSliderValue,
                          kState: self.mapState,
                          kCity: self.mapCity]
@@ -235,10 +235,10 @@ class SettingsViewController: BaseViewController {
                 .responseJSON { response in switch response.result {
                 case .Success(_):
                     var prefixUser = kPMAPIUSER
-                    prefixUser.appendContentsOf(PMHeler.getCurrentID())
+                    prefixUser.appendContentsOf(PMHelper.getCurrentID())
                     prefixUser.appendContentsOf("/notification")
                     
-                    let paramUser = [kUserId:PMHeler.getCurrentID(),
+                    let paramUser = [kUserId:PMHelper.getCurrentID(),
                         "messageNotification": self.messageCell.switchBT.on ? "1" : "0",
                         "newleadNotification": self.newLeadCell.switchBT.on ? "1" : "0",
                         "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
@@ -261,10 +261,10 @@ class SettingsViewController: BaseViewController {
             self.view.makeToastActivity(message: "Saving")
             
             var prefixUser = kPMAPIUSER
-            prefixUser.appendContentsOf(PMHeler.getCurrentID())
+            prefixUser.appendContentsOf(PMHelper.getCurrentID())
             prefixUser.appendContentsOf("/notification")
             
-            let paramUser = [kUserId:PMHeler.getCurrentID(),
+            let paramUser = [kUserId:PMHelper.getCurrentID(),
                              "messageNotification": self.messageCell.switchBT.on ? "1" : "0",
                              "sessionNotification": self.sessionCell.switchBT.on ? "1" : "0"]
             
@@ -424,9 +424,9 @@ class SettingsViewController: BaseViewController {
             self.defaults.setObject(metric, forKey: kUnit)
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
-            let param = [kUserId:PMHeler.getCurrentID(),
+            let param = [kUserId:PMHelper.getCurrentID(),
                          kFirstname:self.defaults.objectForKey(kFirstname) as! String,
                          kUnits: metric]
             
@@ -445,9 +445,9 @@ class SettingsViewController: BaseViewController {
             self.defaults.setObject(imperial, forKey: kUnit)
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
-            let param = [kUserId:PMHeler.getCurrentID(),
+            let param = [kUserId:PMHelper.getCurrentID(),
                          kFirstname:self.defaults.objectForKey(kFirstname) as! String,
                          kUnits: imperial]
             
@@ -470,7 +470,7 @@ class SettingsViewController: BaseViewController {
         let alertController = UIAlertController(title: kApply, message: kWantToBecomeACoach, preferredStyle: .Alert)
         let OKAction = UIAlertAction(title: kContinue, style: .Default) { (action) in
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
             self.performSegueWithIdentifier("upgradeCoach", sender: nil)
         }
@@ -851,7 +851,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func configLocationCell(cell: SettingLocationTableViewCell) {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -879,7 +879,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func configDistanceCell(cell: SettingMaxDistanceTableViewCell) {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {

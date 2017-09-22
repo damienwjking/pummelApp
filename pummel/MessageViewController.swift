@@ -165,7 +165,7 @@ class MessageViewController: BaseViewController {
     
     func getMessagetAtSaveIndexPathScrollView() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
         prefix.appendContentsOf(String((self.saveIndexPath?.row)!))
         prefix.appendContentsOf(kPM_PATH_LIMIT_ONE)
@@ -200,7 +200,7 @@ class MessageViewController: BaseViewController {
     
     func getListLead() {
         var prefix = kPMAPICOACHES
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPMAPICOACH_LEADS)
         
         Alamofire.request(.GET, prefix)
@@ -227,7 +227,7 @@ class MessageViewController: BaseViewController {
             isLoadingMessage = true
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
             prefix.appendContentsOf(String(offset))
             
@@ -292,7 +292,7 @@ class MessageViewController: BaseViewController {
             
             if (targetID == nil || targetID?.isEmpty == true) {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHeler.getCurrentID())
+                prefix.appendContentsOf(PMHelper.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_CONVERSATION)
                 prefix.appendContentsOf("/")
                 prefix.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
@@ -306,7 +306,7 @@ class MessageViewController: BaseViewController {
                         let conversationMe : NSDictionary!
                         let conversationTarget: NSDictionary!
                         let converstationTemp = conversationsUserArray[0] as! NSDictionary
-                        if (String(format:"%0.f", converstationTemp[kUserId]!.doubleValue) == PMHeler.getCurrentID()) {
+                        if (String(format:"%0.f", converstationTemp[kUserId]!.doubleValue) == PMHelper.getCurrentID()) {
                             conversationMe = conversationsUserArray[0] as! NSDictionary
                             conversationTarget = conversationsUserArray[1]  as! NSDictionary
                         } else {
@@ -384,7 +384,7 @@ class MessageViewController: BaseViewController {
             
             // Get message
             var prefixT = kPMAPIUSER
-            prefixT.appendContentsOf(PMHeler.getCurrentID())
+            prefixT.appendContentsOf(PMHelper.getCurrentID())
             prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
             prefixT.appendContentsOf("/")
             prefixT.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
@@ -524,7 +524,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         if (tableView == listMessageTB && arrayMessages.count != 0) {
             let cell = tableView.dequeueReusableCellWithIdentifier(kMessageTableViewCell, forIndexPath: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
-            let currentUserid = PMHeler.getCurrentID()
+            let currentUserid = PMHelper.getCurrentID()
             
             // TargetID
             let targerID = message["targetId"] as? String
@@ -610,7 +610,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let userInfo = result as! NSDictionary
                         let name = userInfo.objectForKey(kFirstname) as! String
@@ -620,7 +620,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                             let imageURLString = userInfo[kImageUrl] as! String
                             ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
-                                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                                     if visibleCell == true {
                                         let imageRes = result as! UIImage
                                         cell!.imageV.image = imageRes
@@ -650,13 +650,13 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         let message = arrayMessages[indexPath.row]
         let messageId = String(format:"%0.f", message[kId]!.doubleValue)
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION_V2)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(messageId)
         
         let param = [kConversationId:messageId,
-                     kUserId: PMHeler.getCurrentID()]
+                     kUserId: PMHelper.getCurrentID()]
         
         self.view.makeToastActivity(message: "Loading")
         Alamofire.request(.PUT, prefix, parameters: param)
@@ -674,7 +674,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     
                     self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
                 } else {
-                    PMHeler.showDoAgainAlert()
+                    PMHelper.showDoAgainAlert()
                 }
         }
     }
@@ -845,7 +845,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     let phoneNumber = userInfo[kMobile] as! String
                     
                     let viewProfileAction = { (action:UIAlertAction!) -> Void in
-                        PMHeler.showCoachOrUserView(userID)
+                        PMHelper.showCoachOrUserView(userID)
                     }
                     
                     let acceptClientAction = { (action:UIAlertAction!) -> Void in
@@ -853,11 +853,11 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         let lead = self.arrayListLead[indexPath.row]
                         let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
                         
-                        let param = [kUserId: PMHeler.getCurrentID(),
+                        let param = [kUserId: PMHelper.getCurrentID(),
                             kUserIdRequest: targetUserId]
                         
                         var prefix = kPMAPICOACHES
-                        prefix.appendContentsOf(PMHeler.getCurrentID())
+                        prefix.appendContentsOf(PMHelper.getCurrentID())
                         prefix.appendContentsOf(kPMAPICOACH_CURRENT)
                         prefix.appendContentsOf("/")
                         

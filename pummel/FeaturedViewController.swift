@@ -341,7 +341,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         let userIDString = String(format: "%0.0f", userID)
         
         self.isGoProfileDetail = true
-        PMHeler.showCoachOrUserView(userIDString)
+        PMHelper.showCoachOrUserView(userIDString)
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -524,7 +524,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         
-                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                         if visibleCell == true {
                             dispatch_async(dispatch_get_main_queue(),{
                                 cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
@@ -553,7 +553,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             
             ImageRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
                 if (error == nil) {
-                    let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    let isUpdateCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                     
                     if (isUpdateCell) {
                         let imageRes = result as! UIImage
@@ -579,7 +579,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
             let isCoach = result as! Bool
-            let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+            let isUpdateCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
             
             if (isUpdateCell) {
                 cell.userInteractionEnabled = true
@@ -611,7 +611,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
             if (error == nil) {
-                let isUpdateCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                let isUpdateCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                 
                 if (isUpdateCell) {
                     dispatch_async(dispatch_get_main_queue(),{

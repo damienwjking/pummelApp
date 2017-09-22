@@ -137,7 +137,7 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
             self.isloading = true
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
             prefix.appendContentsOf(String(self.offset))
             
@@ -371,7 +371,7 @@ extension SessionCoachViewController: UITableViewDelegate, UITableViewDataSource
         let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { (action, indexPath) in
             if indexPath.row < self.selectedSessionList.count {
                 let session = self.selectedSessionList[indexPath.row]
-                let userID = PMHeler.getCurrentID()
+                let userID = PMHelper.getCurrentID()
                 
                 var prefix = kPMAPIUSER
                 prefix = prefix.stringByAppendingString(userID)

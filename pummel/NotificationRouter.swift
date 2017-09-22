@@ -42,7 +42,7 @@ enum NotificationRouter: URLRequestConvertible {
     }
     
     var path: String {
-        let currentUserID = PMHeler.getCurrentID()
+        let currentUserID = PMHelper.getCurrentID()
         
         var prefix = ""
         switch self {
@@ -88,7 +88,7 @@ enum NotificationRouter: URLRequestConvertible {
                     self.comletedBlock(result: result, error: nil)
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock(result: nil, error: error)
                     }
@@ -100,7 +100,7 @@ enum NotificationRouter: URLRequestConvertible {
                 print("PM: NotificationRouter 2")
                 
                 if (response.response?.statusCode == 401) {
-                    PMHeler.showLogoutAlert()
+                    PMHelper.showLogoutAlert()
                 } else {
                     self.comletedBlock(result: nil, error: nil)
                 }

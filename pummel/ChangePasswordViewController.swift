@@ -52,7 +52,7 @@ class ChangePasswordViewController : BaseViewController {
             let defaults = NSUserDefaults.standardUserDefaults()
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf(kPMAPI_CHANGEPASS)
             
             let param = [kPassword:self.curPassTF.text!,

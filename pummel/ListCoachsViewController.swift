@@ -92,18 +92,18 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         // Maybe need conver ID from int to string
         let userID = coachInfo[kId] as! String
         
-        PMHeler.showCoachOrUserView(userID)
+        PMHelper.showCoachOrUserView(userID)
     }
     
     
     func showAlertMovetoOldAction(userID:String) {
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_OLD)
             prefix.appendContentsOf("/")
             
-            let param = [kUserId:PMHeler.getCurrentID(),
+            let param = [kUserId:PMHelper.getCurrentID(),
                          kUserIdRequest:userID]
             
             Alamofire.request(.PUT, prefix, parameters: param)
@@ -127,11 +127,11 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     func showAlertMovetoCurrentAction(userID:String,typeGroup:Int) {
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_CURRENT)
             prefix.appendContentsOf("/")
             
-            let param = [kUserId:PMHeler.getCurrentID(),
+            let param = [kUserId:PMHelper.getCurrentID(),
                          kUserIdRequest:userID]
             
             Alamofire.request(.PUT, prefix, parameters: param)

@@ -148,7 +148,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             prefix = kPMAPIUSER
         }
         
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         
         if self.typeGroup == TypeGroup.NewLead {
             prefix.appendContentsOf(kPMAPICOACH_LEADS)

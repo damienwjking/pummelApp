@@ -12,7 +12,7 @@ import Alamofire
 import Foundation
 
 
-class PMHeler {
+class PMHelper {
     class func getCurrentID() -> String {
         let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
         
@@ -139,7 +139,10 @@ class PMHeler {
                         if (isCoach == true) {
                             let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
                             
+//                            let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
+                            
                             coachProfileVC.coachDetail = userInfo
+//                            coachProfileVC.userID = userID
                             
                             if (showTestimonial == true) {
                                 topController.presentViewController(coachProfileVC, animated: true, completion: {

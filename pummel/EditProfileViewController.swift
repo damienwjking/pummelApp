@@ -194,7 +194,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func updateUI() {
         if (self.userInfo == nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
@@ -377,7 +377,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func done() {
         if (self.checkRuleInputData() == false) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
@@ -403,7 +403,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             let heightString = heightContentTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
             
             let param = (dobContentTF.text! == "") ?
-                    [kUserId:PMHeler.getCurrentID(),
+                    [kUserId:PMHelper.getCurrentID(),
                      kFirstname:firstname,
                      kLastName: lastname,
                      kMobile: mobileContentTF.text!,
@@ -418,7 +418,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                      kEmergencyName:emergencyNameTF.text!,
                      kEmergencyMobile:emergencyMobileTF.text!] :
                     
-                    [kUserId:PMHeler.getCurrentID(),
+                    [kUserId:PMHelper.getCurrentID(),
                      kFirstname:firstname,
                      kLastName: lastname,
                      kMobile: mobileContentTF.text!,
@@ -525,10 +525,10 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 })
             }  else {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHeler.getCurrentID())
+                prefix.appendContentsOf(PMHelper.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 
-                let parameters = [kUserId:PMHeler.getCurrentID(),
+                let parameters = [kUserId:PMHelper.getCurrentID(),
                                   kProfilePic: "1"]
                 
                 Alamofire.upload(
@@ -660,10 +660,10 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
 
             } else {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHeler.getCurrentID())
+                prefix.appendContentsOf(PMHelper.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 
-                let parameters = [kUserId:PMHeler.getCurrentID(),
+                let parameters = [kUserId:PMHelper.getCurrentID(),
                                   kProfilePic: "1"]
                 
                 Alamofire.upload(

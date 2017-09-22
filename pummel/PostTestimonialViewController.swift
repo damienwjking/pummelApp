@@ -170,7 +170,7 @@ class PostTestimonialViewController: UIViewController {
             if (error == nil) {
                 self.dismissViewControllerAnimated(true, completion: nil)
             } else {
-                PMHeler.showDoAgainAlert()
+                PMHelper.showDoAgainAlert()
             }
         }.fetchdata()
     }

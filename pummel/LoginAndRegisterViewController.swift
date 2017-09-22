@@ -254,9 +254,9 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
                                     
                                     if (self.cameraProfileIconIMV.hidden) {
                                         var prefix = kPMAPIUSER
-                                        prefix.appendContentsOf(PMHeler.getCurrentID())
+                                        prefix.appendContentsOf(PMHelper.getCurrentID())
                                         prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
-                                        let parameters = [kUserId:PMHeler.getCurrentID(),
+                                        let parameters = [kUserId:PMHelper.getCurrentID(),
                                             kProfilePic: "1"]
                                         
                                         Alamofire.upload(

@@ -64,7 +64,7 @@ extension AppDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf("/resetNotificationBadge")
             Alamofire.request(.PUT, prefix, parameters: [:])
                 .responseJSON { response in
@@ -85,7 +85,7 @@ extension AppDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf("/resetNotificationBadge")
             Alamofire.request(.PUT, prefix, parameters: [:])
                 .responseJSON { response in
@@ -165,7 +165,7 @@ extension AppDelegate {
         let mixpanel = Mixpanel.sharedInstance()
         mixpanel.people.addPushDeviceToken(deviceToken)
         
-        let currentId = PMHeler.getCurrentID()
+        let currentId = PMHelper.getCurrentID()
         let param = [kUserId:currentId,
                      kProtocol:"APNS",
                      kToken: deviceTokenString]

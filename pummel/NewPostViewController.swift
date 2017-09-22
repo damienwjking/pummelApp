@@ -136,7 +136,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             self.commentPhotoTV.resignFirstResponder()
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf("/posts/")
             
             var imageData : NSData!
@@ -149,7 +149,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             
             let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
             
-            let parameters = [kUserId:PMHeler.getCurrentID(),
+            let parameters = [kUserId:PMHelper.getCurrentID(),
                               kText: textPost]
             
             Alamofire.upload(

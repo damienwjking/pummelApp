@@ -155,7 +155,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                 
                 ImageRouter.getImage(imageURLString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let imageRes = result as! UIImage
                             cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
@@ -210,7 +210,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                     if response.response?.statusCode == 200 {
                         let likeJson = response.result.value as! NSDictionary
                         let rows = likeJson[kRows] as! [NSDictionary]
-                        let currentId = PMHeler.getCurrentID()
+                        let currentId = PMHelper.getCurrentID()
                         
                         var like = false
                         for row in rows {
@@ -467,7 +467,7 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                         self.textBox.text = ""
                         self.getLastComment()
                     } else {
-                        PMHeler.showDoAgainAlert()
+                        PMHelper.showDoAgainAlert()
                     }
             }
         }

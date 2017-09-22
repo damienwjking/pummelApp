@@ -53,11 +53,7 @@ class UserModel: NSObject {
     var facebookUrl: String? = ""
     var instagramUrl: String? = ""
     
-    var dictionaryValue: NSDictionary? = nil // temporary for convert format code: use dictionary to user model
-    
     func parseData(data: NSDictionary) {
-        self.dictionaryValue = data
-        
         self.id = data["id"] as! Int
         self.businessId = data["id"] as! Int
         self.mixpanel_id = data["mixpanel_id"] as? String
@@ -100,10 +96,6 @@ class UserModel: NSObject {
         self.twitterUrl = data["twitterUrl"] as? String
         self.facebookUrl = data["facebookUrl"] as? String
         self.instagramUrl = data["instagramUrl"] as? String
-    }
-    
-    func convertToDictionary() -> NSDictionary? {
-        return self.dictionaryValue
     }
     
     func same(userCheck: UserModel) -> Bool {

@@ -264,7 +264,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                             })
                         }
                     } else if response.response?.statusCode == 401 {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         NSNotificationCenter.defaultCenter().postNotificationName("AFTER_SEARCH_PAGE", object: nil)
                     }
@@ -448,7 +448,7 @@ extension FindViewController: CardViewCellDelegate {
         let userID = self.arrayResult[cellIndex][kUserId] as! Int
         let userIDString = String(format: "%ld", userID)
         
-        PMHeler.showCoachOrUserView(userIDString)
+        PMHelper.showCoachOrUserView(userIDString)
     }
     
     func cardViewCellMoreInfoClicked(cell: CardViewCell) {
@@ -457,7 +457,7 @@ extension FindViewController: CardViewCellDelegate {
         let userID = self.arrayResult[cellIndex][kUserId] as! Int
         let userIDString = String(format: "%ld", userID)
         
-        PMHeler.showCoachOrUserView(userIDString)
+        PMHelper.showCoachOrUserView(userIDString)
     }
 }
 
@@ -509,7 +509,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let userData = result as! NSDictionary
                         coach.parseData(userData)
@@ -551,7 +551,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
             let userID = self.coachArray[cellIndex].id
             let userIDString = String(format: "%ld", userID)
             
-            PMHeler.showCoachOrUserView(userIDString)
+            PMHelper.showCoachOrUserView(userIDString)
         }
     }
 }
@@ -704,7 +704,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 let userID = self.arrayResult[cellIndex][kUserId] as! Int
                 let userIDString = String(format: "%ld", userID)
                 
-                PMHeler.showCoachOrUserView(userIDString)
+                PMHelper.showCoachOrUserView(userIDString)
             }
         }
     }

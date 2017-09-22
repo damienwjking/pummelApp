@@ -146,11 +146,11 @@ extension BookSessionShareViewController {
         let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
         
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
-            let param = [kUserId : PMHeler.getCurrentID(),
+            let param = [kUserId : PMHelper.getCurrentID(),
                          kUserIdRequest : userID]
             
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_OLD)
             prefix.appendContentsOf("/")
             Alamofire.request(.PUT, prefix, parameters: param)
@@ -227,7 +227,7 @@ extension BookSessionShareViewController {
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            PMHeler.showCoachOrUserView(userID)
+            PMHelper.showCoachOrUserView(userID)
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
@@ -257,11 +257,11 @@ extension BookSessionShareViewController {
         let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
         
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
-            let param = [kUserId : PMHeler.getCurrentID(),
+            let param = [kUserId : PMHelper.getCurrentID(),
                          kUserIdRequest : userID]
             
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             prefix.appendContentsOf(kPMAPICOACH_CURRENT)
             prefix.appendContentsOf("/")
             
@@ -335,7 +335,7 @@ extension BookSessionShareViewController {
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            PMHeler.showCoachOrUserView(userID)
+            PMHelper.showCoachOrUserView(userID)
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)

@@ -14,3 +14,4 @@ let SCREEN_BOUND = UIScreen.mainScreen().bounds
 
 let SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
 let SCREEN_HEIGHT = UIScreen.mainScreen().bounds.size.height
+let SCREEN_MAX_LENGTH = max(SCREEN_WIDTH, SCREEN_HEIGHT)

@@ -150,11 +150,11 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         }
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         
-        let param = [kUserId : PMHeler.getCurrentID(),
+        let param = [kUserId : PMHelper.getCurrentID(),
                      kUserIds : values]
         
         Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
@@ -176,7 +176,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         activityView.startAnimating()
         self.view.addSubview(activityView)
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)
@@ -231,14 +231,14 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
                             let dayCurrent = dateFormatter.stringFromDate(NSDate())
                             
                             var prefixT = kPMAPIUSER
-                            prefixT.appendContentsOf(PMHeler.getCurrentID())
+                            prefixT.appendContentsOf(PMHelper.getCurrentID())
                             prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
                             prefixT.appendContentsOf("/")
                             prefixT.appendContentsOf(self.messageId as String)
                             
                             let param = [kConversationId:self.messageId as String,
                                 kLastOpenAt:dayCurrent,
-                                kUserId: PMHeler.getCurrentID()]
+                                kUserId: PMHelper.getCurrentID()]
                             
                             Alamofire.request(.PUT, prefixT, parameters: param)
                                 .responseJSON { response in

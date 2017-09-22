@@ -98,7 +98,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         self.updateUI()
         self.getListTags()
         
-        currentId = PMHeler.getCurrentID()
+        currentId = PMHelper.getCurrentID()
         self.navigationItem.title = kNavEditProfile
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
@@ -299,14 +299,14 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     func updateLocationCoach() {
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
             var locationName = ""
             if (self.location?.name?.isEmpty == false) {
                 locationName = (self.location?.name)!
             }
             
-            let param = [kUserId:PMHeler.getCurrentID(),
+            let param = [kUserId:PMHelper.getCurrentID(),
                          kServiceArea:locationName,
                          kLat:(self.location?.coordinate.latitude)!,
                          kLong:(self.location?.coordinate.longitude)!]
@@ -519,7 +519,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         }
         
         var prefixC = kPMAPICOACH
-        prefixC.appendContentsOf(PMHeler.getCurrentID())
+        prefixC.appendContentsOf(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefixC)
             .responseJSON { response in switch response.result {
@@ -600,7 +600,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     func callBasicInfoUpdate() {
         if (self.checkRuleInputData() == true) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHeler.getCurrentID())
+            prefix.appendContentsOf(PMHelper.getCurrentID())
             
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
@@ -622,7 +622,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
             mixpanel.track("IOS.Profile.EditProfile", properties: properties)
             
-            let userID = PMHeler.getCurrentID()
+            let userID = PMHelper.getCurrentID()
             
             let gender = (self.genderContentTF.text?.uppercaseString)!
             
@@ -679,12 +679,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func trainerInfoUpdate() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         
         let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
         
-        let param = [kUserId:PMHeler.getCurrentID(),
+        let param = [kUserId:PMHelper.getCurrentID(),
                      "qualifications":qualStr, "achievements": achiveStr]
         
         Alamofire.request(.PUT, prefix, parameters: param)
@@ -719,7 +719,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         if (self.haveAvatar == false) {
             message = "Please add a profile image"
             
-            PMHeler.showApplyAlert(message)
+            PMHelper.showApplyAlert(message)
             
             return false
         }
@@ -764,7 +764,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         if (selectedSpecialities == false) {
             message = "Please choose your specialities"
             
-            PMHeler.showApplyAlert(message)
+            PMHelper.showApplyAlert(message)
             return false
         }
         
@@ -772,7 +772,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         if (self.locationName.text?.isEmpty == true || self.locationName.text == "...") {
             message = "Please set your location"
             
-            PMHeler.showApplyAlert(message)
+            PMHelper.showApplyAlert(message)
             return false
         }
         
@@ -781,9 +781,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func upgradeToCoach() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         
-        let param = [kUserId:PMHeler.getCurrentID()]
+        let param = [kUserId:PMHelper.getCurrentID()]
         
         Alamofire.request(.PUT, prefix, parameters: param)
             .responseJSON { response in switch response.result {
@@ -837,7 +837,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                 }
             }).fetchdata()
         } else {
-            let coachID = PMHeler.getCurrentID()
+            let coachID = PMHelper.getCurrentID()
             
             ImageRouter.getCoachAvatar(coachID: coachID, sizeString: widthHeight100, completed: { (result, error) in
                 if (error == nil) {
@@ -1174,10 +1174,10 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
                 
             } else {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHeler.getCurrentID())
+                prefix.appendContentsOf(PMHelper.getCurrentID())
                 prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
                 
-                let parameters = [kUserId:PMHeler.getCurrentID(), kProfilePic: "1"]
+                let parameters = [kUserId:PMHelper.getCurrentID(), kProfilePic: "1"]
                 
                 Alamofire.upload(
                     .POST,

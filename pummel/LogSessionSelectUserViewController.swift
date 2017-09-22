@@ -44,7 +44,7 @@ class LogSessionSelectUserViewController: BaseViewController {
     
     func loadDataWithPrefix(prefixAPI:String) {
         var prefix = kPMAPICOACHES
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(prefixAPI)
         if prefixAPI == kPMAPICOACH_LEADS {
             prefix.appendContentsOf("\(offsetNew)")
@@ -178,7 +178,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         // Get name and image
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
             if (error == nil) {
-                let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                 if visibleCell == true {
                     if let userInfo = result as? NSDictionary {
                         let name = userInfo.objectForKey(kFirstname) as! String
@@ -188,7 +188,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                         
                         if (imageURLString?.isEmpty == false) {
                             ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
-                                let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                                 if visibleCell == true {
                                     if (error == nil) {
                                         let imageRes = result as! UIImage

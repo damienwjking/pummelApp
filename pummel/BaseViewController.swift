@@ -234,14 +234,14 @@ class BaseViewController: UIViewController {
                     defaults.setObject("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
                     
                     if (userID != nil && userID?.isEmpty == false) {
-                        PMHeler.showCoachOrUserView(userID!)
+                        PMHelper.showCoachOrUserView(userID!)
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL {
                     // Get user information + add to navigation
                     let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL) as? String
                     
                     if (userID != nil && userID?.isEmpty == false) {
-                        PMHeler.showCoachOrUserView(userID!, showTestimonial: true)
+                        PMHelper.showCoachOrUserView(userID!, showTestimonial: true)
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_MESSAGE_DETAIL {
                     self.tabBarController?.selectedIndex = 3

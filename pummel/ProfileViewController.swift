@@ -18,7 +18,13 @@ import Alamofire
 import AVFoundation
 
 enum UploadVideoStatus: Int {
-    case normal, uploading
+    case normal
+    case uploading
+}
+
+enum ProfileState: Int {
+    case currentUserProfile
+    case otherUserProfile
 }
 
 class ProfileViewController:  BaseViewController, UITextViewDelegate {
@@ -32,8 +38,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var bigBigIndicatorView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMV: UIImageView!
-    @IBOutlet weak var coachBorderV: UIView!
-    @IBOutlet weak var coachBorderBackgroundV: UIView!
     @IBOutlet weak var connectV : UIView!
     @IBOutlet weak var connectBT : UIView!
     @IBOutlet weak var cameraButton: UIButton!
@@ -107,12 +111,14 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var testimonialCollectionView: UICollectionView!
     @IBOutlet weak var testimonialViewHeightConstraint: NSLayoutConstraint!
     
+    var coachDetail: NSDictionary!
+    var userID = PMHelper.getCurrentID()
+    
     var instagramLink: String? = ""
     var twitterLink: String? = ""
     var facebookLink: String? = ""
     var oldPositionAboutV: CGFloat!
     var statusBarDefault: Bool!
-    var coachDetail: NSDictionary!
     var sizingCell: TagCell?
     var tags = [Tag]()
     var photoArray: NSMutableArray = []
@@ -122,7 +128,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var testimonialOffset = 0
     var isStopGetListPhotos : Bool = false
     var isStopGetTestimonial = false
-    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     
     let imagePickerController = UIImagePickerController()
     var videoView: UIView? = nil
@@ -151,8 +156,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     let defaults = NSUserDefaults.standardUserDefaults()
-    
-
     
     // MARK: View life circle
     override func viewDidLoad() {
@@ -203,7 +206,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.tabBarController?.title = kNavProfile
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        self.navigationController!.navigationBar.translucent = false;
+//        self.navigationController!.navigationBar.translucent = false;
         let selectedImage = UIImage(named: "profilePressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         
@@ -212,24 +215,18 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         self.getDetail()
         
-        self.isStopGetTestimonial = false
-        self.testimonialOffset = 0
-        self.getTestimonial()
-        
         self.playVideoButton.setImage(nil, forState: .Normal)
         
         if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
             self.cameraButton.alpha = 1
             self.cameraButton.userInteractionEnabled = true
-            self.coachBorderV.alpha = 1
-            self.coachBorderBackgroundV.alpha = 1
+            self.avatarIMV.layer.borderWidth = 3
             
             self.testimonialInviteButton.hidden = false
         } else {
             self.cameraButton.alpha = 0
             self.cameraButton.userInteractionEnabled = false
-            self.coachBorderV.alpha = 0
-            self.coachBorderBackgroundV.alpha = 0
+            self.avatarIMV.layer.borderWidth = 0
             
             self.testimonialInviteButton.hidden = true
         }
@@ -237,9 +234,15 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
         postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
         self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
         self.scrollView.scrollEnabled = true
+        
+        self.isStopGetTestimonial = false
+        self.testimonialOffset = 0
+        self.testimonialArray.removeAll()
+        self.getTestimonial()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -295,11 +298,9 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.testimonialTitle.font = .pmmMonLight11()
         self.testimonialInviteButton.titleLabel?.font = .pmmMonReg11()
         self.avatarIMV.layer.cornerRadius = 125/2
-        self.coachBorderV.layer.cornerRadius = 135/2
-        self.coachBorderBackgroundV.layer.cornerRadius = 129/2
         self.avatarIMV.clipsToBounds = true
-        self.coachBorderBackgroundV.hidden = true
-        self.coachBorderV.hidden = true
+        self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.avatarIMV.layer.borderWidth = 0
         self.scrollView.scrollsToTop = false
         self.interestCollectionView.delegate = self
         self.interestCollectionView.dataSource = self
@@ -370,7 +371,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = false
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(self.userID)
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
@@ -401,7 +402,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                         self.showVideoLayout(videoURL!)
                     }
                 } else if response.response?.statusCode == 401 {
-                    PMHeler.showLogoutAlert()
+                    PMHelper.showLogoutAlert()
                 }
         }
     }
@@ -414,13 +415,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMV.image = imageRes
-                    self.coachBorderBackgroundV.hidden = false
-                    
-                    if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-                        self.coachBorderV.hidden = false
-                    } else {
-                        self.coachBorderV.hidden = true
-                    }
                 } else {
                     print("Request failed with error: \(error)")
                 }
@@ -513,9 +507,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     func getTestimonial() {
         if (self.isStopGetTestimonial == false) {
-            let userID = PMHeler.getCurrentID()
-            
-            UserRouter.getTestimonial(userID: userID, offset: self.testimonialOffset) { (result, error) in
+            UserRouter.getTestimonial(userID: self.userID, offset: self.testimonialOffset) { (result, error) in
                 if (error == nil) {
                     let testimonialDicts = result as! NSArray
                     
@@ -719,8 +711,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     func updateUIUser() {
         self.interestHeightDT.constant = 0
-        self.coachBorderBackgroundV.hidden = true
-        self.coachBorderV.hidden = true
         self.addressIconIMV.hidden = true
         
         var totalPoint = 0.0
@@ -1017,7 +1007,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     
                     self.presentViewController(messageCompose, animated: true, completion: nil)
                 } else {
-                    PMHeler.showDoAgainAlert()
+                    PMHelper.showDoAgainAlert()
                 }
             })
             
@@ -1030,7 +1020,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     mail.setMessageBody("Please give me a testimonial : pummel://givetestimonial/coachId=\(userIDString)", isHTML: true)
                     self.presentViewController(mail, animated: true, completion: nil)
                 } else {
-                    PMHeler.showDoAgainAlert()
+                    PMHelper.showDoAgainAlert()
                 }
             })
             
@@ -1051,8 +1041,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.videoPlayerSetPlay(self.isVideoPlaying)
         }
     }
-    
-    // MARK: - Video
+}
+
+// MARK: - Video
+extension ProfileViewController {
     func videoPlayerSetPlay(isPlay: Bool) {
         if (isPlay == true) {
             self.videoPlayer!.play()
@@ -1071,8 +1063,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.isVideoPlaying = isPlay
         // Show/Hidden item above video view
         self.avatarIMV.hidden = isPlay
-        self.coachBorderV.hidden = isPlay
-        self.coachBorderBackgroundV.hidden = isPlay
         
         self.connectV.hidden = isPlay
     }
@@ -1081,13 +1071,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         // Move avatar to top left
         let newAvatarSize: CGFloat = 37.0
         let margin: CGFloat = 10.0
+        let topMargin: CGFloat = 55.0
         self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + margin
-        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + margin
+        self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
         self.avatarIMVWidthConstraint.constant = newAvatarSize
         
         self.avatarIMV.layer.cornerRadius = newAvatarSize/2
-        self.coachBorderV.layer.cornerRadius = (newAvatarSize + 10)/2
-        self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
         
         // Hidden indicator view
         self.smallIndicatorView.hidden = true
@@ -1140,20 +1129,20 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-//        let currentItem = object as! AVPlayerItem
-//        if currentItem.status == .ReadyToPlay {
-//            let videoRect = self.videoPlayerLayer?.videoRect
-//            if (videoRect?.width > videoRect?.height) {
-//                //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-//            } else {
-//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-//            }
-//            
-////            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
-//            
-//            self.videoPlayerSetPlay(false)
-//        }
+        //        let currentItem = object as! AVPlayerItem
+        //        if currentItem.status == .ReadyToPlay {
+        //            let videoRect = self.videoPlayerLayer?.videoRect
+        //            if (videoRect?.width > videoRect?.height) {
+        //                //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
+        //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+        //            } else {
+        //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
+        //            }
+        //
+        ////            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
+        //
+        //            self.videoPlayerSetPlay(false)
+        //        }
     }
     
     func endVideoNotification(notification: NSNotification) {
@@ -1165,7 +1154,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.videoPlayerSetPlay(false)
     }
     
-//    func convertVideoToMP4(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
+    //    func convertVideoToMP4(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
     func convertVideoToMP4AndUploadToServer(videoURL: NSURL) {
         //        self.getTempVideoPath()
         // Crop video to square
@@ -1217,11 +1206,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(self.userID)
         prefix.appendContentsOf(kPM_PATH_VIDEO)
         var parameters = [String:AnyObject]()
         
-        parameters = [kUserId:PMHeler.getCurrentID(),
+        parameters = [kUserId:self.userID,
                       kProfileVideo : "1"]
         
         Alamofire.upload(

@@ -110,7 +110,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
 
     func getArrayChat() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         
@@ -216,7 +216,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     
-                    let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                     if visibleCell == true {
                         dispatch_async(dispatch_get_main_queue(),{
                             cell.avatarIMV.image = imageRes
@@ -263,7 +263,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
@@ -276,7 +276,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
                                         
-                                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                                         if visibleCell == true {
                                             dispatch_async(dispatch_get_main_queue(),{
                                                 cell.avatarIMV.image = imageRes
@@ -311,7 +311,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if (imageURLString?.isEmpty == false) {
                     ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
                         if (error == nil) {
-                            let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                            let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                             if visibleCell == true {
                                 let imageRes = result as! UIImage
                                 cell.photoIMW.image = imageRes
@@ -327,7 +327,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
@@ -338,7 +338,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             if (imageURLString?.isEmpty == false) {
                                 ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
                                     if (error == nil) {
-                                        let visibleCell = PMHeler.checkVisibleCell(tableView, indexPath: indexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
                                         if visibleCell == true {
                                             let imageRes = result as! UIImage
                                             cell.avatarIMV.image = imageRes
@@ -396,7 +396,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     func avatarClicked() {
-        PMHeler.showCoachOrUserView(self.userIdTarget)
+        PMHelper.showCoachOrUserView(self.userIdTarget)
     }
     
     @IBAction func goPhoto(sender:UIButton!) {
@@ -425,11 +425,11 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         values = (self.typeCoach == true) ? [coachId] : [userIdTarget as String]
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         
-        let param = [kUserId : PMHeler.getCurrentID(),
+        let param = [kUserId : PMHelper.getCurrentID(),
                      kUserIds : values]
         
         Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
@@ -452,7 +452,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     func addMessageToExistConverstation(){
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         prefix.appendContentsOf(kPM_PATH_CONVERSATION)
         prefix.appendContentsOf("/")
         prefix.appendContentsOf(self.messageId as String)

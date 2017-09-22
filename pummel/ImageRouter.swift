@@ -66,7 +66,7 @@ enum ImageRouter: URLRequestConvertible {
     }
     
     var path: String {
-        let currentUserID = PMHeler.getCurrentID()
+        let currentUserID = PMHelper.getCurrentID()
         
         var prefix = ""
         switch self {
@@ -132,7 +132,7 @@ enum ImageRouter: URLRequestConvertible {
                 case .Failure(let error):
                     // check status code 401 : cookie expire
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock(result:  nil, error: error)
                     }

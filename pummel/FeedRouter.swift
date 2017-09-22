@@ -74,7 +74,7 @@ enum FeedRouter: URLRequestConvertible {
     
     func fetchdata() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let currentUserID = PMHeler.getCurrentID()
+        let currentUserID = PMHelper.getCurrentID()
         
         switch self {
         case .getListFeed:
@@ -90,7 +90,7 @@ enum FeedRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock(result: nil, error: error)
                     }
@@ -126,7 +126,7 @@ enum FeedRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock(result: nil, error: error)
                     }
@@ -141,7 +141,7 @@ enum FeedRouter: URLRequestConvertible {
                     self.comletedBlock(result: true, error: nil)
                 } else {
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         // Not expect case
                         self.comletedBlock(result: false, error: nil)

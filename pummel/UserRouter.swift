@@ -69,7 +69,7 @@ enum UserRouter: URLRequestConvertible {
     }
     
     var path: String {
-        let currentUserID = PMHeler.getCurrentID()
+        let currentUserID = PMHelper.getCurrentID()
         
         var prefix = ""
         switch self {
@@ -111,7 +111,7 @@ enum UserRouter: URLRequestConvertible {
     
     var param : [String: AnyObject]? {
         var param : [String : AnyObject] = [:]
-        let currentUserID = PMHeler.getCurrentID()
+        let currentUserID = PMHelper.getCurrentID()
         
         switch self {
         case .authenticateFacebook(let fbID, let email, let firstName, let lastName, let avatarURL, let gender, _):
@@ -190,7 +190,7 @@ enum UserRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(result: nil, error: error)
                     }
@@ -205,7 +205,7 @@ enum UserRouter: URLRequestConvertible {
                     self.comletedBlock!(result: true, error: nil)
                 } else {
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
                         self.comletedBlock!(result: false, error: error)
@@ -229,7 +229,7 @@ enum UserRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(result: false, error: error)
                     }
@@ -252,7 +252,7 @@ enum UserRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(result: nil, error: error)
                     }
@@ -274,7 +274,7 @@ enum UserRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(result: nil, error: error)
                     }
@@ -297,7 +297,7 @@ enum UserRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(result: false, error: error)
                     }
@@ -328,7 +328,7 @@ enum UserRouter: URLRequestConvertible {
                     }
                 case .Failure(let error):
                     if (response.response?.statusCode == 401) {
-                        PMHeler.showLogoutAlert()
+                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(result: nil, error: error)
                     }
@@ -363,7 +363,7 @@ enum UserRouter: URLRequestConvertible {
         
         // Send token
         if ((defaults.objectForKey(k_PM_PUSH_TOKEN)) != nil) {
-            let currentId = PMHeler.getCurrentID()
+            let currentId = PMHelper.getCurrentID()
             let deviceTokenString = defaults.objectForKey(k_PM_PUSH_TOKEN) as! String
             
             let param = [kUserId:currentId,

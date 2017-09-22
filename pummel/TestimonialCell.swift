@@ -104,6 +104,6 @@ class TestimonialCell: UICollectionViewCell {
     }
     
     func avatarImageViewClicked() {
-        PMHeler.showCoachOrUserView(self.userID)
+        PMHelper.showCoachOrUserView(self.userID)
     }
 }

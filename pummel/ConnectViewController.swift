@@ -80,7 +80,7 @@ class ConnectViewController: BaseViewController {
         self.fourthConnectingIconV.layer.cornerRadius = 5
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
@@ -208,7 +208,7 @@ class ConnectViewController: BaseViewController {
         self.requestCallBackBT.userInteractionEnabled = false
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHeler.getCurrentID())
+        prefix.appendContentsOf(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
