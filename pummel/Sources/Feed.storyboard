@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -184,7 +184,6 @@
                         <outlet property="refineSearchBT" destination="WNF-6o-ajD" id="OLf-54-7Gy"/>
                         <outlet property="separeateline" destination="HoU-ZV-LeH" id="w9F-j5-qa1"/>
                         <segue destination="VVc-lb-yt4" kind="presentation" identifier="goConnect" id="LTK-hm-JXL"/>
-                        <segue destination="REY-5g-p4Z" kind="presentation" identifier="goProfile" id="tGO-Rx-XKv"/>
                         <segue destination="RcJ-86-YBS" kind="presentation" identifier="letUsHelp" id="Z6O-y3-8EI"/>
                         <segue destination="gWf-bF-p9D" kind="show" identifier="sendMessageConnection" id="pOS-qP-4jl"/>
                         <segue destination="vGS-YO-8M7" kind="show" identifier="gotoClient" id="Fx5-WO-RPO"/>
@@ -201,15 +200,7 @@
                 <viewControllerPlaceholder storyboardName="Connection" id="VVc-lb-yt4" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zqE-hi-K4j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3867" y="1136"/>
-        </scene>
-        <!--CoachProfile-->
-        <scene sceneID="hob-RH-XXc">
-            <objects>
-                <viewControllerPlaceholder storyboardName="CoachProfile" id="REY-5g-p4Z" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="yNl-My-VR5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3851" y="1264"/>
+            <point key="canvasLocation" x="-4221" y="1181"/>
         </scene>
         <!--Chat-->
         <scene sceneID="bFs-Ms-e8m">
@@ -217,7 +208,7 @@
                 <viewControllerPlaceholder storyboardName="Chat" id="gWf-bF-p9D" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ULk-3L-OBS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4009" y="662"/>
+            <point key="canvasLocation" x="-4221" y="861"/>
         </scene>
         <!--Search-->
         <scene sceneID="SxD-BH-aac">
@@ -225,7 +216,7 @@
                 <viewControllerPlaceholder storyboardName="Search" id="RcJ-86-YBS" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O9s-ju-dzQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3866" y="739"/>
+            <point key="canvasLocation" x="-4220" y="1025"/>
         </scene>
         <!--List Coachs View Controller-->
         <scene sceneID="Nu4-3E-3c1">
@@ -258,12 +249,11 @@
                     </view>
                     <connections>
                         <outlet property="tbView" destination="0Ea-MJ-Kte" id="sNG-t8-Ixg"/>
-                        <segue destination="REY-5g-p4Z" kind="show" identifier="goProfile" id="cAd-8P-CL0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fvw-rQ-nOU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5410" y="1783"/>
+            <point key="canvasLocation" x="-5252" y="1868"/>
         </scene>
         <!--Book Session Share View Controller-->
         <scene sceneID="hHj-lP-vtn">
@@ -297,20 +287,11 @@
                     <connections>
                         <outlet property="tbView" destination="NQ0-MS-QSr" id="PP1-J6-xpE"/>
                         <segue destination="Pb5-iB-czY" kind="show" identifier="inviteContactUser" id="wCh-FF-UZc"/>
-                        <segue destination="WaN-lF-MaJ" kind="presentation" identifier="goUserProfile" id="BFV-gp-LJL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KvM-lu-Mmd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4106" y="1784"/>
-        </scene>
-        <!--UserProfile-->
-        <scene sceneID="9CF-TR-6ar">
-            <objects>
-                <viewControllerPlaceholder storyboardName="UserProfile" id="WaN-lF-MaJ" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ViT-EW-QTT" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4107" y="2289"/>
+            <point key="canvasLocation" x="-4369" y="1868"/>
         </scene>
         <!--Contact User View Controller-->
         <scene sceneID="vVi-Z5-wjv">
@@ -344,18 +325,18 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EgM-zk-jwW" id="eDt-UY-KOy">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UkR-DH-fWD">
-                                                    <rect key="frame" x="15" y="5" width="33.5" height="20.5"/>
+                                                    <rect key="frame" x="15" y="4" width="34" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0az-oK-fv2">
-                                                    <rect key="frame" x="15" y="25.5" width="44" height="14.5"/>
+                                                    <rect key="frame" x="15" y="25" width="44" height="15"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
@@ -386,14 +367,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sgk-YR-rZX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3263.1999999999998" y="1783.3583208395803"/>
+            <point key="canvasLocation" x="-3652" y="1868"/>
         </scene>
     </scenes>
     <resources>
         <image name="cardEmpty" width="166" height="142"/>
         <image name="search.png" width="45" height="45"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="tGO-Rx-XKv"/>
-    </inferredMetricsTieBreakers>
 </document>

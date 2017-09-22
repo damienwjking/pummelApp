@@ -249,8 +249,6 @@
                             <nil key="action"/>
                         </segue>
                         <segue destination="i7M-ev-VKF" kind="push" identifier="checkChatMessage" id="y7V-3C-Wca"/>
-                        <segue destination="aSJ-QE-QVC" kind="presentation" identifier="goUserProfile" id="42k-Hb-Ab2"/>
-                        <segue destination="YPI-RB-1RP" kind="presentation" identifier="goProfile" id="Lac-yb-Onx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SP4-Yg-AYO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -418,22 +416,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fy3-Eg-WOC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2662" y="2355"/>
-        </scene>
-        <!--UserProfile-->
-        <scene sceneID="8k3-DA-JAr">
-            <objects>
-                <viewControllerPlaceholder storyboardName="UserProfile" id="aSJ-QE-QVC" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0i0-6n-Dtf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4150" y="2803"/>
-        </scene>
-        <!--CoachProfile-->
-        <scene sceneID="Gaw-n3-D0a">
-            <objects>
-                <viewControllerPlaceholder storyboardName="CoachProfile" id="YPI-RB-1RP" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BWW-pH-BuE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3677" y="2803"/>
         </scene>
         <!--Chat-->
         <scene sceneID="7aq-cN-kCX">

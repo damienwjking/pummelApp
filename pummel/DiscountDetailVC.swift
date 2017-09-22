@@ -24,7 +24,6 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var tvLinkHeightConstraint: NSLayoutConstraint!
     
-    var businessDetail:NSDictionary!
     var discountDetail:NSDictionary!
     
     override func viewDidLoad() {
@@ -142,41 +141,15 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         
         // Get bussiness
         let businessId = String(format:"%0.f", discountDetail[kBusinessId]!.doubleValue)
-        var linkBusinessId = kPMAPI_BUSINESS
-        linkBusinessId.appendContentsOf(businessId)
-        Alamofire.request(.GET, linkBusinessId)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    if let jsonBusiness = response.result.value as? NSDictionary {
-                        self.businessDetail = jsonBusiness
-                        self.fillData()
-                    }
-                }
-        }
-    }
-    
-    func fillData() {
-        
-        let postfix = widthEqual.stringByAppendingString(String(self.imgLogo.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.imgLogo.bounds.height))
-        if !(businessDetail[kImageUrl] is NSNull) {
-            let imageLink = businessDetail[kImageUrl] as! String
-            var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+        ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight200) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                
                 self.imgLogo.image = imageRes
             } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.imgLogo.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                        }
-                }
+                print("Request failed with error: \(error)")
             }
-        }
+        }.fetchdata()
     }
     
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {

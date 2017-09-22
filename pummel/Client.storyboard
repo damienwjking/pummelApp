@@ -463,9 +463,7 @@
                         <outlet property="noActivityYetLB" destination="Ul5-hp-CQ3" id="Orn-CU-1Ym"/>
                         <outlet property="tableFeed" destination="PWt-iK-hgy" id="OsT-HW-2MD"/>
                         <segue destination="cbx-O6-eji" kind="presentation" identifier="goConnect" id="Ac1-pw-fXy"/>
-                        <segue destination="Gd2-C1-EhE" kind="presentation" identifier="goProfile" id="eNF-2K-hnC"/>
                         <segue destination="i79-xW-CTq" kind="show" identifier="goNewPost" id="5s5-d3-Bto"/>
-                        <segue destination="ISJ-2B-nHW" kind="presentation" identifier="goUserProfile" id="JUz-x8-3Nn"/>
                         <segue destination="Ccl-Of-O49" kind="show" identifier="goToFeedDetail" id="gUV-m3-HpE"/>
                         <segue destination="L48-MW-P9N" kind="push" identifier="sendMessageConnection" id="QU3-vC-ICQ"/>
                         <segue destination="U6V-S5-maD" kind="show" identifier="clickURLLink" id="cMA-0W-Q2t"/>
@@ -475,16 +473,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNB-e7-PKw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2331" y="198"/>
-        </scene>
-        <!--CoachProfile-->
-        <scene sceneID="x8u-eD-Cc9">
-            <objects>
-                <viewControllerPlaceholder storyboardName="CoachProfile" id="Gd2-C1-EhE" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="Dmf-AG-EMx"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HfY-JS-giY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1678" y="1452"/>
         </scene>
         <!--Connection-->
         <scene sceneID="mla-lJ-BQe">
@@ -555,14 +543,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VCY-hs-uTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1298" y="-214"/>
-        </scene>
-        <!--UserProfile-->
-        <scene sceneID="Whz-9q-eid">
-            <objects>
-                <viewControllerPlaceholder storyboardName="UserProfile" id="ISJ-2B-nHW" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MMJ-Ug-MB0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1289" y="197"/>
         </scene>
         <!--Discount-->
         <scene sceneID="DOw-D2-xI5">

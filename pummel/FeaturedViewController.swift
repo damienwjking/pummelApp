@@ -6,11 +6,11 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 
-import Foundation
 import UIKit
-import Alamofire
-import Mixpanel
 import MapKit
+import Mixpanel
+import Alamofire
+import Foundation
 
 class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITextViewDelegate, FeedDiscountViewDelegate, CLLocationManagerDelegate {
     
@@ -62,7 +62,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         if (self.isLoading == false &&
             self.isGoFeedDetail == false &&
             self.isGoProfileDetail == false) {
-            self.tableFeed.hidden = true
             self.refresh()
         }
         self.noActivityYetLB.font = .pmmPlayFairReg18()
@@ -81,37 +80,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             self.sharePummel()
         } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_FEED {
             self.refresh()
-        } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_PROFILE {
-            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
-            
-            // Get user information + add to navigation
-            let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE) as? String
-            defaults.setObject("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
-            if (userID != nil && userID?.isEmpty == false) {
-                self.view.makeToastActivity(message: "Loading")
-                
-                UserRouter.getUserInfo(userID: userID!) { (result, error) in
-                    if (error == nil) {
-                        self.isGoProfileDetail = true
-                        
-                        let userDetail = result as! NSDictionary
-                        
-                        UserRouter.checkCoachOfUser(userID: userID!) { (result, error) in
-                            self.view.hideToastActivity()
-                            let isCoach = result as! Bool
-                            
-                            if (isCoach == true) {
-                                self.performSegueWithIdentifier(kGoProfile, sender:userDetail)
-                            } else {
-                                self.performSegueWithIdentifier(kGoUserProfile, sender:userDetail)
-                            }
-                            }.fetchdata()
-                        
-                    } else {
-                        print("Request failed with error: \(error)")
-                    }
-                    }.fetchdata()
-            }
         }
     }
     
@@ -371,21 +339,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         let feed = arrayFeeds[sender.tag]
         let userID = feed[kUserId] as! Double
         let userIDString = String(format: "%0.0f", userID)
-        UserRouter.getUserInfo(userID: userIDString) { (result, error) in
-            if (error == nil) {
-                let cell = self.tableFeed.cellForRowAtIndexPath(NSIndexPath.init(forRow: sender.tag, inSection: 1)) as! FeaturedFeedTableViewCell
-                self.isGoProfileDetail = true
-                
-                let userDetail = result as! NSDictionary
-                if (cell.isCoach == true) {
-                    self.performSegueWithIdentifier(kGoProfile, sender:userDetail)
-                } else {
-                    self.performSegueWithIdentifier(kGoUserProfile, sender:userDetail)
-                }
-            } else {
-                print("Request failed with error: \(error)")
-            }
-        }.fetchdata()
+        
+        self.isGoProfileDetail = true
+        PMHeler.showCoachOrUserView(userIDString)
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -434,15 +390,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let currentFeedDetail = feed[kUser] as! NSDictionary
             destination.coachDetail = currentFeedDetail
             destination.isFromFeed = true
-        } else if (segue.identifier == kGoProfile) {
-            let destination = segue.destinationViewController as! CoachProfileViewController
-            destination.coachDetail = sender as! NSDictionary
-            destination.isFromFeed = true
-        } else if (segue.identifier == kGoUserProfile) {
-            let destination = segue.destinationViewController as! UserProfileViewController
-            let currentFeedDetail = sender as! NSDictionary
-            destination.userDetail = currentFeedDetail
-            destination.userId = String(format:"%0.f", currentFeedDetail[kId]!.doubleValue)
         } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destinationViewController as! ChatMessageViewController
             

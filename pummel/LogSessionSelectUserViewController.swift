@@ -210,16 +210,11 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         
         // Check coach
         UserRouter.checkCoachOfUser(userID: targetUserId) { (result, error) in
-            if (error == nil) {
-                let isCoach = result as! Bool
-                
-                if (isCoach) {
-                    cell.imgAvatar.layer.borderWidth = 3
-                    cell.imgAvatar.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
-                }
-                
-            } else {
-                print("Request failed with error: \(error)")
+            let isCoach = result as! Bool
+            
+            if (isCoach) {
+                cell.imgAvatar.layer.borderWidth = 3
+                cell.imgAvatar.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
             }
         }.fetchdata()
         

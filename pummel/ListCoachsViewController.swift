@@ -89,17 +89,12 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     }
     
     func selectUserWithCoachInfo(coachInfo: NSDictionary) {
-        self.performSegueWithIdentifier(kGoProfile, sender:coachInfo)
+        // Maybe need conver ID from int to string
+        let userID = coachInfo[kId] as! String
+        
+        PMHeler.showCoachOrUserView(userID)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == kGoProfile) {
-            let destination = segue.destinationViewController as! CoachProfileViewController
-            let currentFeedDetail = sender as! NSDictionary
-            destination.coachDetail = currentFeedDetail
-            destination.isFromListCoaches = true
-        }
-    }
     
     func showAlertMovetoOldAction(userID:String) {
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in

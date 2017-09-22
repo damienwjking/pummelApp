@@ -207,7 +207,8 @@ enum UserRouter: URLRequestConvertible {
                     if (response.response?.statusCode == 401) {
                         PMHeler.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: false, error: nil)
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(result: false, error: error)
                     }
                 }
             })

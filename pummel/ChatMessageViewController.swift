@@ -396,18 +396,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     func avatarClicked() {
-        var coachLink  = kPMAPICOACH
-        let coachId = self.userIdTarget
-        coachLink.appendContentsOf(coachId)
-        Alamofire.request(.GET, coachLink)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    let coachDetail = response.result.value as! NSDictionary
-                    self.performSegueWithIdentifier(kGoProfile, sender: coachDetail[kUser])
-                } else {
-                    self.performSegueWithIdentifier(kGoUserProfile, sender: nil)
-                }
-        }
+        PMHeler.showCoachOrUserView(self.userIdTarget)
     }
     
     @IBAction func goPhoto(sender:UIButton!) {
@@ -427,14 +416,6 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             destinationVC.typeCoach = self.typeCoach
             destinationVC.coachId = self.coachId
             destinationVC.userIdTarget = self.userIdTarget
-        } else if (segue.identifier == kGoUserProfile) {
-            let destination = segue.destinationViewController as! UserProfileViewController
-            destination.userId = userIdTarget
-            destination.userDetail = self.targerUser
-        } else if (segue.identifier == kGoProfile) {
-            let destination = segue.destinationViewController as! CoachProfileViewController
-            destination.coachDetail = sender as! NSDictionary
-            destination.isFromChat = true
         }
     }
     

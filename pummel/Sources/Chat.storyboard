@@ -123,14 +123,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="display-empty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="VIf-cu-6RV">
-                                                    <rect key="frame" x="151.5" y="11" width="80" height="80"/>
+                                                    <rect key="frame" x="152" y="11" width="80" height="80"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="BLc-Un-kC7"/>
                                                         <constraint firstAttribute="width" constant="80" id="L9e-wJ-mb0"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CONNECTED TO" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3E-AV-Xr0">
-                                                    <rect key="frame" x="126.5" y="106" width="92" height="26"/>
+                                                    <rect key="frame" x="127" y="106" width="92" height="26"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="92" id="Plj-KE-ICK"/>
                                                         <constraint firstAttribute="height" constant="26" id="w2Z-gz-nGR"/>
@@ -140,7 +140,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SARAH" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgB-Dv-Jsd">
-                                                    <rect key="frame" x="217.5" y="106" width="86" height="26"/>
+                                                    <rect key="frame" x="218" y="106" width="86" height="26"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="86" id="K4L-gA-fUs"/>
                                                         <constraint firstAttribute="height" constant="26" id="tI9-d6-zs7"/>
@@ -150,13 +150,13 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ASK ME ABOUT MY SERVICES, RATES, AVAILABILITY, BOOKINGS OR JUST REQUEST A CALL BACK" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hwb-LY-J4r">
-                                                    <rect key="frame" x="30" y="126" width="323" height="26.5"/>
+                                                    <rect key="frame" x="30" y="126" width="323" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                     <color key="textColor" red="0.3803921569" green="0.3803921569" blue="0.3803921569" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="JUST NOW" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lmw-Nh-viM">
-                                                    <rect key="frame" x="116.5" y="179.5" width="150" height="25"/>
+                                                    <rect key="frame" x="117" y="180" width="150" height="25"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="150" id="Bix-ZD-3k5"/>
                                                         <constraint firstAttribute="height" constant="25" id="Tqr-pQ-Y9L"/>
@@ -346,29 +346,11 @@ fasdfasdfasdfas
                         <segue destination="uhu-24-VMw" kind="show" identifier="sendPhoto" id="pyi-qs-lJb">
                             <nil key="action"/>
                         </segue>
-                        <segue destination="jhT-sT-dEg" kind="presentation" identifier="goUserProfile" id="ttK-ax-dh6"/>
-                        <segue destination="2op-t9-NTK" kind="presentation" identifier="goProfile" id="GzD-Ys-WQ1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="65d-yZ-AFc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="550" y="3277"/>
-        </scene>
-        <!--UserProfile-->
-        <scene sceneID="r5T-0I-VZ9">
-            <objects>
-                <viewControllerPlaceholder storyboardName="UserProfile" id="jhT-sT-dEg" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="flO-JA-IXA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="175" y="3723"/>
-        </scene>
-        <!--CoachProfile-->
-        <scene sceneID="GlT-3x-Y1w">
-            <objects>
-                <viewControllerPlaceholder storyboardName="CoachProfile" id="2op-t9-NTK" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="yeQ-Ni-gDR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="902" y="3723"/>
         </scene>
         <!--Send Photo View Controller-->
         <scene sceneID="nye-gp-lGD">

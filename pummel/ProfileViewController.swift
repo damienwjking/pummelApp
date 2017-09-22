@@ -1046,8 +1046,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.isVideoPlaying = !self.isVideoPlaying
-        self.videoPlayerSetPlay(self.isVideoPlaying)
+        if (self.videoPlayer != nil) {
+            self.isVideoPlaying = !self.isVideoPlaying
+            self.videoPlayerSetPlay(self.isVideoPlaying)
+        }
     }
     
     // MARK: - Video

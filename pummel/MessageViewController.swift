@@ -440,17 +440,6 @@ class MessageViewController: BaseViewController {
                 let userID = sender as! String
                 destinationVC.userIdTarget = userID
             }
-            
-        } else if (segue.identifier == kGoUserProfile) {
-            let destination = segue.destinationViewController as! UserProfileViewController
-            
-            let indexPathRow = sender as! Int
-            
-            let lead = self.arrayListLead[indexPathRow]
-            let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
-            
-            destination.userId = targetUserId
-            destination.userDetail = lead
         }
     }
 
@@ -856,7 +845,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     let phoneNumber = userInfo[kMobile] as! String
                     
                     let viewProfileAction = { (action:UIAlertAction!) -> Void in
-                        self.performSegueWithIdentifier(kGoUserProfile, sender: indexPath.row)
+                        PMHeler.showCoachOrUserView(userID)
                     }
                     
                     let acceptClientAction = { (action:UIAlertAction!) -> Void in

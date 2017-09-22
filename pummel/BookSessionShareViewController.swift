@@ -99,13 +99,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == kGoUserProfile {
-            let destination = segue.destinationViewController as! UserProfileViewController
-//            let feed = arrayFeeds[sender.tag]
-//            currentFeedDetail = feed[kUser] as! NSDictionary
-//            destination.userDetail = currentFeedDetail
-            destination.userId = String(format:"%0.f", sender!.doubleValue)
-        } else if (segue.identifier == "inviteContactUser") {
+        if (segue.identifier == "inviteContactUser") {
             let destination = segue.destinationViewController as! ContactUserViewController
             
             let styleInvite = sender as! String
@@ -233,13 +227,10 @@ extension BookSessionShareViewController {
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
-            
+            PMHeler.showCoachOrUserView(userID)
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        
-        
         
         alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
         
@@ -344,7 +335,7 @@ extension BookSessionShareViewController {
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            self.performSegueWithIdentifier(kGoUserProfile, sender:userID)
+            PMHeler.showCoachOrUserView(userID)
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)

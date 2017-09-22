@@ -330,25 +330,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     destination.needOpenKeyboard = true
                 }
             }
-        } else if (segue.identifier == kGoProfile) {
-            let destination = segue.destinationViewController as! CoachProfileViewController
-            let totalDetail = sender as! NSDictionary
-            
-            var coachDetail = totalDetail[kUser] as? NSDictionary
-            if (coachDetail == nil) {
-                coachDetail = totalDetail
-            }
-
-            if (coachDetail != nil) {
-                destination.coachDetail = coachDetail
-                
-                if let firstName = destination.coachDetail[kFirstname] as? String {
-                    // Tracker mixpanel
-                    let mixpanel = Mixpanel.sharedInstance()
-                    let properties = ["Name": "Profile Is Clicked", "Label":"\(firstName.uppercaseString)"]
-                    mixpanel.track("IOS.ClickOnProfile", properties: properties)
-                }
-            }
         }
     }
 
@@ -463,14 +444,20 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
 extension FindViewController: CardViewCellDelegate {
     func cardViewCellTagClicked(cell: CardViewCell) {
         let indexPath = self.collectionView.indexPathForCell(cell)
+        let cellIndex = indexPath!.row
+        let userID = self.arrayResult[cellIndex][kUserId] as! Int
+        let userIDString = String(format: "%ld", userID)
         
-        self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[(indexPath?.row)!])
+        PMHeler.showCoachOrUserView(userIDString)
     }
     
     func cardViewCellMoreInfoClicked(cell: CardViewCell) {
         let indexPath = self.collectionView.indexPathForCell(cell)
+        let cellIndex = indexPath!.row
+        let userID = self.arrayResult[cellIndex][kUserId] as! Int
+        let userIDString = String(format: "%ld", userID)
         
-        self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[(indexPath?.row)!])
+        PMHeler.showCoachOrUserView(userIDString)
     }
 }
 
@@ -561,9 +548,10 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if indexPath.row < self.coachArray.count {
             let cellIndex = indexPath.row
+            let userID = self.coachArray[cellIndex].id
+            let userIDString = String(format: "%ld", userID)
             
-            let userDetail = self.coachArray[cellIndex].convertToDictionary()
-            self.performSegueWithIdentifier(kGoProfile, sender: userDetail)
+            PMHeler.showCoachOrUserView(userIDString)
         }
     }
 }
@@ -713,8 +701,10 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         if collectionView == self.collectionView {
             if indexPath.row < self.arrayResult.count {
                 let cellIndex = indexPath.row
+                let userID = self.arrayResult[cellIndex][kUserId] as! Int
+                let userIDString = String(format: "%ld", userID)
                 
-                self.performSegueWithIdentifier(kGoProfile, sender: self.arrayResult[cellIndex])
+                PMHeler.showCoachOrUserView(userIDString)
             }
         }
     }

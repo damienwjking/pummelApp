@@ -245,10 +245,6 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         }
         self.checkConnect()
         
-        self.isStopGetTestimonial = false
-        self.testimonialOffset = 0
-        self.getTestimonial()
-        
         self.playVideoButton.setImage(nil, forState: .Normal)
     }
     
@@ -258,6 +254,11 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
         self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
         self.scrollView.scrollEnabled = true
+        
+        self.isStopGetTestimonial = false
+        self.testimonialOffset = 0
+        self.testimonialArray.removeAll()
+        self.getTestimonial()
         
         // check Video URL
         let videoURL = self.coachDetail[kVideoURL] as? String

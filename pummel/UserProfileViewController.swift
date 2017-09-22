@@ -296,8 +296,10 @@ class UserProfileViewController: BaseViewController  {
     }
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        self.isVideoPlaying = !self.isVideoPlaying
-        self.videoPlayerSetPlay(self.isVideoPlaying)
+        if (self.videoPlayer != nil) {
+            self.isVideoPlaying = !self.isVideoPlaying
+            self.videoPlayerSetPlay(self.isVideoPlaying)
+        }
     }
     
     func endVideoNotification(notification: NSNotification) {

@@ -359,16 +359,8 @@ class FeedViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func goProfile(sender: UIButton) {
-        self.performSegueWithIdentifier(kGoProfile, sender:sender)
-    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == kGoProfile) {
-            let destination = segue.destinationViewController as! CoachProfileViewController
-            destination.coachDetail = userFeed
-            destination.isFromFeed = true
-        } else if (segue.identifier == "goNewPost") {
+        if (segue.identifier == "goNewPost") {
             let destination = segue.destinationViewController as! NewCommentImageViewController
             destination.postId = String(format:"%0.f", feedDetail[kId]!.doubleValue)
         } else if (segue.identifier == kClickURLLink) {
