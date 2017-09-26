@@ -32,84 +32,86 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var detailV: UIView!
     @IBOutlet weak var smallIndicatorView: UIView!
     @IBOutlet weak var medIndicatorView: UIView!
     @IBOutlet weak var bigIndicatorView: UIView!
     @IBOutlet weak var bigBigIndicatorView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var avatarIMV: UIImageView!
-    @IBOutlet weak var connectV : UIView!
-    @IBOutlet weak var connectBT : UIView!
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var uploadingLabel: UILabel!
     @IBOutlet weak var playVideoButton: UIButton!
     @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var addressIconIMV: UIImageView!
-    @IBOutlet weak var interestLB: UILabel!
-    @IBOutlet weak var specialitiesLB: UILabel!
-    @IBOutlet weak var aboutLB: UILabel!
-    @IBOutlet weak var qualificaitonLB: UILabel!
-    @IBOutlet weak var socailLB: UILabel!
-    @IBOutlet weak var postLB: UILabel!
-    @IBOutlet weak var interestCollectionView: UICollectionView!
-    @IBOutlet weak var interestFlowLayout: FlowLayout!
-    @IBOutlet weak var aboutCollectionView: UICollectionView!
-    @IBOutlet weak var aboutFlowLayout: FlowLayout!
-    @IBOutlet weak var aboutLeftDT: NSLayoutConstraint!
     @IBOutlet weak var businessIMV: UIImageView!
-    @IBOutlet weak var postHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var interestHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var postV: UIView!
-    @IBOutlet weak var imageV: UIView!
-    @IBOutlet weak var detailV: UIView!
-    @IBOutlet weak var interestV: UIView!
-    @IBOutlet weak var aboutV: UIView!
-    @IBOutlet weak var aboutHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var achivementDT: NSLayoutConstraint!
-    @IBOutlet weak var socailV: UIView!
-    @IBOutlet weak var facebookV: UIView!
-    @IBOutlet weak var facebookBT: UIButton!
-    @IBOutlet weak var twiterV: UIView!
-    @IBOutlet weak var twiterBT: UIButton!
-    @IBOutlet weak var instagramV: UIView!
-    @IBOutlet weak var instagramBT: UIButton!
-    @IBOutlet weak var facebookDT: NSLayoutConstraint!
-    @IBOutlet weak var twiterDT: NSLayoutConstraint!
-    @IBOutlet weak var instagramDT: NSLayoutConstraint!
-    @IBOutlet weak var socalDT: NSLayoutConstraint!
-    @IBOutlet weak var socalBTDT: NSLayoutConstraint!
-    @IBOutlet weak var aboutTV: UITextView!
-    @IBOutlet weak var aboutTVHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var webV: UIView!
-    @IBOutlet weak var webTV: UITextView!
-    @IBOutlet weak var webTVHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var webHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var qualificationV: UIView!
-    @IBOutlet weak var qualificationDT: NSLayoutConstraint!
-    @IBOutlet weak var qualificationTV: UITextView!
-    @IBOutlet weak var qualificationTVHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var achivementV: UIView!
-    @IBOutlet weak var achivementTV: UITextView!
-    @IBOutlet weak var achivementTVHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var specifiesDT: NSLayoutConstraint!
     
-    @IBOutlet weak var locationView: UIView!
-    @IBOutlet weak var locationBackgroundImageView: UIImageView!
-    
-    @IBOutlet weak var ratingLB: UILabel!
-    @IBOutlet weak var ratingContentLB: UILabel!
+    @IBOutlet weak var connectV : UIView!
     
     @IBOutlet weak var connectionLB: UILabel!
+    @IBOutlet weak var ratingContentLB: UILabel!
     @IBOutlet weak var connectionContentLB: UILabel!
-    
-    @IBOutlet weak var postNumberLB: UILabel!
     @IBOutlet weak var postNumberContentLB: UILabel!
+    
+    @IBOutlet weak var interestV: UIView!
+    @IBOutlet weak var interestCollectionView: UICollectionView!
+    @IBOutlet weak var interestFlowLayout: FlowLayout!
+    @IBOutlet weak var interestHeightDT: NSLayoutConstraint!
+    
+    @IBOutlet weak var aboutV: UIView!
+    @IBOutlet weak var aboutLB: UILabel!
+    @IBOutlet weak var aboutTV: UITextView!
+    @IBOutlet weak var aboutFlowLayout: FlowLayout!
+    @IBOutlet weak var aboutLeftDT: NSLayoutConstraint!
+    @IBOutlet weak var aboutHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var aboutTVHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var aboutCollectionView: UICollectionView!
     
     @IBOutlet weak var testimonialView: UIView!
     @IBOutlet weak var testimonialTitle: UILabel!
     @IBOutlet weak var testimonialInviteButton: UIButton!
     @IBOutlet weak var testimonialCollectionView: UICollectionView!
     @IBOutlet weak var testimonialViewHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var webV: UIView!
+    @IBOutlet weak var webTV: UITextView!
+    @IBOutlet weak var webHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var webTVHeightDT: NSLayoutConstraint!
+    
+    @IBOutlet weak var qualificationV: UIView!
+    @IBOutlet weak var qualificationTV: UITextView!
+    @IBOutlet weak var specifiesDT: NSLayoutConstraint!
+    @IBOutlet weak var qualificationDT: NSLayoutConstraint!
+    @IBOutlet weak var qualificationTVHeightDT: NSLayoutConstraint!
+    
+    @IBOutlet weak var achivementV: UIView!
+    @IBOutlet weak var achivementTV: UITextView!
+    @IBOutlet weak var achivementDT: NSLayoutConstraint!
+    @IBOutlet weak var achivementTVHeightDT: NSLayoutConstraint!
+    
+    @IBOutlet weak var postV: UIView!
+    @IBOutlet weak var postLB: UILabel!
+    @IBOutlet weak var postHeightDT: NSLayoutConstraint!
+    
+    @IBOutlet weak var socialView: UIView!
+    @IBOutlet weak var socialLabel: UILabel!
+    @IBOutlet weak var facebookView: UIView!
+    @IBOutlet weak var facebookButton: UIButton!
+    @IBOutlet weak var instagramView: UIView!
+    @IBOutlet weak var instagramButton: UIButton!
+    @IBOutlet weak var twiterView: UIView!
+    @IBOutlet weak var twiterButton: UIButton!
+    
+    @IBOutlet weak var socalDT: NSLayoutConstraint!
+    @IBOutlet weak var socalBTDT: NSLayoutConstraint!
+    @IBOutlet weak var facebookDT: NSLayoutConstraint!
+    @IBOutlet weak var twiterDT: NSLayoutConstraint!
+    @IBOutlet weak var instagramDT: NSLayoutConstraint!
+    
+    @IBOutlet weak var locationView: UIView!
+    @IBOutlet weak var locationBackgroundImageView: UIImageView!
     
     var coachDetail: NSDictionary!
     var userID = PMHelper.getCurrentID()
@@ -174,18 +176,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
         }
         
-        self.interestCollectionView.backgroundColor = UIColor.clearColor()
-        self.aboutCollectionView.backgroundColor = UIColor.clearColor()
         self.statusBarDefault = false
         self.aboutCollectionView.delegate = self
         self.aboutCollectionView.dataSource = self
-        self.ratingLB.font = .pmmMonLight10()
-        self.ratingContentLB.font = .pmmMonReg16()
-        self.connectionLB.font = .pmmMonLight10()
         self.connectionLB.text = (self.defaults.boolForKey(k_PM_IS_COACH)) ? "RATING" : "SESSIONS"
-        self.connectionContentLB.font = .pmmMonReg16()
-        self.postNumberLB.font = .pmmMonLight10()
-        self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
         
         let cameraImage = UIImage(named: "profile_camera")
@@ -258,45 +252,15 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     func setupUI() {
-        self.bigBigIndicatorView.alpha = 0.005
-        self.bigIndicatorView.alpha = 0.01
-        self.medIndicatorView.alpha = 0.025
-        self.smallIndicatorView.alpha = 0.05
-        
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
         self.bigIndicatorView.layer.cornerRadius = 312/2
         self.medIndicatorView.layer.cornerRadius = 240/2
         self.smallIndicatorView.layer.cornerRadius = 180/2
         
-        self.bigBigIndicatorView.clipsToBounds = true
-        self.bigIndicatorView.clipsToBounds = true
-        self.medIndicatorView.clipsToBounds = true
-        self.smallIndicatorView.clipsToBounds = true
-        
         self.locationView.layer.cornerRadius = 2
         self.locationView.layer.masksToBounds = true
         
         self.connectV.layer.cornerRadius = 55/2
-        self.connectV.clipsToBounds = true
-        self.connectV.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
-        self.addressLB.font = .pmmMonReg11()
-        self.interestLB.font = .pmmMonReg11()
-        self.specialitiesLB.font = .pmmMonLight11()
-        self.qualificationTV.font = .pmmMonLight13()
-        self.socailLB.font = .pmmMonLight11()
-        self.postLB.font = .pmmMonLight11()
-        self.aboutLB.font = .pmmMonLight11()
-        self.aboutTV.backgroundColor = .clearColor()
-        self.aboutTV.font = .pmmMonLight13()
-        self.aboutTV.scrollEnabled = false
-        self.qualificationTV.backgroundColor = .clearColor()
-        self.qualificationTV.font = .pmmMonLight13()
-        self.qualificationTV.scrollEnabled = false
-        self.facebookBT.titleLabel?.font = .pmmMonReg11()
-        self.twiterBT.titleLabel?.font = .pmmMonReg11()
-        self.instagramBT.titleLabel?.font = .pmmMonReg11()
-        self.testimonialTitle.font = .pmmMonLight11()
-        self.testimonialInviteButton.titleLabel?.font = .pmmMonReg11()
         self.avatarIMV.layer.cornerRadius = 125/2
         self.avatarIMV.clipsToBounds = true
         self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
@@ -387,8 +351,8 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     
                     self.setAvatar()
                     if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
-                        self.setBusiness()
-                        self.setTag()
+                        self.getBusinessImage()
+                        self.getListTag()
                         self.updateUI()
                         self.getListImage()
                     } else {
@@ -422,7 +386,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    func setBusiness() {
+    func getBusinessImage() {
         if (coachDetail[kBusinessId] is NSNull == false) {
             let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
             
@@ -439,7 +403,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    func setTag() {
+    func getListTag() {
         if (coachDetail[kTags] == nil) {
             let feedId = String(format:"%0.f", coachDetail[kId]!.doubleValue)
             var tagLink = kPMAPIUSER
@@ -639,67 +603,8 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.webHeightDT.constant = 0
                 }
                 
-                if !(coachInformation[kInstagramUrl] is NSNull) {
-                    self.instagramLink = coachInformation[kInstagramUrl] as? String
-                }
-                if !(coachInformation[kFacebookUrl] is NSNull) {
-                    self.facebookLink = coachInformation[kFacebookUrl] as? String
-                }
-                if !(coachInformation[kTwitterUrl] is NSNull) {
-                    self.twitterLink = coachInformation[kTwitterUrl] as? String
-                }
+                self.setupSocialView(coachInformation)
                 
-                self.socalDT.constant = 94
-                self.socalBTDT.constant = 50
-                self.socailLB.text = "SOCIAL"
-                if (self.instagramLink == "") {
-                    if (self.facebookLink == "") {
-                        if (self.twitterLink == "") {
-                            self.facebookDT.constant = 0
-                            self.twiterDT.constant = 0
-                            self.instagramDT.constant = 0
-                            self.socalBTDT.constant = 0
-                            self.socalDT.constant = 0
-                            self.socailLB.text = ""
-                        } else {
-                            self.facebookDT.constant = 0
-                            self.twiterDT.constant = self.view.frame.size.width
-                            self.instagramDT.constant = 0
-                        }
-                    } else {
-                        if (self.twitterLink == "") {
-                            self.facebookDT.constant = self.view.frame.size.width
-                            self.twiterDT.constant = 0
-                            self.instagramDT.constant = 0
-                        } else {
-                            self.facebookDT.constant =  self.view.frame.size.width/2
-                            self.twiterDT.constant = self.view.frame.size.width/2
-                            self.instagramDT.constant = 0
-                        }
-                    }
-                } else {
-                    if (self.facebookLink == "") {
-                        if (self.twitterLink == "") {
-                            self.facebookDT.constant = 0
-                            self.twiterDT.constant = 0
-                            self.instagramDT.constant = self.view.frame.size.width
-                        } else {
-                            self.facebookDT.constant = 0
-                            self.twiterDT.constant = self.view.frame.size.width/2
-                            self.instagramDT.constant = self.view.frame.size.width/2
-                        }
-                    } else {
-                        if (self.twitterLink == "") {
-                            self.facebookDT.constant = self.view.frame.size.width/2
-                            self.twiterDT.constant = 0
-                            self.instagramDT.constant = self.view.frame.size.width/2
-                        } else {
-                            self.facebookDT.constant = self.view.frame.size.width/3
-                            self.twiterDT.constant = self.view.frame.size.width/3
-                            self.instagramDT.constant = self.view.frame.size.width/3
-                        }
-                    }
-                }
                 self.view.hideToastActivity()
             case .Failure(let error):
                 print("Request failed with error: \(error)")
@@ -755,19 +660,25 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.webTV.text = " "
         self.webHeightDT.constant = 0
         
-        if !(coachDetail[kInstagramUrl] is NSNull) {
-            self.instagramLink = coachDetail[kInstagramUrl] as? String
+        self.setupSocialView(self.coachDetail)
+    }
+    
+    func setupSocialView(userInfo: NSDictionary) {
+        if (userInfo[kInstagramUrl] is NSNull == false) {
+            self.instagramLink = userInfo[kInstagramUrl] as? String
         }
-        if !(coachDetail[kFacebookUrl] is NSNull) {
-            self.facebookLink = coachDetail[kFacebookUrl] as? String
+        
+        if (userInfo[kFacebookUrl] is NSNull == false) {
+            self.facebookLink = userInfo[kFacebookUrl] as? String
         }
-        if !(coachDetail[kTwitterUrl] is NSNull) {
-            self.twitterLink = coachDetail[kTwitterUrl] as? String
+        
+        if (userInfo[kTwitterUrl] is NSNull == false) {
+            self.twitterLink = userInfo[kTwitterUrl] as? String
         }
         
         self.socalDT.constant = 94
         self.socalBTDT.constant = 50
-        self.socailLB.text = "SOCIAL"
+        self.socialLabel.text = "SOCIAL"
         if (self.instagramLink == "") {
             if (self.facebookLink == "") {
                 if (self.twitterLink == "") {
@@ -776,7 +687,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.instagramDT.constant = 0
                     self.socalBTDT.constant = 0
                     self.socalDT.constant = 0
-                    self.socailLB.text = ""
+                    self.socialLabel.text = ""
                 } else {
                     self.facebookDT.constant = 0
                     self.twiterDT.constant = self.view.frame.size.width
@@ -882,6 +793,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             frameV.size.height -= self.oldPositionAboutV
             self.view.frame = frameV
         }
+    }
+    
+    @IBAction func backButtonClicked() {
+        
     }
     
     @IBAction func clickOnFacebook() {

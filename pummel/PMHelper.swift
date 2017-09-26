@@ -137,12 +137,13 @@ class PMHelper {
                         
                         let isCoach = result as! Bool
                         if (isCoach == true) {
-                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
+//                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
                             
-//                            let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
+                            let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
+                            
+                            coachProfileVC.userID = userID
                             
                             coachProfileVC.coachDetail = userInfo
-//                            coachProfileVC.userID = userID
                             
                             if (showTestimonial == true) {
                                 topController.presentViewController(coachProfileVC, animated: true, completion: {

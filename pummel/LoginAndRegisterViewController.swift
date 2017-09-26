@@ -7,9 +7,11 @@
 //
 
 import UIKit
-import Alamofire
 import Mixpanel
+import Alamofire
 import FBSDKCoreKit
+import FBSDKShareKit
+import FBSDKLoginKit
 
 class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -27,6 +29,9 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     @IBOutlet var addProfileIconIMV : UIImageView!
     @IBOutlet var cameraProfileIconIMV : UIImageView!
     @IBOutlet var addProfilePhototLB : UILabel!
+    
+    var FBButton = FBSDKLoginButton()
+    
     var imageData : NSData!
     var type : String!
     var filename: String!
@@ -48,14 +53,14 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
         loginVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width,  self.view.frame.size.height - 251)
         loginVC.forgotPasswordBT.addTarget(self, action:#selector(LoginAndRegisterViewController.forgotAction(_:)), forControlEvents:UIControlEvents.TouchUpInside)
         loginVC.signinBT.addTarget(self, action:#selector(LoginAndRegisterViewController.clickSigninAction(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(loginVC.view)
+//        self.view.addSubview(loginVC.view)
 
         // Add registerVC and hidden it for initial
         self.addChildViewController(signupVC)
         signupVC.didMoveToParentViewController(self)
         signupVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width, self.view.frame.size.height - 251)
         signupVC.signupBT.addTarget(self, action:#selector(LoginAndRegisterViewController.clickSignupAction(_:)), forControlEvents:UIControlEvents.TouchUpInside)
-        self.view.addSubview(signupVC.view)
+//        self.view.addSubview(signupVC.view)
         
         self.updateUI()
         self.profileIMV.layer.cornerRadius = 45
@@ -449,27 +454,24 @@ class LoginAndRegisterViewController: UIViewController, UIImagePickerControllerD
     
     func keyboardWillShow(notification: NSNotification) {
         
-        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()) != nil {
-            if ( self.view.frame.origin.y == 0) {
-                let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
-                let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
-                let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-                if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 667.0) {
-                    self.view.frame.origin.y = 10
-                } else {
-                    self.view.frame.origin.y = 0
-                }
-            }
-        }
+//        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()) != nil {
+//            if ( self.view.frame.origin.y == 0) {
+//                let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
+//                let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
+//                let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
+//                if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 667.0) {
+//                    self.view.frame.origin.y = 10
+//                } else {
+//                    self.view.frame.origin.y = 0
+//                }
+//            }
+//        }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
-            self.view.frame.origin.y = 0
-        }
-        if (self.isShowLogin == true && self.loginVC.emailTF.text != "" && self.loginVC.passwordTF.text != "") {
-            self.clickSigninAction(self.loginBT)
-        }
+//        if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+//            self.view.frame.origin.y = 0
+//        }
     }
     
     func checkRuleInputData() -> Bool {

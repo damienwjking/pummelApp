@@ -44,7 +44,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VAS-ue-Job">
-                                    <rect key="frame" x="0.0" y="49.5" width="375" height="0.5"/>
+                                    <rect key="frame" x="0.0" y="50" width="375" height="0.0"/>
                                     <color key="backgroundColor" red="0.30196078431372547" green="0.28627450980392155" blue="0.28627450980392155" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="0.5" id="JTG-ol-efB"/>
@@ -105,7 +105,7 @@
                                     </connections>
                                 </textField>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Ho-Ef-rRJ">
-                                    <rect key="frame" x="0.0" y="49.5" width="375" height="0.5"/>
+                                    <rect key="frame" x="0.0" y="50" width="375" height="0.0"/>
                                     <color key="backgroundColor" red="0.30196078430000001" green="0.28627450980000002" blue="0.28627450980000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="0.5" id="YF9-Ku-DpF"/>
