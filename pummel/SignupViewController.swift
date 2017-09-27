@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import Mixpanel
+import Alamofire
 import FBSDKCoreKit
 import FBSDKShareKit
 import FBSDKLoginKit
 
-class SignupViewController: UIViewController, UITextFieldDelegate {
+class SignupViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -29,7 +31,10 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var andLB: UILabel!
     @IBOutlet weak var privacyPolicyBT: UIButton!
     
+    @IBOutlet weak var spaceViewHeightConstraint: NSLayoutConstraint!
+    
     var FBButton = FBSDKLoginButton()
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     @IBAction func termOfService(sender: AnyObject) {
         let termOfServiceURL = NSURL(string: "http://pummel.fit/terms/")
@@ -43,53 +48,18 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.nameTF.font = .pmmMonReg13()
-        self.nameTF.autocorrectionType = UITextAutocorrectionType.No
-        self.emailTF.font = .pmmMonReg13()
-        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
-        self.passwordTF.font = .pmmMonReg13()
-        self.genderTF.font = .pmmMonReg13()
-        self.continuingLB.font = .pmmMonReg9()
-        self.termOfServiceBT.titleLabel!.font = .pmmMonReg9()
-        self.andLB.font = .pmmMonReg9()
-        self.privacyPolicyBT.titleLabel!.font = .pmmMonReg9()
         
-        self.termOfServiceBT.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
-        self.privacyPolicyBT.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
+        self.setupUI()
         
-       
-        self.nameTF.attributedPlaceholder = NSAttributedString(string:"NAME",
-            attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
-        self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
-            attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
-        self.passwordTF.attributedPlaceholder = NSAttributedString(string:"PASSWORD",
-            attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
-        self.genderTF.attributedPlaceholder = NSAttributedString(string:"GENDER",
-            attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
-        
-        self.signupBT.layer.cornerRadius = 2
-        self.signupBT.layer.borderWidth = 0.5
-        self.signupBT.layer.borderColor = UIColor.whiteColor().CGColor
-        self.signupBT.titleLabel?.font = .pmmMonReg13()
-        
-        self.passwordAttentionIM.hidden = true
-        self.emailAttentionIM.hidden = true
-
-        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(SignupViewController.dismissKeyboard)))
-        self.scrollView.userInteractionEnabled = true
-        self.scrollView.addGestureRecognizer(tapGestureRecognizer)
-        
-        self.nameTF.keyboardAppearance = .Dark
-        self.passwordTF.keyboardAppearance = .Dark
-        self.emailTF.keyboardAppearance = .Dark
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
         var fbButtonFrame = self.signupBT.frame
-        fbButtonFrame.origin.y = self.signupBT.frame.origin.y + self.signupBT.frame.size.height + 30
+        fbButtonFrame.origin.y = self.signupBT.frame.origin.y + self.signupBT.frame.size.height + 20
         
         self.FBButton.frame = fbButtonFrame
         self.FBButton.delegate = self
@@ -98,60 +68,149 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.scrollView.addSubview(self.FBButton)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func setupUI() {
+        self.nameTF.autocorrectionType = UITextAutocorrectionType.No
+        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
+        
+        self.nameTF.attributedPlaceholder = NSAttributedString(string:"NAME",
+                                                               attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
+        self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
+                                                                attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
+        self.passwordTF.attributedPlaceholder = NSAttributedString(string:"PASSWORD",
+                                                                   attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
+        self.genderTF.attributedPlaceholder = NSAttributedString(string:"GENDER",
+                                                                 attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
+        
+        self.signupBT.layer.cornerRadius = 2
+        self.signupBT.layer.borderWidth = 0.5
+        self.signupBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.signupBT.titleLabel?.font = .pmmMonReg13()
+        
+        self.passwordAttentionIM.hidden = true
+        self.emailAttentionIM.hidden = true
+        
+        let tapGestureRecognizer = UITapGestureRecognizer { (_) in
+            self.nameTF.resignFirstResponder()
+            self.emailTF.resignFirstResponder()
+            self.passwordTF.resignFirstResponder()
+        }
+        self.scrollView.userInteractionEnabled = true
+        self.scrollView.addGestureRecognizer(tapGestureRecognizer)
+        
+        self.nameTF.keyboardAppearance = .Dark
+        self.passwordTF.keyboardAppearance = .Dark
+        self.emailTF.keyboardAppearance = .Dark
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        if textField.isEqual(self.emailTF) == true {
-            if (self.isValidEmail(self.emailTF.text!) == false) {
-                self.emailAttentionIM.hidden = false
-                self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
-            } else {
-                self.emailAttentionIM.hidden = true
-                self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
-            }
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.spaceViewHeightConstraint.constant = keyboardSize.height
         }
-        if textField.isEqual(self.passwordTF) == true {
-            // TODO: Show left icon
-            if (self.passwordTF.text?.characters.count < 8) {
-                self.passwordAttentionIM.hidden = false
-                self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
-                let alertController = UIAlertController(title: pmmNotice, message: passwordNotice, preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    // ...
-                }
-                alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
-                    // ...
-                }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        self.spaceViewHeightConstraint.constant = 0
+    }
+    
+    @IBAction func signupButtonClicked(sender: AnyObject) {
+        if (self.checkRuleInputData() == false) {
+            let name = self.nameTF.text
+            let userEmail = self.emailTF.text
+            let userPassword = self.passwordTF.text
+            var gender = self.genderTF.text
+            
+            let fullNameArr = name!.characters.split{$0 == " "}.map(String.init)
+            var firstname = ""
+            if (fullNameArr.count > 0) {
+                firstname = fullNameArr[0]
+            }
+            
+            if (gender == "") {
+                gender = kDontCare
+            }
+            
+            // Tracker mixpanel
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Name": "Navigation Click", "Label":"Register"]
+            mixpanel.track("IOS.Register", properties: properties)
+            
+            
+            self.view.makeToastActivity(message: "Loading")
+            
+            UserRouter.signup(firstName: firstname, email: userEmail!, password: userPassword!, gender: gender!, completed: { (result, error) in
+                self.view.hideToastActivity()
                 
-            } else {
-                self.passwordAttentionIM.hidden = true
-                self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
-                    attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
-            }
+                if (error == nil) {
+                    let isSigninSuccess = result as! Bool
+                    
+                    if (isSigninSuccess == true) {
+                        NSNotificationCenter.defaultCenter().postNotificationName("SIGNUPSUCCESSNOTIFICATION", object: nil)
+                    }
+                } else {
+                    if (error?.code == 400) {
+                        let alertController = UIAlertController(title: pmmNotice, message: yourEmailIsNotValid, preferredStyle: .Alert)
+                        
+                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            self.emailTF.becomeFirstResponder()
+                        }
+                        alertController.addAction(OKAction)
+                        self.presentViewController(alertController, animated: true) {
+                            // ...
+                        }
+                    } else {
+                        PMHelper.showDoAgainAlert()
+                    }
+                }
+            }).fetchdata()
         }
-        return true
     }
     
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        if textField.isEqual(self.genderTF) == true {
-            self.showPopupToSelectGender()
+    func updateCookies(response: Response<AnyObject, NSError>) {
+        if let
+            headerFields = response.response?.allHeaderFields as? [String: String],
+            let URL = response.request?.URL {
+            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: URL)
+            // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
+            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
+            self.defaults.setObject(headerFields, forKey: k_PM_HEADER_FILEDS)
+            self.defaults.setObject(URL.absoluteString, forKey: k_PM_URL_LAST_COOKIE)
+        }
+    }
+    
+    func checkRuleInputData() -> Bool {
+        var returnValue  = false
+        
+        if (self.emailTF.text?.isValidEmail() == false) {
+            returnValue = true
+            self.emailAttentionIM.hidden = false
+            self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
+                                                                 attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
+        } else {
+            self.emailAttentionIM.hidden = true
+            self.emailTF.attributedText = NSAttributedString(string:self.emailTF.text!,
+                                                                 attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
+        }
+        
+        if !(self.checkPassword(self.passwordTF.text!)) {
+            returnValue = true
+            self.passwordAttentionIM.hidden = false
+            self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
+                                                                    attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
+        } else {
+            self.passwordAttentionIM.hidden = true
+            self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
+                                                                    attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
+        }
+        
+        return returnValue
+    }
+    
+    func checkPassword(testStr:String) -> Bool {
+        if (testStr.characters.count < 8) {
             return false
         } else {
             return true
         }
-    }
-    
-    func isValidEmail(testStr:String) -> Bool {
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
-        return emailTest.evaluateWithObject(testStr)
     }
     
     @IBAction func showPopupToSelectGender() {
@@ -170,12 +229,49 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         
         self.presentViewController(alertController, animated: true) { }
     }
-    
-    func dismissKeyboard() {
+}
+
+// MARK: - UITextFieldDelegate
+extension SignupViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
         
+        self.checkRuleInputData();
+        
+        if (textField == self.nameTF) {
+            self.emailTF.becomeFirstResponder()
+        } else if (textField == self.emailTF) {
+            self.passwordTF.becomeFirstResponder()
+        } else if (textField == self.passwordTF) {
+            if (self.passwordTF.text?.characters.count < 8) {
+                let alertController = UIAlertController(title: pmmNotice, message: passwordNotice, preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    // ...
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                    // ...
+                }
+                
+            } else {
+                self.genderTF.becomeFirstResponder()
+            }
+        }
+        
+        return true
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        if textField.isEqual(self.genderTF) == true {
+            self.showPopupToSelectGender()
+            return false
+        } else {
+            return true
+        }
     }
 }
 
+// MARK: - FBSDKLoginButtonDelegate
 extension SignupViewController : FBSDKLoginButtonDelegate {
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         print("declined: \(result.declinedPermissions)")
@@ -217,7 +313,7 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                NSNotificationCenter.defaultCenter().postNotificationName("LOGINFACEBOOKSUCCESS", object: nil)
+                                NSNotificationCenter.defaultCenter().postNotificationName("LOGINSUCCESSNOTIFICATION", object: nil)
                             }
                         } else {
                             let loginManager: FBSDKLoginManager = FBSDKLoginManager()

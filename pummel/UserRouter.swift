@@ -19,6 +19,7 @@ enum UserRouter: URLRequestConvertible {
     case getTestimonial(userID: String, offset: Int, completed: CompletionBlock)
     case postTestimonial(userID: String, description: String, location: String, rating: CGFloat, completed: CompletionBlock)
     case getFollowCoach(offset: Int, completed: CompletionBlock)
+    case signup(firstName: String, email: String, password: String, gender: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock? {
         switch self {
@@ -39,6 +40,8 @@ enum UserRouter: URLRequestConvertible {
         case .postTestimonial(_, _, _, _, let completed):
             return completed
         case .getFollowCoach(_, let completed):
+            return completed
+        case .signup(_ , _, _, _, let completed):
             return completed
             
         }
@@ -64,6 +67,8 @@ enum UserRouter: URLRequestConvertible {
             return .POST
         case .getFollowCoach:
             return .GET
+        case .signup:
+            return .POST
             
         }
     }
@@ -103,6 +108,9 @@ enum UserRouter: URLRequestConvertible {
         case .getFollowCoach (let offset, _):
             let offsetString = String(format: "%ld", offset)
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_USERCOACH_OFFSET + offsetString
+            
+        case .signup:
+            prefix = kPMAPI_REGISTER
             
         }
         
@@ -152,6 +160,12 @@ enum UserRouter: URLRequestConvertible {
             let dateString = dateFormater.stringFromDate(NSDate())
             
             param["currentDate"] = dateString
+            
+        case .signup(let firstName, let email, let password, let gender, _):
+            param[kEmail] = email
+            param[kPassword] = password
+            param[kFirstname] = firstName
+            param[kGender] = gender
             
         default:
             break
@@ -222,6 +236,7 @@ enum UserRouter: URLRequestConvertible {
                     if (JSON is NSNull == false) {
                         UserRouter.saveCurrentUserInfo(response)
                         
+                        // Can't return respone object
                         self.comletedBlock!(result: true, error: nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
@@ -331,6 +346,32 @@ enum UserRouter: URLRequestConvertible {
                         PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(result: nil, error: error)
+                    }
+                }
+            })
+        case signup:
+            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 8")
+                
+                switch response.result {
+                case .Success(let JSON):
+                    if (JSON is NSNull == false) {
+                        UserRouter.saveCurrentUserInfo(response)
+                        
+                        // Can't return respone object
+                        self.comletedBlock!(result: true, error: nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(result: false, error: error)
+                    }
+                case .Failure(let error):
+                    if (response.response?.statusCode == 400) {
+                        let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
+                        self.comletedBlock!(result: false, error: error)
+                    } else if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(result: false, error: error)
                     }
                 }
             })

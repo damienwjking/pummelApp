@@ -19,6 +19,7 @@ enum ImageRouter: URLRequestConvertible {
     case getCoachAvatar(coachID : String, sizeString: String, completed: CompletionBlock)
     case getBusinessLogo(businessID : String, sizeString: String, completed: CompletionBlock)
     case getImage(imageURLString: String, sizeString: String, completed: CompletionBlock)
+    case currentUserUploadAvatar(imageData: NSData, completed: CompletionBlock)
     
     var imageSize: String {
         switch self {
@@ -32,7 +33,23 @@ enum ImageRouter: URLRequestConvertible {
             return sizeString
         case .getImage(_, let sizeString, _):
             return sizeString
+        case .currentUserUploadAvatar:
+            return ""
+            
         }
+    }
+    
+    var imageData: NSData? {
+        var data: NSData? = nil
+        switch self {
+        case .currentUserUploadAvatar(let imageData, _):
+            data = imageData
+            
+        default:
+            break
+        }
+        
+        return data
     }
     
     var comletedBlock: CompletionBlock {
@@ -46,6 +63,8 @@ enum ImageRouter: URLRequestConvertible {
         case .getBusinessLogo(_, _, let completed):
             return completed
         case .getImage(_, _, let completed):
+            return completed
+        case .currentUserUploadAvatar(_, let completed):
             return completed
         }
     }
@@ -62,6 +81,8 @@ enum ImageRouter: URLRequestConvertible {
             return .GET
         case .getImage:
             return .GET
+        case .currentUserUploadAvatar:
+            return .POST
         }
     }
     
@@ -92,9 +113,30 @@ enum ImageRouter: URLRequestConvertible {
             } else {
                 prefix = ""
             }
+            
+        case .currentUserUploadAvatar:
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_PHOTO_PROFILE
+            
         }
         
         return prefix
+    }
+    
+    var param : [String: AnyObject]? {
+        var param : [String : AnyObject] = [:]
+        let currentUserID = PMHelper.getCurrentID()
+        
+        switch self {
+        case .currentUserUploadAvatar:
+            param[kUserId] = currentUserID
+            param[kProfilePic] = "1"
+            
+        default:
+            break
+            
+        }
+        
+        return param
     }
     
     // MARK: URLRequestConvertible
@@ -162,6 +204,38 @@ enum ImageRouter: URLRequestConvertible {
                 let error = NSError(domain: "Pummel", code: 500, userInfo: nil) // Simple error
                 self.comletedBlock(result: nil, error: error)
             }
+            
+        case .currentUserUploadAvatar:
+            let filename = jpgeFile
+            let type = imageJpeg
+            
+            Alamofire.upload(self.method, self.path,
+                multipartFormData: { multipartFormData in
+                    multipartFormData.appendBodyPart(data: self.imageData!, name: "file", fileName:filename, mimeType:type)
+                    
+                    for (key, value) in self.param! {
+                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
+                    }
+                },
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .Success(let upload, _, _):
+                        upload.responseJSON { response in
+                            if (response.result.isSuccess) {
+                                self.comletedBlock(result: true, error: nil)
+                            } else {
+                                let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                                self.comletedBlock(result: false, error: error)
+                            }
+                        }
+                        
+                    case .Failure(_):
+                        let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                        self.comletedBlock(result: false, error: error)
+                    }
+                }
+            )
+            
         }
     }
     

@@ -14,9 +14,12 @@ import Foundation
 
 class PMHelper {
     class func getCurrentID() -> String {
-        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as! String
+        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as? String
         
-        return currentId
+        if (currentId != nil) {
+            return currentId!
+        }
+        return ""
     }
     
     class func checkVisibleCell(tableView: UITableView, indexPath: NSIndexPath ) -> Bool {

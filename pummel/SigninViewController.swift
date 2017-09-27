@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Mixpanel
 import Alamofire
 import FBSDKCoreKit
 import FBSDKShareKit
@@ -19,29 +20,18 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var passwordTF : UITextField!
     @IBOutlet var forgotPasswordBT : UIButton!
     @IBOutlet var signinBT : UIButton!
-    @IBOutlet var signinDistantCT: NSLayoutConstraint!
+    
+    @IBOutlet weak var spaceViewHeightConstraint: NSLayoutConstraint!
     
     var FBButton = FBSDKLoginButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setNeedsStatusBarAppearanceUpdate()
-        self.emailTF.font = .pmmMonReg13()
-        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
-
-        self.passwordTF.font = .pmmMonReg13()
-        self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
-            attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
-        self.passwordTF.attributedPlaceholder = NSAttributedString(string:"PASSWORD",
-            attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
         
-        self.forgotPasswordBT.titleLabel?.font = .pmmMonReg13()
-        self.signinBT.layer.cornerRadius = 2
-        self.signinBT.layer.borderWidth = 0.5
-        self.signinBT.layer.borderColor = UIColor.whiteColor().CGColor
-        self.signinBT.titleLabel?.font = .pmmMonReg13()
-        self.emailTF.keyboardAppearance = .Dark
-        self.passwordTF.keyboardAppearance = .Dark
+        self.setupUI()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -52,7 +42,7 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         super.viewDidAppear(animated)
         
         var fbButtonFrame = self.signinBT.frame
-        fbButtonFrame.origin.y = self.signinBT.frame.origin.y + self.signinBT.frame.size.height + 30
+        fbButtonFrame.origin.y = self.signinBT.frame.origin.y + self.signinBT.frame.size.height + 20
         
         self.FBButton.frame = fbButtonFrame
         self.FBButton.delegate = self
@@ -61,8 +51,105 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         self.scrollView.addSubview(self.FBButton)
     }
     
+    func setupUI() {
+        self.setNeedsStatusBarAppearanceUpdate()
+        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
+        
+        self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
+                                                                attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
+        self.passwordTF.attributedPlaceholder = NSAttributedString(string:"PASSWORD",
+                                                                   attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
+        
+        self.forgotPasswordBT.titleLabel?.font = .pmmMonReg13()
+        self.signinBT.layer.cornerRadius = 2
+        self.signinBT.layer.borderWidth = 0.5
+        self.signinBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.signinBT.titleLabel?.font = .pmmMonReg13()
+        self.emailTF.keyboardAppearance = .Dark
+        self.passwordTF.keyboardAppearance = .Dark
+        
+        let tapGestureRecognizer = UITapGestureRecognizer { (_) in
+            self.emailTF.resignFirstResponder()
+            self.passwordTF.resignFirstResponder()
+        }
+        self.scrollView.userInteractionEnabled = true
+        self.scrollView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+            self.spaceViewHeightConstraint.constant = keyboardSize.height
+        }
+    }
+
+    func keyboardWillHide(notification: NSNotification) {
+        self.spaceViewHeightConstraint.constant = 0
+    }
+    
+    @IBAction func forgotPasswordButtonClicked(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName("FORGOTPASSWORDNOTIFICATION", object: nil)
+    }
+    
+    @IBAction func signinButtonClicked(sender: AnyObject) {
+        let userEmail = self.emailTF.text!
+        let userPassword = self.passwordTF.text!
+        self.view.makeToastActivity(message: "Loading")
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Name": "Navigation Click", "Label":"Login"]
+        mixpanel.track("IOS.Login", properties: properties)
+        
+        Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
+            .responseJSON { response in
+                self.view.hideToastActivity()
+                
+                if response.response?.statusCode == 200 {
+                    let JSON = response.result.value
+                    
+                    UserRouter.saveCurrentUserInfo(response)
+                    let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
+                    
+                    let mixpanel = Mixpanel.sharedInstance()
+                    if mixpanel.distinctId != "" {
+                        mixpanel.identify(currentId)
+                    } else {
+                        mixpanel.createAlias(currentId, forDistinctID: mixpanel.distinctId)
+                        mixpanel.identify(mixpanel.distinctId)
+                    }
+                    
+                    if let userinfo = JSON!.objectForKey("user") as? NSDictionary {
+                        if let nameUser = userinfo.objectForKey(kFirstname) as? String {
+                            mixpanel.people.set("$name", to: nameUser)
+                        }
+                        
+                        if let mailUser = userinfo[kEmail] as? String {
+                            mixpanel.people.set("$email", to: mailUser)
+                        }
+                    }
+                    
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+                    NSNotificationCenter.defaultCenter().postNotificationName("LOGINSUCCESSNOTIFICATION", object: nil)
+                    FBSDKAppEvents.logEvent("Login")
+                } else {
+                    let alertController = UIAlertController(title: pmmNotice, message: signInNotice, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        // ...
+                    }
+                    alertController.addAction(OKAction)
+                    self.presentViewController(alertController, animated: true) {
+                        // ...
+                    }
+                }
+        }
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        if (textField == self.emailTF) {
+            self.passwordTF.becomeFirstResponder()
+        } else if (textField == self.passwordTF) {
+            self.signinBT.sendActionsForControlEvents(.TouchUpInside)
+        }
         
         return true
     }
@@ -110,7 +197,7 @@ extension SigninViewController: FBSDKLoginButtonDelegate {
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                NSNotificationCenter.defaultCenter().postNotificationName("LOGINFACEBOOKSUCCESS", object: nil)
+                                NSNotificationCenter.defaultCenter().postNotificationName("LOGINSUCCESSNOTIFICATION", object: nil)
                             }
                         } else {
                             let loginManager: FBSDKLoginManager = FBSDKLoginManager()

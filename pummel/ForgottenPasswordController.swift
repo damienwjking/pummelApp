@@ -42,8 +42,8 @@ class ForgottenPasswordController: UIViewController {
         self.doneBT.layer.borderColor = UIColor.whiteColor().CGColor
         self.doneBT.titleLabel?.font = .pmmMonReg13()
         self.emailTF.keyboardAppearance = .Dark
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginAndRegisterViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func viewDidDisappear(animated: Bool) {

@@ -112,6 +112,11 @@ extension String {
             }
         }
     }
+    
+    func isValidEmail() -> Bool {
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
+        return emailTest.evaluateWithObject(self)
+    }
 }
 
 extension Dictionary {
