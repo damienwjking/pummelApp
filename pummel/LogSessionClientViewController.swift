@@ -25,7 +25,6 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
     var editSession = SessionModel()
     var isEditSession = false
     @IBOutlet weak var flowLayout: FlowLayout!
-    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     let defaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {

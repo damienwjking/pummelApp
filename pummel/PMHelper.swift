@@ -144,9 +144,10 @@ class PMHelper {
                             
                             let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
                             
+                            coachProfileVC.isCoach = true
                             coachProfileVC.userID = userID
-                            
                             coachProfileVC.coachDetail = userInfo
+                            coachProfileVC.profileStyle = .otherUser
                             
                             if (showTestimonial == true) {
                                 topController.presentViewController(coachProfileVC, animated: true, completion: {

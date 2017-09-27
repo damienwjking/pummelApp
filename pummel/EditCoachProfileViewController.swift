@@ -74,8 +74,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     let imagePicker = UIImagePickerController()
     var currentId : String = ""
     
-    let SCREEN_MAX_LENGTH = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         currentId = PMHelper.getCurrentID()

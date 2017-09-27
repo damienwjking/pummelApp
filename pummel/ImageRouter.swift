@@ -170,6 +170,9 @@ enum ImageRouter: URLRequestConvertible {
                             let defaultImage = UIImage(named: "display-empty.jpg")
                             self.comletedBlock(result:  defaultImage, error: nil)
                         }
+                    } else {
+                        let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                        self.comletedBlock(result:  nil, error: error)
                     }
                 case .Failure(let error):
                     // check status code 401 : cookie expire

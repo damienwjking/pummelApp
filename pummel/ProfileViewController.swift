@@ -22,9 +22,9 @@ enum UploadVideoStatus: Int {
     case uploading
 }
 
-enum ProfileState: Int {
-    case currentUserProfile
-    case otherUserProfile
+enum ProfileStyle: Int {
+    case currentUser
+    case otherUser
 }
 
 class ProfileViewController:  BaseViewController, UITextViewDelegate {
@@ -32,20 +32,21 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var avatarIMVCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarIMVWidthConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var detailV: UIView!
+    @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var smallIndicatorView: UIView!
     @IBOutlet weak var medIndicatorView: UIView!
     @IBOutlet weak var bigIndicatorView: UIView!
     @IBOutlet weak var bigBigIndicatorView: UIView!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var userNameLabel: UILabel!
-    @IBOutlet weak var avatarIMV: UIImageView!
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var uploadingLabel: UILabel!
     @IBOutlet weak var playVideoButton: UIButton!
-    @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var addressIconIMV: UIImageView!
+    @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var businessIMV: UIImageView!
     
     @IBOutlet weak var connectV : UIView!
@@ -55,19 +56,19 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var connectionContentLB: UILabel!
     @IBOutlet weak var postNumberContentLB: UILabel!
     
-    @IBOutlet weak var interestV: UIView!
-    @IBOutlet weak var interestCollectionView: UICollectionView!
-    @IBOutlet weak var interestFlowLayout: FlowLayout!
-    @IBOutlet weak var interestHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var specialitiesView: UIView!
+    @IBOutlet weak var specialitiesCollectionView: UICollectionView!
+    @IBOutlet weak var specialitiesFlowLayout: FlowLayout!
+    @IBOutlet weak var specifiesCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var specifiesViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var specifiesCollectionViewTraillingConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var aboutV: UIView!
     @IBOutlet weak var aboutLB: UILabel!
     @IBOutlet weak var aboutTV: UITextView!
     @IBOutlet weak var aboutFlowLayout: FlowLayout!
-    @IBOutlet weak var aboutLeftDT: NSLayoutConstraint!
     @IBOutlet weak var aboutHeightDT: NSLayoutConstraint!
     @IBOutlet weak var aboutTVHeightDT: NSLayoutConstraint!
-    @IBOutlet weak var aboutCollectionView: UICollectionView!
     
     @IBOutlet weak var testimonialView: UIView!
     @IBOutlet weak var testimonialTitle: UILabel!
@@ -82,7 +83,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     @IBOutlet weak var qualificationV: UIView!
     @IBOutlet weak var qualificationTV: UITextView!
-    @IBOutlet weak var specifiesDT: NSLayoutConstraint!
     @IBOutlet weak var qualificationDT: NSLayoutConstraint!
     @IBOutlet weak var qualificationTVHeightDT: NSLayoutConstraint!
     
@@ -91,9 +91,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var achivementDT: NSLayoutConstraint!
     @IBOutlet weak var achivementTVHeightDT: NSLayoutConstraint!
     
-    @IBOutlet weak var postV: UIView!
-    @IBOutlet weak var postLB: UILabel!
-    @IBOutlet weak var postHeightDT: NSLayoutConstraint!
+    @IBOutlet weak var postView: UIView!
+    @IBOutlet weak var postLabel: UILabel!
+    @IBOutlet weak var postCollectionView: UICollectionView!
+    @IBOutlet weak var postViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var postCollectionViewHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var socialView: UIView!
     @IBOutlet weak var socialLabel: UILabel!
@@ -115,6 +117,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     var coachDetail: NSDictionary!
     var userID = PMHelper.getCurrentID()
+    var isCoach = NSUserDefaults.standardUserDefaults().boolForKey(k_PM_IS_COACH)
+    var profileStyle: ProfileStyle = .currentUser
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     var instagramLink: String? = ""
     var twitterLink: String? = ""
@@ -157,34 +163,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    let defaults = NSUserDefaults.standardUserDefaults()
-    
-    // MARK: View life circle
+    // MARK: - View life circle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.setupUI()
-        
-        self.interestFlowLayout.smaller = true
-        let cellNib = UINib(nibName: kTagCell, bundle: nil)
-        self.interestCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
-        self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
-        
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
-            self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
-        } else {
-            self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
-        }
-        
-        self.statusBarDefault = false
-        self.aboutCollectionView.delegate = self
-        self.aboutCollectionView.dataSource = self
-        self.connectionLB.text = (self.defaults.boolForKey(k_PM_IS_COACH)) ? "RATING" : "SESSIONS"
-        self.aboutCollectionView.backgroundColor = UIColor.pmmWhiteColor()
-        
-        let cameraImage = UIImage(named: "profile_camera")
-        self.cameraButton.setImage(cameraImage, forState: .Normal)
-        self.cameraButton.tintColor = UIColor.pmmBrightOrangeColor()
+        self.setupTagCollectionView()
         
         // Add notification for update video url
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.profileGetNewDetail), name: "profileGetDetail", object: nil)
@@ -196,6 +180,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.title = kNavProfile
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
@@ -204,34 +189,25 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         let selectedImage = UIImage(named: "profilePressed")
         self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
         
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"SETTINGS", style:.Plain, target: self, action: #selector(ProfileViewController.setting))
-        self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
+        self.setupUIForProfileStyle()
         
         self.getDetail()
         
         self.playVideoButton.setImage(nil, forState: .Normal)
         
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.isCoach == true) {
             self.cameraButton.alpha = 1
             self.cameraButton.userInteractionEnabled = true
             self.avatarIMV.layer.borderWidth = 3
-            
-            self.testimonialInviteButton.hidden = false
         } else {
             self.cameraButton.alpha = 0
             self.cameraButton.userInteractionEnabled = false
             self.avatarIMV.layer.borderWidth = 0
-            
-            self.testimonialInviteButton.hidden = true
         }
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-        self.scrollView.scrollEnabled = true
         
         self.isStopGetTestimonial = false
         self.testimonialOffset = 0
@@ -260,20 +236,60 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.locationView.layer.cornerRadius = 2
         self.locationView.layer.masksToBounds = true
         
+        self.connectionLB.text = self.isCoach ? "RATING" : "SESSIONS"
+        
         self.connectV.layer.cornerRadius = 55/2
         self.avatarIMV.layer.cornerRadius = 125/2
         self.avatarIMV.clipsToBounds = true
         self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
         self.avatarIMV.layer.borderWidth = 0
         self.scrollView.scrollsToTop = false
-        self.interestCollectionView.delegate = self
-        self.interestCollectionView.dataSource = self
         
         self.businessIMV.hidden = true
-        self.aboutLeftDT.constant = 10
+        self.specifiesCollectionViewTraillingConstraint.constant = 10
         self.businessIMV.layer.cornerRadius = 50
         self.businessIMV.clipsToBounds = true
         self.webTV.delegate = self
+        
+        self.statusBarDefault = false
+        
+        self.postCollectionView.backgroundColor = UIColor.pmmWhiteColor()
+    }
+    
+    func setupTagCollectionView() {
+        self.specialitiesFlowLayout.smaller = true
+        let cellNib = UINib(nibName: kTagCell, bundle: nil)
+        self.specialitiesCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
+        self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            self.specialitiesFlowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
+        } else {
+            self.specialitiesFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
+        }
+    }
+    
+    func setupUIForProfileStyle() {
+        self.testimonialInviteButton.hidden = true
+        
+        if (self.profileStyle == .currentUser) {
+            self.backButton.hidden = true
+            self.userNameLabel.hidden = true
+            
+            self.cameraButton.hidden = false
+            
+            if (self.isCoach) {
+                self.testimonialInviteButton.hidden = false
+            }
+            
+            self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"SETTINGS", style:.Plain, target: self, action: #selector(self.setting))
+            self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState:.Normal)
+        } else if (self.profileStyle == .otherUser) {
+            self.backButton.hidden = false
+            self.userNameLabel.hidden = false
+            
+            self.cameraButton.hidden = true
+        }
     }
     
     func profileGetNewDetail() {
@@ -296,7 +312,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     @IBAction func edit() {
-        if (self.defaults.boolForKey(k_PM_IS_COACH) != true) {
+        if (self.isCoach != true) {
             performSegueWithIdentifier("goEdit", sender: nil)
         } else {
             performSegueWithIdentifier("goEditCoach", sender: nil)
@@ -343,14 +359,21 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 if response.response?.statusCode == 200 {
                     if (response.result.value == nil) {return}
                     self.coachDetail = response.result.value as! NSDictionary
-                    self.defaults.setObject(self.coachDetail["newleadNotification"] as! Int == 0 ? false : true, forKey: kNewConnections)
-                    self.defaults.setObject(self.coachDetail["messageNotification"] as! Int == 0 ? false : true, forKey: kMessage)
-                    self.defaults.setObject(self.coachDetail["sessionNotification"] as! Int == 0 ? false : true, forKey: kSessions)
-                    self.defaults.setObject(self.coachDetail[kUnits], forKey: kUnit)
-                    self.defaults.setObject(self.coachDetail[kFirstname], forKey: kFirstname)
+                    
+                    let firstName = self.coachDetail[kFirstname] as? String
+                    self.userNameLabel.text = firstName?.uppercaseString
+                    
+                    if (self.profileStyle == .currentUser) {
+                        self.defaults.setObject(self.coachDetail["newleadNotification"] as! Int == 0 ? false : true, forKey: kNewConnections)
+                        self.defaults.setObject(self.coachDetail["messageNotification"] as! Int == 0 ? false : true, forKey: kMessage)
+                        self.defaults.setObject(self.coachDetail["sessionNotification"] as! Int == 0 ? false : true, forKey: kSessions)
+                        self.defaults.setObject(self.coachDetail[kUnits], forKey: kUnit)
+                        self.defaults.setObject(firstName, forKey: kFirstname)
+                    }
+                    
                     
                     self.setAvatar()
-                    if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+                    if (self.isCoach == true) {
                         self.getBusinessImage()
                         self.getListTag()
                         self.updateUI()
@@ -387,20 +410,18 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     func getBusinessImage() {
-        if (coachDetail[kBusinessId] is NSNull == false) {
-            let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
-            
-            ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
-                if (error == nil) {
-                    self.businessIMV.hidden = false
-                    let imageRes = result as! UIImage
-                    self.businessIMV.image = imageRes
-                    self.aboutLeftDT.constant = 120
-                } else {
-                    print("Request failed with error: \(error)")
-                }
-            }).fetchdata()
-        }
+        let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+        
+        ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
+            if (error == nil) {
+                self.businessIMV.hidden = false
+                let imageRes = result as! UIImage
+                self.businessIMV.image = imageRes
+                self.specifiesCollectionViewTraillingConstraint.constant = 120
+            } else {
+                print("Request failed with error: \(error)")
+            }
+        }).fetchdata()
     }
     
     func getListTag() {
@@ -420,9 +441,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                             tag.name = tagContent[kTitle] as? String
                             self.tags.append(tag)
                         }
-                        self.interestCollectionView.reloadData({
-                            self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
-                            self.interestHeightDT.constant = ((self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50) < 128) ? 128 : (self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50)
+                        self.specialitiesCollectionView.reloadData({
+                            let heightCollectionView = self.specialitiesCollectionView.collectionViewLayout.collectionViewContentSize().height
+                            
+                            self.specifiesCollectionViewHeightConstraint.constant = heightCollectionView < 78 ? 78 : heightCollectionView
+                            self.specifiesViewHeightConstraint.constant = ((heightCollectionView + 50) < 128) ? 128 : (heightCollectionView + 50)
                         })
                     }
             }
@@ -435,9 +458,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 tag.name = tagContent[kTitle] as? String
                 self.tags.append(tag)
             }
-            self.interestCollectionView.reloadData({
-                self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
-                self.interestHeightDT.constant = (self.specifiesDT.constant + 50 < 128) ? 128 : (self.specifiesDT.constant + 50)
+            self.specialitiesCollectionView.reloadData({
+                let heightCollectionView = self.specialitiesCollectionView.collectionViewLayout.collectionViewContentSize().height
+                
+                self.specifiesCollectionViewHeightConstraint.constant = heightCollectionView < 78 ? 78 : heightCollectionView
+                
+                self.specifiesViewHeightConstraint.constant = (self.specifiesCollectionViewHeightConstraint.constant + 50 < 128) ? 128 : (self.specifiesCollectionViewHeightConstraint.constant + 50)
             })
         }
     }
@@ -457,9 +483,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                         self.getListImage()
                     } else {
                         self.isStopGetListPhotos = true
-                        self.aboutCollectionView.reloadData()
-                        self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
-                        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
+                        self.postCollectionView.reloadData({
+                            self.postCollectionViewHeightConstraint.constant = self.postCollectionView.collectionViewLayout.collectionViewContentSize().height
+                            
+                            self.postViewHeightConstraint.constant = self.postCollectionViewHeightConstraint.constant + 50
+                        })
+                        
                         self.scrollView.scrollEnabled = true
                     }
                 }
@@ -518,7 +547,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
                 
                 var totalPoint = 0.0
-                if (self.defaults.boolForKey(k_PM_IS_COACH)) {
+                if (self.isCoach == true) {
                     self.connectionContentLB.text = "100%"
                 } else {
                     if (coachInformation[kConnectionCount] is NSNull) {
@@ -615,8 +644,9 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     func updateUIUser() {
-        self.interestHeightDT.constant = 0
+        self.specifiesViewHeightConstraint.constant = 0
         self.addressIconIMV.hidden = true
+        self.addressLB.hidden = true
         
         var totalPoint = 0.0
         if (coachDetail[kConnectionCount] is NSNull) {
@@ -635,8 +665,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             totalPoint = totalPoint + (coachDetail[kPostCount]!.doubleValue * 75)
         }
         self.ratingContentLB.text = String(format:"%0.f", totalPoint)
-        
-        self.addressLB.hidden = true
         
         let bioText = coachDetail[kBio] as? String
         if (bioText != nil && bioText?.isEmpty == false) {
@@ -738,7 +766,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBAction func goConnection() {
         self.performSegueWithIdentifier(kGoConnect, sender: self)
         
-        if defaults.boolForKey(k_PM_IS_COACH) == true {
+        if (self.isCoach == true) {
             if let val = self.coachDetail[kId] as? Int {
                 TrackingPMAPI.sharedInstance.trackingConnectButtonCLick("\(val)")
             }
@@ -754,49 +782,46 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     @IBAction func expandInterest(sender:UIButton) {
-        if (self.interestHeightDT.constant == 50) {
-            self.interestHeightDT.constant = 128
-            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
+        if (self.specifiesViewHeightConstraint.constant == 50) {
+            self.specifiesViewHeightConstraint.constant = 128
             
         } else {
-            self.interestHeightDT.constant = 50
-            self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-            
+            self.specifiesViewHeightConstraint.constant = 50
         }
     }
     
-    @IBAction func expandAboutDetail(sender: UIButton) {
-        if (self.postHeightDT.constant == 50) {
-            self.postHeightDT.constant = 70
-        } else {
-            self.postHeightDT.constant = 50
-        }
-        if (self.view.frame.origin.y == 0.0) {
-            self.oldPositionAboutV = self.view.frame.size.height - (self.postV.frame.size.height +
-                self.aboutCollectionView.frame.size.height)
-            var frameV : CGRect!
-            frameV = self.view.frame
-            frameV.origin.y = -self.postV.frame.origin.y
-            frameV.size.height += self.oldPositionAboutV
-            self.view.frame = frameV
-            self.aboutLB.hidden = true
-            self.statusBarDefault = true
-            self.setNeedsStatusBarAppearanceUpdate()
-            
-        } else {
-            self.statusBarDefault = false
-            self.setNeedsStatusBarAppearanceUpdate()
-            self.aboutLB.hidden = false
-            var frameV : CGRect!
-            frameV = self.view.frame
-            frameV.origin.y = 0
-            frameV.size.height -= self.oldPositionAboutV
-            self.view.frame = frameV
-        }
-    }
+//    @IBAction func expandAboutDetail(sender: UIButton) {
+//        if (self.postHeightDT.constant == 50) {
+//            self.postHeightDT.constant = 70
+//        } else {
+//            self.postHeightDT.constant = 50
+//        }
+//        if (self.view.frame.origin.y == 0.0) {
+//            self.oldPositionAboutV = self.view.frame.size.height - (self.postV.frame.size.height +
+//                self.aboutCollectionView.frame.size.height)
+//            var frameV : CGRect!
+//            frameV = self.view.frame
+//            frameV.origin.y = -self.postView.frame.origin.y
+//            frameV.size.height += self.oldPositionAboutV
+//            self.view.frame = frameV
+//            self.aboutLB.hidden = true
+//            self.statusBarDefault = true
+//            self.setNeedsStatusBarAppearanceUpdate()
+//            
+//        } else {
+//            self.statusBarDefault = false
+//            self.setNeedsStatusBarAppearanceUpdate()
+//            self.aboutLB.hidden = false
+//            var frameV : CGRect!
+//            frameV = self.view.frame
+//            frameV.origin.y = 0
+//            frameV.size.height -= self.oldPositionAboutV
+//            self.view.frame = frameV
+//        }
+//    }
     
     @IBAction func backButtonClicked() {
-        
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func clickOnFacebook() {
@@ -818,7 +843,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
             
-            if defaults.boolForKey(k_PM_IS_COACH) == true {
+            if (self.isCoach == true) {
                 if let val = self.coachDetail[kId] as? Int {
                     TrackingPMAPI.sharedInstance.trackSocialFacebook("\(val)")
                 }
@@ -845,7 +870,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
             
-            if defaults.boolForKey(k_PM_IS_COACH) == true {
+            if (self.isCoach == true) {
                 if let val = self.coachDetail[kId] as? Int {
                     TrackingPMAPI.sharedInstance.trackSocialTwitter("\(val)")
                 }
@@ -872,7 +897,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
             
-            if defaults.boolForKey(k_PM_IS_COACH) == true {
+            if (self.isCoach == true) {
                 if let val = self.coachDetail[kId] as? Int {
                     TrackingPMAPI.sharedInstance.trackSocialInstagram("\(val)")
                 }
@@ -1222,20 +1247,20 @@ extension ProfileViewController: MFMailComposeViewControllerDelegate, MFMessageC
 // MARK: - UICollectionViewDataSource
 extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (collectionView == self.interestCollectionView) {
+        if (collectionView == self.specialitiesCollectionView) {
             return tags.count
         } else if (collectionView == self.testimonialCollectionView) {
-            if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+            self.testimonialViewHeightConstraint.constant = 0
+            
+            if (self.isCoach == true) {
                 if (self.testimonialArray.count > 0) {
                     self.testimonialViewHeightConstraint.constant = 324
                 } else {
-                    // Title: 44, Cell 280 --> 324
-                    self.testimonialViewHeightConstraint.constant = 44
+                    if (self.profileStyle == .currentUser) {
+                        self.testimonialViewHeightConstraint.constant = 44
+                    }
                 }
-            } else {
-                self.testimonialViewHeightConstraint.constant = 0
             }
-            
             
             return self.testimonialArray.count
         } else {
@@ -1244,7 +1269,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        if (collectionView == self.interestCollectionView) {
+        if (collectionView == self.specialitiesCollectionView) {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
             self.configureCell(cell, forIndexPath: indexPath)
             return cell
@@ -1272,7 +1297,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        if (collectionView == self.interestCollectionView) {
+        if (collectionView == self.specialitiesCollectionView) {
             self.configureCell(self.sizingCell!, forIndexPath: indexPath)
             var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
             
@@ -1284,13 +1309,15 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         } else if (collectionView == self.testimonialCollectionView) {
             // Title: 44, Cell 280
             return CGSize(width: 175, height: 280)
-        } else {
-            return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
+        } else if (collectionView == self.postCollectionView) {
+            return CGSizeMake(self.postCollectionView.frame.size.width/2, self.postCollectionView.frame.size.width/2)
         }
+        
+        return CGSize()
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if (collectionView == self.interestCollectionView) {
+        if (collectionView == self.specialitiesCollectionView) {
             // Do nothing
         } else if (collectionView == self.testimonialCollectionView) {
             // Do nothing
@@ -1356,7 +1383,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-        if defaults.boolForKey(k_PM_IS_COACH) == true {
+        if (self.isCoach == true) {
             if let val = self.coachDetail[kId] as? Int {
                 TrackingPMAPI.sharedInstance.trackSocialWeb("\(val)")
             }

@@ -33,7 +33,6 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
     var offset: Int = 0
     var isStopGetListTag : Bool = false
     
-    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
