@@ -313,17 +313,21 @@ extension BookSessionShareViewController {
         }
         
         // Call action
-        let phoneNumber = userInfo[kMobile] as! String
-        let callClientAction = { (action:UIAlertAction!) -> Void in
-            let phoneNumber = userInfo[kMobile] as! String
-            var urlString = "tel:///"
-            urlString = urlString.stringByAppendingString(phoneNumber)
-            
-            let tellURL = NSURL(string: urlString)
-            if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
-                UIApplication.sharedApplication().openURL(tellURL!)
+        let phoneNumber = userInfo[kMobile] as? String
+        var callClientAction:((UIAlertAction) -> Void)? = nil
+        if (phoneNumber != nil) {
+            callClientAction = { (action:UIAlertAction!) -> Void in
+                let phoneNumber = userInfo[kMobile] as! String
+                var urlString = "tel:///"
+                urlString = urlString.stringByAppendingString(phoneNumber)
+                
+                let tellURL = NSURL(string: urlString)
+                if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
+                    UIApplication.sharedApplication().openURL(tellURL!)
+                }
             }
         }
+        
         
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
@@ -345,7 +349,7 @@ extension BookSessionShareViewController {
         alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
         
         // Check exist phone number
-        if (phoneNumber.isEmpty == false) {
+        if (phoneNumber != nil && phoneNumber?.isEmpty == false) {
             alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
         }
         

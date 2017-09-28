@@ -42,4 +42,10 @@ class TagCell: UICollectionViewCell {
         
         return UIColor(red: randomRed, green: randomGreen, blue: randomBlue, alpha: 1.0)
     }
+    
+    func setupData(tag: Tag) {
+        self.tagName.text = tag.name
+        self.tagName.textColor = UIColor.blackColor()
+        self.layer.borderColor = UIColor.clearColor().CGColor
+    }
 }

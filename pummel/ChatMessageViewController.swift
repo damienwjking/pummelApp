@@ -396,7 +396,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     func avatarClicked() {
-        PMHelper.showCoachOrUserView(self.userIdTarget)
+        PMHelper.showCoachOrUserView(self.userIdTarget, showTestimonial: false, isFromChat: true)
     }
     
     @IBAction func goPhoto(sender:UIButton!) {

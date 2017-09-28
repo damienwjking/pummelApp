@@ -19,7 +19,6 @@ class LeadCollectionViewCell: UICollectionViewCell {
         self.imgAvatar.layer.cornerRadius = self.imgAvatar.frame.size.width/2.0
         self.imgAvatar.clipsToBounds = true
         self.btnAdd.layer.cornerRadius = self.btnAdd.frame.size.width/2.0
-        self.nameUser.font = .pmmMonReg13()
     }
 
 }

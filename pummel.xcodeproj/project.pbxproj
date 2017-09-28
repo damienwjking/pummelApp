@@ -799,7 +799,6 @@
 		F9AF9DF41D29C8810065F2D2 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -865,6 +864,7 @@
 		F9EAE8DB1D6EF88500FD32BE /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				F9AF9DF91D29C9410065F2D2 /* AboutCollectionViewCell.swift */,
 				F9EAE8DC1D6EF8AD00FD32BE /* SettingDiscoveryHeaderTableViewCell.swift */,
 				F9EAE8DE1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift */,
 				F9EAE8E01D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift */,

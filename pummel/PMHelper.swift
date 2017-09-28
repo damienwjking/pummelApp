@@ -116,65 +116,74 @@ class PMHelper {
         }
     }
     
-    class func showCoachOrUserView(userID: String, showTestimonial: Bool = false) {
+    class func showCoachOrUserView(userID: String, showTestimonial: Bool = false, isFromChat:Bool = false) {
         if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
             
-            topController.view.makeToastActivity()
+            let currentUser = PMHelper.getCurrentID()
             
-            UserRouter.getUserInfo(userID: userID) { (result, error) in
-                if (error == nil) {
-                    let userInfo = result as! NSDictionary
-                    
-                    if let firstName = userInfo[kFirstname] as? String {
-                        // Tracker mixpanel
-                        let mixpanel = Mixpanel.sharedInstance()
-                        let properties = ["Name": "Profile Is Clicked", "Label":"\(firstName.uppercaseString)"]
-                        mixpanel.track("IOS.ClickOnProfile", properties: properties)
-                    }
-                    
-                    UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
-                        topController.view.hideToastActivity()
+            if (userID == currentUser) {
+                NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_CURRENT_PROFILE, forKey: k_PM_MOVE_SCREEN)
+                
+                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+            } else {
+                topController.view.makeToastActivity()
+                
+                UserRouter.getUserInfo(userID: userID) { (result, error) in
+                    if (error == nil) {
+                        let userInfo = result as! NSDictionary
                         
-                        let isCoach = result as! Bool
-                        if (isCoach == true) {
-//                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
-                            
-                            let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
-                            
-                            coachProfileVC.isCoach = true
-                            coachProfileVC.userID = userID
-                            coachProfileVC.coachDetail = userInfo
-                            coachProfileVC.profileStyle = .otherUser
-                            
-                            if (showTestimonial == true) {
-                                topController.presentViewController(coachProfileVC, animated: true, completion: {
-                                    coachProfileVC.showPostTestimonialViewController()
-                                })
-                            } else {
-                                topController.presentViewController(coachProfileVC, animated: true, completion: nil)
-                            }
-                        } else {
-                            let userProfileVC = UIStoryboard(name: "UserProfile", bundle: nil).instantiateInitialViewController() as! UserProfileViewController
-                            
-                            userProfileVC.userDetail = userInfo
-                            userProfileVC.userId = userID
-                            
-                            if (showTestimonial == true) {
-                                topController.presentViewController(userProfileVC, animated: true, completion: { 
-                                    userProfileVC.showPostTestimonialViewController()
-                                })
-                            } else {
-                                topController.presentViewController(userProfileVC, animated: true, completion: nil)
-                            }
+                        if let firstName = userInfo[kFirstname] as? String {
+                            // Tracker mixpanel
+                            let mixpanel = Mixpanel.sharedInstance()
+                            let properties = ["Name": "Profile Is Clicked", "Label":"\(firstName.uppercaseString)"]
+                            mixpanel.track("IOS.ClickOnProfile", properties: properties)
                         }
-                        }.fetchdata()
-                } else {
-                    print("Request failed with error: \(error)")
-                }
-                }.fetchdata()
+                        
+                        UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
+                            topController.view.hideToastActivity()
+                            
+                            let isCoach = result as! Bool
+                            if (isCoach == true) {
+                                //                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
+                                
+                                let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
+                                
+                                coachProfileVC.isCoach = true
+                                coachProfileVC.userID = userID
+                                coachProfileVC.coachDetail = userInfo
+                                coachProfileVC.profileStyle = .otherUser
+                                coachProfileVC.isFromChat = isFromChat
+                                
+                                if (showTestimonial == true) {
+                                    topController.presentViewController(coachProfileVC, animated: true, completion: {
+                                        coachProfileVC.showPostTestimonialViewController()
+                                    })
+                                } else {
+                                    topController.presentViewController(coachProfileVC, animated: true, completion: nil)
+                                }
+                            } else {
+                                let userProfileVC = UIStoryboard(name: "UserProfile", bundle: nil).instantiateInitialViewController() as! UserProfileViewController
+                                
+                                userProfileVC.userDetail = userInfo
+                                userProfileVC.userId = userID
+                                
+                                if (showTestimonial == true) {
+                                    topController.presentViewController(userProfileVC, animated: true, completion: {
+                                        userProfileVC.showPostTestimonialViewController()
+                                    })
+                                } else {
+                                    topController.presentViewController(userProfileVC, animated: true, completion: nil)
+                                }
+                            }
+                            }.fetchdata()
+                    } else {
+                        print("Request failed with error: \(error)")
+                    }
+                    }.fetchdata()
+            }
         }
     }
     

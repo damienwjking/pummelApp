@@ -245,6 +245,18 @@ class BaseViewController: UIViewController {
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_MESSAGE_DETAIL {
                     self.tabBarController?.selectedIndex = 3
+                } else if moveScreenType == k_PM_MOVE_SCREEN_CURRENT_PROFILE {
+                    if (self.navigationController != nil) {
+                        self.navigationController?.popToRootViewControllerAnimated(true)
+                    } else {
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    }
+                    
+                    if (self.tabBarController != nil) {
+                        defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+                        
+                        self.tabBarController?.selectedIndex = 4
+                    }
                 } else {
                     defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
                 }

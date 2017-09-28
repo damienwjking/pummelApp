@@ -18,6 +18,7 @@ let widthHeight250 = "?width=250&height=250"
 let widthHeight100 = "?width=100&height=100"
 let widthHeight200 = "?width=200&height=200"
 let widthHeight236 = "?width=236&height=236"
+let widthHeightScreen = "?width=\(SCREEN_WIDTH)&height=\(SCREEN_HEIGHT)"
 let widthEqual = "?width="
 let heighEqual = "&height="
 
@@ -104,6 +105,7 @@ let k_PM_MOVE_SCREEN_NOTI_NEW_MESSAGE = "noti_new_message"
 let k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION = "noti_incoming_session"
 
 let k_PM_MOVE_SCREEN_MESSAGE_DETAIL = "moveScreenMessageDetail"
+let k_PM_MOVE_SCREEN_CURRENT_PROFILE = "moveScreenCurrentProfile"
 
 // Key Json
 let kConversationId = "conversationId"

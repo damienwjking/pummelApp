@@ -49,7 +49,8 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var addressLB: UILabel!
     @IBOutlet weak var businessIMV: UIImageView!
     
-    @IBOutlet weak var connectV : UIView!
+    @IBOutlet weak var connectView : UIView!
+    @IBOutlet weak var connectButton: UIButton!
     
     @IBOutlet weak var connectionLB: UILabel!
     @IBOutlet weak var ratingContentLB: UILabel!
@@ -125,19 +126,23 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var instagramLink: String? = ""
     var twitterLink: String? = ""
     var facebookLink: String? = ""
-    var oldPositionAboutV: CGFloat!
-    var statusBarDefault: Bool!
-    var sizingCell: TagCell?
+    
     var tags = [Tag]()
     var photoArray: NSMutableArray = []
     var testimonialArray = [TestimonialModel]()
-    var isFromFeed: Bool = false
     var offset: Int = 0
     var testimonialOffset = 0
-    var isStopGetListPhotos : Bool = false
+    
+    var sizingCell: TagCell?
+    
+    var isConnected = false
+    var isFromChat = false
+    var isFromFeed = false
     var isStopGetTestimonial = false
+    var isStopGetListPhotos = false
     
     let imagePickerController = UIImagePickerController()
+    
     var videoView: UIView? = nil
     var videoPlayer: AVPlayer? = nil
     var videoPlayerLayer: AVPlayerLayer? = nil
@@ -168,14 +173,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.setupUI()
-        self.setupTagCollectionView()
+        self.setupCollectionView()
         
         // Add notification for update video url
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.profileGetNewDetail), name: "profileGetDetail", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.uploadVideoWithNotification), name: "profileUploadVideo", object: nil)
-        
-        let testimonialXib = UINib(nibName: kTestimonialCell, bundle: nil)
-        self.testimonialCollectionView.registerNib(testimonialXib, forCellWithReuseIdentifier: kTestimonialCell)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -192,6 +194,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.setupUIForProfileStyle()
         
         self.getDetail()
+        self.getConnectStatus()
         
         self.playVideoButton.setImage(nil, forState: .Normal)
         
@@ -238,25 +241,28 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         self.connectionLB.text = self.isCoach ? "RATING" : "SESSIONS"
         
-        self.connectV.layer.cornerRadius = 55/2
-        self.avatarIMV.layer.cornerRadius = 125/2
-        self.avatarIMV.clipsToBounds = true
-        self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.connectButton.layer.cornerRadius = 55/2
+        self.connectButton.layer.masksToBounds = true
+        
         self.avatarIMV.layer.borderWidth = 0
+        self.avatarIMV.clipsToBounds = true
+        self.avatarIMV.layer.cornerRadius = 125/2
+        self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        
         self.scrollView.scrollsToTop = false
         
         self.businessIMV.hidden = true
-        self.specifiesCollectionViewTraillingConstraint.constant = 10
-        self.businessIMV.layer.cornerRadius = 50
         self.businessIMV.clipsToBounds = true
-        self.webTV.delegate = self
+        self.businessIMV.layer.cornerRadius = 50
+        self.specifiesCollectionViewTraillingConstraint.constant = 10
         
-        self.statusBarDefault = false
+        self.webTV.delegate = self
         
         self.postCollectionView.backgroundColor = UIColor.pmmWhiteColor()
     }
     
-    func setupTagCollectionView() {
+    func setupCollectionView() {
+        // Tag collection view
         self.specialitiesFlowLayout.smaller = true
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
         self.specialitiesCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
@@ -267,6 +273,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         } else {
             self.specialitiesFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
         }
+        
+        // Testimonial collection view
+        let testimonialXib = UINib(nibName: kTestimonialCell, bundle: nil)
+        self.testimonialCollectionView.registerNib(testimonialXib, forCellWithReuseIdentifier: kTestimonialCell)
     }
     
     func setupUIForProfileStyle() {
@@ -311,18 +321,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         mixpanel.track("IOS.Profile", properties: properties)
     }
     
-    @IBAction func edit() {
-        if (self.isCoach != true) {
-            performSegueWithIdentifier("goEdit", sender: nil)
-        } else {
-            performSegueWithIdentifier("goEditCoach", sender: nil)
-        }
-        // Tracker mixpanel
-        let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Name": "Navigation Click", "Label":"Go Edit Profile"]
-        mixpanel.track("IOS.Profile", properties: properties)
-    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "goEdit") {
             let destinationVC = segue.destinationViewController as! EditProfileViewController
@@ -344,6 +342,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             let destination = segue.destinationViewController as! CameraViewController
             
             destination.videoURL = sender as? NSURL
+        } else if (segue.identifier == kGoConnect) {
+            let destimation = segue.destinationViewController as! ConnectViewController
+            destimation.coachDetail = self.coachDetail
+            destimation.isFromProfile = true
+            destimation.isFromFeed = self.isFromFeed
+            destimation.isConnected = self.isConnected
         }
     }
     
@@ -371,17 +375,20 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                         self.defaults.setObject(firstName, forKey: kFirstname)
                     }
                     
+                    if let val = self.coachDetail[kId] as? Int {
+                        TrackingPMAPI.sharedInstance.trackingProfileViewed("\(val)")
+                    }
                     
                     self.setAvatar()
                     if (self.isCoach == true) {
                         self.getBusinessImage()
                         self.getListTag()
                         self.updateUI()
-                        self.getListImage()
                     } else {
                         self.updateUIUser()
-                        self.getListImage()
                     }
+                    
+                    self.getListImage()
                     
                     // check Video URL
                     let videoURL = self.coachDetail[kVideoURL] as? String
@@ -469,32 +476,34 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     func getListImage() {
-        var prefix = kPMAPIUSER
-        prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
-        prefix.appendContentsOf(kPM_PATH_PHOTOV2)
-        prefix.appendContentsOf("\(self.offset)")
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arrayphoto = JSON as? NSArray {
-                    if arrayphoto.count > 0 {
-                        self.offset += 10
-                        self.photoArray.addObjectsFromArray(arrayphoto as [AnyObject])
-                        self.getListImage()
-                    } else {
-                        self.isStopGetListPhotos = true
-                        self.postCollectionView.reloadData({
-                            self.postCollectionViewHeightConstraint.constant = self.postCollectionView.collectionViewLayout.collectionViewContentSize().height
+        if (self.isStopGetListPhotos == false) {
+            var prefix = kPMAPIUSER
+            prefix.appendContentsOf(String(format:"%0.f", coachDetail[kId]!.doubleValue))
+            prefix.appendContentsOf(kPM_PATH_PHOTOV2)
+            prefix.appendContentsOf("\(self.offset)")
+            Alamofire.request(.GET, prefix)
+                .responseJSON { response in switch response.result {
+                case .Success(let JSON):
+                    if let arrayphoto = JSON as? NSArray {
+                        if arrayphoto.count > 0 {
+                            self.offset += 10
+                            self.photoArray.addObjectsFromArray(arrayphoto as [AnyObject])
+                            self.getListImage()
+                        } else {
+                            self.isStopGetListPhotos = true
+                            self.postCollectionView.reloadData({
+                                self.postCollectionViewHeightConstraint.constant = self.postCollectionView.collectionViewLayout.collectionViewContentSize().height
+                                
+                                self.postViewHeightConstraint.constant = self.postCollectionViewHeightConstraint.constant + 50
+                            })
                             
-                            self.postViewHeightConstraint.constant = self.postCollectionViewHeightConstraint.constant + 50
-                        })
-                        
-                        self.scrollView.scrollEnabled = true
+                            self.scrollView.scrollEnabled = true
+                        }
                     }
-                }
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    }
+            }
         }
     }
     
@@ -546,6 +555,13 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 let coachInformationTotal = JSON as! NSDictionary
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
                 
+                let totalTestimonial = coachInformationTotal[kTotalTestimonial] as? Int
+                if (totalTestimonial == nil) {
+                    self.testimonialTitle.text = "TESTIMONIALS"
+                } else {
+                    self.testimonialTitle.text = "TESTIMONIALS (\(totalTestimonial!))"
+                }
+                
                 var totalPoint = 0.0
                 if (self.isCoach == true) {
                     self.connectionContentLB.text = "100%"
@@ -554,16 +570,9 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                         self.connectionContentLB.text = "0"
                     } else {
                         self.connectionContentLB.text = String(format:"%0.f", coachInformation[kConnectionCount]!.doubleValue)
-                
+                        
                         totalPoint = totalPoint + (coachInformation[kConnectionCount]!.doubleValue * 120)
                     }
-                }
-                
-                let totalTestimonial = coachInformationTotal[kTotalTestimonial] as? Int
-                if (totalTestimonial == nil) {
-                    self.testimonialTitle.text = "TESTIMONIALS"
-                } else {
-                    self.testimonialTitle.text = "TESTIMONIALS (\(totalTestimonial!))"
                 }
                 
                 if (coachInformation[kPostCount] is NSNull) {
@@ -585,15 +594,14 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 
                 let bioText = coachInformation[kBio] as? String
                 if (bioText != nil && bioText?.isEmpty == false) {
-                    self.aboutTV.text = bioText
-                }
-                
-                let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
-                self.aboutTVHeightDT.constant = sizeAboutTV.height
-                if (self.aboutTV.text.isEmpty == true) {
-                    self.aboutHeightDT.constant = 0;
-                } else {
+                    self.aboutTV.text = coachInformation[kBio] as! String
+                    
+                    let sizeAboutTV = self.aboutTV.sizeThatFits(self.aboutTV.frame.size)
+                    self.aboutTVHeightDT.constant = sizeAboutTV.height
                     self.aboutHeightDT.constant = self.aboutTV.frame.origin.y + sizeAboutTV.height + 8
+                } else {
+                    self.aboutTVHeightDT.constant = 0
+                    self.aboutHeightDT.constant = 0
                 }
                 
                 self.qualificationDT.constant = 0
@@ -602,9 +610,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.qualificationTV.text = qualificationText
                     let sizeQualificationTV = self.qualificationTV.sizeThatFits(self.qualificationTV.frame.size)
                     self.qualificationTVHeightDT.constant = sizeQualificationTV.height + 10
-                    if qualificationText != "" {
-                        self.qualificationDT.constant = self.qualificationTV.frame.origin.y + sizeQualificationTV.height
-                    }
+                    self.qualificationDT.constant = self.qualificationTV.frame.origin.y + sizeQualificationTV.height
                 } else {
                     self.qualificationTV.text = " "
                 }
@@ -616,9 +622,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.achivementTV.text = achivementText
                     let sizeAchivementTV = self.achivementTV.sizeThatFits(self.achivementTV.frame.size)
                     self.achivementTVHeightDT.constant = sizeAchivementTV.height + 10
-                    if achivementText != "" {
-                        self.achivementDT.constant = self.qualificationTV.frame.origin.y + sizeAchivementTV.height
-                    }
+                    self.achivementDT.constant = self.qualificationTV.frame.origin.y + sizeAchivementTV.height
                 }
                 
                 let websiteText = coachInformationTotal[kWebsiteUrl] as? String
@@ -757,68 +761,99 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    // MARK: - Outlet function
-    @IBAction func goBackToResult() {
-        self.dismissViewControllerAnimated(true) {
+    func getConnectStatus() {
+        if (self.profileStyle == .currentUser) {
+            self.connectButton.setImage(UIImage(named: "edit"), forState: .Normal)
+            self.connectButton.backgroundColor = UIColor.pmmBrightOrangeColor()
+            
+            self.connectButton.addTarget(self, action: #selector(self.editButtonClicked), forControlEvents: .TouchUpInside)
+        } else if (self.profileStyle == .otherUser) {
+            self.connectButton.setImage(UIImage(named: "connect"), forState: .Normal)
+            self.connectButton.backgroundColor = UIColor.pmmBrightOrangeColor()
+            
+            self.connectButton.addTarget(self, action: #selector(self.connectButtonClicked), forControlEvents: .TouchUpInside)
+            
+            let prefix = kPMAPICHECKUSERCONNECT
+            let param = [kUserId: PMHelper.getCurrentID(),
+                         kCoachId : self.coachDetail[kId]!]
+            
+            self.connectButton.userInteractionEnabled = false
+            
+            Alamofire.request(.POST, prefix, parameters: param)
+                .responseString(completionHandler: { (Response) in
+                    self.connectButton.userInteractionEnabled = true
+                    
+                    switch (Response.result) {
+                    case .Success(let resultValue) :
+                        let resultString = resultValue as String
+                        
+                        if (resultString.isEmpty == false) {
+                            if (resultString == "Connected") {
+                                self.connectButton.setImage(UIImage(named: "mail"), forState: .Normal)
+                                self.connectButton.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
+                                self.isConnected = true
+                                
+                                if self.isFromChat {
+                                    self.connectButton.userInteractionEnabled = false
+                                }
+                            }
+                        }
+                    case .Failure(let error):
+                        print("Request failed with error: \(error)")
+                    }
+                    
+                    
+                })
         }
     }
     
-    @IBAction func goConnection() {
-        self.performSegueWithIdentifier(kGoConnect, sender: self)
-        
-        if (self.isCoach == true) {
-            if let val = self.coachDetail[kId] as? Int {
-                TrackingPMAPI.sharedInstance.trackingConnectButtonCLick("\(val)")
+    // MARK: - Outlet function
+    @IBAction func editButtonClicked() {
+        if (self.isCoach != true) {
+            performSegueWithIdentifier("goEdit", sender: nil)
+        } else {
+            performSegueWithIdentifier("goEditCoach", sender: nil)
+        }
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Name": "Navigation Click", "Label":"Go Edit Profile"]
+        mixpanel.track("IOS.Profile", properties: properties)
+    }
+    
+    @IBAction func connectButtonClicked() {
+        if self.coachDetail != nil {
+            if let firstName = self.coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+                mixpanel.track("IOS.SendMessageToCoach", properties: properties)
+                
+                self.view.makeToastActivity(message: "Connecting")
+                
+                var prefix = kPMAPIUSER
+                prefix.appendContentsOf(PMHelper.getCurrentID())
+                prefix.appendContentsOf(kPMAPI_LEAD)
+                prefix.appendContentsOf("/")
+                
+                let param = [kUserId : PMHelper.getCurrentID(),
+                             kCoachId : self.coachDetail[kId]!]
+                
+                Alamofire.request(.POST, prefix, parameters: param)
+                    .responseJSON { response in
+                        self.view.hideToastActivity()
+                        
+                        if let val = self.coachDetail[kId] as? Int {
+                            TrackingPMAPI.sharedInstance.trackingConnectButtonCLick("\(val)")
+                        }
+                        
+                        self.performSegueWithIdentifier(kGoConnect, sender: self)
+                }
             }
         }
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        if (statusBarDefault == true) {
-            return UIStatusBarStyle.Default
-        } else {
-            return UIStatusBarStyle.LightContent
-        }
+        return UIStatusBarStyle.LightContent
     }
-    
-    @IBAction func expandInterest(sender:UIButton) {
-        if (self.specifiesViewHeightConstraint.constant == 50) {
-            self.specifiesViewHeightConstraint.constant = 128
-            
-        } else {
-            self.specifiesViewHeightConstraint.constant = 50
-        }
-    }
-    
-//    @IBAction func expandAboutDetail(sender: UIButton) {
-//        if (self.postHeightDT.constant == 50) {
-//            self.postHeightDT.constant = 70
-//        } else {
-//            self.postHeightDT.constant = 50
-//        }
-//        if (self.view.frame.origin.y == 0.0) {
-//            self.oldPositionAboutV = self.view.frame.size.height - (self.postV.frame.size.height +
-//                self.aboutCollectionView.frame.size.height)
-//            var frameV : CGRect!
-//            frameV = self.view.frame
-//            frameV.origin.y = -self.postView.frame.origin.y
-//            frameV.size.height += self.oldPositionAboutV
-//            self.view.frame = frameV
-//            self.aboutLB.hidden = true
-//            self.statusBarDefault = true
-//            self.setNeedsStatusBarAppearanceUpdate()
-//            
-//        } else {
-//            self.statusBarDefault = false
-//            self.setNeedsStatusBarAppearanceUpdate()
-//            self.aboutLB.hidden = false
-//            var frameV : CGRect!
-//            frameV = self.view.frame
-//            frameV.origin.y = 0
-//            frameV.size.height -= self.oldPositionAboutV
-//            self.view.frame = frameV
-//        }
-//    }
     
     @IBAction func backButtonClicked() {
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -974,13 +1009,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.presentViewController(alertViewController, animated: true, completion: nil)
         }
     }
-    
-    @IBAction func playVideoButtonClicked(sender: AnyObject) {
-        if (self.videoPlayer != nil) {
-            self.isVideoPlaying = !self.isVideoPlaying
-            self.videoPlayerSetPlay(self.isVideoPlaying)
-        }
-    }
 }
 
 // MARK: - Video
@@ -1003,15 +1031,18 @@ extension ProfileViewController {
         self.isVideoPlaying = isPlay
         // Show/Hidden item above video view
         self.avatarIMV.hidden = isPlay
-        
-        self.connectV.hidden = isPlay
+        self.connectView.hidden = isPlay
     }
     
     func showVideoLayout(videoURLString: String) {
         // Move avatar to top left
         let newAvatarSize: CGFloat = 37.0
-        let margin: CGFloat = 10.0
-        let topMargin: CGFloat = 55.0
+        let margin: CGFloat = 15.0
+        var topMargin: CGFloat = 15.0
+        if (self.profileStyle == .otherUser) {
+            topMargin = 55.0
+        }
+        
         self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + margin
         self.avatarIMVCenterYConstraint.constant = -(self.detailV.frame.height - newAvatarSize)/2 + topMargin
         self.avatarIMVWidthConstraint.constant = newAvatarSize
@@ -1037,8 +1068,6 @@ extension ProfileViewController {
             self.videoPlayerLayer!.frame = self.videoView!.bounds
             self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
-            
-            //            self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
             
             self.detailV.insertSubview(self.videoView!, atIndex: 0)
         }
@@ -1066,23 +1095,6 @@ extension ProfileViewController {
                                                          selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
                                                          object: self.videoPlayer!.currentItem)
-    }
-    
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        //        let currentItem = object as! AVPlayerItem
-        //        if currentItem.status == .ReadyToPlay {
-        //            let videoRect = self.videoPlayerLayer?.videoRect
-        //            if (videoRect?.width > videoRect?.height) {
-        //                //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-        //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-        //            } else {
-        //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-        //            }
-        //
-        ////            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
-        //
-        //            self.videoPlayerSetPlay(false)
-        //        }
     }
     
     func endVideoNotification(notification: NSNotification) {
@@ -1207,6 +1219,13 @@ extension ProfileViewController {
         
         self.convertVideoToMP4AndUploadToServer(videoURL)
     }
+    
+    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+        if (self.videoPlayer != nil) {
+            self.isVideoPlaying = !self.isVideoPlaying
+            self.videoPlayerSetPlay(self.isVideoPlaying)
+        }
+    }
 }
 
 // MARK: - UIImagePickerControllerDelegate
@@ -1271,7 +1290,10 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         if (collectionView == self.specialitiesCollectionView) {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-            self.configureCell(cell, forIndexPath: indexPath)
+            
+            let tag = self.tags[indexPath.row]
+            cell.setupData(tag)
+            
             return cell
         } else if (collectionView == self.testimonialCollectionView) {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTestimonialCell, forIndexPath: indexPath) as! TestimonialCell
@@ -1286,19 +1308,24 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             return cell
         } else {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
-            self.configureAboutCell(cell, forIndexPath: indexPath)
+            
+            let photoDictionary = self.photoArray[indexPath.row] as! NSDictionary
+            cell.setupData(self.photoArray[indexPath.row] as! NSDictionary)
+            
             return cell
-        }    }
+        }
+    }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row == self.photoArray.count - 1 && self.isStopGetListPhotos == false {
+        if indexPath.row == self.photoArray.count - 1 {
             self.getListImage()
         }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         if (collectionView == self.specialitiesCollectionView) {
-            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
+            self.sizingCell?.setupData(self.tags[indexPath.row])
+            
             var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
             
             if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
@@ -1330,11 +1357,12 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
+                    self.view.hideToastActivity()
+                    
                     if let arr = JSON as? NSArray {
                         if arr.count > 0 {
                             if let dic = arr.objectAtIndex(0) as? NSDictionary {
                                 self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
-                                self.view.hideToastActivity()
                                 return
                             }
                         }
@@ -1348,37 +1376,11 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
                     self.presentViewController(alertController, animated: true) {
                         // ...
                     }
-                    self.view.hideToastActivity()
                 case .Failure(let error):
                     print("Request failed with error: \(error)")
                     }
                     self.view.hideToastActivity()
             }
-        }
-    }
-    
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
-        cell.tagName.textColor = UIColor.blackColor()
-        cell.layer.borderColor = UIColor.clearColor().CGColor
-    }
-    
-    func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        let photo = self.photoArray[indexPath.row] as! NSDictionary
-        let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
-        
-        if (photo[kImageUrl] is NSNull == false) {
-            let imageURLString = photo.objectForKey(kImageUrl) as! String
-            
-            ImageRouter.getImage(imageURLString: imageURLString, sizeString: postfix, completed: { (result, error) in
-                if (error == nil) {
-                    let imageRes = result as! UIImage
-                    cell.imageCell.image = imageRes
-                } else {
-                    print("Request failed with error: \(error)")
-                }
-            }).fetchdata()
         }
     }
     
