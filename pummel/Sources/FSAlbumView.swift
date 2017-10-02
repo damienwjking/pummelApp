@@ -55,14 +55,14 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             return
         }
 		
-		self.hidden = false
+		self.isHidden = false
         
      
         dragDirection = Direction.Up
         
         
-        collectionView.registerNib(UINib(nibName: "FSAlbumViewCell", bundle: NSBundle(forClass: self.classForCoder)), forCellWithReuseIdentifier: "FSAlbumViewCell")
-		collectionView.backgroundColor = UIColor.whiteColor()
+        collectionView.register(UINib(nibName: "FSAlbumViewCell", bundle: NSBundle(forClass: self.classForCoder)), forCellWithReuseIdentifier: "FSAlbumViewCell")
+		collectionView.backgroundColor = UIColor.white
         // Never load photos Unless the user allows to access to photo album
         checkPhotoAuth()
         
@@ -101,9 +101,9 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     
     // MARK: - UICollectionViewDelegate Protocol
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("FSAlbumViewCell", forIndexPath: indexPath) as! FSAlbumViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("FSAlbumViewCell", for: indexPath) as! FSAlbumViewCell
         
         let currentTag = cell.tag + 1
         cell.tag = currentTag
@@ -129,18 +129,18 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return images == nil ? 0 : images.count
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let width = (collectionView.frame.width - 3) / 4
         return CGSize(width: width, height: width)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = images[indexPath.row] as! PHAsset
         
         let options = PHImageRequestOptions()
@@ -178,11 +178,11 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             let imageRequestOptions = PHImageRequestOptions()
             
             manager.requestImageDataForAsset(lastAsset, options: imageRequestOptions) {
-                (let imageData: NSData?, let dataUTI: String?,
-                let orientation: UIImageOrientation,
-                let info: [NSObject : AnyObject]?) -> Void in
+                ( imageData: NSData?, dataUTI: String?,
+                orientation: UIImageOrientation,
+                info: [NSObject : AnyObject]?) -> Void in
                 
-                if let imageDataUnwrapped = imageData, lastImageRetrieved = UIImage(data: imageDataUnwrapped) {
+                if let imageDataUnwrapped = imageData, let lastImageRetrieved = UIImage(data: imageDataUnwrapped) {
                     // do stuff with image
                     self.imageSelected = lastImageRetrieved
                 }

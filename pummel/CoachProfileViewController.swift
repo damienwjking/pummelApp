@@ -113,25 +113,23 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     var isFromListCoaches: Bool = false
     var isConnected = false
     
-    let defaults = NSUserDefaults.standardUserDefaults()
-    
-    let SCREEN_MAX_LENGTH = max(UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+    let defaults = UserDefaults.standard
     
     var videoView: UIView? = nil
     var videoPlayer: AVPlayer? = nil
     var videoPlayerLayer: AVPlayerLayer? = nil
     var isShowVideo: Bool = true
-    let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
     var isVideoPlaying = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        self.aboutTV.backgroundColor = .clearColor()
-        self.aboutTV.scrollEnabled = false
-        self.qualificationTV.backgroundColor = .clearColor()
-        self.qualificationTV.scrollEnabled = false
+        self.aboutTV.backgroundColor = UIColor.clear
+        self.aboutTV.isScrollEnabled = false
+        self.qualificationTV.backgroundColor = UIColor.clear
+        self.qualificationTV.isScrollEnabled = false
         
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
         self.bigIndicatorView.layer.cornerRadius = 312/2
@@ -144,7 +142,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.smallIndicatorView.clipsToBounds = true
 
         self.titleCoachLB.font = .pmmMonReg13()
-        self.titleCoachLB.text = (self.coachDetail[kFirstname] as! String).uppercaseString
+        self.titleCoachLB.text = (self.coachDetail[kFirstname] as! String).uppercased()
         
         self.locationView.layer.cornerRadius = 2
         self.locationView.layer.masksToBounds = true
@@ -153,7 +151,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.connectBT.clipsToBounds = true
         self.connectBT.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
         self.actionViewWidthConstraint.constant = 55;
-        self.phoneBT.hidden = true
+        self.phoneBT.isHidden = true
         
         self.avatarIMV.layer.cornerRadius = 125/2
         self.coachBorderV.layer.cornerRadius = 135/2
@@ -169,25 +167,25 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             self.setCoachAvatar()
         }
         
-        self.businessIMV.hidden = true
+        self.businessIMV.isHidden = true
         self.aboutLeftDT.constant = 10
         self.businessIMV.layer.cornerRadius = 50
         self.businessIMV.clipsToBounds = true
         if (self.coachDetail[kBusinessId] != nil) {
             self.getBusinessImage()
         } else {
-            let userID = String(format:"%0.f", self.coachDetail[kId]!.doubleValue)
+            let userID = String(format:"%0.f", (self.coachDetail[kId]! as AnyObject).doubleValue)
             UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                 if (error == nil) {
                     let jsonBusiness = result as! NSDictionary
                     if (jsonBusiness[kBusinessId] != nil) {
                         let dictionary: NSMutableDictionary = NSMutableDictionary(dictionary: self.coachDetail)
-                        dictionary[kBusinessId] = jsonBusiness[kBusinessId]!.doubleValue
+                        dictionary[kBusinessId] = (jsonBusiness[kBusinessId]! as AnyObject).doubleValue
                         self.coachDetail = dictionary
                         self.getBusinessImage()
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -203,25 +201,25 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 tag.name = tagContent[kTitle] as? String
                 self.tags.append(tag)
             }
-            self.interestCollectionView.reloadData({
-                self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
+            self.interestCollectionView.reloadData(completion: {
+                self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize.height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize.height
                 self.interestHeightDT.constant = (self.specifiesDT.constant + 50 < 128) ? 128 : (self.specifiesDT.constant + 50)
             })
         }
 
         self.interestFlowLayout.smaller = true
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
-        self.interestCollectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
-        self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
+        self.interestCollectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
+        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
         
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
             self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
         } else {
             self.interestFlowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
         }
         
-        self.interestCollectionView.backgroundColor = UIColor.clearColor()
-        self.aboutCollectionView.backgroundColor = UIColor.clearColor()
+        self.interestCollectionView.backgroundColor = UIColor.clear
+        self.aboutCollectionView.backgroundColor = UIColor.clear
         self.statusBarDefault = false
         self.aboutCollectionView.delegate = self
         self.aboutCollectionView.dataSource = self
@@ -230,30 +228,30 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         self.setupViewForLabelButton()
         
         if self.isFromListCoaches == true {
-            self.navigationController?.navigationBar.hidden = true
+            self.navigationController?.navigationBar.isHidden = true
         }
         
         let testimonialXib = UINib(nibName: kTestimonialCell, bundle: nil)
-        self.testimonialCollectionView.registerNib(testimonialXib, forCellWithReuseIdentifier: kTestimonialCell)
+        self.testimonialCollectionView.register(testimonialXib, forCellWithReuseIdentifier: kTestimonialCell)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if let val = self.coachDetail[kId] as? Int {
-            TrackingPMAPI.sharedInstance.trackingProfileViewed("\(val)")
+            TrackingPMAPI.sharedInstance.trackingProfileViewed(coachId: "\(val)")
         }
         self.checkConnect()
         
-        self.playVideoButton.setImage(nil, forState: .Normal)
+        self.playVideoButton.setImage(nil, for: .normal)
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
-        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-        self.scrollView.scrollEnabled = true
+        self.scrollView.isScrollEnabled = true
         
         self.isStopGetTestimonial = false
         self.testimonialOffset = 0
@@ -268,7 +266,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // pause video and move time to 0
@@ -291,7 +289,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     let imageRes = result as! UIImage
                     self.businessIMV.image = imageRes
                     
-                    self.businessIMV.hidden = false
+                    self.businessIMV.isHidden = false
                     self.aboutLeftDT.constant = 120
                 } else {
                     print("Request failed with error: \(error)")
@@ -301,10 +299,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     }
     
     func getCoachTags() {
-        let userID = String(format:"%0.f", self.coachDetail[kId]!.doubleValue)
+        let userID = String(format:"%0.f", (self.coachDetail[kId]! as AnyObject).doubleValue)
         var tagLink = kPMAPIUSER
-        tagLink.appendContentsOf(userID)
-        tagLink.appendContentsOf("/tags")
+        tagLink.append(userID)
+        tagLink.append("/tags")
         Alamofire.request(.GET, tagLink)
             .responseJSON { response in
                 if (response.response?.statusCode == 200) {
@@ -317,8 +315,8 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                         self.tags.append(tag)
                     }
                     self.interestCollectionView.reloadData({
-                        self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height
-                        self.interestHeightDT.constant = ((self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50) < 128) ? 128 : (self.interestCollectionView.collectionViewLayout.collectionViewContentSize().height + 50)
+                        self.specifiesDT.constant = self.interestCollectionView.collectionViewLayout.collectionViewContentSize.height < 78 ? 78 : self.interestCollectionView.collectionViewLayout.collectionViewContentSize.height
+                        self.interestHeightDT.constant = ((self.interestCollectionView.collectionViewLayout.collectionViewContentSize.height + 50) < 128) ? 128 : (self.interestCollectionView.collectionViewLayout.collectionViewContentSize.height + 50)
                     })
                 }
         }
@@ -367,11 +365,11 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     func setCoachAvatar() {
         let imageLink = self.coachDetail[kImageUrl] as! String
         var prefix = kPMAPI
-        prefix.appendContentsOf(imageLink)
+        prefix.append(imageLink)
         let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
-        prefix.appendContentsOf(postfix)
-        if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-            let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+        prefix.append(postfix)
+        if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
+            let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
             self.avatarIMV.image = imageRes
         } else {
             Alamofire.request(.GET, prefix)
@@ -410,16 +408,16 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     
     func getListImage() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(String(format:"%0.f", self.coachDetail[kId]!.doubleValue))
-        prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
+        prefix.append(String(format:"%0.f", (self.coachDetail[kId]! as AnyObject).doubleValue))
+        prefix.append(kPM_PATH_PHOTO_PROFILE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 self.photoArray = JSON as! NSArray
                 self.aboutCollectionView.reloadData()
-                self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+                self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize.height
                 self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
-                self.scrollView.scrollEnabled = true
+                self.scrollView.isScrollEnabled = true
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
@@ -428,7 +426,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     
     func updateUI() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(String(format:"%0.f", self.coachDetail[kId]!.doubleValue))
+        prefix.append(String(format:"%0.f", (self.coachDetail[kId]! as AnyObject).doubleValue))
         self.view.makeToastActivity(message: "Loading")
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -470,10 +468,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 
                 let areaText = coachInformationTotal[kServiceArea] as? String
                 if (areaText != nil && areaText?.isEmpty == false) {
-                    self.locationView.hidden = false
+                    self.locationView.isHidden = false
                     self.addressLB.text = areaText
                 } else {
-                    self.locationView.hidden = true
+                    self.locationView.isHidden = true
                 }
                 
                 let bioText = coachInformation[kBio] as? String
@@ -595,12 +593,12 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         let param = [kUserId: PMHelper.getCurrentID(),
                      kCoachId : self.coachDetail[kId]!]
         
-        self.connectBT.userInteractionEnabled = false
+        self.connectBT.isUserInteractionEnabled = false
         
         Alamofire.request(.POST, prefix, parameters: param)
             .responseString(completionHandler: { (Response) in
                 self.view.hideToastActivity()
-                self.connectBT.userInteractionEnabled = true
+                self.connectBT.isUserInteractionEnabled = true
                 
                 switch (Response.result) {
                 case .Success(let resultValue) :
@@ -608,19 +606,19 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     
                     if (resultString.isEmpty == false) {
                         if (resultString == "Connected") {
-                            self.connectBT.setImage(UIImage(named: "mail"), forState: .Normal)
+                            self.connectBT.setImage(UIImage(named: "mail"), for: .normal)
                             self.connectBT.backgroundColor = UIColor(red: 80.0 / 255.0, green: 227.0 / 255.0, blue: 194.0 / 255.0, alpha: 1.0)
                             self.isConnected = true
                             
                             if self.isFromChat {
-                                self.connectBT.userInteractionEnabled = false
+                                self.connectBT.isUserInteractionEnabled = false
                             }
                         } else if (resultString == "Not yet") {
-                            self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
+                            self.connectBT.setImage(UIImage(named: "connect"), for: .normal)
                             self.connectBT.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
                         }
                     } else {
-                        self.connectBT.setImage(UIImage(named: "connect"), forState: .Normal)
+                        self.connectBT.setImage(UIImage(named: "connect"), for: .normal)
                         self.connectBT.backgroundColor = UIColor(red: 255.0 / 255.0, green: 91.0 / 255.0, blue: 16.0 / 255.0, alpha: 1.0)
                     }
                     
@@ -639,10 +637,10 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
     
     @IBAction func goBackToResult() {
         if isFromListCoaches == true {
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
             return
         }
-        self.dismissViewControllerAnimated(true) { 
+        self.dismissViewControllerAnimated(animated: true) { 
         }
     }
     
@@ -655,15 +653,15 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
         if self.coachDetail != nil {
             if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+                let properties = ["Name": "Send Message", "Label":"\(firstName.uppercased())"]
                 mixpanel.track("IOS.SendMessageToCoach", properties: properties)
                 
                 self.view.makeToastActivity(message: "Connecting")
                 
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHelper.getCurrentID())
-                prefix.appendContentsOf(kPMAPI_LEAD)
-                prefix.appendContentsOf("/")
+                prefix.append(PMHelper.getCurrentID())
+                prefix.append(kPMAPI_LEAD)
+                prefix.append("/")
                 
                 let param = [kUserId : PMHelper.getCurrentID(),
                              kCoachId : self.coachDetail[kId]!]
@@ -673,28 +671,28 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                         self.view.hideToastActivity()
                         
                         if self.isFromChat {
-                            self.dismissViewControllerAnimated(true, completion:nil)
+                            self.dismissViewControllerAnimated(animated: true, completion:nil)
                         } else {
                             if let val = self.coachDetail[kId] as? Int {
                                 TrackingPMAPI.sharedInstance.trackingConnectButtonCLick("\(val)")
                             }
 
-                            self.performSegueWithIdentifier(kGoConnect, sender: self)
+                            self.performSegue(withIdentifier: kGoConnect, sender: self)
                         }
                 }
             }
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == kGoConnect) {
-            let destimation = segue.destinationViewController as! ConnectViewController
+            let destimation = segue.destination as! ConnectViewController
             destimation.coachDetail = self.coachDetail
             destimation.isFromProfile = true
             destimation.isFromFeed = self.isFromFeed
             destimation.isConnected = self.isConnected
         } else if segue.identifier == "goToFeedDetail" {
-            let navc = segue.destinationViewController as! UINavigationController
+            let navc = segue.destination as! UINavigationController
             let destination = navc.topViewController as! FeedViewController
             destination.fromPhoto = true
             if let feed = sender as? NSDictionary {
@@ -737,21 +735,21 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             frameV.origin.y = -self.postV.frame.origin.y
             frameV.size.height += self.oldPositionAboutV
             self.view.frame = frameV
-            self.aboutLB.hidden = true
-            self.backBT.setImage(UIImage(named:"blackArrow"), forState: .Normal)
+            self.aboutLB.isHidden = true
+            self.backBT.setImage(UIImage(named:"blackArrow"), for: .normal)
             self.statusBarDefault = true
             self.setNeedsStatusBarAppearanceUpdate()
             
         } else {
             self.statusBarDefault = false
             self.setNeedsStatusBarAppearanceUpdate()
-            self.aboutLB.hidden = false
+            self.aboutLB.isHidden = false
             var frameV : CGRect!
             frameV = self.view.frame
             frameV.origin.y = 0
             frameV.size.height -= self.oldPositionAboutV
             self.view.frame = frameV
-            self.backBT.setImage(UIImage(named:"back"), forState: .Normal)
+            self.backBT.setImage(UIImage(named:"back"), for: .normal)
         }
     }
     
@@ -769,7 +767,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             // Tracker mixpanel
             if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Facebook", "Label":"\(firstName.uppercaseString)"]
+                let properties = ["Name": "Facebook", "Label":"\(firstName.uppercased())"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
             
@@ -801,7 +799,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             // Tracker mixpanel
             if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercaseString)"]
+                let properties = ["Name": "Twitter", "Label":"\(firstName.uppercased())"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
             
@@ -825,7 +823,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
             // Tracker mixpanel
             if let firstName = self.coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercaseString)"]
+                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercased())"]
                 mixpanel.track("IOS.SocialClick", properties: properties)
             }
             
@@ -842,13 +840,13 @@ extension CoachProfileViewController {
         if (isPlay == true) {
             self.videoPlayer!.play()
             
-            self.playVideoButton.setImage(nil, forState: .Normal)
+            self.playVideoButton.setImage(nil, for: .normal)
             
             self.locationView.alpha = 0
         } else {
             self.videoPlayer?.pause()
             
-            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), forState: .Normal)
+            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), for: .normal)
             
             self.locationView.alpha = 1
         }
@@ -856,10 +854,10 @@ extension CoachProfileViewController {
         self.isVideoPlaying = isPlay
         
         // Show/Hidden item above video view
-        self.avatarIMV.hidden = isPlay
-        self.coachBorderV.hidden = isPlay
-        self.coachBorderBackgroundV.hidden = isPlay
-        self.actionView.hidden = isPlay
+        self.avatarIMV.isHidden = isPlay
+        self.coachBorderV.isHidden = isPlay
+        self.coachBorderBackgroundV.isHidden = isPlay
+        self.actionView.isHidden = isPlay
     }
     
     
@@ -879,13 +877,13 @@ extension CoachProfileViewController {
         self.coachBorderBackgroundV.layer.cornerRadius = (newAvatarSize + 4)/2
         
         // Hidden indicator view
-        self.smallIndicatorView.hidden = true
-        self.medIndicatorView.hidden = true
-        self.bigIndicatorView.hidden = true
-        self.bigBigIndicatorView.hidden = true
+        self.smallIndicatorView.isHidden = true
+        self.medIndicatorView.isHidden = true
+        self.bigIndicatorView.isHidden = true
+        self.bigBigIndicatorView.isHidden = true
         
         // Show location background
-        self.locationBackgroundImageView.hidden = false
+        self.locationBackgroundImageView.isHidden = false
         
         // Show video
         if (self.videoView?.superview != nil) {
@@ -905,7 +903,7 @@ extension CoachProfileViewController {
         self.detailV.insertSubview(self.videoView!, atIndex: 0)
         
         // Animation
-        UIView.animateWithDuration(0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             self.detailV.layoutIfNeeded()
         }) { (_) in
             self.videoPlayerSetPlay(false)
@@ -920,10 +918,10 @@ extension CoachProfileViewController {
         self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
         
         // Remove loop play video for
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
         
         // Add notification for loop play video
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
                                                          object: self.videoPlayer!.currentItem)
@@ -966,7 +964,7 @@ extension CoachProfileViewController {
 
 // MARK: - UICollectionViewDataSource
 extension CoachProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.interestCollectionView) {
             return tags.count
         } else if (collectionView == self.testimonialCollectionView) {
@@ -983,13 +981,13 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
         }
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if (collectionView == self.interestCollectionView) {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-            self.configureCell(cell, forIndexPath: indexPath)
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
+            self.configureCell(cell, for: indexPath)
             return cell
         } else if (collectionView == self.testimonialCollectionView) {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTestimonialCell, forIndexPath: indexPath) as! TestimonialCell
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTestimonialCell, for: indexPath) as! TestimonialCell
             
             let testimonial = self.testimonialArray[indexPath.row]
             cell.setupData(testimonial)
@@ -1001,17 +999,17 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
             return cell
         } else {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
-            self.configureAboutCell(cell, forIndexPath: indexPath)
+            self.configureAboutCell(cell, for: indexPath)
             return cell
         }
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if (collectionView == self.interestCollectionView) {
-            self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-            var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+            self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
+            var cellSize = self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
             
-            if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+            if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
                 cellSize.width += 10;
             }
             
@@ -1019,11 +1017,11 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
         } else if (collectionView == self.testimonialCollectionView) {
             return CGSize(width: 175, height: 280)
         } else {
-            return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
+            return CGSize(x:self.aboutCollectionView.frame.size.width/2, y:self.aboutCollectionView.frame.size.width/2)
         }
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if (collectionView == self.interestCollectionView) {
             // Do nothing
         } else if (collectionView == self.testimonialCollectionView) {
@@ -1032,7 +1030,7 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
             self.view.makeToastActivity()
             
             var prefix = kPMAPI
-            prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
+            prefix.append(kPMAPI_POSTOFPHOTO)
             let photo = self.photoArray[indexPath.row] as! NSDictionary
             Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
                 .responseJSON { response in switch response.result {
@@ -1040,19 +1038,19 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
                     if let arr = JSON as? NSArray {
                         if arr.count > 0 {
                             if let dic = arr.objectAtIndex(0) as? NSDictionary {
-                                self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
+                                self.performSegue(withIdentifier: "goToFeedDetail", sender: dic)
                                 self.view.hideToastActivity()
                                 return
                             }
                         }
                     }
                     
-                    let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                     self.view.hideToastActivity()
@@ -1067,15 +1065,15 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
-        cell.tagName.textColor = UIColor.blackColor()
-        cell.layer.borderColor = UIColor.clearColor().CGColor
+        cell.tagName.textColor = UIColor.black
+        cell.layer.borderColor = UIColor.clear.cgColor
     }
     
     func configureAboutCell(cell: AboutCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
         let photo = self.photoArray[indexPath.row] as! NSDictionary
         
-        if (photo.objectForKey(kImageUrl) is NSNull == false) {
-            let link = photo.objectForKey(kImageUrl) as! String
+        if (photo.object(forKey: kImageUrl) is NSNull == false) {
+            let link = photo.object(forKey: kImageUrl) as! String
             let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
             
             ImageRouter.getImage(imageURLString: link, sizeString: postfix) { (result, error) in
@@ -1089,7 +1087,7 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
         }
     }
     
-    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         if let val = self.coachDetail[kId] as? Int {
             TrackingPMAPI.sharedInstance.trackSocialWeb("\(val)")
         }

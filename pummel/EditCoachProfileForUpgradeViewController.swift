@@ -79,7 +79,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     var userInfo: NSDictionary!
     
     let imagePicker = UIImagePickerController()
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var currentId : String = ""
     var settingCV:SettingsViewController!
     
@@ -99,16 +99,16 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         
         currentId = PMHelper.getCurrentID()
         self.navigationItem.title = kNavEditProfile
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        self.navigationController!.navigationBar.translucent = false;
+        self.navigationController!.navigationBar.isTranslucent = false;
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"APPLY NOW", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.applyNowAction))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"APPLY NOW", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.applyNowAction))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         
@@ -179,19 +179,19 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         self.changeAvatarIMW.layer.cornerRadius = 15
         self.changeAvatarIMW.clipsToBounds = true
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(LoginAndRegisterViewController.imageTapped)))
-        self.changeAvatarIMW.userInteractionEnabled = true
+        self.changeAvatarIMW.isUserInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditCoachProfileViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditCoachProfileViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
-        self.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
-        self.collectionView.backgroundColor = UIColor.clearColor()
-        self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
+        self.collectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
+        self.collectionView.backgroundColor = UIColor.clear
+        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
         self.sizingCell?.isSearch = true
         
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
             self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
         } else {
             self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
@@ -200,7 +200,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         self.flowLayout.isSearch = true
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        self.tapView.hidden = true
+        self.tapView.isHidden = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(EditCoachProfileViewController.didTapView))
         self.tapView.addGestureRecognizer(tap)
         
@@ -212,12 +212,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        self.arrow.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        self.arrow.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
     }
     
     func didTapView() {
-        if (self.emailContentTF.isFirstResponder()) {
-            self.validateEmail()
+        if (self.emailContentTF.isFirstResponder) {
+            let _ = self.validateEmail()
         }
         
         self.aboutContentTV.resignFirstResponder()
@@ -236,7 +236,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         self.heightTF.resignFirstResponder()
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         let location = locations.last! as CLLocation
         let geoCoder = CLGeocoder()
@@ -266,20 +266,20 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
     
     @IBAction func gotoGetLocation() {
-        self.performSegueWithIdentifier("LocationPicker", sender: nil)
+        self.performSegue(withIdentifier: "LocationPicker", sender: nil)
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.aboutDT.constant = self.view.frame.size.width - 30
         offset = 0
         isStopGetListTag = false
         
-        //if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+        //if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
             if self.location != nil {
                 if self.location?.name != locationName.text {
                     var locationName = ""
@@ -296,9 +296,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
     
     func updateLocationCoach() {
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
             var prefix = kPMAPICOACH
-            prefix.appendContentsOf(PMHelper.getCurrentID())
+            prefix.append(PMHelper.getCurrentID())
             
             var locationName = ""
             if (self.location?.name?.isEmpty == false) {
@@ -308,7 +308,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             let param = [kUserId:PMHelper.getCurrentID(),
                          kServiceArea:locationName,
                          kLat:(self.location?.coordinate.latitude)!,
-                         kLong:(self.location?.coordinate.longitude)!]
+                         kLong:(self.location?.coordinate.longitude)!] as [String : Any]
             
             Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
                 .responseJSON { response in switch response.result {
@@ -324,7 +324,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     func getListTags() {
         if (isStopGetListTag == false) {
             var listTagsLink = kPMAPI_TAGALL_OFFSET
-            listTagsLink.appendContentsOf(String(offset))
+            listTagsLink.append(String(offset))
             Alamofire.request(.GET, listTagsLink)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -334,7 +334,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                             let tagContent = self.arrayTags[i]
                             let tag = Tag()
                             tag.name = tagContent[kTitle] as? String
-                            tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
+                            tag.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
                             tag.tagColor = self.getRandomColorString()
                             tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
                             if tag.tagType == 0 || tag.tagType == 1 || tag.tagType == 2 || tag.tagType == 3 {
@@ -343,14 +343,14 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                         }
                         self.offset += 10
                         self.collectionView.reloadData({
-                            self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize().height
+                            self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
                         })
                     } else {
                         self.isStopGetListTag = true
                         if !(self.isStopGetListCoachTag) {
                             var tagLink = kPMAPIUSER
-                            tagLink.appendContentsOf(self.currentId)
-                            tagLink.appendContentsOf("/tags")
+                            tagLink.append(self.currentId)
+                            tagLink.append("/tags")
                             Alamofire.request(.GET, tagLink)
                                 .responseJSON { response in
                                     if (response.response?.statusCode == 200) {
@@ -360,7 +360,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                                             let tagContent = tagArr[i]
                                             let tagT = Tag()
                                             tagT.name = tagContent[kTitle] as? String
-                                            tagT.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
+                                            tagT.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
                                             tagT.tagColor = self.getRandomColorString()
                                             let index = self.tags.indexOf({ $0.name == tagT.name
                                             })
@@ -390,7 +390,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     func updateUI() {
         if (self.userInfo == nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(currentId)
+            prefix.append(currentId)
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
@@ -452,12 +452,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                             
                         }
                     }else if response.response?.statusCode == 401 {
-                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // TODO: LOGOUT
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                         
@@ -465,7 +465,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             }
         } else {
             if !(self.userInfo[kLastName] is NSNull) {
-                self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
+                self.nameContentTF.text = (self.userInfo[kFirstname] as! String) + " " + (self.userInfo[kLastName] as! String)
             } else {
                 self.nameContentTF.text = self.userInfo[kFirstname] as? String
             }
@@ -518,7 +518,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         }
         
         var prefixC = kPMAPICOACH
-        prefixC.appendContentsOf(PMHelper.getCurrentID())
+        prefixC.append(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefixC)
             .responseJSON { response in switch response.result {
@@ -549,8 +549,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        self.tapView.hidden = false
-        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()) != nil {
+        self.tapView.isHidden = false
+        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             if (self.view.frame.origin.y >= 0) {
 //                self.view.frame.origin.y -= keyboardSize.height
             }
@@ -558,21 +558,21 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        self.tapView.hidden = true
-        if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        self.tapView.isHidden = true
+        if let _ = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) {
 //            self.view.frame.origin.y = 64
         }
     }
     
     func basicInfoUpdate() {
         
-        let alertControllerSuccess = UIAlertController(title: kThanks, message: kMessageUpgradedCoach, preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+        let alertControllerSuccess = UIAlertController(title: kThanks, message: kMessageUpgradedCoach, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
             self.callBasicInfoUpdate()
         }
         alertControllerSuccess.addAction(OKAction)
         
-        self.presentViewController(alertControllerSuccess, animated: true) {
+        self.present(alertControllerSuccess, animated: true) {
             // ...
         }
     }
@@ -584,22 +584,22 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             mail.setToRecipients(["hello@pummel.fit"])
             mail.setMessageBody("Hi Pummel, I have just applied to become a coach.  Can you please review my application shortly. Thanks", isHTML: true)
             mail.setSubject("Upgrade to coach")
-            self.presentViewController(mail, animated: true, completion: nil)
+            self.present(mail, animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         }
     }
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismissViewControllerAnimated(true, completion: {
-            self.navigationController?.popToRootViewControllerAnimated(true)
+        controller.dismiss(animated: true, completion: {
+            self.navigationController?.popToRootViewController(animated: true)
         })
     }
     
     func callBasicInfoUpdate() {
         if (self.checkRuleInputData() == true) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
+            prefix.append(PMHelper.getCurrentID())
             
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
@@ -609,8 +609,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             }
             if fullNameArr.count >= 2 {
                 for i in 1 ..< fullNameArr.count {
-                    lastname.appendContentsOf(fullNameArr[i])
-                    lastname.appendContentsOf(" ")
+                    lastname.append(fullNameArr[i])
+                    lastname.append(" ")
                 }
             } else {
                 lastname = " "
@@ -619,15 +619,15 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
             let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
-            mixpanel.track("IOS.Profile.EditProfile", properties: properties)
+            mixpanel?.track("IOS.Profile.EditProfile", properties: properties)
             
             let userID = PMHelper.getCurrentID()
             
-            let gender = (self.genderContentTF.text?.uppercaseString)!
+            let gender = (self.genderContentTF.text?.uppercased())!
             
-            let weightString = self.weightTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
+            let weightString = self.weightTF.text?.replacingOccurrences(of: " kgs", with: "")
             
-            let heightString = self.heightTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
+            let heightString = self.heightTF.text?.replacingOccurrences(of: " cms", with: "")
             
             let param = [kUserId: userID,
                          kFirstname: firstname,
@@ -642,7 +642,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                          kEmergencyName:emergencyNameTF.text!,
                          kWeight: weightString!,
                          kHeight: heightString!,
-                         kEmergencyMobile:emergencyMobileTF.text!]
+                         kEmergencyMobile:emergencyMobileTF.text!] as [String : Any]
             
             self.view.makeToastActivity(message: "Saving")
             Alamofire.request(.PUT, prefix, parameters: param)
@@ -653,24 +653,24 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                         self.updateLocationCoach()
                     }else {
                         self.view.hideToastActivity()
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                     }
             }
             
         } else {
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
@@ -678,7 +678,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func trainerInfoUpdate() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(PMHelper.getCurrentID())
+        prefix.append(PMHelper.getCurrentID())
         
         let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
@@ -692,12 +692,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                 if response.response?.statusCode == 200 {
                     self.sendEmail()
                 } else {
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                 }
@@ -718,7 +718,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         if (self.haveAvatar == false) {
             message = "Please add a profile image"
             
-            PMHelper.showApplyAlert(message)
+            PMHelper.showApplyAlert(message: message)
             
             return false
         }
@@ -728,7 +728,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             let offsetPoint = CGPoint(x: 0, y: self.aboutLB.frame.origin.y)
             self.scrollView.setContentOffset(offsetPoint, animated: true)
             
-            UIView.animateWithDuration(1, animations: {
+            UIView.animate(withDuration: 1, animations: {
                 self.aboutContentTV.backgroundColor = UIColor.pmmHighLightBrightOrangeColor()
                 }, completion: { (_) in
                     self.aboutContentTV.becomeFirstResponder()
@@ -742,7 +742,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             let offsetPoint = CGPoint(x: 0, y: self.qualificationLB.superview!.frame.origin.y)
             self.scrollView.setContentOffset(offsetPoint, animated: true)
             
-            UIView.animateWithDuration(1, animations: {
+            UIView.animate(withDuration: 1, animations: {
                 self.qualificationContentTF.backgroundColor = UIColor.pmmHighLightBrightOrangeColor()
                 }, completion: { (_) in
                     self.qualificationContentTF.becomeFirstResponder()
@@ -763,7 +763,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         if (selectedSpecialities == false) {
             message = "Please choose your specialities"
             
-            PMHelper.showApplyAlert(message)
+            PMHelper.showApplyAlert(message: message)
             return false
         }
         
@@ -771,7 +771,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         if (self.locationName.text?.isEmpty == true || self.locationName.text == "...") {
             message = "Please set your location"
             
-            PMHelper.showApplyAlert(message)
+            PMHelper.showApplyAlert(message: message)
             return false
         }
         
@@ -780,7 +780,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func upgradeToCoach() {
         var prefix = kPMAPICOACH
-        prefix.appendContentsOf(PMHelper.getCurrentID())
+        prefix.append(PMHelper.getCurrentID())
         
         let param = [kUserId:PMHelper.getCurrentID()]
         
@@ -796,26 +796,26 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func showPopupToSelectProfileAvatar() {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = true
-            self.imagePicker.sourceType = .PhotoLibrary
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-            self.imagePicker.sourceType = .Camera
-            self.imagePicker.cameraDevice = .Front
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.imagePicker.sourceType = .camera
+            self.imagePicker.cameraDevice = .front
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     func imageTapped() {
@@ -823,8 +823,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
     
     func setAvatar() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.boolForKey(k_PM_IS_COACH) == false) {
+        let defaults = UserDefaults.standard
+        if (defaults.bool(forKey: k_PM_IS_COACH) == false) {
             ImageRouter.getCurrentUserAvatar(sizeString: widthHeight200, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
@@ -832,7 +832,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                     
                     self.haveAvatar = true
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         } else {
@@ -845,21 +845,21 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                     
                     self.haveAvatar = true
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
     }
     
     func validateEmail() -> Bool{
-        if (self.isValidEmail(emailContentTF.text!) == false) {
+        if (self.isValidEmail(testStr: emailContentTF.text!) == false) {
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
                                                                attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
             
             return false
         } else {
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
-                                                               attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+                                                               attributes:[NSForegroundColorAttributeName: UIColor.black])
             return true
         }
     }
@@ -870,17 +870,17 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             
         }
         
-        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
+        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase(find: "facebook.com") {
             self.showMsgLinkInValid()
             return false
         }
         
-        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase("twitter.com") {
+        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase(find: "twitter.com") {
             self.showMsgLinkInValid()
             return false
         }
         
-        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase("instagram.com") {
+        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase(find: "instagram.com") {
             self.showMsgLinkInValid()
             return false
         }
@@ -889,30 +889,30 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
     
     func showMsgLinkInValid() {
-        let alertController = UIAlertController(title: pmmNotice, message: linkInvalid, preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+        let alertController = UIAlertController(title: pmmNotice, message: linkInvalid, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
         }
         alertController.addAction(OKAction)
-        self.presentViewController(alertController, animated: true) {
+        self.present(alertController, animated: true) {
         }
     }
     
     
     func isValidEmail(testStr:String) -> Bool {
         let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
-        return emailTest.evaluateWithObject(testStr)
+        return emailTest.evaluate(with: testStr)
     }
     
     func checkDateChanged(testStr:String) -> Bool {
         if (testStr == "") {
             return false
         } else {
-            let dateFormatter = NSDateFormatter()
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = kDateFormat
-            let dateDOB = dateFormatter.dateFromString(testStr)
+            let dateDOB = dateFormatter.date(from: testStr)
             
             let date = NSDate()
-            let calendar = NSCalendar.currentCalendar()
+            let calendar = NSCalendar.current
             let components = calendar.components([.Day , .Month , .Year], fromDate: date)
             let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
             let year =  components.year
@@ -928,21 +928,21 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     @IBAction func textFieldEditingWithSender(sender: UITextField) {
         let datePickerView:UIDatePicker = UIDatePicker()
-        datePickerView.backgroundColor = UIColor.blackColor()
-        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
-        datePickerView.datePickerMode = UIDatePickerMode.Date
+        datePickerView.backgroundColor = UIColor.black
+        datePickerView.setValue(UIColor.white, forKey: "textColor")
+        datePickerView.datePickerMode = UIDatePickerMode.date
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(EditProfileViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerView.addTarget(self, action:#selector(self.datePickerValueChanged(_:)), for: .valueChanged)
     }
     
     func datePickerValueChanged(sender:UIDatePicker) {
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "YYYY-MM-dd"
-        self.dobContentTF.text = dateFormatter.stringFromDate(sender.date)
-        let dateDOB = dateFormatter.dateFromString(self.dobContentTF.text!)
+        self.dobContentTF.text = dateFormatter.string(from: sender.date)
+        let dateDOB = dateFormatter.date(from: self.dobContentTF.text!)
         
         let date = NSDate()
-        let calendar = NSCalendar.currentCalendar()
+        let calendar = NSCalendar.current
         let components = calendar.components([.Day , .Month , .Year], fromDate: date)
         let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
         let year =  components.year
@@ -950,7 +950,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         
         if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
-                                                                  attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+                                                                  attributes:[NSForegroundColorAttributeName: UIColor.black])
         } else {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
                                                                   attributes:[NSForegroundColorAttributeName:  UIColor.pmmRougeColor()])
@@ -959,8 +959,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func selectNewTag(tag: Tag) {
         var linkAddTagToUser = kPMAPIUSER
-        linkAddTagToUser.appendContentsOf(currentId)
-        linkAddTagToUser.appendContentsOf("/tags")
+        linkAddTagToUser.append(currentId)
+        linkAddTagToUser.append("/tags")
         Alamofire.request(.POST, linkAddTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
                         .responseJSON { response in
                             if response.response?.statusCode == 200 {
@@ -970,9 +970,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     
     func deleteATagUser(tag: Tag) {
         var linkDeleteTagToUser = kPMAPIUSER
-        linkDeleteTagToUser.appendContentsOf(currentId)
-        linkDeleteTagToUser.appendContentsOf("/tags/")
-        linkDeleteTagToUser.appendContentsOf(tag.tagId!)
+        linkDeleteTagToUser.append(currentId)
+        linkDeleteTagToUser.append("/tags/")
+        linkDeleteTagToUser.append(tag.tagId!)
         Alamofire.request(.DELETE, linkDeleteTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -991,11 +991,11 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             self.genderContentTF.text = kFemale
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kMALEU, style: UIAlertActionStyle.Default, handler: selectMale))
-        alertController.addAction(UIAlertAction(title: kFemaleU, style: UIAlertActionStyle.Default, handler: selectFemale))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kMALEU, style: .default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: kFemaleU, style: .default, handler: selectFemale))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     func getRandomColorString() -> String{
@@ -1007,10 +1007,10 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "LocationPicker" {
-            let locationPicker = segue.destinationViewController as! LocationPickerViewController
+            let locationPicker = segue.destination as! LocationPickerViewController
             locationPicker.location = self.location
             locationPicker.showCurrentLocationButton = true
             locationPicker.useCurrentLocationAsHint = true
@@ -1019,7 +1019,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             
             let backItem = UIBarButtonItem()
             backItem.title = "BACK        "
-            backItem.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+            backItem.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
             
             navigationItem.backBarButtonItem = backItem
             self.navigationController?.navigationBar.backIndicatorImage = UIImage()
@@ -1032,32 +1032,32 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
 
 // MARK: - UICollectionViewDelegate
 extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return tags.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-        self.configureCell(cell, forIndexPath: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
+        self.configureCell(cell, for: indexPath)
         if (indexPath.row == tags.count - 1) {
             self.getListTags()
         }
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        var cellSize = self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        self.configureCell(self.sizingCell!, for: indexPath)
+        var cellSize = self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
         
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
             cellSize.width += 5;
         }
         
         return cellSize
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         let tag = tags[indexPath.row]
         if (tag.selected) {
@@ -1075,9 +1075,9 @@ extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource,
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
-        cell.tagName.textColor =  tag.selected ? UIColor.whiteColor() : UIColor.pmmWarmGreyColor()
+        cell.tagName.textColor =  tag.selected ? UIColor.white : UIColor.pmmWarmGreyColor()
         cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
-        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
+        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clear
         cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
     }
 }
@@ -1096,7 +1096,7 @@ extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextV
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
         if (textField == self.nameContentTF) {
@@ -1127,7 +1127,7 @@ extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextV
     }
     
     func textViewDidChange(textView: UITextView) {
-        textView.backgroundColor = UIColor.whiteColor()
+        textView.backgroundColor = UIColor.white
     }
 }
 
@@ -1135,7 +1135,7 @@ extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextV
 extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
             activityView.center = self.view.center
             activityView.startAnimating()
             avatarIMW.addSubview(activityView)
@@ -1155,26 +1155,26 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
             }
             
             if (imageData == nil) {
-                dispatch_async(dispatch_get_main_queue(),{
+                DispatchQueue.main.async(execute: {
                     activityView.stopAnimating()
                     activityView.removeFromSuperview()
                     //Your main thread code goes in here
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .Alert)
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .alert)
                     
                     
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                 })
                 
             } else {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHelper.getCurrentID())
-                prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
+                prefix.append(PMHelper.getCurrentID())
+                prefix.append(kPM_PATH_PHOTO_PROFILE)
                 
                 let parameters = [kUserId:PMHelper.getCurrentID(), kProfilePic: "1"]
                 

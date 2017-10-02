@@ -18,7 +18,7 @@ class LogSessionSelectUserViewController: BaseViewController {
     var offsetCurrent: Int = 0
     var arrayOld: [NSDictionary] = []
     var offsetOld: Int = 0
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var tag:Tag?
     var userInfoSelect:NSDictionary!
     
@@ -28,14 +28,14 @@ class LogSessionSelectUserViewController: BaseViewController {
         self.title = "INVITE"
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.next))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.next))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         
         let nibName = UINib(nibName: "BookUserTableViewCell", bundle:nil)
-        self.tbView.registerNib(nibName, forCellReuseIdentifier: "BookUserTableViewCell")
+        self.tbView.register(nibName, forCellReuseIdentifier: "BookUserTableViewCell")
         
         self.loadDataWithPrefix(kPMAPICOACH_LEADS)
         self.loadDataWithPrefix(kPMAPICOACH_CURRENT)
@@ -44,14 +44,14 @@ class LogSessionSelectUserViewController: BaseViewController {
     
     func loadDataWithPrefix(prefixAPI:String) {
         var prefix = kPMAPICOACHES
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(prefixAPI)
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(prefixAPI)
         if prefixAPI == kPMAPICOACH_LEADS {
-            prefix.appendContentsOf("\(offsetNew)")
+            prefix.append("\(offsetNew)")
         } else if prefixAPI == kPMAPICOACH_CURRENT {
-            prefix.appendContentsOf("\(offsetCurrent)")
+            prefix.append("\(offsetCurrent)")
         } else if prefixAPI == kPMAPICOACH_OLD {
-            prefix.appendContentsOf("\(offsetOld)")
+            prefix.append("\(offsetOld)")
         }
         
         Alamofire.request(.GET, prefix)
@@ -91,12 +91,12 @@ class LogSessionSelectUserViewController: BaseViewController {
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func next() {
         self.userInfoSelect = nil
-        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
+        self.performSegue(withIdentifier: "goLogSessionDetail", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -104,9 +104,9 @@ class LogSessionSelectUserViewController: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "goLogSessionDetail" {
-            let destination = segue.destinationViewController as! LogSessionClientDetailViewController
+            let destination = segue.destination as! LogSessionClientDetailViewController
             destination.tag = self.tag!
             destination.userInfoSelect = self.userInfoSelect
         }
@@ -120,7 +120,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         return 3
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return arrayNew.count
         } else if section == 1 {
@@ -129,7 +129,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         return arrayOld.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
         return 60.0
     }
     
@@ -140,7 +140,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let title = UILabel()
         title.font = .pmmMonLight16()
-        title.textColor = UIColor.lightGrayColor()
+        title.textColor = UIColor.lightGray
         
         let header = view as! UITableViewHeaderFooterView
         header.textLabel?.font = .pmmMonReg13()
@@ -155,8 +155,8 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         header.textLabel?.text = text
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("BookUserTableViewCell") as! BookUserTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BookUserTableViewCell") as! BookUserTableViewCell
         var userInfo:NSDictionary!
         
         if indexPath.section == 0 {
@@ -178,17 +178,17 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         // Get name and image
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
             if (error == nil) {
-                let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                 if visibleCell == true {
                     if let userInfo = result as? NSDictionary {
-                        let name = userInfo.objectForKey(kFirstname) as! String
-                        cell.lbName.text = name.uppercaseString
+                        let name = userInfo.object(forKey: kFirstname) as! String
+                        cell.lbName.text = name.uppercased()
                         
                         let imageURLString = userInfo[kImageUrl] as? String
                         
                         if (imageURLString?.isEmpty == false) {
                             ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
-                                let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                 if visibleCell == true {
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
@@ -214,7 +214,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
             
             if (isCoach) {
                 cell.imgAvatar.layer.borderWidth = 3
-                cell.imgAvatar.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+                cell.imgAvatar.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
             }
         }.fetchdata()
         
@@ -233,7 +233,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         }
         
         self.userInfoSelect = userInfo
-        self.performSegueWithIdentifier("goLogSessionDetail", sender: nil)
-        self.tbView.deselectRowAtIndexPath(indexPath, animated: false)
+        self.performSegue(withIdentifier: "goLogSessionDetail", sender: nil)
+        self.tbView.deselectRow(at: indexPath, animated: false)
     }
 }

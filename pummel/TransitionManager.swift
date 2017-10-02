@@ -40,7 +40,7 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
         // for this example, just slid both fromView and toView to the left at the same time
         // meaning fromView is pushed off the screen and toView slides into view
         // we also use the block animation usingSpringWithDamping for a little bounce
-        UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+        UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: UIViewAnimationOptions.CurveEaseIn, animations: {
             
             fromView.transform = offScreenLeft
             toView.transform = CGAffineTransformIdentity

@@ -34,7 +34,7 @@ class MessageViewController: BaseViewController {
     @IBOutlet weak var separeateline: UIView?
     
     var arrayMessages: [NSMutableDictionary] = []
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var dataSourceArr : [NSDictionary] = []
     var offset : Int = 0
     var isStopLoadMessage : Bool = false
@@ -56,17 +56,17 @@ class MessageViewController: BaseViewController {
         super.viewDidLoad()
         self.listMessageTB.delegate = self
         self.listMessageTB.dataSource = self
-        self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.None
+        self.listMessageTB.separatorStyle = UITableViewCellSeparatorStyle.none
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.gotNewNotificationShowBage), name: k_PM_REFRESH_MESSAGE, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.gotNewNotificationShowBage), name: NSNotification.Name(rawValue: k_PM_REFRESH_MESSAGE), object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.refreshControlTable), name: "SEND_CHAT_MESSAGE", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refreshControlTable), name: NSNotification.Name(rawValue: "SEND_CHAT_MESSAGE"), object: nil)
         
         self.connectionsLB!.font = .pmmMonReg13()
         self.connectionsLB!.textColor = UIColor.pmmWarmGreyColor()
         self.connectionsLB!.text = kNewConnections
         
-        self.horizontalTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
+        self.horizontalTableView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2.0))
         self.separeateline!.backgroundColor = UIColor.pmmWhiteColor()
         
         self.noMessageTitleLB.font = UIFont.pmmPlayFairReg18()
@@ -76,21 +76,21 @@ class MessageViewController: BaseViewController {
         self.startConversationBT.layer.cornerRadius = 5
         
         self.refreshControl = UIRefreshControl()
-        self.refreshControl.addTarget(self, action: #selector(refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl.addTarget(self, action: #selector(refreshControlTable), for: .valueChanged)
         self.listMessageTB.addSubview(self.refreshControl)
         
         self.getListLead()
         self.horizontalViewHeightConstraint!.constant = 0
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.initNavigationBar()
         
         self.listMessageTB.reloadData()
         
         self.view.bringSubviewToFront(self.noMessageV)
         
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
             self.noMessageTitleLB.text = "Get Connections With Your Clients"
         } else {
             self.noMessageTitleLB.text = "Get Connections With Your Coaches"
@@ -101,37 +101,37 @@ class MessageViewController: BaseViewController {
         self.getMessage()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
-        let moveScreenType = self.defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        let moveScreenType = self.defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if (moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_3) {
-            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             self.newMessage()
         } else if (moveScreenType == k_PM_MOVE_SCREEN_MESSAGE_DETAIL) {
-            self.defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            self.defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             
             // Get message data and separate to ID
-            let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_MESSAGE_DETAIL) as! String
-            self.defaults.removeObjectForKey(k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            let userID = defaults.object(forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL) as! String
+            self.defaults.removeObject(forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
             
             self.isGoToMessageDetail = true
-            self.performSegueWithIdentifier("checkChatMessage", sender: userID)
+            self.performSegue(withIdentifier: "checkChatMessage", sender: userID)
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
     
     func initNavigationBar() {
         self.tabBarController?.title = kNavMessage
-        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        let image = UIImage(named: "newmessage")!.imageWithRenderingMode(.AlwaysOriginal)
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(self.newMessage))
+        let image = UIImage(named: "newmessage")!.withRenderingMode(.alwaysOriginal)
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(self.newMessage))
         let selectedImage = UIImage(named: "messagesSelcted")
-        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
+        self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
     }
     
@@ -165,10 +165,10 @@ class MessageViewController: BaseViewController {
     
     func getMessagetAtSaveIndexPathScrollView() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
-        prefix.appendContentsOf(String((self.saveIndexPath?.row)!))
-        prefix.appendContentsOf(kPM_PATH_LIMIT_ONE)
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(kPM_PATH_CONVERSATION_OFFSET_V2)
+        prefix.append(String((self.saveIndexPath?.row)!))
+        prefix.append(kPM_PATH_LIMIT_ONE)
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -190,7 +190,7 @@ class MessageViewController: BaseViewController {
     }
     
     func newMessage() {
-        self.performSegueWithIdentifier("newMessage", sender: nil)
+        self.performSegue(withIdentifier: "newMessage", sender: nil)
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -200,8 +200,8 @@ class MessageViewController: BaseViewController {
     
     func getListLead() {
         var prefix = kPMAPICOACHES
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(kPMAPICOACH_LEADS)
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(kPMAPICOACH_LEADS)
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
@@ -227,9 +227,9 @@ class MessageViewController: BaseViewController {
             isLoadingMessage = true
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf(kPM_PATH_CONVERSATION_OFFSET_V2)
-            prefix.appendContentsOf(String(offset))
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append(kPM_PATH_CONVERSATION_OFFSET_V2)
+            prefix.append(String(offset))
             
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
@@ -259,12 +259,12 @@ class MessageViewController: BaseViewController {
                             }
                             
                             self.isLoadingMessage = false
-                            self.noMessageV.hidden = true
+                            self.noMessageV.isHidden = true
                             
                              self.listMessageTB.reloadData()
                         } else {
                             if self.arrayMessages.count <= 0 {
-                                self.noMessageV.hidden = false
+                                self.noMessageV.isHidden = false
                             }
                             self.isLoadingMessage = false
                             self.isStopLoadMessage = true
@@ -292,10 +292,10 @@ class MessageViewController: BaseViewController {
             
             if (targetID == nil || targetID?.isEmpty == true) {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHelper.getCurrentID())
-                prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-                prefix.appendContentsOf("/")
-                prefix.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
+                prefix.append(PMHelper.getCurrentID())
+                prefix.append(kPM_PATH_CONVERSATION)
+                prefix.append("/")
+                prefix.append(String(format:"%0.f", (message[kId]! as AnyObject).doubleValue))
                 
                 Alamofire.request(.GET, prefix)
                     .responseJSON { response in switch response.result {
@@ -320,12 +320,12 @@ class MessageViewController: BaseViewController {
                         if (conversationMe[kLastOpenAt] is NSNull) {
                             message[kLastOpenAt] = "0"
                         } else {
-                            let dateFormatter = NSDateFormatter()
+                            let dateFormatter = DateFormatter
                             dateFormatter.dateFormat = kFullDateFormat
                             dateFormatter.timeZone = NSTimeZone(name: "UTC")
                             
-                            let lastOpenAtM = dateFormatter.dateFromString(conversationMe[kLastOpenAt] as! String)
-                            let updateAtM =  dateFormatter.dateFromString(message["updatedAt"] as! String)
+                            let lastOpenAtM = dateFormatter.date(from: conversationMe[kLastOpenAt] as! String)
+                            let updateAtM =  dateFormatter.date(from: message["updatedAt"] as! String)
                             
                             if (lastOpenAtM!.compare(updateAtM!) == NSComparisonResult.OrderedAscending) {
                                 message[kLastOpenAt] = "0"
@@ -336,16 +336,16 @@ class MessageViewController: BaseViewController {
                         
                         // Get name
                         var prefixUser = kPMAPIUSER
-                        prefixUser.appendContentsOf(String(format:"%0.f", conversationTarget[kUserId]!.doubleValue))
+                        prefixUser.append(String(format:"%0.f", conversationTarget[kUserId]!.doubleValue))
                         Alamofire.request(.GET, prefixUser)
                             .responseJSON { response in switch response.result {
                             case .Success(let JSON):
                                 let userInfo = JSON as! NSDictionary
                                 
-                                let name = userInfo.objectForKey(kFirstname) as! String
-                                message[kFirstname] = name.uppercaseString
+                                let name = userInfo.object(forKey: kFirstname) as! String
+                                message[kFirstname] = name.uppercased()
                                 
-                                var imageURL = userInfo.objectForKey(kImageUrl) as? String
+                                var imageURL = userInfo.object(forKey: kImageUrl) as? String
                                 if (imageURL?.isEmpty == true) {
                                     imageURL = " "
                                 }
@@ -355,7 +355,7 @@ class MessageViewController: BaseViewController {
                                     
                                     ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                         if (error == nil) {
-                                            dispatch_async(dispatch_get_main_queue(),{
+                                            DispatchQueue.main.async(execute: {
                                                 let imageRes = result as! UIImage
                                                 message["userImage"] = imageRes
                                                 
@@ -384,11 +384,11 @@ class MessageViewController: BaseViewController {
             
             // Get message
             var prefixT = kPMAPIUSER
-            prefixT.appendContentsOf(PMHelper.getCurrentID())
-            prefixT.appendContentsOf(kPM_PATH_CONVERSATION)
-            prefixT.appendContentsOf("/")
-            prefixT.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
-            prefixT.appendContentsOf("/messages")
+            prefixT.append(PMHelper.getCurrentID())
+            prefixT.append(kPM_PATH_CONVERSATION)
+            prefixT.append("/")
+            prefixT.append(String(format:"%0.f", (message[kId]! as AnyObject).doubleValue))
+            prefixT.append("/messages")
             Alamofire.request(.GET, prefixT)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -424,9 +424,9 @@ class MessageViewController: BaseViewController {
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "checkChatMessage") {
-            let destinationVC = segue.destinationViewController as! ChatMessageViewController
+            let destinationVC = segue.destination as! ChatMessageViewController
             
             if (self.isGoToMessageDetail == false) {
                 let indexPathRow = sender as! Int
@@ -435,7 +435,7 @@ class MessageViewController: BaseViewController {
                 let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
                 
                 destinationVC.userIdTarget = cell.targetId
-                destinationVC.messageId = String(format:"%0.f", message[kId]!.doubleValue)
+                destinationVC.messageId = String(format:"%0.f", (message[kId]! as AnyObject).doubleValue)
             } else {
                 let userID = sender as! String
                 destinationVC.userIdTarget = userID
@@ -444,7 +444,7 @@ class MessageViewController: BaseViewController {
     }
 
     func timeAgoSinceDate(date:NSDate) -> String {
-        let calendar = NSCalendar.currentCalendar()
+        let calendar = NSCalendar.current
         let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
         let now = NSDate()
         let earliest = now.earlierDate(date)
@@ -482,7 +482,7 @@ class MessageViewController: BaseViewController {
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
             if (scrollView == self.listMessageTB) {
                 if (self.arrayListLead.count == 0) {
                     self.horizontalViewHeightConstraint!.constant = 0
@@ -493,7 +493,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         self.horizontalViewHeightConstraint!.constant = 180
                     }
                     
-                    UIView.animateWithDuration(0.3, animations: {
+                    UIView.animate(withDuration: 0.3, animations: {
                         self.view.layoutIfNeeded()
                     })
                 }
@@ -501,9 +501,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
         if (tableView == self.horizontalTableView) {
-            if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+            if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
                 return 96
             }
         } else {
@@ -520,9 +520,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         return 0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == listMessageTB && arrayMessages.count != 0) {
-            let cell = tableView.dequeueReusableCellWithIdentifier(kMessageTableViewCell, forIndexPath: indexPath) as! MessageTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: kMessageTableViewCell, for: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
             let currentUserid = PMHelper.getCurrentID()
             
@@ -530,25 +530,25 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             let targerID = message["targetId"] as? String
             if (targerID?.isEmpty == false) {
                 cell.targetId = targerID
-                cell.userInteractionEnabled = true
+                cell.isUserInteractionEnabled = true
             } else {
-                cell.userInteractionEnabled = false
+                cell.isUserInteractionEnabled = false
             }
             
             
             //Get Text
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(currentUserid)
-            prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-            prefix.appendContentsOf("/")
-            prefix.appendContentsOf(String(format:"%0.f", message[kId]!.doubleValue))
+            prefix.append(currentUserid)
+            prefix.append(kPM_PATH_CONVERSATION)
+            prefix.append("/")
+            prefix.append(String(format:"%0.f", (message[kId]! as AnyObject).doubleValue))
             
             // Chat time
             let timeAgo = message["updatedAt"] as! String
-            let dateFormatter = NSDateFormatter()
+            let dateFormatter = DateFormatter
             dateFormatter.dateFormat = kFullDateFormat
             dateFormatter.timeZone = NSTimeZone(name: "UTC")
-            let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
+            let dateFromString : NSDate = dateFormatter.date(from: timeAgo)!
             cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
             
             // User name
@@ -583,7 +583,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 } else {
                     cell.nameLB.font = .pmmMonLight13()
                     cell.messageLB.font = .pmmMonLight16()
-                    cell.timeLB.textColor = UIColor.blackColor()
+                    cell.timeLB.textColor = UIColor.black
                 }
             }
             
@@ -598,33 +598,33 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else {
             let cellId = "HorizontalCell"
-            var cell:HorizontalCell? = tableView.dequeueReusableCellWithIdentifier(cellId) as? HorizontalCell
+            var cell:HorizontalCell? = tableView.dequeueReusableCell(withIdentifier: cellId) as? HorizontalCell
             if cell == nil {
                 cell = NSBundle.mainBundle().loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
-                cell!.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 2.0))
+                cell!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2.0))
             }
-            cell!.addButton.hidden = true
+            cell!.addButton.isHidden = true
             
             let lead = self.arrayListLead[indexPath.row]
             let targetUserId = String(format:"%0.f", lead["userId"]!.doubleValue)
             
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let userInfo = result as! NSDictionary
-                        let name = userInfo.objectForKey(kFirstname) as! String
-                        cell!.name.text = name.uppercaseString
+                        let name = userInfo.object(forKey: kFirstname) as! String
+                        cell!.name.text = name.uppercased()
                         
                         if (userInfo[kImageUrl] is NSNull == false) {
                             let imageURLString = userInfo[kImageUrl] as! String
                             ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
-                                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                     if visibleCell == true {
                                         let imageRes = result as! UIImage
                                         cell!.imageV.image = imageRes
-                                        cell!.addButton.hidden = false
+                                        cell!.addButton.isHidden = false
                                     }
                                 } else {
                                     print("Request failed with error: \(error)")
@@ -632,7 +632,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                             }).fetchdata()
                         } else {
                             cell?.imageV.image = UIImage(named: "display-empty.jpg")
-                            cell!.addButton.hidden = false
+                            cell!.addButton.isHidden = false
                         }
                     }
                 } else {
@@ -648,12 +648,12 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     func clickOnConnectionImage(indexPath: NSIndexPath) {
         self.saveIndexPath = indexPath
         let message = arrayMessages[indexPath.row]
-        let messageId = String(format:"%0.f", message[kId]!.doubleValue)
+        let messageId = String(format:"%0.f", (message[kId]! as AnyObject).doubleValue)
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION_V2)
-        prefix.appendContentsOf("/")
-        prefix.appendContentsOf(messageId)
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(kPM_PATH_CONVERSATION_V2)
+        prefix.append("/")
+        prefix.append(messageId)
         
         let param = [kConversationId:messageId,
                      kUserId: PMHelper.getCurrentID()]
@@ -672,7 +672,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         messageTabItem?.badgeValue = nil
                     }
                     
-                    self.performSegueWithIdentifier("checkChatMessage", sender: indexPath.row)
+                    self.performSegue(withIdentifier: "checkChatMessage", sender: indexPath.row)
                 } else {
                     PMHelper.showDoAgainAlert()
                 }
@@ -688,7 +688,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     //TODO: show message not enable contact
                 } else {
                     self.saveIndexPath = indexPath
-                    self.listMessageTB.deselectRowAtIndexPath(indexPath, animated: false)
+                    self.listMessageTB.deselectRow(at: indexPath, animated: false)
                     let cell = self.horizontalTableView.cellForRowAtIndexPath(indexPath) as! HorizontalCell
                     
                     if (cell.imageV.image != nil) {
@@ -703,35 +703,35 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                             if (error == nil) {
                                 let userInfo = result as! NSDictionary
                                 
-                                let firstName = userInfo.objectForKey(kFirstname) as? String
-                                let lastName = userInfo.objectForKey(kLastName) as? String
+                                let firstName = userInfo.object(forKey: kFirstname) as? String
+                                let lastName = userInfo.object(forKey: kLastName) as? String
                                 
                                 var fullName = firstName
                                 if (lastName != nil && lastName?.isEmpty == false) {
                                     fullName = String(format: "%@ %@", firstName!, lastName!)
                                 }
                                 
-                                var phoneNumber = userInfo.objectForKey(kMobile) as? String
+                                var phoneNumber = userInfo.object(forKey: kMobile) as? String
                                 if phoneNumber == nil {
                                     phoneNumber = ""
                                 }
                                 
-                                var emailString = userInfo.objectForKey(kEmail) as? String
+                                var emailString = userInfo.object(forKey: kEmail) as? String
                                 if emailString == nil {
                                     emailString = ""
                                 }
                                 
-                                var facebookURL = userInfo.objectForKey(kFacebookUrl) as? String
+                                var facebookURL = userInfo.object(forKey: kFacebookUrl) as? String
                                 if facebookURL == nil {
                                     facebookURL = ""
                                 }
                                 
-                                var twitterURL = userInfo.objectForKey(kTwitterUrl) as? String
+                                var twitterURL = userInfo.object(forKey: kTwitterUrl) as? String
                                 if twitterURL == nil {
                                     twitterURL = ""
                                 }
                                 
-                                var DOBString = (userInfo.objectForKey(kDob) as? String)
+                                var DOBString = (userInfo.object(forKey: kDob) as? String)
                                 if twitterURL == nil {
                                     twitterURL = "1990-01-01"
                                 } else {
@@ -761,7 +761,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 
                                 newContact.socialProfiles = [facebookProfile, twitterProfile]
                                 
-                                let DOBArray = DOBString?.componentsSeparatedByString("-")
+                                let DOBArray = DOBString?.components(separatedBy: "-")
                                 if (DOBArray?.count == 3) {
                                     let birthday = NSDateComponents()
                                     birthday.year = Int(DOBArray![0])!
@@ -771,7 +771,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 }
                                 
                                 
-                                let alert = UIAlertController(title: pmmNotice, message: "", preferredStyle: .Alert)
+                                let alert = UIAlertController(title: pmmNotice, message: "", preferredStyle: .alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: { _ in }))
                                 
                                 let request = CNSaveRequest()
@@ -785,7 +785,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                         try store.executeSaveRequest(request)
                                     } else {
                                         alert.message = contactExist
-                                        self.presentViewController(alert, animated: true, completion: nil)
+                                        self.present(alert, animated: true, completion: nil)
                                     }
                                     
                                     
@@ -793,7 +793,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                     print(error)
                                     
                                     alert.message = pleaseDoItAgain
-                                    self.presentViewController(alert, animated: true, completion: nil)
+                                    self.present(alert, animated: true, completion: nil)
                                 }
                             } else {
                                 print("Request failed with error: \(error)")
@@ -812,7 +812,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tableView == self.listMessageTB) {
             return self.arrayMessages.count
         } else {
@@ -842,10 +842,10 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 if (error == nil) {
                     let userInfo = result as! NSDictionary
                     let userMail = userInfo[kEmail] as! String
-                    let phoneNumber = userInfo[kMobile] as! String
+                    let phoneNumber = userInfo[kMobile] as? String
                     
                     let viewProfileAction = { (action:UIAlertAction!) -> Void in
-                        PMHelper.showCoachOrUserView(userID)
+                        PMHelper.showCoachOrUserView(userID: userID)
                     }
                     
                     let acceptClientAction = { (action:UIAlertAction!) -> Void in
@@ -857,9 +857,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                             kUserIdRequest: targetUserId]
                         
                         var prefix = kPMAPICOACHES
-                        prefix.appendContentsOf(PMHelper.getCurrentID())
-                        prefix.appendContentsOf(kPMAPICOACH_CURRENT)
-                        prefix.appendContentsOf("/")
+                        prefix.append(PMHelper.getCurrentID())
+                        prefix.append(kPMAPICOACH_CURRENT)
+                        prefix.append("/")
                         
                         Alamofire.request(.PUT, prefix, parameters: param)
                             .responseJSON { response in
@@ -906,7 +906,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     // Call action
                     let callClientAction = { (action:UIAlertAction!) -> Void in
                         var urlString = "tel:///"
-                        urlString = urlString.stringByAppendingString(phoneNumber)
+                        urlString = urlString.stringByAppendingString(phoneNumber!)
                         
                         let tellURL = NSURL(string: urlString)
                         if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
@@ -917,30 +917,31 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     // Send message action
                     let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
                         self.isGoToMessageDetail = true
-                        self.performSegueWithIdentifier("checkChatMessage", sender: userID)
+                        self.performSegue(withIdentifier: "checkChatMessage", sender: userID)
                     }
                     
-                    let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-                    alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+                    let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                    alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.destructive, handler: viewProfileAction))
                     
                     
-                    alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+                    alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.destructive, handler: sendMessageClientAction))
                     
                     // Check exist phone number
-                    if (phoneNumber.isEmpty == false) {
-                        alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
+                    if (phoneNumber != nil &&
+                        phoneNumber!.isEmpty == false) {
+                        alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.destructive, handler: callClientAction))
                     }
                     
                     // Check exist email
                     if (userMail.isEmpty == false) {
-                        alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+                        alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.destructive, handler: emailClientAction))
                     }
                     
-                    alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.Destructive, handler: acceptClientAction))
+                    alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.destructive, handler: acceptClientAction))
                     
-                    alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+                    alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
                     
-                    self.presentViewController(alertController, animated: true, completion: nil)
+                    self.present(alertController, animated: true, completion: nil)
                 } else {
                     print("Request failed with error: \(error)")
                 }

@@ -39,7 +39,7 @@ class ConnectViewController: BaseViewController {
     var isFromFeed: Bool = false
     var isConnected = false
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +48,7 @@ class ConnectViewController: BaseViewController {
 
         self.keepLookingBT.layer.cornerRadius = 2
         self.keepLookingBT.layer.borderWidth = 0.5
-        self.keepLookingBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.keepLookingBT.layer.borderColor = UIColor.white.cgColor
         self.keepLookingBT.titleLabel?.font = .pmmMonReg13()
         
         self.requestCallBackBT.layer.cornerRadius = 2
@@ -80,7 +80,7 @@ class ConnectViewController: BaseViewController {
         self.fourthConnectingIconV.layer.cornerRadius = 5
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
+        prefix.append(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
@@ -98,7 +98,7 @@ class ConnectViewController: BaseViewController {
                     self.titleConnectDetailLB.text = titleConnectDetailText
                     
                     let titleSendMessageText = "CHAT WITH ".stringByAppendingString(coachDetailName)
-                    self.sendMessageBT.setTitle(titleSendMessageText.uppercaseString, forState: .Normal)
+                    self.sendMessageBT.setTitle(titleSendMessageText.uppercased(), for: .normal)
                     
                     if (JSON[kImageUrl] is NSNull == false) {
                         let imageURLString = JSON[kImageUrl] as! String
@@ -128,22 +128,22 @@ class ConnectViewController: BaseViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.view.hidden = true
+        self.view.isHidden = true
         
         if self.isConnected {
             self.sendUsAMessage(self.sendMessageBT)
         } else {
-            self.view.hidden = false
+            self.view.isHidden = false
         }
         
         self.hiddenIndicatorView(true)
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
         self.meBigIndicatorView.layer.cornerRadius = self.meBigIndicatorView.frame.width/2
         self.meMedIndicatorView.layer.cornerRadius = self.meMedIndicatorView.frame.width/2
@@ -156,22 +156,22 @@ class ConnectViewController: BaseViewController {
         self.meAvatarIMV.layer.cornerRadius = self.meAvatarIMV.frame.width/2
         self.youAvatarIMV.layer.cornerRadius = self.youAvatarIMV.frame.width/2
         
-        UIView.animateWithDuration(0.2) {
+        UIView.animate(withDuration: 0.2) {
             self.hiddenIndicatorView(false)
         }
     }
     
     func hiddenIndicatorView(isHidden: Bool) {
-        self.meBigIndicatorView.hidden = isHidden
-        self.meMedIndicatorView.hidden = isHidden
-        self.meSmallIndicatorView.hidden = isHidden
+        self.meBigIndicatorView.isHidden = isHidden
+        self.meMedIndicatorView.isHidden = isHidden
+        self.meSmallIndicatorView.isHidden = isHidden
         
-        self.youBigIndicatorView.hidden = isHidden
-        self.youMedIndicatorView.hidden = isHidden
-        self.youSmallIndicatorView.hidden = isHidden
+        self.youBigIndicatorView.isHidden = isHidden
+        self.youMedIndicatorView.isHidden = isHidden
+        self.youSmallIndicatorView.isHidden = isHidden
         
-        self.meAvatarIMV.hidden = isHidden
-        self.youAvatarIMV.hidden = isHidden
+        self.meAvatarIMV.isHidden = isHidden
+        self.youAvatarIMV.isHidden = isHidden
     }
 
     override func didReceiveMemoryWarning() {
@@ -182,7 +182,7 @@ class ConnectViewController: BaseViewController {
     @IBAction func sendUsAMessage(sender: UIButton) {
         if let firstName = coachDetail[kFirstname] as? String {
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Name": "Send Message", "Label":"\(firstName.uppercaseString)"]
+            let properties = ["Name": "Send Message", "Label":"\(firstName.uppercased())"]
             mixpanel.track("IOS.SendMessageToCoach", properties: properties)
         }
 
@@ -197,7 +197,7 @@ class ConnectViewController: BaseViewController {
         
         if let firstName = coachDetail[kFirstname] as? String {
             let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Name": "Request Call Back", "Label":"\(firstName.uppercaseString)"]
+            let properties = ["Name": "Request Call Back", "Label":"\(firstName.uppercased())"]
             mixpanel.track("IOS.SendMessageToCoach", properties: properties)
         }
         
@@ -205,23 +205,23 @@ class ConnectViewController: BaseViewController {
             TrackingPMAPI.sharedInstance.trackingCallBackButtonClick("\(val)")
         }
         
-        self.requestCallBackBT.userInteractionEnabled = false
+        self.requestCallBackBT.isUserInteractionEnabled = false
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
+        prefix.append(PMHelper.getCurrentID())
         
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
-                self.requestCallBackBT.userInteractionEnabled = true
+                self.requestCallBackBT.isUserInteractionEnabled = true
                 
                 if response.response?.statusCode == 200 {
                     if (response.result.value == nil) {return}
                     let userInfo = response.result.value as! NSDictionary
                     
                     var phoneNumber = ""
-                    if !(userInfo[kMobile] is NSNull) {
+                    if (userInfo[kMobile] is NSNull == false) {
                         phoneNumber = (userInfo[kMobile] as? String)!
-                        phoneNumber = (phoneNumber.uppercaseString == "NONE") ? "" : phoneNumber
+                        phoneNumber = (phoneNumber.uppercased() == "NONE") ? "" : phoneNumber
                     }
                     
                     var message = "Hey "
@@ -238,12 +238,12 @@ class ConnectViewController: BaseViewController {
         if coachDetail != nil {
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Keep Looking", "Label":"\(firstName.uppercaseString)"]
+                let properties = ["Name": "Keep Looking", "Label":"\(firstName.uppercased())"]
                 mixpanel.track("IOS.SendMessageToCoach", properties: properties)
             }
         }
         
-        self.dismissViewControllerAnimated(true) {
+        self.dismissViewControllerAnimated(animated: true) {
         }
     }
     
@@ -257,18 +257,18 @@ class ConnectViewController: BaseViewController {
                 let profileVC = presentingViewController!
                 let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
                 let featureVC = tabbarVC.viewControllers![0] as! FeaturedViewController
-                self.dismissViewControllerAnimated(false, completion: {
-                    profileVC.dismissViewControllerAnimated(false, completion: {
-                        featureVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
+                self.dismissViewControllerAnimated(animated: false, completion: {
+                    profileVC.dismissViewControllerAnimated(animated: false, completion: {
+                        featureVC.performSegue(withIdentifier: kSendMessageConnection, sender:([self.coachDetail, message]))
                     })
                 })
             } else {
                 let profileVC = presentingViewController!
                 let tabbarVC = presentingViewController!.presentingViewController?.childViewControllers[0] as! BaseTabBarController
                 let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                self.dismissViewControllerAnimated(false, completion: {
-                    profileVC.dismissViewControllerAnimated(false, completion: {
-                        findVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
+                self.dismissViewControllerAnimated(animated: false, completion: {
+                    profileVC.dismissViewControllerAnimated(animated: false, completion: {
+                        findVC.performSegue(withIdentifier: kSendMessageConnection, sender:([self.coachDetail, message]))
                     })
                 })
             }
@@ -276,14 +276,14 @@ class ConnectViewController: BaseViewController {
             if (isFromFeed == true) {
                 let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
                 let featuredVC = tabbarVC.viewControllers![0] as! FeaturedViewController
-                presentingViewController!.dismissViewControllerAnimated(false, completion: {
-                    featuredVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
+                presentingViewController!.dismissViewControllerAnimated(animated: false, completion: {
+                    featuredVC.performSegue(withIdentifier: kSendMessageConnection, sender:([self.coachDetail, message]))
                 })
             } else {
                 let tabbarVC = presentingViewController!.childViewControllers[0] as! BaseTabBarController
                 let findVC = tabbarVC.viewControllers![2] as! FindViewController
-                presentingViewController!.dismissViewControllerAnimated(false, completion: {
-                    findVC.performSegueWithIdentifier(kSendMessageConnection, sender:([self.coachDetail, message]))
+                presentingViewController!.dismissViewControllerAnimated(animated: false, completion: {
+                    findVC.performSegue(withIdentifier: kSendMessageConnection, sender:([self.coachDetail, message]))
                 })
             }
         }

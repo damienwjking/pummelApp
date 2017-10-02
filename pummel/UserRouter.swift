@@ -68,7 +68,7 @@ enum UserRouter: URLRequestConvertible {
         case .getFollowCoach:
             return .GET
         case .signup:
-            return .POST
+            return .post
             
         }
     }
@@ -155,9 +155,9 @@ enum UserRouter: URLRequestConvertible {
             param["rating"] = String(format: "%0.1f", rating)
 
         case .getUpcomingSession, .getCompletedSession:
-            let dateFormater = NSDateFormatter()
+            let dateFormater = DateFormatter
             dateFormater.dateFormat = "yyyy-MM-dd hh:mm:ss"
-            let dateString = dateFormater.stringFromDate(NSDate())
+            let dateString = dateFormater.string(from: NSDate())
             
             param["currentDate"] = dateString
             
@@ -381,40 +381,40 @@ enum UserRouter: URLRequestConvertible {
     }
     
     static func saveCurrentUserInfo(response: Response<AnyObject, NSError>) {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         
         // Save access token here
         let JSON = response.result.value
         self.updateCookies(response)
-        let currentId = String(format:"%0.f",JSON!.objectForKey(kUserId)!.doubleValue)
-        defaults.setObject(true, forKey: k_PM_IS_LOGINED)
-        defaults.setObject(currentId, forKey: k_PM_CURRENT_ID)
+        let currentId = String(format:"%0.f",JSON!.object(forKey: kUserId)!.doubleValue)
+        defaults.set(true, forKey: k_PM_IS_LOGINED)
+        defaults.set(currentId, forKey: k_PM_CURRENT_ID)
         
         // Check Coach
         var coachLink  = kPMAPICOACH
         let coachId = currentId
-        coachLink.appendContentsOf(coachId)
+        coachLink.append(coachId)
         Alamofire.request(.GET, coachLink)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
-                    defaults.setObject(true, forKey: k_PM_IS_COACH)
+                    defaults.set(true, forKey: k_PM_IS_COACH)
                 } else {
-                    defaults.setObject(false, forKey: k_PM_IS_COACH)
+                    defaults.set(false, forKey: k_PM_IS_COACH)
                 }
         }
         
         // Send token
-        if ((defaults.objectForKey(k_PM_PUSH_TOKEN)) != nil) {
+        if ((defaults.object(forKey: k_PM_PUSH_TOKEN)) != nil) {
             let currentId = PMHelper.getCurrentID()
-            let deviceTokenString = defaults.objectForKey(k_PM_PUSH_TOKEN) as! String
+            let deviceTokenString = defaults.object(forKey: k_PM_PUSH_TOKEN) as! String
             
             let param = [kUserId:currentId,
                          kProtocol:"APNS",
                          kToken: deviceTokenString]
             
             var linkPostNotif = kPMAPIUSER
-            linkPostNotif.appendContentsOf(currentId)
-            linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
+            linkPostNotif.append(currentId)
+            linkPostNotif.append(kPM_PATH_DEVICES)
             Alamofire.request(.POST, linkPostNotif, parameters: param)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
@@ -432,7 +432,7 @@ enum UserRouter: URLRequestConvertible {
     }
     
     static func updateCookies(response: Response<AnyObject, NSError>) {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         
         if let
             headerFields = response.response?.allHeaderFields as? [String: String],
@@ -440,8 +440,8 @@ enum UserRouter: URLRequestConvertible {
             let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: URL)
             // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
             Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
-            defaults.setObject(headerFields, forKey: k_PM_HEADER_FILEDS)
-            defaults.setObject(URL.absoluteString, forKey: k_PM_URL_LAST_COOKIE)
+            defaults.set(headerFields, forKey: k_PM_HEADER_FILEDS)
+            defaults.set(URL.absoluteString, forKey: k_PM_URL_LAST_COOKIE)
         }
     }
     

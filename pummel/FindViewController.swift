@@ -12,7 +12,7 @@ import UIKit
 import MapKit
 import Mixpanel
 import Alamofire
-import ReactiveUI
+//import ReactiveUI
 import Cartography
 import UIColor_FlatColors
 
@@ -36,7 +36,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
     @IBOutlet weak var refineSearchBT: UIButton!
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
@@ -51,7 +51,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     // MARK: - View controller circle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController!.navigationBar.translucent = false
+        self.navigationController!.navigationBar.isTranslucent = false
         self.tabBarController?.navigationController?.navigationBar.addSubview(self.badgeLabel)
         
         self.setupCollectionView()
@@ -62,28 +62,28 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
         refineSearchBT.layer.cornerRadius = 5
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.startSearchCoachNotification), name: k_PM_FIRST_SEARCH_COACH, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateSMLCBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.updateLBadge(_:)), name: k_PM_UPDATE_LEAD_BADGE, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.startSearchCoachNotification), name: k_PM_FIRST_SEARCH_COACH, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.updateSMLCBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.updateLBadge(_:)), name: k_PM_UPDATE_LEAD_BADGE, object: nil)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.setupLayout()
         
-        let showSeachViewController = self.defaults.boolForKey("SHOW_SEARCH_AFTER_REGISTER")
+        let showSeachViewController = self.defaults.bool(forKey: "SHOW_SEARCH_AFTER_REGISTER")
         if (showSeachViewController == true) {
             self.defaults.setBool(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
             self.defaults.synchronize()
-            performSegueWithIdentifier("letUsHelp", sender: nil)
+            performSegue(withIdentifier: "letUsHelp", sender: nil)
         }
         
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
         
-        self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
         
         self.stopSearch = false
         
@@ -92,14 +92,14 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.endPagingCarousel(self.collectionView)
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
-        let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_1 {
             self.refind()
         } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_SEARCH {
-            self.defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            self.defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
         }
         
         self.collectionView.reloadData { 
@@ -111,10 +111,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.getCoachArray()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: "SELECTED_MIDDLE_TAB", object: nil)
+        NotificationCenter.default.removeObserver(self, name: "SELECTED_MIDDLE_TAB", object: nil)
 
         self.badgeLabel.alpha = 0
     }
@@ -122,22 +122,22 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     func setupLayout() {
         self.tabBarController?.title = "RESULTS"
         
-        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         let selectedImage = UIImage(named: "search")
-        self.tabBarItem.image = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
-        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
+        self.tabBarItem.image = selectedImage?.withRenderingMode(.alwaysOriginal)
+        self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         
         // Left button
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
             let leftBarButtonItem = UIBarButtonItem(title:"CLIENTS",
-                                                    style: UIBarButtonItemStyle.Plain,
+                                                    style: UIBarButtonItemStyle.plain,
                                                     target: self,
                                                     action: #selector(FindViewController.btnClientClick))
             self.tabBarController?.navigationItem.leftBarButtonItem = leftBarButtonItem
         } else {
             let leftBarButtonItem = UIBarButtonItem(title:"COACHES",
-                                                    style: UIBarButtonItemStyle.Plain,
+                                                    style: UIBarButtonItemStyle.plain,
                                                     target: self,
                                                     action: #selector(FindViewController.btnCoachsClick))
             self.tabBarController?.navigationItem.leftBarButtonItem = leftBarButtonItem
@@ -145,13 +145,13 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     }
     
     func setupHorizontalView() {
-        self.horizontalTableView.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI / 2.0))
+        self.horizontalTableView.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2.0))
         
         self.separeateline!.backgroundColor = UIColor.pmmWhiteColor()
         
         self.horizontalButton.titleLabel?.font = UIFont.pmmMonLight11()
-        self.horizontalButton.setTitleColor(UIColor.pmmBrightOrangeColor(), forState: .Normal)
-//        self.horizontalButton.setTitle("Show List Coach", forState: .Normal)
+        self.horizontalButton.setTitleColor(UIColor.pmmBrightOrangeColor(), for: .normal)
+//        self.horizontalButton.setTitle("Show List Coach", for: .normal)
         
         
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.horizontalViewSwipeUp))
@@ -162,10 +162,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     func setupCollectionView() {
         // register cell
         let nibName = UINib(nibName: "CardContentView", bundle: nil)
-        self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "CardView")
+        self.collectionView.register(nibName, forCellWithReuseIdentifier: "CardView")
         
         let noResultNibName = UINib(nibName: "CardContentNoResult", bundle: nil)
-        self.collectionView.registerNib(noResultNibName, forCellWithReuseIdentifier: "SearchNoCoach")
+        self.collectionView.register(noResultNibName, forCellWithReuseIdentifier: "SearchNoCoach")
         
         // setup cell
         self.widthCell = (SCREEN_WIDTH - 30)
@@ -209,14 +209,14 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                 var index = 0
                 for id in tagArray! {
                     if (index == 0) {
-                        prefix.appendContentsOf("?")
+                        prefix.append("?")
                     } else {
-                        prefix.appendContentsOf("&")
+                        prefix.append("&")
                     }
                     
                     index = index + 1
                     
-                    prefix.appendContentsOf("tagIds=".stringByAppendingString(id as! String))
+                    prefix.append("tagIds=".stringByAppendingString(id as! String))
                     
                 }
             }
@@ -226,7 +226,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     if response.response?.statusCode == 200 {
                         if (response.result.value == nil) {
                             self.stopSearch = true
-                            NSNotificationCenter.defaultCenter().postNotificationName("AFTER_SEARCH_PAGE", object: nil)
+                            NotificationCenter.default.postNotificationName("AFTER_SEARCH_PAGE", object: nil)
                             return
                         }
                         
@@ -244,7 +244,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                                 self.collectionView.contentOffset = CGPointZero
                                 
                                 // Post notification for dismiss search animation screen
-                                NSNotificationCenter.defaultCenter().postNotificationName("AFTER_SEARCH_PAGE", object: nil)
+                                NotificationCenter.default.postNotificationName("AFTER_SEARCH_PAGE", object: nil)
                             });
                         } else {
                             if ((response.result.value as! NSArray).count == 0) {
@@ -266,7 +266,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     } else if response.response?.statusCode == 401 {
                         PMHelper.showLogoutAlert()
                     } else {
-                        NSNotificationCenter.defaultCenter().postNotificationName("AFTER_SEARCH_PAGE", object: nil)
+                        NotificationCenter.default.postNotificationName("AFTER_SEARCH_PAGE", object: nil)
                     }
             }
         } else {
@@ -301,20 +301,20 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "letUsHelp") {
             // Do nothing
         } else if (segue.identifier == kGoConnect) {
-            let destination = segue.destinationViewController as! ConnectViewController
+            let destination = segue.destination as! ConnectViewController
             let totalDetail = arrayResult[sender.tag]
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
         } else if (segue.identifier == kSendMessageConnection) {
-            let destination = segue.destinationViewController as! ChatMessageViewController
+            let destination = segue.destination as! ChatMessageViewController
             
             let coachDetail = (sender as! NSArray)[0]
             let message = (sender as! NSArray)[1] as! String
             
-            destination.coachName = ((coachDetail[kFirstname] as! String).stringByAppendingString(" ")).uppercaseString
+            destination.coachName = ((coachDetail[kFirstname] as! String).stringByAppendingString(" ")).uppercased()
             destination.typeCoach = true
             destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
             destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
@@ -323,7 +323,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             if (message.isEmpty == true) {
                 destination.needOpenKeyboard = true
             } else {
-                let messageSeparate = message.componentsSeparatedByString("can you please call me back on ")
+                let messageSeparate = message.components(separatedBy: "can you please call me back on ")
                 let phoneNumber = messageSeparate[1]
                 
                 if (phoneNumber.isEmpty == true) {
@@ -335,7 +335,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
 
     @IBAction func refind() {
         self.resultIndex = 0
-        performSegueWithIdentifier("letUsHelp", sender: nil)
+        performSegue(withIdentifier: "letUsHelp", sender: nil)
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -344,12 +344,12 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     }
     
     func updateLBadge(notification: NSNotification) {
-        if (self.defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
             let badgeValue = notification.object as? Int
             
             if (badgeValue != nil && badgeValue > 0) {
                 // Create badge label
-                self.badgeLabel.textColor = UIColor.whiteColor()
+                self.badgeLabel.textColor = UIColor.white
                 self.badgeLabel.font = UIFont.systemFontOfSize(12)
                 self.badgeLabel.backgroundColor = UIColor.pmmBrightOrangeColor()
                 self.badgeLabel.textAlignment = .Center
@@ -363,19 +363,19 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                 self.badgeLabel.layer.masksToBounds = true
                 self.badgeLabel.frame = CGRect(x: 70, y: 5, width: maxSize, height: maxSize)
                 
-                self.badgeLabel.hidden = false
+                self.badgeLabel.isHidden = false
             } else {
-                self.badgeLabel.hidden = true
+                self.badgeLabel.isHidden = true
             }
         }
     }
     
     func btnClientClick() {
-        self.performSegueWithIdentifier("gotoClient", sender: nil)
+        self.performSegue(withIdentifier: "gotoClient", sender: nil)
     }
     
     func btnCoachsClick() {
-//        self.performSegueWithIdentifier("gotoCoachs", sender: nil)
+//        self.performSegue(withIdentifier: "gotoCoachs", sender: nil)
         
         if (self.horizontalTableView.alpha == 0) {
             self.expandCollapseCoachView(true)
@@ -400,19 +400,19 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             self.horizontalViewHeightConstraint.constant = 120
             self.noResultViewVerticalConstraint.constant = -32 + 60 // Default vertical value
             
-            self.separeateline.hidden = true // For animation
+            self.separeateline.isHidden = true // For animation
             
-            UIView.animateWithDuration(0.3, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.horizontalTableView.alpha = 1
                 self.tabBarController?.navigationItem.leftBarButtonItem?.customView?.alpha = 1
                 
-                self.horizontalButton.hidden = true
+                self.horizontalButton.isHidden = true
                 
-                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmLightBrightOrangeColor()], forState: .Normal)
+                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmLightBrightOrangeColor()], for: .normal)
                 
                 self.horizontalView.layoutIfNeeded()
             }) { (_) in
-                self.separeateline.hidden = false
+                self.separeateline.isHidden = false
                 
                 self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
             }
@@ -420,19 +420,19 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             self.horizontalViewHeightConstraint.constant = 0
             self.noResultViewVerticalConstraint.constant = -32 // Default vertical value
             
-            self.separeateline.hidden = true // For animation
+            self.separeateline.isHidden = true // For animation
             
-            UIView.animateWithDuration(0.3, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.horizontalTableView.alpha = 0
                 self.tabBarController?.navigationItem.leftBarButtonItem?.customView?.alpha = 0.5
                 
-                self.horizontalButton.hidden = false
+                self.horizontalButton.isHidden = false
                 
-                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
                 
                 self.horizontalView.layoutIfNeeded()
             }) { (_) in
-                self.separeateline.hidden = false
+                self.separeateline.isHidden = false
                 
                 self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
             }
@@ -448,7 +448,7 @@ extension FindViewController: CardViewCellDelegate {
         let userID = self.arrayResult[cellIndex][kUserId] as! Int
         let userIDString = String(format: "%ld", userID)
         
-        PMHelper.showCoachOrUserView(userIDString)
+        PMHelper.showCoachOrUserView(userID: userIDString)
     }
     
     func cardViewCellMoreInfoClicked(cell: CardViewCell) {
@@ -457,23 +457,23 @@ extension FindViewController: CardViewCellDelegate {
         let userID = self.arrayResult[cellIndex][kUserId] as! Int
         let userIDString = String(format: "%ld", userID)
         
-        PMHelper.showCoachOrUserView(userIDString)
+        PMHelper.showCoachOrUserView(userID: userIDString)
     }
 }
 
 extension FindViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (self.coachArray.count == 0) {
-            self.horizontalView.hidden = true
+            self.horizontalView.isHidden = true
         } else {
-            self.horizontalView.hidden = false
+            self.horizontalView.isHidden = false
         }
         
         return self.coachArray.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+        if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
             self.horizontalViewHeightConstraint.constant = 0
             
             return 0
@@ -486,18 +486,18 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.row == self.coachArray.count - 2) {
             self.getCoachArray()
         }
         
         let cellId = "HorizontalCell"
-        var cell:HorizontalCell? = tableView.dequeueReusableCellWithIdentifier(cellId) as? HorizontalCell
+        var cell:HorizontalCell? = tableView.dequeueReusableCell(withIdentifier: cellId) as? HorizontalCell
         if cell == nil {
             cell = NSBundle.mainBundle().loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
-            cell!.transform = CGAffineTransformMakeRotation(CGFloat(M_PI / 2.0))
+            cell!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2.0))
         }
-        cell!.addButton.hidden = true
+        cell!.addButton.isHidden = true
         cell?.imageV.image = UIImage(named: "display-empty.jpg")
         cell?.imageV.layer.borderWidth = 2
         
@@ -509,7 +509,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let userData = result as! NSDictionary
                         coach.parseData(userData)
@@ -527,7 +527,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func setupDataForCell(cell: HorizontalCell, coach: UserModel) {
-        cell.name.text = coach.firstname!.uppercaseString
+        cell.name.text = coach.firstname!.uppercased()
         
         if (coach.imageUrl != nil) {
             let imageURLString = coach.imageUrl
@@ -551,21 +551,21 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
             let userID = self.coachArray[cellIndex].id
             let userIDString = String(format: "%ld", userID)
             
-            PMHelper.showCoachOrUserView(userIDString)
+            PMHelper.showCoachOrUserView(userID: userIDString)
         }
     }
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension FindViewController : UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.collectionView {
             if (self.arrayResult.count == 0) {
-                self.collectionView.hidden = true
+                self.collectionView.isHidden = true
                 
                 return 0
             } else {
-                self.collectionView.hidden = false
+                self.collectionView.isHidden = false
                 
                 return self.arrayResult.count + 1
             }
@@ -574,13 +574,13 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         return 0
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.collectionView {
             if indexPath.row == self.arrayResult.count {
-                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("SearchNoCoach", forIndexPath: indexPath) as! NoResultCell
+                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("SearchNoCoach", for: indexPath) as! NoResultCell
                 
                 // add refind action
-                cell.refineSearchBT.addTarget(self, action: #selector(refind), forControlEvents: .TouchUpInside)
+                cell.refineSearchBT.addTarget(self, action: #selector(refind), for: .touchUpInside)
                 
                 // add Swipe gesture
                 if cell.gestureRecognizers?.count < 1 {
@@ -591,7 +591,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 
                 return cell
             } else {
-                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", forIndexPath: indexPath) as! CardViewCell
+                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", for: indexPath) as! CardViewCell
                 cell.delegate = self
                 cell.clipsToBounds = false
                 
@@ -636,10 +636,10 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 if !(coachDetail[kImageUrl] is NSNull) {
                     let imageLink = coachDetail[kImageUrl] as! String
                     var prefix = kPMAPI
-                    prefix.appendContentsOf(imageLink)
-                    prefix.appendContentsOf(postfix)
-                    if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                        let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+                    prefix.append(imageLink)
+                    prefix.append(postfix)
+                    if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
+                        let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
                         cell.cardView.avatarIMV.image = imageRes
                     } else {
                         Alamofire.request(.GET, prefix)
@@ -654,13 +654,13 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 }
                 
                 // Business ImageView
-                cell.cardView.connectV.hidden = true
+                cell.cardView.connectV.isHidden = true
                 if (coachDetail[kBusinessId] is NSNull == false) {
                     let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
                     
                     ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
                         if (error == nil) {
-                            cell.cardView.connectV.hidden = false
+                            cell.cardView.connectV.isHidden = false
                             
                             let imageRes = result as! UIImage
                             cell.cardView.businessIMV.image = imageRes
@@ -689,7 +689,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         return UICollectionViewCell()
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == self.collectionView {
             return self.collectionViewLayout.itemSize
         }
@@ -697,14 +697,14 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         return CGSizeZero
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.collectionView {
             if indexPath.row < self.arrayResult.count {
                 let cellIndex = indexPath.row
                 let userID = self.arrayResult[cellIndex][kUserId] as! Int
                 let userIDString = String(format: "%ld", userID)
                 
-                PMHelper.showCoachOrUserView(userIDString)
+                PMHelper.showCoachOrUserView(userID: userIDString)
             }
         }
     }
@@ -724,8 +724,8 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 let userDetail = coachDetail[kUser] as! NSDictionary
                 let videoURL = userDetail[kVideoURL] as? String
                 if (videoURL != nil && videoURL!.isEmpty == false) {
-                    cell?.playVideoButton.hidden = false
-                    cell?.playVideoButton.userInteractionEnabled = false
+                    cell?.playVideoButton.isHidden = false
+                    cell?.playVideoButton.isUserInteractionEnabled = false
                 }
                 
                 // Show video layout < 23/06
@@ -777,7 +777,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         
         let newContentOffset = CGPointMake(offsetX, 0)
         
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.collectionView.contentOffset = newContentOffset
         }) { (_) in
             self.endPagingCarousel(self.collectionView)
@@ -791,7 +791,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         
         let newContentOffset = CGPointMake(offsetX, 0)
         
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.collectionView.contentOffset = newContentOffset
         }) { (_) in
             self.endPagingCarousel(self.collectionView)

@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Override point for customization after application launch.
     //    Mixpanel.initialize(token: "9007be62479ca54acb05b03991f1e56e")
         
-        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
+        UserDefaults.standard.setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
         
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
         let token = "9007be62479ca54acb05b03991f1e56e"
@@ -61,11 +61,11 @@ extension AppDelegate {
     }
     
     func applicationDidEnterBackground(application: UIApplication) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
+        let defaults = UserDefaults.standard
+        if ((defaults.object(forKey: k_PM_CURRENT_ID)) != nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf("/resetNotificationBadge")
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append("/resetNotificationBadge")
             Alamofire.request(.PUT, prefix, parameters: [:])
                 .responseJSON { response in
             }
@@ -74,7 +74,7 @@ extension AppDelegate {
     
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        //     NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_BADGE, object: nil)
+        //     NotificationCenter.default.postNotificationName(k_PM_SHOW_BADGE, object: nil)
     }
     
     func applicationDidBecomeActive(application: UIApplication) {
@@ -82,11 +82,11 @@ extension AppDelegate {
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
         
         // Reset badge in server
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if ((defaults.objectForKey(k_PM_CURRENT_ID)) != nil) {
+        let defaults = UserDefaults.standard
+        if ((defaults.object(forKey: k_PM_CURRENT_ID)) != nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf("/resetNotificationBadge")
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append("/resetNotificationBadge")
             Alamofire.request(.PUT, prefix, parameters: [:])
                 .responseJSON { response in
             }
@@ -106,7 +106,7 @@ extension AppDelegate {
 extension AppDelegate {
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
         if (url.absoluteString != nil && (url.absoluteString?.contains("pummel://")) == true) {
-            let userDefaults = NSUserDefaults.standardUserDefaults()
+            let userDefaults = UserDefaults.standard
             let urlPath = url.path?.lowercaseString
             let urlAbsoluteString = url.absoluteString?.lowercaseString
             
@@ -115,29 +115,29 @@ extension AppDelegate {
             
             if ((urlPath!.contains("search")) == true) {
                 // Open Pummel
-                userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_SEARCH, forKey: k_PM_MOVE_SCREEN)
+                userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_SEARCH, forKey: k_PM_MOVE_SCREEN)
             } else if ((urlPath!.contains("login")) == true) {
                 // Allow me to Login/Register
                 let logined = userDefaults.valueForKey(k_PM_IS_LOGINED)
                 
                 if (logined as? Bool != nil && logined as? Bool == false) {
-                    userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_LOGIN, forKey: k_PM_MOVE_SCREEN)
+                    userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_LOGIN, forKey: k_PM_MOVE_SCREEN)
                 }
             } else if ((urlAbsoluteString!.contains(kProfileKey)) == true) {
                 // Take me directly to my coaches Profile and connect me to him automatically.
-                userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE, forKey: k_PM_MOVE_SCREEN)
+                userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE, forKey: k_PM_MOVE_SCREEN)
                 
-                let userID = url.absoluteString?.componentsSeparatedByString("=")[1]
+                let userID = url.absoluteString?.components(separatedBy: "=")[1]
                 if (userID?.isEmpty == false) {
-                    userDefaults.setObject(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
+                    userdefaults.set(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
                 }
             } else if ((urlAbsoluteString!.contains(kTestimonialKey)) == true) {
                 // Show post testimonial view.
-                userDefaults.setObject(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL, forKey: k_PM_MOVE_SCREEN)
+                userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL, forKey: k_PM_MOVE_SCREEN)
                 
-                let userID = url.absoluteString?.componentsSeparatedByString("=")[1]
+                let userID = url.absoluteString?.components(separatedBy: "=")[1]
                 if (userID?.isEmpty == false) {
-                    userDefaults.setObject(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
+                    userdefaults.set(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
                 }
             }
             
@@ -145,7 +145,7 @@ extension AppDelegate {
             
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+                NotificationCenter.default.postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
             }
             
             return true
@@ -160,8 +160,8 @@ extension AppDelegate {
     // implemented in your application delegate
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         let deviceTokenString = deviceToken.hexString
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(deviceTokenString, forKey: k_PM_PUSH_TOKEN)
+        let defaults = UserDefaults.standard
+        defaults.set(deviceTokenString, forKey: k_PM_PUSH_TOKEN)
         let mixpanel = Mixpanel.sharedInstance()
         mixpanel.people.addPushDeviceToken(deviceToken)
         
@@ -171,8 +171,8 @@ extension AppDelegate {
                      kToken: deviceTokenString]
         
         var linkPostNotif = kPMAPIUSER
-        linkPostNotif.appendContentsOf(currentId)
-        linkPostNotif.appendContentsOf(kPM_PATH_DEVICES)
+        linkPostNotif.append(currentId)
+        linkPostNotif.append(kPM_PATH_DEVICES)
         Alamofire.request(.POST, linkPostNotif, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -190,7 +190,7 @@ extension AppDelegate {
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         let alert = userInfo["aps"]!["alert"] as! String
         
-        NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
+        NotificationCenter.default.postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
         
         if (UIApplication.sharedApplication().applicationState != .Active) {
             // Update badge app
@@ -199,16 +199,16 @@ extension AppDelegate {
             
             // check message
             if (alert.containsString("Hey you have a new message")) {
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
+                NotificationCenter.default.postNotificationName(k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
             }
             if (alert.containsString("you have a new comment in your post:")) {
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_FEED, object: nil)
+                NotificationCenter.default.postNotificationName(k_PM_SHOW_FEED, object: nil)
             }
             if (alert.containsString("You have a new Lead")) {
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_CLIENTS, object: nil)
+                NotificationCenter.default.postNotificationName(k_PM_SHOW_SHOW_CLIENTS, object: nil)
             }
             if (alert.containsString("You have a new booking")){
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_SHOW_SHOW_SESSIONS, object: nil)
+                NotificationCenter.default.postNotificationName(k_PM_SHOW_SHOW_SESSIONS, object: nil)
             }
         } else {
             // Prepare router navigation
@@ -231,10 +231,10 @@ extension AppDelegate {
             // Show push notification
             let notification = MessageView.viewFromNib(layout: .CardView)
             notification.configureTheme(.Success)
-            notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.whiteColor())
+            notification.configureTheme(backgroundColor: UIColor.pmmBrightOrangeColor(), foregroundColor: UIColor.white)
             notification.configureDropShadow()
             notification.configureContent(title: "Pummel", body: alert)
-            notification.button?.hidden = true
+            notification.button?.isHidden = true
             notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
             var notificationConfig = SwiftMessages.defaultConfig
             notificationConfig.duration = .Seconds(seconds: 3);
@@ -243,8 +243,8 @@ extension AppDelegate {
             SwiftMessages.show(config: notificationConfig, view: notification)
             
             let foregroundButton = UIButton(action: { (UIControl) in
-                NSNotificationCenter.defaultCenter().postNotificationName(pushNotification, object: nil)
-                }, forControlEvents: .TouchUpInside)
+                NotificationCenter.default.postNotificationName(pushNotification, object: nil)
+                }, for: .touchUpInside)
             foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
             
             notification.addSubview(foregroundButton)
@@ -255,15 +255,15 @@ extension AppDelegate {
 // MARK: - 3D Touch
 extension AppDelegate {
     func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
-        let type = shortcutItem.type.componentsSeparatedByString(".").last!
+        let type = shortcutItem.type.components(separatedBy: ".").last!
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(type, forKey: k_PM_MOVE_SCREEN)
+        let defaults = UserDefaults.standard
+        defaults.set(type, forKey: k_PM_MOVE_SCREEN)
         defaults.synchronize()
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
         dispatch_after(delayTime, dispatch_get_main_queue()) {
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+            NotificationCenter.default.postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
         }
     }
 }

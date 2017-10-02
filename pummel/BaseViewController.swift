@@ -14,25 +14,25 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.viewDidAppear(_:)), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.viewDidAppear(_:)), name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
         
         // Get messasge notification + session notification
         self.updateSMLCBadge()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.moveScreen()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -120,7 +120,7 @@ class BaseViewController: UIViewController {
                     if (lBadge != nil && lBadge > 0) {
                         totalBadge = totalBadge + lBadge!
                     }
-                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_UPDATE_LEAD_BADGE, object: lBadge)
+                    NotificationCenter.default.postNotificationName(k_PM_UPDATE_LEAD_BADGE, object: lBadge)
                     
                     UIApplication.sharedApplication().applicationIconBadgeNumber = totalBadge
                 }
@@ -131,12 +131,12 @@ class BaseViewController: UIViewController {
     }
     
     func showPostTestimonialViewController() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+        let defaults = UserDefaults.standard
+        defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
         
         // Get user information + add to navigation
-        let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL) as? String
-        defaults.setObject("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
+        let userID = defaults.object(forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL) as? String
+        defaults.set("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
         
         // Capture screen shot
         let screenImage = self.view.renderImage()
@@ -145,20 +145,20 @@ class BaseViewController: UIViewController {
         postTestimonialVC.userID = userID!
         postTestimonialVC.backgroundImage = screenImage
         
-        self.presentViewController(postTestimonialVC, animated: true, completion: nil)
+        self.present(postTestimonialVC, animated: true, completion: nil)
     }
     
     func moveScreen() {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         
-        if (defaults.objectForKey(k_PM_MOVE_SCREEN) != nil) {
-            let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        if (defaults.object(forKey: k_PM_MOVE_SCREEN) != nil) {
+            let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
             
             if moveScreenType == k_PM_MOVE_SCREEN_NO_MOVE {
                 // Do nothing
             } else {
                 if (self.isKindOfClass(LogSessionClientViewController) == false) {
-                    self.navigationController?.popToRootViewControllerAnimated(true)
+                    self.navigationController?.popToRootViewController(animated: true)
                 }
                 
                 if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_1 {
@@ -227,42 +227,42 @@ class BaseViewController: UIViewController {
                 } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_LOGIN {
                     // Check in GetStartedViewController
                 } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_PROFILE {
-                    defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+                    defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
                     
                     // Get user information + add to navigation
-                    let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE) as? String
-                    defaults.setObject("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
+                    let userID = defaults.object(forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE) as? String
+                    defaults.set("", forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
                     
                     if (userID != nil && userID?.isEmpty == false) {
-                        PMHelper.showCoachOrUserView(userID!)
+                        PMHelper.showCoachOrUserView(userID: userID!)
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL {
                     // Get user information + add to navigation
-                    let userID = defaults.objectForKey(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL) as? String
+                    let userID = defaults.object(forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL) as? String
                     
                     if (userID != nil && userID?.isEmpty == false) {
-                        PMHelper.showCoachOrUserView(userID!, showTestimonial: true)
+                        PMHelper.showCoachOrUserView(userID: userID!, showTestimonial: true)
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_MESSAGE_DETAIL {
                     self.tabBarController?.selectedIndex = 3
                 } else if moveScreenType == k_PM_MOVE_SCREEN_CURRENT_PROFILE {
                     if (self.navigationController != nil) {
-                        self.navigationController?.popToRootViewControllerAnimated(true)
+                        self.navigationController?.popToRootViewController(animated: true)
                     } else {
-                        self.dismissViewControllerAnimated(true, completion: nil)
+                        self.dismissViewControllerAnimated(animated: true, completion: nil)
                     }
                     
                     if (self.tabBarController != nil) {
-                        defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+                        defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
                         
                         self.tabBarController?.selectedIndex = 4
                     }
                 } else {
-                    defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+                    defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
                 }
             }
         } else {
-            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
         }
     }
 

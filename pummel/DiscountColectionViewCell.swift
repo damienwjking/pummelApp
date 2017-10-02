@@ -24,26 +24,26 @@ class DiscountColectionViewCell: UICollectionViewCell {
         self.imgCover.clipsToBounds = true
         self.viewGradient.layer.cornerRadius = 5
         
-        self.lbTitle.textColor = UIColor.whiteColor()
+        self.lbTitle.textColor = UIColor.white
         self.lbTitle.font = UIFont.pmmMonReg18()
         
-        self.lbSubTitle.textColor = UIColor.whiteColor()
+        self.lbSubTitle.textColor = UIColor.white
         self.lbSubTitle.font = UIFont.pmmMonReg13()
         
-        self.lbText.textColor = UIColor.whiteColor()
+        self.lbText.textColor = UIColor.white
         self.lbText.font = UIFont.pmmMonLight13()
         
-        self.bntDiscount.layer.borderColor = UIColor.whiteColor().CGColor
+        self.bntDiscount.layer.borderColor = UIColor.white.cgColor
         self.bntDiscount.layer.cornerRadius = 15
         self.bntDiscount.layer.borderWidth = 1
-        self.bntDiscount.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        self.bntDiscount.setTitleColor(UIColor.white, for: .normal)
     }
 
     func setData(discountDetail:NSDictionary) {
         self.lbTitle.text = ""
         self.lbSubTitle.text = ""
         self.lbText.text = ""
-        self.bntDiscount.hidden = true
+        self.bntDiscount.isHidden = true
         
         if let val = discountDetail[kTitle] as? String {
             self.lbTitle.text = val
@@ -58,8 +58,8 @@ class DiscountColectionViewCell: UICollectionViewCell {
         }
         
         if let val = discountDetail[kDiscount] as? String {
-            self.bntDiscount.setTitle(val, forState: .Normal)
-            self.bntDiscount.hidden = false
+            self.bntDiscount.setTitle(val, for: .normal)
+            self.bntDiscount.isHidden = false
         }
         
         

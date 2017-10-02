@@ -23,7 +23,7 @@ class ContactUserCell : UITableViewCell {
         self.textLabel?.frame = CGRectMake(60, 5, self.frame.width - 60, self.frame.height - 15)
         
         self.detailTextLabel?.font = UIFont.pmmMonReg11()
-        self.detailTextLabel?.textColor = UIColor.lightGrayColor()
+        self.detailTextLabel?.textColor = UIColor.lightGray
         self.detailTextLabel?.frame = CGRectMake(60, self.frame.height - 25, self.frame.width - 60, 20)
         
         self.bringSubviewToFront(self.textLabel!)
@@ -46,16 +46,16 @@ class ContactUserViewController: BaseViewController {
 
         // Do any additional setup after loading the view.
         var image = UIImage(named: "blackArrow")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.cancel))
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
         
         self.getAllContact()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.title = kInvite.uppercaseString
+        self.title = kInvite.uppercased()
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,7 +64,7 @@ class ContactUserViewController: BaseViewController {
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: Private function
@@ -94,7 +94,7 @@ class ContactUserViewController: BaseViewController {
             do {
                 let containerResults = try store.unifiedContactsMatchingPredicate(fetchPredicate, keysToFetch: keysToFetch)
                 // Put them into "contacts"
-                contacts.appendContentsOf(containerResults)
+                contacts.append(containerResults)
             } catch {
                 print("Error fetching results for container")
             }
@@ -107,16 +107,16 @@ class ContactUserViewController: BaseViewController {
 // MARK: UITableView
 extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filterContacts.count;
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("kContactUserCell")
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "kContactUserCell")
         
         let contact = self.filterContacts[indexPath.row]
         
@@ -127,13 +127,13 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         }
         
         let contactName = contact.givenName + " " + contact.familyName
-        cell?.textLabel?.text = contactName.uppercaseString
+        cell?.textLabel?.text = contactName.uppercased()
         
         if (self.styleInvite == kSMS) {
             var phoneNumberString = ""
             if contact.phoneNumbers.count != 0 {
                 let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-                phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+                phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
             }
             
             cell?.detailTextLabel?.text = phoneNumberString
@@ -149,7 +149,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.searchBar.resignFirstResponder()
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         if (self.styleInvite == kSMS) {
             if MFMessageComposeViewController.canSendText() {
@@ -158,7 +158,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                 var phoneNumberString = ""
                 if contact.phoneNumbers.count != 0 {
                     let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-                    phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+                    phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
                 }
                 
                 let messageCompose = MFMessageComposeViewController()
@@ -166,7 +166,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                 messageCompose.recipients = [phoneNumberString]
                 
                 messageCompose.messageComposeDelegate = self
-                self.presentViewController(messageCompose, animated: true, completion: nil)
+                self.present(messageCompose, animated: true, completion: nil)
             }
         } else if (self.styleInvite == kEmail) {
             self.view.makeToastActivity()
@@ -180,7 +180,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                     let coachFirstName = currentInfo[kFirstname] as! String
                     
                     let contact = self.filterContacts[indexPath.row]
-                    let userFirstName = contact.givenName.stringByReplacingOccurrencesOfString(" ", withString: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                    let userFirstName = contact.givenName.replacingOccurrences(of: " ", with: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
                     let userMail = contact.emailAddresses[0].value as! String
                     
                     var urlString = "mailto:"
@@ -233,7 +233,7 @@ extension ContactUserViewController: UISearchBarDelegate {
                 var phoneNumberString = ""
                 if contact.phoneNumbers.count != 0 {
                     let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-                    phoneNumberString = phoneNumber.stringValue.stringByReplacingOccurrencesOfString("-", withString: "")
+                    phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
                 }
                 isFilterNumber = phoneNumberString.contains(filterString)
                 isFilterNumber = false // not available filter number now
@@ -267,6 +267,6 @@ extension ContactUserViewController: UISearchBarDelegate {
 // MARK: MFMessageComposeViewControllerDelegate
 extension ContactUserViewController: MFMessageComposeViewControllerDelegate {
     func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+        controller.dismissViewControllerAnimated(animated: true, completion: nil)
     }
 }

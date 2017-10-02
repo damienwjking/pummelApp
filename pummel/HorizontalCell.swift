@@ -21,7 +21,7 @@ class HorizontalCell: UITableViewCell {
         super.awakeFromNib()
         imageV.layer.cornerRadius = 35
         imageV.clipsToBounds = true
-        imageV.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        imageV.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
         
         addButton.clipsToBounds = true
         addButton.layer.cornerRadius = 10;

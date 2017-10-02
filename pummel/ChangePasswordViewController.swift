@@ -19,28 +19,28 @@ class ChangePasswordViewController : BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = kChangePassword
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        self.navigationController!.navigationBar.translucent = false;
+        self.navigationController!.navigationBar.isTranslucent = false;
         
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"DONE", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChangePasswordViewController.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"DONE", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChangePasswordViewController.done))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChangePasswordViewController.cancel))
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChangePasswordViewController.cancel))
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
     }
     
     func done() {
         // Check new password & retype new password are the same
         if self.newPassTF.text?.characters.count < 8 {
-            let alertController = UIAlertController(title: pmmNotice, message: passWordMinCharacter, preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let alertController = UIAlertController(title: pmmNotice, message: passWordMinCharacter, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
             return
@@ -49,11 +49,11 @@ class ChangePasswordViewController : BaseViewController {
         if self.newPassTF.text == self.reTypePassTF.text {
             self.view.makeToastActivity()
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
             
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf(kPMAPI_CHANGEPASS)
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append(kPMAPI_CHANGEPASS)
             
             let param = [kPassword:self.curPassTF.text!,
                          kPasswordNew: self.newPassTF.text!]
@@ -63,41 +63,41 @@ class ChangePasswordViewController : BaseViewController {
                     self.view.hideToastActivity()
                     print(response.response?.statusCode)
                     if response.response?.statusCode == 200 {
-                        self.navigationController?.popViewControllerAnimated(true)
+                        self.navigationController?.popViewController(animated: true)
                     } else if response.response?.statusCode == 401 {
-                        let alertController = UIAlertController(title: pmmNotice, message: curPassWrong, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let alertController = UIAlertController(title: pmmNotice, message: curPassWrong, preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                     } else {
                         self.view.hideToastActivity()
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                     }
             }
         } else {
-            let alertController = UIAlertController(title: pmmNotice, message: passWordNotMatch, preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let alertController = UIAlertController(title: pmmNotice, message: passWordNotMatch, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
 }

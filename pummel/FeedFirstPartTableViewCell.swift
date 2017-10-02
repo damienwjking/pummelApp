@@ -25,18 +25,18 @@ class FeedFirstPartTableViewCell: UITableViewCell {
         // Initialization code
         self.avatarBT.layer.cornerRadius = 15
         self.avatarBT.clipsToBounds = true
-        self.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
         self.nameLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
         self.coachLB.font = .pmmMonReg13()
-        self.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
+        self.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
     }
     
     @IBAction func like(sender: UIButton!) {
         if ((sender.backgroundImageForState(.Normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
-            sender.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
+            sender.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
         } else {
-            sender.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
+            sender.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
         }
     }
 

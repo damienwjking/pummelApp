@@ -22,7 +22,7 @@ class GetStartedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
         self.backgroundV.backgroundColor = .pmmWhite07Color()
         
         self.betterTogetherTF.font = .pmmPlayFairReg42()
@@ -30,43 +30,43 @@ class GetStartedViewController: UIViewController {
         
         self.getStartedBT.layer.cornerRadius = 2
         self.getStartedBT.layer.borderWidth = 0.5
-        self.getStartedBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.getStartedBT.layer.borderColor = UIColor.white.cgColor
         self.getStartedBT.titleLabel?.font = .pmmMonReg13()
         
         self.imNewBT.layer.cornerRadius = 2
         self.imNewBT.layer.borderWidth = 0.5
-        self.imNewBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
-        self.imNewBT.layer.backgroundColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.imNewBT.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
+        self.imNewBT.layer.backgroundColor = UIColor.pmmBrightOrangeColor().cgColor
         self.imNewBT.titleLabel?.font = .pmmMonReg13()
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.objectForKey(k_PM_IS_LOGINED) == nil) {
+        let defaults = UserDefaults.standard
+        if (defaults.object(forKey: k_PM_IS_LOGINED) == nil) {
             // Do Nothing
-        } else if  (defaults.objectForKey(k_PM_IS_LOGINED) as! Bool) {
-            let urlString = defaults.objectForKey(k_PM_URL_LAST_COOKIE)
+        } else if  (defaults.object(forKey: k_PM_IS_LOGINED) as! Bool) {
+            let urlString = defaults.object(forKey: k_PM_URL_LAST_COOKIE)
             let url = NSURL(string: urlString as! String)
-            let headerFields = defaults.objectForKey(k_PM_HEADER_FILEDS) as! [String : String]
+            let headerFields = defaults.object(forKey: k_PM_HEADER_FILEDS) as! [String : String]
             let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: url!)
             Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: url!, mainDocumentURL: nil)
-            performSegueWithIdentifier("showClientWithoutLogin", sender: nil)
+            performSegue(withIdentifier: "showClientWithoutLogin", sender: nil)
         } else {
-            performSegueWithIdentifier("toSignin", sender: nil)
+            performSegue(withIdentifier: "toSignin", sender: nil)
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.signinNotification), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.signinNotification), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
     }
     
     func signinNotification() {
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController?.popToRootViewController(animated: true)
         
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        let moveScreenType = userDefaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        let userDefaults = UserDefaults.standard
+        let moveScreenType = userDefaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_LOGIN {
-            userDefaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            userdefaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             userDefaults.synchronize()
             
             self.gotSignin(UIButton()) // UIButton : to call function
@@ -75,26 +75,26 @@ class GetStartedViewController: UIViewController {
     
     // Button Action
     @IBAction func gotSignin(sender:UIButton!) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        NotificationCenter.default.removeObserver(self, name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if (defaults.objectForKey(k_PM_IS_LOGINED) == nil) {
-            performSegueWithIdentifier("toSignin", sender: nil)
-        } else if  (defaults.objectForKey(k_PM_IS_LOGINED) as! Bool) {
-            let urlString = defaults.objectForKey(k_PM_URL_LAST_COOKIE)
+        let defaults = UserDefaults.standard
+        if (defaults.object(forKey: k_PM_IS_LOGINED) == nil) {
+            performSegue(withIdentifier: "toSignin", sender: nil)
+        } else if  (defaults.object(forKey: k_PM_IS_LOGINED) as! Bool) {
+            let urlString = defaults.object(forKey: k_PM_URL_LAST_COOKIE)
             let url = NSURL(string: urlString as! String)
-            let headerFields = defaults.objectForKey(k_PM_HEADER_FILEDS) as! [String : String]
+            let headerFields = defaults.object(forKey: k_PM_HEADER_FILEDS) as! [String : String]
             let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: url!)
             Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: url!, mainDocumentURL: nil)
-            performSegueWithIdentifier("showClientWithoutLogin", sender: nil)
+            performSegue(withIdentifier: "showClientWithoutLogin", sender: nil)
         } else {
-            performSegueWithIdentifier("toSignin", sender: nil)
+            performSegue(withIdentifier: "toSignin", sender: nil)
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "toSignin") {
-            let destinationVC = segue.destinationViewController as! LoginAndRegisterViewController
+            let destinationVC = segue.destination as! LoginAndRegisterViewController
             destinationVC.isShowLogin = true
         } else if(segue.identifier == "showClientWithoutLogin") {
             // Send token

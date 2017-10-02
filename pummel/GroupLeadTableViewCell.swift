@@ -24,7 +24,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     @IBOutlet weak var titleHeader: UILabel!
     var arrayMessages: [NSDictionary] = []
     var arrayCoachesInfo: [NSDictionary] = []
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var typeGroup:TypeGroup!
     weak var delegateGroupLeadTableViewCell: GroupLeadTableViewCellDelegate?
     var userIdSelected = ""
@@ -38,7 +38,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         self.cv.dataSource = self
         self.cv.delegate = self
         let nibName = UINib(nibName: "LeadCollectionViewCell" , bundle:nil)
-        self.cv.registerNib(nibName, forCellWithReuseIdentifier: "LeadCollectionViewCell")
+        self.cv.register(nibName, forCellWithReuseIdentifier: "LeadCollectionViewCell")
         self.cv.collectionViewLayout = layout
         self.cv.reloadData()
         self.titleHeader.font = .pmmMonReg13()
@@ -50,13 +50,13 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         // Configure the view for the selected state
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.arrayMessages.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadCollectionViewCell", forIndexPath: indexPath) as! LeadCollectionViewCell
-        cell.btnAdd.hidden = true
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadCollectionViewCell", for: indexPath) as! LeadCollectionViewCell
+        cell.btnAdd.isHidden = true
         
         let message = arrayMessages[indexPath.row]
         var targetUserId = ""
@@ -75,14 +75,14 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                 let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
                 if (updateCell != nil) {
                     cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                    cell.btnAdd.hidden = false
+                    cell.btnAdd.isHidden = false
                     if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-                        cell.btnAdd.hidden = true
+                        cell.btnAdd.isHidden = true
                     }
                     
                     if let userInfo = result as? NSDictionary {
-                        let name = userInfo.objectForKey(kFirstname) as! String
-                        cell.nameUser.text = name.uppercaseString
+                        let name = userInfo.object(forKey: kFirstname) as! String
+                        cell.nameUser.text = name.uppercased()
                         self.arrayCoachesInfo[indexPath.row] = userInfo
                         
                         if (userInfo[kImageUrl] is NSNull == false) {
@@ -126,7 +126,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         return CGSize(width: 90,height: 90)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.delegateGroupLeadTableViewCell != nil {
             let userInfo = arrayMessages[indexPath.row]
             
@@ -148,20 +148,20 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             prefix = kPMAPIUSER
         }
         
-        prefix.appendContentsOf(PMHelper.getCurrentID())
+        prefix.append(PMHelper.getCurrentID())
         
         if self.typeGroup == TypeGroup.NewLead {
-            prefix.appendContentsOf(kPMAPICOACH_LEADS)
+            prefix.append(kPMAPICOACH_LEADS)
         } else if self.typeGroup == TypeGroup.Current {
-            prefix.appendContentsOf(kPMAPICOACH_CURRENT)
+            prefix.append(kPMAPICOACH_CURRENT)
         } else if self.typeGroup == TypeGroup.Old {
-            prefix.appendContentsOf(kPMAPICOACH_OLD)
+            prefix.append(kPMAPICOACH_OLD)
         } else if self.typeGroup == TypeGroup.CoachJustConnected {
-            prefix.appendContentsOf(kPMAPICOACH_JUSTCONNECTED)
+            prefix.append(kPMAPICOACH_JUSTCONNECTED)
         } else if self.typeGroup == TypeGroup.CoachCurrent {
-            prefix.appendContentsOf(kPMAPICOACH_COACHCURRENT)
+            prefix.append(kPMAPICOACH_COACHCURRENT)
         } else if self.typeGroup == TypeGroup.CoachOld {
-            prefix.appendContentsOf(kPMAPICOACH_COACHOLD)
+            prefix.append(kPMAPICOACH_COACHOLD)
         }
         
         Alamofire.request(.GET, prefix)

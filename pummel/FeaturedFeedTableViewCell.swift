@@ -34,7 +34,7 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.avatarBT.layer.cornerRadius = 15
         self.avatarBT.clipsToBounds = true
-        self.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().CGColor
+        self.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
         self.coachLB.font = .pmmMonReg13()
         self.nameLB.font = .pmmMonLight13()
         self.timeLB.font = .pmmMonLight13()
@@ -43,36 +43,36 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         self.firstContentCommentTV.font = .pmmMonLight16()
         self.firstContentCommentTV.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonLight16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
         self.viewAllLB.font = .pmmMonLight13()
-        self.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
+        self.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(FeaturedFeedTableViewCell.onDoubleTap(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
-        self.imageContentIMV.userInteractionEnabled = true
+        self.imageContentIMV.isUserInteractionEnabled = true
         self.imageContentIMV.addGestureRecognizer(doubleTapGesture)
-        self.likeImage?.hidden = true
-        self.likeBT.addTarget(self, action:#selector(FeaturedFeedTableViewCell.onDoubleTap(_:)), forControlEvents: .TouchUpInside)
+        self.likeImage?.isHidden = true
+        self.likeBT.addTarget(self, action:#selector(FeaturedFeedTableViewCell.onDoubleTap(_:)), for: .touchUpInside)
     }
     
     func onDoubleTap(sender: UITapGestureRecognizer) {
-//        self.imageContentIMV.userInteractionEnabled = false
-//        self.likeBT.userInteractionEnabled = false
+//        self.imageContentIMV.isUserInteractionEnabled = false
+//        self.likeBT.isUserInteractionEnabled = false
         didDoubleTap = true
-        self.likeImage?.hidden = false
+        self.likeImage?.isHidden = false
         self.likeImage?.alpha = 1.0
-        UIView.animateWithDuration(0.5, delay: 0.4, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.4, options: UIViewAnimationOptions.CurveEaseIn, animations: {
             self.likeImage?.alpha = 0
             }, completion: {
                 (value:Bool) in
                 var likeLink  = kPMAPI_LIKE
-                likeLink.appendContentsOf(self.postId)
-                likeLink.appendContentsOf(kPM_PATH_LIKE)
+                likeLink.append(self.postId)
+                likeLink.append(kPM_PATH_LIKE)
                 Alamofire.request(.POST, likeLink, parameters: [kPostId:self.postId])
                     .responseJSON { response in
                         if response.response?.statusCode != 200 {
                             print("cant like")
                         }
                 }
-                self.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
-//                self.likeBT.userInteractionEnabled = false
+                self.likeBT.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
+//                self.likeBT.isUserInteractionEnabled = false
                 let sLikeArr = self.likeLB.text!.characters.split{$0 == " "}.map(String.init)
                 var sLike = ""
                 if (sLikeArr.count > 0) {
@@ -82,23 +82,23 @@ class FeaturedFeedTableViewCell: UITableViewCell {
                 }
                 let nLike = Int(sLike)! + 1
                 sLike = String(nLike)
-                sLike.appendContentsOf(" Likes")
+                sLike.append(" Likes")
                 self.likeLB.text = sLike
-                self.likeImage?.hidden = true
+                self.likeImage?.isHidden = true
         })
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         self.imageContentIMV.image = nil
-        self.likeBT.setBackgroundImage(nil, forState: .Normal)
+        self.likeBT.setBackgroundImage(nil, for: .normal)
     }
     
     @IBAction func like(sender: UIButton!) {
         if ((sender.backgroundImageForState(.Normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
-            sender.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
+            sender.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
         } else {
-            sender.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
+            sender.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
         }
     }
     

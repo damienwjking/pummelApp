@@ -42,7 +42,7 @@ class DetailSessionViewController: BaseViewController {
     
     var session = SessionModel()
     var sessionTagColorString = "#FFFFFF"
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,22 +50,22 @@ class DetailSessionViewController: BaseViewController {
         self.sessionTagColorString = self.getRandomColorString()
         
         // Back button
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backClicked))
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.backClicked))
         
         // Right button
         
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kEdit.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.editClicked))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kEdit.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.editClicked))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
         
         self.initLayout()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DetailSessionViewController.updateSession(_:)), name: k_PM_UPDATE_SESSION_NOTIFICATION, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(DetailSessionViewController.updateSession(_:)), name: k_PM_UPDATE_SESSION_NOTIFICATION, object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,10 +73,10 @@ class DetailSessionViewController: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.typeLabel.text = self.session.type?.componentsSeparatedByString(" ").joinWithSeparator("")
+        self.typeLabel.text = self.session.type?.components(separatedBy: " ").joined(separator: "")
         
         self.title = kSession
         
@@ -114,84 +114,84 @@ class DetailSessionViewController: BaseViewController {
             self.contentTV.text = ""
         }
         
-        self.centerV.hidden = true
+        self.centerV.isHidden = true
         
         var numberInformation = 0;
         if (self.session.longtime != 0) {
             self.timeLB.text = String(format: "%ld minutes", self.session.longtime)
-            self.timeV.hidden = false
+            self.timeV.isHidden = false
             
             numberInformation = numberInformation + 1
         } else {
             self.timeLB.text = "..."
-            self.timeV.hidden = true
+            self.timeV.isHidden = true
         }
         
         if self.session.intensity?.isEmpty == false {
             self.intensityLB.text = self.session.intensity
-            self.intensityV.hidden = false
+            self.intensityV.isHidden = false
             
             numberInformation = numberInformation + 1
         } else {
             self.intensityLB.text = "..."
-            self.intensityV.hidden = true
+            self.intensityV.isHidden = true
         }
         
         if self.session.distance != nil && self.session.distance != 0 {
-            let distanceUnit = self.defaults.objectForKey(kUnit) as? String
+            let distanceUnit = self.defaults.object(forKey: kUnit) as? String
             if (distanceUnit == metric) {
                 self.distanceLB.text = String(format: "%0.0f kms", self.session.distance!)
-                self.distanceV.hidden = false
+                self.distanceV.isHidden = false
             } else {
                 self.distanceLB.text = String(format: "%0.1f mi", (Double(self.session.distance!) / 1.61))
-                self.distanceV.hidden = false
+                self.distanceV.isHidden = false
             }
             
             numberInformation = numberInformation + 1
         } else {
             self.distanceLB.text = "..."
-            self.distanceV.hidden = true
+            self.distanceV.isHidden = true
         }
         
         if (self.session.calorie != 0) {
             self.caloriesLB.text = String(format: "%ld", self.session.calorie)
-            self.caloriesV.hidden = false
+            self.caloriesV.isHidden = false
             
             numberInformation = numberInformation + 1
         } else {
             self.caloriesLB.text = "..."
-            self.caloriesV.hidden = true
+            self.caloriesV.isHidden = true
         }
         
         if self.session.datetime?.isEmpty == false {
-            let timeFormatter = NSDateFormatter()
+            let timeFormatter = DateFormatter
             timeFormatter.dateFormat = kFullDateFormat
-            let date = timeFormatter.dateFromString(self.session.datetime!)
+            let date = timeFormatter.date(from: self.session.datetime!)
             timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
-            self.dateTF.text = timeFormatter.stringFromDate(date!)
+            self.dateTF.text = timeFormatter.string(from: date!)
         }
         
         if numberInformation == 1 {
-            self.centerV.hidden = false
+            self.centerV.isHidden = false
             
-            if self.timeV.hidden == false {
+            if self.timeV.isHidden == false {
                 self.centerLB.text = self.timeLB.text
                 self.centerIMV.image = UIImage(named: "icon_longtime")
-            } else if self.intensityV.hidden == false {
+            } else if self.intensityV.isHidden == false {
                 self.centerLB.text = self.intensityLB.text
                 self.centerIMV.image = UIImage(named: "icon_insensity")
-            } else if self.distanceV.hidden == false {
+            } else if self.distanceV.isHidden == false {
                 self.centerLB.text = self.distanceLB.text
                 self.centerIMV.image = UIImage(named: "icon_distance")
-            } else if self.caloriesV.hidden == false {
+            } else if self.caloriesV.isHidden == false {
                 self.centerLB.text = self.caloriesLB.text
                 self.centerIMV.image = UIImage(named: "icon_calories")
             }
             
-            self.timeV.hidden = true
-            self.intensityV.hidden = true
-            self.distanceV.hidden = true
-            self.caloriesV.hidden = true
+            self.timeV.isHidden = true
+            self.intensityV.isHidden = true
+            self.distanceV.isHidden = true
+            self.caloriesV.isHidden = true
         }
     }
     
@@ -220,7 +220,7 @@ class DetailSessionViewController: BaseViewController {
         self.coachIMV.layer.cornerRadius = 20
         self.coachIMV.clipsToBounds = true
         
-        self.commentIMV.image = self.commentIMV.image?.imageWithRenderingMode(.AlwaysTemplate)
+        self.commentIMV.image = self.commentIMV.image?.withRenderingMode(.alwaysTemplate)
         self.commentIMV.tintColor = UIColor.init(hexString: sessionTagColorString)
         
         self.contentTV.font = UIFont.pmmMonReg13()
@@ -231,11 +231,11 @@ class DetailSessionViewController: BaseViewController {
         if self.session.imageUrl?.isEmpty == false {
             let imageLink = self.session.imageUrl
             var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink!)
+            prefix.append(imageLink!)
             let postfix = widthEqual.stringByAppendingString(self.sessionIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.sessionIMV.frame.size.width.description)
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+            prefix.append(postfix)
+            if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
+                let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
                 self.sessionIMV.image = imageRes
             } else {
                 Alamofire.request(.GET, prefix)
@@ -286,17 +286,17 @@ class DetailSessionViewController: BaseViewController {
     }
     
     func backClicked() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func editClicked() {
-        self.performSegueWithIdentifier("editLogSession", sender: self.session)
+        self.performSegue(withIdentifier: "editLogSession", sender: self.session)
     }
     
     // MARK: Segue
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "editLogSession" {
-            let destinationVC = segue.destinationViewController as! LogSessionClientViewController
+            let destinationVC = segue.destination as! LogSessionClientViewController
             destinationVC.editSession = sender as! SessionModel
         }
     }

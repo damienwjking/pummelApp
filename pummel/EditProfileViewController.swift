@@ -62,16 +62,16 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = kNavEditProfile
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        self.navigationController!.navigationBar.translucent = false;
+        self.navigationController!.navigationBar.isTranslucent = false;
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kDone, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditProfileViewController.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kDone, style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.done))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EditProfileViewController.cancel))
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:kCancle.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.cancel))
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
 
@@ -133,15 +133,15 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         self.changeAvatarIMW.layer.cornerRadius = 15
         self.changeAvatarIMW.clipsToBounds = true
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(LoginAndRegisterViewController.imageTapped)))
-        self.changeAvatarIMW.userInteractionEnabled = true
+        self.changeAvatarIMW.isUserInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EditProfileViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(EditProfileViewController.didTapView))
         self.tapView.addGestureRecognizer(tap)
-        self.tapView.hidden = true
+        self.tapView.isHidden = true
     }
     
     func didTapView() {
@@ -158,21 +158,21 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         self.emergencyNameTF.resignFirstResponder()
         self.emergencyMobileTF.resignFirstResponder()
         
-        let numberFormat = NSNumberFormatter()
-        numberFormat.numberStyle = .DecimalStyle
+        let numberFormat = NumberFormatter()
+        numberFormat.numberStyle = .decimal
         
         var weightText = self.weightContentTF.text
         if weightText?.isEmpty == false {
-            if isNumber(weightText!) {
-                weightText = numberFormat.stringFromNumber(Int(weightText!)!)
+            if isNumber(testStr: weightText!) {
+                weightText = numberFormat.string(from: NSNumber(value: Int(weightText!)!))
                 self.weightContentTF.text = weightText! + " kgs"
             }
         }
         
         var heightText = self.heightContentTF.text
         if heightText?.isEmpty == false {
-            if isNumber(heightText!) {
-                heightText = numberFormat.stringFromNumber(Int(heightText!)!)
+            if isNumber(testStr: heightText!) {
+                heightText = numberFormat.string(from: NSNumber(value: Int(heightText!)!))
                 self.heightContentTF.text = heightText! + " cms"
             }
         }
@@ -180,11 +180,11 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     
     
-    override func viewDidDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setAvatar()
         self.updateUI()
@@ -194,168 +194,98 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func updateUI() {
         if (self.userInfo == nil) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
+            prefix.append(PMHelper.getCurrentID())
             
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        if (response.result.value == nil) {return}
-                        self.userInfo = response.result.value as! NSDictionary
-                        if !(self.userInfo[kLastName] is NSNull) {
-                            self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
-                        } else {
-                            self.nameContentTF.text = self.userInfo[kFirstname] as? String
-                        }
-                        if !(self.userInfo[kBio] is NSNull) {
-                            self.aboutContentTV.text = self.userInfo[kBio] as! String
-                        } else {
-                            self.aboutContentTV.text = ""
-                        }
-                        
-                        let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
-                        self.aboutContentDT.constant = sizeAboutTV.height + 20
-                        
-                        self.genderContentTF.text = self.userInfo[kGender] as? String
-                        
-                        self.emailContentTF.text = self.userInfo[kEmail] as? String
-                        
-                        if !(self.userInfo[kMobile] is NSNull) {
-                            self.mobileContentTF.text = self.userInfo[kMobile] as? String
-                        } else {
-                            self.mobileContentTF.text = ""
-                        }
-                        
-                        if !(self.userInfo[kDob] is NSNull) {
-                            let stringDob = self.userInfo[kDob] as! String
-                            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
-                        } else {
-                            self.dobContentTF.text = ""
-                        }
-                        
-                        if !(self.userInfo[kWeight] is NSNull) {
-                            let weightNumber = self.userInfo[kWeight] as! NSNumber
-                            var weightString = String(format: "%ld", weightNumber.intValue)
-                            weightString = weightString.stringByAppendingString(" kgs")
-                            self.weightContentTF.text = weightString
-                        } else {
-                            self.weightContentTF.text = ""
-                        }
-                        
-                        if !(self.userInfo[kHeight] is NSNull) {
-                            let heightNumber = self.userInfo[kHeight] as! NSNumber
-                            var heightString = String(format: "%ld", heightNumber.intValue)
-                            heightString = heightString.stringByAppendingString(" cms")
-                            self.heightContentTF.text = heightString
-                        } else {
-                            self.heightContentTF.text = ""
-                        }
-                        
-                        if !(self.userInfo[kFacebookUrl] is NSNull) {
-                            self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
-                        }
-                        
-                        if !(self.userInfo[kInstagramUrl] is NSNull) {
-                            self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
-                        }
-                        
-                        if !(self.userInfo[kTwitterUrl] is NSNull) {
-                            self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
-                        }
-                        
-                        if !(self.userInfo[kEmergencyName] is NSNull) {
-                            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
-                        }
-                        
-                        if !(self.userInfo[kEmergencyMobile] is NSNull) {
-                            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
-                        }
-
-                    }else if response.response?.statusCode == 401 {
-                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                            // TODO: LOGOUT
-                        }
-                        alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
-                            // ...
-                        }
-                        
-                    }
-            }
+            UserRouter.getCurrentUserInfo(completed: { (result, error) in
+                if (error == nil) {
+                    self.userInfo = result as! NSDictionary
+                    
+                    self.fillDataForUserLayout()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
         } else {
-            if !(self.userInfo[kLastName] is NSNull) {
-                self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
-            } else {
-                self.nameContentTF.text = self.userInfo[kFirstname] as? String
-            }
-            
-            if !(self.userInfo[kBio] is NSNull) {
-                self.aboutContentTV.text = self.userInfo[kBio] as! String
-            } else {
-                self.aboutContentTV.text = ""
-            }
-            
-            self.genderContentTF.text = self.userInfo[kGender] as? String
-            
-            self.emailContentTF.text = self.userInfo[kEmail] as? String
-            
-            if !(self.userInfo[kMobile] is NSNull) {
-                self.mobileContentTF.text = self.userInfo[kMobile] as? String
-            } else {
-                self.mobileContentTF.text = ""
-            }
-            
-            if !(self.userInfo[kDob] is NSNull) {
-                let stringDob = self.userInfo[kDob] as! String
-                self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
-            } else {
-                self.dobContentTF.text = ""
-            }
-            
-            if !(self.userInfo[kWeight] is NSNull) {
-                let weightNumber = self.userInfo[kWeight] as! NSNumber
-                var weightString = String(format: "%ld", weightNumber.intValue)
-                weightString = weightString.stringByAppendingString(" kgs")
-                self.weightContentTF.text = weightString
-            } else {
-                self.weightContentTF.text = ""
-            }
-            
-            if !(self.userInfo[kHeight] is NSNull) {
-                let heightNumber = self.userInfo[kHeight] as! NSNumber
-                var heightString = String(format: "%ld", heightNumber.intValue)
-                heightString = heightString.stringByAppendingString(" cms")
-                self.heightContentTF.text = heightString
-            } else {
-                self.heightContentTF.text = ""
-            }
-            
-            if !(self.userInfo[kFacebookUrl] is NSNull) {
-                self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
-            }
-            
-            if !(self.userInfo[kInstagramUrl] is NSNull) {
-                self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
-            }
-            
-            if !(self.userInfo[kTwitterUrl] is NSNull) {
-                self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
-            }
-            
-            if !(self.userInfo[kEmergencyName] is NSNull) {
-                self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
-            }
-            
-            if !(self.userInfo[kEmergencyMobile] is NSNull) {
-                self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
-            }
+            self.fillDataForUserLayout()
         }
     }
     
+    func fillDataForUserLayout() {
+        if (self.userInfo[kLastName] is NSNull == false) {
+            let firstName = self.userInfo[kFirstname] as! String
+            let lastName = self.userInfo[kLastName] as! String
+            
+            self.nameContentTF.text = firstName + " " + lastName
+        } else {
+            self.nameContentTF.text = self.userInfo[kFirstname] as? String
+        }
+        
+        if (self.userInfo[kBio] is NSNull == false) {
+            self.aboutContentTV.text = self.userInfo[kBio] as! String
+        } else {
+            self.aboutContentTV.text = ""
+        }
+        
+        if (self.userInfo[kMobile] is NSNull == false) {
+            self.mobileContentTF.text = self.userInfo[kMobile] as? String
+        } else {
+            self.mobileContentTF.text = ""
+        }
+        
+        if (self.userInfo[kDob] is NSNull == false) {
+            let stringDob = self.userInfo[kDob] as! String
+//            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+            self.dobContentTF.text = stringDob.substring(to: stringDob.index(0, offsetBy: 10))
+        } else {
+            self.dobContentTF.text = ""
+        }
+        
+        if (self.userInfo[kWeight] is NSNull == false) {
+            let weightNumber = self.userInfo[kWeight] as! NSNumber
+            self.weightContentTF.text = String(format: "%ld kgs", weightNumber.intValue)
+        } else {
+            self.weightContentTF.text = ""
+        }
+        
+        if (self.userInfo[kHeight] is NSNull == false) {
+            let heightNumber = self.userInfo[kHeight] as! NSNumber
+            self.heightContentTF.text = String(format: "%ld cms", heightNumber.intValue)
+        } else {
+            self.heightContentTF.text = ""
+        }
+        
+        if (self.userInfo[kFacebookUrl] is NSNull == false) {
+            self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
+        }
+        
+        if (self.userInfo[kInstagramUrl] is NSNull == false) {
+            self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
+        }
+        
+        if (self.userInfo[kTwitterUrl] is NSNull == false) {
+            self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
+        }
+        
+        if (self.userInfo[kEmergencyName] is NSNull == false) {
+            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
+        }
+        
+        if (self.userInfo[kEmergencyMobile] is NSNull == false) {
+            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
+        }
+        
+        let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
+        self.aboutContentDT.constant = sizeAboutTV.height + 20
+        
+        self.genderContentTF.text = self.userInfo[kGender] as? String
+        
+        self.emailContentTF.text = self.userInfo[kEmail] as? String
+    }
+    
     func keyboardWillShow(notification: NSNotification) {
-        self.tapView.hidden = false
+        self.tapView.isHidden = false
         if (self.isFirstTVS) {return}
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let keyboardSize = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) {
             if (self.scrollView.contentOffset.y >= 0) {
                 self.scrollView.contentOffset.y += keyboardSize.height
             }
@@ -365,9 +295,9 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        self.tapView.hidden = true
+        self.tapView.isHidden = true
         self.isFirstTVS = false
-        if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let _ = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) {
             self.view.frame.origin.y = 64
             
             self.scrollViewBottomDT.constant = 21;
@@ -377,7 +307,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func done() {
         if (self.checkRuleInputData() == false) {
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
+            prefix.append(PMHelper.getCurrentID())
             
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
@@ -387,8 +317,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             var lastname = ""
             if fullNameArr.count >= 2 {
                 for i in 1 ..< fullNameArr.count {
-                    lastname.appendContentsOf(fullNameArr[i])
-                    lastname.appendContentsOf(" ")
+                    lastname.append(fullNameArr[i])
+                    lastname.append(" ")
                 }
             } 
 
@@ -399,8 +329,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             
             self.view.makeToastActivity(message: "Saving")
             
-            let weightString = weightContentTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
-            let heightString = heightContentTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
+            let weightString = weightContentTF.text?.replacingOccurrences(of: " kgs", with: "")
+            let heightString = heightContentTF.text?.replacingOccurrences(of: " cms", with: "")
             
             let param = (dobContentTF.text! == "") ?
                     [kUserId:PMHelper.getCurrentID(),
@@ -408,7 +338,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                      kLastName: lastname,
                      kMobile: mobileContentTF.text!,
                      kDob: dobContentTF.text!,
-                     kGender:(genderContentTF.text?.uppercaseString)!,
+                     kGender:(genderContentTF.text?.uppercased())!,
                      kBio: aboutContentTV.text,
                      kWeight: weightString,
                      kHeight: heightString,
@@ -422,7 +352,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                      kFirstname:firstname,
                      kLastName: lastname,
                      kMobile: mobileContentTF.text!,
-                     kGender:(genderContentTF.text?.uppercaseString)!,
+                     kGender:(genderContentTF.text?.uppercased())!,
                      kBio: aboutContentTV.text,
                      kWeight: weightString,
                      kHeight: heightString,
@@ -438,51 +368,51 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         //TODO: Save access token here
-                        self.navigationController?.popViewControllerAnimated(true)
+                        self.navigationController?.popViewController(animated: true)
                     } else {
                         self.view.hideToastActivity()
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                     }
             }
 
         } else {
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func showPopupToSelectProfileAvatar() {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = true
             self.imagePicker.sourceType = .PhotoLibrary
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
             self.showCameraRoll()
         }
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     func showCameraRoll() {
@@ -490,14 +420,14 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         fusuma.delegate = self
         fusuma.defaultMode = .Camera
         fusuma.modeOrder = .CameraFirst
-        self.presentViewController(fusuma, animated: true, completion: nil)
+        self.present(fusuma, animated: true, completion: nil)
     }
     
     // Fusuma delegate
     func fusumaImageSelected(image: UIImage) {
         
         let pickedImage = image
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityView.center = self.view.center
         activityView.startAnimating()
         avatarIMW.addSubview(activityView)
@@ -508,25 +438,25 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
         
             if (imageData == nil) {
-                dispatch_async(dispatch_get_main_queue(),{
+                DispatchQueue.main.async(execute: {
                     activityView.stopAnimating()
                     activityView.removeFromSuperview()
                     //Your main thread code goes in here
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .Alert)
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .alert)
                     
                     
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                 })
             }  else {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHelper.getCurrentID())
-                prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
+                prefix.append(PMHelper.getCurrentID())
+                prefix.append(kPM_PATH_PHOTO_PROFILE)
                 
                 let parameters = [kUserId:PMHelper.getCurrentID(),
                                   kProfilePic: "1"]
@@ -573,7 +503,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         
         print("Camera roll unauthorized")
         
-        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
             
@@ -587,7 +517,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             
         }))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
     func imageTapped()
@@ -596,9 +526,9 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     }
     
     func setAvatar() {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         
-        if (defaults.boolForKey(k_PM_IS_COACH) == false) {
+        if (defaults.bool(forKey: k_PM_IS_COACH) == false) {
             ImageRouter.getCurrentUserAvatar(sizeString: widthHeight250, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
@@ -622,7 +552,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
             activityView.center = self.view.center
             activityView.startAnimating()
             avatarIMW.addSubview(activityView)
@@ -642,26 +572,26 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             }
             
             if (imageData == nil) {
-                dispatch_async(dispatch_get_main_queue(),{
+                DispatchQueue.main.async(execute: {
                     activityView.stopAnimating()
                     activityView.removeFromSuperview()
                     //Your main thread code goes in here
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .Alert)
+                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .alert)
                     
                     
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                 })
 
             } else {
                 var prefix = kPMAPIUSER
-                prefix.appendContentsOf(PMHelper.getCurrentID())
-                prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
+                prefix.append(PMHelper.getCurrentID())
+                prefix.append(kPM_PATH_PHOTO_PROFILE)
                 
                 let parameters = [kUserId:PMHelper.getCurrentID(),
                                   kProfilePic: "1"]
@@ -730,28 +660,28 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                                                                  attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
         } else {
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
-                                                               attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+                                                               attributes:[NSForegroundColorAttributeName: UIColor.black])
         }
                
         // check number weight height
-        let weightString = self.weightContentTF.text!.stringByReplacingOccurrencesOfString(" kgs", withString: "")
-        if !(self.isNumber(weightString)) {
+        let weightString = self.weightContentTF.text!.replacingOccurrences(of: " kgs", with: "")
+        if !(self.isNumber(testStr: weightString)) {
             returnValue = true
             weightContentTF.attributedText = NSAttributedString(string:weightContentTF.text!,
                                                                 attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
         } else {
             weightContentTF.attributedText = NSAttributedString(string:weightContentTF.text!,
-                                                             attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+                                                             attributes:[NSForegroundColorAttributeName: UIColor.black])
         }
         
-        let heightString = self.heightContentTF.text!.stringByReplacingOccurrencesOfString(" cms", withString: "")
-        if !(self.isNumber(heightString)) {
+        let heightString = self.heightContentTF.text!.replacingOccurrences(of: " cms", with: "")
+        if !(self.isNumber(testStr: heightString)) {
             returnValue = true
             heightContentTF.attributedText = NSAttributedString(string:heightContentTF.text!,
                                                                 attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
         } else {
             heightContentTF.attributedText = NSAttributedString(string:heightContentTF.text!,
-                                                                attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+                                                                attributes:[NSForegroundColorAttributeName: UIColor.black])
         }
         
         if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
@@ -773,24 +703,24 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     }
     
     func showMsgLinkInValid() {
-        let alertController = UIAlertController(title: pmmNotice, message: linkInvalid, preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+        let alertController = UIAlertController(title: pmmNotice, message: linkInvalid, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
         }
         alertController.addAction(OKAction)
-        self.presentViewController(alertController, animated: true) {
+        self.present(alertController, animated: true) {
         }
     }
     
     func isValidEmail(testStr:String) -> Bool {
         let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
-        return emailTest.evaluateWithObject(testStr)
+        return emailTest.evaluate(with: testStr)
     }
     
     func isNumber(testStr:String) -> Bool {
         do {
-            let numberRegex = try NSRegularExpression(pattern: "[0-9]", options:.CaseInsensitive)
+            let numberRegex = try NSRegularExpression(pattern: "[0-9]", options:.caseInsensitive)
             let weightString = testStr as NSString
-            let results = numberRegex.matchesInString(testStr, options: [], range: NSMakeRange(0, weightString.length))
+            let results = numberRegex.matches(in: testStr, options: [], range: NSMakeRange(0, weightString.length))
             
             if results.count == weightString.length {
                 return true
@@ -806,12 +736,12 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         if (testStr == "") {
             return true
         } else {
-            let dateFormatter = NSDateFormatter()
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "YYYY-mm-dd"
-            let dateDOB = dateFormatter.dateFromString(testStr)
+            let dateDOB = dateFormatter.date(from: testStr)
             
             let date = NSDate()
-            let calendar = NSCalendar.currentCalendar()
+            let calendar = NSCalendar.current
             let components = calendar.components([.Day , .Month , .Year], fromDate: date)
             let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
             let year =  components.year
@@ -840,12 +770,12 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             isFirstTVS = true
             return true
         } else if (textField.isEqual(self.weightContentTF)){
-            let weightString = weightContentTF.text?.stringByReplacingOccurrencesOfString(" kgs", withString: "")
+            let weightString = weightContentTF.text?.replacingOccurrences(of: " kgs", with: "")
             self.weightContentTF.text = weightString
             
             return true
         } else if (textField.isEqual(self.heightContentTF)){
-            let heightString = heightContentTF.text?.stringByReplacingOccurrencesOfString(" cms", withString: "")
+            let heightString = heightContentTF.text?.replacingOccurrences(of: " cms", with: "")
             self.heightContentTF.text = heightString
             
             return true
@@ -856,21 +786,21 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     @IBAction func textFieldEditingWithSender(sender: UITextField) {
         let datePickerView:UIDatePicker = UIDatePicker()
-        datePickerView.backgroundColor = UIColor.blackColor()
-        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
-        datePickerView.datePickerMode = UIDatePickerMode.Date
+        datePickerView.backgroundColor = UIColor.black
+        datePickerView.setValue(UIColor.white, forKey: "textColor")
+        datePickerView.datePickerMode = UIDatePickerMode.date
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(EditProfileViewController.datePickerValueChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerView.addTarget(self, action:#selector(self.datePickerValueChanged(sender:)), for: .valueChanged)
     }
     
     func datePickerValueChanged(sender:UIDatePicker) {
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "YYYY-MM-dd"
-        self.dobContentTF.text = dateFormatter.stringFromDate(sender.date)
-        let dateDOB = dateFormatter.dateFromString(self.dobContentTF.text!)
+        self.dobContentTF.text = dateFormatter.string(from: sender.date)
+        let dateDOB = dateFormatter.date(from: self.dobContentTF.text!)
         
         let date = NSDate()
-        let calendar = NSCalendar.currentCalendar()
+        let calendar = NSCalendar.current
         let components = calendar.components([.Day , .Month , .Year], fromDate: date)
         let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
         let year =  components.year
@@ -878,22 +808,22 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         
         if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
-                                                           attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+                                                           attributes:[NSForegroundColorAttributeName: UIColor.black])
         } else {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
                                                            attributes:[NSForegroundColorAttributeName:  UIColor.pmmRougeColor()])
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         if textField.isEqual(self.emailContentTF) == true {
-            if (self.isValidEmail(self.emailContentTF.text!) == false) {
+            if (self.isValidEmail(testStr: self.emailContentTF.text!) == false) {
                 self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
                                                                  attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
             } else {
                 self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                 attributes:[NSForegroundColorAttributeName: UIColor.blackColor()])
+                                                                 attributes:[NSForegroundColorAttributeName: UIColor.black])
             }
         }
         return true
@@ -906,11 +836,11 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         let selectFemale = { (action:UIAlertAction!) -> Void in
             self.genderContentTF.text = kFemale
         }
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kMALEU, style: UIAlertActionStyle.Default, handler: selectMale))
-        alertController.addAction(UIAlertAction(title: kFemaleU, style: UIAlertActionStyle.Default, handler: selectFemale))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kMALEU, style: .default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: kFemaleU, style: .default, handler: selectFemale))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
 }
 

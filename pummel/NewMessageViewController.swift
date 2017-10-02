@@ -26,30 +26,30 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController!.navigationBar.translucent = false;
+        self.navigationController!.navigationBar.isTranslucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationItem.title = kNavNewMessage
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NewMessageViewController.cancel))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(NewMessageViewController.cancel))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.toLB.font = .pmmMonReg13()
         self.toUserTF.attributedPlaceholder = NSAttributedString(string:"|",
             attributes:([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()]))
         self.listUserTB.delegate = self
         self.listUserTB.dataSource = self
-        self.listUserTB.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        self.listUserTB.separatorStyle = UITableViewCellSeparatorStyle.None
+        self.listUserTB.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        self.listUserTB.separatorStyle = UITableViewCellSeparatorStyle.none
         self.listUserSearchResultTB.delegate = self
         self.listUserSearchResultTB.dataSource = self
         self.listUserSearchResultTB.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        self.listUserSearchResultTB.separatorStyle = UITableViewCellSeparatorStyle.None
+        self.listUserSearchResultTB.separatorStyle = UITableViewCellSeparatorStyle.none
         self.toUserTF.delegate = self
         self.getListUser()
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {   //delegate method
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {   //delegate method
         textField.resignFirstResponder()
         return true
     }
@@ -58,23 +58,23 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         textField.text = ""
         self.arrayListUserResult.removeAll()
         self.listUserSearchResultTB.reloadData()
-        self.listUserTB.hidden = true
-        self.listUserSearchResultTB.hidden = false
+        self.listUserTB.isHidden = true
+        self.listUserSearchResultTB.isHidden = false
         return true
     }
     
     @available(iOS 10.0, *)
     func textFieldDidEndEditing(textField: UITextField, reason: UITextFieldDidEndEditingReason) {
         if (textField.text == "") {
-            self.listUserTB.hidden = false
+            self.listUserTB.isHidden = false
             self.arrayListUserResult.removeAll()
             self.listUserSearchResultTB.reloadData()
-            self.listUserSearchResultTB.hidden = true
+            self.listUserSearchResultTB.isHidden = true
         } else {
             self.arrayListUserResult.removeAll()
             self.getListUserSearch()
-            self.listUserTB.hidden = true
-            self.listUserSearchResultTB.hidden = false
+            self.listUserTB.isHidden = true
+            self.listUserSearchResultTB.isHidden = false
             
             
         }
@@ -85,7 +85,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func getListUserSearch() {
@@ -93,10 +93,10 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             self.isLoading = true
             var prefix = kPMAPISEARCHUSER
             let offset = self.arrayListUserResult.count
-            prefix.appendContentsOf(String(offset))
-            prefix.appendContentsOf("&character=")
-//            prefix.appendContentsOf(self.toUserTF.text!)
-            prefix.appendContentsOf(self.toUserTF.text!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+            prefix.append(String(offset))
+            prefix.append("&character=")
+//            prefix.append(self.toUserTF.text!)
+            prefix.append(self.toUserTF.text!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
             
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
@@ -122,7 +122,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             self.isLoadingSearch = true
             var prefix = kPMAPIUSER_OFFSET
             let offset = self.arrayListUser.count
-            prefix.appendContentsOf(String(offset))
+            prefix.append(String(offset))
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -142,31 +142,31 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
         return 70 // Ceiling this value fixes disappearing separators
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == listUserTB) {
-            let cell = tableView.dequeueReusableCellWithIdentifier(kUserTableViewCell, forIndexPath: indexPath) as! UserTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: kUserTableViewCell, for: indexPath) as! UserTableViewCell
             cell.tag = indexPath.row
             let user = arrayListUser[indexPath.row]
-            var name = user.objectForKey(kFirstname) as! String
-            name.appendContentsOf(" ")
-            if !(user.objectForKey(kLastName) is NSNull) {
-                name.appendContentsOf(user.objectForKey(kLastName) as! String)
+            var name = user.object(forKey: kFirstname) as! String
+            name.append(" ")
+            if !(user.object(forKey: kLastName) is NSNull) {
+                name.append(user.object(forKey: kLastName) as! String)
             }
-            cell.nameLB.text = name.uppercaseString
+            cell.nameLB.text = name.uppercased()
             
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
             
-            let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
+            let idSender = String(format:"%0.f",user.object(forKey: kId)!.doubleValue)
             ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let imageRes = result as! UIImage
-                        dispatch_async(dispatch_get_main_queue(),{
+                        DispatchQueue.main.async(execute: {
                             cell.avatarIMV.image = imageRes
                         })
                     }
@@ -177,25 +177,25 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             
             return cell
         } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier(kUserTableViewCell, forIndexPath: indexPath) as! UserTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: kUserTableViewCell, for: indexPath) as! UserTableViewCell
             cell.tag = indexPath.row
             let user = arrayListUserResult[indexPath.row]
-            var name = user.objectForKey(kFirstname) as! String
-            name.appendContentsOf(" ")
-            if !(user.objectForKey(kLastName) is NSNull) {
-                name.appendContentsOf(user.objectForKey(kLastName) as! String)
+            var name = user.object(forKey: kFirstname) as! String
+            name.append(" ")
+            if !(user.object(forKey: kLastName) is NSNull) {
+                name.append(user.object(forKey: kLastName) as! String)
             }
-            cell.nameLB.text = name.uppercaseString
+            cell.nameLB.text = name.uppercased()
             
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
             
-            let idSender = String(format:"%0.f",user.objectForKey(kId)!.doubleValue)
+            let idSender = String(format:"%0.f",(user.object(forKey: kId)! as AnyObject).doubleValue)
             ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let imageRes = result as! UIImage
-                        dispatch_async(dispatch_get_main_queue(),{
+                        DispatchQueue.main.async(execute: {
                             cell.avatarIMV.image = imageRes
                         })
                     }
@@ -218,22 +218,22 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (tableView == listUserTB) ? arrayListUser.count : arrayListUserResult.count
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        performSegueWithIdentifier("chatMessage", sender: indexPath.row)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
+        performSegue(withIdentifier: "chatMessage", sender: indexPath.row)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "chatMessage") {
-            let destinationVC = segue.destinationViewController as! ChatMessageViewController
+            let destinationVC = segue.destination as! ChatMessageViewController
             let indexPathRow = sender as! Int
-            let user = (listUserTB.hidden == false) ? arrayListUser[indexPathRow] : arrayListUserResult[indexPathRow]
-            destinationVC.nameChatUser = (user.objectForKey(kFirstname) as! String).uppercaseString
-            destinationVC.userIdTarget = String(format:"%0.f", user[kId]!.doubleValue)
+            let user = (listUserTB.isHidden == false) ? arrayListUser[indexPathRow] : arrayListUserResult[indexPathRow]
+            destinationVC.nameChatUser = (user.object(forKey: kFirstname) as! String).uppercased()
+            destinationVC.userIdTarget = String(format:"%0.f", (user[kId]! as AnyObject).doubleValue)
         }
     }
 }

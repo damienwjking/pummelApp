@@ -29,22 +29,22 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.lbTitle.font = UIFont.pmmMonReg20()
-        self.lbTitle.textColor = UIColor.whiteColor()
+        self.lbTitle.textColor = UIColor.white
         
         self.lbSubTitle.font = UIFont.pmmMonReg16()
-        self.lbSubTitle.textColor = UIColor.whiteColor()
+        self.lbSubTitle.textColor = UIColor.white
         
-        self.lbText.textColor = UIColor.whiteColor()
+        self.lbText.textColor = UIColor.white
         self.lbText.font = UIFont.pmmMonLight16()
         
         self.lbDescription.font = UIFont.pmmMonLight16()
         self.lbFullText.font = UIFont.pmmMonLight16()
         self.tvLink.font = .pmmMonLight16()
         
-        self.btnDiscount.layer.borderColor = UIColor.whiteColor().CGColor
+        self.btnDiscount.layer.borderColor = UIColor.white.cgColor
         self.btnDiscount.layer.cornerRadius = 15
         self.btnDiscount.layer.borderWidth = 1
-        self.btnDiscount.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        self.btnDiscount.setTitleColor(UIColor.white, for: .normal)
         
         self.lbTitle.text = ""
         self.lbSubTitle.text = ""
@@ -59,14 +59,14 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         return UIStatusBarStyle.LightContent
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
         
         self.updateData()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
@@ -79,10 +79,10 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         if !(discountDetail[kImageUrl] is NSNull) {
             let imageLink = discountDetail[kImageUrl] as! String
             var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+            prefix.append(imageLink)
+            prefix.append(postfix)
+            if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
+                let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
                 self.imgCover.image = imageRes
             } else {
                 Alamofire.request(.GET, prefix)
@@ -109,8 +109,8 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         }
         
         if let val = discountDetail[kDiscount] as? String {
-            self.btnDiscount.setTitle(val, forState: .Normal)
-            self.btnDiscount.hidden = false
+            self.btnDiscount.setTitle(val, for: .normal)
+            self.btnDiscount.isHidden = false
         }
         
         if let val = discountDetail[kSubText] as? String {
@@ -152,7 +152,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         }.fetchdata()
     }
     
-    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         self.openWebview()
         return false
     }
@@ -161,7 +161,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         if let val = discountDetail[kWebsite] as? String {
             let urlWeb = NSURL(string: val)
             if urlWeb != nil {
-                self.performSegueWithIdentifier(kClickURLLink, sender: urlWeb)
+                self.performSegue(withIdentifier: kClickURLLink, sender: urlWeb)
             }
         }
     }
@@ -174,9 +174,9 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.openWebview()
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == kClickURLLink) {
-            let destination = segue.destinationViewController as! FeedWebViewController
+            let destination = segue.destination as! FeedWebViewController
             destination.URL = sender as? NSURL
         }
     }
@@ -187,6 +187,6 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func backButtonClicked() {
-        _ = self.navigationController?.popViewControllerAnimated(true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
 }

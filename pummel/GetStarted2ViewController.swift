@@ -20,21 +20,21 @@ class GetStarted2ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
         self.backgroundV.backgroundColor = .pmmWhite07Color()
         self.yourPersonalTF.font = .pmmPlayFairReg42()
         self.matchedToYouTF.font = .pmmPlayFairReg15()
         
         self.imInBT.layer.cornerRadius = 2
         self.imInBT.layer.borderWidth = 0.5
-        self.imInBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.imInBT.layer.borderColor = UIColor.white.cgColor
         self.imInBT.titleLabel?.font = .pmmMonReg13()
         self.updateUI()
     }
 
     
     @IBAction func backToFirstScreenTour(sender:UIButton!) {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -43,10 +43,7 @@ class GetStarted2ViewController: UIViewController {
     }
     
     func updateUI() {
-        let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
-        let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
-        let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
             self.mainTextDistantCT.constant = 40
         }
     }

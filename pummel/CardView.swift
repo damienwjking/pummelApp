@@ -38,9 +38,9 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
 
     func setup() {
         // Shadow
-        layer.shadowColor = UIColor.blackColor().CGColor
+        layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.25
-        layer.shadowOffset = CGSizeMake(0, 1.5)
+        layer.shadowOffset = CGSize(x:0, 1.5)
         layer.shadowRadius = 4.0
         layer.shouldRasterize = true
         layer.rasterizationScale = SCREEN_SCALE
@@ -51,30 +51,30 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         self.collectionView.dataSource = self;
         
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
-        self.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
-        self.collectionView.backgroundColor = UIColor.clearColor()
+        self.collectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
+        self.collectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
     }
     
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return tags.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-        self.configureCell(cell, forIndexPath: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
+        self.configureCell(cell, for: indexPath)
         
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        self.configureCell(self.sizingCell!, for: indexPath)
+        return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         collectionView.reloadData()
         
@@ -86,7 +86,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
-        cell.tagName.textColor = UIColor.blackColor()
-        cell.layer.borderColor = UIColor.clearColor().CGColor
+        cell.tagName.textColor = UIColor.black
+        cell.layer.borderColor = UIColor.clear.cgColor
     }
 }

@@ -14,7 +14,7 @@ import Foundation
 
 class PMHelper {
     class func getCurrentID() -> String {
-        let currentId = NSUserDefaults.standardUserDefaults().objectForKey(k_PM_CURRENT_ID) as? String
+        let currentId = UserDefaults.standard.object(forKey: k_PM_CURRENT_ID) as? String
         
         if (currentId != nil) {
             return currentId!
@@ -41,30 +41,30 @@ class PMHelper {
                 topController = presentedViewController
             }
             
-            let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 let loginManager: FBSDKLoginManager = FBSDKLoginManager()
                 loginManager.logOut()
                 
                 // LOGOUT
-                NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
+                UserDefaults.standard.setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
                 Alamofire.request(.DELETE, kPMAPI_LOGOUT).response { (req, res, data, error) -> Void in
                     print(res)
                     
-                    let defaults = NSUserDefaults.standardUserDefaults()
+                    let defaults = UserDefaults.standard
                     
                     let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
                     if ((outputString?.containsString(kLogoutSuccess)) != nil) {
-                        defaults.setObject(false, forKey: k_PM_IS_LOGINED)
-                        defaults.setObject(false, forKey: k_PM_IS_COACH)
+                        defaults.set(false, forKey: k_PM_IS_LOGINED)
+                        defaults.set(false, forKey: k_PM_IS_COACH)
                         let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
                         for cookie in storage.cookies! {
                             Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
                             storage.deleteCookie(cookie)
                         }
-                        NSUserDefaults.standardUserDefaults().synchronize()
+                        UserDefaults.standard.synchronize()
                         
-                        topController.dismissViewControllerAnimated(true, completion: nil)
+                        topController.dismissViewControllerAnimated(animated: true, completion: nil)
                     }
                 }
                 
@@ -76,7 +76,7 @@ class PMHelper {
             
             alertController.addAction(OKAction)
             
-            topController.presentViewController(alertController, animated: true, completion: nil)
+            topController.present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -86,15 +86,15 @@ class PMHelper {
                 topController = presentedViewController
             }
             
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
             
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             
             alertController.addAction(OKAction)
             
-            topController.presentViewController(alertController, animated: true, completion: nil)
+            topController.present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -104,15 +104,15 @@ class PMHelper {
                 topController = presentedViewController
             }
             
-            let alertController = UIAlertController(title: kApply, message: message, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: kApply, message: message, preferredStyle: .alert)
             
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             
             alertController.addAction(OKAction)
             
-            topController.presentViewController(alertController, animated: true, completion: nil)
+            topController.present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -125,9 +125,9 @@ class PMHelper {
             let currentUser = PMHelper.getCurrentID()
             
             if (userID == currentUser) {
-                NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_CURRENT_PROFILE, forKey: k_PM_MOVE_SCREEN)
+                UserDefaults.standard.setObject(k_PM_MOVE_SCREEN_CURRENT_PROFILE, forKey: k_PM_MOVE_SCREEN)
                 
-                NSNotificationCenter.defaultCenter().postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+                NotificationCenter.default.postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
             } else {
                 topController.view.makeToastActivity()
                 
@@ -138,7 +138,7 @@ class PMHelper {
                         if let firstName = userInfo[kFirstname] as? String {
                             // Tracker mixpanel
                             let mixpanel = Mixpanel.sharedInstance()
-                            let properties = ["Name": "Profile Is Clicked", "Label":"\(firstName.uppercaseString)"]
+                            let properties = ["Name": "Profile Is Clicked", "Label":"\(firstName.uppercased())"]
                             mixpanel.track("IOS.ClickOnProfile", properties: properties)
                         }
                         
@@ -158,11 +158,11 @@ class PMHelper {
                                 coachProfileVC.isFromChat = isFromChat
                                 
                                 if (showTestimonial == true) {
-                                    topController.presentViewController(coachProfileVC, animated: true, completion: {
+                                    topController.present(coachProfileVC, animated: true, completion: {
                                         coachProfileVC.showPostTestimonialViewController()
                                     })
                                 } else {
-                                    topController.presentViewController(coachProfileVC, animated: true, completion: nil)
+                                    topController.present(coachProfileVC, animated: true, completion: nil)
                                 }
                             } else {
                                 let userProfileVC = UIStoryboard(name: "UserProfile", bundle: nil).instantiateInitialViewController() as! UserProfileViewController
@@ -171,11 +171,11 @@ class PMHelper {
                                 userProfileVC.userId = userID
                                 
                                 if (showTestimonial == true) {
-                                    topController.presentViewController(userProfileVC, animated: true, completion: {
+                                    topController.present(userProfileVC, animated: true, completion: {
                                         userProfileVC.showPostTestimonialViewController()
                                     })
                                 } else {
-                                    topController.presentViewController(userProfileVC, animated: true, completion: nil)
+                                    topController.present(userProfileVC, animated: true, completion: nil)
                                 }
                             }
                             }.fetchdata()

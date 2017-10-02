@@ -47,7 +47,7 @@ let HRToastMaxMessageLines            = 0
 // shadow appearance
 let HRToastShadowOpacity  : CGFloat   = 0.8
 let HRToastShadowRadius   : CGFloat   = 6.0
-let HRToastShadowOffset   : CGSize    = CGSizeMake(CGFloat(4.0), CGFloat(4.0))
+let HRToastShadowOffset   : CGSize    = CGSize(x:CGFloat(4.0), CGFloat(4.0))
 
 let HRToastOpacity        : CGFloat   = 0.9
 let HRToastCornerRadius   : CGFloat   = 10.0
@@ -75,20 +75,20 @@ extension UIView {
     /*
     *  public methods
     */
-    class func hr_setToastThemeColor(color color: UIColor) {
+    class func hr_setToastThemeColor(color: UIColor) {
         objc_setAssociatedObject(self, &HRToastThemeColor, color, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     class func hr_toastThemeColor() -> UIColor {
         var color = objc_getAssociatedObject(self, &HRToastThemeColor) as! UIColor?
         if color == nil {
-            color = UIColor.blackColor()
+            color = UIColor.black
             UIView.hr_setToastThemeColor(color: color!)
         }
         return color!
     }
     
-    class func hr_setToastTitleFontName(fontName fontName: String) {
+    class func hr_setToastTitleFontName(fontName: String) {
         objc_setAssociatedObject(self, &HRToastTitleFontName, fontName, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
@@ -103,7 +103,7 @@ extension UIView {
         return name!
     }
     
-    class func hr_setToastFontName(fontName fontName: String) {
+    class func hr_setToastFontName(fontName: String) {
         objc_setAssociatedObject(self, &HRToastFontName, fontName, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
@@ -118,14 +118,14 @@ extension UIView {
         return name!
     }
     
-    class func hr_setToastFontColor(color color: UIColor) {
+    class func hr_setToastFontColor(color: UIColor) {
         objc_setAssociatedObject(self, &HRToastFontColor, color, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     class func hr_toastFontColor() -> UIColor {
         var color = objc_getAssociatedObject(self, &HRToastFontColor) as! UIColor?
         if color == nil {
-            color = UIColor.whiteColor()
+            color = UIColor.white
             UIView.hr_setToastFontColor(color: color!)
         }
         
@@ -156,11 +156,11 @@ extension UIView {
         self.showToast(toast: toast!, duration: duration, position: position)
     }
     
-    func showToast(toast toast: UIView) {
+    func showToast(toast: UIView) {
         self.showToast(toast: toast, duration: HRToastDefaultDuration, position: HRToastPositionDefault)
     }
     
-    private func showToast(toast toast: UIView, duration: Double, position: AnyObject) {
+    private func showToast(toast: UIView, duration: Double, position: AnyObject) {
         let existToast = objc_getAssociatedObject(self, &HRToastView) as! UIView?
         if existToast != nil {
             if let timer: NSTimer = objc_getAssociatedObject(existToast, &HRToastTimer) as? NSTimer {
@@ -175,14 +175,14 @@ extension UIView {
         if HRToastHidesOnTap {
             let tapRecognizer = UITapGestureRecognizer(target: toast, action: #selector(UIView.handleToastTapped(_:)))
             toast.addGestureRecognizer(tapRecognizer)
-            toast.userInteractionEnabled = true;
+            toast.isUserInteractionEnabled = true;
             toast.exclusiveTouch = true;
         }
         
         self.addSubview(toast)
         objc_setAssociatedObject(self, &HRToastView, toast, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
         
-        UIView.animateWithDuration(HRToastFadeDuration,
+        UIView.animate(withDuration: HRToastFadeDuration,
             delay: 0.0, options: ([.CurveEaseOut, .AllowUserInteraction]),
             animations: {
                 toast.alpha = 1
@@ -231,13 +231,13 @@ extension UIView {
         activityView.autoresizingMask = ([.FlexibleLeftMargin, .FlexibleTopMargin, .FlexibleRightMargin, .FlexibleBottomMargin])
         
         if HRToastDisplayShadow {
-            activityView.layer.shadowColor = UIView.hr_toastThemeColor().CGColor
+            activityView.layer.shadowColor = UIView.hr_toastThemeColor().cgColor
             activityView.layer.shadowOpacity = Float(HRToastShadowOpacity)
             activityView.layer.shadowRadius = HRToastShadowRadius
             activityView.layer.shadowOffset = HRToastShadowOffset
         }
         
-        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+        let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityIndicatorView.center = CGPointMake(activityView.bounds.size.width / 2, activityView.bounds.size.height / 2)
         activityView.addSubview(activityIndicatorView)
         activityIndicatorView.startAnimating()
@@ -257,7 +257,7 @@ extension UIView {
         // associate activity view with self
         objc_setAssociatedObject(self, &HRToastActivityView, activityView, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
-        UIView.animateWithDuration(HRToastFadeDuration,
+        UIView.animate(withDuration: HRToastFadeDuration,
             delay: 0.0,
             options: UIViewAnimationOptions.CurveEaseOut,
             animations: {
@@ -269,7 +269,7 @@ extension UIView {
     func hideToastActivity() {
         let existingActivityView = objc_getAssociatedObject(self, &HRToastActivityView) as! UIView?
         if existingActivityView == nil { return }
-        UIView.animateWithDuration(HRToastFadeDuration,
+        UIView.animate(withDuration: HRToastFadeDuration,
             delay: 0.0,
             options: UIViewAnimationOptions.CurveEaseOut,
             animations: {
@@ -284,11 +284,11 @@ extension UIView {
     /*
     *  private methods (helper)
     */
-    func hideToast(toast toast: UIView) {
+    func hideToast(toast: UIView) {
         self.hideToast(toast: toast, force: false);
     }
     
-    func hideToast(toast toast: UIView, force: Bool) {
+    func hideToast(toast: UIView, force: Bool) {
         let completeClosure = { (finish: Bool) -> () in
             toast.removeFromSuperview()
             objc_setAssociatedObject(self, &HRToastTimer, nil, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -297,7 +297,7 @@ extension UIView {
         if force {
             completeClosure(true)
         } else {
-            UIView.animateWithDuration(HRToastFadeDuration,
+            UIView.animate(withDuration: HRToastFadeDuration,
                 delay: 0.0,
                 options: ([.CurveEaseIn, .BeginFromCurrentState]),
                 animations: {
@@ -350,7 +350,7 @@ extension UIView {
         wrapperView.backgroundColor = UIView.hr_toastThemeColor().colorWithAlphaComponent(HRToastOpacity)
         
         if HRToastDisplayShadow {
-            wrapperView.layer.shadowColor = UIView.hr_toastThemeColor().CGColor
+            wrapperView.layer.shadowColor = UIView.hr_toastThemeColor().cgColor
             wrapperView.layer.shadowOpacity = Float(HRToastShadowOpacity)
             wrapperView.layer.shadowRadius = HRToastShadowRadius
             wrapperView.layer.shadowOffset = HRToastShadowOffset
@@ -378,12 +378,12 @@ extension UIView {
             titleLabel!.textAlignment = .Center
             titleLabel!.lineBreakMode = .ByWordWrapping
             titleLabel!.textColor = UIView.hr_toastFontColor()
-            titleLabel!.backgroundColor = UIColor.clearColor()
+            titleLabel!.backgroundColor = UIColor.clear
             titleLabel!.alpha = 1.0
             titleLabel!.text = title
             
             // size the title label according to the length of the text
-            let maxSizeTitle = CGSizeMake((self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight);
+            let maxSizeTitle = CGSize(x:(self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight);
             let expectedHeight = title!.stringHeightWithFontSize(HRToastFontSize, width: maxSizeTitle.width)
             titleLabel!.frame = CGRectMake(0.0, 0.0, maxSizeTitle.width, expectedHeight)
         }
@@ -395,11 +395,11 @@ extension UIView {
             msgLabel!.lineBreakMode = .ByWordWrapping
             msgLabel!.textAlignment = .Center
             msgLabel!.textColor = UIView.hr_toastFontColor()
-            msgLabel!.backgroundColor = UIColor.clearColor()
+            msgLabel!.backgroundColor = UIColor.clear
             msgLabel!.alpha = 1.0
             msgLabel!.text = msg
             
-            let maxSizeMessage = CGSizeMake((self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight)
+            let maxSizeMessage = CGSize(x:(self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight)
             let expectedHeight = msg!.stringHeightWithFontSize(HRToastFontSize, width: maxSizeMessage.width)
             msgLabel!.frame = CGRectMake(0.0, 0.0, maxSizeMessage.width, expectedHeight)
         }
@@ -454,7 +454,7 @@ extension String {
     
     func stringHeightWithFontSize(fontSize: CGFloat,width: CGFloat) -> CGFloat {
         let font = UIFont(name: UIView.hr_toastFontName(), size: HRToastFontSize)
-        let size = CGSizeMake(width, CGFloat.max)
+        let size = CGSize(x:width, CGFloat.max)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = .ByWordWrapping;
         let attributes = [NSFontAttributeName:font!,

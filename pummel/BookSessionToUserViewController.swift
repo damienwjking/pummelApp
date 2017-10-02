@@ -20,7 +20,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
     @IBOutlet weak var imageSelected : UIImageView!
     @IBOutlet weak var imageScrolView : UIScrollView!
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var coachDetail: NSDictionary!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
@@ -30,30 +30,30 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         
         let datePickerView  : UIDatePicker = UIDatePicker()
-        datePickerView.datePickerMode = UIDatePickerMode.DateAndTime
-        datePickerView.backgroundColor = UIColor.blackColor()
-        datePickerView.setValue(UIColor.whiteColor(), forKey: "textColor")
+        datePickerView.datePickerMode = UIDatePickerMode.dateAndTime
+        datePickerView.backgroundColor = UIColor.black
+        datePickerView.setValue(UIColor.white, forKey: "textColor")
         dateTF.inputView = datePickerView
-        datePickerView.addTarget(self, action: #selector(BookSessionToUserViewController.handleDatePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerView.addTarget(self, action: #selector(BookSessionToUserViewController.handleDatePicker(_:)), for: .valueChanged)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
-        self.tapView.hidden = true
+        self.tapView.isHidden = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.didTapView))
         self.tapView.addGestureRecognizer(tap)
         
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(BookSessionViewController.cancel))
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.done))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
@@ -63,11 +63,10 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         self.dateTF.font = UIFont.pmmMonReg13()
         self.contentTV.font = UIFont.pmmMonReg13()
         self.contentTV.text = "ADD A COMMENT..."
-        self.contentTV.keyboardAppearance = .Dark
+        self.contentTV.keyboardAppearance = .dark
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.contentTV.delegate = self
-        self.contentTV.selectedTextRange = self.contentTV.textRangeFromPosition(  self.contentTV.beginningOfDocument, toPosition:self.contentTV.beginningOfDocument)
-        
+        self.contentTV.selectedTextRange = self.contentTV.textRange(from: self.contentTV.beginningOfDocument, to: self.contentTV.beginningOfDocument)
         imagePicker.delegate = self
         imageScrolView.delegate = self
         imageScrolView.minimumZoomScale = 1
@@ -80,78 +79,77 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         self.dateTF.resignFirstResponder()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        let tagTitle = self.tag!.name?.componentsSeparatedByString(" ").joinWithSeparator("")
-        self.title = String(format: "#%@", (tagTitle!.uppercaseString))
+        let tagTitle = self.tag!.name?.components(separatedBy: " ").joined(separator: "")
+        self.title = String(format: "#%@", (tagTitle!.uppercased()))
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.title = " "
     }
     
     func handleDatePicker(sender: UIDatePicker) {
-        let timeFormatter = NSDateFormatter()
+        let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
-        dateTF.text = timeFormatter.stringFromDate(sender.date)
+        dateTF.text = timeFormatter.string(from: sender.date)
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        self.tapView.hidden = false
+        self.tapView.isHidden = false
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        self.tapView.hidden = true
+        self.tapView.isHidden = true
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func next() {
         if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
             
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .alert)
             
             
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         } else {
-             self.performSegueWithIdentifier("gotoShare", sender: nil)
+             self.performSegue(withIdentifier: "gotoShare", sender: nil)
         }
     }
     
     func done() {
         if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
             
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .alert)
             
             
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         } else {
             self.view.makeToastActivity(message: "Saving")
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf(kPMAPICOACH_BOOK)
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append(kPMAPICOACH_BOOK)
             
             var imageData : NSData!
             let type : String!
             let filename : String!
             if self.imageSelected.image != nil {
-                imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+                imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as NSData
             }
             
             type = imageJpeg
@@ -163,8 +161,8 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             let textToPost = (self.contentTV.text == "" || self.contentTV.text == "ADD A COMMENT..." ) ? "..." : self.contentTV.text
             var parameters = [String:AnyObject]()
             var tagname = ""
-            let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
-            tagname = (self.tag?.name?.uppercaseString)!
+            let selectedDate = self.convertLocalTimeToUTCTime(dateTimeString: self.dateTF.text!)
+            tagname = (self.tag?.name?.uppercased())!
             parameters = [kUserId:PMHelper.getCurrentID(),
                           kText: textToPost,
                           kUserIdTarget:userIdSelected,
@@ -194,26 +192,26 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
                             let json = response.result.value as! NSDictionary
                             print(json)
                             if response.result.error != nil {
-                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
+                                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                                     // ...
                                 }
                                 alertController.addAction(OKAction)
-                                self.presentViewController(alertController, animated: true) {
+                                self.present(alertController, animated: true) {
                                     // ...
                                 }
                             } else {
-                                self.navigationController?.popToRootViewControllerAnimated(false)
+                                self.navigationController?.popToRootViewController(animated: false)
                             }
                         }
                         
                     case .Failure( _):
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                     }
@@ -223,34 +221,34 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
     }
     
     func convertLocalTimeToUTCTime(dateTimeString: String) -> String {
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
         
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
-        let date = dateFormatter.dateFromString(dateTimeString)
+        dateFormatter.timeZone = NSTimeZone.local
+        let date = dateFormatter.date(from: dateTimeString)
         
-        let newDateFormatter = NSDateFormatter()
+        let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
-        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
-        let newDateString = newDateFormatter.stringFromDate(date!)
+        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC") as! TimeZone
+        let newDateString = newDateFormatter.string(from: date!)
         
         return newDateString
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
 
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        let currentText:NSString = textView.text
-        let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:NSString = textView.text! as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with:text)
         if updatedText.isEmpty {
             
             textView.text = addAComment
             textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
             
-            textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             
             return false
         }
@@ -262,17 +260,17 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         return true
     }
     
-    func textViewDidChangeSelection(textView: UITextView) {
+    func textViewDidChangeSelection(_ textView: UITextView) {
         if self.view.window != nil {
             if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             }
         }
     }
     
     func getDetail() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
+        prefix.append(PMHelper.getCurrentID())
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -280,12 +278,12 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
                     self.coachDetail = response.result.value as! NSDictionary
                     self.setAvatar()
                 } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // TODO: LOGOUT
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                 }
@@ -296,11 +294,11 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         if !(coachDetail[kImageUrl] is NSNull) {
             let imageLink = coachDetail[kImageUrl] as! String
             var prefix = kPMAPI
-            prefix.appendContentsOf(imageLink)
+            prefix.append(imageLink)
             let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
-            prefix.appendContentsOf(postfix)
-            if (NSCache.sharedInstance.objectForKey(prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.objectForKey(prefix) as! UIImage
+            prefix.append(postfix)
+            if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
+                let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
                 self.avatarIMV.image = imageRes
             } else {
                 Alamofire.request(.GET, prefix)
@@ -333,19 +331,19 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = false
             self.imagePicker.sourceType = .PhotoLibrary
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
         
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
             self.showCameraRoll()
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     
@@ -354,15 +352,15 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         fusuma.delegate = self
         fusuma.defaultMode = .Camera
         fusuma.modeOrder = .CameraFirst
-        self.presentViewController(fusuma, animated: true, completion: nil)
+        self.present(fusuma, animated: true, completion: nil)
     }
     
     // Fusuma delegate
     func fusumaImageSelected(image: UIImage) {
         self.imageSelected.image = image
         if (self.selectFromLibrary == true) {
-            self.imageScrolView.hidden = true
-            self.imageSelected?.hidden = false
+            self.imageScrolView.isHidden = true
+            self.imageSelected?.isHidden = false
         } else {
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
@@ -372,15 +370,15 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = image
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
-            self.imageSelected?.hidden = true
-            self.imageScrolView?.hidden = false
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
+            self.imageSelected?.isHidden = true
+            self.imageScrolView?.isHidden = false
         }
     }
     
     func fusumaCameraRollUnauthorized() {
         print("Camera roll unauthorized")
-        let alert = UIAlertController(title: accessRequested, message: savingImageNeedsToAccessYourPhotoAlbum, preferredStyle: .Alert)
+        let alert = UIAlertController(title: accessRequested, message: savingImageNeedsToAccessYourPhotoAlbum, preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
@@ -392,7 +390,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
         }))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
@@ -410,9 +408,9 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
-            self.imageSelected?.hidden = true
-            self.imageScrolView?.hidden = false
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
+            self.imageSelected?.isHidden = true
+            self.imageScrolView?.isHidden = false
         }
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -421,9 +419,9 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "gotoShare" {
-            let destination = segue.destinationViewController as! BookSessionShareViewController
+            let destination = segue.destination as! BookSessionShareViewController
             destination.tag = self.tag
             destination.image = self.imageSelected.image
             destination.textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text

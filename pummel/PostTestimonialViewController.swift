@@ -52,11 +52,11 @@ class PostTestimonialViewController: UIViewController {
         let contentViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.contentViewTapGesture(_:)))
         self.contentView.addGestureRecognizer(contentViewTapGesture)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.backgroundImageView.image = self.backgroundImage
@@ -66,7 +66,7 @@ class PostTestimonialViewController: UIViewController {
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let keyboardSize = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) {
             self.templateKeyboardViewHeightContraint.constant = keyboardSize.height
             
             self.scrollView.layoutIfNeeded()
@@ -136,14 +136,14 @@ class PostTestimonialViewController: UIViewController {
     func setupUI() {
         self.backgroundImageView.addBlurEffect(0.5)
         
-        let cancelImage = UIImage(named: "close")?.imageWithRenderingMode(.AlwaysTemplate)
-        self.cancelButton.tintColor = UIColor.whiteColor()
-        self.cancelButton.setImage(cancelImage, forState: .Normal)
+        let cancelImage = UIImage(named: "close")?.withRenderingMode(.alwaysTemplate)
+        self.cancelButton.tintColor = UIColor.white
+        self.cancelButton.setImage(cancelImage, for: .normal)
         
         self.userAvatarImageView.layer.cornerRadius = self.userAvatarImageView.frame.size.width/2
         self.userAvatarImageView.layer.masksToBounds = true
         self.userAvatarImageView.layer.borderWidth = 1
-        self.userAvatarImageView.layer.borderColor = UIColor.whiteColor().CGColor
+        self.userAvatarImageView.layer.borderColor = UIColor.white.cgColor
         
         self.contentView.layer.cornerRadius = 5
         self.contentView.layer.masksToBounds = true
@@ -154,7 +154,7 @@ class PostTestimonialViewController: UIViewController {
         self.totalCharacterView.layer.cornerRadius = 2
         self.totalCharacterView.layer.masksToBounds = true
         self.totalCharacterView.backgroundColor = UIColor.pmmWarmGreyColor()
-        self.overCharacterLabel.hidden = true
+        self.overCharacterLabel.isHidden = true
         self.overCharacterLabel.textColor = UIColor.pmmRougeColor()
         
         self.submitButton.layer.cornerRadius = 2
@@ -168,7 +168,7 @@ class PostTestimonialViewController: UIViewController {
         
         UserRouter.postTestimonial(userID: self.userID, description: description, location: location!, rating: rating) { (result, error) in
             if (error == nil) {
-                self.dismissViewControllerAnimated(true, completion: nil)
+                self.dismissViewControllerAnimated(animated: true, completion: nil)
             } else {
                 PMHelper.showDoAgainAlert()
             }
@@ -176,7 +176,7 @@ class PostTestimonialViewController: UIViewController {
     }
     
     @IBAction func cancelButtonClicked(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(animated: true, completion: nil)
     }
     
     func ratingTapped(gesture: UITapGestureRecognizer) {
@@ -186,7 +186,7 @@ class PostTestimonialViewController: UIViewController {
         
         self.ratingStarViewWidthConstraint.constant = touchLocation
         
-        UIView.animateWithDuration(0.3) {
+        UIView.animate(withDuration: 0.3) {
             self.contentView.layoutIfNeeded()
         }
     }
@@ -210,21 +210,21 @@ extension PostTestimonialViewController : UITextViewDelegate, UITextFieldDelegat
         self.totalCharacterLabel.text = String(format: "%ld", textViewText.length)
         
         if (textViewText.length == 0) {
-            self.testimonialPlaceHolder.hidden = false
+            self.testimonialPlaceHolder.isHidden = false
         } else {
-            self.testimonialPlaceHolder.hidden = true
+            self.testimonialPlaceHolder.isHidden = true
         }
         
         if (textViewText.length >= 300) {
-            textView.scrollEnabled = true
+            textView.isScrollEnabled = true
             
-            self.overCharacterLabel.hidden = false
+            self.overCharacterLabel.isHidden = false
             
             self.totalCharacterView.backgroundColor = UIColor.pmmRougeColor()
         } else {
-            textView.scrollEnabled = false
+            textView.isScrollEnabled = false
             
-            self.overCharacterLabel.hidden = true
+            self.overCharacterLabel.isHidden = true
             
             self.totalCharacterView.backgroundColor = UIColor.pmmWarmGreyColor()
         }

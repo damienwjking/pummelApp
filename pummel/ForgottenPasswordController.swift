@@ -39,15 +39,15 @@ class ForgottenPasswordController: UIViewController {
         
         self.doneBT.layer.cornerRadius = 2
         self.doneBT.layer.borderWidth = 0.5
-        self.doneBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.doneBT.layer.borderColor = UIColor.white.cgColor
         self.doneBT.titleLabel?.font = .pmmMonReg13()
-        self.emailTF.keyboardAppearance = .Dark
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        self.emailTF.keyboardAppearance = .dark
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -56,22 +56,22 @@ class ForgottenPasswordController: UIViewController {
     }
     
     @IBAction func goBackWithSender() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
     func keyboardWillShow(notification: NSNotification) {
         
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let keyboardSize = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) {
             self.doneBTDT.constant = keyboardSize.height + 15
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if let _ = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let _ = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) {
             self.doneBTDT.constant = 15
         }
     }
@@ -81,7 +81,7 @@ class ForgottenPasswordController: UIViewController {
     }
     
     @IBAction func buttonSweetWithSender(sender: AnyObject) {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     
@@ -96,14 +96,14 @@ class ForgottenPasswordController: UIViewController {
             
             self.emailTF.highlighted = true
             
-            let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .alert)
             
             
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
             
@@ -115,23 +115,23 @@ class ForgottenPasswordController: UIViewController {
                     if (response.response?.statusCode == 200) {
                         self.alertTitleLB.text = String.init(format: "Check your email")
                         self.alertMessageLB.text = String.init(format: "We sent an email to %@. Tap the link in the email to reset your password.", userEmail!)
-                        self.sweetBT.setTitle(kSweetThanks, forState: .Normal)
+                        self.sweetBT.setTitle(kSweetThanks, for: .normal)
                         self.view.hideToastActivity()
-                        UIView.animateWithDuration(0.3, animations: { 
+                        UIView.animate(withDuration: 0.3, animations: { 
                             self.dimView.alpha = 0.5;
                             self.alertView.alpha = 1;
                             
-                            self.dimView.userInteractionEnabled = true;
+                            self.dimView.isUserInteractionEnabled = true;
                         })
                     } else {
-                        let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .Alert)
+                        let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .alert)
                         self.view.hideToastActivity()
                         
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                     }

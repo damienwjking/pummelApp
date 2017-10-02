@@ -46,15 +46,15 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
         self.helpMeReachTheCoachBT.layer.cornerRadius = 2
         self.helpMeReachTheCoachBT.layer.borderWidth = 0.5
         self.helpMeReachTheCoachBT.titleLabel?.font = .pmmMonReg11()
-        self.helpMeReachTheCoachBT.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        self.helpMeReachTheCoachBT.setTitleColor(UIColor.white, for: .Normal)
         self.helpMeReachTheCoachBT.backgroundColor = .pmmBrightOrangeColor()
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
-        self.collectionView.registerNib(cellNib, forCellWithReuseIdentifier: kTagCell)
-        self.collectionView.backgroundColor = UIColor.clearColor()
+        self.collectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
+        self.collectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
         self.sizingCell?.isSearch = true
         
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
             self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
         } else {
             self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
@@ -65,7 +65,7 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
         self.collectionView.dataSource = self
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         offset = 0
         isStopGetListTag = false
@@ -75,7 +75,7 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
     func getListTags() {
         if (isStopGetListTag == false) {
             var listTagsLink = kPMAPI_TAG_OFFSET
-            listTagsLink.appendContentsOf(String(offset))
+            listTagsLink.append(String(offset))
             Alamofire.request(.GET, listTagsLink)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -85,13 +85,13 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
                             let tagContent = self.arrayTags[i]
                             let tag = Tag()
                             tag.name = tagContent[kTitle] as? String
-                            tag.tagId = String(format:"%0.f", tagContent[kId]!.doubleValue)
+                            tag.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
                             tag.tagColor = self.getRandomColorString()
                             self.tags.append(tag)
                         }
                         self.offset += 10
                         self.collectionView.reloadData({ 
-                            self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize().height
+                            self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
                             self.scrollHeightConstraint.constant = self.collectionView.frame.origin.y + self.tagHeightConstraint.constant
                         })
                     } else {
@@ -108,13 +108,13 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        let defaults = UserDefaults.standard
+        let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_1 {
-            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
         }
     }
 
@@ -129,29 +129,29 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
             locationManager.requestWhenInUseAuthorization()
             locationManager.delegate = self
             if (CLLocationManager.authorizationStatus() == .Restricted || CLLocationManager.authorizationStatus() == .Denied) {
-                                let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                     let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
                     if let url = settingsUrl {
                         UIApplication.sharedApplication().openURL(url)
                     }
                 }
                 alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
+                self.present(alertController, animated: true) {
                     // ...
                 }
             } else if (CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse || CLLocationManager.authorizationStatus() == .AuthorizedAlways) {
-                performSegueWithIdentifier("searching", sender: nil)
+                performSegue(withIdentifier: "searching", sender: nil)
             }
         } else {
-            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                self.dismissViewControllerAnimated(false, completion: {
+            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
+                self.dismissViewControllerAnimated(animated: false, completion: {
                     
                 })
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
@@ -162,15 +162,15 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         if (status == .AuthorizedWhenInUse) {
-             performSegueWithIdentifier("searching", sender: nil)
+             performSegue(withIdentifier: "searching", sender: nil)
         } 
     }
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "searching")
         {
-            let destimation = segue.destinationViewController as! SearchingViewController
+            let destimation = segue.destination as! SearchingViewController
             destimation.tagIdsArray = tagIdsArray.objectEnumerator().allObjects as? [String]
             if (self.genderResultTF.text ==  kMALEU) {
                  destimation.gender = kMale
@@ -187,26 +187,26 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
         // Dispose of any resources that can be recreated.
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return tags.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-        self.configureCell(cell, forIndexPath: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
+        self.configureCell(cell, for: indexPath)
         if (indexPath.row == tags.count - 1) {
             self.getListTags()
         }
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        self.configureCell(self.sizingCell!, for: indexPath)
+        return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         let tag = tags[indexPath.row]
         if (tag.selected) {
@@ -217,12 +217,12 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
                 let properties = ["Name": "Select Tags", "Label":"\(tag.name!)"]
                 mixpanel.track("IOS.FindATrainer", properties: properties)
             } else {
-                let alertController = UIAlertController(title: nil, message: "Select just a few tags to broaden your search", preferredStyle: .Alert)
-                alertController.addAction(UIAlertAction(title: kOk, style: UIAlertActionStyle.Cancel, handler: { (_) in
+                let alertController = UIAlertController(title: nil, message: "Select just a few tags to broaden your search", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: kOk, style: UIAlertActionStyle.cancel, handler: { (_) in
                     self.tags[indexPath.row].selected = !self.tags[indexPath.row].selected
                     self.collectionView.reloadData()
                 }))
-                self.presentViewController(alertController, animated: true) { }
+                self.present(alertController, animated: true) { }
             }
         } else {
             tagIdsArray.removeObject(tag.tagId!)
@@ -236,7 +236,7 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
         cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
-        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clearColor()
+        cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clear
         cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25
         
     }
@@ -260,12 +260,12 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
             self.genderResultTF.text = kDontCareUp
         }
 
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kMALEU, style: UIAlertActionStyle.Default, handler: selectMale))
-        alertController.addAction(UIAlertAction(title: kFemaleU, style: UIAlertActionStyle.Default, handler: selectFemale))
-        alertController.addAction(UIAlertAction(title: kDontCareUp, style: UIAlertActionStyle.Default, handler: selectDontCare))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kMALEU, style: .default, handler: selectMale))
+        alertController.addAction(UIAlertAction(title: kFemaleU, style: .default, handler: selectFemale))
+        alertController.addAction(UIAlertAction(title: kDontCareUp, style: .default, handler: selectDontCare))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     @IBAction func clickOnLocation(sender: UIButton) {
@@ -313,15 +313,15 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
             self.locationResultTF.text = kPRIVATESTUDIO
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kGYM, style: UIAlertActionStyle.Default, handler: selectGym))
-        alertController.addAction(UIAlertAction(title: kSMALLGROUPTRAINING, style: UIAlertActionStyle.Default, handler: selectSmall))
-        alertController.addAction(UIAlertAction(title: kBOOTCAMP, style: UIAlertActionStyle.Default, handler: selectBootcamp))
-        alertController.addAction(UIAlertAction(title: kMOBILE, style: UIAlertActionStyle.Default, handler: selectMobile))
-        alertController.addAction(UIAlertAction(title: kOUTDOOR, style: UIAlertActionStyle.Default, handler: selectOutdoor))
-        alertController.addAction(UIAlertAction(title: kPRIVATESTUDIO, style: UIAlertActionStyle.Default, handler: selectPrivateStudio))
-        alertController.addAction(UIAlertAction(title: kANYWHERE, style: UIAlertActionStyle.Default, handler: selectAnywhere))
-        self.presentViewController(alertController, animated: true) { }
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kGYM, style: .default, handler: selectGym))
+        alertController.addAction(UIAlertAction(title: kSMALLGROUPTRAINING, style: .default, handler: selectSmall))
+        alertController.addAction(UIAlertAction(title: kBOOTCAMP, style: .default, handler: selectBootcamp))
+        alertController.addAction(UIAlertAction(title: kMOBILE, style: .default, handler: selectMobile))
+        alertController.addAction(UIAlertAction(title: kOUTDOOR, style: .default, handler: selectOutdoor))
+        alertController.addAction(UIAlertAction(title: kPRIVATESTUDIO, style: .default, handler: selectPrivateStudio))
+        alertController.addAction(UIAlertAction(title: kANYWHERE, style: .default, handler: selectAnywhere))
+        self.present(alertController, animated: true) { }
     }
 
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -340,14 +340,14 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
 
 extension UICollectionView {
     func reloadData(completion: ()->()) {
-        UIView.animateWithDuration(0, animations: { self.reloadData() })
+        UIView.animate(withDuration: 0, animations: { self.reloadData() })
         { _ in completion() }
     }
 }
 
 extension UITableView {
     func reloadData(completion: ()->()) {
-        UIView.animateWithDuration(0, animations: { self.reloadData() })
+        UIView.animate(withDuration: 0, animations: { self.reloadData() })
         { _ in completion() }
     }
 }

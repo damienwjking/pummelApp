@@ -34,7 +34,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     @IBOutlet weak var nosessionIMVHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var addSessionBT: UIButton!
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     var isloading = false
     var canLoadMore = true
@@ -57,12 +57,12 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         
         self.addSessionBT.layer.cornerRadius = 5
         
-        self.selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], forState: .Normal)
+        self.selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], for: .Normal)
         
-        if self.defaults.objectForKey(k_PM_IS_UP_COMING) == nil {
+        if self.defaults.object(forKey: k_PM_IS_UP_COMING) == nil {
             self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
         } else {
-            let isComingValue = self.defaults.objectForKey(k_PM_IS_UP_COMING) as! Int
+            let isComingValue = self.defaults.object(forKey: k_PM_IS_UP_COMING) as! Int
             if isComingValue == 1 {
                 self.selectSegment.selectedSegmentIndex = 0
             } else {
@@ -81,40 +81,39 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         super.viewDidLayoutSubviews()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(self.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
         self.getListSession()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
-        let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_2 {
-            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
-            self.performSegueWithIdentifier("userLogASession", sender: nil)
+            defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            self.performSegue(withIdentifier: "userLogASession", sender: nil)
         }
         
         // Update Calendar
-        self.calendarView.presentedDate = CVDate(date: NSDate())
+        self.calendarView.presentedDate = CVDate(date: NSDate() as Date)
         self.updateLayout()
         
         self.resetSBadge()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: Init
     func initTableView() {
         self.sessionTableView.estimatedRowHeight = 100
         let nibName = UINib(nibName: "LogTableViewCell", bundle:nil)
-        self.sessionTableView.registerNib(nibName, forCellReuseIdentifier: "LogTableViewCell")
+        self.sessionTableView.register(nibName, forCellReuseIdentifier: "LogTableViewCell")
         
-        let SCREEN_WIDTH = UIScreen.mainScreen().bounds.size.width
         self.sessionTableView.separatorInset = UIEdgeInsetsMake(0, SCREEN_WIDTH, 0, 0)
     }
     
@@ -124,9 +123,9 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         
         // ADD Log Button At Right Navigationbar Item
         var image = UIImage(named: "icon_add")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(self.logButtonClicked))
-        self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.blackColor()
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(self.logButtonClicked))
+        self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.black
     }
     
     // MARK: Private function
@@ -145,9 +144,9 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             
 //            
             var prefix = kPMAPIUSER
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf(kPM_PATH_ACTIVITIES_USER)
-            prefix.appendContentsOf(String(self.offset))
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append(kPM_PATH_ACTIVITIES_USER)
+            prefix.append(String(self.offset))
             
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in
@@ -202,25 +201,25 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     // MARK: UITableView
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.selectedSessionList.count > 0 {
-            self.noSessionV.hidden = true
+            self.noSessionV.isHidden = true
         } else {
-            self.noSessionV.hidden = false
+            self.noSessionV.isHidden = false
         }
         
         return self.selectedSessionList.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let session = self.selectedSessionList[indexPath.row]
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("LogTableViewCell") as! LogTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LogTableViewCell") as! LogTableViewCell
         
         let now = NSDate()
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter
         dateFormatter.dateFormat = kFullDateFormat
-        let sessionDate = dateFormatter.dateFromString(session.datetime!)
+        let sessionDate = dateFormatter.date(from: session.datetime!)
         
         if now.compare(sessionDate!) == .OrderedAscending {
             cell.setData(session, isUpComing: true)
@@ -242,11 +241,11 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         let session = self.selectedSessionList[indexPath.row]
         
-        self.performSegueWithIdentifier("userSessionDetail", sender: session)
+        self.performSegue(withIdentifier: "userSessionDetail", sender: session)
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -301,24 +300,24 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.calendarView.contentController.refreshPresentedMonth()
         
         // update month label
-        let monthDateFormatter = NSDateFormatter()
+        let monthDateFormatter = DateFormatter
         monthDateFormatter.dateFormat = "yyyy M"
         let dateString = String(format:"%ld %ld", date.year, date.month)
-        let convertDate = monthDateFormatter.dateFromString(dateString)
+        let convertDate = monthDateFormatter.date(from: dateString)
         
-        let convertDateFormatter = NSDateFormatter()
+        let convertDateFormatter = DateFormatter
         convertDateFormatter.dateFormat = "LLLL yyyy"
-        self.monthLabel.text = convertDateFormatter.stringFromDate(convertDate!)
+        self.monthLabel.text = convertDateFormatter.string(from: convertDate!)
         
         // update session list
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter
         dateFormatter.dateFormat = "yyyyMMdd"
         dateFormatter.timeZone = NSTimeZone.localTimeZone()
-        //let eventDateString = dateFormatter.stringFromDate(date)
+        //let eventDateString = dateFormatter.string(from: date)
         
         let calendarString = String(format:"%ld%ld%ld%ld%ld", date.year, date.month/10, date.month%10, date.day/10, date.day%10)
         
-        let fullDateFormatter = NSDateFormatter()
+        let fullDateFormatter = DateFormatter
         fullDateFormatter.dateFormat = kFullDateFormat
         fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
         
@@ -326,8 +325,8 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.selectedSessionList.removeAll()
         while i < self.sessionList.count {
             let session = self.sessionList[i]
-            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
-            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            let sessionDate = fullDateFormatter.date(from: session.datetime!)
+            let sessionDateString = dateFormatter.string(from: sessionDate!)
             
             if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
                 self.selectedSessionList.append(session)
@@ -365,14 +364,14 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter
         dateFormatter.dateFormat = "yyyyMMdd"
         dateFormatter.timeZone = NSTimeZone.localTimeZone()
-        //let eventDateString = dateFormatter.stringFromDate(date)
+        //let eventDateString = dateFormatter.string(from: date)
         
         let calendarString = String(format:"%ld%ld%ld%ld%ld", dayView.date.year, dayView.date.month/10, dayView.date.month%10, dayView.date.day/10, dayView.date.day%10)
         
-        let fullDateFormatter = NSDateFormatter()
+        let fullDateFormatter = DateFormatter
         fullDateFormatter.dateFormat = kFullDateFormat
         fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
         
@@ -380,8 +379,8 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         var showDotMarker = false
         while i < self.sessionList.count {
             let session = self.sessionList[i]
-            let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
-            let sessionDateString = dateFormatter.stringFromDate(sessionDate!)
+            let sessionDate = fullDateFormatter.date(from: session.datetime!)
+            let sessionDateString = dateFormatter.string(from: sessionDate!)
             
             if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
                 showDotMarker = true
@@ -405,12 +404,12 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     // MARK: Outlet function
     @IBAction func addSessionBTClicked(sender: AnyObject) {
         print("add session clicked")
-        self.performSegueWithIdentifier("userLogASession", sender: nil)
+        self.performSegue(withIdentifier: "userLogASession", sender: nil)
     }
     
     func logButtonClicked() {
         print("log clicked")
-        self.performSegueWithIdentifier("userLogASession", sender: nil)
+        self.performSegue(withIdentifier: "userLogASession", sender: nil)
     }
     
     @IBAction func selecSegmentValueChanged(sender: AnyObject) {
@@ -427,7 +426,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         // Update layout
         var isUpComing = false
         
-        let isComingValue = self.defaults.objectForKey(k_PM_IS_UP_COMING) as! Int
+        let isComingValue = self.defaults.object(forKey: k_PM_IS_UP_COMING) as! Int
         if isComingValue == 1 {
             isUpComing = true
         }
@@ -438,7 +437,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             self.calendateMenuViewHeightConstraint.constant = 25
             self.nosessionIMVHeightConstraint.constant = 0
             self.noSessionVCenterYConstraint.constant = 0;
-            self.separateLineView.hidden = false
+            self.separateLineView.isHidden = false
             
             // to Call function presentedDateUpdated
             self.calendarView.presentedDate = self.calendarView.presentedDate
@@ -451,13 +450,13 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             self.calendateMenuViewHeightConstraint.constant = 0
             self.nosessionIMVHeightConstraint.constant = 160
             self.noSessionVCenterYConstraint.constant = -29;
-            self.separateLineView.hidden = true
+            self.separateLineView.isHidden = true
             
             // Subtitle no session
             self.noSessionContentLB.text = "Completed appointments from your coach will appear here as well"
             
             // Update session table
-            let fullDateFormatter = NSDateFormatter()
+            let fullDateFormatter = DateFormatter
             fullDateFormatter.dateFormat = kFullDateFormat
             fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
             
@@ -465,7 +464,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             self.selectedSessionList.removeAll()
             while i < self.sessionList.count {
                 let session = self.sessionList[i]
-                let sessionDate = fullDateFormatter.dateFromString(session.datetime!)
+                let sessionDate = fullDateFormatter.date(from: session.datetime!)
                 
                 if NSDate().compare(sessionDate!) == .OrderedDescending {
                     self.selectedSessionList.append(session)
@@ -494,13 +493,13 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             if (granted) && (error == nil) {
                 let event:EKEvent = EKEvent(eventStore: eventStore)
                 
-                let dateFormatter = NSDateFormatter()
+                let dateFormatter = DateFormatter
                 dateFormatter.dateFormat = kFullDateFormat
                 dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
-                let startDate = dateFormatter.dateFromString(session.datetime!)
+                let startDate = dateFormatter.date(from: session.datetime!)
                 
                 let longTime = session.longtime > 0 ? session.longtime : 1
-                let calendar = NSCalendar.currentCalendar()
+                let calendar = NSCalendar.current
                 let endDate = calendar.dateByAddingUnit(.Minute, value: longTime, toDate: startDate!, options: [])
                 
                 
@@ -512,12 +511,12 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                 
                 do {
                     try eventStore.saveEvent(event, span: .FutureEvents, commit: true)
-                    let alertController = UIAlertController(title: "", message: "This session has been added to your calendar", preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let alertController = UIAlertController(title: "", message: "This session has been added to your calendar", preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // ...
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                 } catch {
@@ -528,9 +527,9 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     // MARK: Segue
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "userSessionDetail" {
-            let destination = segue.destinationViewController as! DetailSessionViewController
+            let destination = segue.destination as! DetailSessionViewController
             destination.session = sender as! SessionModel
         }
     }

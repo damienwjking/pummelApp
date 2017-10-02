@@ -56,7 +56,7 @@ class UserProfileViewController: BaseViewController  {
     var videoPlayer: AVPlayer? = nil
     var videoPlayerLayer: AVPlayerLayer? = nil
     var isShowVideo: Bool = true
-    let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    let videoIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
     var isVideoPlaying = false
     
     var arrayPhotos: NSArray = []
@@ -68,7 +68,7 @@ class UserProfileViewController: BaseViewController  {
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         // Do any additional setup after loading the view.
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
         self.bigIndicatorView.layer.cornerRadius = 312/2
@@ -84,7 +84,7 @@ class UserProfileViewController: BaseViewController  {
         self.aboutCollectionView.dataSource = self
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(userId)
+        prefix.append(userId)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
@@ -95,9 +95,9 @@ class UserProfileViewController: BaseViewController  {
         self.userNameLB.font = .pmmMonReg13()
         self.aboutLB.font = .pmmMonLight11()
         self.postLB.font = .pmmMonLight11()
-        self.aboutTV.backgroundColor = UIColor.clearColor()
+        self.aboutTV.backgroundColor = UIColor.clear
         self.aboutTV.font = .pmmMonLight13()
-        self.aboutTV.scrollEnabled = false
+        self.aboutTV.isScrollEnabled = false
         self.avatarIMV.layer.cornerRadius = 125/2
         self.avatarIMV.clipsToBounds = true
         self.setAvatar()
@@ -111,14 +111,14 @@ class UserProfileViewController: BaseViewController  {
         self.postNumberContentLB.font = .pmmMonReg16()
         self.aboutTV.editable = false
         
-        self.playVideoButton.setImage(nil, forState: .Normal)
+        self.playVideoButton.setImage(nil, for: .normal)
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
+        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)
-        self.scrollView.scrollEnabled = true
+        self.scrollView.isScrollEnabled = true
         
         // check Video URL
 //        let videoURL = self.userDetail[kVideoURL] as? String
@@ -129,7 +129,7 @@ class UserProfileViewController: BaseViewController  {
 //        }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // pause video and move time to 0
@@ -144,20 +144,20 @@ class UserProfileViewController: BaseViewController  {
     }
     
     func setting() {
-        performSegueWithIdentifier("goSetting", sender: nil)
+        performSegue(withIdentifier: "goSetting", sender: nil)
     }
     
     @IBAction func edit() {
-        performSegueWithIdentifier("goEdit", sender: nil)
+        performSegue(withIdentifier: "goEdit", sender: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "goEdit")
         {
-            let destinationVC = segue.destinationViewController as! EditProfileViewController
+            let destinationVC = segue.destination as! EditProfileViewController
             destinationVC.userInfo = self.userDetail
         } else if segue.identifier == "goToFeedDetail" {
-            let navc = segue.destinationViewController as! UINavigationController
+            let navc = segue.destination as! UINavigationController
             let destination = navc.topViewController as! FeedViewController
             destination.fromPhoto = true
             if let feed = sender as? NSDictionary {
@@ -167,22 +167,22 @@ class UserProfileViewController: BaseViewController  {
     }
     
     @IBAction func goBackToFeed(sender:UIButton) {
-        self.dismissViewControllerAnimated(true) {
+        self.dismissViewControllerAnimated(animated: true) {
         }
     }
     
     func getListPhoto() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(userId)
-        prefix.appendContentsOf(kPM_PATH_PHOTO_PROFILE)
+        prefix.append(userId)
+        prefix.append(kPM_PATH_PHOTO_PROFILE)
         Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 self.arrayPhotos = JSON as! NSArray
                 self.aboutCollectionView.reloadData()
-                self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize().height
+                self.postHeightDT.constant = self.aboutCollectionView.collectionViewLayout.collectionViewContentSize.height
                 self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
-                self.scrollView.scrollEnabled = true
+                self.scrollView.isScrollEnabled = true
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
@@ -201,7 +201,7 @@ class UserProfileViewController: BaseViewController  {
     }
     
     func updateUI() {
-        self.userNameLB.text = (self.userDetail[kFirstname] as! String).uppercaseString
+        self.userNameLB.text = (self.userDetail[kFirstname] as! String).uppercased()
         
         self.ratingContentLB.text = String(format:"%0.f", (self.userDetail[kConnectionCount]!.doubleValue * 120) + (self.userDetail[kPostCount]!.doubleValue * 75))
         
@@ -235,10 +235,10 @@ class UserProfileViewController: BaseViewController  {
         self.avatarIMV.layer.cornerRadius = newAvatarSize/2
         
         // Hidden indicator view
-        self.smallIndicatorView.hidden = true
-        self.medIndicatorView.hidden = true
-        self.bigIndicatorView.hidden = true
-        self.bigBigIndicatorView.hidden = true
+        self.smallIndicatorView.isHidden = true
+        self.medIndicatorView.isHidden = true
+        self.bigIndicatorView.isHidden = true
+        self.bigBigIndicatorView.isHidden = true
         
         // Show video
         if (self.videoView?.superview != nil) {
@@ -257,7 +257,7 @@ class UserProfileViewController: BaseViewController  {
         self.detailV.insertSubview(self.videoView!, atIndex: 0)
         
         // Animation
-        UIView.animateWithDuration(0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             self.detailV.layoutIfNeeded()
         }) { (_) in
             self.videoPlayerSetPlay(false)
@@ -272,10 +272,10 @@ class UserProfileViewController: BaseViewController  {
         self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
         
         // Remove loop play video for
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
         
         // Add notification for loop play video
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
                                                          object: self.videoPlayer!.currentItem)
@@ -315,63 +315,63 @@ class UserProfileViewController: BaseViewController  {
         if (isPlay == true) {
             self.videoPlayer!.play()
             
-            self.playVideoButton.setImage(nil, forState: .Normal)
+            self.playVideoButton.setImage(nil, for: .normal)
         } else {
             self.videoPlayer?.pause()
             
             let playImage = UIImage(named: "icon_play_video")
-            self.playVideoButton.setImage(playImage, forState: .Normal)
+            self.playVideoButton.setImage(playImage, for: .normal)
             
         }
         
         // Show item above video view
         self.isVideoPlaying = isPlay
-        self.avatarIMV.hidden = isPlay
+        self.avatarIMV.isHidden = isPlay
     }
 }
 
 extension UserProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrayPhotos.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, forIndexPath: indexPath) as! AboutCollectionViewCell
-        self.configureAboutCell(cell, forIndexPath: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kAboutCollectionViewCell, for: indexPath) as! AboutCollectionViewCell
+        self.configureAboutCell(cell, for: indexPath)
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(x:self.aboutCollectionView.frame.size.width/2, self.aboutCollectionView.frame.size.width/2)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.view.makeToastActivity()
         var prefix = kPMAPI
-        prefix.appendContentsOf(kPMAPI_POSTOFPHOTO)
+        prefix.append(kPMAPI_POSTOFPHOTO)
         let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
-        print(photo.objectForKey(kId)!)
+        print(photo.object(forKey: kId)!)
         Alamofire.request(.GET, prefix, parameters: ["photoId":photo["uploadId"]!])
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 if let arr = JSON as? NSArray {
                     if arr.count > 0 {
                         if let dic = arr.objectAtIndex(0) as? NSDictionary {
-                            self.performSegueWithIdentifier("goToFeedDetail", sender: dic)
+                            self.performSegue(withIdentifier: "goToFeedDetail", sender: dic)
                             self.view.hideToastActivity()
                             return
                         }
                     }
                 }
                 
-                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .Alert)
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                     // ...
                 }
                 alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
+                self.present(alertController, animated: true) {
                     // ...
                 }
                 self.view.hideToastActivity()
@@ -385,7 +385,7 @@ extension UserProfileViewController: UICollectionViewDataSource, UICollectionVie
     func configureAboutCell(cell: AboutCollectionViewCell?, forIndexPath indexPath: NSIndexPath) {
         let photo = self.arrayPhotos[indexPath.row] as! NSDictionary
         let postfix = widthEqual.stringByAppendingString((self.view.frame.size.width).description).stringByAppendingString(heighEqual).stringByAppendingString((self.view.frame.size.width).description)
-        let link = photo.objectForKey(kImageUrl) as? String
+        let link = photo.object(forKey: kImageUrl) as? String
         
         if (link != nil) {
             ImageRouter.getImage(imageURLString: link!, sizeString: postfix, completed: { (result, error) in

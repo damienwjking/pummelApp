@@ -39,10 +39,10 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         
         self.cv = UICollectionView.init(frame: self.bounds, collectionViewLayout: self.cvLayout)
         let nibName = UINib(nibName: "DiscountColectionViewCell", bundle: nil)
-        self.cv.registerNib(nibName, forCellWithReuseIdentifier: "DiscountColectionViewCell")
+        self.cv.register(nibName, forCellWithReuseIdentifier: "DiscountColectionViewCell")
         self.cv.delegate = self
         self.cv.dataSource = self
-        self.cv.scrollEnabled = false
+        self.cv.isScrollEnabled = false
         self.cv.backgroundColor = UIColor.groupTableViewBackgroundColor()
         
         self.addSubview(self.cv)
@@ -52,12 +52,12 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         super.init(coder: aDecoder)
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.arrayResult.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("DiscountColectionViewCell", forIndexPath: indexPath) as! DiscountColectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("DiscountColectionViewCell", for: indexPath) as! DiscountColectionViewCell
         
         // add Swipe gesture
         if cell.gestureRecognizers?.count < 2 {
@@ -85,11 +85,11 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return self.cvLayout.itemSize
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row >= self.arrayResult.count {
             return
         }
@@ -114,7 +114,7 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         
         let newContentOffset = CGPointMake(offsetX, 0)
         
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.cv.contentOffset = newContentOffset
         }) { (_) in
             self.endPagingCarousel(self.cv)
@@ -127,7 +127,7 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         
         let newContentOffset = CGPointMake(offsetX, 0)
         
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.cv.contentOffset = newContentOffset
         }) { (_) in
             self.endPagingCarousel(self.cv)

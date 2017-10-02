@@ -115,7 +115,7 @@ extension String {
     
     func isValidEmail() -> Bool {
         let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
-        return emailTest.evaluateWithObject(self)
+        return emailTest.evaluate(with: self)
     }
 }
 
@@ -127,7 +127,7 @@ extension Dictionary {
             return "\(percentEscapedKey)=\(percentEscapedValue)"
         }
         
-        return parameterArray.joinWithSeparator("&")
+        return parameterArray.joined(separator: "&")
     }
     
 }

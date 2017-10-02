@@ -24,41 +24,41 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.loadWeb()
         
         self.activityIndicator.startAnimating()
-        self.activityIndicator.hidden = false
+        self.activityIndicator.isHidden = false
         
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backButtonClicked))
-//        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.backButtonClicked))
+//        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         
         
         
         
         // Title
         self.title = kNavFeed
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         
         // Left button
-        let image = UIImage(named: "back")!.imageWithRenderingMode(.AlwaysTemplate)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(self.backButtonClicked))
+        let image = UIImage(named: "back")!.withRenderingMode(.alwaysTemplate)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(self.backButtonClicked))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.pmmBrightOrangeColor()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
 //        let closeImage = UIImage(named: "closewhite")
         
 //        self.closeButton = UIButton(type: UIButtonType.Custom)
 //        self.closeButton!.frame = CGRectMake(0, 20, 40, 40)
-//        self.closeButton?.setImage(closeImage, forState: .Normal)
+//        self.closeButton?.setImage(closeImage, for: .normal)
 //        self.closeButton?.tintColor = UIColor.pmmBrightOrangeColor()
-//        self.closeButton!.addTarget(self, action: #selector(self.backButtonClicked), forControlEvents: .TouchUpInside)
+//        self.closeButton!.addTarget(self, action: #selector(self.backButtonClicked), for: .touchUpInside)
 //        
 //        
 //        self.webView.scrollView.addSubview(self.closeButton!)
@@ -72,11 +72,11 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
     }
     
     func backButtonClicked() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func webViewDidFinishLoad(webView: UIWebView) {
         self.activityIndicator.stopAnimating()
-        self.activityIndicator.hidden = true
+        self.activityIndicator.isHidden = true
     }
 }

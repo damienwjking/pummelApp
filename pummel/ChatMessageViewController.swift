@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RSKGrowingTextView
+//import RSKGrowingTextView
 import Alamofire
 import Mixpanel
 
@@ -36,16 +36,16 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     var isSendMessage = false
     var needOpenKeyboard = false
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     // MARK: Controller Life Circle
     override func viewDidLoad() {
         super.viewDidLoad()
         var image = UIImage(named: "blackArrow")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatMessageViewController.cancel))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
-        self.navigationController!.navigationBar.translucent = false;
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChatMessageViewController.cancel))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .Normal)
+        self.navigationController!.navigationBar.isTranslucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.setNavigationTitle()
        
@@ -56,36 +56,36 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         
         self.chatTB.delegate = self
         self.chatTB.dataSource = self
-        self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.None
-        let recognizer = UITapGestureRecognizer(target: self, action:#selector(ChatMessageViewController.handleTap(_:)))
+        self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.none
+        let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.handleTap(_:)))
         self.chatTB.addGestureRecognizer(recognizer)
         self.avatarTextBox.layer.cornerRadius = 20
         self.avatarTextBox.clipsToBounds = true
-        self.avatarTextBox.hidden = true
+        self.avatarTextBox.isHidden = true
         self.getImageAvatarTextBox()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
         self.getArrayChat()
         
         self.textBox.text = self.preMessage
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
         if (self.needOpenKeyboard == true) {
             self.textBox.becomeFirstResponder()
         }
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func getImageAvatarTextBox() {
@@ -103,20 +103,20 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     func handleTap(recognizer: UITapGestureRecognizer) {
         self.textBox.resignFirstResponder()
         self.view.frame.origin.y = 64
-        self.cursorView.hidden = false
-        self.avatarTextBox.hidden = true
+        self.cursorView.isHidden = false
+        self.avatarTextBox.isHidden = true
         self.leftMarginLeftChatCT.constant = 15
     }
 
     func getArrayChat() {
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-        prefix.appendContentsOf("/")
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(kPM_PATH_CONVERSATION)
+        prefix.append("/")
         
         if (messageId != nil) {
-            prefix.appendContentsOf(self.messageId as String)
-            prefix.appendContentsOf(kPM_PARTH_MESSAGE)
+            prefix.append(self.messageId as String)
+            prefix.append(kPM_PARTH_MESSAGE)
             Alamofire.request(.GET, prefix)
                 .responseJSON { response in switch response.result {
                 case .Success(let JSON):
@@ -144,13 +144,13 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 self.navigationItem.title = nameChatUser
             } else {
                 var prefixUser = kPMAPIUSER
-                prefixUser.appendContentsOf(userIdTarget)
+                prefixUser.append(userIdTarget)
                 Alamofire.request(.GET, prefixUser)
                     .responseJSON { response in switch response.result {
                     case .Success(let JSON):
                         let userInfo = JSON as! NSDictionary
-                        let name = userInfo.objectForKey(kFirstname) as! String
-                        self.navigationItem.title = name.uppercaseString
+                        let name = userInfo.object(forKey: kFirstname) as! String
+                        self.navigationItem.title = name.uppercased()
                     case .Failure(let error):
                         print("Request failed with error: \(error)")
                     }
@@ -160,7 +160,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() {
+        if let keyboardSize = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) {
             self.view.frame.origin.y = 64 - keyboardSize.height
         }
     }
@@ -168,26 +168,26 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     func keyboardWillHide(notification: NSNotification) {
         self.view.frame.origin.y = 64
         if (self.textBox.text == "") {
-            self.cursorView.hidden = false
-            self.avatarTextBox.hidden = true
+            self.cursorView.isHidden = false
+            self.avatarTextBox.isHidden = true
             self.leftMarginLeftChatCT.constant = 15
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         self.sendMessage(true)
         return true
     }
     
     func textViewDidBeginEditing(textView: UITextView) {
-        self.cursorView.hidden = true
-        self.avatarTextBox.hidden = false
+        self.cursorView.isHidden = true
+        self.avatarTextBox.isHidden = false
         self.leftMarginLeftChatCT.constant = 40
     }
     
     // MARK: UITableViewDelegate
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 0) {
             return 197
         } else {
@@ -203,27 +203,27 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
-            let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageHeaderTableViewCell, forIndexPath: indexPath) as! ChatMessageHeaderTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: kChatMessageHeaderTableViewCell, for: indexPath as IndexPath) as! ChatMessageHeaderTableViewCell
             
             let avatarGesture = UITapGestureRecognizer(target: self, action:#selector(self.avatarClicked))
             cell.avatarIMV.addGestureRecognizer(avatarGesture)
-            cell.avatarIMV.userInteractionEnabled = true
+            cell.avatarIMV.isUserInteractionEnabled = true
             cell.avatarIMV.image = UIImage(named: "display-empty.jpg")
             
             ImageRouter.getUserAvatar(userID: self.userIdTarget, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     
-                    let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
-                        dispatch_async(dispatch_get_main_queue(),{
+                        DispatchQueue.main.async(execute: {
                             cell.avatarIMV.image = imageRes
                         })
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
             
@@ -234,13 +234,13 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     cell.nameChatUserLB.text = nameChatUser
                 } else {
                     var prefixUser = kPMAPIUSER
-                    prefixUser.appendContentsOf(userIdTarget)
+                    prefixUser.append(userIdTarget)
                     Alamofire.request(.GET, prefixUser)
                         .responseJSON { response in switch response.result {
                         case .Success(let JSON):
                             let userInfo = JSON as! NSDictionary
-                            let name = userInfo.objectForKey(kFirstname) as! String
-                            cell.nameChatUserLB.text = name.uppercaseString
+                            let name = userInfo.object(forKey: kFirstname) as! String
+                            cell.nameChatUserLB.text = name.uppercased()
                         case .Failure(let error):
                             print("Request failed with error: \(error)")
                         }
@@ -249,26 +249,26 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
 
             }
             
-            cell.timeLB.hidden = true
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            cell.timeLB.isHidden = true
+            cell.selectionStyle = UITableViewCellSelectionStyle.none
             return cell
         } else {
             let num = arrayChat.count
             let message = arrayChat[num-indexPath.row] as! NSDictionary
             if (message[kImageUrl] is NSNull) {
-                let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageWithoutImageTableViewCell, forIndexPath: indexPath) as! ChatMessageWithoutImageTableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: kChatMessageWithoutImageTableViewCell, for: indexPath as IndexPath) as! ChatMessageWithoutImageTableViewCell
                 
-                let userID = String(format:"%0.f",message[kUserId]!.doubleValue)
+                let userID = String(format:"%0.f",(message[kUserId]! as AnyObject).doubleValue)
                 cell.avatarIMV.image = nil
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
-                            let name = userInfo.objectForKey(kFirstname) as! String
-                            cell.nameLB.text = name.uppercaseString
+                            let name = userInfo.object(forKey: kFirstname) as! String
+                            cell.nameLB.text = name.uppercased()
                             if (userInfo[kImageUrl] is NSNull == false) {
                                 let userImageURL = userInfo[kImageUrl] as! String
                                 
@@ -276,9 +276,9 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
                                         
-                                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                         if visibleCell == true {
-                                            dispatch_async(dispatch_get_main_queue(),{
+                                            DispatchQueue.main.async(execute: {
                                                 cell.avatarIMV.image = imageRes
                                             })
                                         }
@@ -296,49 +296,49 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     }
                 }).fetchdata()
                 
-                if (message.objectForKey(kText) == nil) {
+                if (message.object(forKey: kText) == nil) {
                     cell.messageLB.text = ""
                 } else {
-                    cell.messageLB.text = message.objectForKey(kText) as? String
+                    cell.messageLB.text = message.object(forKey: kText) as? String
                 }
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier(kChatMessageImageTableViewCell, forIndexPath: indexPath) as! ChatMessageImageTableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: kChatMessageImageTableViewCell, for: indexPath as IndexPath) as! ChatMessageImageTableViewCell
                 
-                let imageURLString = message.objectForKey(kImageUrl) as? String
+                let imageURLString = message.object(forKey: kImageUrl) as? String
                 
                 if (imageURLString?.isEmpty == false) {
                     ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
                         if (error == nil) {
-                            let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                            let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                             if visibleCell == true {
                                 let imageRes = result as! UIImage
                                 cell.photoIMW.image = imageRes
                             }
                         } else {
-                            print("Request failed with error: \(error)")
+                            print("Request failed with error: \(String(describing: error))")
                         }
                     }).fetchdata()
                 }
                 
                 
-                let userID = String(format:"%0.f",message[kUserId]!.doubleValue)
+                let userID = String(format:"%0.f",(message[kUserId]! as AnyObject).doubleValue)
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
-                            let name = userInfo.objectForKey(kFirstname) as! String
-                            cell.nameLB.text = name.uppercaseString
+                            let name = userInfo.object(forKey: kFirstname) as! String
+                            cell.nameLB.text = name.uppercased()
                             
                             let imageURLString = userInfo[kImageUrl] as? String
                             if (imageURLString?.isEmpty == false) {
                                 ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
                                     if (error == nil) {
-                                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                         if visibleCell == true {
                                             let imageRes = result as! UIImage
                                             cell.avatarIMV.image = imageRes
@@ -354,27 +354,27 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                     }
                 }).fetchdata()
                 
-                cell.messageLB.text = (message.objectForKey(kText) == nil) ? "" :  message.objectForKey(kText) as? String
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cell.messageLB.text = (message.object(forKey: kText) == nil) ? "" :  message.object(forKey: kText) as? String
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
                 return cell
             }
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (self.messageId == nil) {
             chatTBDistantCT.constant = self.view.frame.size.height/2 - 64 - 49
-            tableView.scrollEnabled = false
+            tableView.isScrollEnabled = false
             
             return 1
         } else {
             if (self.arrayChat != nil) {
                 chatTBDistantCT.constant = 0
-                tableView.scrollEnabled = true
+                tableView.isScrollEnabled = true
                 return self.arrayChat.count + 1
             } else {
                 chatTBDistantCT.constant = self.view.frame.size.height/2 - 64 - 49
-                tableView.scrollEnabled = false
+                tableView.isScrollEnabled = false
                 return 1
             }
         }
@@ -383,39 +383,39 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
     
     // MARK: Outlet function
     func cancel() {
         if self.isSendMessage {
-            NSNotificationCenter.defaultCenter().postNotificationName("SEND_CHAT_MESSAGE", object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SEND_CHAT_MESSAGE"), object: nil)
         }
         
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func avatarClicked() {
-        PMHelper.showCoachOrUserView(self.userIdTarget, showTestimonial: false, isFromChat: true)
+        PMHelper.showCoachOrUserView(userID: self.userIdTarget, showTestimonial: false, isFromChat: true)
     }
     
     @IBAction func goPhoto(sender:UIButton!) {
-        performSegueWithIdentifier("sendPhoto", sender: nil)
+        performSegue(withIdentifier: "sendPhoto", sender: nil)
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Go Send Picture Message"]
-        mixpanel.track("IOS.ChatMessage", properties: properties)
+        mixpanel?.track("IOS.ChatMessage", properties: properties)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "sendPhoto") {
             self.textBox.resignFirstResponder()
-            let destinationVC = segue.destinationViewController as! SendPhotoViewController
-            destinationVC.messageId = self.messageId
+            let destinationVC = segue.destination as! SendPhotoViewController
+            destinationVC.messageId = self.messageId as! NSString
             destinationVC.typeCoach = self.typeCoach
             destinationVC.coachId = self.coachId
-            destinationVC.userIdTarget = self.userIdTarget
+            destinationVC.userIdTarget = self.userIdTarget as! NSString
         }
     }
     
@@ -425,18 +425,18 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         values = (self.typeCoach == true) ? [coachId] : [userIdTarget as String]
         
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-        prefix.appendContentsOf("/")
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(kPM_PATH_CONVERSATION)
+        prefix.append("/")
         
         let param = [kUserId : PMHelper.getCurrentID(),
-                     kUserIds : values]
+                     kUserIds : values] as [String : Any]
         
         Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                     let JSON = response.result.value
-                    let conversationId = String(format:"%0.f",JSON!.objectForKey(kId)!.doubleValue)
+                    let conversationId = String(format:"%0.f",JSON!.object(forKey: kId)!.doubleValue)
                     //Add message to converstaton
                     self.messageId = conversationId
                     
@@ -452,11 +452,11 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     func addMessageToExistConverstation(){
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(kPM_PATH_CONVERSATION)
-        prefix.appendContentsOf("/")
-        prefix.appendContentsOf(self.messageId as String)
-        prefix.appendContentsOf(kPM_PARTH_MESSAGE_V2)
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(kPM_PATH_CONVERSATION)
+        prefix.append("/")
+        prefix.append(self.messageId as String)
+        prefix.append(kPM_PARTH_MESSAGE_V2)
         
         let param = [kConversationId : self.messageId,
                      kText : textBox.text,
@@ -478,7 +478,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             if (self.messageId != nil) {
                 self.addMessageToExistConverstation()
             } else {
-                self.sendMessage(true)
+                self.sendMessage(addEmptyMessage: true)
             }
             
             self.isSendMessage = true
@@ -486,7 +486,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
             let properties = ["Name": "Navigation Click", "Label":"Send Message"]
-            mixpanel.track("IOS.ChatMessage", properties: properties)
+            mixpanel?.track("IOS.ChatMessage", properties: properties)
         }
     }
 
@@ -494,9 +494,9 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         let data = NSMutableData()
         let terminator = [0]
         for string in array {
-            if let encodedString = string.dataUsingEncoding(NSUTF8StringEncoding) {
-                data.appendData(encodedString)
-                data.appendBytes(terminator, length: 1)
+            if let encodedString = string.data(using: NSUTF8StringEncoding) {
+                data.append(encodedString)
+                data.append(terminator, length: 1)
             }
         }
         return data

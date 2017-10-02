@@ -54,42 +54,42 @@ class CameraViewController: UIViewController {
     var recordStatus: RecordStatus = .pending {
         didSet {
             // Hidden indicator
-            self.playButtonIndicatorView.hidden = true
-            self.cameraIndicatorView.hidden = true
-            self.playVideoButton.hidden = true
-            self.changeCameraButton.hidden = true
+            self.playButtonIndicatorView.isHidden = true
+            self.cameraIndicatorView.isHidden = true
+            self.playVideoButton.isHidden = true
+            self.changeCameraButton.isHidden = true
             
-            self.cameraBorderView.backgroundColor = UIColor.clearColor()
+            self.cameraBorderView.backgroundColor = UIColor.clear
             
-            UIView.animateWithDuration(0.3) { 
+            UIView.animate(withDuration: 0.3) { 
                 // Setup play button image
                 if (self.recordStatus == .pending) {
-                    self.playButton.setImage(nil, forState: .Normal)
-                    self.changeCameraButton.hidden = false
+                    self.playButton.setImage(nil, for: .normal)
+                    self.changeCameraButton.isHidden = false
                 } else if (self.recordStatus == .recording) {
-                    let pauseImage = UIImage(named: "icon_pause")?.imageWithRenderingMode(.AlwaysTemplate)
-                    self.playButton.setImage(pauseImage, forState: .Normal)
+                    let pauseImage = UIImage(named: "icon_pause")?.withRenderingMode(.alwaysTemplate)
+                    self.playButton.setImage(pauseImage, for: .normal)
                 } else if (self.recordStatus == .finish) {
-                    let uploadImage = UIImage(named: "icon_upload")?.imageWithRenderingMode(.AlwaysTemplate)
-                    self.playButton.setImage(uploadImage, forState: .Normal)
+                    let uploadImage = UIImage(named: "icon_upload")?.withRenderingMode(.alwaysTemplate)
+                    self.playButton.setImage(uploadImage, for: .normal)
                     
-                    self.cameraIndicatorView.hidden = false
-                    self.playVideoButton.hidden = false
+                    self.cameraIndicatorView.isHidden = false
+                    self.playVideoButton.isHidden = false
                     
-                    self.cameraBorderView.backgroundColor = UIColor.blackColor()
+                    self.cameraBorderView.backgroundColor = UIColor.black
                 } else if (self.recordStatus == .uploading) {
-                    self.playButton.setImage(nil, forState: .Normal)
+                    self.playButton.setImage(nil, for: .normal)
                     
                     // Show indicator for uploading
-                    self.playButtonIndicatorView.hidden = false
+                    self.playButtonIndicatorView.isHidden = false
                 }
                 
                 // Retake button
                 if (self.retakeButton != nil) {
-                    self.retakeButton.hidden = true
+                    self.retakeButton.isHidden = true
                     
                     if (self.recordStatus == .finish) {
-                        self.retakeButton.hidden = false
+                        self.retakeButton.isHidden = false
                     }
                 }
             }
@@ -117,8 +117,8 @@ class CameraViewController: UIViewController {
         self.setupBasicLayout()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
         if (self.videoURL == nil) {
             self.isRecordByCamera = true
@@ -148,7 +148,7 @@ class CameraViewController: UIViewController {
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         if (self.needRemoveKVO) {
@@ -167,7 +167,7 @@ class CameraViewController: UIViewController {
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             }
             
-            self.playButton.userInteractionEnabled = true
+            self.playButton.isUserInteractionEnabled = true
             
             if (self.needRemoveKVO) {
                 self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
@@ -193,10 +193,10 @@ class CameraViewController: UIViewController {
         
         // Catch end video
         // Remove loop play video for
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
         
         // Add notification for loop play video
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(self.endVideoNotification),
                                                          name: AVPlayerItemDidPlayToEndTimeNotification,
                                                          object: self.videoPlayer!.currentItem)
@@ -213,19 +213,19 @@ class CameraViewController: UIViewController {
     
     func setupBasicLayout() {
         // Border camera view
-//        self.cameraBorderView.layer.borderColor = UIColor.whiteColor().CGColor
+//        self.cameraBorderView.layer.borderColor = UIColor.white.cgColor
 //        self.cameraBorderView.layer.borderWidth = 1.0
         
         // Close button
-        let closeImage = UIImage(named: "close")?.imageWithRenderingMode(.AlwaysTemplate)
-        self.closeButton.setImage(closeImage, forState: .Normal)
-        self.closeButton.tintColor = UIColor.whiteColor()
+        let closeImage = UIImage(named: "close")?.withRenderingMode(.alwaysTemplate)
+        self.closeButton.setImage(closeImage, for: .normal)
+        self.closeButton.tintColor = UIColor.white
         
         // Retake button
         
         
         // Play button
-        self.playButton.tintColor = UIColor.whiteColor()
+        self.playButton.tintColor = UIColor.white
         self.recordStatus = .pending
         
         self.playBorderBigView.layer.cornerRadius = 54/2
@@ -252,7 +252,7 @@ class CameraViewController: UIViewController {
         return templatePath
     }
     
-    func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: (exportURL:NSURL) -> Void) {
+    func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: (_ exportURL:NSURL) -> Void) {
         //        self.getTempVideoPath()
         // Crop video to square
         let asset: AVAsset = AVAsset(URL: videoURL)
@@ -274,7 +274,7 @@ class CameraViewController: UIViewController {
         let cropWidth = minWidthHeightVideo
         let cropHeight = minWidthHeightVideo
         
-        videoComposition.renderSize = CGSizeMake(cropWidth, cropHeight)
+        videoComposition.renderSize = CGSize(x:cropWidth, cropHeight)
         
         
         let videoOrientation = self.orientationForTrack(assetTrack)
@@ -284,13 +284,13 @@ class CameraViewController: UIViewController {
         switch (videoOrientation) {
         case .Portrait:
             t1 = CGAffineTransformMakeTranslation(assetTrack.naturalSize.height - cropOffX, 0 - cropOffX)
-            t2 = CGAffineTransformRotate(t1, CGFloat(M_PI_2))
+            t2 = CGAffineTransformRotate(t1, CGFloat(Double.pi/2))
             
 //            transformer.setCropRectangle(CGRect(x: cropOffX, y: cropOffX, width: cropWidth, height: cropHeight), atTime: kCMTimeZero)
             break
         case .PortraitUpsideDown:
             t1 = CGAffineTransformMakeTranslation(0 - cropOffX, assetTrack.naturalSize.width - cropOffY ) // not fixed width is the real height in upside down
-            t2 = CGAffineTransformRotate(t1, CGFloat(-M_PI_2))
+            t2 = CGAffineTransformRotate(t1, CGFloat(-Double.pi/2))
             break
         case .LandscapeRight:
             t1 = CGAffineTransformMakeTranslation(0 - cropOffX, 0 - cropOffY )
@@ -300,7 +300,7 @@ class CameraViewController: UIViewController {
             break
         case .LandscapeLeft:
             t1 = CGAffineTransformMakeTranslation(assetTrack.naturalSize.width - cropOffX, assetTrack.naturalSize.height - cropOffY )
-            t2 = CGAffineTransformRotate(t1, CGFloat(M_PI))
+            t2 = CGAffineTransformRotate(t1, CGFloat(Double.pi))
             break
         default:
             print("no supported orientation has been found in this video")
@@ -388,7 +388,7 @@ class CameraViewController: UIViewController {
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
                         PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
                     }) { completed, error in
-                        self.dismissViewControllerAnimated(true, completion: nil)
+                        self.dismissViewControllerAnimated(animated: true, completion: nil)
                     }
                 })
             }
@@ -397,7 +397,7 @@ class CameraViewController: UIViewController {
     
     func uploadCurrentVideo(videoURL: NSURL) {
         let videoData = NSData(contentsOfURL: videoURL)
-        let videoExtend = (videoURL.absoluteString!.componentsSeparatedByString(".").last?.lowercaseString)!
+        let videoExtend = (videoURL.absoluteString!.components(separatedBy: ".").last?.lowercaseString)!
         let videoType = "video/" + videoExtend
         let videoName = "video." + videoExtend
         
@@ -406,8 +406,8 @@ class CameraViewController: UIViewController {
         
         // send video by method mutipart to server
         var prefix = kPMAPIUSER
-        prefix.appendContentsOf(PMHelper.getCurrentID())
-        prefix.appendContentsOf(kPM_PATH_VIDEO)
+        prefix.append(PMHelper.getCurrentID())
+        prefix.append(kPM_PATH_VIDEO)
         var parameters = [String:AnyObject]()
         
         parameters = [kUserId : PMHelper.getCurrentID(),
@@ -438,16 +438,16 @@ class CameraViewController: UIViewController {
                         self.recordStatus = .pending
                         
                         if (response.response?.statusCode == 200) {
-                            NSNotificationCenter.defaultCenter().postNotificationName("profileGetDetail", object: nil, userInfo: nil)
+                            NotificationCenter.default.postNotificationName("profileGetDetail", object: nil, userInfo: nil)
                             
-                            self.dismissViewControllerAnimated(true, completion: nil)
+                            self.dismissViewControllerAnimated(animated: true, completion: nil)
                         } else {
-                            let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .Alert)
-                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                            let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                                 self.recordStatus = .finish
                             }
                             alertController.addAction(OKAction)
-                            self.presentViewController(alertController, animated: true) {
+                            self.present(alertController, animated: true) {
                                 // ...
                             }
                         }
@@ -462,34 +462,34 @@ class CameraViewController: UIViewController {
     func videoPlayerSetPlay(isPlay: Bool) {
         if (isPlay) {
             self.videoPlayer?.play()
-            self.playVideoButton.setImage(nil, forState: .Normal)
+            self.playVideoButton.setImage(nil, for: .normal)
         } else {
             self.videoPlayer?.pause()
             
             let playImage = UIImage(named: "icon_play_video")
-            self.playVideoButton.setImage(playImage, forState: .Normal)
+            self.playVideoButton.setImage(playImage, for: .normal)
         }
         
         self.isVideoPlaying = isPlay
     }
     
     func showSettingAlert() {
-        let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .alert)
         
-        let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (action) in
+        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (action) in
             UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
         }
         
         alertController.addAction(settingsAction)
         
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - Outlet function
     
     @IBAction func closeButtonClicked(sender: AnyObject) {
         if (self.recordStatus != .uploading) {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismissViewControllerAnimated(animated: true, completion: nil)
         }
     }
     
@@ -505,7 +505,7 @@ class CameraViewController: UIViewController {
             
         } else {
             self.pickerController.delegate = self
-            self.presentViewController(self.pickerController, animated: true, completion: { 
+            self.present(self.pickerController, animated: true, completion: { 
                 // Do nothing
             })
         }
@@ -532,9 +532,9 @@ class CameraViewController: UIViewController {
                 self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
                 
                 // Notification for upload video in background
-                NSNotificationCenter.defaultCenter().postNotificationName("profileUploadVideo", object: self.videoURL)
+                NotificationCenter.default.postNotificationName("profileUploadVideo", object: self.videoURL)
                 
-                self.dismissViewControllerAnimated(true, completion: nil)
+                self.dismissViewControllerAnimated(animated: true, completion: nil)
             }
         } else {
             self.showSettingAlert()
@@ -608,7 +608,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         print("Finish record video")
         
-        self.playButton.userInteractionEnabled = false
+        self.playButton.isUserInteractionEnabled = false
         
         // Save video to library
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {

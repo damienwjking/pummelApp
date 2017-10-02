@@ -36,34 +36,34 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.afterSearch), name: "AFTER_SEARCH_PAGE", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.afterSearch), name: "AFTER_SEARCH_PAGE", object: nil)
     }
     
     func animationIndicator() {
-        self.smallIndicatorView.hidden = false
+        self.smallIndicatorView.isHidden = false
         let seconds = 0.5
         let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
         let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
             
-            self.medIndicatorView.hidden = false
+            self.medIndicatorView.isHidden = false
             let seconds = 0.5
             let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
             let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
 
             dispatch_after(dispatchTime, dispatch_get_main_queue(), {
                 
-                self.bigIndicatorView.hidden = false
+                self.bigIndicatorView.isHidden = false
                 let seconds = 0.5
                 let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
                 let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
 
                 dispatch_after(dispatchTime, dispatch_get_main_queue(), {
                     
-                    self.smallIndicatorView.hidden = true
-                    self.medIndicatorView.hidden = true
-                    self.bigIndicatorView.hidden = true
+                    self.smallIndicatorView.isHidden = true
+                    self.medIndicatorView.isHidden = true
+                    self.bigIndicatorView.isHidden = true
                     let seconds = 0.5
                     let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
                     let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
@@ -82,7 +82,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
     }
     
     @IBAction func closeSearching(sender:UIButton!) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(animated: true, completion: nil)
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
@@ -100,7 +100,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         backgroundLogo.layer.cornerRadius = 45
@@ -118,9 +118,9 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         self.medIndicatorView.clipsToBounds = true
         self.smallIndicatorView.clipsToBounds = true
         
-        self.bigIndicatorView.hidden = true
-        self.medIndicatorView.hidden = true
-        self.smallIndicatorView.hidden = true
+        self.bigIndicatorView.isHidden = true
+        self.medIndicatorView.isHidden = true
+        self.smallIndicatorView.isHidden = true
         
         self.map.delegate = self
         let link = "http://tile.stamen.com/toner/{z}/{x}/{y}.png"
@@ -139,29 +139,29 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         {
             switch(CLLocationManager.authorizationStatus()) {
                 case .Restricted, .Denied:
-                    let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .Alert)
-                            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .alert)
+                            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                                 let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
                                 if let url = settingsUrl {
                                     UIApplication.sharedApplication().openURL(url)
                                 }
                         }
                         alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                     // ...
                     }
                 case .AuthorizedAlways, .AuthorizedWhenInUse: break
             default: break
             }
         } else {
-            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                self.dismissViewControllerAnimated(false, completion: { 
+            let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
+                self.dismissViewControllerAnimated(animated: false, completion: { 
                     
                 })
             }
             alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
+            self.present(alertController, animated: true) {
                 // ...
             }
         }
@@ -193,8 +193,8 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         let presentViewController = self.presentingViewController
         
         if (presentViewController != nil) {
-            self.dismissViewControllerAnimated(true, completion: {
-                presentViewController!.dismissViewControllerAnimated(true, completion: nil)
+            self.dismissViewControllerAnimated(animated: true, completion: {
+                presentViewController!.dismissViewControllerAnimated(animated: true, completion: nil)
             })
         }
     }
@@ -225,7 +225,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         kState: state,
                         kCity: city]
                     
-                    NSNotificationCenter.defaultCenter().postNotificationName(k_PM_FIRST_SEARCH_COACH, object: nil)
+                    NotificationCenter.default.postNotificationName(k_PM_FIRST_SEARCH_COACH, object: nil)
                 }
             })
         }

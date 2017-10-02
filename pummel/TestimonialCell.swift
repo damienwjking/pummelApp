@@ -24,15 +24,15 @@ class TestimonialCell: UICollectionViewCell {
         
         self.layer.cornerRadius = 10
         self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor.init(white: 0.8, alpha: 0.25).CGColor
+        self.layer.borderColor = UIColor.init(white: 0.8, alpha: 0.25).cgColor
         
         self.avatarImageView.clipsToBounds = true
         self.avatarImageView.layer.masksToBounds = true
         self.avatarImageView.layer.cornerRadius = 25
-        self.avatarImageView.layer.borderColor = UIColor.lightGrayColor().CGColor
+        self.avatarImageView.layer.borderColor = UIColor.lightGray.cgColor
         self.avatarImageView.layer.borderWidth = 0 // No border
         
-        self.avatarImageView.userInteractionEnabled = true
+        self.avatarImageView.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer { (_) in
             self.avatarImageViewClicked()
         }
@@ -104,6 +104,6 @@ class TestimonialCell: UICollectionViewCell {
     }
     
     func avatarImageViewClicked() {
-        PMHelper.showCoachOrUserView(self.userID)
+        PMHelper.showCoachOrUserView(userID: self.userID)
     }
 }

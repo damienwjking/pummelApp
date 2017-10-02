@@ -33,7 +33,7 @@ class LoginAndRegisterViewController: UIViewController {
         super.viewDidLoad()
         
         // Hidden navigation bar
-        self.navigationController?.navigationBar.hidden = true
+        self.navigationController?.navigationBar.isHidden = true
         self.setNeedsStatusBarAppearanceUpdate()
         
         // Add loginVC
@@ -55,23 +55,23 @@ class LoginAndRegisterViewController: UIViewController {
         profileIMV.clipsToBounds = true
         imagePicker.delegate = self
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(LoginAndRegisterViewController.imageTapped)))
-        self.addProfileIMV.userInteractionEnabled = true
+        self.addProfileIMV.isUserInteractionEnabled = true
         self.addProfileIMV.addGestureRecognizer(tapGestureRecognizer)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.loginSuccessAction), name: "LOGINSUCCESSNOTIFICATION", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.loginSuccessAction), name: "LOGINSUCCESSNOTIFICATION", object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.signupSuccessAction), name: "SIGNUPSUCCESSNOTIFICATION", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.signupSuccessAction), name: "SIGNUPSUCCESSNOTIFICATION", object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.forgotPasswordAction), name: "FORGOTPASSWORDNOTIFICATION", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.forgotPasswordAction), name: "FORGOTPASSWORDNOTIFICATION", object: nil)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -79,11 +79,11 @@ class LoginAndRegisterViewController: UIViewController {
     }
     
     func loginSuccessAction() {
-        self.performSegueWithIdentifier("showClientSegue", sender: nil)
+        self.performSegue(withIdentifier: "showClientSegue", sender: nil)
     }
     
     func forgotPasswordAction() {
-        performSegueWithIdentifier("forgottenPasswordSegue", sender: nil)
+        performSegue(withIdentifier: "forgottenPasswordSegue", sender: nil)
     }
     
     func signupSuccessAction() {
@@ -99,17 +99,17 @@ class LoginAndRegisterViewController: UIViewController {
             
             let isSuccess = result as! Bool
             if (isSuccess == true) {
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
-                self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                UserDefaults.standard.setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+                self.performSegue(withIdentifier: "showClientSegue", sender: nil)
             } else {
-                let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .Alert)
+                let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .alert)
                 
-                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
-                    self.performSegueWithIdentifier("showClientSegue", sender: nil)
+                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
+                    UserDefaults.standard.setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+                    self.performSegue(withIdentifier: "showClientSegue", sender: nil)
                 }
                 alertController.addAction(OKAction)
-                self.presentViewController(alertController, animated: true) {
+                self.present(alertController, animated: true) {
                     // ...
                 }
             }
@@ -117,7 +117,7 @@ class LoginAndRegisterViewController: UIViewController {
     }
     
     @IBAction func backButtonClicked(sender:UIButton!) {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func loginAction(sender:UIButton!) {
@@ -132,30 +132,30 @@ class LoginAndRegisterViewController: UIViewController {
     
     func updateLoginScreen() {
         if (self.isShowLogin == false) {
-            loginVC.view.hidden = true
-            signupVC.view.hidden = false
+            loginVC.view.isHidden = true
+            signupVC.view.isHidden = false
             self.underLineViewLeadingContraint.constant = self.view.frame.size.width/2
-            self.addProfilePhototLB.hidden = false
-            self.profileIMV.hidden = true
-            self.logoIMV.hidden = false
-            self.profileIMV.hidden = false
-            self.logoIMV.hidden = true
-            self.addProfileIMV.hidden = false
-            self.addProfileIconIMV.hidden = false
-            self.cameraProfileIconIMV.hidden = false
+            self.addProfilePhototLB.isHidden = false
+            self.profileIMV.isHidden = true
+            self.logoIMV.isHidden = false
+            self.profileIMV.isHidden = false
+            self.logoIMV.isHidden = true
+            self.addProfileIMV.isHidden = false
+            self.addProfileIconIMV.isHidden = false
+            self.cameraProfileIconIMV.isHidden = false
         } else {
-            signupVC.view.hidden = true
-            loginVC.view.hidden = false
+            signupVC.view.isHidden = true
+            loginVC.view.isHidden = false
             self.underLineViewLeadingContraint.constant = 0
-            self.addProfilePhototLB.hidden = true
-            self.profileIMV.hidden = true
-            self.logoIMV.hidden = false
-            self.addProfileIMV.hidden = true
-            self.addProfileIconIMV.hidden = true
-            self.cameraProfileIconIMV.hidden = true
+            self.addProfilePhototLB.isHidden = true
+            self.profileIMV.isHidden = true
+            self.logoIMV.isHidden = false
+            self.addProfileIMV.isHidden = true
+            self.addProfileIconIMV.isHidden = true
+            self.cameraProfileIconIMV.isHidden = true
         }
         
-        UIView.animateWithDuration(0.3) {
+        UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
     }
@@ -164,21 +164,21 @@ class LoginAndRegisterViewController: UIViewController {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = false
             self.imagePicker.sourceType = .PhotoLibrary
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
         
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
             self.imagePicker.sourceType = .Camera
             self.imagePicker.cameraDevice = .Front
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     func imageTapped() {
@@ -194,13 +194,13 @@ class LoginAndRegisterViewController: UIViewController {
         if (testStr == "") {
             return false
         } else {
-            let dateFormatter = NSDateFormatter()
+            let dateFormatter = DateFormatter
             dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
             dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
-            let dateDOB = dateFormatter.dateFromString(testStr)
+            let dateDOB = dateFormatter.date(from: testStr)
             
             let date = NSDate()
-            let calendar = NSCalendar.currentCalendar()
+            let calendar = NSCalendar.current
             let components = calendar.components([.Day , .Month , .Year], fromDate: date)
             let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
             let year =  components.year
@@ -221,7 +221,7 @@ extension LoginAndRegisterViewController: UIImagePickerControllerDelegate, UINav
             self.profileIMV.contentMode = .ScaleAspectFill
             self.profileIMV.image = pickedImage
             self.imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
-            self.cameraProfileIconIMV.hidden = true
+            self.cameraProfileIconIMV.isHidden = true
             self.addProfilePhototLB.textColor = UIColor(white: 225, alpha: 1.0)
         }
         

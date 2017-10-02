@@ -19,6 +19,7 @@ let widthHeight100 = "?width=100&height=100"
 let widthHeight200 = "?width=200&height=200"
 let widthHeight236 = "?width=236&height=236"
 let widthHeightScreen = "?width=\(SCREEN_WIDTH)&height=\(SCREEN_HEIGHT)"
+let widthHeightScreenx2 = "?width=\(SCREEN_WIDTH*2)&height=\(SCREEN_HEIGHT*2)"
 let widthEqual = "?width="
 let heighEqual = "&height="
 

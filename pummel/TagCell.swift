@@ -18,12 +18,12 @@ class TagCell: UICollectionViewCell {
     @IBOutlet weak var tagImage: UIImageView!
     var isSearch: Bool = false
     override func awakeFromNib() {
-        self.layer.borderColor = UIColor(white: 151.0/255.0, alpha: 1.0).CGColor
+        self.layer.borderColor = UIColor(white: 151.0/255.0, alpha: 1.0).cgColor
         self.layer.borderWidth = 0.5
-        self.backgroundColor = UIColor.clearColor()
-        self.tagBackgroundV.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
+        self.tagBackgroundV.backgroundColor = UIColor.clear
         self.tagBackgroundV.layer.cornerRadius = 2
-        self.tagName.textColor = UIColor.whiteColor()
+        self.tagName.textColor = UIColor.white
         self.tagName.font = .pmmMonLight14()
         self.layer.cornerRadius = 2
         
@@ -45,7 +45,7 @@ class TagCell: UICollectionViewCell {
     
     func setupData(tag: Tag) {
         self.tagName.text = tag.name
-        self.tagName.textColor = UIColor.blackColor()
-        self.layer.borderColor = UIColor.clearColor().CGColor
+        self.tagName.textColor = UIColor.black
+        self.layer.borderColor = UIColor.clear.cgColor
     }
 }

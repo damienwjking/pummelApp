@@ -29,19 +29,19 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "ADD A COMMENT"
-        self.navigationController!.navigationBar.translucent = false;
+        self.navigationController!.navigationBar.isTranslucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationItem.hidesBackButton = true;
-        let image = UIImage(named: "close")!.imageWithRenderingMode(.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(SendPhotoViewController.close))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SendPhotoViewController.post))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        let image = UIImage(named: "close")!.withRenderingMode(.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(SendPhotoViewController.close))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SendPhotoViewController.post))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
         self.setAvatar()
         self.commentPhotoTV.text = addAComment
         self.commentPhotoTV.font = UIFont.pmmMonReg13()
-        self.commentPhotoTV.keyboardAppearance = .Dark
+        self.commentPhotoTV.keyboardAppearance = .dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
         self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
@@ -56,15 +56,15 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
         imageScrolView.autoresizingMask = [.FlexibleHeight , .FlexibleWidth]
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(NewCommentImageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -76,19 +76,19 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
             self.viewKeyboard.removeFromSuperview()
         }
         viewKeyboard = UIView.init(frame:CGRect(x: 0, y: self.view.frame.height - keyboardHeight, width: self.view.frame.width, height: keyboardHeight))
-        viewKeyboard.backgroundColor = UIColor.blackColor()
-        viewKeyboard.hidden = true
+        viewKeyboard.backgroundColor = UIColor.black
+        viewKeyboard.isHidden = true
         self.view.addSubview(viewKeyboard)
-        self.viewKeyboard.hidden = false
+        self.viewKeyboard.isHidden = false
         if  (self.otherKeyboardView != nil) {
             self.otherKeyboardView.removeFromSuperview()
         }
         self.otherKeyboardView = UIView.init(frame:CGRect(x: 0, y: self.commentPhotoTV.frame.origin.y, width: self.view.frame.width, height: self.view.frame.size.height - self.commentPhotoTV.frame.origin.y))
-        self.otherKeyboardView.backgroundColor = UIColor.clearColor()
+        self.otherKeyboardView.backgroundColor = UIColor.clear
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(SendPhotoViewController.handleTap(_:)))
         self.otherKeyboardView.addGestureRecognizer(recognizer)
         self.view.addSubview(self.otherKeyboardView)
-        self.viewKeyboard.backgroundColor = UIColor.blackColor()
+        self.viewKeyboard.backgroundColor = UIColor.black
     }
     
     override func didReceiveMemoryWarning() {
@@ -120,7 +120,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     }
     
     func close() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func post() {
@@ -128,15 +128,15 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
             self.isPosting = true
             self.commentPhotoTV.resignFirstResponder()
             var prefix = kPMAPI_POST
-            prefix.appendContentsOf(postId)
-            prefix.appendContentsOf("/comments")
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            prefix.append(postId)
+            prefix.append("/comments")
+            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
             activityView.center = self.view.center
             activityView.startAnimating()
             var imageData : NSData!
             let type : String!
             let filename : String!
-            imageData = (self.imageSelected?.hidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+            imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
             type = imageJpeg
             filename = jpgeFile
             let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
@@ -167,20 +167,20 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
                             if response.result.error != nil {
                                 activityView.stopAnimating()
                                 activityView.removeFromSuperview()
-                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
                                 
                                 
-                                let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                                     // ...
                                 }
                                 alertController.addAction(OKAction)
-                                self.presentViewController(alertController, animated: true) {
+                                self.present(alertController, animated: true) {
                                     // ...
                                 }
                             } else {
                                 activityView.stopAnimating()
                                 activityView.removeFromSuperview()
-                                self.navigationController?.popViewControllerAnimated(true)
+                                self.navigationController?.popViewController(animated: true)
                             }
                         }
                         
@@ -189,14 +189,14 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
                         activityView.stopAnimating()
                         activityView.removeFromSuperview()
                         
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .Alert)
+                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
                         
                         
-                        let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                             // ...
                         }
                         alertController.addAction(OKAction)
-                        self.presentViewController(alertController, animated: true) {
+                        self.present(alertController, animated: true) {
                             // ...
                         }
                     }
@@ -211,19 +211,19 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
             self.selectFromLibrary = true
             self.imagePicker.allowsEditing = false
             self.imagePicker.sourceType = .PhotoLibrary
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
         
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
             self.showCameraRoll(sender)
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.Destructive, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.Destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     
@@ -232,10 +232,10 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
         fusuma.delegate = self
         fusuma.defaultMode = .Camera
         fusuma.modeOrder = .CameraFirst
-        self.presentViewController(fusuma, animated: true, completion: nil)
+        self.present(fusuma, animated: true, completion: nil)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
@@ -245,8 +245,8 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     func fusumaImageSelected(image: UIImage) {
         self.imageSelected!.image = image
         if (self.selectFromLibrary == true) {
-            self.imageScrolView.hidden = true
-            self.imageSelected?.hidden = false
+            self.imageScrolView.isHidden = true
+            self.imageSelected?.isHidden = false
         } else {
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
@@ -256,9 +256,9 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = image
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
-            self.imageSelected?.hidden = true
-            self.imageScrolView?.hidden = false
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
+            self.imageSelected?.isHidden = true
+            self.imageScrolView?.isHidden = false
         }
     }
     
@@ -277,7 +277,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
     func fusumaCameraRollUnauthorized() {
         print("Camera roll unauthorized")
         
-        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
             
@@ -291,7 +291,7 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
             
         }))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -333,10 +333,10 @@ class NewCommentImageViewController: BaseViewController, FusumaDelegate, UITextV
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSizeMake(self.view.frame.size.width, frameT.size.height) : CGSizeMake(self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
             
-            self.imageSelected?.hidden = true
-            self.imageScrolView?.hidden = false
+            self.imageSelected?.isHidden = true
+            self.imageScrolView?.isHidden = false
         }
         dismissViewControllerAnimated(true, completion: nil)
     }

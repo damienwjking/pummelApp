@@ -10,7 +10,7 @@ import Mixpanel
 import Alamofire
 import Foundation
 
-typealias CompletionBlock = (result: AnyObject?, error: NSError?) -> Void
+typealias CompletionBlock = (_ result: AnyObject?, _ error: NSError?) -> Void
 //typealias ResponseCompletionBlock = (response:  Response<AnyObject, NSError>, error: NSError?) -> Void
 
 enum ImageRouter: URLRequestConvertible {
@@ -243,8 +243,8 @@ enum ImageRouter: URLRequestConvertible {
     }
     
     func getCacheImageWithLink(link: String) -> UIImage?  {
-        if (NSCache.sharedInstance.objectForKey(link) != nil) {
-            let imageRes = NSCache.sharedInstance.objectForKey(link) as! UIImage
+        if (NSCache.sharedInstance.object(forKey: link) != nil) {
+            let imageRes = NSCache.sharedInstance.object(forKey: link) as! UIImage
             return imageRes
         }
         

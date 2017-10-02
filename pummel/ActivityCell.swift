@@ -17,13 +17,13 @@ class ActivityCell: UICollectionViewCell {
     
     var isSearch: Bool = false
     override func awakeFromNib() {
-        self.layer.borderColor = UIColor(white: 151.0/255.0, alpha: 1.0).CGColor
+        self.layer.borderColor = UIColor(white: 151.0/255.0, alpha: 1.0).cgColor
         self.layer.borderWidth = 0.5
         self.layer.cornerRadius = 2
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
         self.tagBackgroundV.layer.cornerRadius = 2
         self.tagBackgroundV.backgroundColor = self.getRandomColor()
-        self.tagName.textColor = UIColor.whiteColor()
+        self.tagName.textColor = UIColor.white
         self.tagName.font = .pmmMonLight14()
         
         self.tagNameMaxWidthConstraint.constant = SCREEN_WIDTH - 9

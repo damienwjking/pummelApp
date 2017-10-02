@@ -14,21 +14,21 @@ class ProgressViewController: BaseViewController {
     @IBOutlet var comingSoonTF : UILabel!
     @IBOutlet var comingSoonDetailTF : UILabel!
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.title = kNavSession
-        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         
         let selectedImage = UIImage(named: "sessionsPressed")
-        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
+        self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         
-        if (defaults.boolForKey(k_PM_IS_COACH) == true) {
+        if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
             let sessionCoachVC = UIStoryboard(name: "Session", bundle: nil).instantiateViewControllerWithIdentifier("SessionCoachViewController")
             self.addChildViewController(sessionCoachVC)
             self.view.addSubview(sessionCoachVC.view)
@@ -39,7 +39,7 @@ class ProgressViewController: BaseViewController {
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
     

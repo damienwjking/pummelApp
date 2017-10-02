@@ -19,33 +19,33 @@ class GetStarted3ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
         self.backgroundV.backgroundColor = .pmmWhite07Color()
         self.reachTF.font = .pmmPlayFairReg42()
         self.shareTF.font = .pmmPlayFairReg15()
         
         self.letSetItBT.layer.cornerRadius = 2
         self.letSetItBT.layer.borderWidth = 0.5
-        self.letSetItBT.layer.borderColor = UIColor.whiteColor().CGColor
+        self.letSetItBT.layer.borderColor = UIColor.white.cgColor
         self.letSetItBT.titleLabel?.font = .pmmMonReg13()
         self.updateUI()
     }
 
     // Button Action
     @IBAction func buttonAction(sender:UIButton!) {
-        performSegueWithIdentifier("toRegister", sender: nil)
+        performSegue(withIdentifier: "toRegister", sender: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "toRegister")
         {
-            let destinationVC = segue.destinationViewController as! LoginAndRegisterViewController
+            let destinationVC = segue.destination as! LoginAndRegisterViewController
             destinationVC.isShowLogin = false
         }
     }
 
     @IBAction func backToFirstScreenTour(sender:UIButton!) {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -54,10 +54,7 @@ class GetStarted3ViewController: UIViewController {
     }
     
     func updateUI() {
-        let SCREEN_WIDTH         = UIScreen.mainScreen().bounds.size.width
-        let SCREEN_HEIGHT        = UIScreen.mainScreen().bounds.size.height
-        let SCREEN_MAX_LENGTH    = max(SCREEN_WIDTH, SCREEN_HEIGHT)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && SCREEN_MAX_LENGTH == 568.0) {
+        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
             self.mainTextDistantCT.constant = 40
         }
     }

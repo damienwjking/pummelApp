@@ -15,19 +15,19 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedIndex = defaultIndex
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessage), name: k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showMessage), name: k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showFeed), name: k_PM_SHOW_FEED, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showSession), name: k_PM_SHOW_SHOW_SESSIONS, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showClients), name: k_PM_SHOW_SHOW_CLIENTS, object: nil)
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadgeWithoutRefresh), name: k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showFeed), name: k_PM_SHOW_FEED, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showSession), name: k_PM_SHOW_SHOW_SESSIONS, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showClients), name: k_PM_SHOW_SHOW_CLIENTS, object: nil)
+//        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadgeWithoutRefresh), name: k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
         
         self.delegate = self
     }
     
     func showMessage() {
         if selectedIndex == 3 {
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
+            NotificationCenter.default.postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
         } else {
             selectedIndex = 3
         }
@@ -39,7 +39,7 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func showSession() {
         if selectedIndex == 3 {
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_SESSION, object: nil)
+            NotificationCenter.default.postNotificationName(k_PM_REFRESH_SESSION, object: nil)
         } else {
             selectedIndex = 3
         }
@@ -47,16 +47,16 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func showClients() {
         if selectedIndex == 3 {
-            NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_CLIENTS, object: nil)
+            NotificationCenter.default.postNotificationName(k_PM_REFRESH_CLIENTS, object: nil)
         } else {
             selectedIndex = 3
         }
     }
     
     func showMessageBadge() {
-        var badgeV = NSUserDefaults.standardUserDefaults().integerForKey("MESSAGE_BADGE_VALUE")
+        var badgeV = UserDefaults.standard.integerForKey("MESSAGE_BADGE_VALUE")
         badgeV += 1
-        NSUserDefaults.standardUserDefaults().setInteger(badgeV, forKey: "MESSAGE_BADGE_VALUE")
+        UserDefaults.standard.setInteger(badgeV, forKey: "MESSAGE_BADGE_VALUE")
         if (badgeV > 0) {
             self.tabBar.items![3].badgeValue = String(badgeV)
         } else {
@@ -64,14 +64,14 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         if (selectedIndex == 3) {
-             NSNotificationCenter.defaultCenter().postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
+             NotificationCenter.default.postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
         }
     }
     
     func showMessageBadgeWithoutRefresh () {
-        var badgeV = NSUserDefaults.standardUserDefaults().integerForKey("MESSAGE_BADGE_VALUE")
+        var badgeV = UserDefaults.standard.integerForKey("MESSAGE_BADGE_VALUE")
         badgeV += 1
-        NSUserDefaults.standardUserDefaults().setInteger(badgeV, forKey: "MESSAGE_BADGE_VALUE")
+        UserDefaults.standard.setInteger(badgeV, forKey: "MESSAGE_BADGE_VALUE")
         if (badgeV != 0) {
             self.tabBar.items![3].badgeValue = String(badgeV)
         } else {

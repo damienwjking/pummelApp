@@ -17,30 +17,30 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
     var textToPost = ""
     var dateToPost = ""
     var userIdSelected = ""
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var forceUpdate = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         var image = UIImage(named: "blackArrow")
-        image = image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(BookSessionViewController.cancel))
+        image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(BookSessionViewController.cancel))
         
         // TODO: add right invite button
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kInvite.uppercaseString, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.invite))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], forState: .Normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kInvite.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.invite))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         
         let nibName = UINib(nibName: "GroupLeadTableViewCell", bundle:nil)
-        self.tbView.registerNib(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")
+        self.tbView.register(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")
         
         let nibName2 = UINib(nibName: "LeadAddedTableViewCell", bundle:nil)
-        self.tbView.registerNib(nibName2, forCellReuseIdentifier: "LeadAddedTableViewCell")
+        self.tbView.register(nibName2, forCellReuseIdentifier: "LeadAddedTableViewCell")
         self.tbView.allowsSelection = false
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.title = kClients.uppercaseString
+        self.title = kClients.uppercased()
         
         self.resetLBadge()
     }
@@ -52,25 +52,25 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
     
     func invite() {
         let inviteSMSAction = UIAlertAction(title: kInviteSMS, style: .Destructive) { (_) in
-            self.performSegueWithIdentifier("inviteContactUser", sender: kSMS)
+            self.performSegue(withIdentifier: "inviteContactUser", sender: kSMS)
         }
         
         let inviteMailAction = UIAlertAction(title: kInviteEmail, style: .Destructive) { (_) in
-            self.performSegueWithIdentifier("inviteContactUser", sender: kEmail)
+            self.performSegue(withIdentifier: "inviteContactUser", sender: kEmail)
         }
         
         let cancelAction = UIAlertAction(title: kCancle, style: .Cancel, handler: nil)
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alertController.addAction(inviteSMSAction)
         alertController.addAction(inviteMailAction)
         alertController.addAction(cancelAction)
         
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func cancel() {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func selectUserWithID(userId: String, typeGroup: Int) {
@@ -85,7 +85,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
                 if typeGroup == TypeGroup.Current.rawValue {
                     self.showAlertMovetoOldAction(userInfo)
                 } else {
-                    self.showAlertMovetoCurrentAction(userInfo, typeGroup: typeGroup)
+                    self.showAlertMovetoCurrentAction(userInfo: userInfo, typeGroup: typeGroup)
                 }
             } else {
                 print("Request failed with error: \(error)")
@@ -98,9 +98,9 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
         self.tbView.reloadData()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "inviteContactUser") {
-            let destination = segue.destinationViewController as! ContactUserViewController
+            let destination = segue.destination as! ContactUserViewController
             
             let styleInvite = sender as! String
             destination.styleInvite = styleInvite
@@ -110,16 +110,16 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
 
 //MARK: TableView
 extension BookSessionShareViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
         return 140
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("GroupLeadTableViewCell") as! GroupLeadTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "GroupLeadTableViewCell") as! GroupLeadTableViewCell
         if indexPath.row == 0 {
             cell.titleHeader.text = "NEW LEADS"
             cell.typeGroup = TypeGroup.NewLead
@@ -143,16 +143,16 @@ extension BookSessionShareViewController: UITableViewDelegate, UITableViewDataSo
 
 extension BookSessionShareViewController {
     func showAlertMovetoOldAction(userInfo:NSDictionary) {
-        let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
+        let userID = String(format:"%0.f", (userInfo[kId]! as AnyObject).doubleValue)
         
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
             let param = [kUserId : PMHelper.getCurrentID(),
                          kUserIdRequest : userID]
             
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf(kPMAPICOACH_OLD)
-            prefix.appendContentsOf("/")
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append(kPMAPICOACH_OLD)
+            prefix.append("/")
             Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
                     self.view.hideToastActivity()
@@ -180,7 +180,7 @@ extension BookSessionShareViewController {
 //                        mail.setToRecipients(["hello@pummel.fit"])
 //                        mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
 //                        mail.setSubject("Come join me on Pummel Fitness")
-//                        self.presentViewController(mail, animated: true, completion: nil)
+//                        self.present(mail, animated: true, completion: nil)
 //                    }
                     
                     var urlString = "mailto:"
@@ -206,10 +206,10 @@ extension BookSessionShareViewController {
         }
         
         // Call action
-        let phoneNumber = userInfo[kMobile] as! String
+        let phoneNumber = userInfo[kMobile] as? String
         let callClientAction = { (action:UIAlertAction!) -> Void in
             var urlString = "tel:///"
-            urlString = urlString.stringByAppendingString(phoneNumber)
+            urlString = urlString.stringByAppendingString(phoneNumber!)
             
             let tellURL = NSURL(string: urlString)
             if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
@@ -220,50 +220,50 @@ extension BookSessionShareViewController {
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
             // Special case: can not call tabbarviewcontroller
-            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            UserDefaults.standard.setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            UserDefaults.standard.setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
             
-            self.navigationController?.popToRootViewControllerAnimated(true)
+            self.navigationController?.popToRootViewController(animated: true)
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            PMHelper.showCoachOrUserView(userID)
+            PMHelper.showCoachOrUserView(userID: userID)
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.destructive, handler: viewProfileAction))
         
-        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.destructive, handler: sendMessageClientAction))
         
         // Check exist phone number
-        if (phoneNumber.isEmpty == false) {
-            alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
+        if (phoneNumber != nil && phoneNumber!.isEmpty == false) {
+            alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.destructive, handler: callClientAction))
         }
         
         // Check exist email
         if (userMail.isEmpty == false) {
-            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.destructive, handler: emailClientAction))
         }
         
-        alertController.addAction(UIAlertAction(title: kRemoveClient, style: UIAlertActionStyle.Destructive, handler: clickMoveToOld))
+        alertController.addAction(UIAlertAction(title: kRemoveClient, style: UIAlertActionStyle.destructive, handler: clickMoveToOld))
         
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     func showAlertMovetoCurrentAction(userInfo: NSDictionary, typeGroup: Int) {
-        let userID = String(format:"%0.f", userInfo[kId]!.doubleValue)
+        let userID = String(format:"%0.f", (userInfo[kId]! as AnyObject).doubleValue)
         
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
             let param = [kUserId : PMHelper.getCurrentID(),
                          kUserIdRequest : userID]
             
             var prefix = kPMAPICOACHES
-            prefix.appendContentsOf(PMHelper.getCurrentID())
-            prefix.appendContentsOf(kPMAPICOACH_CURRENT)
-            prefix.appendContentsOf("/")
+            prefix.append(PMHelper.getCurrentID())
+            prefix.append(kPMAPICOACH_CURRENT)
+            prefix.append("/")
             
             Alamofire.request(.PUT, prefix, parameters: param)
                 .responseJSON { response in
@@ -332,36 +332,36 @@ extension BookSessionShareViewController {
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
             // Special case: can not call tabbarviewcontroller
-            NSUserDefaults.standardUserDefaults().setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            NSUserDefaults.standardUserDefaults().setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            UserDefaults.standard.setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            UserDefaults.standard.setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
             
-            self.navigationController?.popToRootViewControllerAnimated(true)
+            self.navigationController?.popToRootViewController(animated: true)
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
-            PMHelper.showCoachOrUserView(userID)
+            PMHelper.showCoachOrUserView(userID: userID)
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.Destructive, handler: viewProfileAction))
+        alertController.addAction(UIAlertAction(title: kViewProfile, style: UIAlertActionStyle.destructive, handler: viewProfileAction))
         
-        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.Destructive, handler: sendMessageClientAction))
+        alertController.addAction(UIAlertAction(title: kSendMessage, style: UIAlertActionStyle.destructive, handler: sendMessageClientAction))
         
         // Check exist phone number
         if (phoneNumber != nil && phoneNumber?.isEmpty == false) {
-            alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.Destructive, handler: callClientAction))
+            alertController.addAction(UIAlertAction(title: kCallClient, style: UIAlertActionStyle.destructive, handler: callClientAction))
         }
         
         // Check exist email
         if (userMail.isEmpty == false) {
-            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.Destructive, handler: emailClientAction))
+            alertController.addAction(UIAlertAction(title: kEmailClient, style: UIAlertActionStyle.destructive, handler: emailClientAction))
         }
         
-        alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.Destructive, handler: clickMoveToCurrent))
+        alertController.addAction(UIAlertAction(title: kAcceptClient, style: UIAlertActionStyle.destructive, handler: clickMoveToCurrent))
         
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
 }

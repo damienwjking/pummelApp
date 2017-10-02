@@ -50,7 +50,6 @@
 		BA2FEA6E1F4F399200146529 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */; };
 		BA2FEA6F1F4F399200146529 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */; };
 		BA2FEA701F4F399200146529 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */; };
-		BA48F9BF1EF23A0400F55F05 /* DiskRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA54913C1F6FA29D001A2DEF /* PostTestimonial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA54913B1F6FA29D001A2DEF /* PostTestimonial.storyboard */; };
 		BA54913E1F6FB0C7001A2DEF /* PostTestimonialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA54913D1F6FB0C7001A2DEF /* PostTestimonialViewController.swift */; };
@@ -110,10 +109,6 @@
 		F96847111E06B726009EB06C /* LogSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847101E06B726009EB06C /* LogSession.storyboard */; };
 		F96847131E06B737009EB06C /* BookSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847121E06B737009EB06C /* BookSession.storyboard */; };
 		F96847151E06BC24009EB06C /* BookSessionToUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */; };
-		F970A2A51D26384400932BFC /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A11D26384400932BFC /* Direction.swift */; };
-		F970A2A61D26384400932BFC /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A21D26384400932BFC /* Scheduler.swift */; };
-		F970A2A71D26384400932BFC /* ViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A31D26384400932BFC /* ViewManager.swift */; };
-		F970A2A81D26384400932BFC /* ZLSwipeableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2A41D26384400932BFC /* ZLSwipeableView.swift */; };
 		F970A2AC1D26393F00932BFC /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F970A2AB1D26393F00932BFC /* CardView.swift */; };
 		F970A2B01D26463000932BFC /* CardContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F970A2AF1D26463000932BFC /* CardContentView.xib */; };
 		F9741E0D1D89A83900D61868 /* display-empty.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F9741E0C1D89A83900D61868 /* display-empty.jpg */; };
@@ -270,7 +265,6 @@
 		BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
 		BA2FEA6A1F4F388D00146529 /* pummel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pummel-Bridging-Header.h"; sourceTree = "<group>"; };
 		BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateBridgFile.m; sourceTree = "<group>"; };
-		BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskRecorder.swift; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA54913B1F6FA29D001A2DEF /* PostTestimonial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PostTestimonial.storyboard; sourceTree = "<group>"; };
 		BA54913D1F6FB0C7001A2DEF /* PostTestimonialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTestimonialViewController.swift; sourceTree = "<group>"; };
@@ -336,10 +330,6 @@
 		F96847101E06B726009EB06C /* LogSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogSession.storyboard; sourceTree = "<group>"; };
 		F96847121E06B737009EB06C /* BookSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BookSession.storyboard; sourceTree = "<group>"; };
 		F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionToUserViewController.swift; sourceTree = "<group>"; };
-		F970A2A11D26384400932BFC /* Direction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
-		F970A2A21D26384400932BFC /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
-		F970A2A31D26384400932BFC /* ViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewManager.swift; sourceTree = "<group>"; };
-		F970A2A41D26384400932BFC /* ZLSwipeableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLSwipeableView.swift; sourceTree = "<group>"; };
 		F970A2AB1D26393F00932BFC /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		F970A2AF1D26463000932BFC /* CardContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardContentView.xib; sourceTree = "<group>"; };
 		F9741E0C1D89A83900D61868 /* display-empty.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "display-empty.jpg"; sourceTree = "<group>"; };
@@ -647,10 +637,6 @@
 		F970A2A01D26382B00932BFC /* ZLSV */ = {
 			isa = PBXGroup;
 			children = (
-				F970A2A11D26384400932BFC /* Direction.swift */,
-				F970A2A21D26384400932BFC /* Scheduler.swift */,
-				F970A2A31D26384400932BFC /* ViewManager.swift */,
-				F970A2A41D26384400932BFC /* ZLSwipeableView.swift */,
 				F970A2AB1D26393F00932BFC /* CardView.swift */,
 				BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */,
 				F970A2AF1D26463000932BFC /* CardContentView.xib */,
@@ -722,7 +708,6 @@
 				F9ABEADE1DC367620084B70E /* StringConstant.swift */,
 				BAA439561F0DE8CC001D122A /* NumberConstant.swift */,
 				F9ABEAE01DC36C3B0084B70E /* FontConstant.swift */,
-				BA48F9BE1EF23A0400F55F05 /* DiskRecorder.swift */,
 				BA29B1381F132C530059AE9A /* Extension.swift */,
 			);
 			name = Others;
@@ -1194,7 +1179,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BA48F9BF1EF23A0400F55F05 /* DiskRecorder.swift in Sources */,
 				F96846FE1E06B4AC009EB06C /* ShareClientSessionViewController.swift in Sources */,
 				F96847041E06B51A009EB06C /* LogSessionClientViewController.swift in Sources */,
 				F9ABEADF1DC367620084B70E /* StringConstant.swift in Sources */,
@@ -1216,7 +1200,6 @@
 				BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
-				F970A2A51D26384400932BFC /* Direction.swift in Sources */,
 				F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */,
 				BA0E98791E6673BF0019A24A /* NoResultCell.swift in Sources */,
 				BA2FA9621F1693A2004164D5 /* NotificationRouter.swift in Sources */,
@@ -1235,7 +1218,6 @@
 				F9CF54E51D801F2100BE144F /* UserProfileViewController.swift in Sources */,
 				BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */,
 				BA81A4431EE68CA5002D626E /* ImageRouter.swift in Sources */,
-				F970A2A61D26384400932BFC /* Scheduler.swift in Sources */,
 				F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */,
 				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
 				F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */,
@@ -1258,7 +1240,6 @@
 				F9EAE8E11D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift in Sources */,
 				E84D638A1E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift in Sources */,
 				F9EAE8F31D6F0E5200FD32BE /* FeaturedFeedTableViewCell.swift in Sources */,
-				F970A2A71D26384400932BFC /* ViewManager.swift in Sources */,
 				F9827F441CBD231D00841BF1 /* SignupViewController.swift in Sources */,
 				E87FB0131E0AD91A0091856B /* BookSessionTableViewCell.swift in Sources */,
 				F9CF54D71D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift in Sources */,
@@ -1294,7 +1275,6 @@
 				F9CA4A0B1D21466600E8A585 /* Tag.swift in Sources */,
 				F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */,
 				9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */,
-				F970A2A81D26384400932BFC /* ZLSwipeableView.swift in Sources */,
 				9CE72E121C8466E50075F5D1 /* GetStartedViewController.swift in Sources */,
 				BA003AA41EEE5532002FE038 /* PMHelper.swift in Sources */,
 				BA003AA01EEE3241002FE038 /* FeedRouter.swift in Sources */,
@@ -1478,7 +1458,7 @@
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YW7P88KVE4;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1492,7 +1472,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "pummel/pummel-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1507,7 +1487,7 @@
 				CODE_SIGN_ENTITLEMENTS = pummel/Pummel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Pummel Pty Ltd (YW7P88KVE4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = YW7P88KVE4;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1520,7 +1500,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "pummel/pummel-Bridging-Header.h";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

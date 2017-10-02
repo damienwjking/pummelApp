@@ -17,7 +17,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
 
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var idUser = ""
     weak var delegateLeadAddedTableViewCell: LeadAddedTableViewCellDelegate?
     
@@ -29,7 +29,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         self.cv.dataSource = self
         self.cv.delegate = self
         let nibName = UINib(nibName: "LeadAddedCollectionViewCell" , bundle:nil)
-        self.cv.registerNib(nibName, forCellWithReuseIdentifier: "LeadAddedCollectionViewCell")
+        self.cv.register(nibName, forCellWithReuseIdentifier: "LeadAddedCollectionViewCell")
         self.cv.collectionViewLayout = layout
         self.cv.reloadData()
         self.titleHeader.font = .pmmMonReg13()
@@ -41,15 +41,15 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         // Configure the view for the selected state
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if idUser == "" {
             return 0
         }
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", forIndexPath: indexPath) as! LeadAddedCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", for: indexPath) as! LeadAddedCollectionViewCell
 
         ImageRouter.getUserAvatar(userID: self.idUser, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {
@@ -72,7 +72,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         return CGSize(width: 50,height: 50)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if self.delegateLeadAddedTableViewCell != nil {
             self.delegateLeadAddedTableViewCell?.removeUserWithID!(idUser)

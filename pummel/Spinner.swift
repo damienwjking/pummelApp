@@ -23,7 +23,7 @@ class Spinner: UIView {
     
     @IBInspectable var hidesWhenStopped : Bool = false
     
-    @IBInspectable var outerFillColor : UIColor = UIColor.clearColor()
+    @IBInspectable var outerFillColor : UIColor = UIColor.clear
     @IBInspectable var outerStrokeColor : UIColor = UIColor.grayColor()
     @IBInspectable var outerLineWidth : CGFloat = 5.0
     @IBInspectable var outerEndStroke : CGFloat = 0.5
@@ -31,7 +31,7 @@ class Spinner: UIView {
     
     @IBInspectable var enableInnerLayer : Bool = true
     
-    @IBInspectable var innerFillColor : UIColor  = UIColor.clearColor()
+    @IBInspectable var innerFillColor : UIColor  = UIColor.clear
     @IBInspectable var innerStrokeColor : UIColor = UIColor.grayColor()
     @IBInspectable var innerLineWidth : CGFloat = 5.0
     @IBInspectable var innerEndStroke : CGFloat = 0.5
@@ -39,7 +39,7 @@ class Spinner: UIView {
     
     @IBInspectable var labelText : String  = ""
     @IBInspectable var labelFont : String  = "Helvetica"
-    @IBInspectable var labelTextColor : UIColor  = UIColor.blackColor()
+    @IBInspectable var labelTextColor : UIColor  = UIColor.black
     
     @IBInspectable var labelFontSize : CGFloat = 11.0
     
@@ -61,7 +61,7 @@ class Spinner: UIView {
     }
     
     func commonInit(){
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
     }
     
     override func drawRect(rect: CGRect) {
@@ -89,8 +89,8 @@ class Spinner: UIView {
         outerLayer.strokeStart = 0.0
         outerLayer.strokeEnd = outerEndStroke
         outerLayer.lineCap = kCALineCapRound
-        outerLayer.fillColor = outerFillColor.CGColor
-        outerLayer.strokeColor = outerStrokeColor.CGColor
+        outerLayer.fillColor = outerFillColor.cgColor
+        outerLayer.strokeColor = outerStrokeColor.cgColor
         outerView.layer.addSublayer(outerLayer)
         
         if enableInnerLayer{
@@ -104,8 +104,8 @@ class Spinner: UIView {
             innerLayer.strokeStart = 0
             innerLayer.strokeEnd = innerEndStroke
             innerLayer.lineCap = kCALineCapRound
-            innerLayer.fillColor = innerFillColor.CGColor
-            innerLayer.strokeColor = innerStrokeColor.CGColor
+            innerLayer.fillColor = innerFillColor.cgColor
+            innerLayer.strokeColor = innerStrokeColor.cgColor
             
             innerView.layer.addSublayer(innerLayer)
         }
@@ -136,8 +136,8 @@ class Spinner: UIView {
     func animateInnerRing(){
         
         let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotationAnimation.fromValue = 0 * CGFloat(M_PI/180)
-        rotationAnimation.toValue = 360 * CGFloat(M_PI/180)
+        rotationAnimation.fromValue = 0 * CGFloat(Double.pi/180)
+        rotationAnimation.toValue = 360 * CGFloat(Double.pi/180)
         rotationAnimation.duration = Double(innerAnimationDuration)
         rotationAnimation.repeatCount = HUGE
         self.innerView.layer.addAnimation(rotationAnimation, forKey: "rotateInner")
@@ -145,8 +145,8 @@ class Spinner: UIView {
     func animateOuterRing(){
         
         let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotationAnimation.fromValue = 360 * CGFloat(M_PI/180)
-        rotationAnimation.toValue = 0 * CGFloat(M_PI/180)
+        rotationAnimation.fromValue = 360 * CGFloat(Double.pi/180)
+        rotationAnimation.toValue = 0 * CGFloat(Double.pi/180)
         rotationAnimation.duration = Double(outerAnimationDuration)
         rotationAnimation.repeatCount = HUGE
         self.outerView.layer.addAnimation(rotationAnimation, forKey: "rotateOuter")
@@ -154,7 +154,7 @@ class Spinner: UIView {
     
     func startAnimating(){
         
-        self.hidden = false
+        self.isHidden = false
         
         self.animateOuterRing()
         self.animateInnerRing()
@@ -162,7 +162,7 @@ class Spinner: UIView {
     
     func stopAnimating(){
         if hidesWhenStopped{
-            self.hidden = true
+            self.isHidden = true
         }
         self.outerView.layer.removeAllAnimations()
         self.innerView.layer.removeAllAnimations()

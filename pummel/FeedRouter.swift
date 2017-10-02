@@ -73,7 +73,7 @@ enum FeedRouter: URLRequestConvertible {
     }
     
     func fetchdata() {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         let currentUserID = PMHelper.getCurrentID()
         
         switch self {

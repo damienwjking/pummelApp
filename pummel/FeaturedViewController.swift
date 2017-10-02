@@ -36,22 +36,22 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController!.navigationBar.translucent = false
+        self.navigationController!.navigationBar.isTranslucent = false
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(FeaturedViewController.refreshControlTable), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: #selector(FeaturedViewController.refreshControlTable), for: .valueChanged)
         self.tableFeed.addSubview(refreshControl)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.tabBarController?.title = kNavFeed
-        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         let selectedImage = UIImage(named: "feedPressed")
-        let image = UIImage(named: "newmessage")!.imageWithRenderingMode(.AlwaysOriginal)
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action:#selector(FeaturedViewController.newPost))
-        self.tabBarItem.selectedImage = selectedImage?.imageWithRenderingMode(.AlwaysOriginal)
+        let image = UIImage(named: "newmessage")!.withRenderingMode(.alwaysOriginal)
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(FeaturedViewController.newPost))
+        self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tableFeed.delegate = self
         self.tableFeed.dataSource = self
@@ -70,13 +70,13 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.resetCBadge()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated: animated)
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let moveScreenType = defaults.objectForKey(k_PM_MOVE_SCREEN) as! String
+        let defaults = UserDefaults.standard
+        let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_4 {
-            defaults.setObject(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             self.sharePummel()
         } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_FEED {
             self.refresh()
@@ -93,10 +93,10 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         if (CLLocationManager.locationServicesEnabled())
         {
             switch(CLLocationManager.authorizationStatus()) {
-            case .Restricted, .Denied:
+            case .restricted, .denied:
                 self.getListDiscount()
                 break
-            case .AuthorizedAlways, .AuthorizedWhenInUse: break
+            case .authorizedAlways, .authorizedWhenInUse: break
             default: break
             }
         } else {
@@ -126,7 +126,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func refresh() {
-        self.tableFeed.hidden = true
+        self.tableFeed.isHidden = true
         self.arrayFeeds.removeAll()
         self.arrayDiscount.removeAll()
         self.tableFeed.reloadData { 
@@ -153,12 +153,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     func getListDiscount() {
         var prefix = "\(kPMAPI)\(kPMAPI_DISCOUNTS)"
-        prefix.appendContentsOf(String(offsetDiscount))
+        prefix.append(String(offsetDiscount))
         
         if self.coordinate != nil {
-            prefix.appendContentsOf("&")
+            prefix.append("&")
             let coordinateParams = String(format: "%@=%f&%@=%f", kLong, self.coordinate!.longitude, kLat, self.coordinate!.latitude)
-            prefix.appendContentsOf(coordinateParams)
+            prefix.append(coordinateParams)
             
             let geoCoder = CLGeocoder()
             if locationManager.location != nil {
@@ -174,10 +174,10 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                             country = placeMark.country!
                         }
                         
-                        let trimCountry = country.stringByReplacingOccurrencesOfString(" ", withString: "")
+                        let trimCountry = country.replacingOccurrences(of: " ", with: "")
                         let stateCity =  String(format: "&%@=%@&%@=%@", kState, state.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, kCountry, trimCountry.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
                         
-                        prefix.appendContentsOf(stateCity)
+                        prefix.append(stateCity)
                         self.callAPIDiscount(prefix)
                     }
                 })
@@ -208,12 +208,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                         }
                     }
                 } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .Alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .Default) { (action) in
+                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // TODO: LOGOUT
                     }
                     alertController.addAction(OKAction)
-                    self.presentViewController(alertController, animated: true) {
+                    self.present(alertController, animated: true) {
                         // ...
                     }
                 }
@@ -232,7 +232,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                         self.arrayFeeds += arr
                         self.tableFeed.reloadData({
                             // Hidden table view if no data
-                            self.tableFeed.hidden = (self.arrayFeeds.count == 0)
+                            self.tableFeed.isHidden = (self.arrayFeeds.count == 0)
                         })
                     } else {
                         self.isStopFetch = true
@@ -247,7 +247,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func newPost() {
-         self.performSegueWithIdentifier("goNewPost", sender:nil)
+         self.performSegue(withIdentifier: "goNewPost", sender:nil)
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -257,7 +257,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     func goToDetailDiscount(discountDetail: NSDictionary) {
         self.isGoFeedDetail = true
-        self.performSegueWithIdentifier(kGoDiscount, sender:discountDetail)
+        self.performSegue(withIdentifier: kGoDiscount, sender:discountDetail)
     }
     
     func loadMoreDiscount() {
@@ -285,13 +285,13 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         }
         
         let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
-        self.presentViewController(activityViewController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     
     func goToFeedDetail(sender: UIButton) {
         self.isGoFeedDetail = true
-        self.performSegueWithIdentifier("goToFeedDetail", sender: sender)
+        self.performSegue(withIdentifier: "goToFeedDetail", sender: sender)
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -302,7 +302,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func showListContext(sender: UIButton) {
         let selectReport = { (action:UIAlertAction!) -> Void in
             let feed = self.arrayFeeds[sender.tag]
-            let postId = String(format:"%0.f", feed[kId]!.doubleValue)
+            let postId = String(format:"%0.f", (feed[kId]! as AnyObject).doubleValue)
 //            Alamofire.request(.PUT, kPMAPI_REPORT, parameters: ["postId":postId])
 //                .responseJSON { response in
 //                    if response.response?.statusCode == 200 {
@@ -327,12 +327,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         let selectCancle = { (action:UIAlertAction!) -> Void in
         }
         
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        alertController.addAction(UIAlertAction(title: KReport, style: UIAlertActionStyle.Destructive, handler: selectReport))
-        alertController.addAction(UIAlertAction(title: kShare, style: UIAlertActionStyle.Destructive, handler: share))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.Cancel, handler: selectCancle))
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: KReport, style: UIAlertActionStyle.destructive, handler: selectReport))
+        alertController.addAction(UIAlertAction(title: kShare, style: UIAlertActionStyle.destructive, handler: share))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: selectCancle))
         
-        self.presentViewController(alertController, animated: true) { }
+        self.present(alertController, animated: true) { }
     }
     
     func goProfile(sender: UIButton) {
@@ -341,26 +341,26 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         let userIDString = String(format: "%0.0f", userID)
         
         self.isGoProfileDetail = true
-        PMHelper.showCoachOrUserView(userIDString)
+        PMHelper.showCoachOrUserView(userID: userIDString)
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return tags.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, forIndexPath: indexPath) as! TagCell
-        self.configureCell(cell, forIndexPath: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kTagCell, for: indexPath) as! TagCell
+        self.configureCell(cell: cell, forIndexPath: indexPath as NSIndexPath)
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, forIndexPath: indexPath)
-        return self.sizingCell!.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath as NSIndexPath)
+        return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         collectionView.reloadData()
     }
@@ -368,35 +368,35 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
-        cell.tagName.textColor = UIColor.blackColor()
-        cell.layer.borderColor = UIColor.clearColor().CGColor
+        cell.tagName.textColor = UIColor.black
+        cell.layer.borderColor = UIColor.clear.cgColor
     }
     
     func goConnect(sender:UIButton!) {
-        self.performSegueWithIdentifier(kGoConnect, sender: sender)
+        self.performSegue(withIdentifier: kGoConnect, sender: sender)
     }
     
-    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-        self.performSegueWithIdentifier(kClickURLLink, sender: URL)
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        self.performSegue(withIdentifier: kClickURLLink, sender: URL)
         
         return false
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == kGoConnect) {
-            let destination = segue.destinationViewController as! ConnectViewController
+            let destination = segue.destination as! ConnectViewController
             let tag = sender.tag
-            let feed = arrayFeeds[tag] 
+            let feed = arrayFeeds[tag!] 
             let currentFeedDetail = feed[kUser] as! NSDictionary
             destination.coachDetail = currentFeedDetail
             destination.isFromFeed = true
         } else if (segue.identifier == kSendMessageConnection) {
-            let destination = segue.destinationViewController as! ChatMessageViewController
+            let destination = segue.destination as! ChatMessageViewController
             
-            let coachDetail = (sender as! NSArray)[0]
+            let coachDetail = (sender as! NSArray)[0] as! NSDictionary
             let message = (sender as! NSArray)[1] as! String
             
-            destination.coachName = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercaseString
+            destination.coachName = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercased()
             destination.typeCoach = true
             destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
             destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
@@ -405,7 +405,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             if (message.isEmpty == true) {
                 destination.needOpenKeyboard = true
             } else {
-                let messageSeparate = message.componentsSeparatedByString("can you please call me back on ")
+                let messageSeparate = message.components(separatedBy: "can you please call me back on ")
                 let phoneNumber = messageSeparate[1]
                 
                 if (phoneNumber.isEmpty == true) {
@@ -413,14 +413,14 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                 }
             }
         } else if (segue.identifier == "goToFeedDetail") {
-            let destination = segue.destinationViewController as! FeedViewController
+            let destination = segue.destination as! FeedViewController
             let feed = arrayFeeds[sender.tag] 
             destination.feedDetail = feed
         } else if (segue.identifier == kClickURLLink) {
-            let destination = segue.destinationViewController as! FeedWebViewController
+            let destination = segue.destination as! FeedWebViewController
             destination.URL = sender as? NSURL
         } else if segue.identifier == kGoDiscount {
-            let destination = segue.destinationViewController as! DiscountDetailVC
+            let destination = segue.destination as! DiscountDetailVC
             if let dic = sender as? NSDictionary {
                 destination.discountDetail = dic
             }
@@ -428,7 +428,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
 
     func timeAgoSinceDate(date:NSDate) -> String {
-        let calendar = NSCalendar.currentCalendar()
+        let calendar = NSCalendar.current
         let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
         let now = NSDate()
         let earliest = now.earlierDate(date)
@@ -497,26 +497,26 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         return 0.001
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 0
         }
         return self.arrayFeeds.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(kFeaturedFeedTableViewCell) as! FeaturedFeedTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: kFeaturedFeedTableViewCell) as! FeaturedFeedTableViewCell
         
-        cell.separatorInset = UIEdgeInsetsZero;
+        cell.separatorInset = UIEdgeInsets()
         let feed = arrayFeeds[indexPath.row]
         let userFeed = feed[kUser] as! NSDictionary
         // Name
         let firstname = userFeed[kFirstname] as? String
-        cell.nameLB.text = firstname?.uppercaseString
+        cell.nameLB.text = firstname?.uppercased()
         
         // Avatar
         if (userFeed[kImageUrl] is NSNull == false) {
-            cell.avatarBT.setBackgroundImage(nil, forState: .Normal)
+            cell.avatarBT.setBackgroundImage(nil, for: .normal)
             let imageLink = userFeed[kImageUrl] as? String
             
             if (imageLink?.isEmpty == false) {
@@ -524,10 +524,10 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         
-                        let visibleCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                         if visibleCell == true {
-                            dispatch_async(dispatch_get_main_queue(),{
-                                cell.avatarBT.setBackgroundImage(imageRes, forState: .Normal)
+                            DispatchQueue.main.async(execute: {
+                                cell.avatarBT.setBackgroundImage(imageRes, for: .normal)
                             })
                         }
                     } else {
@@ -535,29 +535,29 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                     }.fetchdata()
             } else {
-                cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
+                cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
             }
         } else {
-            cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), forState: .Normal)
+            cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
         }
         // Time
         let timeAgo = feed[kCreateAt] as! String
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")
-        let dateFromString : NSDate = dateFormatter.dateFromString(timeAgo)!
-        cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
+        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        let dateFromString : NSDate = dateFormatter.date(from: timeAgo)!
+        cell.timeLB.text = self.timeAgoSinceDate(date: dateFromString)
         if (feed[kImageUrl] is NSNull == false) {
             let imageContentLink = feed[kImageUrl] as! String
-            let postfixContent = widthEqual.stringByAppendingString(String(self.view.frame.size.width*2)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width*2))
+            let postfixContent = widthHeightScreenx2
             
             ImageRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
                 if (error == nil) {
-                    let isUpdateCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                    let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     
                     if (isUpdateCell) {
                         let imageRes = result as! UIImage
-                        dispatch_async(dispatch_get_main_queue(),{
+                        DispatchQueue.main.async(execute: {
                             cell.imageContentIMV.image = imageRes
                         })
                     }
@@ -568,10 +568,10 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         // Check Coach
-        cell.userInteractionEnabled = false
+        cell.isUserInteractionEnabled = false
         var coachLink  = kPMAPICOACH
-        let coachId = String(format:"%0.f", userFeed[kId]!.doubleValue)
-        coachLink.appendContentsOf(coachId)
+        let coachId = String(format:"%0.f", (userFeed[kId]! as AnyObject).doubleValue)
+        coachLink.append(coachId)
         
         cell.avatarBT.layer.borderWidth = 0
         cell.coachLB.text = ""
@@ -579,10 +579,10 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
             let isCoach = result as! Bool
-            let isUpdateCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+            let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
             
             if (isUpdateCell) {
-                cell.userInteractionEnabled = true
+                cell.isUserInteractionEnabled = true
                 cell.isCoach = false
                 
                 if (error == nil) {
@@ -591,9 +591,9 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                         cell.avatarBT.layer.borderWidth = 2
                         
                         cell.coachLBTraillingConstraint.constant = 5
-                        UIView.animateWithDuration(0.3, animations: {
+                        UIView.animate(withDuration: 0.3, animations: {
                             cell.coachLB.layoutIfNeeded()
-                            cell.coachLB.text = kCoach.uppercaseString
+                            cell.coachLB.text = kCoach.uppercased()
                         })
                     }
                 } else {
@@ -602,19 +602,19 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             }
             }.fetchdata()
         
-        cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), forState: .Normal)
+        cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
         
         //Get Likes
-        //            cell.likeBT.userInteractionEnabled = true
-        //            cell.imageContentIMV.userInteractionEnabled = true
-        let feedID = String(format:"%0.f", feed[kId]!.doubleValue)
+        //            cell.likeBT.isUserInteractionEnabled = true
+        //            cell.imageContentIMV.isUserInteractionEnabled = true
+        let feedID = String(format:"%0.f", (feed[kId]! as AnyObject).doubleValue)
         
         FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
             if (error == nil) {
-                let isUpdateCell = PMHelper.checkVisibleCell(tableView, indexPath: indexPath)
+                let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                 
                 if (isUpdateCell) {
-                    dispatch_async(dispatch_get_main_queue(),{
+                    DispatchQueue.main.async(execute: {
                         let likeJson = result as! NSDictionary
                         
                         // Update like number
@@ -624,7 +624,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                         // Update current user liked
                         let userLikedFeed = likeJson["currentUserLiked"] as! Bool
                         if (userLikedFeed == true) {
-                            cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), forState: .Normal)
+                            cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
                         }
                     })
                 }
@@ -642,20 +642,20 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         let marginLeftRight = cell.firstContentCommentTV.layoutMargins.left + cell.firstContentCommentTV.layoutMargins.right
         cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
         
-        cell.firstUserCommentLB.text = firstname?.uppercaseString
+        cell.firstUserCommentLB.text = firstname?.uppercased()
         cell.viewAllBT.tag = indexPath.row
-        cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), for: .touchUpInside)
         
         cell.commentBT.tag = indexPath.row
-        cell.commentBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.commentBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), for: .touchUpInside)
         
         cell.shareBT.tag = indexPath.row
-        cell.shareBT.addTarget(self, action: #selector(FeaturedViewController.showListContext(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.shareBT.addTarget(self, action: #selector(FeaturedViewController.showListContext(_:)), for: .touchUpInside)
         
         cell.avatarBT.tag = indexPath.row
-        cell.avatarBT.addTarget(self, action: #selector(FeaturedViewController.goProfile(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.avatarBT.addTarget(self, action: #selector(FeaturedViewController.goProfile(_:)), for: .touchUpInside)
         cell.likeBT.tag = indexPath.row
-        cell.postId = String(format:"%0.f", feed[kId]!.doubleValue)
+        cell.postId = String(format:"%0.f", (feed[kId]! as AnyObject).doubleValue)
         return cell
     }
     

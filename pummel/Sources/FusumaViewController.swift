@@ -13,8 +13,8 @@ import UIKit
     func fusumaImageSelected(image: UIImage)
     func fusumaCameraRollUnauthorized()
     
-    optional func fusumaClosed()
-    optional func fusumaDismissedWithImage(image: UIImage)
+    @objc optional func fusumaClosed()
+    @objc optional func fusumaDismissedWithImage(image: UIImage)
 }
 
 public var fusumaBaseTintColor       = UIColor.hex("#000000", alpha: 1.0)
@@ -79,8 +79,8 @@ public enum FusumaModeOrder {
         doneButton.titleLabel?.font = .pmmMonLight13()
 
         menuView.backgroundColor = fusumaBackgroundColor
-        menuView.layer.shadowColor = UIColor.blackColor().CGColor;
-        menuView.layer.shadowOffset = CGSizeMake(0.0, 3);
+        menuView.layer.shadowColor = UIColor.black.cgColor;
+        menuView.layer.shadowOffset = CGSize(x:0.0, 3);
         menuView.layer.shadowOpacity = 0.25;
         
 		libraryButton.tintColor = fusumaTintColor
@@ -105,10 +105,10 @@ public enum FusumaModeOrder {
         
         if modeOrder == .CameraFirst {
             self.menuHeighConstraint.constant = 44
-            self.menuView.backgroundColor = UIColor.blackColor()
+            self.menuView.backgroundColor = UIColor.black
         } else {
             self.menuHeighConstraint.constant = 70
-            self.menuView.backgroundColor = UIColor.whiteColor()
+            self.menuView.backgroundColor = UIColor.white
         }
     }
     
@@ -120,7 +120,7 @@ public enum FusumaModeOrder {
     }
 
     override public func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewDidAppear(animated: animated)
         
         albumView.frame  = CGRect(origin: CGPointZero, size: photoLibraryViewerContainer.frame.size)
         albumView.layoutIfNeeded()
@@ -129,7 +129,7 @@ public enum FusumaModeOrder {
         
         albumView.initialize()
         cameraView.initialize()
-        cameraView.goLibrary.addTarget(self, action:#selector(FusumaViewController.libraryButtonPressed(_:)), forControlEvents:UIControlEvents.TouchUpInside)
+        cameraView.goLibrary.addTarget(self, action:#selector(FusumaViewController.libraryButtonPressed(_:)), forControlEvents:.touchUpInside)
     }
 
     override public func prefersStatusBarHidden() -> Bool {
@@ -139,7 +139,7 @@ public enum FusumaModeOrder {
     
     @IBAction func closeButtonPressed(sender: UIButton) {
 
-        self.dismissViewControllerAnimated(true, completion: {
+        self.dismissViewControllerAnimated(animated: true, completion: {
             
             self.delegate?.fusumaClosed?()
         })
@@ -159,7 +159,7 @@ public enum FusumaModeOrder {
         
         let image = albumView.imageSelected as UIImage
         delegate?.fusumaImageSelected(image)
-        self.dismissViewControllerAnimated(true, completion: {
+        self.dismissViewControllerAnimated(animated: true, completion: {
             
             self.delegate?.fusumaDismissedWithImage?(image)
         })
@@ -169,7 +169,7 @@ public enum FusumaModeOrder {
     func cameraShotFinished(image: UIImage) {
         
         delegate?.fusumaImageSelected(image)
-        self.dismissViewControllerAnimated(true, completion: {
+        self.dismissViewControllerAnimated(animated: true, completion: {
         
             self.delegate?.fusumaDismissedWithImage?(image)
         })
@@ -198,19 +198,19 @@ private extension FusumaViewController {
         if mode == FusumaMode.Library {
             titleLabel.text = NSLocalizedString("CAMERA ROLL", comment: "CAMERA ROLL")
             titleLabel.font = .pmmMonReg13()
-            doneButton.hidden = false
+            doneButton.isHidden = false
             doneButton.titleLabel?.font = .pmmMonLight13()
             self.menuHeighConstraint.constant = 70
-            self.menuView.backgroundColor = UIColor.whiteColor()
-            titleLabel.hidden = false
-            closeButton.hidden = true
+            self.menuView.backgroundColor = UIColor.white
+            titleLabel.isHidden = false
+            closeButton.isHidden = true
             highlightButton(libraryButton)
             self.view.insertSubview(photoLibraryViewerContainer, aboveSubview: cameraShotContainer)
             
         } else {
-            doneButton.hidden = true
-            titleLabel.hidden = true
-            self.menuView.backgroundColor = UIColor.blackColor()
+            doneButton.isHidden = true
+            titleLabel.isHidden = true
+            self.menuView.backgroundColor = UIColor.black
             highlightButton(cameraButton)
             self.view.insertSubview(cameraShotContainer, aboveSubview: photoLibraryViewerContainer)
         }
@@ -226,7 +226,7 @@ private extension FusumaViewController {
             
             for layer in cameraButton.layer.sublayers! {
                 
-                if let borderColor = layer.borderColor where UIColor(CGColor: borderColor) == fusumaTintColor {
+                if let borderColor = layer.borderColor, UIColor(CGColor: borderColor) == fusumaTintColor {
                     
                     layer.removeFromSuperlayer()
                 }
@@ -238,7 +238,7 @@ private extension FusumaViewController {
             
             for layer in libraryButton.layer.sublayers! {
                 
-                if let borderColor = layer.borderColor where UIColor(CGColor: borderColor) == fusumaTintColor {
+                if let borderColor = layer.borderColor, UIColor(CGColor: borderColor) == fusumaTintColor {
                     
                     layer.removeFromSuperlayer()
                 }

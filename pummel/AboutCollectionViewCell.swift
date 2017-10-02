@@ -14,7 +14,7 @@ class AboutCollectionViewCell: UICollectionViewCell {
     
     func setupData(photoDictionary: NSDictionary) {
         if (photoDictionary[kImageUrl] is NSNull == false) {
-            let imageURLString = photoDictionary.objectForKey(kImageUrl) as! String
+            let imageURLString = photoDictionary.object(forKey: kImageUrl) as! String
             
             ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeightScreen, completed: { (result, error) in
                 if (error == nil) {
