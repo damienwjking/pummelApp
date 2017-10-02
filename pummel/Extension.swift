@@ -88,6 +88,10 @@ extension NSData {
         }
     }
     
+    var hexString: String {
+        let bytes = UnsafeBufferPointer<UInt8>(start: UnsafePointer(self.bytes), count:self.length)
+        return bytes.map { String(format: "%02hhx", $0) }.reduce("", combine: { $0 + $1 })
+    }
 }
 
 extension String {

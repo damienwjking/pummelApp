@@ -292,7 +292,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     self.businessIMV.isHidden = false
                     self.aboutLeftDT.constant = 120
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -356,7 +356,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     self.testimonialOffset = self.testimonialOffset + 20
                     self.testimonialCollectionView.reloadData()
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
                 }.fetchdata()
         }
@@ -419,7 +419,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
                 self.scrollView.isScrollEnabled = true
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }
@@ -580,7 +580,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                 
                 self.view.hideToastActivity()
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 self.view.hideToastActivity()
             }
         }
@@ -623,7 +623,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
                     }
                     
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
                 
                 
@@ -914,7 +914,7 @@ extension CoachProfileViewController {
             self.videoIndicator.removeFromSuperview()
         }
         self.videoIndicator.startAnimating()
-        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.videoIndicator.center = CGPoint(x: self.detailV.frame.width/2, self.detailV.frame.height/2)
         self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
         
         // Remove loop play video for
@@ -1055,7 +1055,7 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
                     }
                     self.view.hideToastActivity()
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
                     self.view.hideToastActivity()
             }
@@ -1081,7 +1081,7 @@ extension CoachProfileViewController: UICollectionViewDataSource, UICollectionVi
                     let imageRes = result as! UIImage
                     cell.imageCell.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
                 }.fetchdata()
         }

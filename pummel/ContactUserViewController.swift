@@ -200,7 +200,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                         UIApplication.sharedApplication().openURL(mailURL!)
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -218,7 +218,7 @@ extension ContactUserViewController: UISearchBarDelegate {
     }
     
     func filterPhoneNumber(filterValue: String) {
-        let filterString = filterValue.lowercaseString
+        let filterString = filterValue.lowercased()
         
         self.filterContacts = self.contacts.filter({ (contact) -> Bool in
             var isFilterNumber = false
@@ -239,7 +239,7 @@ extension ContactUserViewController: UISearchBarDelegate {
                 isFilterNumber = false // not available filter number now
                 
                 var phoneName = contact.givenName + " " + contact.familyName
-                phoneName = phoneName.lowercaseString
+                phoneName = phoneName.lowercased()
                 isFilterName = phoneName.contains(filterString)
             } else if (self.styleInvite == kEmail) {
                 if (contact.emailAddresses.count > 0) {
@@ -248,11 +248,11 @@ extension ContactUserViewController: UISearchBarDelegate {
                     }
                     
                     var phoneName = contact.givenName + " " + contact.familyName
-                    phoneName = phoneName.lowercaseString
+                    phoneName = phoneName.lowercased()
                     isFilterName = phoneName.contains(filterString)
                     
                     var email = contact.emailAddresses[0].value as! String
-                    email = email.lowercaseString
+                    email = email.lowercased()
                     isFilterEmail = email.contains(filterString)
                 }
             }

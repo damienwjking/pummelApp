@@ -378,7 +378,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                 }
                     
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
             }
         } else
@@ -543,7 +543,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                     }
                 }
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }

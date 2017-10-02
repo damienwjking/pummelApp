@@ -65,14 +65,13 @@ class DiscountColectionViewCell: UICollectionViewCell {
         
         if (discountDetail[kImageUrl] is NSNull == false) {
             let imageLink = discountDetail[kImageUrl] as! String
-            let imageSizeString = widthEqual.stringByAppendingString(String(self.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.bounds.height))
             
-            ImageRouter.getImage(imageURLString: imageLink, sizeString: imageSizeString, completed: { (result, error) in
+            ImageRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.imgCover.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }

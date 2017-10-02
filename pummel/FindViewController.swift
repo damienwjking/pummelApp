@@ -226,7 +226,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     if response.response?.statusCode == 200 {
                         if (response.result.value == nil) {
                             self.stopSearch = true
-                            NotificationCenter.default.postNotificationName("AFTER_SEARCH_PAGE", object: nil)
+                            NotificationCenter.default.post(name: "AFTER_SEARCH_PAGE", object: nil)
                             return
                         }
                         
@@ -234,18 +234,16 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                         var needReloadCollection = true
                         
                         if (self.loadmoreTime == 0) {
-                            let secondsWait = 2.0
-                            let delay = secondsWait * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                            let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                            dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 self.arrayResult.removeAll()
                                 self.arrayResult = response.result.value  as! [NSDictionary]
                                 self.viewDidLayoutSubviews()
                                 self.collectionView.contentOffset = CGPointZero
                                 
                                 // Post notification for dismiss search animation screen
-                                NotificationCenter.default.postNotificationName("AFTER_SEARCH_PAGE", object: nil)
-                            });
+                                NotificationCenter.default.post(name: "AFTER_SEARCH_PAGE", object: nil)
+                            }
+                            
                         } else {
                             if ((response.result.value as! NSArray).count == 0) {
                                 self.stopSearch = true
@@ -266,7 +264,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     } else if response.response?.statusCode == 401 {
                         PMHelper.showLogoutAlert()
                     } else {
-                        NotificationCenter.default.postNotificationName("AFTER_SEARCH_PAGE", object: nil)
+                        NotificationCenter.default.post(name: "AFTER_SEARCH_PAGE", object: nil)
                     }
             }
         } else {
@@ -295,7 +293,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                 } else {
                     self.stopGetCoach = true
                     
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
                 }.fetchdata()
         }
@@ -517,7 +515,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
                         self.setupDataForCell(cell!, coach: coach)
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -537,7 +535,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
                         let imageRes = result as! UIImage
                         cell.imageV.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         } else {
@@ -665,7 +663,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                             let imageRes = result as! UIImage
                             cell.cardView.businessIMV.image = imageRes
                         } else {
-                            print("Request failed with error: \(error)")
+                            print("Request failed with error: \(String(describing: error))")
                         }
                     }).fetchdata()
                 }
@@ -712,8 +710,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
     
     
     func checkPlayVideoOnPresentCell() {
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(Double(Int64(NSEC_PER_SEC)) * 0.1))
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             // Play video on present cell
             let cellIndex = Int(round(self.collectionView.contentOffset.x / self.widthCell))
             let indexPath = NSIndexPath(forRow: cellIndex, inSection: 0)
@@ -765,7 +762,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
             //                    posCell!.stopPlayVideo()
             //                }
             //            }
-        })
+        }
     }
     
     func carouselSwipeLeft() {
@@ -775,7 +772,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
             offsetX = remainSpace
         }
         
-        let newContentOffset = CGPointMake(offsetX, 0)
+        let newContentOffset = CGPoint(x: offsetX, 0)
         
         UIView.animate(withDuration: 0.25, animations: {
             self.collectionView.contentOffset = newContentOffset
@@ -789,7 +786,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         var offsetX = self.collectionView.contentOffset.x - self.widthCell
         offsetX = offsetX < 0 ? 0 : offsetX
         
-        let newContentOffset = CGPointMake(offsetX, 0)
+        let newContentOffset = CGPoint(x: offsetX, 0)
         
         UIView.animate(withDuration: 0.25, animations: {
             self.collectionView.contentOffset = newContentOffset
@@ -811,7 +808,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
             
             if deltaX > 3 {
                 let newOffsetX = self.currentOffset.x + deltaX
-                self.collectionView.setContentOffset(CGPointMake(newOffsetX, 0), animated: false)
+                self.collectionView.setContentOffset(CGPoint(x: newOffsetX, 0), animated: false)
             }
             break
         case .Ended:

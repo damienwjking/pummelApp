@@ -534,7 +534,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         } else {
@@ -543,7 +543,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }

@@ -88,7 +88,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
                     self.showAlertMovetoCurrentAction(userInfo: userInfo, typeGroup: typeGroup)
                 }
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
             }.fetchdata()
     }
@@ -200,7 +200,7 @@ extension BookSessionShareViewController {
                         UIApplication.sharedApplication().openURL(mailURL!)
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -307,7 +307,7 @@ extension BookSessionShareViewController {
                         UIApplication.sharedApplication().openURL(mailURL!)
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }

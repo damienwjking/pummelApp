@@ -90,14 +90,14 @@ class TestimonialCell: UICollectionViewCell {
                                 
                                 testimonial.imageCache = imageRes
                                 
-                                print("Request failed with error: \(error)")
+                                print("Request failed with error: \(String(describing: error))")
                             }
                             }.fetchdata()
                     }
                     
                     
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
                 }.fetchdata()
         }

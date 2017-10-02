@@ -899,7 +899,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.slider.addTarget(self, action:#selector(SettingsViewController.sliderValueDidChange), for: .valueChanged)
                 
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }

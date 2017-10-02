@@ -13,16 +13,16 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
     
     
     // animate a change from one viewcontroller to another
-    func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
         // get reference to our fromView, toView and the container view that we should perform the transition in
-        let container = transitionContext.containerView()
-        let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)!
-        let toView = transitionContext.viewForKey(UITransitionContextToViewKey)!
+        let container = transitionContext.containerView
+        let fromView = transitionContext.view(forKey: UITransitionContextViewKey.from)!
+        let toView = transitionContext.view(forKey: UITransitionContextViewKey.to)!
         
         // set up from 2D transforms that we'll use in the animation
-        let offScreenRight = CGAffineTransformMakeTranslation(container.frame.width, 0)
-        let offScreenLeft = CGAffineTransformMakeTranslation(-container.frame.width, 0)
+        let offScreenRight = CGAffineTransform(translationX: container.frame.width, y: 0)
+        let offScreenLeft = CGAffineTransform(translationX: -container.frame.width, y: 0)
         
         // start the toView to the right of the screen
         toView.transform = offScreenRight
@@ -34,7 +34,7 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
         // get the duration of the animation
         // DON'T just type '0.5s' -- the reason why won't make sense until the next post
         // but for now it's important to just follow this approach
-        let duration = self.transitionDuration(transitionContext)
+        let duration = self.transitionDuration(transitionContext: transitionContext)
         
         // perform the animation!
         // for this example, just slid both fromView and toView to the left at the same time
@@ -55,7 +55,7 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
     }
     
     // return how many seconds the transiton animation will take
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
     }
     

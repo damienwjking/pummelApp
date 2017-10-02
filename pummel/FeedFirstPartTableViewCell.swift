@@ -26,21 +26,21 @@ class FeedFirstPartTableViewCell: UITableViewCell {
         self.avatarBT.layer.cornerRadius = 15
         self.avatarBT.clipsToBounds = true
         self.avatarBT.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
-        self.nameLB.font = .pmmMonLight13()
-        self.timeLB.font = .pmmMonLight13()
-        self.coachLB.font = .pmmMonReg13()
+        self.nameLB.font = UIFont.pmmMonLight13()
+        self.timeLB.font = UIFont.pmmMonLight13()
+        self.coachLB.font = UIFont.pmmMonReg13()
         self.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
     }
     
     @IBAction func like(sender: UIButton!) {
-        if ((sender.backgroundImageForState(.Normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
+        if ((sender.backgroundImage(for: .normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
             sender.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
         } else {
             sender.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
         }
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

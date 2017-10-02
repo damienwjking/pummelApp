@@ -95,13 +95,13 @@ class PostTestimonialViewController: UIViewController {
                             
                             self.userAvatarImageView.image = image
                         } else {
-                            print("Request failed with error: \(error)")
+                            print("Request failed with error: \(String(describing: error))")
                         }
                     }).fetchdata()
                 }
                 
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
             }.fetchdata()
     }
@@ -122,13 +122,13 @@ class PostTestimonialViewController: UIViewController {
                             
                             self.currentUserAvatarImageView.image = image
                         } else {
-                            print("Request failed with error: \(error)")
+                            print("Request failed with error: \(String(describing: error))")
                         }
                     }).fetchdata()
                 }
                 
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
             }.fetchdata()
     }

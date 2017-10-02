@@ -36,7 +36,7 @@ class PMHelper {
     }
     
     class func showLogoutAlert() {
-        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
@@ -47,31 +47,29 @@ class PMHelper {
                 loginManager.logOut()
                 
                 // LOGOUT
-                UserDefaults.standard.setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
-                Alamofire.request(.DELETE, kPMAPI_LOGOUT).response { (req, res, data, error) -> Void in
-                    print(res)
-                    
+                UserDefaults.standard.set(0, forKey: "MESSAGE_BADGE_VALUE")
+                Alamofire.request(kPMAPI_LOGOUT, method: .delete).responseJSON(completionHandler: { (response) in
                     let defaults = UserDefaults.standard
                     
-                    let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
+                    let outputString = NSString(data: data!, encoding:String.Encoding.utf8)
                     if ((outputString?.containsString(kLogoutSuccess)) != nil) {
                         defaults.set(false, forKey: k_PM_IS_LOGINED)
                         defaults.set(false, forKey: k_PM_IS_COACH)
-                        let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+                        let storage = HTTPCookieStorage.shared
                         for cookie in storage.cookies! {
                             Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
                             storage.deleteCookie(cookie)
                         }
                         UserDefaults.standard.synchronize()
                         
-                        topController.dismissViewControllerAnimated(animated: true, completion: nil)
+                        topController.dismiss(animated: true, completion: nil)
                     }
-                }
+                })
                 
                 // Tracker mixpanel
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Navigation Click", "Label":"Logout"]
-                mixpanel.track("IOS.Profile.Setting", properties: properties)
+                mixpanel?.track("IOS.Profile.Setting", properties: properties)
             }
             
             alertController.addAction(OKAction)
@@ -81,7 +79,7 @@ class PMHelper {
     }
     
     class func showDoAgainAlert() {
-        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
@@ -99,7 +97,7 @@ class PMHelper {
     }
     
     class func showApplyAlert(message: String) {
-        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
@@ -117,7 +115,7 @@ class PMHelper {
     }
     
     class func showCoachOrUserView(userID: String, showTestimonial: Bool = false, isFromChat:Bool = false) {
-        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
@@ -125,9 +123,9 @@ class PMHelper {
             let currentUser = PMHelper.getCurrentID()
             
             if (userID == currentUser) {
-                UserDefaults.standard.setObject(k_PM_MOVE_SCREEN_CURRENT_PROFILE, forKey: k_PM_MOVE_SCREEN)
+                UserDefaults.standard.set(k_PM_MOVE_SCREEN_CURRENT_PROFILE, forKey: k_PM_MOVE_SCREEN)
                 
-                NotificationCenter.default.postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
             } else {
                 topController.view.makeToastActivity()
                 
@@ -139,7 +137,7 @@ class PMHelper {
                             // Tracker mixpanel
                             let mixpanel = Mixpanel.sharedInstance()
                             let properties = ["Name": "Profile Is Clicked", "Label":"\(firstName.uppercased())"]
-                            mixpanel.track("IOS.ClickOnProfile", properties: properties)
+                            mixpanel?.track("IOS.ClickOnProfile", properties: properties)
                         }
                         
                         UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
@@ -180,19 +178,17 @@ class PMHelper {
                             }
                             }.fetchdata()
                     } else {
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                     }.fetchdata()
             }
         }
     }
     
-    class func actionWithDelaytime(delayTime: Double, delayAction: Void -> Void) {
-        let delay = delayTime * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+    class func actionWithDelaytime(delayTime: Double, delayAction: @escaping (Void) -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             delayAction()
-        })
+        }
     }
     
 }

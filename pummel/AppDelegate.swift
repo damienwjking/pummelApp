@@ -1,3 +1,4 @@
+
 //
 //  AppDelegate.swift
 //  pummel
@@ -26,18 +27,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var token: NSString!
     var currentUserId: String!
     var searchDetail: NSDictionary!
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
     //    Mixpanel.initialize(token: "9007be62479ca54acb05b03991f1e56e")
         
-        UserDefaults.standard.setInteger(0, forKey: "MESSAGE_BADGE_VALUE")
+        UserDefaults.standard.set(0, forKey: "MESSAGE_BADGE_VALUE")
         
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
+        UIApplication.shared.applicationIconBadgeNumber = 0;
         let token = "9007be62479ca54acb05b03991f1e56e"
-        _ = Mixpanel.sharedInstanceWithToken(token)
+        _ = Mixpanel.sharedInstance(withToken: token)
         
        
-        FIRApp.configure()
+        FirebaseApp.configure()
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
@@ -48,8 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //    }
     
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url as URL!, sourceApplication: sourceApplication, annotation: annotation)
     }
 }
 
@@ -74,12 +75,12 @@ extension AppDelegate {
     
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        //     NotificationCenter.default.postNotificationName(k_PM_SHOW_BADGE, object: nil)
+        //     NotificationCenter.default.post(name: k_PM_SHOW_BADGE, object: nil)
     }
     
     func applicationDidBecomeActive(application: UIApplication) {
         // Remove badge
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        UIApplication.shared.applicationIconBadgeNumber = 0
         
         // Reset badge in server
         let defaults = UserDefaults.standard
@@ -104,54 +105,54 @@ extension AppDelegate {
 
 // MARK: - URL
 extension AppDelegate {
-    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         if (url.absoluteString != nil && (url.absoluteString?.contains("pummel://")) == true) {
             let userDefaults = UserDefaults.standard
-            let urlPath = url.path?.lowercaseString
-            let urlAbsoluteString = url.absoluteString?.lowercaseString
+            let urlPath = url.path?.lowercased()
             
-            let kProfileKey = "coach?userId=".lowercaseString
-            let kTestimonialKey = "givetestimonial/coachId=".lowercaseString
+            let urlAbsoluteString = url.absoluteString?.lowercased()
+            
+            let kProfileKey = "coach?userId=".lowercased()
+            let kTestimonialKey = "givetestimonial/coachId=".lowercased()
             
             if ((urlPath!.contains("search")) == true) {
                 // Open Pummel
-                userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_SEARCH, forKey: k_PM_MOVE_SCREEN)
+                userDefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_SEARCH, forKey: k_PM_MOVE_SCREEN)
             } else if ((urlPath!.contains("login")) == true) {
                 // Allow me to Login/Register
-                let logined = userDefaults.valueForKey(k_PM_IS_LOGINED)
+                let logined = userDefaults.value(forKey: k_PM_IS_LOGINED)
                 
                 if (logined as? Bool != nil && logined as? Bool == false) {
-                    userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_LOGIN, forKey: k_PM_MOVE_SCREEN)
+                    userDefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_LOGIN, forKey: k_PM_MOVE_SCREEN)
                 }
             } else if ((urlAbsoluteString!.contains(kProfileKey)) == true) {
                 // Take me directly to my coaches Profile and connect me to him automatically.
-                userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE, forKey: k_PM_MOVE_SCREEN)
+                userDefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_PROFILE, forKey: k_PM_MOVE_SCREEN)
                 
                 let userID = url.absoluteString?.components(separatedBy: "=")[1]
                 if (userID?.isEmpty == false) {
-                    userdefaults.set(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
+                    userDefaults.set(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_PROFILE)
                 }
             } else if ((urlAbsoluteString!.contains(kTestimonialKey)) == true) {
                 // Show post testimonial view.
-                userdefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL, forKey: k_PM_MOVE_SCREEN)
+                userDefaults.set(k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL, forKey: k_PM_MOVE_SCREEN)
                 
                 let userID = url.absoluteString?.components(separatedBy: "=")[1]
                 if (userID?.isEmpty == false) {
-                    userdefaults.set(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
+                    userDefaults.set(userID, forKey: k_PM_MOVE_SCREEN_DEEPLINK_TESTIMONIAL)
                 }
             }
             
             userDefaults.synchronize()
             
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-                NotificationCenter.default.postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
             }
             
             return true
         }
         
-        return FBSDKApplicationDelegate.sharedInstance().application(app, openURL: url, options: options)
+        return FBSDKApplicationDelegate.sharedInstance().application(app, openURL: url as URL!, options: options)
     }
 }
 
@@ -163,7 +164,7 @@ extension AppDelegate {
         let defaults = UserDefaults.standard
         defaults.set(deviceTokenString, forKey: k_PM_PUSH_TOKEN)
         let mixpanel = Mixpanel.sharedInstance()
-        mixpanel.people.addPushDeviceToken(deviceToken)
+        mixpanel.people.addPushDeviceToken(deviceToken as Data)
         
         let currentId = PMHelper.getCurrentID()
         let param = [kUserId:currentId,
@@ -190,7 +191,7 @@ extension AppDelegate {
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         let alert = userInfo["aps"]!["alert"] as! String
         
-        NotificationCenter.default.postNotificationName(k_PM_SHOW_MESSAGE_BADGE, object: nil)
+        NotificationCenter.default.post(name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
         
         if (UIApplication.sharedApplication().applicationState != .Active) {
             // Update badge app
@@ -199,16 +200,16 @@ extension AppDelegate {
             
             // check message
             if (alert.containsString("Hey you have a new message")) {
-                NotificationCenter.default.postNotificationName(k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
+                NotificationCenter.default.post(name: k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
             }
             if (alert.containsString("you have a new comment in your post:")) {
-                NotificationCenter.default.postNotificationName(k_PM_SHOW_FEED, object: nil)
+                NotificationCenter.default.post(name: k_PM_SHOW_FEED, object: nil)
             }
             if (alert.containsString("You have a new Lead")) {
-                NotificationCenter.default.postNotificationName(k_PM_SHOW_SHOW_CLIENTS, object: nil)
+                NotificationCenter.default.post(name: k_PM_SHOW_SHOW_CLIENTS, object: nil)
             }
             if (alert.containsString("You have a new booking")){
-                NotificationCenter.default.postNotificationName(k_PM_SHOW_SHOW_SESSIONS, object: nil)
+                NotificationCenter.default.post(name: k_PM_SHOW_SHOW_SESSIONS, object: nil)
             }
         } else {
             // Prepare router navigation
@@ -237,13 +238,13 @@ extension AppDelegate {
             notification.button?.isHidden = true
             notification.iconImageView?.image = UIImage(named: "miniPummelLogo")
             var notificationConfig = SwiftMessages.defaultConfig
-            notificationConfig.duration = .Seconds(seconds: 3);
-            notificationConfig.presentationStyle = .Top
-            notificationConfig.presentationContext = .Window(windowLevel: UIWindowLevelNormal)
+            notificationConfig.duration = .seconds(seconds: 3);
+            notificationConfig.presentationStyle = .top
+            notificationConfig.presentationContext = .window(windowLevel: UIWindowLevelNormal)
             SwiftMessages.show(config: notificationConfig, view: notification)
             
             let foregroundButton = UIButton(action: { (UIControl) in
-                NotificationCenter.default.postNotificationName(pushNotification, object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: pushNotification), object: nil)
                 }, for: .touchUpInside)
             foregroundButton.frame = CGRectMake(0, 0, 1000, 1000)
             
@@ -261,17 +262,9 @@ extension AppDelegate {
         defaults.set(type, forKey: k_PM_MOVE_SCREEN)
         defaults.synchronize()
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            NotificationCenter.default.postNotificationName(k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
         }
-    }
-}
-
-extension NSData {
-    var hexString: String {
-        let bytes = UnsafeBufferPointer<UInt8>(start: UnsafePointer(self.bytes), count:self.length)
-        return bytes.map { String(format: "%02hhx", $0) }.reduce("", combine: { $0 + $1 })
     }
 }
 

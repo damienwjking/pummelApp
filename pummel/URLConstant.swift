@@ -42,6 +42,7 @@ let kPMAPI_REGISTER                 = kPMAPI + "/api/register"
 let kPMAPI_TAG_OFFSET               = kPMAPI + "/api/tags?offset="
 let kPMAPI_TAG4_OFFSET              = kPMAPI + "/api/tags4?offset="
 let kPMAPI_TAGALL_OFFSET            = kPMAPI + "/api/tagsAll?offset="
+let kPMAPI_DISCOUNTS                = kPMAPI + "/api/discounts"
 
 // PM Link
 let kPM                             = "http://pummel.fit"
@@ -66,6 +67,7 @@ let kPM_PATH_DEVICES                = "/devices"
 let kPM_PARTH_MESSAGE               = "/messages"
 let kPM_PARTH_MESSAGE_V2            = "/messagesV2"
 let kPM_PATH_LIKE                   = "/likes"
+let kPM_PATH_COMMENT                = "/comments"
 let kPM_PATH_COMMENT_OFFSET         = "/comments?offset="
 let kPM_PATH_COMMENT_LIMIT          = "/comments?limit="
 let kPM_PATH_LIMIT_ONE              = "&limit=1"
@@ -94,10 +96,6 @@ let kPMAPICOACH_BOOK                = "/bookV2"
 let kPMAPI_LEAD                     = "/lead"
 let kPMAPI_CHANGEPASS               = "/password"
 let kPMAPI_POSTOFPHOTO              = "/api/postOfPhoto"
-
-
-// Discount
-let kPMAPI_DISCOUNTS                = "/api/discounts/?offset="
 
 // Tracking
 let kPMAPI_TRACKCALLBACK            = "/api/trackCallBackBt"

@@ -258,7 +258,7 @@ class DetailSessionViewController: BaseViewController {
                 let imageRes = result as! UIImage
                 self.userIMV.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }
@@ -271,7 +271,7 @@ class DetailSessionViewController: BaseViewController {
                 let imageRes = result as! UIImage
                 self.coachIMV.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }

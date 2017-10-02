@@ -184,7 +184,7 @@ class UserProfileViewController: BaseViewController  {
                 self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: self.aboutCollectionView.frame.origin.y + self.postHeightDT.constant)
                 self.scrollView.isScrollEnabled = true
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }
@@ -195,7 +195,7 @@ class UserProfileViewController: BaseViewController  {
                 let imageRes = result as! UIImage
                 self.avatarIMV.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }
@@ -268,7 +268,7 @@ class UserProfileViewController: BaseViewController  {
             self.videoIndicator.removeFromSuperview()
         }
         self.videoIndicator.startAnimating()
-        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.videoIndicator.center = CGPoint(x: self.detailV.frame.width/2, self.detailV.frame.height/2)
         self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
         
         // Remove loop play video for
@@ -376,7 +376,7 @@ extension UserProfileViewController: UICollectionViewDataSource, UICollectionVie
                 }
                 self.view.hideToastActivity()
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
                 self.view.hideToastActivity()
         }
@@ -394,7 +394,7 @@ extension UserProfileViewController: UICollectionViewDataSource, UICollectionVie
                     
                     cell!.imageCell.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }

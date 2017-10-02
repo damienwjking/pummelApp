@@ -35,15 +35,16 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         self.cvLayout.itemSize = CGSize(width: (self.bounds.size.width - 50), height: self.bounds.height)
         self.cvLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 0)
         self.cvLayout.minimumLineSpacing = 10
-        self.cvLayout.scrollDirection = .Horizontal
+        self.cvLayout.scrollDirection = .horizontal
         
         self.cv = UICollectionView.init(frame: self.bounds, collectionViewLayout: self.cvLayout)
         let nibName = UINib(nibName: "DiscountColectionViewCell", bundle: nil)
         self.cv.register(nibName, forCellWithReuseIdentifier: "DiscountColectionViewCell")
         self.cv.delegate = self
         self.cv.dataSource = self
+        
         self.cv.isScrollEnabled = false
-        self.cv.backgroundColor = UIColor.groupTableViewBackgroundColor()
+        self.cv.backgroundColor = UIColor.groupTableViewBackground
         
         self.addSubview(self.cv)
     }
@@ -57,17 +58,17 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("DiscountColectionViewCell", for: indexPath) as! DiscountColectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DiscountColectionViewCell", for: indexPath) as! DiscountColectionViewCell
         
         // add Swipe gesture
-        if cell.gestureRecognizers?.count < 2 {
+        if (cell.gestureRecognizers?.count)! < 2 {
             
             let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
-            swipeLeftGesture.direction = .Left
+            swipeLeftGesture.direction = .left
             cell.addGestureRecognizer(swipeLeftGesture)
             
             let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
-            swipeRightGesture.direction = .Right
+            swipeRightGesture.direction = .right
             cell.addGestureRecognizer(swipeRightGesture)
         }
         
@@ -76,7 +77,7 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         }
         
         let discountDetail = self.arrayResult[indexPath.row]
-        cell.setData(discountDetail)
+        cell.setData(discountDetail: discountDetail)
         
         if indexPath.row == self.arrayResult.count - 1 {
             self.delegate?.loadMoreDiscount()
@@ -95,7 +96,7 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         }
         
         let discountDetail = self.arrayResult[indexPath.row]
-        self.delegate?.goToDetailDiscount(discountDetail)
+        self.delegate?.goToDetailDiscount(discountDetail: discountDetail)
     }
     
     func endPagingCarousel(scrollView: UIScrollView) {
@@ -112,12 +113,12 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         var offsetX = self.cv.contentOffset.x + self.widthCell
         offsetX = offsetX > self.cv.contentSize.width - self.widthCell ? self.cv.contentSize.width - self.widthCell : offsetX
         
-        let newContentOffset = CGPointMake(offsetX, 0)
+        let newContentOffset = CGPoint(x: offsetX, y: 0)
         
         UIView.animate(withDuration: 0.25, animations: {
             self.cv.contentOffset = newContentOffset
         }) { (_) in
-            self.endPagingCarousel(self.cv)
+            self.endPagingCarousel(scrollView: self.cv)
         }
     }
     
@@ -125,12 +126,12 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         var offsetX = self.cv.contentOffset.x - self.widthCell
         offsetX = offsetX < 0 ? 0 : offsetX
         
-        let newContentOffset = CGPointMake(offsetX, 0)
+        let newContentOffset = CGPoint(x: offsetX, y: 0)
         
         UIView.animate(withDuration: 0.25, animations: {
             self.cv.contentOffset = newContentOffset
         }) { (_) in
-            self.endPagingCarousel(self.cv)
+            self.endPagingCarousel(scrollView: self.cv)
         }
     }
 }

@@ -87,7 +87,7 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func forgotPasswordButtonClicked(sender: AnyObject) {
-        NotificationCenter.default.postNotificationName("FORGOTPASSWORDNOTIFICATION", object: nil)
+        NotificationCenter.default.post(name: "FORGOTPASSWORDNOTIFICATION", object: nil)
     }
     
     @IBAction func signinButtonClicked(sender: AnyObject) {
@@ -129,7 +129,7 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
                     }
                     
                     UserDefaults.standard.setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
-                    NotificationCenter.default.postNotificationName("LOGINSUCCESSNOTIFICATION", object: nil)
+                    NotificationCenter.default.post(name: "LOGINSUCCESSNOTIFICATION", object: nil)
                     FBSDKAppEvents.logEvent("Login")
                 } else {
                     let alertController = UIAlertController(title: pmmNotice, message: signInNotice, preferredStyle: .alert)
@@ -197,13 +197,13 @@ extension SigninViewController: FBSDKLoginButtonDelegate {
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                NotificationCenter.default.postNotificationName("LOGINSUCCESSNOTIFICATION", object: nil)
+                                NotificationCenter.default.post(name: "LOGINSUCCESSNOTIFICATION", object: nil)
                             }
                         } else {
                             let loginManager: FBSDKLoginManager = FBSDKLoginManager()
                             loginManager.logOut()
                             
-                            print("Request failed with error: \(error)")
+                            print("Request failed with error: \(String(describing: error))")
                         }
                     }).fetchdata()
                 } else {

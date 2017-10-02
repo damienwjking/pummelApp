@@ -41,51 +41,32 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
     
     func animationIndicator() {
         self.smallIndicatorView.isHidden = false
-        let seconds = 0.5
-        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-            
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.medIndicatorView.isHidden = false
-            let seconds = 0.5
-            let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-            let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-
-            dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.bigIndicatorView.isHidden = false
-                let seconds = 0.5
-                let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-
-                dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                    
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.smallIndicatorView.isHidden = true
                     self.medIndicatorView.isHidden = true
                     self.bigIndicatorView.isHidden = true
-                    let seconds = 0.5
-                    let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-                    let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
                     
-                    dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         if (self.stopAnimation != true) {
-                             self.animationIndicator()
+                            self.animationIndicator()
                         }
-                    })
-
-                })
-            })
-            
-        })
-        
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func closeSearching(sender:UIButton!) {
-        self.dismissViewControllerAnimated(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         let location = locations.last! as CLLocation
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
@@ -95,7 +76,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         
     }
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
            return MKTileOverlayRenderer.init(overlay: overlay)
         
     }
@@ -225,7 +206,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         kState: state,
                         kCity: city]
                     
-                    NotificationCenter.default.postNotificationName(k_PM_FIRST_SEARCH_COACH, object: nil)
+                    NotificationCenter.default.post(name: k_PM_FIRST_SEARCH_COACH, object: nil)
                 }
             })
         }

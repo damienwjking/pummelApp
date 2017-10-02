@@ -111,7 +111,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                         self.listUserSearchResultTB.reloadData()
                     }
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
             }
         }
@@ -136,7 +136,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                         self.listUserTB.reloadData()
                     }
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
             }
         }
@@ -171,7 +171,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                         })
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
             
@@ -200,7 +200,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
                         })
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
                         

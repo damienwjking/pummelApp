@@ -10,7 +10,7 @@ import Mixpanel
 import Alamofire
 import Foundation
 
-typealias CompletionBlock = (_ result: AnyObject?, _ error: NSError?) -> Void
+typealias CompletionBlock = (_ result: Any?, _ error: NSError?) -> Void
 //typealias ResponseCompletionBlock = (response:  Response<AnyObject, NSError>, error: NSError?) -> Void
 
 enum ImageRouter: URLRequestConvertible {
@@ -39,11 +39,11 @@ enum ImageRouter: URLRequestConvertible {
         }
     }
     
-    var imageData: NSData? {
-        var data: NSData? = nil
+    var imageData: Data? {
+        var data: Data? = nil
         switch self {
         case .currentUserUploadAvatar(let imageData, _):
-            data = imageData
+            data = imageData as Data
             
         default:
             break
@@ -69,20 +69,21 @@ enum ImageRouter: URLRequestConvertible {
         }
     }
     
-    var method: Alamofire.Method {
+    var method: Alamofire.HTTPMethod {
         switch self {
         case .getCurrentUserAvatar:
-            return .GET
+            return .get
         case .getUserAvatar:
-            return .GET
+            return .get
         case .getCoachAvatar:
-            return .GET
+            return .get
         case .getBusinessLogo:
-            return .GET
+            return .get
         case .getImage:
-            return .GET
+            return .get
         case .currentUserUploadAvatar:
-            return .POST
+            return .post
+            
         }
     }
     
@@ -128,8 +129,8 @@ enum ImageRouter: URLRequestConvertible {
         
         switch self {
         case .currentUserUploadAvatar:
-            param[kUserId] = currentUserID
-            param[kProfilePic] = "1"
+            param[kUserId] = currentUserID as AnyObject
+            param[kProfilePic] = "1" as AnyObject
             
         default:
             break
@@ -139,24 +140,32 @@ enum ImageRouter: URLRequestConvertible {
         return param
     }
     
-    // MARK: URLRequestConvertible
     var URLRequest: NSMutableURLRequest {
-        //        let mutableURLRequest = NSMutableURLRequest.create(path, method: method.rawValue)!
         let url = NSURL(string: self.path)
         
-        let mutableURLRequest = NSMutableURLRequest(URL: url!)
-        mutableURLRequest.HTTPMethod = self.method.rawValue
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = self.method.rawValue
         
         return mutableURLRequest
+    }
+    
+    // For combine
+    func asURLRequest() throws -> URLRequest {
+        let url = NSURL(string: self.path)
+        
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = self.method.rawValue
+        
+        return mutableURLRequest as URLRequest
     }
     
     func fetchdata() {
         switch self {
         case .getCurrentUserAvatar, .getUserAvatar, .getCoachAvatar, .getBusinessLogo:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
                 print("PM: ImageRouter 1")
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if response.response?.statusCode == 200 {
                         let userDetail = JSON as! NSDictionary
                         
@@ -164,87 +173,82 @@ enum ImageRouter: URLRequestConvertible {
                             let imageURLString = userDetail[kImageUrl] as! String
                             
                             ImageRouter.getImage(imageURLString: imageURLString, sizeString: self.imageSize, completed: { (result, error) in
-                                self.comletedBlock(result: result, error: error)
+                                self.comletedBlock(result, error)
                             }).fetchdata()
                         } else {
                             let defaultImage = UIImage(named: "display-empty.jpg")
-                            self.comletedBlock(result:  defaultImage, error: nil)
+                            self.comletedBlock(defaultImage, nil)
                         }
                     } else {
                         let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
-                        self.comletedBlock(result:  nil, error: error)
+                        self.comletedBlock(nil, error)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     // check status code 401 : cookie expire
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock(result:  nil, error: error)
+                        self.comletedBlock(nil, error as NSError)
                     }
                 }
             })
         case .getImage:
             if (self.path.isEmpty == false) {
-                let image = self.getCacheImageWithLink(self.path)
+                let image = self.getCacheImageWithLink(link: self.path)
                 if (image != nil) {
-                    self.comletedBlock(result: image, error: nil)
+                    self.comletedBlock(image, nil)
                 } else {
-                    Alamofire.request(.GET, self.path).responseImage { response in
+                    Alamofire.request(self.path, method: self.method).responseImage(completionHandler: { (response) in
                         print("PM: ImageRouter 2")
                         
                         if (response.result.isSuccess) {
                             let imageRes = response.result.value! as UIImage
-                            NSCache.sharedInstance.setObject(imageRes, forKey: self.path)
-                            
-                            self.comletedBlock(result: imageRes, error: nil)
+                            NSCache.sharedInstance.setObject(imageRes, forKey: self.path as AnyObject)
+                            self.comletedBlock(imageRes, nil)
                         } else {
                             let error = NSError(domain: "Pummel", code: 1000, userInfo: nil) // simple error
-                            self.comletedBlock(result: nil, error: error)
+                            self.comletedBlock(nil, error)
                         }
-                    }
+                    })
                 }
             } else {
                 let error = NSError(domain: "Pummel", code: 500, userInfo: nil) // Simple error
-                self.comletedBlock(result: nil, error: error)
+                self.comletedBlock(nil, error)
             }
             
         case .currentUserUploadAvatar:
             let filename = jpgeFile
             let type = imageJpeg
             
-            Alamofire.upload(self.method, self.path,
-                multipartFormData: { multipartFormData in
-                    multipartFormData.appendBodyPart(data: self.imageData!, name: "file", fileName:filename, mimeType:type)
-                    
-                    for (key, value) in self.param! {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                    }
-                },
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                    case .Success(let upload, _, _):
-                        upload.responseJSON { response in
-                            if (response.result.isSuccess) {
-                                self.comletedBlock(result: true, error: nil)
-                            } else {
-                                let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
-                                self.comletedBlock(result: false, error: error)
-                            }
-                        }
-                        
-                    case .Failure(_):
-                        let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
-                        self.comletedBlock(result: false, error: error)
-                    }
+            Alamofire.upload(multipartFormData: { (multipartFormData) in
+                multipartFormData.append(self.imageData!, withName: "file", fileName: filename, mimeType: type)
+                
+                for (key, value) in self.param! {
+                    multipartFormData.append(value.data(using: String.Encoding.utf8.rawValue)!, withName: key)
                 }
-            )
-            
+            }, to: self.path, encodingCompletion: { (encodingResult) in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload.responseJSON { response in
+                        if (response.result.isSuccess) {
+                            self.comletedBlock(true as AnyObject, nil)
+                        } else {
+                            let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                            self.comletedBlock(false as AnyObject, error)
+                        }
+                    }
+                    
+                case .failure(_):
+                    let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                    self.comletedBlock(false as AnyObject, error)
+                }
+            })
         }
     }
     
     func getCacheImageWithLink(link: String) -> UIImage?  {
-        if (NSCache.sharedInstance.object(forKey: link) != nil) {
-            let imageRes = NSCache.sharedInstance.object(forKey: link) as! UIImage
+        if (NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: link as AnyObject) != nil) {
+            let imageRes = NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: link as AnyObject) as! UIImage
             return imageRes
         }
         

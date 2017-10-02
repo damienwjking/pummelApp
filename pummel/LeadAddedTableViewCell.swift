@@ -59,7 +59,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                     cell.imgAvatar.image = imageRes
                 }
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
         

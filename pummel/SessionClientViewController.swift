@@ -138,7 +138,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
 //                if (error == nil) {
 //                    
 //                } else {
-//                    print("Request failed with error: \(error)")
+//                    print("Request failed with error: \(String(describing: error))")
 //                }
 //            }).fetchdata()
             
@@ -168,7 +168,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                         }
                     case .Failure(let error):
                         self.canLoadMore = false
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                     
                     self.isloading = false

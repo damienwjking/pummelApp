@@ -95,7 +95,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 self.avatarTextBox.image = textBoxImage
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }).fetchdata()
     }
@@ -128,7 +128,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                         })
                     }
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }
         } else {
@@ -152,7 +152,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                         let name = userInfo.object(forKey: kFirstname) as! String
                         self.navigationItem.title = name.uppercased()
                     case .Failure(let error):
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                 }
             }
@@ -242,7 +242,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             let name = userInfo.object(forKey: kFirstname) as! String
                             cell.nameChatUserLB.text = name.uppercased()
                         case .Failure(let error):
-                            print("Request failed with error: \(error)")
+                            print("Request failed with error: \(String(describing: error))")
                         }
                     }
                 }
@@ -283,7 +283,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                                             })
                                         }
                                     } else {
-                                        print("Request failed with error: \(error)")
+                                        print("Request failed with error: \(String(describing: error))")
                                     }
                                 }).fetchdata()
                                 
@@ -292,7 +292,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             }
                         }
                     } else {
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                 }).fetchdata()
                 
@@ -344,13 +344,13 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                                             cell.avatarIMV.image = imageRes
                                         }
                                     } else {
-                                        print("Request failed with error: \(error)")
+                                        print("Request failed with error: \(String(describing: error))")
                                     }
                                 }).fetchdata()
                             }
                         }
                     } else {
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                 }).fetchdata()
                 

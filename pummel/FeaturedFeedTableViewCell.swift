@@ -41,15 +41,15 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         self.likeLB.font = .pmmMonLight13()
         self.firstUserCommentLB.font = .pmmMonLight13()
         self.firstContentCommentTV.font = .pmmMonLight16()
-        self.firstContentCommentTV.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonLight16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
+        self.firstContentCommentTV.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonLight16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(value: 1)]
         self.viewAllLB.font = .pmmMonLight13()
         self.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
-        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(FeaturedFeedTableViewCell.onDoubleTap(_:)))
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.onDoubleTap(sender:)))
         doubleTapGesture.numberOfTapsRequired = 2
         self.imageContentIMV.isUserInteractionEnabled = true
         self.imageContentIMV.addGestureRecognizer(doubleTapGesture)
         self.likeImage?.isHidden = true
-        self.likeBT.addTarget(self, action:#selector(FeaturedFeedTableViewCell.onDoubleTap(_:)), for: .touchUpInside)
+        self.likeBT.addTarget(self, action:#selector(self.onDoubleTap(sender:)), for: .touchUpInside)
     }
     
     func onDoubleTap(sender: UITapGestureRecognizer) {
@@ -58,19 +58,19 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         didDoubleTap = true
         self.likeImage?.isHidden = false
         self.likeImage?.alpha = 1.0
-        UIView.animate(withDuration: 0.5, delay: 0.4, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.4, options: .curveEaseIn, animations: {
             self.likeImage?.alpha = 0
             }, completion: {
                 (value:Bool) in
-                var likeLink  = kPMAPI_LIKE
-                likeLink.append(self.postId)
-                likeLink.append(kPM_PATH_LIKE)
-                Alamofire.request(.POST, likeLink, parameters: [kPostId:self.postId])
-                    .responseJSON { response in
-                        if response.response?.statusCode != 200 {
-                            print("cant like")
-                        }
-                }
+                
+                FeedRouter.sendLikePost(postID: self.postId, completed: { (result, error) in
+                    if (error == nil) {
+                        // Do nothing
+                    } else {
+                        print("Request failed with error: \(String(describing: error))")
+                    }
+                }).fetchdata()
+                
                 self.likeBT.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
 //                self.likeBT.isUserInteractionEnabled = false
                 let sLikeArr = self.likeLB.text!.characters.split{$0 == " "}.map(String.init)
@@ -95,14 +95,14 @@ class FeaturedFeedTableViewCell: UITableViewCell {
     }
     
     @IBAction func like(sender: UIButton!) {
-        if ((sender.backgroundImageForState(.Normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
+        if ((sender.backgroundImage(for: .normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
             sender.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
         } else {
             sender.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
         }
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     

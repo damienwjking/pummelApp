@@ -8,31 +8,66 @@
 
 import Foundation
 import Alamofire
+import MapKit
 
 enum FeedRouter: URLRequestConvertible {
     case getListFeed(offset: Int, completed: CompletionBlock)
     case getAndCheckFeedLike(feedID : String, completed: CompletionBlock)
-    case reportFeed(param: [String : AnyObject]?, completed: CompletionBlock)
-    
+    case reportFeed(postID: String, completed: CompletionBlock)
+    case getLikePost(postID: String, completed: CompletionBlock)
+    case sendLikePost(postID: String, completed: CompletionBlock)
+    case getDiscount(longitude: CLLocationDegrees?, latitude: CLLocationDegrees?, state: String?, country: String?, offset: Int, completed: CompletionBlock)
+    case getComment(postID: String, offset: Int, limit: Int, completed: CompletionBlock)
+
     var comletedBlock: CompletionBlock {
         switch self {
         case .getListFeed(_, let completed):
             return completed
+            
         case .getAndCheckFeedLike(_, let completed):
             return completed
+            
         case .reportFeed(_, let completed):
             return completed
+            
+        case .getLikePost(_, let completed):
+            return completed
+            
+        case .sendLikePost(_, let completed):
+            return completed
+            
+        case .getDiscount(_, _, _, _, _, let completed):
+            return completed
+            
+        case .getComment(_, _, _, let completed):
+            return completed
+            
         }
     }
     
-    var method: Alamofire.Method {
+    var method: Alamofire.HTTPMethod {
         switch self {
         case .getListFeed:
-            return .GET
+            return .get
+            
         case .getAndCheckFeedLike:
-            return .GET
+            return .get
+            
         case .reportFeed:
-            return .PUT
+            return .put
+            
+        case .getLikePost:
+            return .get
+            
+        case .sendLikePost:
+            return .post
+            
+        case .getDiscount:
+            return .get
+            
+        case .getComment:
+            return .get
+            
         }
     }
     
@@ -45,74 +80,128 @@ enum FeedRouter: URLRequestConvertible {
         case .getAndCheckFeedLike(let feedID, _):
             prefix = kPMAPI_LIKE + feedID + kPM_PATH_LIKE
             
-        case .reportFeed(_, _):
+        case .reportFeed:
             prefix = kPMAPI_REPORT
+            
+        case .getLikePost(let postID, _):
+            prefix = kPMAPI_LIKE + postID + kPM_PATH_LIKE
+            
+        case .sendLikePost(let postID, _):
+            prefix = kPMAPI_LIKE + postID + kPM_PATH_LIKE
+            
+        case .getDiscount:
+            prefix = kPMAPI_DISCOUNTS
+            
+        case .getComment(let postID, _, _, _):
+            prefix = kPMAPI_POST + postID + kPM_PATH_COMMENT
+            
         }
         
         return prefix
     }
     
-    var param: [String : AnyObject]? {
+    var param: [String : Any]? {
+        var param: [String : Any]? = [:]
+        
         switch self {
-        case .reportFeed(let param, _):
-            return param
+        case .reportFeed(let postID, _):
+            param?[kPostId] = postID
+            
+        case .getLikePost(let postID, _):
+            param?[kPostId] = postID
+            
+        case .sendLikePost(let postID, _):
+            param?[kPostId] = postID
+            
+        case .getDiscount(let longitude, let latitude, let state, let country, let offset, _):
+            if (longitude != nil) {
+                param?[kLong] = longitude
+            }
+            
+            if (latitude != nil) {
+                param?[kLat] = latitude
+            }
+
+            if (state != nil) {
+                param?[kState] = state
+            }
+            
+            if (country != nil) {
+                param?[kCountry] = country
+            }
+            
+            param?[kOffset] = offset
+            
+        case .getComment(_, let offset, let limit, _):
+            param?[kOffset] = offset
+            param?[kLimit] = limit
+            
         default:
-            return nil
+            break
         }
+        
+        return param
     }
     
-    // MARK: URLRequestConvertible
     var URLRequest: NSMutableURLRequest {
-        //        let mutableURLRequest = NSMutableURLRequest.create(path, method: method.rawValue)!
         let url = NSURL(string: self.path)
         
-        let mutableURLRequest = NSMutableURLRequest(URL: url!)
-        mutableURLRequest.HTTPMethod = method.rawValue
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = method.rawValue
         
         return mutableURLRequest
     }
     
+    // For combine
+    func asURLRequest() throws -> URLRequest {
+        let url = NSURL(string: self.path)
+        
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = self.method.rawValue
+        
+        return mutableURLRequest as URLRequest
+    }
+    
     func fetchdata() {
-        let defaults = UserDefaults.standard
         let currentUserID = PMHelper.getCurrentID()
         
         switch self {
         case .getListFeed:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
                 print("PM: FeedRouter 1")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if response.response?.statusCode == 200 {
                         let userDetail = JSON as! [NSDictionary]
                         
-                        self.comletedBlock(result: userDetail, error: nil)
+                        self.comletedBlock(userDetail as AnyObject, nil)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock(result: nil, error: error)
+                        self.comletedBlock(nil, error as NSError)
                     }
                 }
             })
             
         case .getAndCheckFeedLike:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
                 print("PM: FeedRouter 2")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if response.response?.statusCode == 200 {
                         let resultDictionary = NSMutableDictionary()
                         
                         let likeJson = JSON as! NSDictionary
-                        let likeNumber = String(format:"%0.f", likeJson[kCount]!.doubleValue)
+                        let likeNumber = String(format:"%0.f", (likeJson[kCount]! as AnyObject).doubleValue)
                         let rows = likeJson[kRows] as! [NSDictionary]
                         
                         var currentUserLiked = false
                         for row in rows {
-                            let likeUserID = String(format:"%0.f", row[kUserId]!.doubleValue)
+                            let likeUserID = String(format:"%0.f", (row[kUserId]! as AnyObject).doubleValue)
                             if (likeUserID == currentUserID){
                                 currentUserLiked = true
                                 break
@@ -122,32 +211,113 @@ enum FeedRouter: URLRequestConvertible {
                         resultDictionary["likeNumber"] = likeNumber
                         resultDictionary["currentUserLiked"] = currentUserLiked
                         
-                        self.comletedBlock(result: resultDictionary, error: nil)
+                        self.comletedBlock(resultDictionary, nil)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock(result: nil, error: error)
+                        self.comletedBlock(nil, error as NSError)
                     }
                 }
             })
             
         case .reportFeed:
-            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: FeedRouter 3")
                 
-                if response.response?.statusCode == 200 {
-                    self.comletedBlock(result: true, error: nil)
-                } else {
+                switch response.result {
+                case .success( _):
+                    if response.response?.statusCode == 200 {
+                        self.comletedBlock(true, nil)
+                    }
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        // Not expect case
-                        self.comletedBlock(result: false, error: nil)
+                        self.comletedBlock(false, error as NSError)
                     }
                 }
             })
+            
+        case .getLikePost:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 4")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        let result = JSON as! NSDictionary
+                        
+                        self.comletedBlock(result, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .sendLikePost:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 5")
+                
+                switch response.result {
+                case .success( _):
+                    if response.response?.statusCode == 200 {
+                        self.comletedBlock(true, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
+            
+        case .getDiscount:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 6")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        let result = JSON as! [NSDictionary]
+                        
+                        self.comletedBlock(result, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
+            
+        case .getComment:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 7")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        let result = JSON as! [NSDictionary]
+                        
+                        self.comletedBlock(result, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
+            
         }
     }
 }

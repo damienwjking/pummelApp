@@ -1,3 +1,4 @@
+
 //
 //  BaseTabBarController.swift
 //  pummel
@@ -8,18 +9,18 @@
 import UIKit
 import Mixpanel
 
-class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
+class BaseTabBarController: UITabBarController {
     
     @IBInspectable var defaultIndex: Int = 2
     
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedIndex = defaultIndex
-        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showMessage), name: k_PM_SHOW_LIST_MESSAGE_SCREEN, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.showMessage), name: NSNotification.Name(rawValue: k_PM_SHOW_LIST_MESSAGE_SCREEN), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showFeed), name: k_PM_SHOW_FEED, object: nil)
-        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showSession), name: k_PM_SHOW_SHOW_SESSIONS, object: nil)
-        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showClients), name: k_PM_SHOW_SHOW_CLIENTS, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.showFeed), name: NSNotification.Name(rawValue: k_PM_SHOW_FEED), object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.showSession), name: NSNotification.Name(rawValue: k_PM_SHOW_SHOW_SESSIONS), object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.showClients), name: NSNotification.Name(rawValue: k_PM_SHOW_SHOW_CLIENTS), object: nil)
 //        NotificationCenter.default.addObserver(self, selector:  #selector(BaseTabBarController.showMessageBadgeWithoutRefresh), name: k_PM_SHOW_MESSAGE_BADGE_WITHOUT_REFRESH, object: nil)
         
         self.delegate = self
@@ -27,7 +28,7 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func showMessage() {
         if selectedIndex == 3 {
-            NotificationCenter.default.postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_REFRESH_MESSAGE), object: nil)
         } else {
             selectedIndex = 3
         }
@@ -39,7 +40,7 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func showSession() {
         if selectedIndex == 3 {
-            NotificationCenter.default.postNotificationName(k_PM_REFRESH_SESSION, object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_REFRESH_SESSION), object: nil)
         } else {
             selectedIndex = 3
         }
@@ -47,16 +48,16 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func showClients() {
         if selectedIndex == 3 {
-            NotificationCenter.default.postNotificationName(k_PM_REFRESH_CLIENTS, object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_REFRESH_CLIENTS), object: nil)
         } else {
             selectedIndex = 3
         }
     }
     
     func showMessageBadge() {
-        var badgeV = UserDefaults.standard.integerForKey("MESSAGE_BADGE_VALUE")
+        var badgeV = UserDefaults.standard.integer(forKey: "MESSAGE_BADGE_VALUE")
         badgeV += 1
-        UserDefaults.standard.setInteger(badgeV, forKey: "MESSAGE_BADGE_VALUE")
+        UserDefaults.standard.set(badgeV, forKey: "MESSAGE_BADGE_VALUE")
         if (badgeV > 0) {
             self.tabBar.items![3].badgeValue = String(badgeV)
         } else {
@@ -64,23 +65,24 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         if (selectedIndex == 3) {
-             NotificationCenter.default.postNotificationName(k_PM_REFRESH_MESSAGE, object: nil)
+             NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_REFRESH_MESSAGE), object: nil)
         }
     }
     
     func showMessageBadgeWithoutRefresh () {
-        var badgeV = UserDefaults.standard.integerForKey("MESSAGE_BADGE_VALUE")
+        var badgeV = UserDefaults.standard.integer(forKey: "MESSAGE_BADGE_VALUE")
         badgeV += 1
-        UserDefaults.standard.setInteger(badgeV, forKey: "MESSAGE_BADGE_VALUE")
+        UserDefaults.standard.set(badgeV, forKey: "MESSAGE_BADGE_VALUE")
         if (badgeV != 0) {
             self.tabBar.items![3].badgeValue = String(badgeV)
         } else {
             self.tabBar.items![3].badgeValue = nil
         }
     }
+}
 
-    
-    func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
+extension BaseTabBarController : UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         var properties = ["Name": "Navigation Click", "Label":"ProfileTabbar"]
@@ -93,8 +95,8 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
             properties = ["Name": "Navigation Click", "Label":"SessionTabbar"]
             break
         case 2:
-//            let slectedVC = self.selectedViewController as! FindViewController
-//            slectedVC.refind()
+            //            let slectedVC = self.selectedViewController as! FindViewController
+            //            slectedVC.refind()
             properties = ["Name": "Navigation Click", "Label":"SearchTabbar"]
             break
         case 3:
@@ -104,6 +106,6 @@ class BaseTabBarController: UITabBarController, UITabBarControllerDelegate {
             break
         }
         
-        mixpanel.track("IOS.Tabbar", properties: properties)
+        mixpanel?.track("IOS.Tabbar", properties: properties)
     }
 }

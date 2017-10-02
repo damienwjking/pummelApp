@@ -108,7 +108,7 @@ class ConnectViewController: BaseViewController {
                                 let imageRes = result as! UIImage
                                 self.meAvatarIMV.image = imageRes
                             } else {
-                                print("Request failed with error: \(error)")
+                                print("Request failed with error: \(String(describing: error))")
                             }
                         }).fetchdata()
                     }
@@ -122,7 +122,7 @@ class ConnectViewController: BaseViewController {
                     let imageRes = result as! UIImage
                     self.youAvatarIMV.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }

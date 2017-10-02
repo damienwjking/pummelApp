@@ -99,7 +99,7 @@ class LetUsHelpViewController: BaseViewController, UICollectionViewDataSource, U
                     }
                     
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
             }
         } else

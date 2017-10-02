@@ -96,14 +96,14 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                                         cell.imgAvatar.image = imageRes
                                     }
                                 } else {
-                                    print("Request failed with error: \(error)")
+                                    print("Request failed with error: \(String(describing: error))")
                                 }
                             }).fetchdata()
                         }
                     }
                 }
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
         
@@ -173,7 +173,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                     self.cv.reloadData()
                 }
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }

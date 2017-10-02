@@ -47,26 +47,26 @@ enum UserRouter: URLRequestConvertible {
         }
     }
     
-    var method: Alamofire.Method {
+    var method: Alamofire.HTTPMethod {
         switch self {
         case .getCurrentUserInfo:
-            return .GET
+            return .get
         case .getUserInfo:
-            return .GET
+            return .get
         case .checkCoachOfUser:
-            return .GET
+            return .get
         case .authenticateFacebook:
-            return .POST
+            return .post
         case .getUpcomingSession:
-            return .GET
+            return .get
         case .getCompletedSession:
-            return .GET
+            return .get
         case .getTestimonial:
-            return .GET
+            return .get
         case .postTestimonial:
-            return .POST
+            return .post
         case .getFollowCoach:
-            return .GET
+            return .get
         case .signup:
             return .post
             
@@ -124,48 +124,49 @@ enum UserRouter: URLRequestConvertible {
         switch self {
         case .authenticateFacebook(let fbID, let email, let firstName, let lastName, let avatarURL, let gender, _):
             if (fbID != nil) {
-                param["fbId"] = fbID!
+                param["fbId"] = fbID! as AnyObject
             }
             
             if (email != nil) {
-                param["email"] = email!
+                param["email"] = email! as AnyObject
             }
             
             if (firstName != nil) {
-                param["firstname"] = firstName!
+                param["firstname"] = firstName! as AnyObject
             }
             
             if (lastName != nil) {
-                param["lastname"] = lastName!
+                param["lastname"] = lastName! as AnyObject
             }
             
             if (avatarURL != nil) {
-                param["imageUrl"] = avatarURL!
+                param["imageUrl"] = avatarURL! as AnyObject
             }
             
             if (gender != nil) {
-                param["gender"] = gender!
+                param["gender"] = gender! as AnyObject
             }
             
         case .postTestimonial(let userID, let description, let location, let rating, _):
-            param["userId"] = userID
-            param["userCommentId"] = currentUserID
-            param["description"] = description
-            param["userCommentLocation"] = location
-            param["rating"] = String(format: "%0.1f", rating)
+            param["userId"] = userID as AnyObject
+            param["userCommentId"] = currentUserID as AnyObject
+            param["description"] = description as AnyObject
+            param["userCommentLocation"] = location as AnyObject
+            param["rating"] = String(format: "%0.1f", rating) as AnyObject
 
         case .getUpcomingSession, .getCompletedSession:
-            let dateFormater = DateFormatter
+            let dateFormater = DateFormatter()
             dateFormater.dateFormat = "yyyy-MM-dd hh:mm:ss"
-            let dateString = dateFormater.string(from: NSDate())
+            let dateString = dateFormater.string(from: NSDate() as Date)
             
-            param["currentDate"] = dateString
+            param["currentDate"] = dateString as AnyObject
             
         case .signup(let firstName, let email, let password, let gender, _):
-            param[kEmail] = email
-            param[kPassword] = password
-            param[kFirstname] = firstName
-            param[kGender] = gender
+            param[kEmail] = email as AnyObject
+            param[kPassword] = password as AnyObject
+            param[kFirstname] = firstName as AnyObject
+            param[kGender] = gender as AnyObject
+            
             
         default:
             break
@@ -174,16 +175,23 @@ enum UserRouter: URLRequestConvertible {
         return param
     }
     
-    // MARK: URLRequestConvertible
     var URLRequest: NSMutableURLRequest {
-        //        let mutableURLRequest = NSMutableURLRequest.create(path, method: method.rawValue)!
-        
         let url = NSURL(string: self.path)
         
-        let mutableURLRequest = NSMutableURLRequest(URL: url!)
-        mutableURLRequest.HTTPMethod = method.rawValue
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = method.rawValue
         
         return mutableURLRequest
+    }
+    
+    // For combine
+    func asURLRequest() throws -> URLRequest {
+        let url = NSURL(string: self.path)
+        
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = self.method.rawValue
+        
+        return mutableURLRequest as URLRequest
     }
     
     func fetchdata() {
@@ -193,139 +201,142 @@ enum UserRouter: URLRequestConvertible {
                 print("PM: UserRouter 1")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if (JSON is NSNull == false) {
                         let userDetail = JSON as! NSDictionary
                         
-                        self.comletedBlock!(result: userDetail, error: nil)
+                        self.comletedBlock!(userDetail, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error as NSError
+                        
+                        )
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error as NSError)
                     }
                 }
             })
             
-        case checkCoachOfUser:
+        case .checkCoachOfUser:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 2")
                 
                 if response.response?.statusCode == 200 {
-                    self.comletedBlock!(result: true, error: nil)
+                    self.comletedBlock!(true as AnyObject, nil)
                 } else {
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error as NSError)
                     }
                 }
             })
             
         case .authenticateFacebook:
-            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 3")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if (JSON is NSNull == false) {
-                        UserRouter.saveCurrentUserInfo(response)
+                        UserRouter.saveCurrentUserInfo(response: response)
                         
                         // Can't return respone object
-                        self.comletedBlock!(result: true, error: nil)
+                        self.comletedBlock!(true as AnyObject, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error as NSError)
                     }
                 }
             })
             
         case .getUpcomingSession, .getCompletedSession:
-            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 4")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if (JSON is NSNull == false) {
                         let sessionArray = JSON as! NSArray
                         
-                        self.comletedBlock!(result: sessionArray, error: nil)
+                        self.comletedBlock!(sessionArray, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error as NSError)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error as NSError)
                     }
                 }
             })
             
-        case getTestimonial:
+        case .getTestimonial:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 5")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if (JSON is NSNull == false) {
                         let userDetail = JSON as! NSArray
                         
-                        self.comletedBlock!(result: userDetail, error: nil)
+                        self.comletedBlock!(userDetail, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error as NSError)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error as NSError
+                        )
                     }
                 }
             })
             
         case .postTestimonial:
-            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 6")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if (JSON is NSNull == false) {
                         let userDetails = JSON as! NSDictionary
                         
-                        self.comletedBlock!(result: userDetails, error: nil)
+                        self.comletedBlock!(userDetails, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error as NSError)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error as NSError)
                     }
                 }
             })
             
-        case getFollowCoach:
+        case .getFollowCoach:
             Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 7")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if (JSON is NSNull == false) {
                         let userDetails = JSON as! NSArray
                         
@@ -333,46 +344,46 @@ enum UserRouter: URLRequestConvertible {
                         for userDetail in userDetails {
                             let user = UserModel()
                             
-                            user.id = userDetail[kCoachId] as! Int
+                            user.id = (userDetail as! NSDictionary)[kCoachId] as! Int
                             coachArray.append(user)
                         }
                         
-                        self.comletedBlock!(result: coachArray, error: nil)
+                        self.comletedBlock!(coachArray as AnyObject, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: nil, error: error)
+                        self.comletedBlock!(nil, error as NSError)
                     }
                 }
             })
-        case signup:
-            Alamofire.request(self.method, self.path, parameters: self.param).responseJSON(completionHandler: { (response) in
+        case .signup:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 8")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     if (JSON is NSNull == false) {
-                        UserRouter.saveCurrentUserInfo(response)
+                        UserRouter.saveCurrentUserInfo(response: response)
                         
                         // Can't return respone object
-                        self.comletedBlock!(result: true, error: nil)
+                        self.comletedBlock!(true as AnyObject, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error)
                     }
-                case .Failure(let error):
+                case .failure(let error):
                     if (response.response?.statusCode == 400) {
                         let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error as NSError)
                     } else if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock!(result: false, error: error)
+                        self.comletedBlock!(false as AnyObject, error as NSError)
                     }
                 }
             })
@@ -380,28 +391,23 @@ enum UserRouter: URLRequestConvertible {
         }
     }
     
-    static func saveCurrentUserInfo(response: Response<AnyObject, NSError>) {
+    static func saveCurrentUserInfo(response: DefaultDataResponse) {
         let defaults = UserDefaults.standard
         
         // Save access token here
-        let JSON = response.result.value
-        self.updateCookies(response)
-        let currentId = String(format:"%0.f",JSON!.object(forKey: kUserId)!.doubleValue)
+        let JSON = NSKeyedUnarchiver.unarchiveObject(with: response.data!) as! NSDictionary
+        self.updateCookies(response: response)
+        let currentId = String(format:"%0.f", (JSON.object(forKey: kUserId)! as AnyObject).doubleValue)
         defaults.set(true, forKey: k_PM_IS_LOGINED)
         defaults.set(currentId, forKey: k_PM_CURRENT_ID)
         
         // Check Coach
-        var coachLink  = kPMAPICOACH
-        let coachId = currentId
-        coachLink.append(coachId)
-        Alamofire.request(.GET, coachLink)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    defaults.set(true, forKey: k_PM_IS_COACH)
-                } else {
-                    defaults.set(false, forKey: k_PM_IS_COACH)
-                }
-        }
+        UserRouter.checkCoachOfUser(userID: currentId) { (result, error) in
+            let isCoach = result as! Bool
+            
+            defaults.set(isCoach, forKey: k_PM_IS_COACH)
+            }.fetchdata()
+        
         
         // Send token
         if ((defaults.object(forKey: k_PM_PUSH_TOKEN)) != nil) {
@@ -424,21 +430,22 @@ enum UserRouter: URLRequestConvertible {
                     }
             }
         } else {
-            let application = UIApplication.sharedApplication()
-            let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+            let application = UIApplication.shared
+            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
         }
     }
     
-    static func updateCookies(response: Response<AnyObject, NSError>) {
+    static func updateCookies(response: DefaultDataResponse) {
         let defaults = UserDefaults.standard
         
         if let
             headerFields = response.response?.allHeaderFields as? [String: String],
-            let URL = response.request?.URL {
-            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: URL)
+            let URL = response.request?.url {
+            let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: URL)
             // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
+            
             Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
             defaults.set(headerFields, forKey: k_PM_HEADER_FILEDS)
             defaults.set(URL.absoluteString, forKey: k_PM_URL_LAST_COOKIE)

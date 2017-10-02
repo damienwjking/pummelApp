@@ -31,15 +31,15 @@ class LogSessionSelectUserViewController: BaseViewController {
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.next))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(getter: self.next))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         
         let nibName = UINib(nibName: "BookUserTableViewCell", bundle:nil)
         self.tbView.register(nibName, forCellReuseIdentifier: "BookUserTableViewCell")
         
-        self.loadDataWithPrefix(kPMAPICOACH_LEADS)
-        self.loadDataWithPrefix(kPMAPICOACH_CURRENT)
-        self.loadDataWithPrefix(kPMAPICOACH_OLD)
+        self.loadDataWithPrefix(prefixAPI: kPMAPICOACH_LEADS)
+        self.loadDataWithPrefix(prefixAPI: kPMAPICOACH_CURRENT)
+        self.loadDataWithPrefix(prefixAPI: kPMAPICOACH_OLD)
     }
     
     func loadDataWithPrefix(prefixAPI:String) {
@@ -54,7 +54,9 @@ class LogSessionSelectUserViewController: BaseViewController {
             prefix.append("\(offsetOld)")
         }
         
-        Alamofire.request(.GET, prefix)
+        
+        
+        .request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 if let arrayMessageT = JSON as? [NSDictionary] {
@@ -85,7 +87,7 @@ class LogSessionSelectUserViewController: BaseViewController {
                     }
                 }
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }
@@ -194,7 +196,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                                         let imageRes = result as! UIImage
                                         cell.imgAvatar.image = imageRes
                                     } else {
-                                        print("Request failed with error: \(error)")
+                                        print("Request failed with error: \(String(describing: error))")
                                     }
                                 }
                             }).fetchdata()
@@ -204,7 +206,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                     }
                 }
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
             }.fetchdata()
         

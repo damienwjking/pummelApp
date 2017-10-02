@@ -290,7 +290,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         self.contentTV.keyboardAppearance = .dark
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.contentTV.delegate = self
-        self.contentTV.selectedTextRange = self.contentTV.textRangeFromPosition(  self.contentTV.beginningOfDocument, toPosition:self.contentTV.beginningOfDocument)
+        self.contentTV.selectedTextRange = self.contentTV.textRange(from:   self.contentTV.beginningOfDocument, toPosition:self.contentTV.beginningOfDocument)
     }
     
     func initTime() {
@@ -581,7 +581,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                     
                     self.editSession.datetime = timeFormatter.string(from: date!)
                     
-                    NotificationCenter.default.postNotificationName(k_PM_UPDATE_SESSION_NOTIFICATION, object: self.editSession)
+                    NotificationCenter.default.post(name: k_PM_UPDATE_SESSION_NOTIFICATION, object: self.editSession)
                     
                 } else if response.response?.statusCode == 401 {
                     let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
@@ -653,7 +653,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                         let imageRes = result as! UIImage
                         self.avatarIMV.image = imageRes
                     } else {
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                 }).fetchdata()
             }
@@ -665,7 +665,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                     let imageRes = result as! UIImage
                     self.avatarIMV.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -692,7 +692,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 let imageRes = result as! UIImage
                 self.avatarUserIMV.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }
@@ -905,7 +905,7 @@ extension LogSessionClientDetailViewController : UITextFieldDelegate, UITextView
             textView.text = addAComment
             textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
             
-            textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
             
             return false
         }
@@ -920,7 +920,7 @@ extension LogSessionClientDetailViewController : UITextFieldDelegate, UITextView
     func textViewDidChangeSelection(textView: UITextView) {
         if self.view.window != nil {
             if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
             }
         }
     }

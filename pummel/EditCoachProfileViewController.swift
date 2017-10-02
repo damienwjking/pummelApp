@@ -264,7 +264,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 }
                     
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
             }
         } else
@@ -412,7 +412,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 }
                 
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }
@@ -584,7 +584,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 let imageRes = result as! UIImage
                 self.avatarIMW.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }).fetchdata()
     }
@@ -818,7 +818,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         } else if (mediType == "public.movie") {
             let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
             let videoData = NSData(contentsOfURL: videoPath)
-            let videoExtend = (videoPath.absoluteString!.components(separatedBy: ".").last?.lowercaseString)!
+            let videoExtend = (videoPath.absoluteString!.components(separatedBy: ".").last?.lowercased())!
             let videoType = "video/" + videoExtend
             let videoName = "video." + videoExtend
             

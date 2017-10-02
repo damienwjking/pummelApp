@@ -160,7 +160,7 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
                         }
                     case .Failure(let error):
                         self.canLoadMore = false
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                     
                     self.offset = self.offset + 20

@@ -238,7 +238,7 @@ extension UIView {
         }
         
         let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        activityIndicatorView.center = CGPointMake(activityView.bounds.size.width / 2, activityView.bounds.size.height / 2)
+        activityIndicatorView.center = CGPoint(x: activityView.bounds.size.width / 2, activityView.bounds.size.height / 2)
         activityView.addSubview(activityIndicatorView)
         activityIndicatorView.startAnimating()
         
@@ -322,12 +322,12 @@ extension UIView {
         if position is String {
             let toastSize = toast.bounds.size
             let viewSize  = self.bounds.size
-            if position.lowercaseString == HRToastPositionTop {
-                return CGPointMake(viewSize.width/2, toastSize.height/2 + HRToastVerticalMargin)
-            } else if position.lowercaseString == HRToastPositionDefault {
-                return CGPointMake(viewSize.width/2, viewSize.height - toastSize.height/2 - HRToastVerticalMargin)
-            } else if position.lowercaseString == HRToastPositionCenter {
-                return CGPointMake(viewSize.width/2, viewSize.height/2)
+            if position.lowercased() == HRToastPositionTop {
+                return CGPoint(x: viewSize.width/2, toastSize.height/2 + HRToastVerticalMargin)
+            } else if position.lowercased() == HRToastPositionDefault {
+                return CGPoint(x: viewSize.width/2, viewSize.height - toastSize.height/2 - HRToastVerticalMargin)
+            } else if position.lowercased() == HRToastPositionCenter {
+                return CGPoint(x: viewSize.width/2, viewSize.height/2)
             }
         } else if position is NSValue {
             return position.CGPointValue

@@ -180,7 +180,7 @@ class MessageViewController: BaseViewController {
                     self.listMessageTB.reloadData()
                 }
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }
@@ -214,7 +214,7 @@ class MessageViewController: BaseViewController {
                     self.horizontalViewHeightConstraint!.constant = 180
                 }
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }
     }
@@ -275,7 +275,7 @@ class MessageViewController: BaseViewController {
                         self.view.hideToastActivity()
                         self.offset -= 10
                         self.isLoadingMessage = false
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                     
                     self.refreshControl.endRefreshing()
@@ -362,7 +362,7 @@ class MessageViewController: BaseViewController {
                                                 self.listMessageTB.reloadData()
                                             })
                                         } else {
-                                            print("Request failed with error: \(error)")
+                                            print("Request failed with error: \(String(describing: error))")
                                         }
                                     }).fetchdata()
                                 } else {
@@ -372,12 +372,12 @@ class MessageViewController: BaseViewController {
                                 }
                                 
                             case .Failure(let error):
-                                print("Request failed with error: \(error)")
+                                print("Request failed with error: \(String(describing: error))")
                                 }
                         }
                         
                     case .Failure(let error):
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                         }
                 }
             }
@@ -416,7 +416,7 @@ class MessageViewController: BaseViewController {
                     
                     self.listMessageTB.reloadData()
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
             }
             
@@ -627,7 +627,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                         cell!.addButton.isHidden = false
                                     }
                                 } else {
-                                    print("Request failed with error: \(error)")
+                                    print("Request failed with error: \(String(describing: error))")
                                 }
                             }).fetchdata()
                         } else {
@@ -636,7 +636,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         }
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
             
@@ -796,7 +796,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                     self.present(alert, animated: true, completion: nil)
                                 }
                             } else {
-                                print("Request failed with error: \(error)")
+                                print("Request failed with error: \(String(describing: error))")
                             }
                         }).fetchdata()
                     }
@@ -898,7 +898,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                     UIApplication.sharedApplication().openURL(mailURL!)
                                 }
                             } else {
-                                print("Request failed with error: \(error)")
+                                print("Request failed with error: \(String(describing: error))")
                             }
                         }).fetchdata()
                     }
@@ -943,7 +943,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     
                     self.present(alertController, animated: true, completion: nil)
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }

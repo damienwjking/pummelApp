@@ -144,7 +144,7 @@ class SignupViewController: UIViewController {
                     let isSigninSuccess = result as! Bool
                     
                     if (isSigninSuccess == true) {
-                        NotificationCenter.default.postNotificationName("SIGNUPSUCCESSNOTIFICATION", object: nil)
+                        NotificationCenter.default.post(name: "SIGNUPSUCCESSNOTIFICATION", object: nil)
                     }
                 } else {
                     if (error?.code == 400) {
@@ -313,13 +313,13 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                NotificationCenter.default.postNotificationName("LOGINSUCCESSNOTIFICATION", object: nil)
+                                NotificationCenter.default.post(name: "LOGINSUCCESSNOTIFICATION", object: nil)
                             }
                         } else {
                             let loginManager: FBSDKLoginManager = FBSDKLoginManager()
                             loginManager.logOut()
                             
-                            print("Request failed with error: \(error)")
+                            print("Request failed with error: \(String(describing: error))")
                         }
                     }).fetchdata()
                 } else {

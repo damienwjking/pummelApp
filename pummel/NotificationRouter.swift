@@ -28,16 +28,16 @@ enum NotificationRouter: URLRequestConvertible {
         }
     }
     
-    var method: Alamofire.Method {
+    var method: Alamofire.HTTPMethod {
         switch self {
         case .getNotificationBadge:
-            return .GET
+            return .get
         case .resetSBadge:
-            return .PUT
+            return .put
         case .resetLBadge:
-            return .PUT
+            return .put
         case .resetCBadge:
-            return .PUT
+            return .put
         }
     }
     
@@ -62,47 +62,55 @@ enum NotificationRouter: URLRequestConvertible {
         return prefix
     }
     
-    // MARK: URLRequestConvertible
     var URLRequest: NSMutableURLRequest {
-        //        let mutableURLRequest = NSMutableURLRequest.create(path, method: method.rawValue)!
         let url = NSURL(string: self.path)
         
-        let mutableURLRequest = NSMutableURLRequest(URL: url!)
-        mutableURLRequest.HTTPMethod = method.rawValue
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = method.rawValue
         
         return mutableURLRequest
+    }
+    
+    // For combine
+    func asURLRequest() throws -> URLRequest {
+        let url = NSURL(string: self.path)
+        
+        let mutableURLRequest = NSMutableURLRequest(url: url! as URL)
+        mutableURLRequest.httpMethod = self.method.rawValue
+        
+        return mutableURLRequest as URLRequest
     }
     
     func fetchdata() {
         switch self {
         case .getNotificationBadge:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
                 print("PM: NotificationRouter 1")
                 
                 switch response.result {
-                case .Success(let JSON):
+                case .success(let JSON):
                     // [Message] [Session] [Lead] [Comment]
                     
                     let result = JSON as! NSArray
                     
-                    self.comletedBlock(result: result, error: nil)
-                case .Failure(let error):
+                    self.comletedBlock(result, nil)
+                case .failure(let error):
                     if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
-                        self.comletedBlock(result: nil, error: error)
+                        self.comletedBlock(nil, error as NSError)
                     }
                 }
             })
             
         case .resetSBadge, .resetLBadge, .resetCBadge:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
                 print("PM: NotificationRouter 2")
                 
                 if (response.response?.statusCode == 401) {
                     PMHelper.showLogoutAlert()
                 } else {
-                    self.comletedBlock(result: nil, error: nil)
+                    self.comletedBlock(nil, nil)
                 }
             })
         }

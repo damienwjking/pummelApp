@@ -68,7 +68,7 @@ class TextViewAutoHeight: UITextView {
             if finalContentSize.height <= CGRectGetHeight(self.frame) {
                 let textViewHeight = (CGRectGetHeight(self.frame) - self.contentSize.height * self.zoomScale)/2.0
                 
-                self.contentOffset = CGPointMake(0, -(textViewHeight < 0.0 ? 0.0 : textViewHeight))
+                self.contentOffset = CGPoint(x: 0, -(textViewHeight < 0.0 ? 0.0 : textViewHeight))
                 
             }
         }

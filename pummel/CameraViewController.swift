@@ -397,7 +397,7 @@ class CameraViewController: UIViewController {
     
     func uploadCurrentVideo(videoURL: NSURL) {
         let videoData = NSData(contentsOfURL: videoURL)
-        let videoExtend = (videoURL.absoluteString!.components(separatedBy: ".").last?.lowercaseString)!
+        let videoExtend = (videoURL.absoluteString!.components(separatedBy: ".").last?.lowercased())!
         let videoType = "video/" + videoExtend
         let videoName = "video." + videoExtend
         
@@ -438,7 +438,7 @@ class CameraViewController: UIViewController {
                         self.recordStatus = .pending
                         
                         if (response.response?.statusCode == 200) {
-                            NotificationCenter.default.postNotificationName("profileGetDetail", object: nil, userInfo: nil)
+                            NotificationCenter.default.post(name: "profileGetDetail", object: nil, userInfo: nil)
                             
                             self.dismissViewControllerAnimated(animated: true, completion: nil)
                         } else {
@@ -532,7 +532,7 @@ class CameraViewController: UIViewController {
                 self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
                 
                 // Notification for upload video in background
-                NotificationCenter.default.postNotificationName("profileUploadVideo", object: self.videoURL)
+                NotificationCenter.default.post(name: "profileUploadVideo", object: self.videoURL)
                 
                 self.dismissViewControllerAnimated(animated: true, completion: nil)
             }

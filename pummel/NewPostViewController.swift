@@ -47,7 +47,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         self.commentPhotoTV.keyboardAppearance = .dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
-        self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
+        self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRange(from: self.commentPhotoTV.beginningOfDocument, to:self.commentPhotoTV.beginningOfDocument)
         self.navigationItem.hidesBackButton = true;
         imagePicker.delegate = self
         
@@ -60,8 +60,8 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -70,9 +70,9 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        let userInfo:NSDictionary = notification.userInfo!
-        let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardRectangle = keyboardFrame.CGRectValue()
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
         if  (self.viewKeyboard != nil) {
             self.viewKeyboard.removeFromSuperview()
@@ -87,15 +87,10 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         }
         self.otherKeyboardView = UIView.init(frame:CGRect(x: 0, y: self.commentPhotoTV.frame.origin.y, width: self.view.frame.width, height: self.view.frame.size.height - self.commentPhotoTV.frame.origin.y))
         self.otherKeyboardView.backgroundColor = UIColor.clear
-        let recognizer = UITapGestureRecognizer(target: self, action:#selector(SendPhotoViewController.handleTap(_:)))
+        let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.handleTap(recognizer:)))
         self.otherKeyboardView.addGestureRecognizer(recognizer)
         self.view.addSubview(self.otherKeyboardView)
         self.viewKeyboard.backgroundColor = UIColor.black
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
@@ -115,7 +110,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
                 let imageRes = result as! UIImage
                 self.avatarIMV.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }
@@ -131,7 +126,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         
         if (self.imageSelected!.image != nil) {
             self.isPosting = true
-            self.navigationItem.rightBarButtonItem?.enabled = false
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
             self.view.makeToastActivity(message: "Posting")
             self.commentPhotoTV.resignFirstResponder()
             
@@ -142,7 +137,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             var imageData : NSData!
             let type : String!
             let filename : String!
-            imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+            imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2)! as NSData : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as NSData
             type = imageJpeg
             filename = jpgeFile
             
@@ -219,12 +214,12 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.selectFromLibrary = true
             self.imagePicker.allowsEditing = false
-            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.sourceType = .photoLibrary
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-           self.showCameraRoll(sender)
+           self.showCameraRoll(sender: sender)
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -268,22 +263,22 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
                 subview.removeFromSuperview()
             }
             let height =  self.view.frame.size.width*image.size.height/image.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = image
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width:self.view.frame.size.width, height: frameT.size.height) : CGSize(width:self.view.frame.size.width, height: self.view.frame.size.width)
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         } 
     }
     
     func cropAndSave() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.main.scale)
         let offset = imageScrolView.contentOffset
         
-        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
-        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        UIGraphicsGetCurrentContext()!.translateBy(x: -offset.x, y: -offset.y)
+        imageScrolView.layer.render(in: UIGraphicsGetCurrentContext()!)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
        
@@ -296,27 +291,27 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         
         let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
             
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(url)
+                UIApplication.shared.openURL(url as URL)
             }
             
         }))
         
-        alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
             
         }))
         
         self.present(alert, animated: true, completion: nil)
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         // Combine the textView text and the replacement text to
         // create the updated text string
-        let currentText:NSString = textView.text
-        let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
+        let currentText = textView.text
+        let updatedText = currentText?.replacingCharacters(in: range, with: text)
         
         // If updated text view will be empty, add the placeholder
         // and set the cursor to the beginning of the text view
@@ -325,7 +320,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
             textView.text = addAComment
             textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
             
-            textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             
             return false
         }
@@ -342,34 +337,35 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         return true
     }
     
-    func textViewDidChangeSelection(textView: UITextView) {
+    func textViewDidChangeSelection(_ textView: UITextView) {
         if self.view.window != nil {
             if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             }
         }
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
             }
             self.imageSelected!.image = pickedImage
             let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width:self.view.frame.size.width, height: frameT.size.height) : CGSize(width:self.view.frame.size.width, height:self.view.frame.size.width)
             
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
-        dismissViewControllerAnimated(true, completion: nil)
+        
+        self.dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

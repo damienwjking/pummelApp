@@ -67,7 +67,7 @@ class BookSessionViewController: BaseViewController, UITableViewDelegate, UITabl
                     self.tbView.reloadData()
                 }
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 }
         }
     }

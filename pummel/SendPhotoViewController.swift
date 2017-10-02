@@ -46,7 +46,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         self.commentPhotoTV.keyboardAppearance = .dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
-        self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRangeFromPosition(  self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
+        self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRange(from:   self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
         self.navigationItem.hidesBackButton = true;
         self.imagePicker.delegate = self
         
@@ -112,7 +112,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
                 let imageRes = result as! UIImage
                 self.avatarIMV.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }
@@ -347,7 +347,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
             textView.text = addAComment
             textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
             
-            textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
             
             return false
         }
@@ -362,7 +362,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     func textViewDidChangeSelection(textView: UITextView) {
         if self.view.window != nil {
             if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRangeFromPosition(textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
             }
         }
     }

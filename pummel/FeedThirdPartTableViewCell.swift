@@ -17,15 +17,9 @@ class FeedThirdPartTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        self.userCommentLB.font = .pmmMonLight13()
-        self.contentCommentTV.font = .pmmMonLight16()
+        self.userCommentLB.font = UIFont.pmmMonLight13()
+        self.contentCommentTV.font = UIFont.pmmMonLight16()
         self.contentCommentTV.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonLight16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
 }

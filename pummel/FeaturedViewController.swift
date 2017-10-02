@@ -71,7 +71,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         let defaults = UserDefaults.standard
         let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
@@ -94,32 +94,32 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         {
             switch(CLLocationManager.authorizationStatus()) {
             case .restricted, .denied:
-                self.getListDiscount()
+                self.getDiscountList()
                 break
             case .authorizedAlways, .authorizedWhenInUse: break
             default: break
             }
         } else {
-            self.getListDiscount()
+            self.getDiscountList()
         }
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         let location = locations.last! as CLLocation
         if self.coordinate == nil {
             self.coordinate = location.coordinate
-            self.getListDiscount()
+            self.getDiscountList()
         }
         self.coordinate = location.coordinate
     }
     
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch(status) {
-        case .Restricted, .Denied:
-            self.getListDiscount()
+        case .restricted, .denied:
+            self.getDiscountList()
             break
-        case .AuthorizedAlways, .AuthorizedWhenInUse: break
+        case .authorizedAlways, .authorizedWhenInUse: break
         default: break
         }
 
@@ -136,7 +136,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             self.offset = 0
             self.offsetDiscount = 0
             if self.coordinate != nil {
-                self.getListDiscount()
+                self.getDiscountList()
             } else {
                 self.setupLocation()
             }
@@ -151,73 +151,66 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func getListDiscount() {
+    func getDiscountList() {
         var prefix = "\(kPMAPI)\(kPMAPI_DISCOUNTS)"
         prefix.append(String(offsetDiscount))
         
         if self.coordinate != nil {
-            prefix.append("&")
-            let coordinateParams = String(format: "%@=%f&%@=%f", kLong, self.coordinate!.longitude, kLat, self.coordinate!.latitude)
-            prefix.append(coordinateParams)
+            let longitude = self.coordinate!.longitude
+            let latitude = self.coordinate!.latitude
             
             let geoCoder = CLGeocoder()
             if locationManager.location != nil {
                 geoCoder.reverseGeocodeLocation(locationManager.location!, completionHandler: { (placemarks, error) -> Void in
-                    // Place details
-                    var placeMark: CLPlacemark!
-                    placeMark = placemarks?[0]
+                    let placeMark = placemarks?[0]
+                    
                     if ((placeMark) != nil) {
                         var state = ""
                         var country = ""
-                        if ((placeMark.administrativeArea) != nil) {
-                            state = placeMark.administrativeArea!
-                            country = placeMark.country!
+                        if ((placeMark?.administrativeArea) != nil) {
+                            state = placeMark?.administrativeArea!
+                            country = placeMark?.country!
                         }
                         
-                        let trimCountry = country.replacingOccurrences(of: " ", with: "")
-                        let stateCity =  String(format: "&%@=%@&%@=%@", kState, state.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!, kCountry, trimCountry.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+                        // TODO: need Check
+//                        let trimCountry = country.replacingOccurrences(of: " ", with: "")
                         
-                        prefix.append(stateCity)
-                        self.callAPIDiscount(prefix)
+//                        let stateCity = "&" + kState + "=" + state.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)! + "&" + kCountry + "=" + trimCountry.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                        
+                        self.callAPIDiscount(lontitude: longitude, latitude: latitude, state: state, country: country)
+                    } else {
+                        self.callAPIDiscount(lontitude: longitude, latitude: latitude, state: nil, country: nil)
                     }
                 })
             } else {
-                self.callAPIDiscount(prefix)
+                self.callAPIDiscount(lontitude: longitude, latitude: latitude, state: nil, country: nil)
             }
         } else {
-            self.callAPIDiscount(prefix)
+            self.callAPIDiscount(lontitude: nil, latitude: nil, state: nil, country: nil)
         }
     }
     
-    func callAPIDiscount(prefix:String) {
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in
-                self.isLoadDiscount = false
-                if response.response?.statusCode == 200 {
-                    if let arr = response.result.value as? [NSDictionary] {
-                        self.offsetDiscount += 10
-                        self.arrayDiscount += arr
-                        if arr.count > 0 {
-                            if self.arrayDiscount.count == arr.count {
-                                self.tableFeed.reloadData()
-                            } else if self.headerDiscount != nil {
-                                self.headerDiscount.arrayResult = self.arrayDiscount
-                            } else {
-                                self.tableFeed.reloadData()
-                            }
-                        }
-                    }
-                } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
+    func callAPIDiscount(lontitude: CLLocationDegrees?, latitude: CLLocationDegrees?, state: String?, country: String?) {
+        FeedRouter.getDiscount(longitude: lontitude, latitude: latitude, state: state, country: country, offset: self.offsetDiscount) { (result, error) in
+            if (error == nil) {
+                let discountArray = result as! [NSDictionary]
+                
+                self.offsetDiscount += 10
+                self.arrayDiscount += discountArray
+                if (discountArray.count > 0) {
+                    if self.arrayDiscount.count == discountArray.count {
+                        self.tableFeed.reloadData()
+                    } else if self.headerDiscount != nil {
+                        self.headerDiscount.arrayResult = self.arrayDiscount
+                    } else {
+                        self.tableFeed.reloadData()
                     }
                 }
-        }
+                
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+        }.fetchdata()
     }
     
     func getListFeeds() {
@@ -230,7 +223,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     
                     if (arr.count > 0) {
                         self.arrayFeeds += arr
-                        self.tableFeed.reloadData({
+                        self.tableFeed.reloadData(completion: {
                             // Hidden table view if no data
                             self.tableFeed.isHidden = (self.arrayFeeds.count == 0)
                         })
@@ -240,7 +233,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     
                     self.isLoading = false
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -252,7 +245,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"NewPost"]
-        mixpanel.track("IOS.Feed", properties: properties)
+        mixpanel?.track("IOS.Feed", properties: properties)
     }
     
     func goToDetailDiscount(discountDetail: NSDictionary) {
@@ -263,25 +256,27 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func loadMoreDiscount() {
         if self.isLoadDiscount == false {
             self.isLoadDiscount = true
-            self.getListDiscount()
+            self.getDiscountList()
         }
     }
     
     func sharePummel() {
-        self.shareTextImageAndURL(pummelSlogan, sharingImage: UIImage(named: "shareLogo.png"), sharingURL: NSURL.init(string: kPM))
+        self.shareTextImageAndURL(sharingText: pummelSlogan, sharingImage: UIImage(named: "shareLogo.png"), sharingURL: NSURL.init(string: kPM))
     }
     
     func shareTextImageAndURL(sharingText: String?, sharingImage: UIImage?, sharingURL: NSURL?) {
         var sharingItems = [AnyObject]()
         
         if let text = sharingText {
-            sharingItems.append(text)
+            sharingItems.append(text as AnyObject)
         }
+        
         if let image = sharingImage {
-            sharingItems.append(image)
+            sharingItems.append(image as AnyObject)
         }
+        
         if let url = sharingURL {
-            sharingItems.append(url)
+            sharingItems.append(url as AnyObject)
         }
         
         let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
@@ -296,7 +291,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Comment"]
-        mixpanel.track("IOS.Feed", properties: properties)
+        mixpanel?.track("IOS.Feed", properties: properties)
     }
     
     func showListContext(sender: UIButton) {
@@ -311,12 +306,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
 //                    }
 //            }
             
-            FeedRouter.reportFeed(param: ["postId":postId], completed: { (result, error) in
+            FeedRouter.reportFeed(postID: postId, completed: { (result, error) in
                 if (error == nil) {
-                    self.arrayFeeds.removeAtIndex(sender.tag)
+                    self.arrayFeeds.remove(at: sender.tag)
                     self.tableFeed.reloadData()
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
 
@@ -396,10 +391,10 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let coachDetail = (sender as! NSArray)[0] as! NSDictionary
             let message = (sender as! NSArray)[1] as! String
             
-            destination.coachName = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")).uppercased()
+            destination.coachName = ((coachDetail[kFirstname] as! String) + " ").uppercased()
             destination.typeCoach = true
-            destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
-            destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
+            destination.coachId = String(format:"%0.f", (coachDetail[kId]! as AnyObject).doubleValue)
+            destination.userIdTarget =  String(format:"%0.f", (coachDetail[kId]! as AnyObject).doubleValue)
             destination.preMessage = message
             
             if (message.isEmpty == true) {
@@ -429,11 +424,11 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
 
     func timeAgoSinceDate(date:NSDate) -> String {
         let calendar = NSCalendar.current
-        let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
+        let unitFlags : NSCalendar.Unit = [.second, .minute, .hour, .day, .month, .year]
         let now = NSDate()
-        let earliest = now.earlierDate(date)
-        let latest = (earliest == now) ? date : now
-        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendarOptions.MatchPreviousTimePreservingSmallerUnits)
+        let earliest = now.earlierDate(date as Date)
+        let latest = (earliest == now as Date) ? date : now
+        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendar.Options.MatchPreviousTimePreservingSmallerUnits)
         
         if (components.year >= 2) {
             return "\(components.year)y"
@@ -467,12 +462,13 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
 }
 
+// MARK: - UITableViewDelegate
 extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 1 {
             return nil
         }
@@ -490,7 +486,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         return headerDiscount
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 && self.arrayDiscount.count > 0 {
             return 200
         }
@@ -524,14 +520,14 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                         if visibleCell == true {
                             DispatchQueue.main.async(execute: {
                                 cell.avatarBT.setBackgroundImage(imageRes, for: .normal)
                             })
                         }
                     } else {
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                     }.fetchdata()
             } else {
@@ -545,7 +541,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        let dateFromString : NSDate = dateFormatter.date(from: timeAgo)!
+        let dateFromString : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
         cell.timeLB.text = self.timeAgoSinceDate(date: dateFromString)
         if (feed[kImageUrl] is NSNull == false) {
             let imageContentLink = feed[kImageUrl] as! String
@@ -553,7 +549,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             
             ImageRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
                 if (error == nil) {
-                    let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                    let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                     
                     if (isUpdateCell) {
                         let imageRes = result as! UIImage
@@ -562,7 +558,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                         })
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -579,7 +575,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
             let isCoach = result as! Bool
-            let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+            let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
             
             if (isUpdateCell) {
                 cell.isUserInteractionEnabled = true
@@ -597,7 +593,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                         })
                     }
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }
             }.fetchdata()
@@ -611,14 +607,14 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
             if (error == nil) {
-                let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                 
                 if (isUpdateCell) {
                     DispatchQueue.main.async(execute: {
                         let likeJson = result as! NSDictionary
                         
                         // Update like number
-                        let likeNumber = String(format:"%0.f", likeJson["likeNumber"]!.doubleValue)
+                        let likeNumber = String(format:"%0.f", (likeJson["likeNumber"]! as AnyObject).doubleValue)
                         cell.likeLB.text = likeNumber + " likes"
                         
                         // Update current user liked
@@ -629,7 +625,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                     })
                 }
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
             }.fetchdata()
         
@@ -640,26 +636,26 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         let marginTopBottom = cell.firstContentCommentTV.layoutMargins.top + cell.firstContentCommentTV.layoutMargins.bottom
         let marginLeftRight = cell.firstContentCommentTV.layoutMargins.left + cell.firstContentCommentTV.layoutMargins.right
-        cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
+        cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(width: cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
         
         cell.firstUserCommentLB.text = firstname?.uppercased()
         cell.viewAllBT.tag = indexPath.row
-        cell.viewAllBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), for: .touchUpInside)
+        cell.viewAllBT.addTarget(self, action: #selector(self.goToFeedDetail(sender:)), for: .touchUpInside)
         
         cell.commentBT.tag = indexPath.row
-        cell.commentBT.addTarget(self, action: #selector(FeaturedViewController.goToFeedDetail(_:)), for: .touchUpInside)
+        cell.commentBT.addTarget(self, action: #selector(self.goToFeedDetail(sender:)), for: .touchUpInside)
         
         cell.shareBT.tag = indexPath.row
-        cell.shareBT.addTarget(self, action: #selector(FeaturedViewController.showListContext(_:)), for: .touchUpInside)
+        cell.shareBT.addTarget(self, action: #selector(self.showListContext(sender:)), for: .touchUpInside)
         
         cell.avatarBT.tag = indexPath.row
-        cell.avatarBT.addTarget(self, action: #selector(FeaturedViewController.goProfile(_:)), for: .touchUpInside)
+        cell.avatarBT.addTarget(self, action: #selector(self.goProfile(sender:)), for: .touchUpInside)
         cell.likeBT.tag = indexPath.row
         cell.postId = String(format:"%0.f", (feed[kId]! as AnyObject).doubleValue)
         return cell
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: IndexPath) {
         if (indexPath.row == self.arrayFeeds.count - 1 && isLoading == false) {
             self.getListFeeds()
         }

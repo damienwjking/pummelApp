@@ -130,7 +130,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
             let textMarginHorizontal = self.tvLink.layoutMargins.top + self.tvLink.layoutMargins.bottom
             
             let textWidth = self.tvLink.frame.size.width - textMarginVertical
-            let heightLinkText = val.heightWithConstrainedWidth(textWidth, font: self.tvLink.font!)
+            let heightLinkText = val.heightWithConstrainedWidth(width: textWidth, font: self.tvLink.font!)
             
             self.tvLinkHeightConstraint.constant = heightLinkText + textMarginHorizontal
         }
@@ -147,7 +147,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
                 
                 self.imgLogo.image = imageRes
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }

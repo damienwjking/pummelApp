@@ -410,7 +410,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     let imageRes = result as! UIImage
                     self.avatarIMV.image = imageRes
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }
@@ -426,7 +426,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 self.businessIMV.image = imageRes
                 self.specifiesCollectionViewTraillingConstraint.constant = 120
             } else {
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
             }
         }).fetchdata()
     }
@@ -501,7 +501,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                         }
                     }
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
             }
         }
@@ -539,7 +539,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     
                     self.testimonialCollectionView.reloadData()
                 } else {
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                 }
                 }.fetchdata()
         }
@@ -640,7 +640,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 
                 self.view.hideToastActivity()
             case .Failure(let error):
-                print("Request failed with error: \(error)")
+                print("Request failed with error: \(String(describing: error))")
                 self.view.hideToastActivity()
                 }
         }
@@ -799,7 +799,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                             }
                         }
                     case .Failure(let error):
-                        print("Request failed with error: \(error)")
+                        print("Request failed with error: \(String(describing: error))")
                     }
                     
                     
@@ -1084,7 +1084,7 @@ extension ProfileViewController {
             self.videoIndicator.removeFromSuperview()
         }
         self.videoIndicator.startAnimating()
-        self.videoIndicator.center = CGPointMake(self.detailV.frame.width/2, self.detailV.frame.height/2)
+        self.videoIndicator.center = CGPoint(x: self.detailV.frame.width/2, self.detailV.frame.height/2)
         self.detailV.insertSubview(self.videoIndicator, atIndex: 0)
         
         // Remove loop play video for
@@ -1149,7 +1149,7 @@ extension ProfileViewController {
     
     func uploadVideo(videoURL: NSURL) {
         let videoData = NSData(contentsOfURL: videoURL)
-        let videoExtend = (videoURL.absoluteString!.components(separatedBy: ".").last?.lowercaseString)!
+        let videoExtend = (videoURL.absoluteString!.components(separatedBy: ".").last?.lowercased())!
         let videoType = "video/" + videoExtend
         let videoName = "video." + videoExtend
         
@@ -1194,7 +1194,7 @@ extension ProfileViewController {
                             self.isUploadingVideo = .normal
                             
                             if (response.response?.statusCode == 200) {
-                                NotificationCenter.default.postNotificationName("profileGetDetail", object: nil, userInfo: nil)
+                                NotificationCenter.default.post(name: "profileGetDetail", object: nil, userInfo: nil)
                             } else {
                                 let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .alert)
                                 let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
@@ -1377,7 +1377,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
                         // ...
                     }
                 case .Failure(let error):
-                    print("Request failed with error: \(error)")
+                    print("Request failed with error: \(String(describing: error))")
                     }
                     self.view.hideToastActivity()
             }
