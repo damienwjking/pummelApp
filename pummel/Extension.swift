@@ -19,9 +19,9 @@ extension UIView {
             viewSize.height = SCREEN_HEIGHT
         }
         
-        UIGraphicsBeginImageContextWithOptions(viewSize, self.opaque, 0.0)
+        UIGraphicsBeginImageContextWithOptions(viewSize, self.isOpaque, 0.0)
         
-        self.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        self.layer.render(in: UIGraphicsGetCurrentContext()!)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()
@@ -34,28 +34,28 @@ extension UIImageView {
     func roundCorners(corners:UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
-        mask.path = path.CGPath
+        mask.path = path.cgPath
         self.layer.mask = mask
     }
     
     func addBlurEffect(alpha: CGFloat = 0.5) {
-        let blurEffect = UIBlurEffect(style: .Dark)
+        let blurEffect = UIBlurEffect(style: .dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         
         blurEffectView.frame = self.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         blurEffectView.alpha = alpha
         
         self.addSubview(blurEffectView)
     }
     
     func addVibrancyEffect(alpha: CGFloat = 0.5) {
-        let blurEffect = UIBlurEffect(style: .Dark)
-        let vibrancyEffect = UIVibrancyEffect(forBlurEffect: blurEffect)
+        let blurEffect = UIBlurEffect(style: .dark)
+        let vibrancyEffect = UIVibrancyEffect(blurEffect: blurEffect)
         let effectView = UIVisualEffectView(effect: vibrancyEffect)
         
         effectView.frame = self.bounds
-        effectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        effectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         effectView.alpha = alpha
         
         self.addSubview(effectView)
@@ -69,9 +69,9 @@ extension NSData {
         guard self.length > 0 else { return nil }
         
         // Get first byte
-        var c = [UInt8](count: 1, repeatedValue: 0)
+        var c = [UInt8](repeating: 0, count: 1)
         c.withUnsafeMutableBufferPointer { buffer in
-            getBytes(buffer.baseAddress, length: 1)
+            getBytes(buffer.baseAddress!, length: 1)
         }
         // Identify data type
         switch (c[0]) {
@@ -89,32 +89,23 @@ extension NSData {
     }
     
     var hexString: String {
-        let bytes = UnsafeBufferPointer<UInt8>(start: UnsafePointer(self.bytes), count:self.length)
-        return bytes.map { String(format: "%02hhx", $0) }.reduce("", combine: { $0 + $1 })
+        return map { String(format: "%02hhx", $0) }.joined()
     }
 }
 
 extension String {
     func stringByAddingPercentEncodingForURLQueryValue() -> String? {
-        let allowedCharacters = NSCharacterSet(charactersInString: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
+        let allowedCharacters = NSCharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
         
-        return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacters)
+        return self.addingPercentEncoding(withAllowedCharacters: allowedCharacters as CharacterSet)
     }
     
     func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: CGFloat.max)
+        let constraintRect = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         
-        let boundingBox = self.boundingRectWithSize(constraintRect, options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: font], context: nil)
+        let boundingBox = self.boundingRect(with: constraintRect, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName: font], context: nil)
         
         return boundingBox.height
-    }
-    
-    func sliceFrom(start: String, to: String) -> String? {
-        return (rangeOfString(start)?.endIndex).flatMap { sInd in
-            (rangeOfString(to, range: sInd..<endIndex)?.startIndex).map { eInd in
-                substringWithRange(sInd..<eInd)
-            }
-        }
     }
     
     func isValidEmail() -> Bool {
@@ -134,4 +125,81 @@ extension Dictionary {
         return parameterArray.joined(separator: "&")
     }
     
+}
+
+extension UIColor {
+    public convenience init?(hexString: String) {
+        let r, g, b, a: CGFloat
+        
+        if hexString.hasPrefix("#") {
+            let start = hexString.index(hexString.startIndex, offsetBy: 1)
+            let hexColor = hexString.substring(from: start)
+            
+            if hexColor.characters.count == 8 {
+                let scanner = Scanner(string: hexColor)
+                var hexNumber: UInt64 = 0
+                
+                if scanner.scanHexInt64(&hexNumber) {
+                    r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
+                    g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
+                    b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
+                    a = CGFloat(hexNumber & 0x000000ff) / 255
+                    
+                    self.init(red: r, green: g, blue: b, alpha: a)
+                    return
+                }
+            }
+        }
+        
+        return nil
+    }
+    
+    func randomAString()-> String {
+        let randomRed:CGFloat = CGFloat(drand48())
+        let randomGreen:CGFloat = CGFloat(drand48())
+        let randomBlue:CGFloat = CGFloat(drand48())
+        
+        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
+    }
+}
+
+extension UIApplication {
+    class func appVersion() -> String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        
+        let appversion = "Pummel " + version
+        
+        return appversion
+    }
+    
+    class func appBuild() -> String {
+        return Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as! String
+    }
+    
+    class func versionBuild() -> String {
+        let version = appVersion()
+        let build = appBuild()
+        
+        return version == build ? "\(version)" : "\(version)(\(build))"
+    }
+}
+
+extension UICollectionView {
+    func reloadData(completion: @escaping ()->()) {
+        UIView.animate(withDuration: 0, animations: { self.reloadData() })
+        { _ in completion() }
+    }
+}
+
+extension UITableView {
+    func reloadData(completion: @escaping ()->()) {
+        UIView.animate(withDuration: 0, animations: { self.reloadData() })
+        { _ in completion() }
+    }
+}
+
+extension Array {
+    func randomElement() -> Element {
+        return self[Int(arc4random_uniform(UInt32(self.count)))]
+    }
 }

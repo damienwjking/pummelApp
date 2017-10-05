@@ -1,14 +1,16 @@
 //
-//  Session.swift
+//  FeedModel.swift
 //  pummel
 //
-//  Created by Nguyễn Tấn Phúc on 12/30/16.
-//  Copyright © 2016 pummel. All rights reserved.
+//  Created by Nguyễn Tấn Phúc on 10/3/17.
+//  Copyright © 2017 pummel. All rights reserved.
 //
+
+import Foundation
 
 import UIKit
 
-class SessionModel: NSObject {
+class FeedModel: NSObject {
     var id = 0
     var status = 0
     var userId = 0

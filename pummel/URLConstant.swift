@@ -39,10 +39,13 @@ let kPMAPI_POST                     = kPMAPI + "/api/posts/"
 let kPMAPI_POST_OFFSET              = kPMAPI + "/api/posts/?offset="
 let kPMAPI_REPORT                   = kPMAPI + "/api/posts/report"
 let kPMAPI_REGISTER                 = kPMAPI + "/api/register"
-let kPMAPI_TAG_OFFSET               = kPMAPI + "/api/tags?offset="
-let kPMAPI_TAG4_OFFSET              = kPMAPI + "/api/tags4?offset="
-let kPMAPI_TAGALL_OFFSET            = kPMAPI + "/api/tagsAll?offset="
+//let kPMAPI_TAG_OFFSET               = kPMAPI + "/api/tags?offset="        ||
+//let kPMAPI_TAG4_OFFSET              = kPMAPI + "/api/tags4?offset="       ||
+//let kPMAPI_TAGALL_OFFSET            = kPMAPI + "/api/tagsAll?offset="     \/
+let kPMAPI_TAG_OFFSET               = kPMAPI + "/api/tagsAll?offset="
+
 let kPMAPI_DISCOUNTS                = kPMAPI + "/api/discounts"
+let kPMAPI_POSTOFPHOTO              = kPMAPI + "/api/postOfPhoto"
 
 // PM Link
 let kPM                             = "http://pummel.fit"
@@ -95,7 +98,6 @@ let kPMAPICOACH_COACHOLD            = "/pastCoach?offset="
 let kPMAPICOACH_BOOK                = "/bookV2"
 let kPMAPI_LEAD                     = "/lead"
 let kPMAPI_CHANGEPASS               = "/password"
-let kPMAPI_POSTOFPHOTO              = "/api/postOfPhoto"
 
 // Tracking
 let kPMAPI_TRACKCALLBACK            = "/api/trackCallBackBt"

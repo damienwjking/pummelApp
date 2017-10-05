@@ -27,7 +27,7 @@ class TagCell: UICollectionViewCell {
         self.tagName.font = .pmmMonLight14()
         self.layer.cornerRadius = 2
         
-        self.tagNameMaxWidthConstraint.constant = UIScreen.mainScreen().bounds.width - 9
+        self.tagNameMaxWidthConstraint.constant = UIScreen.main.bounds.width - 9
         self.tagImageConstraint.constant = self.frame.height/2 - 18
         self.tagImage.layer.cornerRadius = 5
         if (isSearch ==  false) {self.tagImage.backgroundColor = self.getRandomColor()}

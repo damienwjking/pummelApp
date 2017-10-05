@@ -181,7 +181,7 @@ class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
         let avatarImage = UIImage(named: "display-empty.jpg")
         self.avatarTextBox.image = avatarImage
         
-        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight120, completed: { (result, error) in
+        ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight120, completed: { (result, error) in
             if (error == nil) {
                 let textBoxImage = result as! UIImage
                 
@@ -223,34 +223,34 @@ class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
     
     func timeAgoSinceDate(date:NSDate) -> String {
         let calendar = NSCalendar.current
-        let unitFlags : NSCalendar.Unit = [.second, .minute, .hour, .day, .month, .year]
+        let unitFlags = Set<Calendar.Component>([.second, .minute, .hour, .day, .month, .year])
         let now = NSDate()
         let earliest = now.earlierDate(date as Date)
         let latest = (earliest == now as Date) ? date : now
-        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendar.Options.MatchPreviousTimePreservingSmallerUnits)
+        let components = calendar.dateComponents(unitFlags, from: earliest, to: latest as Date)
         
-        if (components.year >= 2) {
-            return "\(components.year)y"
-        } else if (components.year >= 1){
+        if (components.year! >= 2) {
+            return "\(String(describing: components.year))y"
+        } else if (components.year! >= 1){
             return "1y"
-        } else if (components.month >= 2) {
-            return "\(components.month)m"
-        } else if (components.month >= 1){
+        } else if (components.month! >= 2) {
+            return "\(String(describing: components.month))m"
+        } else if (components.month! >= 1){
             return "1m"
-        } else if (components.day >= 2) {
-            return "\(components.day)d"
-        } else if (components.day >= 1){
+        } else if (components.day! >= 2) {
+            return "\(String(describing: components.day))d"
+        } else if (components.day! >= 1){
             return "1d"
-        } else if (components.hour >= 2) {
-            return "\(components.hour)hr"
-        } else if (components.hour >= 1){
+        } else if (components.hour! >= 2) {
+            return "\(String(describing: components.hour))hr"
+        } else if (components.hour! >= 1){
             return "1hr"
-        } else if (components.minute >= 2) {
-            return "\(components.minute)m"
-        } else if (components.minute >= 1){
+        } else if (components.minute! >= 2) {
+            return "\(String(describing: components.minute))m"
+        } else if (components.minute! >= 1){
             return "1m"
-        } else if (components.second >= 3) {
-            return "\(components.second)s"
+        } else if (components.second! >= 3) {
+            return "\(String(describing: components.second))s"
         } else {
             return "Just now"
         }
@@ -305,7 +305,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
             if (userFeed[kImageUrl] is NSNull == false) {
                 let imageLink = userFeed[kImageUrl] as! String
                 
-                ImageRouter.getImage(imageURLString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
+                ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
                     if (error == nil) {
                         let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                         if visibleCell == true {
@@ -331,7 +331,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
             if (feedDetail[kImageUrl] is NSNull == false) {
                 let imageContentLink = feedDetail[kImageUrl] as! String
                 
-                ImageRouter.getImage(imageURLString: imageContentLink, sizeString: widthHeightScreenx2, completed: { (result, error) in
+                ImageVideoRouter.getImage(imageURLString: imageContentLink, sizeString: widthHeightScreenx2, completed: { (result, error) in
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         cell.imageContentIMV.image = imageRes
@@ -469,7 +469,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
                 
                 let commentImageURL = comment[kImageUrl] as? String
                 if (commentImageURL != nil && commentImageURL?.isEmpty == false) {
-                    ImageRouter.getImage(imageURLString: commentImageURL!, sizeString: widthHeightScreenx2, completed: { (result, error) in
+                    ImageVideoRouter.getImage(imageURLString: commentImageURL!, sizeString: widthHeightScreenx2, completed: { (result, error) in
                         if (error == nil) {
                             let imageRes = result as! UIImage
                             cell.contentCommentImageView.image = imageRes

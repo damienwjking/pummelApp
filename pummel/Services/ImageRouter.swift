@@ -1,5 +1,5 @@
 //
-//  ImageRouter.swift
+//  ImageVideoRouter.swift
 //  pummel
 //
 //  Created by Nguyễn Tấn Phúc on 6/6/17.
@@ -13,13 +13,14 @@ import Foundation
 typealias CompletionBlock = (_ result: Any?, _ error: NSError?) -> Void
 //typealias ResponseCompletionBlock = (response:  Response<AnyObject, NSError>, error: NSError?) -> Void
 
-enum ImageRouter: URLRequestConvertible {
+enum ImageVideoRouter: URLRequestConvertible {
     case getCurrentUserAvatar(sizeString: String, completed: CompletionBlock)
     case getUserAvatar(userID : String, sizeString: String, completed: CompletionBlock)
     case getCoachAvatar(coachID : String, sizeString: String, completed: CompletionBlock)
     case getBusinessLogo(businessID : String, sizeString: String, completed: CompletionBlock)
     case getImage(imageURLString: String, sizeString: String, completed: CompletionBlock)
-    case currentUserUploadAvatar(imageData: NSData, completed: CompletionBlock)
+    case currentUserUploadAvatar(imageData: Data, completed: CompletionBlock)
+    case currentUserUploadVideo(videoData: Data, completed: CompletionBlock)
     
     var imageSize: String {
         switch self {
@@ -35,15 +36,20 @@ enum ImageRouter: URLRequestConvertible {
             return sizeString
         case .currentUserUploadAvatar:
             return ""
+        case .currentUserUploadVideo:
+            return ""
             
         }
     }
     
-    var imageData: Data? {
+    var fileData: Data? {
         var data: Data? = nil
         switch self {
         case .currentUserUploadAvatar(let imageData, _):
-            data = imageData as Data
+            data = imageData
+            
+        case .currentUserUploadVideo(let videoData, _):
+            data = videoData
             
         default:
             break
@@ -66,6 +72,9 @@ enum ImageRouter: URLRequestConvertible {
             return completed
         case .currentUserUploadAvatar(_, let completed):
             return completed
+        case .currentUserUploadVideo(_, let completed):
+            return completed
+            
         }
     }
     
@@ -82,6 +91,8 @@ enum ImageRouter: URLRequestConvertible {
         case .getImage:
             return .get
         case .currentUserUploadAvatar:
+            return .post
+        case .currentUserUploadVideo:
             return .post
             
         }
@@ -118,6 +129,9 @@ enum ImageRouter: URLRequestConvertible {
         case .currentUserUploadAvatar:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_PHOTO_PROFILE
             
+        case .currentUserUploadAvatar:
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_VIDEO
+            
         }
         
         return prefix
@@ -131,6 +145,10 @@ enum ImageRouter: URLRequestConvertible {
         case .currentUserUploadAvatar:
             param[kUserId] = currentUserID as AnyObject
             param[kProfilePic] = "1" as AnyObject
+            
+        case .currentUserUploadVideo:
+            param[kUserId] = currentUserID as AnyObject
+            param[kProfileVideo] = "1" as AnyObject
             
         default:
             break
@@ -172,7 +190,7 @@ enum ImageRouter: URLRequestConvertible {
                         if (userDetail[kImageUrl] is NSNull == false) {
                             let imageURLString = userDetail[kImageUrl] as! String
                             
-                            ImageRouter.getImage(imageURLString: imageURLString, sizeString: self.imageSize, completed: { (result, error) in
+                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: self.imageSize, completed: { (result, error) in
                                 self.comletedBlock(result, error)
                             }).fetchdata()
                         } else {
@@ -221,7 +239,7 @@ enum ImageRouter: URLRequestConvertible {
             let type = imageJpeg
             
             Alamofire.upload(multipartFormData: { (multipartFormData) in
-                multipartFormData.append(self.imageData!, withName: "file", fileName: filename, mimeType: type)
+                multipartFormData.append(self.fileData!, withName: "file", fileName: filename, mimeType: type)
                 
                 for (key, value) in self.param! {
                     multipartFormData.append(value.data(using: String.Encoding.utf8.rawValue)!, withName: key)
@@ -235,6 +253,43 @@ enum ImageRouter: URLRequestConvertible {
                         } else {
                             let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
                             self.comletedBlock(false as AnyObject, error)
+                        }
+                    }
+                    
+                case .failure(_):
+                    let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                    self.comletedBlock(false as AnyObject, error)
+                }
+            })
+            
+        case .currentUserUploadVideo:
+            let videoType = "video/mp4"
+            let videoName = "video.mp4"
+            
+            Alamofire.upload(multipartFormData: { (multipartFormData) in
+                multipartFormData.append(self.fileData!, withName: "file", fileName: videoName, mimeType: videoType)
+                
+                for (key, value) in self.param! {
+                    multipartFormData.append(value.data(using: String.Encoding.utf8.rawValue)!, withName: key)
+                }
+            }, to: self.path, encodingCompletion: { (encodingResult) in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload.uploadProgress(closure: { (Progress) in
+                        print("Upload Progress: \(Progress.fractionCompleted)")
+                        
+                        self.comletedBlock(Progress.fractionCompleted, nil)
+                    })
+                    
+                    // 0 : upload faile
+                    // 0 < x < 100: in progress
+                    // 101 : done
+                    upload.responseJSON { response in
+                        if (response.result.isSuccess) {
+                            self.comletedBlock(Double(101), nil)
+                        } else {
+                            let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                            self.comletedBlock(0, error)
                         }
                     }
                     

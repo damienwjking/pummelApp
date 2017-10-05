@@ -80,7 +80,7 @@ public enum FusumaModeOrder {
 
         menuView.backgroundColor = fusumaBackgroundColor
         menuView.layer.shadowColor = UIColor.black.cgColor;
-        menuView.layer.shadowOffset = CGSize(x:0.0, 3);
+        menuView.layer.shadowOffset = CGSize(width: 0.0, 3);
         menuView.layer.shadowOpacity = 0.25;
         
 		libraryButton.tintColor = fusumaTintColor
@@ -139,7 +139,7 @@ public enum FusumaModeOrder {
     
     @IBAction func closeButtonPressed(sender: UIButton) {
 
-        self.dismissViewControllerAnimated(animated: true, completion: {
+        self.dismiss(animated: true, completion: {
             
             self.delegate?.fusumaClosed?()
         })
@@ -159,7 +159,7 @@ public enum FusumaModeOrder {
         
         let image = albumView.imageSelected as UIImage
         delegate?.fusumaImageSelected(image)
-        self.dismissViewControllerAnimated(animated: true, completion: {
+        self.dismiss(animated: true, completion: {
             
             self.delegate?.fusumaDismissedWithImage?(image)
         })
@@ -169,7 +169,7 @@ public enum FusumaModeOrder {
     func cameraShotFinished(image: UIImage) {
         
         delegate?.fusumaImageSelected(image)
-        self.dismissViewControllerAnimated(animated: true, completion: {
+        self.dismiss(animated: true, completion: {
         
             self.delegate?.fusumaDismissedWithImage?(image)
         })

@@ -195,7 +195,7 @@ class MessageViewController: BaseViewController {
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"New Message"]
-        mixpanel.track("IOS.Message", properties: properties)
+        mixpanel?.track("IOS.Message", properties: properties)
     }
     
     func getListLead() {
@@ -353,7 +353,7 @@ class MessageViewController: BaseViewController {
                                 if (JSON[kImageUrl] is NSNull == false) {
                                     let imageURLString = JSON[kImageUrl] as! String
                                     
-                                    ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                    ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                         if (error == nil) {
                                             DispatchQueue.main.async(execute: {
                                                 let imageRes = result as! UIImage
@@ -600,7 +600,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             let cellId = "HorizontalCell"
             var cell:HorizontalCell? = tableView.dequeueReusableCell(withIdentifier: cellId) as? HorizontalCell
             if cell == nil {
-                cell = NSBundle.mainBundle().loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
+                cell = Bundle.main.loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
                 cell!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2.0))
             }
             cell!.addButton.isHidden = true
@@ -618,7 +618,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         
                         if (userInfo[kImageUrl] is NSNull == false) {
                             let imageURLString = userInfo[kImageUrl] as! String
-                            ImageRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
                                     let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                     if visibleCell == true {
@@ -894,8 +894,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
                                 
                                 let mailURL = NSURL(string: urlString)
-                                if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
-                                    UIApplication.sharedApplication().openURL(mailURL!)
+                                if (UIApplication.shared.canOpenURL(mailURL!)) {
+                                    UIApplication.shared.openURL(mailURL!)
                                 }
                             } else {
                                 print("Request failed with error: \(String(describing: error))")
@@ -909,8 +909,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         urlString = urlString.stringByAppendingString(phoneNumber!)
                         
                         let tellURL = NSURL(string: urlString)
-                        if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
-                            UIApplication.sharedApplication().openURL(tellURL!)
+                        if (UIApplication.shared.canOpenURL(tellURL!)) {
+                            UIApplication.shared.openURL(tellURL!)
                         }
                     }
                     
@@ -948,7 +948,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             }).fetchdata()
         }
         
-        mixpanel.track("IOS.Message", properties: properties)
+        mixpanel?.track("IOS.Message", properties: properties)
     }
 }
 

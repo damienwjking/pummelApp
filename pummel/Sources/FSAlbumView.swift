@@ -354,19 +354,19 @@ private extension FSAlbumView {
             let newMaxY = CGRectGetMaxY(newRect)
             let newMinY = CGRectGetMinY(newRect)
             if newMaxY > oldMaxY {
-                let rectToAdd = CGRectMake(newRect.origin.x, oldMaxY, newRect.size.width, (newMaxY - oldMaxY))
+                let rectToAdd = CGRect(x: newRect.origin.x, oldMaxY, newRect.size.width, (newMaxY - oldMaxY))
                 addedHandler(rectToAdd)
             }
             if oldMinY > newMinY {
-                let rectToAdd = CGRectMake(newRect.origin.x, newMinY, newRect.size.width, (oldMinY - newMinY))
+                let rectToAdd = CGRect(x: newRect.origin.x, newMinY, newRect.size.width, (oldMinY - newMinY))
                 addedHandler(rectToAdd)
             }
             if newMaxY < oldMaxY {
-                let rectToRemove = CGRectMake(newRect.origin.x, newMaxY, newRect.size.width, (oldMaxY - newMaxY))
+                let rectToRemove = CGRect(x: newRect.origin.x, newMaxY, newRect.size.width, (oldMaxY - newMaxY))
                 removedHandler(rectToRemove)
             }
             if oldMinY < newMinY {
-                let rectToRemove = CGRectMake(newRect.origin.x, oldMinY, newRect.size.width, (newMinY - oldMinY))
+                let rectToRemove = CGRect(x: newRect.origin.x, oldMinY, newRect.size.width, (newMinY - oldMinY))
                 removedHandler(rectToRemove)
             }
         } else {

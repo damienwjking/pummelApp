@@ -10,4 +10,10 @@ import UIKit
 
 class SettingNotificationHeaderTableViewCell: UITableViewCell {
     @IBOutlet weak var notificationLB: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        self.notificationLB.font = .pmmMonReg11()
+    }
 }

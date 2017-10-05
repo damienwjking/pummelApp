@@ -98,7 +98,7 @@ class GetStartedViewController: UIViewController {
             destinationVC.isShowLogin = true
         } else if(segue.identifier == "showClientWithoutLogin") {
             // Send token
-            let application = UIApplication.sharedApplication()
+            let application = UIApplication.shared
             let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()

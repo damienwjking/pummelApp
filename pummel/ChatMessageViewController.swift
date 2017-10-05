@@ -89,7 +89,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     func getImageAvatarTextBox() {
-        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight120, completed: { (result, error) in
+        ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight120, completed: { (result, error) in
             if (error == nil) {
                 let textBoxImage = result as! UIImage
                 
@@ -212,7 +212,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             cell.avatarIMV.isUserInteractionEnabled = true
             cell.avatarIMV.image = UIImage(named: "display-empty.jpg")
             
-            ImageRouter.getUserAvatar(userID: self.userIdTarget, sizeString: widthHeight160, completed: { (result, error) in
+            ImageVideoRouter.getUserAvatar(userID: self.userIdTarget, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     
@@ -272,7 +272,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             if (userInfo[kImageUrl] is NSNull == false) {
                                 let userImageURL = userInfo[kImageUrl] as! String
                                 
-                                ImageRouter.getImage(imageURLString: userImageURL, sizeString: widthHeight160, completed: { (result, error) in
+                                ImageVideoRouter.getImage(imageURLString: userImageURL, sizeString: widthHeight160, completed: { (result, error) in
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
                                         
@@ -309,7 +309,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 let imageURLString = message.object(forKey: kImageUrl) as? String
                 
                 if (imageURLString?.isEmpty == false) {
-                    ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
+                    ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
                         if (error == nil) {
                             let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                             if visibleCell == true {
@@ -336,7 +336,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             
                             let imageURLString = userInfo[kImageUrl] as? String
                             if (imageURLString?.isEmpty == false) {
-                                ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
+                                ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
                                     if (error == nil) {
                                         let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                         if visibleCell == true {

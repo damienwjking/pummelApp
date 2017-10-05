@@ -80,7 +80,7 @@ class Spinner: UIView {
         }
         
         self.addSubview(outerView)
-        outerView.frame = CGRectMake(0 , 0, rect.size.width, rect.size.height)
+        outerView.frame = CGRect(x: 0 , 0, rect.size.width, rect.size.height)
         outerView.center = self.convertPoint(self.center, fromCoordinateSpace: self.superview!)
         
         let outerLayer = CAShapeLayer()
@@ -96,7 +96,7 @@ class Spinner: UIView {
         if enableInnerLayer{
             
             self.addSubview(innerView)
-            innerView.frame = CGRectMake(0 , 0, rect.size.width - 20, rect.size.height - 20)
+            innerView.frame = CGRect(x: 0 , 0, rect.size.width - 20, rect.size.height - 20)
             innerView.center =  self.convertPoint(self.center, fromCoordinateSpace: self.superview!)
             let innerLayer = CAShapeLayer()
             innerLayer.path = UIBezierPath(ovalInRect: innerView.bounds).CGPath

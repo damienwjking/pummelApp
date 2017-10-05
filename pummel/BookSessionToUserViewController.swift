@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import Alamofire
 
-class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, FusumaDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class BookSessionToUserViewController: BaseViewController {
     
     @IBOutlet weak var dateTF: UITextField!
     @IBOutlet weak var contentTV: UITextView!
@@ -24,7 +24,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
     var coachDetail: NSDictionary!
     let imagePicker = UIImagePickerController()
     var selectFromLibrary : Bool = false
-    var tag:Tag?
+    var tag:TagModel?
     var userInfoSelect:NSDictionary!
     
     override func viewDidLoad() {
@@ -38,10 +38,10 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         datePickerView.backgroundColor = UIColor.black
         datePickerView.setValue(UIColor.white, forKey: "textColor")
         dateTF.inputView = datePickerView
-        datePickerView.addTarget(self, action: #selector(BookSessionToUserViewController.handleDatePicker(_:)), for: .valueChanged)
+        datePickerView.addTarget(self, action: #selector(self.handleDatePicker(sender:)), for: .valueChanged)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         self.tapView.isHidden = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.didTapView))
@@ -50,7 +50,7 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(BookSessionViewController.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.leftBarButtonClicked))
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.done))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
@@ -59,7 +59,9 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         self.avatarIMV.clipsToBounds = true
         self.avatarUserIMV.layer.cornerRadius = 20
         self.avatarUserIMV.clipsToBounds = true
-        self.getDetail()
+        
+        self.setAvatar()
+        
         self.dateTF.font = UIFont.pmmMonReg13()
         self.contentTV.font = UIFont.pmmMonReg13()
         self.contentTV.text = "ADD A COMMENT..."
@@ -104,23 +106,13 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         self.tapView.isHidden = true
     }
     
-    func cancel() {
+    func leftBarButtonClicked() {
         self.navigationController?.popViewController(animated: true)
     }
     
     func next() {
         if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
-            
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .alert)
-            
-            
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true) {
-                // ...
-            }
+            PMHelper.showNoticeAlert(message: pleaseInputADate)
         } else {
              self.performSegue(withIdentifier: "gotoShare", sender: nil)
         }
@@ -128,95 +120,39 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
     
     func done() {
         if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
-            
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .alert)
-            
-            
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true) {
-                // ...
-            }
+            PMHelper.showNoticeAlert(message: pleaseInputADate)
         } else {
-            self.view.makeToastActivity(message: "Saving")
-            var prefix = kPMAPICOACHES
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPMAPICOACH_BOOK)
-            
-            var imageData : NSData!
-            let type : String!
-            let filename : String!
+            var imageData : Data!
             if self.imageSelected.image != nil {
-                imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as NSData
+                imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2)! as Data : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as Data
             }
             
-            type = imageJpeg
-            filename = jpgeFile
             var userIdSelected = ""
             if let val = self.userInfoSelect["userId"] as? Int {
                 userIdSelected = "\(val)"
             }
-            let textToPost = (self.contentTV.text == "" || self.contentTV.text == "ADD A COMMENT..." ) ? "..." : self.contentTV.text
-            var parameters = [String:AnyObject]()
-            var tagname = ""
+            
+            var textToPost = self.contentTV.text
+            if (self.contentTV.text == "" || self.contentTV.text == "ADD A COMMENT..." ) {
+                textToPost = "..."
+            }
+            
+            let currentUserID = PMHelper.getCurrentID()
+            let type = "#" + (self.tag?.name?.uppercased())!
             let selectedDate = self.convertLocalTimeToUTCTime(dateTimeString: self.dateTF.text!)
-            tagname = (self.tag?.name?.uppercased())!
-            parameters = [kUserId:PMHelper.getCurrentID(),
-                          kText: textToPost,
-                          kUserIdTarget:userIdSelected,
-                          kType:"#\(tagname)",
-                          kDatetime: selectedDate]
-            Alamofire.upload(
-                .POST,
-                prefix,
-                multipartFormData: { multipartFormData in
-                    if imageData != nil {
-                        multipartFormData.appendBodyPart(data: imageData, name: "file",
-                            fileName:filename, mimeType:type)
-                        multipartFormData.appendBodyPart(data: "1".dataUsingEncoding(NSUTF8StringEncoding)!, name: "priv")
-                    }
-                    for (key, value) in parameters {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                    }
-                },
-                encodingCompletion: { encodingResult in
-                    self.view.hideToastActivity()
-                    switch encodingResult {
-                    case .Success(let upload, _, _):
-                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                        }
-                        upload.validate()
-                        upload.responseJSON { response in
-                            let json = response.result.value as! NSDictionary
-                            print(json)
-                            if response.result.error != nil {
-                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                                    // ...
-                                }
-                                alertController.addAction(OKAction)
-                                self.present(alertController, animated: true) {
-                                    // ...
-                                }
-                            } else {
-                                self.navigationController?.popToRootViewController(animated: false)
-                            }
-                        }
-                        
-                    case .Failure( _):
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                    }
+            
+            self.view.makeToastActivity(message: "Saving")
+            
+            SessionRouter.postBookSession(userID: currentUserID, targetUserID: userIdSelected, message: textToPost!, type: type, dateTime: selectedDate, imageData: imageData, completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                let isPostSuccess = result as! Bool
+                if (isPostSuccess == true) {
+                    self.navigationController?.popToRootViewController(animated: false)
+                } else {
+                    PMHelper.showDoAgainAlert()
                 }
-            )
+            }).fetchdata()
         }
     }
     
@@ -229,17 +165,139 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
         
         let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
-        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC") as! TimeZone
+        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
         let newDateString = newDateFormatter.string(from: date!)
         
         return newDateString
     }
     
+    func setAvatar() {
+        // Current user avatar
+        ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight320) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.avatarIMV.image = imageRes
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+            }.fetchdata()
+        
+        // user avatar
+        var targetUserId = ""
+        if let val = self.userInfoSelect["userId"] as? Int {
+            targetUserId = "\(val)"
+        }
+        
+        ImageVideoRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.avatarUserIMV.image = imageRes
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+            }.fetchdata()
+    }
+    
+    @IBAction func showPopupToSelectImageWithSender() {
+        let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
+            self.imagePicker.allowsEditing = false
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }
+        
+        let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
+            self.showCameraRoll()
+        }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectFromLibraryHandler))
+        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
+        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
+        
+        self.present(alertController, animated: true) { }
+    }
+    
+    
+    func showCameraRoll() {
+        let fusuma = FusumaViewController()
+        fusuma.delegate = self
+        fusuma.defaultMode = .Camera
+        fusuma.modeOrder = .CameraFirst
+        self.present(fusuma, animated: true, completion: nil)
+    }
+    
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "gotoShare" {
+            let destination = segue.destination as! BookSessionShareViewController
+            destination.tag = self.tag
+            destination.image = self.imageSelected.image
+            destination.textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
+            destination.dateToPost = self.dateTF.text!
+        }
+    }
+}
+
+// MARK: - FusumaDelegate
+extension BookSessionToUserViewController : FusumaDelegate {
+    func fusumaImageSelected(image: UIImage) {
+        self.imageSelected.image = image
+        if (self.selectFromLibrary == true) {
+            self.imageScrolView.isHidden = true
+            self.imageSelected?.isHidden = false
+        } else {
+            for(subview) in self.imageScrolView.subviews {
+                subview.removeFromSuperview()
+            }
+            let height =  self.view.frame.size.width * image.size.height / image.size.width
+            
+            var frameT = CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
+            if (height > self.view.frame.width) {
+                frameT = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height)
+            }
+            
+            let imageViewScrollView = UIImageView.init(frame: frameT)
+            imageViewScrollView.image = image
+            self.imageScrolView.addSubview(imageViewScrollView)
+            
+            self.imageScrolView.contentSize = CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
+            if (height > self.view.frame.width) {
+                self.imageScrolView.contentSize = CGSize(width: self.view.frame.size.width, height: frameT.size.height)
+            }
+            
+            self.imageSelected?.isHidden = true
+            self.imageScrolView?.isHidden = false
+        }
+    }
+    
+    func fusumaCameraRollUnauthorized() {
+        print("Camera roll unauthorized")
+        let alert = UIAlertController(title: accessRequested, message: savingImageNeedsToAccessYourPhotoAlbum, preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
+            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(url as URL)
+            }
+            
+        }))
+        
+        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews[0] as! UIImageView
+    }
+}
+
+// MARK: - UITextViewDelegate
+extension BookSessionToUserViewController : UITextViewDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
-
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let currentText:NSString = textView.text! as NSString
         let updatedText = currentText.replacingCharacters(in: range, with:text)
@@ -267,144 +325,18 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             }
         }
     }
-    
-    func getDetail() {
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    if (response.result.value == nil) {return}
-                    self.coachDetail = response.result.value as! NSDictionary
-                    self.setAvatar()
-                } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                }
-        }
-    }
-    
-    func setAvatar() {
-        if !(coachDetail[kImageUrl] is NSNull) {
-            let imageLink = coachDetail[kImageUrl] as! String
-            var prefix = kPMAPI
-            prefix.append(imageLink)
-            let postfix = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
-            prefix.append(postfix)
-            if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
-                self.avatarIMV.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.avatarIMV.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                        }
-                }
-            }
-        }
-        
-        var targetUserId = ""
-        if let val = self.userInfoSelect["userId"] as? Int {
-            targetUserId = "\(val)"
-        }
-        
-        ImageRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
-            if (error == nil) {
-                let imageRes = result as! UIImage
-                self.avatarUserIMV.image = imageRes
-            } else {
-                print("Request failed with error: \(String(describing: error))")
-            }
-            }.fetchdata()
-    }
-    
-    @IBAction func showPopupToSelectImageWithSender() {
-        let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
-            self.imagePicker.allowsEditing = false
-            self.imagePicker.sourceType = .PhotoLibrary
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }
-        
-        let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-            self.showCameraRoll()
-        }
-        
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectFromLibraryHandler))
-        alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
-        alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
-        
-        self.present(alertController, animated: true) { }
-    }
-    
-    
-    func showCameraRoll() {
-        let fusuma = FusumaViewController()
-        fusuma.delegate = self
-        fusuma.defaultMode = .Camera
-        fusuma.modeOrder = .CameraFirst
-        self.present(fusuma, animated: true, completion: nil)
-    }
-    
-    // Fusuma delegate
-    func fusumaImageSelected(image: UIImage) {
-        self.imageSelected.image = image
-        if (self.selectFromLibrary == true) {
-            self.imageScrolView.isHidden = true
-            self.imageSelected?.isHidden = false
-        } else {
-            for(subview) in self.imageScrolView.subviews {
-                subview.removeFromSuperview()
-            }
-            let height =  self.view.frame.size.width*image.size.height/image.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
-            let imageViewScrollView = UIImageView.init(frame: frameT)
-            imageViewScrollView.image = image
-            self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
-            self.imageSelected?.isHidden = true
-            self.imageScrolView?.isHidden = false
-        }
-    }
-    
-    func fusumaCameraRollUnauthorized() {
-        print("Camera roll unauthorized")
-        let alert = UIAlertController(title: accessRequested, message: savingImageNeedsToAccessYourPhotoAlbum, preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
-            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(url)
-            }
-            
-        }))
-        
-        alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
-        }))
-        
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
-        return scrollView.subviews[0] as! UIImageView
-    }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension BookSessionToUserViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
             }
             self.imageSelected!.image = pickedImage
             let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height:height) : CGRect(x: 0, y:(self.view.frame.size.width - height)/2, width:self.view.frame.size.width, height: height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
@@ -412,29 +344,19 @@ class BookSessionToUserViewController: BaseViewController, UITextViewDelegate, F
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "gotoShare" {
-            let destination = segue.destination as! BookSessionShareViewController
-            destination.tag = self.tag
-            destination.image = self.imageSelected.image
-            destination.textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
-            destination.dateToPost = self.dateTF.text!
-        }
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     func cropAndSave() -> UIImage {
         UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, SCREEN_SCALE)
         let offset = imageScrolView.contentOffset
         
-        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
-        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        UIGraphicsGetCurrentContext()!.translateBy(x: -offset.x, y: -offset.y)
+        imageScrolView.layer.render(in: UIGraphicsGetCurrentContext()!)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         

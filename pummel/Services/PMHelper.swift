@@ -46,13 +46,23 @@ class PMHelper {
                 let loginManager: FBSDKLoginManager = FBSDKLoginManager()
                 loginManager.logOut()
                 
+                
+                topController.view.makeToastActivity(message: "Logging Out")
+                
                 // LOGOUT
                 UserDefaults.standard.set(0, forKey: "MESSAGE_BADGE_VALUE")
                 Alamofire.request(kPMAPI_LOGOUT, method: .delete).responseJSON(completionHandler: { (response) in
+                    topController.view.hideToastActivity()
+
+                    // Logout facebook
+                    let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+                    loginManager.logOut()
+                    
+                    // Logout app
                     let defaults = UserDefaults.standard
                     
                     let outputString = NSString(data: data!, encoding:String.Encoding.utf8)
-                    if ((outputString?.containsString(kLogoutSuccess)) != nil) {
+                    if ((outputString?.contains(find: kLogoutSuccess)) != nil) {
                         defaults.set(false, forKey: k_PM_IS_LOGINED)
                         defaults.set(false, forKey: k_PM_IS_COACH)
                         let storage = HTTPCookieStorage.shared
@@ -103,6 +113,24 @@ class PMHelper {
             }
             
             let alertController = UIAlertController(title: kApply, message: message, preferredStyle: .alert)
+            
+            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
+                // ...
+            }
+            
+            alertController.addAction(OKAction)
+            
+            topController.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    class func showNoticeAlert(message: String) {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            let alertController = UIAlertController(title: pmmNotice, message: message, preferredStyle: .alert)
             
             let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...

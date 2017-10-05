@@ -38,12 +38,12 @@ class SignupViewController: UIViewController {
     
     @IBAction func termOfService(sender: AnyObject) {
         let termOfServiceURL = NSURL(string: "http://pummel.fit/terms/")
-        UIApplication.sharedApplication().openURL(termOfServiceURL!)
+        UIApplication.shared.openURL(termOfServiceURL!)
     }
     
     @IBAction func privacyPolicy(sender: AnyObject) {
         let privacyPolicyURL = NSURL(string: "http://pummel.fit/privacy/")
-        UIApplication.sharedApplication().openURL(privacyPolicyURL!)
+        UIApplication.shared.openURL(privacyPolicyURL!)
     }
     
     override func viewDidLoad() {
@@ -132,7 +132,7 @@ class SignupViewController: UIViewController {
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
             let properties = ["Name": "Navigation Click", "Label":"Register"]
-            mixpanel.track("IOS.Register", properties: properties)
+            mixpanel?.track("IOS.Register", properties: properties)
             
             
             self.view.makeToastActivity(message: "Loading")

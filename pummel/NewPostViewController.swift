@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDelegate,  UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
+class NewPostViewController: BaseViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var commentPhotoTV : UITextView!
@@ -28,6 +28,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
     
     var selectFromLibrary : Bool = false
     
+    // MARK: - Life Circle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -87,16 +88,10 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         }
         self.otherKeyboardView = UIView.init(frame:CGRect(x: 0, y: self.commentPhotoTV.frame.origin.y, width: self.view.frame.width, height: self.view.frame.size.height - self.commentPhotoTV.frame.origin.y))
         self.otherKeyboardView.backgroundColor = UIColor.clear
-        let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.handleTap(recognizer:)))
+        let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.otherKeyBoardViewTapped(recognizer:)))
         self.otherKeyboardView.addGestureRecognizer(recognizer)
         self.view.addSubview(self.otherKeyboardView)
         self.viewKeyboard.backgroundColor = UIColor.black
-    }
-    
-    func handleTap(recognizer: UITapGestureRecognizer) {
-        viewKeyboard.removeFromSuperview()
-        otherKeyboardView.removeFromSuperview()
-        self.commentPhotoTV.resignFirstResponder()
     }
     
     func keyboardWillHide(notification: NSNotification) {
@@ -104,8 +99,14 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         otherKeyboardView.removeFromSuperview()
     }
     
+    func otherKeyBoardViewTapped(recognizer: UITapGestureRecognizer) {
+        viewKeyboard.removeFromSuperview()
+        otherKeyboardView.removeFromSuperview()
+        self.commentPhotoTV.resignFirstResponder()
+    }
+    
     func setAvatar() {
-        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight200) { (result, error) in
+        ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight200) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.avatarIMV.image = imageRes
@@ -168,7 +169,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
                         }
                         upload.validate()
                         upload.responseJSON { response in
-                            self.navigationItem.rightBarButtonItem?.enabled = true
+                            self.navigationItem.rightBarButtonItem?.isEnabled = true
                              self.isPosting = false
                             self.view.hideToastActivity()
                             if response.result.error != nil {
@@ -189,7 +190,7 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
                         
                     case .Failure( _):
                          self.isPosting = false
-                        self.navigationItem.rightBarButtonItem?.enabled = true
+                        self.navigationItem.rightBarButtonItem?.isEnabled = true
                         self.view.hideToastActivity()
                         
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
@@ -245,67 +246,10 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         fusuma.modeOrder = .CameraFirst
         self.present(fusuma, animated: true, completion: nil)
     }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    
-    // Fusuma delegate
-    func fusumaImageSelected(image: UIImage) {
-        self.imageSelected!.image = image
-        if (self.selectFromLibrary == true) {
-            self.imageScrolView.isHidden = true
-            self.imageSelected?.isHidden = false
-        } else {
-            for(subview) in self.imageScrolView.subviews {
-                subview.removeFromSuperview()
-            }
-            let height =  self.view.frame.size.width*image.size.height/image.size.width
-            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
-            let imageViewScrollView = UIImageView.init(frame: frameT)
-            imageViewScrollView.image = image
-            self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width:self.view.frame.size.width, height: frameT.size.height) : CGSize(width:self.view.frame.size.width, height: self.view.frame.size.width)
-            self.imageSelected?.isHidden = true
-            self.imageScrolView?.isHidden = false
-        } 
-    }
-    
-    func cropAndSave() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.main.scale)
-        let offset = imageScrolView.contentOffset
-        
-        UIGraphicsGetCurrentContext()!.translateBy(x: -offset.x, y: -offset.y)
-        imageScrolView.layer.render(in: UIGraphicsGetCurrentContext()!)
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-       
-        return image!
-    }
-    
-    func fusumaCameraRollUnauthorized() {
-        
-        print("Camera roll unauthorized")
-        
-        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
-            
-            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(url as URL)
-            }
-            
-        }))
-        
-        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
-            
-        }))
-        
-        self.present(alert, animated: true, completion: nil)
-    }
-    
+}
+
+// MARK: - UITextViewDelegate
+extension NewPostViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         // Combine the textView text and the replacement text to
@@ -345,6 +289,14 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension NewPostViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             for(subview) in self.imageScrolView.subviews {
@@ -367,5 +319,63 @@ class NewPostViewController: BaseViewController, FusumaDelegate, UITextViewDeleg
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+// MARK: - FusumaDelegate
+extension NewPostViewController : FusumaDelegate {
+    
+    // Fusuma delegate
+    func fusumaImageSelected(image: UIImage) {
+        self.imageSelected!.image = image
+        if (self.selectFromLibrary == true) {
+            self.imageScrolView.isHidden = true
+            self.imageSelected?.isHidden = false
+        } else {
+            for(subview) in self.imageScrolView.subviews {
+                subview.removeFromSuperview()
+            }
+            let height =  self.view.frame.size.width*image.size.height/image.size.width
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
+            let imageViewScrollView = UIImageView.init(frame: frameT)
+            imageViewScrollView.image = image
+            self.imageScrolView.addSubview(imageViewScrollView)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width:self.view.frame.size.width, height: frameT.size.height) : CGSize(width:self.view.frame.size.width, height: self.view.frame.size.width)
+            self.imageSelected?.isHidden = true
+            self.imageScrolView?.isHidden = false
+        }
+    }
+    
+    func fusumaCameraRollUnauthorized() {
+        
+        print("Camera roll unauthorized")
+        
+        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
+            
+            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(url as URL)
+            }
+            
+        }))
+        
+        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
+            
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func cropAndSave() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.main.scale)
+        let offset = imageScrolView.contentOffset
+        
+        UIGraphicsGetCurrentContext()!.translateBy(x: -offset.x, y: -offset.y)
+        imageScrolView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        return image!
     }
 }

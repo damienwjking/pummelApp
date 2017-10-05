@@ -7,8 +7,6 @@
 //
 
 class TestimonialModel: NSObject {
-    
-    
     var id = 0
     var rating = 0.0
     var userId = 0

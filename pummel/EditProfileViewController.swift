@@ -325,7 +325,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
             let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
-            mixpanel.track("IOS.Profile.EditProfile", properties: properties)
+            mixpanel?.track("IOS.Profile.EditProfile", properties: properties)
             
             self.view.makeToastActivity(message: "Saving")
             
@@ -401,7 +401,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func showPopupToSelectProfileAvatar() {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = true
-            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.sourceType = .photoLibrary
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
@@ -505,10 +505,10 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         
         let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
             
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(url)
+                UIApplication.shared.openURL(url)
             }
             
         }))
@@ -529,7 +529,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         let defaults = UserDefaults.standard
         
         if (defaults.bool(forKey: k_PM_IS_COACH) == false) {
-            ImageRouter.getCurrentUserAvatar(sizeString: widthHeight250, completed: { (result, error) in
+            ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight250, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
@@ -538,7 +538,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 }
             }).fetchdata()
         } else {
-            ImageRouter.getCurrentUserAvatar(sizeString: widthHeight250, completed: { (result, error) in
+            ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight250, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
@@ -636,11 +636,11 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
     
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {

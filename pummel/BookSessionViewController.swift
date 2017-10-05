@@ -10,13 +10,14 @@ import UIKit
 import Foundation
 import Alamofire
 
-class BookSessionViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+class BookSessionViewController: BaseViewController {
     
     @IBOutlet weak var tbView: UITableView!
-    var tags = [Tag]()
-    var arrayTags : [NSDictionary] = []
-    var offset: Int = 0
-    var tagSelect:Tag?
+    var tags = [TagModel]()
+    var tagOffset: Int = 0
+    var tagSelect:TagModel?
+    
+    var isStopLoadTag = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +31,7 @@ class BookSessionViewController: BaseViewController, UITableViewDelegate, UITabl
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(BookSessionViewController.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.backButtonClicked))
         
         self.getListTags()
     }
@@ -47,46 +48,48 @@ class BookSessionViewController: BaseViewController, UITableViewDelegate, UITabl
     
     // MARK: Private function
     func getListTags() {
-        var listTagsLink = kPMAPI_TAG4_OFFSET
-        listTagsLink.append(String(self.offset))
-        Alamofire.request(.GET, listTagsLink)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                self.arrayTags = JSON as! [NSDictionary]
-                if (self.arrayTags.count > 0) {
-                    for i in 0 ..< self.arrayTags.count {
-                        let tagContent = self.arrayTags[i]
-                        let tag = Tag()
-                        tag.name = tagContent[kTitle] as? String
-                        tag.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
-                        tag.tagColor = self.getRandomColorString()
-                        tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
-                        self.tags.append(tag)
+        if (isStopLoadTag == false) {
+            TagRouter.getTagList(offset: self.tagOffset, completed: { (result, error) in
+                if (error == nil) {
+                    let tagList = result as! [TagModel]
+                    
+                    if (tagList.count == 0) {
+                        self.isStopLoadTag = true
+                    } else {
+                        for tag in tagList {
+                            if (tag.existInList(tagList: self.tags) == false) {
+                                self.tags.append(tag)
+                            }
+                        }
+                        
+                        self.tagOffset += 10
+                        self.tbView.reloadData()
                     }
-                    self.offset += 10
-                    self.tbView.reloadData()
+                    
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.isStopLoadTag = true
                 }
-            case .Failure(let error):
-                print("Request failed with error: \(String(describing: error))")
-                }
+            }).fetchdata()
         }
     }
     
-    func getRandomColorString() -> String{
-        
-        let randomRed:CGFloat = CGFloat(drand48())
-        let randomGreen:CGFloat = CGFloat(drand48())
-        let randomBlue:CGFloat = CGFloat(drand48())
-        
-        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
-    }
-    
-    func cancel() {
+    func backButtonClicked() {
         self.navigationController?.popViewController(animated: true)
     }
     
-    //MARK: TableView
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "selectUser" {
+            let destination = segue.destination as! BookSessionSelectUserViewController
+            destination.tag = tagSelect
+        }
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension BookSessionViewController : UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
@@ -96,33 +99,24 @@ class BookSessionViewController: BaseViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BookSessionTableViewCell") as! BookSessionTableViewCell
-        if tags.count <= indexPath.row {
-            return cell
-        }
+        
         let tag = tags[indexPath.row]
         
-//        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercased())!)
-        let tagName = (tag.name?.uppercased())
+        let tagName = tag.name?.uppercased()
         cell.bookTitleLB.text = tagName
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        
         if (indexPath.row == tags.count - 1) {
             self.getListTags()
         }
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
         let tag = tags[indexPath.row]
         tagSelect = tag
         self.performSegue(withIdentifier: "selectUser", sender: nil)
-    }
-    
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "selectUser" {
-            let destination = segue.destination as! BookSessionSelectUserViewController
-            destination.tag = tagSelect
-        }
     }
 }
 

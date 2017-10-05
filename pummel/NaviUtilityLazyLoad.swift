@@ -20,12 +20,12 @@ class NaviUtilityLazyLoad
     init(withPageSize pSize: Int, andEnabled isEnabled: Bool)
     {
         self.pageSize = pSize
-        self.enabled = isEnabled
+        self.isEnabled = isEnabled
     }
     
     func nextCursor() -> Int
     {
-        if !self.enabled { return -1 }
+        if !self.isEnabled { return -1 }
         
         switch currentCursor
         {

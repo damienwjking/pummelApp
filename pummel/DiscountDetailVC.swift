@@ -26,6 +26,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     
     var discountDetail:NSDictionary!
     
+    // MARK: - Life Circle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.lbTitle.font = UIFont.pmmMonReg20()
@@ -55,8 +56,8 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.lbFullText.text = ""
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+    func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,25 +76,17 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.imgLogo.layer.cornerRadius = 75
         self.imgLogo.clipsToBounds = true
         
-        let postfix = widthEqual.stringByAppendingString(String(self.imgCover.bounds.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.imgCover.bounds.height))
-        if !(discountDetail[kImageUrl] is NSNull) {
+        if (discountDetail[kImageUrl] is NSNull == false) {
             let imageLink = discountDetail[kImageUrl] as! String
-            var prefix = kPMAPI
-            prefix.append(imageLink)
-            prefix.append(postfix)
-            if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
-                self.imgCover.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.imgCover.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                        }
+
+            ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.imgCover.image = imageRes
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
                 }
-            }
+            }).fetchdata()
         }
         
         if let val = discountDetail[kTitle] as? String {
@@ -141,7 +134,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         
         // Get bussiness
         let businessId = String(format:"%0.f", discountDetail[kBusinessId]!.doubleValue)
-        ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight200) { (result, error) in
+        ImageVideoRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight200) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 
@@ -179,11 +172,6 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
             let destination = segue.destination as! FeedWebViewController
             destination.URL = sender as? NSURL
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func backButtonClicked() {

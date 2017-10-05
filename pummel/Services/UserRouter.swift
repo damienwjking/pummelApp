@@ -12,6 +12,9 @@ import Alamofire
 enum UserRouter: URLRequestConvertible {
     case getCurrentUserInfo(completed: CompletionBlock)
     case getUserInfo(userID : String, completed: CompletionBlock)
+    case getCoachInfo(userID : String, completed: CompletionBlock)
+    case changeCurrentUserInfo(posfix: String, param: [String : Any], completed: CompletionBlock)
+    case changeCurrentCoachInfo(posfix: String, param: [String : Any], completed: CompletionBlock)
     case checkCoachOfUser(userID : String, completed: CompletionBlock)
     case authenticateFacebook(fbID : String?, email : String?, firstName : String?, lastName : String?, avatarURL : String?, gender : String?, completed: CompletionBlock)
     case getUpcomingSession(offset: Int, completed: CompletionBlock)
@@ -19,13 +22,23 @@ enum UserRouter: URLRequestConvertible {
     case getTestimonial(userID: String, offset: Int, completed: CompletionBlock)
     case postTestimonial(userID: String, description: String, location: String, rating: CGFloat, completed: CompletionBlock)
     case getFollowCoach(offset: Int, completed: CompletionBlock)
+    case getUserTagList(userID : String, completed: CompletionBlock)
+    case getPhotoList(userID : String, offset: Int, completed: CompletionBlock)
     case signup(firstName: String, email: String, password: String, gender: String, completed: CompletionBlock)
+    case checkConnect(coachID: String, completed: CompletionBlock)
+    case setLead(coachID: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock? {
         switch self {
         case .getCurrentUserInfo(let completed):
             return completed
         case .getUserInfo(_, let completed):
+            return completed
+        case .getCoachInfo(_, let completed):
+            return completed
+        case .changeCurrentUserInfo(_, _, let completed):
+            return completed
+        case .changeCurrentCoachInfo(_, _, let completed):
             return completed
         case .checkCoachOfUser(_, let completed):
             return completed
@@ -41,9 +54,17 @@ enum UserRouter: URLRequestConvertible {
             return completed
         case .getFollowCoach(_, let completed):
             return completed
+        case .getUserTagList(_, let completed):
+            return completed
+        case .getPhotoList(_, _, let completed):
+            return completed
         case .signup(_ , _, _, _, let completed):
             return completed
-            
+        case .checkConnect(_, let completed):
+            return completed
+        case .setLead(_, let completed):
+            return completed
+
         }
     }
     
@@ -53,6 +74,12 @@ enum UserRouter: URLRequestConvertible {
             return .get
         case .getUserInfo:
             return .get
+        case .getCoachInfo:
+            return .get
+        case .changeCurrentUserInfo:
+            return .put
+        case .changeCurrentCoachInfo:
+            return .put
         case .checkCoachOfUser:
             return .get
         case .authenticateFacebook:
@@ -67,7 +94,15 @@ enum UserRouter: URLRequestConvertible {
             return .post
         case .getFollowCoach:
             return .get
+        case .getUserTagList:
+            return .get
+        case .getPhotoList:
+            return .get
         case .signup:
+            return .post
+        case .checkConnect:
+            return .post
+        case .setLead:
             return .post
             
         }
@@ -84,6 +119,15 @@ enum UserRouter: URLRequestConvertible {
         case .getUserInfo(let userID, _):
             prefix = kPMAPIUSER + userID
             
+        case .getCoachInfo(let userID, _):
+            prefix = kPMAPICOACH + userID
+            
+        case .changeCurrentUserInfo (let posfix, _, _):
+            prefix = kPMAPIUSER + currentUserID + posfix
+            
+        case .changeCurrentCoachInfo (let posfix, _, _):
+            prefix = kPMAPICOACH + currentUserID + posfix
+            
         case .checkCoachOfUser(let userID, _):
             prefix = kPMAPICOACH + userID
             
@@ -91,26 +135,34 @@ enum UserRouter: URLRequestConvertible {
             prefix = kPMAPIAUTHENTICATEFACEBOOK
             
         case .getUpcomingSession(let offset, _):
-            let offsetString = String(format: "%ld", offset)
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_UPCOMING_SESSION + offsetString
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_UPCOMING_SESSION + "\(offset)"
             
         case .getCompletedSession(let offset, _):
-            let offsetString = String(format: "%ld", offset)
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_COMPLETED_SESSION + offsetString
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_COMPLETED_SESSION + "\(offset)"
             
         case .getTestimonial(let userID, let offset, _):
-            let offsetString = String(format: "%ld", offset)
-            prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL_OFFSET + offsetString
+            prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL_OFFSET + "\(offset)"
         
         case .postTestimonial(let userID, _, _, _, _):
             prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL
             
-        case .getFollowCoach (let offset, _):
-            let offsetString = String(format: "%ld", offset)
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_USERCOACH_OFFSET + offsetString
+        case .getFollowCoach(let offset, _):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_USERCOACH_OFFSET + "\(offset)"
+            
+        case .getUserTagList(let userID, _):
+            prefix = kPMAPIUSER + userID + "/tags"
+            
+        case .getPhotoList(let userID, let offset, _):
+            prefix = kPMAPIUSER + userID + kPM_PATH_PHOTOV2 + "\(offset)"
             
         case .signup:
             prefix = kPMAPI_REGISTER
+            
+        case .checkConnect:
+            prefix = kPMAPICHECKUSERCONNECT
+            
+        case .setLead:
+            prefix = kPMAPIUSER + currentUserID + kPMAPI_LEAD + "/" // TODO check need / ???
             
         }
         
@@ -122,6 +174,16 @@ enum UserRouter: URLRequestConvertible {
         let currentUserID = PMHelper.getCurrentID()
         
         switch self {
+        case .changeCurrentUserInfo(_, let parameter, _):
+            for (key, value) in parameter {
+                param[key] = value as AnyObject
+            }
+            
+        case .changeCurrentCoachInfo(_, let parameter, _):
+            for (key, value) in parameter {
+                param[key] = value as AnyObject
+            }
+            
         case .authenticateFacebook(let fbID, let email, let firstName, let lastName, let avatarURL, let gender, _):
             if (fbID != nil) {
                 param["fbId"] = fbID! as AnyObject
@@ -167,6 +229,14 @@ enum UserRouter: URLRequestConvertible {
             param[kFirstname] = firstName as AnyObject
             param[kGender] = gender as AnyObject
             
+        case .checkConnect(let coachID, _):
+            param[kUserId] = currentUserID as AnyObject
+            param[kCoachId] = coachID as AnyObject
+            
+        case .setLead(let coachID, _):
+            param[kUserId] = currentUserID as AnyObject
+            param[kCoachId] = coachID as AnyObject
+            
             
         default:
             break
@@ -196,8 +266,8 @@ enum UserRouter: URLRequestConvertible {
     
     func fetchdata() {
         switch self {
-        case .getCurrentUserInfo, .getUserInfo:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+        case .getCurrentUserInfo, .getUserInfo, .getCoachInfo:
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 1")
                 
                 switch response.result {
@@ -221,9 +291,51 @@ enum UserRouter: URLRequestConvertible {
                 }
             })
             
-        case .checkCoachOfUser:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
+        case .changeCurrentUserInfo:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 2")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        self.comletedBlock!(true as AnyObject, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(false as AnyObject, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(false as AnyObject, error as NSError)
+                    }
+                }
+            })
+            
+        case .changeCurrentCoachInfo:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 3")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        self.comletedBlock!(true as AnyObject, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(false as AnyObject, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(false as AnyObject, error as NSError)
+                    }
+                }
+            })
+            
+        case .checkCoachOfUser:
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 4")
                 
                 if response.response?.statusCode == 200 {
                     self.comletedBlock!(true as AnyObject, nil)
@@ -239,7 +351,7 @@ enum UserRouter: URLRequestConvertible {
             
         case .authenticateFacebook:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 3")
+                print("PM: UserRouter 5")
                 
                 switch response.result {
                 case .success(let JSON):
@@ -263,7 +375,7 @@ enum UserRouter: URLRequestConvertible {
             
         case .getUpcomingSession, .getCompletedSession:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 4")
+                print("PM: UserRouter 6")
                 
                 switch response.result {
                 case .success(let JSON):
@@ -285,8 +397,8 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getTestimonial:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 5")
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 7")
                 
                 switch response.result {
                 case .success(let JSON):
@@ -310,7 +422,7 @@ enum UserRouter: URLRequestConvertible {
             
         case .postTestimonial:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 6")
+                print("PM: UserRouter 8")
                 
                 switch response.result {
                 case .success(let JSON):
@@ -332,8 +444,8 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getFollowCoach:
-            Alamofire.request(self.URLRequest).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 7")
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 9")
                 
                 switch response.result {
                 case .success(let JSON):
@@ -361,15 +473,118 @@ enum UserRouter: URLRequestConvertible {
                     }
                 }
             })
+            
+        case .getUserTagList:
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter User_Tag_List")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let tagList = JSON as! [NSDictionary]
+                        
+                        self.comletedBlock!(tagList as AnyObject, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .getPhotoList:
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter 11")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let photoList = JSON as! NSArray
+                        
+                        self.comletedBlock!(photoList as AnyObject, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
         case .signup:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 8")
+                print("PM: UserRouter signup")
                 
                 switch response.result {
                 case .success(let JSON):
                     if (JSON is NSNull == false) {
                         UserRouter.saveCurrentUserInfo(response: response)
                         
+                        // Can't return respone object
+                        self.comletedBlock!(true as AnyObject, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(false as AnyObject, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 400) {
+                        let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
+                        self.comletedBlock!(false as AnyObject, error as NSError)
+                    } else if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(false as AnyObject, error as NSError)
+                    }
+                }
+            })
+            
+        case .checkConnect:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter check_connect")
+                
+                
+                // TODO:    user responseJSON/responseString
+                //          return "Connected"/"..."
+                
+                self.comletedBlock!(response as AnyObject, nil)
+                
+                //                switch response.result {
+                //                case .success(let JSON):
+                //                    if (JSON is NSNull == false) {
+                //                        // Can't return respone object
+                //                        self.comletedBlock!("Connected" as AnyObject, nil)
+                //                    } else {
+                //                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                //                        self.comletedBlock!("" as AnyObject, error)
+                //                    }
+                //                case .failure(let error):
+                //                    if (response.response?.statusCode == 400) {
+                //                        let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
+                //                        self.comletedBlock!("" as AnyObject, error as NSError)
+                //                    } else if (response.response?.statusCode == 401) {
+                //                        PMHelper.showLogoutAlert()
+                //                    } else {
+                //                        self.comletedBlock!("" as AnyObject, error as NSError)
+                //                    }
+                //                }
+            })
+            
+        case .setLead:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter set_lead")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
                         // Can't return respone object
                         self.comletedBlock!(true as AnyObject, nil)
                     } else {
@@ -421,7 +636,7 @@ enum UserRouter: URLRequestConvertible {
             var linkPostNotif = kPMAPIUSER
             linkPostNotif.append(currentId)
             linkPostNotif.append(kPM_PATH_DEVICES)
-            Alamofire.request(.POST, linkPostNotif, parameters: param)
+            Alamofire.request(linkPostNotif, method: .post, parameters: param)
                 .responseJSON { response in
                     if response.response?.statusCode == 200 {
                         print("Already push tokenString")

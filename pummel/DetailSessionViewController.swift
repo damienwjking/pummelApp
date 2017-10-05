@@ -164,7 +164,7 @@ class DetailSessionViewController: BaseViewController {
         }
         
         if self.session.datetime?.isEmpty == false {
-            let timeFormatter = DateFormatter
+            let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = kFullDateFormat
             let date = timeFormatter.date(from: self.session.datetime!)
             timeFormatter.dateFormat = "MMM dd, YYYY hh:mm aaa"
@@ -253,7 +253,7 @@ class DetailSessionViewController: BaseViewController {
     func setUserAvatar() {
         let userID = String(format: "%ld", self.session.userId)
         
-        ImageRouter.getUserAvatar(userID: userID, sizeString: widthHeight120) { (result, error) in
+        ImageVideoRouter.getUserAvatar(userID: userID, sizeString: widthHeight120) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.userIMV.image = imageRes
@@ -266,7 +266,7 @@ class DetailSessionViewController: BaseViewController {
     func setCoachAvatar() {
         let coachID = String(format: "%ld", self.session.coachId)
         
-        ImageRouter.getUserAvatar(userID: coachID, sizeString: widthHeight120) { (result, error) in
+        ImageVideoRouter.getUserAvatar(userID: coachID, sizeString: widthHeight120) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.coachIMV.image = imageRes
@@ -274,15 +274,6 @@ class DetailSessionViewController: BaseViewController {
                 print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
-    }
-    
-    func getRandomColorString() -> String{
-        
-        let randomRed:CGFloat = CGFloat(drand48())
-        let randomGreen:CGFloat = CGFloat(drand48())
-        let randomBlue:CGFloat = CGFloat(drand48())
-        
-        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
     }
     
     func backClicked() {

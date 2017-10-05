@@ -98,7 +98,7 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Login"]
-        mixpanel.track("IOS.Login", properties: properties)
+        mixpanel?.track("IOS.Login", properties: properties)
         
         Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
             .responseJSON { response in

@@ -161,7 +161,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
             
             let idSender = String(format:"%0.f",user.object(forKey: kId)!.doubleValue)
-            ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
+            ImageVideoRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                     let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
@@ -190,7 +190,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
             
             let idSender = String(format:"%0.f",(user.object(forKey: kId)! as AnyObject).doubleValue)
-            ImageRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
+            ImageVideoRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                     let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
@@ -241,10 +241,10 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
 extension String {
     
     func contains(find: String) -> Bool{
-        return self.rangeOfString(find) != nil
+        return self.range(of: find) != nil
     }
     
     func containsIgnoringCase(find: String) -> Bool{
-        return self.rangeOfString(find, options: NSStringCompareOptions.CaseInsensitiveSearch) != nil
+        return self.range(of: find, options: NSStringCompareOptions.CaseInsensitiveSearch) != nil
     }
 }

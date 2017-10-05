@@ -47,7 +47,7 @@ let HRToastMaxMessageLines            = 0
 // shadow appearance
 let HRToastShadowOpacity  : CGFloat   = 0.8
 let HRToastShadowRadius   : CGFloat   = 6.0
-let HRToastShadowOffset   : CGSize    = CGSize(x:CGFloat(4.0), CGFloat(4.0))
+let HRToastShadowOffset   : CGSize    = CGSize(width: CGFloat(4.0), CGFloat(4.0))
 
 let HRToastOpacity        : CGFloat   = 0.9
 let HRToastCornerRadius   : CGFloat   = 10.0
@@ -218,10 +218,10 @@ extension UIView {
         
         var activityView = UIView()
         if FullScreen {
-             activityView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width , UIScreen.mainScreen().bounds.height))
+             activityView = UIView(frame: CGRect(x: 0, 0, UIScreen.main.bounds.width , UIScreen.main.bounds.height))
         }
         else {
-            activityView = UIView(frame: CGRectMake(0, 0, HRToastActivityWidth, HRToastActivityHeight))
+            activityView = UIView(frame: CGRect(x: 0, 0, HRToastActivityWidth, HRToastActivityHeight))
             activityView.layer.cornerRadius = HRToastCornerRadius
         }
         
@@ -244,7 +244,7 @@ extension UIView {
         
         if (!msg.isEmpty){
             activityIndicatorView.frame.origin.y -= 10
-            let activityMessageLabel = UILabel(frame: CGRectMake(activityView.bounds.origin.x, (activityIndicatorView.frame.origin.y + activityIndicatorView.frame.size.height + 10), activityView.bounds.size.width, 20))
+            let activityMessageLabel = UILabel(frame: CGRect(x: activityView.bounds.origin.x, (activityIndicatorView.frame.origin.y + activityIndicatorView.frame.size.height + 10), activityView.bounds.size.width, 20))
             activityMessageLabel.textColor = UIView.hr_toastFontColor()
             activityMessageLabel.font = (msg.characters.count<=10) ? UIFont(name:UIView.hr_toastFontName(), size: 16) : UIFont(name:UIView.hr_toastFontName(), size: 13)
             activityMessageLabel.textAlignment = .Center
@@ -359,7 +359,7 @@ extension UIView {
         if image != nil {
             imageView = UIImageView(image: image)
             imageView!.contentMode = .ScaleAspectFit
-            imageView!.frame = CGRectMake(HRToastHorizontalMargin, HRToastVerticalMargin, CGFloat(HRToastImageViewWidth), CGFloat(HRToastImageViewHeight))
+            imageView!.frame = CGRect(x: HRToastHorizontalMargin, HRToastVerticalMargin, CGFloat(HRToastImageViewWidth), CGFloat(HRToastImageViewHeight))
         }
         
         var imageWidth: CGFloat, imageHeight: CGFloat, imageLeft: CGFloat
@@ -383,9 +383,9 @@ extension UIView {
             titleLabel!.text = title
             
             // size the title label according to the length of the text
-            let maxSizeTitle = CGSize(x:(self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight);
+            let maxSizeTitle = CGSize(width: (self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight);
             let expectedHeight = title!.stringHeightWithFontSize(HRToastFontSize, width: maxSizeTitle.width)
-            titleLabel!.frame = CGRectMake(0.0, 0.0, maxSizeTitle.width, expectedHeight)
+            titleLabel!.frame = CGRect(x: 0.0, 0.0, maxSizeTitle.width, expectedHeight)
         }
         
         if msg != nil {
@@ -399,9 +399,9 @@ extension UIView {
             msgLabel!.alpha = 1.0
             msgLabel!.text = msg
             
-            let maxSizeMessage = CGSize(x:(self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight)
+            let maxSizeMessage = CGSize(width: (self.bounds.size.width * HRToastMaxWidth) - imageWidth, self.bounds.size.height * HRToastMaxHeight)
             let expectedHeight = msg!.stringHeightWithFontSize(HRToastFontSize, width: maxSizeMessage.width)
-            msgLabel!.frame = CGRectMake(0.0, 0.0, maxSizeMessage.width, expectedHeight)
+            msgLabel!.frame = CGRect(x: 0.0, 0.0, maxSizeMessage.width, expectedHeight)
         }
         
         var titleWidth: CGFloat, titleHeight: CGFloat, titleTop: CGFloat, titleLeft: CGFloat
@@ -430,15 +430,15 @@ extension UIView {
         // set wrapper view's frame
         let wrapperWidth  = max(imageWidth + HRToastHorizontalMargin * 2, largerLeft + largerWidth + HRToastHorizontalMargin)
         let wrapperHeight = max(msgTop + msgHeight + HRToastVerticalMargin, imageHeight + HRToastVerticalMargin * 2)
-        wrapperView.frame = CGRectMake(0.0, 0.0, wrapperWidth, wrapperHeight)
+        wrapperView.frame = CGRect(x: 0.0, 0.0, wrapperWidth, wrapperHeight)
         
         // add subviews
         if titleLabel != nil {
-            titleLabel!.frame = CGRectMake(titleLeft, titleTop, titleWidth, titleHeight)
+            titleLabel!.frame = CGRect(x: titleLeft, titleTop, titleWidth, titleHeight)
             wrapperView.addSubview(titleLabel!)
         }
         if msgLabel != nil {
-            msgLabel!.frame = CGRectMake(msgLeft, msgTop, msgWidth, msgHeight)
+            msgLabel!.frame = CGRect(x: msgLeft, msgTop, msgWidth, msgHeight)
             wrapperView.addSubview(msgLabel!)
         }
         if imageView != nil {
@@ -454,7 +454,7 @@ extension String {
     
     func stringHeightWithFontSize(fontSize: CGFloat,width: CGFloat) -> CGFloat {
         let font = UIFont(name: UIView.hr_toastFontName(), size: HRToastFontSize)
-        let size = CGSize(x:width, CGFloat.max)
+        let size = CGSize(width: width, CGFloat.max)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = .ByWordWrapping;
         let attributes = [NSFontAttributeName:font!,

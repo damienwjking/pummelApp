@@ -75,7 +75,7 @@ class LogTableViewCell: UITableViewCell {
         self.typeLB.text = session.type
         
         let userID = String(format:"%ld", session.userId)
-        ImageRouter.getUserAvatar(userID: userID, sizeString: widthHeight160) { (result, error) in
+        ImageVideoRouter.getUserAvatar(userID: userID, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.avatarIMV.image = imageRes

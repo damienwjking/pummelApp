@@ -10,4 +10,10 @@ import UIKit
 
 class SettingLogoutTableViewCell: UITableViewCell {
     @IBOutlet weak var logoutLB: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        self.logoutLB.font = .pmmMonReg11()
+    }
 }

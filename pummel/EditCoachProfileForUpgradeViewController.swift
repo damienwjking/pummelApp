@@ -323,7 +323,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
 
     func getListTags() {
         if (isStopGetListTag == false) {
-            var listTagsLink = kPMAPI_TAGALL_OFFSET
+            var listTagsLink = kPMAPI_TAG_OFFSET
             listTagsLink.append(String(offset))
             Alamofire.request(.GET, listTagsLink)
                 .responseJSON { response in switch response.result {
@@ -825,7 +825,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     func setAvatar() {
         let defaults = UserDefaults.standard
         if (defaults.bool(forKey: k_PM_IS_COACH) == false) {
-            ImageRouter.getCurrentUserAvatar(sizeString: widthHeight200, completed: { (result, error) in
+            ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight200, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
@@ -838,7 +838,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         } else {
             let coachID = PMHelper.getCurrentID()
             
-            ImageRouter.getCoachAvatar(coachID: coachID, sizeString: widthHeight100, completed: { (result, error) in
+            ImageVideoRouter.getCoachAvatar(coachID: coachID, sizeString: widthHeight100, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMW.image = imageRes
@@ -996,15 +996,6 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         alertController.addAction(UIAlertAction(title: kFemaleU, style: .default, handler: selectFemale))
         
         self.present(alertController, animated: true) { }
-    }
-    
-    func getRandomColorString() -> String{
-        
-        let randomRed:CGFloat = CGFloat(drand48())
-        let randomGreen:CGFloat = CGFloat(drand48())
-        let randomBlue:CGFloat = CGFloat(drand48())
-        
-        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
     }
     
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -1220,11 +1211,11 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
         }
         
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }
 

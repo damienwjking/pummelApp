@@ -42,8 +42,8 @@ class ForgottenPasswordController: UIViewController {
         self.doneBT.layer.borderColor = UIColor.white.cgColor
         self.doneBT.titleLabel?.font = .pmmMonReg13()
         self.emailTF.keyboardAppearance = .dark
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -76,8 +76,8 @@ class ForgottenPasswordController: UIViewController {
         }
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     @IBAction func buttonSweetWithSender(sender: AnyObject) {
@@ -94,7 +94,7 @@ class ForgottenPasswordController: UIViewController {
         
         if(userEmail!.isEmpty) {
             
-            self.emailTF.highlighted = true
+            self.emailTF.isHighlighted = true
             
             let alertController = UIAlertController(title: "Reset Password", message: "Please enter a valid email address", preferredStyle: .alert)
             

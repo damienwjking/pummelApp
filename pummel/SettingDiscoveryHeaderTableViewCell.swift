@@ -10,4 +10,10 @@ import UIKit
 
 class SettingDiscoveryHeaderTableViewCell: UITableViewCell {
     @IBOutlet weak var discoveryLB: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.discoveryLB.font = .pmmMonReg11()
+    }
 }

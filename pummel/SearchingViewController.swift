@@ -124,7 +124,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                             let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                                 let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
                                 if let url = settingsUrl {
-                                    UIApplication.sharedApplication().openURL(url)
+                                    UIApplication.shared.openURL(url)
                                 }
                         }
                         alertController.addAction(OKAction)
@@ -137,7 +137,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         } else {
             let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceSystem, preferredStyle: .alert)
             let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                self.dismissViewControllerAnimated(animated: false, completion: { 
+                self.dismiss(animated: false, completion: { 
                     
                 })
             }
@@ -174,8 +174,8 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         let presentViewController = self.presentingViewController
         
         if (presentViewController != nil) {
-            self.dismissViewControllerAnimated(animated: true, completion: {
-                presentViewController!.dismissViewControllerAnimated(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: {
+                presentViewController!.dismiss(animated: true, completion: nil)
             })
         }
     }
@@ -199,7 +199,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         state = placeMark.administrativeArea!
                     }
                     
-                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.searchDetail = [kGender:self.gender, "tagIds":self.tagIdsArray,
                         kLat:(self.locationManager.location?.coordinate.latitude)!,
                         kLong:(self.locationManager.location?.coordinate.longitude)!,

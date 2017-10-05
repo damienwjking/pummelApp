@@ -185,7 +185,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         cell.lbName.text = "..."
         cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
         
-        ImageRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
+        ImageVideoRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 cell.imgAvatar.image = imageRes

@@ -516,7 +516,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             let imageLink = userFeed[kImageUrl] as? String
             
             if (imageLink?.isEmpty == false) {
-                ImageRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
+                ImageVideoRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         
@@ -547,7 +547,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             let imageContentLink = feed[kImageUrl] as! String
             let postfixContent = widthHeightScreenx2
             
-            ImageRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
+            ImageVideoRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
                 if (error == nil) {
                     let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                     

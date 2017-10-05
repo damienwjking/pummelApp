@@ -66,7 +66,7 @@ class DiscountColectionViewCell: UICollectionViewCell {
         if (discountDetail[kImageUrl] is NSNull == false) {
             let imageLink = discountDetail[kImageUrl] as! String
             
-            ImageRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
+            ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.imgCover.image = imageRes

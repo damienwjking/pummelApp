@@ -14,17 +14,17 @@ class ContactUserCell : UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.imageView?.frame = CGRectMake(10, 10, 40, 40)
+        self.imageView?.frame = CGRect(x: 10, 10, 40, 40)
         self.imageView?.layer.cornerRadius = 20
         self.imageView?.layer.masksToBounds = true
         
         self.textLabel?.font = UIFont.pmmMonReg13()
         self.textLabel?.textColor = UIColor.darkGrayColor()
-        self.textLabel?.frame = CGRectMake(60, 5, self.frame.width - 60, self.frame.height - 15)
+        self.textLabel?.frame = CGRect(x: 60, 5, self.frame.width - 60, self.frame.height - 15)
         
         self.detailTextLabel?.font = UIFont.pmmMonReg11()
         self.detailTextLabel?.textColor = UIColor.lightGray
-        self.detailTextLabel?.frame = CGRectMake(60, self.frame.height - 25, self.frame.width - 60, 20)
+        self.detailTextLabel?.frame = CGRect(x: 60, self.frame.height - 25, self.frame.width - 60, 20)
         
         self.bringSubviewToFront(self.textLabel!)
         
@@ -196,8 +196,8 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                     urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
                     
                     let mailURL = NSURL(string: urlString)
-                    if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
-                        UIApplication.sharedApplication().openURL(mailURL!)
+                    if (UIApplication.shared.canOpenURL(mailURL!)) {
+                        UIApplication.shared.openURL(mailURL!)
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -267,6 +267,6 @@ extension ContactUserViewController: UISearchBarDelegate {
 // MARK: MFMessageComposeViewControllerDelegate
 extension ContactUserViewController: MFMessageComposeViewControllerDelegate {
     func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
-        controller.dismissViewControllerAnimated(animated: true, completion: nil)
+        controller.dismiss(animated: true, completion: nil)
     }
 }

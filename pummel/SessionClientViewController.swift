@@ -253,7 +253,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { (action, indexPath) in
+        let deleteRowAction = UITableViewRowAction(style: .default, title: "Delete") { (action, indexPath) in
             if indexPath.row < self.selectedSessionList.count {
                 let session = self.selectedSessionList[indexPath.row]
                 

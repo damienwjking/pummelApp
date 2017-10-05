@@ -70,7 +70,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     func keyboardWillShow(notification: NSNotification) {
         let userInfo:NSDictionary = notification.userInfo!
         let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardRectangle = keyboardFrame.CGRectValue()
+        let keyboardRectangle = keyboardFrame.cgRectValue()
         let keyboardHeight = keyboardRectangle.height
         if  (self.viewKeyboard != nil) {
             self.viewKeyboard.removeFromSuperview()
@@ -107,7 +107,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     }
     
     func setAvatar() {
-        ImageRouter.getCurrentUserAvatar(sizeString: widthHeight120) { (result, error) in
+        ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight120) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.avatarIMV.image = imageRes
@@ -136,7 +136,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Send A Photo"]
-        mixpanel.track("IOS.ChatMessage.SendPhoto", properties: properties)
+        mixpanel?.track("IOS.ChatMessage.SendPhoto", properties: properties)
     }
     
     func sendMessage() {
@@ -270,7 +270,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     @IBAction func showPopupToSelectImageWithSender() {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = false
-            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.sourceType = .photoLibrary
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         
@@ -312,11 +312,11 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
                 subview.removeFromSuperview()
             }
             let height =  self.view.frame.size.width*image.size.height/image.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, 0, self.view.frame.size.width, height) : CGRect(x: 0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = image
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, frameT.size.height) : CGSize(width: self.view.frame.size.width, self.view.frame.size.width)
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
@@ -326,9 +326,9 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         print("Camera roll unauthorized")
         let alert = UIAlertController(title: accessRequested, message: savingImageNeedsToAccessYourPhotoAlbum, preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(url)
+                UIApplication.shared.openURL(url)
             }
             
         }))
@@ -374,19 +374,19 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
             }
             self.imageSelected!.image = pickedImage
             let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, 0, self.view.frame.size.width, height) : CGRect(x: 0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, frameT.size.height) : CGSize(width: self.view.frame.size.width, self.view.frame.size.width)
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func cropAndSave() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.main.scale)
         let offset = imageScrolView.contentOffset
         
         CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
@@ -398,6 +398,6 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }

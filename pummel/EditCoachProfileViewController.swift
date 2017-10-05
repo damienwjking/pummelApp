@@ -63,10 +63,10 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     var isFirstTVS : Bool = false
     var sizingCell: TagCell?
     
-    var tags = [Tag]()
+    var tags = [TagModel]()
     var arrayTags : [NSDictionary] = []
     var tagIdsArray : NSMutableArray = []
-    var offset: Int = 0
+    var tagOffset: Int = 0
     var isStopGetListTag : Bool = false
     var isStopGetListCoachTag: Bool = false
     var userInfo: NSDictionary!
@@ -84,7 +84,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.navigationController!.navigationBar.isTranslucent = false;
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"DONE", style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .Normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.cancel))
@@ -157,8 +157,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.changeAvatarIMW.isUserInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(EditCoachProfileViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(EditCoachProfileViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
         self.collectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
@@ -204,73 +204,65 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         super.viewWillAppear(animated)
         self.setAvatar()
         self.updateUI()
-        offset = 0
+        self.tagOffset = 0
         isStopGetListTag = false
         self.getListTags()
     }
     
     
     func getListTags() {
-        if (isStopGetListTag == false) {
-            var listTagsLink = kPMAPI_TAG_OFFSET
-            listTagsLink.append(String(offset))
-            Alamofire.request(.GET, listTagsLink)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    self.arrayTags = JSON as! [NSDictionary]
-                    if (self.arrayTags.count > 0) {
-                        for i in 0 ..< self.arrayTags.count {
-                            let tagContent = self.arrayTags[i]
-                            let tag = Tag()
-                            tag.name = tagContent[kTitle] as? String
-                            tag.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
-                            tag.tagColor = self.getRandomColorString()
-                            self.tags.append(tag)
-                        }
-                        self.offset += 10
-                        self.collectionView.reloadData({
-                            self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
-                        })
-                    } else {
+        if (self.isStopGetListTag == false) {
+            TagRouter.getTagList(offset: self.tagOffset, completed: { (result, error) in
+                if (error == nil) {
+                    let tagList = result as! [TagModel]
+                    
+                    if (tagList.count == 0) {
                         self.isStopGetListTag = true
-                        if !(self.isStopGetListCoachTag) {
-                            var tagLink = kPMAPIUSER
-                            tagLink.append(self.currentId)
-                            tagLink.append("/tags")
-                            Alamofire.request(.GET, tagLink)
-                                .responseJSON { response in
-                                    if (response.response?.statusCode == 200) {
-                                        self.isStopGetListCoachTag = true
-                                        let tagArr = response.result.value as! [NSDictionary]
-                                        for i in 0 ..< tagArr.count {
-                                            let tagContent = tagArr[i]
-                                            let tagT = Tag()
-                                            tagT.name = tagContent[kTitle] as? String
-                                            tagT.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
-                                            tagT.tagColor = self.getRandomColorString()
-                                            let index = self.tags.indexOf({ $0.name == tagT.name
-                                            })
-                                        
-                                            if (index != nil) {
-                                                tagT.selected = true
-                                                self.tags.removeAtIndex(index!)
-                                                self.tags.insert(tagT, atIndex: index!)
-                                            }
-                                        }
-                                        self.collectionView.reloadData()                                        
-                                    }
+                        
+                        self.setSelectedForTag()
+                    } else {
+                        for tag in tagList {
+                            if (tag.existInList(tagList: self.tags) == false) {
+                                self.tags.append(tag)
+                            }
+                            
+                            self.tagOffset += 10
+                            self.collectionView.reloadData {
+                                self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
                             }
                         }
-                }
-                    
-                case .Failure(let error):
-                    print("Request failed with error: \(String(describing: error))")
                     }
-            }
-        } else
-        {
-            self.isStopGetListTag = true
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.isStopGetListTag = true
+                    
+                    self.setSelectedForTag()
+                }
+            }).fetchdata()
         }
+    }
+    
+    func setSelectedForTag() {
+        let currentUserID = PMHelper.getCurrentID()
+        UserRouter.getUserTagList(userID: currentUserID) { (result, error) in
+            if (error == nil) {
+                let tagList = result as! [TagModel]
+                
+                for tag in self.tags {
+                    if (tag.existInList(tagList: tagList) == true) {
+                        tag.selected = true
+                    }
+                }
+                
+                self.collectionView.reloadData {
+                    self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
+                }
+                
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+        }.fetchdata()
     }
     
     func updateUI() {
@@ -351,7 +343,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             
             if (self.userInfo[kDob] is NSNull == false) {
                 let stringDob = self.userInfo[kDob] as! String
-                self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
+                self.dobContentTF.text = stringDob.substring(to: stringDob.index(0, offsetBy: 10))
             }
             
             if (self.userInfo[kMobile] is NSNull == false) {
@@ -459,7 +451,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             // Tracker mixpanel
             let mixpanel = Mixpanel.sharedInstance()
             let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
-            mixpanel.track("IOS.Profile.EditProfile", properties: properties)
+            mixpanel?.track("IOS.Profile.EditProfile", properties: properties)
             
             let param = [kUserId:PMHelper.getCurrentID(),
                          kFirstname:firstname,
@@ -472,7 +464,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                          kEmergencyMobile:emergencyMobileTF.text!,
                          kFacebookUrl:facebookUrlTF.text!,
                          kTwitterUrl:twitterUrlTF.text!,
-                         kInstagramUrl:instagramUrlTF.text!,]
+                         kInstagramUrl:instagramUrlTF.text!,] as [String : Any] as [String : Any]
             
             self.view.makeToastActivity(message: "Saving")
             Alamofire.request(.PUT, prefix, parameters: param)
@@ -546,7 +538,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     func showPopupToSelectProfileAvatar() {
         let selectImageFromLibrary = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = true
-            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.sourceType = .photoLibrary
             self.imagePicker.mediaTypes = ["public.image"]
             self.present(self.imagePicker, animated: true, completion: nil)
         }
@@ -557,7 +549,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         }
 //        let takeVideoFromLibrary = { (action:UIAlertAction!) -> Void in
 //            self.imagePicker.allowsEditing = false
-//            self.imagePicker.sourceType = .PhotoLibrary
+//            self.imagePicker.sourceType = .photoLibrary
 //            self.imagePicker.mediaTypes = ["public.movie"]
 //            self.present(self.imagePicker, animated: true, completion: nil)
 //        }
@@ -579,7 +571,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     func setAvatar() {
         let currentID = PMHelper.getCurrentID()
         
-        ImageRouter.getUserAvatar(userID: currentID, sizeString: widthHeight200, completed: { (result, error) in
+        ImageVideoRouter.getUserAvatar(userID: currentID, sizeString: widthHeight200, completed: { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.avatarIMW.image = imageRes
@@ -715,15 +707,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         alertController.addAction(UIAlertAction(title: kFemaleU, style: .default, handler: selectFemale))
         
         self.present(alertController, animated: true) { }
-    }
-    
-    func getRandomColorString() -> String{
-        
-        let randomRed:CGFloat = CGFloat(drand48())
-        let randomGreen:CGFloat = CGFloat(drand48())
-        let randomBlue:CGFloat = CGFloat(drand48())
-        
-        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
     }
     
     // MARK: UIImagePickerControllerDelegate
@@ -865,11 +848,11 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             )
         }
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }
 

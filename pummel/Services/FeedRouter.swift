@@ -18,6 +18,7 @@ enum FeedRouter: URLRequestConvertible {
     case sendLikePost(postID: String, completed: CompletionBlock)
     case getDiscount(longitude: CLLocationDegrees?, latitude: CLLocationDegrees?, state: String?, country: String?, offset: Int, completed: CompletionBlock)
     case getComment(postID: String, offset: Int, limit: Int, completed: CompletionBlock)
+    case getPhotoPost(photoID: String, completed: CompletionBlock)
 
     var comletedBlock: CompletionBlock {
         switch self {
@@ -40,6 +41,9 @@ enum FeedRouter: URLRequestConvertible {
             return completed
             
         case .getComment(_, _, _, let completed):
+            return completed
+            
+        case .getPhotoPost(_, let completed):
             return completed
             
         }
@@ -68,6 +72,9 @@ enum FeedRouter: URLRequestConvertible {
         case .getComment:
             return .get
             
+        case .getPhotoPost:
+            return .get
+            
         }
     }
     
@@ -94,6 +101,9 @@ enum FeedRouter: URLRequestConvertible {
             
         case .getComment(let postID, _, _, _):
             prefix = kPMAPI_POST + postID + kPM_PATH_COMMENT
+            
+        case .getPhotoPost:
+            prefix = kPMAPI_POSTOFPHOTO
             
         }
         
@@ -135,6 +145,9 @@ enum FeedRouter: URLRequestConvertible {
         case .getComment(_, let offset, let limit, _):
             param?[kOffset] = offset
             param?[kLimit] = limit
+            
+        case .getPhotoPost(let photoID, _):
+            param?[kPhotoId] = photoID
             
         default:
             break
@@ -306,6 +319,26 @@ enum FeedRouter: URLRequestConvertible {
                 case .success(let JSON):
                     if response.response?.statusCode == 200 {
                         let result = JSON as! [NSDictionary]
+                        
+                        self.comletedBlock(result, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
+            
+        case .getPhotoPost:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: FeedRouter 8")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        let result = JSON as! NSArray
                         
                         self.comletedBlock(result, nil)
                     }

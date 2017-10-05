@@ -11,4 +11,10 @@ import UIKit
 class SettingNewConnectionsTableViewCell: UITableViewCell {
     @IBOutlet weak var newConnectionsLB: UILabel!
     @IBOutlet weak var switchBT: UISwitch!
+
+    func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.newConnectionsLB.font = .pmmMonReg11()
+    }
 }

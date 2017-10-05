@@ -11,7 +11,7 @@ import Alamofire
 import Foundation
 
 class LogSessionClientDetailViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    var tag: Tag = Tag()
+    var tag: TagModel = TagModel()
     var editSession = SessionModel()
     var userInfoSelect:NSDictionary!
     
@@ -64,7 +64,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     var caloriesSelected: String = "0"
     var longtimeSelected: String = "0"
     var priv: String = "1"
-    let timeFormatter: NSDateFormatter = DateFormatter
+    let timeFormatter: DateFormatter = DateFormatter()
     var isPublic = false
     
     override func viewDidLoad() {
@@ -114,8 +114,8 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         imageScrolView.maximumZoomScale = 4.0
         imageScrolView.zoomScale = 1.0
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -139,15 +139,15 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         let navigationBar = self.navigationController?.navigationBar
         navigationBar!.addSubview(self.titleButton)
         
-        self.titleButton.frame = CGRectMake(((navigationBar?.frame.width)! - self.titleButton.frame.width) / 2,
-                                            0,
-                                            self.titleButton.frame.width,
-                                            (navigationBar?.frame.height)!)
+        self.titleButton.frame = CGRect(x: ((navigationBar?.frame.width)! - self.titleButton.frame.width) / 2,
+                                        y: 0,
+                                        width: self.titleButton.frame.width,
+                                        height: (navigationBar?.frame.height)!)
 
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         self.setupSessionData()
     }
@@ -157,15 +157,15 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         
         self.titleButton.removeFromSuperview()
         
-        NotificationCenter.default.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     // MARK: Init
     func keyboardWillShow(notification: NSNotification) {
-        let userInfo:NSDictionary = notification.userInfo!
-        let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardRectangle = keyboardFrame.CGRectValue()
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
         
         self.backgroundKeyboardVHeightConstraint.constant = keyboardHeight
@@ -186,7 +186,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         if editSession.id != 0 {
             self.imageSelectBtn.isHidden = true
             
-            let fullDateFormatter = DateFormatter
+            let fullDateFormatter = DateFormatter()
             fullDateFormatter.dateFormat = kFullDateFormat
             let sessionDate = fullDateFormatter.date(from: self.editSession.datetime!)
             self.dateTF.text = self.timeFormatter.string(from: sessionDate!)
@@ -231,23 +231,15 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             
             if self.editSession.imageUrl?.isEmpty == false {
                 let imageLink = self.editSession.imageUrl
-                var prefix = kPMAPI
-                prefix.append(imageLink!)
-                let postfix = widthEqual.stringByAppendingString(self.imageSelected.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.imageSelected.frame.size.width.description)
-                prefix.append(postfix)
-                if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
-                    let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
-                    self.imageSelected.image = imageRes
-                } else {
-                    Alamofire.request(.GET, prefix)
-                        .responseImage { response in
-                            if (response.response?.statusCode == 200) {
-                                let imageRes = response.result.value! as UIImage
-                                self.imageSelected.image = imageRes
-                                NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                            }
+                
+                ImageVideoRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight320, completed: { (result, error) in
+                    if (error == nil) {
+                        let imageRes = result as! UIImage
+                        self.imageSelected.image = imageRes
+                    } else {
+                        print("Request failed with error: \(String(describing: error))")
                     }
-                }
+                }).fetchdata()
             }
         }
     }
@@ -277,7 +269,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         datePickerView.setValue(UIColor.white, forKey: "textColor")
         dateTF.inputView = datePickerView
         dateTF.font = UIFont.pmmMonReg13()
-        datePickerView.addTarget(self, action: #selector(self.handleDatePicker(_:)), for: .valueChanged)
+        datePickerView.addTarget(self, action: #selector(self.handleDatePicker(sender:)), for: .valueChanged)
         
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
@@ -290,23 +282,23 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         self.contentTV.keyboardAppearance = .dark
         self.contentTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.contentTV.delegate = self
-        self.contentTV.selectedTextRange = self.contentTV.textRange(from:   self.contentTV.beginningOfDocument, toPosition:self.contentTV.beginningOfDocument)
+        self.contentTV.selectedTextRange = self.contentTV.textRange(from:   self.contentTV.beginningOfDocument, to:self.contentTV.beginningOfDocument)
     }
     
     func initTime() {
         let timePickerView  : UIDatePicker = UIDatePicker()
-        timePickerView.datePickerMode = .Time
+        timePickerView.datePickerMode = .time
         timePickerView.backgroundColor = UIColor.black
         timePickerView.setValue(UIColor.white, forKey: "textColor")
-        timePickerView.locale = NSLocale(localeIdentifier: "en_GB")
+        timePickerView.locale = NSLocale(localeIdentifier: "en_GB") as Locale
         timeTF.inputView = timePickerView
-        timePickerView.addTarget(self, action: #selector(self.handleTimePicker(_:)), for: .valueChanged)
+        timePickerView.addTarget(self, action: #selector(self.handleTimePicker(sender:)), for: .valueChanged)
         
         let calendar = NSCalendar.current
         let components = NSDateComponents()
         components.hour = 0
         components.minute = 30
-        let defaultDate = calendar.dateFromComponents(components)
+        let defaultDate = calendar.date(from: components as DateComponents)
         timePickerView.date = defaultDate!
         
 //        self.setTimeLBWithDate(NSDate())
@@ -355,15 +347,15 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     }
     
     func convertLocalTimeToUTCTime(dateTimeString: String) -> String {
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
         
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        dateFormatter.timeZone = NSTimeZone.local
         let date = dateFormatter.date(from: dateTimeString)
         
-        let newDateFormatter = DateFormatter
+        let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
-        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
         let newDateString = newDateFormatter.string(from: date!)
         
         return newDateString
@@ -393,43 +385,20 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     
     func saveClicked() {
         if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
-            
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseInputADate, preferredStyle: .alert)
-            
-            
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true) {
-                // ...
-            }
+            PMHelper.showNoticeAlert(message: pleaseInputADate)
         } else {
-            self.view.makeToastActivity(message: "Saving")
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            
-            var imageData : NSData!
-            let type : String! = imageJpeg
-            let filename : String! = jpgeFile
-            
             var userIdSelected = ""
             if self.userInfoSelect != nil {
                 if let val = self.userInfoSelect["userId"] as? Int {
                     userIdSelected = "\(val)"
                 }
-                prefix = kPMAPICOACH
-                prefix.append(PMHelper.getCurrentID())
-                prefix.append(kPM_PATH_LOG_ACTIVITIES_COACH)
-            } else {
-                prefix.append(kPM_PATH_LOG_ACTIVITIES_USER)
             }
             
             let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
-            let selectedDate = self.convertLocalTimeToUTCTime(self.dateTF.text!)
+            let selectedDate = self.convertLocalTimeToUTCTime(dateTimeString: self.dateTF.text!)
             
             var distanceSelected = ""
-            if Double(self.distanceSelected) > 0 {
+            if (self.distanceSelected as NSString).floatValue > 0 {
                 let distanceUnit = self.defaults.object(forKey: kUnit) as? String
                 if (distanceUnit == metric) {
                     distanceSelected = String(format: "%0.1f", Double(self.distanceSelected)!)
@@ -440,82 +409,35 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 }
             }
             
-            let parameters = [
-                kUserId      :PMHelper.getCurrentID(),
-                kText        : (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "...",
-                kType        :String(format: "#%@", (self.tag.name?.uppercased())!),
-                kIntensity   : self.intensitySelected,
-                kDistance    : distanceSelected,
-                kLongtime    : self.longtimeSelected,
-                kCalorie     : calorieSelected,
-                kDatetime    : selectedDate,
-                kUserIdTarget:userIdSelected
-            ]
-
+            var imageData : NSData!
             if (self.imageSelected.image != nil) {
-                imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+                imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2)! as NSData : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as NSData
             }
             
+            let currentUserID = PMHelper.getCurrentID()
+            let message = (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "..."
+            let type = "#" + (self.tag.name?.uppercased())!
             
-            Alamofire.upload(
-                .POST,
-                prefix,
-                multipartFormData: { multipartFormData in
-                    if (self.imageSelected.image != nil) {
-                        multipartFormData.appendBodyPart(data: imageData, name: "file",
-                            fileName:filename, mimeType:type)
-                        multipartFormData.appendBodyPart(data: self.priv.dataUsingEncoding(NSUTF8StringEncoding)!, name: "priv")
-                    }
-
-                    for (key, value) in parameters {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key )
-                    }
-                    
-                },
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                    case .Success(let upload, _, _):
-                        
-                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                            dispatch_async(dispatch_get_main_queue()) {
-                                //                            let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                            }
-                        }
-                        upload.validate()
-                        upload.responseJSON { response in
-                            self.view.hideToastActivity()
-                            if response.result.error != nil {
-                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                                
-                                
-                                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                                    // ...
-                                }
-                                alertController.addAction(OKAction)
-                                self.present(alertController, animated: true) {
-                                    // ...
-                                }
-                            } else {
-                                self.navigationController?.popToRootViewController(animated: false)
-                            }
-                        }
-                        
-                    case .Failure( _):
-                        self.view.hideToastActivity()
-                        
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                        
-                        
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                    }
-                }
-            )
+            self.view.makeToastActivity(message: "Saving")
+            SessionRouter.postLogSession(userID: currentUserID,
+                                         targetUserID: userIdSelected,
+                                         message: message!,
+                                         type: type,
+                                         intensity: self.intensitySelected,
+                                         distance: distanceSelected,
+                                         longtime: self.longtimeSelected,
+                                         calorie: calorieSelected,
+                                         dateTime: selectedDate,
+                                         imageData: imageData as Data, completed: { (result, error) in
+                                            self.view.hideToastActivity()
+                                            
+                                            let isPostSuccess = result as! Bool
+                                            if (isPostSuccess == true) {
+                                                self.navigationController?.popToRootViewController(animated: false)
+                                            } else {
+                                                PMHelper.showDoAgainAlert()
+                                            }
+            }).fetchdata()
         }
     }
     
@@ -524,11 +446,11 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         var prefix = kPMAPIACTIVITY
         prefix.append(String(format:"%ld", self.editSession.id))
         
-        let dateSelected = self.convertLocalTimeToUTCTime(self.dateTF.text!)
+        let dateSelected = self.convertLocalTimeToUTCTime(dateTimeString: self.dateTF.text!)
         let calorieSelected : String = String((self.caloriesLB.text != "") ? Int(self.caloriesLB.text!)! : 0)
         
         var distanceSelected = ""
-        if Double(self.distanceSelected) > 0 {
+        if (self.distanceSelected as NSString).floatValue > 0 {
             let distanceUnit = self.defaults.object(forKey: kUnit) as? String
             if (distanceUnit == metric) {
                 distanceSelected = String(format: "%0.1f", Double(self.distanceSelected)!)
@@ -539,69 +461,56 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             }
         }
         
-        let parameters = [
-            kActivityId : String(format:"%ld", self.editSession.id),
-            kText       : self.contentTV.text,
-            kIntensity  : self.intensitySelected,
-            kDistance   : distanceSelected,
-            kLongtime   : self.longtimeSelected,
-            kCalorie    : calorieSelected,
-            kDatetime   : dateSelected,
-        ]
-        
-        Alamofire.request(.PUT, prefix, parameters: parameters)
-            .responseJSON { response in
-                self.view.hideToastActivity()
+        SessionRouter.editLogSession(sessionID: "\(self.editSession.id)",
+            message:   self.contentTV.text,
+            intensity: self.intensitySelected,
+            distance:  distanceSelected,
+            longtime:  self.longtimeSelected,
+            calorie:   calorieSelected,
+            dateTime:  dateSelected) { (result, error) in
+            self.view.hideToastActivity()
+            
+            let isEditSuccess = result as! Bool
+            if (isEditSuccess == true) {
+                self.navigationController?.popViewController(animated: true)
                 
-                if response.response?.statusCode == 200 {
-                    self.navigationController?.popViewController(animated: true)
-                    
-                    self.editSession.text = self.contentTV.text
-                    self.editSession.calorie = Int(calorieSelected)!
-                    self.editSession.intensity = self.intensitySelected
-                    
-                    self.editSession.longtime = Int(self.longtimeSelected)!
-                    
-                    
-                    let distanceUnit = self.defaults.object(forKey: kUnit) as? String
-                    if (distanceUnit == metric) {
-                        self.editSession.distance = Double(self.distanceSelected)
-                    } else {
-                        self.editSession.distance = Double(self.distanceSelected)! * 1.61
-                    }
-                    
-                    let newDateFormatter = DateFormatter
-                    newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
-                    newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
-                    let date = newDateFormatter.date(from: dateSelected)
-                    
-                    let timeFormatter = DateFormatter
-                    timeFormatter.dateFormat = kFullDateFormat
-                    timeFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
-                    
-                    self.editSession.datetime = timeFormatter.string(from: date!)
-                    
-                    NotificationCenter.default.post(name: k_PM_UPDATE_SESSION_NOTIFICATION, object: self.editSession)
-                    
-                } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
+                self.editSession.text = self.contentTV.text
+                self.editSession.calorie = Int(calorieSelected)!
+                self.editSession.intensity = self.intensitySelected
+                
+                self.editSession.longtime = Int(self.longtimeSelected)!
+                
+                
+                let distanceUnit = self.defaults.object(forKey: kUnit) as? String
+                if (distanceUnit == metric) {
+                    self.editSession.distance = Double(self.distanceSelected)
+                } else {
+                    self.editSession.distance = Double(self.distanceSelected)! * 1.61
                 }
-        }
+                
+                let newDateFormatter = DateFormatter()
+                newDateFormatter.dateFormat = "MMM dd, yyyy hh:mm aaa"
+                newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
+                let date = newDateFormatter.date(from: dateSelected)
+                
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = kFullDateFormat
+                timeFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
+                
+                self.editSession.datetime = timeFormatter.string(from: date!)
+                
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_UPDATE_SESSION_NOTIFICATION), object: self.editSession)
+            }
+            
+        }.fetchdata()
     }
 
     func cropAndSave() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.mainScreen().scale)
+        UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.main.scale)
         let offset = imageScrolView.contentOffset
         
-        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
-        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        UIGraphicsGetCurrentContext()!.translateBy(x: -offset.x, y: -offset.y)
+        imageScrolView.layer.render(in: UIGraphicsGetCurrentContext()!)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         
@@ -609,46 +518,34 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     }
 
     func setTimeLBWithDate(date: NSDate) {
-        let clockTimeFormatter = DateFormatter
+        let clockTimeFormatter = DateFormatter()
         clockTimeFormatter.dateFormat = "HH"
-        hourLB.text = clockTimeFormatter.string(from: date)
+        hourLB.text = clockTimeFormatter.string(from: date as Date)
         
         clockTimeFormatter.dateFormat = "mm"
-        minuteLB.text = clockTimeFormatter.string(from: date)
+        minuteLB.text = clockTimeFormatter.string(from: date as Date)
         let total = Int(hourLB.text!)!*60 + Int(minuteLB.text!)!
         self.longtimeSelected = String(total)
     }
     
     func getDetail() {
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    if (response.result.value == nil) {return}
-                    self.coachDetail = response.result.value as! NSDictionary
-                    self.setAvatar()
-                } else if response.response?.statusCode == 401 {
-                    let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // TODO: LOGOUT
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                }
-        }
+        UserRouter.getCurrentUserInfo { (result, error) in
+            if (error == nil) {
+                self.coachDetail = result as! NSDictionary
+                self.setAvatar()
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+        }.fetchdata()
     }
     
     func setAvatar() {
         // avatar of User
         if self.editSession.userId == 0 {
-            if !(coachDetail[kImageUrl] is NSNull) {
+            if (coachDetail[kImageUrl] is NSNull == false) {
                 let imageLink = coachDetail[kImageUrl] as! String
-                let imageSize = widthEqual.stringByAppendingString(avatarIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(avatarIMV.frame.size.width.description)
                 
-                ImageRouter.getImage(imageURLString: imageLink, sizeString: imageSize, completed: { (result, error) in
+                ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeight200, completed: { (result, error) in
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         self.avatarIMV.image = imageRes
@@ -660,7 +557,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         } else {
             let targetUserId = "\(self.editSession.userId)"
             
-            ImageRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160, completed: { (result, error) in
+            ImageVideoRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight200, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.avatarIMV.image = imageRes
@@ -687,7 +584,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             targetUserId = "\(self.editSession.coachId)"
         }
         
-        ImageRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
+        ImageVideoRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage
                 self.avatarUserIMV.image = imageRes
@@ -700,7 +597,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     @IBAction func showPopupToSelectImage(sender: AnyObject) {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = false
-            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.sourceType = .photoLibrary
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         
@@ -721,7 +618,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
     }
     
     func handleTimePicker(sender: UIDatePicker) {
-        self.setTimeLBWithDate(sender.date)
+        self.setTimeLBWithDate(date: sender.date as NSDate)
     }
     
     func showCameraRoll() {
@@ -745,11 +642,11 @@ extension LogSessionClientDetailViewController: FusumaDelegate {
                 subview.removeFromSuperview()
             }
             let height =  self.view.frame.size.width*image.size.height/image.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = image
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
@@ -759,14 +656,14 @@ extension LogSessionClientDetailViewController: FusumaDelegate {
         print("Camera roll unauthorized")
         let alert = UIAlertController(title: accessRequested, message: savingImageNeedsToAccessYourPhotoAlbum, preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Settings", style: .Default, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(url)
+                UIApplication.shared.openURL(url as URL)
             }
             
         }))
         
-        alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
         }))
         
         self.present(alert, animated: true, completion: nil)
@@ -780,19 +677,19 @@ extension LogSessionClientDetailViewController: FusumaDelegate {
             }
             self.imageSelected!.image = pickedImage
             let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
-            let frameT = (height > self.view.frame.width) ? CGRectMake(0, 0, self.view.frame.size.width, height) : CGRectMake(0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(x:self.view.frame.size.width, frameT.size.height) : CGSize(x:self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
@@ -801,12 +698,12 @@ extension LogSessionClientDetailViewController: FusumaDelegate {
 }
 
 // MARK: UIPickerViewDelegate
-extension LogSessionClientDetailViewController: UIPickerViewDelegate,UIPickerViewDataSource {
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1;
+extension LogSessionClientDetailViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView == self.distancePickerView {
             return 100;
         }
@@ -822,7 +719,7 @@ extension LogSessionClientDetailViewController: UIPickerViewDelegate,UIPickerVie
         return 0
     }
     
-    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         var title = ""
         
         if pickerView == self.distancePickerView {
@@ -844,7 +741,7 @@ extension LogSessionClientDetailViewController: UIPickerViewDelegate,UIPickerVie
         return attString;
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == self.distancePickerView {
             return String(format: "%ld", row)
         }
@@ -860,7 +757,7 @@ extension LogSessionClientDetailViewController: UIPickerViewDelegate,UIPickerVie
         return "";
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == self.distancePickerView {
             self.distanceLB.text = String(format: "%ld", row)
             self.distanceSelected = String(format: "%ld", row)
@@ -878,34 +775,34 @@ extension LogSessionClientDetailViewController: UIPickerViewDelegate,UIPickerVie
 
 // MARK: UITextFieldDelegate - UITextViewDelegate
 extension LogSessionClientDetailViewController : UITextFieldDelegate, UITextViewDelegate{
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         self.tappedV.isUserInteractionEnabled = true
         
         return true
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == self.caloriesTF {
             self.caloriesPickerView.selectRow(50, inComponent: 0, animated: true)
         }
     }
     
-    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         self.tappedV.isUserInteractionEnabled = true
         
         return true
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-        let currentText:NSString = textView.text
-        let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
+        let currentText:NSString = textView.text! as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with:text)
         if updatedText.isEmpty {
             
             textView.text = addAComment
             textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
             
-            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             
             return false
         }
@@ -917,10 +814,10 @@ extension LogSessionClientDetailViewController : UITextFieldDelegate, UITextView
         return true
     }
     
-    func textViewDidChangeSelection(textView: UITextView) {
+    func textViewDidChangeSelection(_ textView: UITextView) {
         if self.view.window != nil {
             if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             }
         }
     }

@@ -40,7 +40,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         // Shadow
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.25
-        layer.shadowOffset = CGSize(x:0, 1.5)
+        layer.shadowOffset = CGSize(width: 0, 1.5)
         layer.shadowRadius = 4.0
         layer.shouldRasterize = true
         layer.rasterizationScale = SCREEN_SCALE

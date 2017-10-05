@@ -196,8 +196,8 @@ extension BookSessionShareViewController {
                     urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
                     
                     let mailURL = NSURL(string: urlString)
-                    if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
-                        UIApplication.sharedApplication().openURL(mailURL!)
+                    if (UIApplication.shared.canOpenURL(mailURL!)) {
+                        UIApplication.shared.openURL(mailURL!)
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -212,8 +212,8 @@ extension BookSessionShareViewController {
             urlString = urlString.stringByAppendingString(phoneNumber!)
             
             let tellURL = NSURL(string: urlString)
-            if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
-                UIApplication.sharedApplication().openURL(tellURL!)
+            if (UIApplication.shared.canOpenURL(tellURL!)) {
+                UIApplication.shared.openURL(tellURL!)
             }
         }
         
@@ -303,8 +303,8 @@ extension BookSessionShareViewController {
                     urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
                     
                     let mailURL = NSURL(string: urlString)
-                    if (UIApplication.sharedApplication().canOpenURL(mailURL!)) {
-                        UIApplication.sharedApplication().openURL(mailURL!)
+                    if (UIApplication.shared.canOpenURL(mailURL!)) {
+                        UIApplication.shared.openURL(mailURL!)
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -322,8 +322,8 @@ extension BookSessionShareViewController {
                 urlString = urlString.stringByAppendingString(phoneNumber)
                 
                 let tellURL = NSURL(string: urlString)
-                if (UIApplication.sharedApplication().canOpenURL(tellURL!)) {
-                    UIApplication.sharedApplication().openURL(tellURL!)
+                if (UIApplication.shared.canOpenURL(tellURL!)) {
+                    UIApplication.shared.openURL(tellURL!)
                 }
             }
         }

@@ -11,17 +11,16 @@ import Foundation
 import Alamofire
 
 
-class LogSessionClientViewController: BaseViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
+class LogSessionClientViewController: BaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var tags = [Tag]()
+    var tags = [TagModel]()
     var arrayTags : [NSDictionary] = []
     var isStopGetListTag = false
-    var offset: Int = 0
+    var tagOffset: Int = 0
     var sizingCell: ActivityCell?
-    var bodyBuildingTag = Tag()
     var editSession = SessionModel()
     var isEditSession = false
     @IBOutlet weak var flowLayout: FlowLayout!
@@ -87,94 +86,62 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
     // MARK: Private function
     func getListTags() {
         if (isStopGetListTag == false) {
-            var listTagsLink = kPMAPI_TAG4_OFFSET
-            listTagsLink.append(String(self.offset))
-            Alamofire.request(.GET, listTagsLink)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    self.arrayTags = JSON as! [NSDictionary]
-                    if (self.arrayTags.count > 0) {
-                        for i in 0 ..< self.arrayTags.count {
-                            let tagContent = self.arrayTags[i]
-                            let tag = Tag()
-                            tag.name = tagContent[kTitle] as? String
-                            tag.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
-                            tag.tagColor = self.getRandomColorString()
-                            tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
-                            
-                            // get body building tag to set color for ccling tag
-                            if tag.name?.uppercased() == "body building".uppercased() {
-                                self.bodyBuildingTag = tag
-                            }
-                            
-                            if tag.name?.uppercased() == "Cycling".uppercased() {
-                                if (self.bodyBuildingTag.tagColor?.isEmpty == false) {
-                                    tag.tagColor = self.bodyBuildingTag.tagColor
-                                }
-                            }
-                            
-                            self.tags.append(tag)
-                        }
-                        self.offset += 10
-                        
-//                        self.collectionView.reloadData()
-                        self.tableView.reloadData()
-                    } else {
-                        self.isStopGetListTag = true
-                    }
+            TagRouter.getTagList(offset: self.tagOffset, completed: { (result, error) in
+                if (error == nil) {
+                    let tagList = result as! [TagModel]
                     
-                case .Failure(let error):
-                    print("Request failed with error: \(String(describing: error))")
+                    if (tagList.count == 0) {
+                        self.isStopGetListTag = true
+                    } else {
+                        for tag in tagList {
+                            if (tag.existInList(tagList: self.tags) == false) {
+                                self.tags.append(tag)
+                            }
+                        }
+                        
+                        self.tagOffset += 10
+                        
+                        self.collectionView.reloadData()
+                        self.tableView.reloadData()
                     }
-            }
-        } else {
-            self.isStopGetListTag = true
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.isStopGetListTag = true
+                }
+            }).fetchdata()
         }
-    }
-    
-    func getRandomColorString() -> String{
-        
-        let randomRed:CGFloat = CGFloat(drand48())
-        let randomGreen:CGFloat = CGFloat(drand48())
-        let randomBlue:CGFloat = CGFloat(drand48())
-        
-        return String(format: "#%02x%02x%02x%02x", Int(randomRed*255), Int(randomGreen*255),Int(randomBlue*255),255)
     }
     
     func backClicked() {
         self.navigationController?.popViewController(animated: true)
     }
     
-    // MARK: UICOLLECTION
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tags.count
+    // MARK: Segue
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "goLogSessionDetail" {
+            let destination = segue.destination as! LogSessionClientDetailViewController
+            
+            if sender == nil {
+               destination.editSession = self.editSession
+                self.editSession = SessionModel()
+                self.isEditSession = true
+                
+                let view = UIView(frame: self.view.bounds)
+                view.backgroundColor = UIColor.white
+                self.view.addSubview(view)
+            } else {
+               destination.tag = (sender as! TagModel)
+            }
+        } else if segue.identifier == "selectUser" {
+            let destination = segue.destination as! LogSessionSelectUserViewController
+            destination.tag = sender as? TagModel
+        }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kActivityCell, for: indexPath) as! ActivityCell
-        
-        self.configureCell(cell: cell, forIndexPath: indexPath as NSIndexPath)
-        
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath as NSIndexPath)
-        return (self.sizingCell?.systemLayoutSizeFitting(UILayoutFittingCompressedSize))!
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "selectUser", sender: nil)
-    }
-    
-    func configureCell(cell: ActivityCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name?.uppercased()
-        cell.tagBackgroundV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
-    }
-    
-    
-    //MARK: TableView
+}
+
+// MARK: - UITableViewDelegate
+extension LogSessionClientViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
@@ -187,7 +154,7 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
         let cell = tableView.dequeueReusableCell(withIdentifier: "LogSessionTableViewCell") as! LogSessionTableViewCell
         
         let tag = tags[indexPath.row]
-//        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercased())!)
+        //        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercased())!)
         let tagName = tag.name?.uppercased()
         cell.LogTitleLB.text = tagName
         cell.tagTypeLabel.text = ""
@@ -216,27 +183,34 @@ class LogSessionClientViewController: BaseViewController, UICollectionViewDelega
             self.performSegue(withIdentifier: "goLogSessionDetail", sender: tag)
         }
     }
-    
-    // MARK: Segue
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "goLogSessionDetail" {
-            let destination = segue.destination as! LogSessionClientDetailViewController
-            
-            if sender == nil {
-               destination.editSession = self.editSession
-                self.editSession = SessionModel()
-                self.isEditSession = true
-                
-                let view = UIView(frame: self.view.bounds)
-                view.backgroundColor = UIColor.white
-                self.view.addSubview(view)
-            } else {
-               destination.tag = (sender as! Tag)
-            }
-        } else if segue.identifier == "selectUser" {
-            let destination = segue.destination as! LogSessionSelectUserViewController
-            destination.tag = sender as? Tag
-        }
+}
+
+// MARK: - UICollectionViewDelegate
+extension LogSessionClientViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tags.count
     }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kActivityCell, for: indexPath) as! ActivityCell
+        
+        self.configureCell(cell: cell, forIndexPath: indexPath as NSIndexPath)
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath as NSIndexPath)
+        return (self.sizingCell?.systemLayoutSizeFitting(UILayoutFittingCompressedSize))!
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "selectUser", sender: nil)
+    }
+    
+    func configureCell(cell: ActivityCell, forIndexPath indexPath: NSIndexPath) {
+        let tag = tags[indexPath.row]
+        cell.tagName.text = tag.name?.uppercased()
+        cell.tagBackgroundV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+    }
 }

@@ -19,7 +19,7 @@ class LogSessionSelectUserViewController: BaseViewController {
     var arrayOld: [NSDictionary] = []
     var offsetOld: Int = 0
     let defaults = UserDefaults.standard
-    var tag:Tag?
+    var tag:TagModel?
     var userInfoSelect:NSDictionary!
     
     override func viewDidLoad() {
@@ -29,9 +29,9 @@ class LogSessionSelectUserViewController: BaseViewController {
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.leftBarButtonClicked))
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(getter: self.next))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kNext.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.rightBarButtonClicked))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         
         let nibName = UINib(nibName: "BookUserTableViewCell", bundle:nil)
@@ -54,9 +54,7 @@ class LogSessionSelectUserViewController: BaseViewController {
             prefix.append("\(offsetOld)")
         }
         
-        
-        
-        .request(.GET, prefix)
+        Alamofire.request(.GET, prefix)
             .responseJSON { response in switch response.result {
             case .Success(let JSON):
                 if let arrayMessageT = JSON as? [NSDictionary] {
@@ -92,18 +90,13 @@ class LogSessionSelectUserViewController: BaseViewController {
         }
     }
     
-    func cancel() {
+    func leftBarButtonClicked() {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func next() {
+    func rightBarButtonClicked() {
         self.userInfoSelect = nil
         self.performSegue(withIdentifier: "goLogSessionDetail", sender: nil)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -189,7 +182,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                         let imageURLString = userInfo[kImageUrl] as? String
                         
                         if (imageURLString?.isEmpty == false) {
-                            ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
+                            ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
                                 let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                 if visibleCell == true {
                                     if (error == nil) {

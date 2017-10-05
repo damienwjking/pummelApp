@@ -51,7 +51,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", for: indexPath) as! LeadAddedCollectionViewCell
 
-        ImageRouter.getUserAvatar(userID: self.idUser, sizeString: widthHeight160) { (result, error) in
+        ImageVideoRouter.getUserAvatar(userID: self.idUser, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {
                 let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
                 if (updateCell != nil) {

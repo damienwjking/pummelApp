@@ -38,14 +38,14 @@ class LoginAndRegisterViewController: UIViewController {
         
         // Add loginVC
         self.addChildViewController(loginVC)
-        loginVC.didMoveToParentViewController(self)
-        loginVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width,  self.view.frame.size.height - 251)
+        loginVC.didMove(toParentViewController: self)
+        loginVC.view.frame = CGRect(x: 0, 251, self.view.frame.size.width,  self.view.frame.size.height - 251)
         self.view.addSubview(loginVC.view)
         
         // Add registerVC and hidden it for initial
         self.addChildViewController(signupVC)
-        signupVC.didMoveToParentViewController(self)
-        signupVC.view.frame = CGRectMake(0, 251, self.view.frame.size.width, self.view.frame.size.height - 251)
+        signupVC.didMove(toParentViewController: self)
+        signupVC.view.frame = CGRect(x: 0, 251, self.view.frame.size.width, self.view.frame.size.height - 251)
         self.view.addSubview(signupVC.view)
         
         self.updateLoginScreen()
@@ -74,8 +74,8 @@ class LoginAndRegisterViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     func loginSuccessAction() {
@@ -94,7 +94,7 @@ class LoginAndRegisterViewController: UIViewController {
             self.imageData = UIImageJPEGRepresentation(noImage!, 0.5)
         }
         
-        ImageRouter.currentUserUploadAvatar(imageData: self.imageData) { (result, error) in
+        ImageVideoRouter.currentUserUploadAvatar(imageData: self.imageData) { (result, error) in
             self.view.hideToastActivity()
             
             let isSuccess = result as! Bool
@@ -163,7 +163,7 @@ class LoginAndRegisterViewController: UIViewController {
     func showPopupToSelectProfileAvatar() {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = false
-            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.sourceType = .photoLibrary
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         
@@ -187,7 +187,7 @@ class LoginAndRegisterViewController: UIViewController {
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Select Profile"]
-        mixpanel.track("IOS.Register", properties: properties)
+        mixpanel?.track("IOS.Register", properties: properties)
     }
     
     func checkDateChanged(testStr:String) -> Bool {
@@ -225,10 +225,10 @@ extension LoginAndRegisterViewController: UIImagePickerControllerDelegate, UINav
             self.addProfilePhototLB.textColor = UIColor(white: 225, alpha: 1.0)
         }
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }

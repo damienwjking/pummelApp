@@ -89,7 +89,7 @@ class PostTestimonialViewController: UIViewController {
                 
                 let imageURL = userInfo[kImageUrl] as? String
                 if (imageURL != nil) {
-                    ImageRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight160, completed: { (result, error) in
+                    ImageVideoRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight160, completed: { (result, error) in
                         if (error == nil) {
                             let image = result as! UIImage
                             
@@ -116,7 +116,7 @@ class PostTestimonialViewController: UIViewController {
                 
                 let imageURL = userInfo[kImageUrl] as? String
                 if (imageURL != nil) {
-                    ImageRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight160, completed: { (result, error) in
+                    ImageVideoRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight160, completed: { (result, error) in
                         if (error == nil) {
                             let image = result as! UIImage
                             
@@ -168,7 +168,7 @@ class PostTestimonialViewController: UIViewController {
         
         UserRouter.postTestimonial(userID: self.userID, description: description, location: location!, rating: rating) { (result, error) in
             if (error == nil) {
-                self.dismissViewControllerAnimated(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
             } else {
                 PMHelper.showDoAgainAlert()
             }
@@ -176,7 +176,7 @@ class PostTestimonialViewController: UIViewController {
     }
     
     @IBAction func cancelButtonClicked(sender: AnyObject) {
-        self.dismissViewControllerAnimated(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     func ratingTapped(gesture: UITapGestureRecognizer) {

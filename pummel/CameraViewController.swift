@@ -39,7 +39,7 @@ class CameraViewController: UIViewController {
         let imagePicker = UIImagePickerController()
         
         imagePicker.allowsEditing = false
-        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.sourceType = .photoLibrary
         imagePicker.mediaTypes = ["public.movie"]
         
         return imagePicker
@@ -274,7 +274,7 @@ class CameraViewController: UIViewController {
         let cropWidth = minWidthHeightVideo
         let cropHeight = minWidthHeightVideo
         
-        videoComposition.renderSize = CGSize(x:cropWidth, cropHeight)
+        videoComposition.renderSize = CGSize(width: cropWidth, cropHeight)
         
         
         let videoOrientation = self.orientationForTrack(assetTrack)
@@ -388,7 +388,7 @@ class CameraViewController: UIViewController {
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
                         PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
                     }) { completed, error in
-                        self.dismissViewControllerAnimated(animated: true, completion: nil)
+                        self.dismiss(animated: true, completion: nil)
                     }
                 })
             }
@@ -438,9 +438,9 @@ class CameraViewController: UIViewController {
                         self.recordStatus = .pending
                         
                         if (response.response?.statusCode == 200) {
-                            NotificationCenter.default.post(name: "profileGetDetail", object: nil, userInfo: nil)
+                            NotificationCenter.default.post(name: "PROFILE_GET_DETAIL", object: nil, userInfo: nil)
                             
-                            self.dismissViewControllerAnimated(animated: true, completion: nil)
+                            self.dismiss(animated: true, completion: nil)
                         } else {
                             let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .alert)
                             let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
@@ -477,7 +477,7 @@ class CameraViewController: UIViewController {
         let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .alert)
         
         let settingsAction = UIAlertAction(title: "Settings", style: .default) { (action) in
-            UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
+            UIApplication.shared.openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
         }
         
         alertController.addAction(settingsAction)
@@ -489,7 +489,7 @@ class CameraViewController: UIViewController {
     
     @IBAction func closeButtonClicked(sender: AnyObject) {
         if (self.recordStatus != .uploading) {
-            self.dismissViewControllerAnimated(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -532,9 +532,9 @@ class CameraViewController: UIViewController {
                 self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
                 
                 // Notification for upload video in background
-                NotificationCenter.default.post(name: "profileUploadVideo", object: self.videoURL)
+                NotificationCenter.default.post(name: "PROFILE_UPLOAD_VIDEO", object: self.videoURL)
                 
-                self.dismissViewControllerAnimated(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
             }
         } else {
             self.showSettingAlert()

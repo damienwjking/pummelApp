@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:pummel/Model.swift/TagModel.swift">
+   </FileRef>
+   <FileRef
       location = "group:pummel.xcodeproj">
    </FileRef>
    <FileRef

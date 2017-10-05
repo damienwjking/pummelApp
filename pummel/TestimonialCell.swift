@@ -33,9 +33,8 @@ class TestimonialCell: UICollectionViewCell {
         self.avatarImageView.layer.borderWidth = 0 // No border
         
         self.avatarImageView.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer { (_) in
-            self.avatarImageViewClicked()
-        }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.avatarImageViewClicked))
+        
         self.avatarImageView.addGestureRecognizer(tapGesture)
     }
 
@@ -76,7 +75,7 @@ class TestimonialCell: UICollectionViewCell {
                     
                     let imageURL = userInfo[kImageUrl] as? String
                     if (imageURL != nil && imageURL?.isEmpty == false) {
-                        ImageRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight120) { (result, error) in
+                        ImageVideoRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight120) { (result, error) in
                             testimonial.needUpdate = false
                             
                             if (error == nil) {

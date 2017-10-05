@@ -190,7 +190,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         if (self.stopSearch == false) {
             var param : [String: AnyObject] = [:];
             
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
             var prefix = kPMAPICOACH_SEARCHV3
             
@@ -338,7 +338,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Refine"]
-        mixpanel.track("IOS.Search", properties: properties)
+        mixpanel?.track("IOS.Search", properties: properties)
     }
     
     func updateLBadge(notification: NSNotification) {
@@ -392,7 +392,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     }
     
     func expandCollapseCoachView(isExpand: Bool) {
-        self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = false
+        self.tabBarController?.navigationItem.leftBarButtonItem?.isEnabled = false
         
         if (isExpand == true) {
             self.horizontalViewHeightConstraint.constant = 120
@@ -412,7 +412,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             }) { (_) in
                 self.separeateline.isHidden = false
                 
-                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
+                self.tabBarController?.navigationItem.leftBarButtonItem?.isEnabled = true
             }
         } else {
             self.horizontalViewHeightConstraint.constant = 0
@@ -432,7 +432,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             }) { (_) in
                 self.separeateline.isHidden = false
                 
-                self.tabBarController?.navigationItem.leftBarButtonItem?.enabled = true
+                self.tabBarController?.navigationItem.leftBarButtonItem?.isEnabled = true
             }
         }
     }
@@ -492,7 +492,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         let cellId = "HorizontalCell"
         var cell:HorizontalCell? = tableView.dequeueReusableCell(withIdentifier: cellId) as? HorizontalCell
         if cell == nil {
-            cell = NSBundle.mainBundle().loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
+            cell = Bundle.main.loadNibNamed(cellId, owner: nil, options: nil)!.first as? HorizontalCell
             cell!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2.0))
         }
         cell!.addButton.isHidden = true
@@ -530,7 +530,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         if (coach.imageUrl != nil) {
             let imageURLString = coach.imageUrl
             
-            ImageRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
+            ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                         let imageRes = result as! UIImage
                         cell.imageV.image = imageRes
@@ -656,7 +656,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 if (coachDetail[kBusinessId] is NSNull == false) {
                     let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
                     
-                    ImageRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
+                    ImageVideoRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
                         if (error == nil) {
                             cell.cardView.connectV.isHidden = false
                             
