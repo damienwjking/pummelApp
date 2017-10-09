@@ -14,19 +14,19 @@ class ContactUserCell : UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.imageView?.frame = CGRect(x: 10, 10, 40, 40)
+        self.imageView?.frame = CGRect(x: 10, y: 10, width: 40, height: 40)
         self.imageView?.layer.cornerRadius = 20
         self.imageView?.layer.masksToBounds = true
         
         self.textLabel?.font = UIFont.pmmMonReg13()
-        self.textLabel?.textColor = UIColor.darkGrayColor()
-        self.textLabel?.frame = CGRect(x: 60, 5, self.frame.width - 60, self.frame.height - 15)
+        self.textLabel?.textColor = UIColor.darkGray
+        self.textLabel?.frame = CGRect(x: 60, y: 5, width: self.frame.width - 60, height: self.frame.height - 15)
         
         self.detailTextLabel?.font = UIFont.pmmMonReg11()
         self.detailTextLabel?.textColor = UIColor.lightGray
-        self.detailTextLabel?.frame = CGRect(x: 60, self.frame.height - 25, self.frame.width - 60, 20)
+        self.detailTextLabel?.frame = CGRect(x: 60, y: self.frame.height - 25, width: self.frame.width - 60, height: 20)
         
-        self.bringSubviewToFront(self.textLabel!)
+        self.bringSubview(toFront: self.textLabel!)
         
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
     }
@@ -70,29 +70,29 @@ class ContactUserViewController: BaseViewController {
     // MARK: Private function
     func getAllContact() {
         // You may add more "keys" to fetch referred to official documentation
-        let keysToFetch = [CNContactFormatter.descriptorForRequiredKeysForStyle(.FullName),
+        let keysToFetch = [CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
                            CNContactEmailAddressesKey,
                            CNContactPhoneNumbersKey,
                            CNContactImageDataAvailableKey,
                            CNContactThumbnailImageDataKey
-        ]
+        ] as [Any]
         let store = CNContactStore()
         
         // The container means
         // that the source the contacts from, such as Exchange and iCloud
         var allContainers: [CNContainer] = []
         do {
-            allContainers = try store.containersMatchingPredicate(nil)
+            allContainers = try store.containers(matching: nil)
         } catch {
             print("Error fetching containers")
         }
         
         // Loop the containers
         for container in allContainers {
-            let fetchPredicate = CNContact.predicateForContactsInContainerWithIdentifier(container.identifier)
+            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
             
             do {
-                let containerResults = try store.unifiedContactsMatchingPredicate(fetchPredicate, keysToFetch: keysToFetch)
+                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as! [CNKeyDescriptor])
                 // Put them into "contacts"
                 contacts.append(containerResults)
             } catch {
@@ -100,7 +100,7 @@ class ContactUserViewController: BaseViewController {
             }
         }
         
-        self.filterPhoneNumber("")
+        self.filterPhoneNumber(filterValue: "")
     }
 }
 
@@ -111,7 +111,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         return self.filterContacts.count;
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
@@ -132,13 +132,13 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         if (self.styleInvite == kSMS) {
             var phoneNumberString = ""
             if contact.phoneNumbers.count != 0 {
-                let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+                let phoneNumber = contact.phoneNumbers.first?.value
                 phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
             }
             
             cell?.detailTextLabel?.text = phoneNumberString
         } else {
-            let emailString = contact.emailAddresses[0].value as! String
+            let emailString = contact.emailAddresses[0].value as String
             
             cell?.detailTextLabel?.text = emailString
         }
@@ -147,9 +147,9 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         return cell!
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.searchBar.resignFirstResponder()
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
         
         if (self.styleInvite == kSMS) {
             if MFMessageComposeViewController.canSendText() {
@@ -157,7 +157,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                 
                 var phoneNumberString = ""
                 if contact.phoneNumbers.count != 0 {
-                    let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
+                    let phoneNumber = contact.phoneNumbers.first?.value!
                     phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
                 }
                 
@@ -176,29 +176,22 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                 
                 if (error == nil) {
                     let currentInfo = result as! NSDictionary
-                    let currentMail = currentInfo[kEmail] as! String
                     let coachFirstName = currentInfo[kFirstname] as! String
                     
                     let contact = self.filterContacts[indexPath.row]
-                    let userFirstName = contact.givenName.replacingOccurrences(of: " ", with: "%20", options: NSStringCompareOptions.LiteralSearch, range: nil)
-                    let userMail = contact.emailAddresses[0].value as! String
+                    let userFirstName = contact.givenName
                     
-                    var urlString = "mailto:"
-                    urlString = urlString.stringByAppendingString(userMail)
-                    
-                    urlString = urlString.stringByAppendingString("?subject=")
-                    urlString = urlString.stringByAppendingString("Come%20join%20me%20on%20Pummel%20Fitness")
-                    
-                    urlString = urlString.stringByAppendingString("&from=")
-                    urlString = urlString.stringByAppendingString(currentMail)
-                    
-                    urlString = urlString.stringByAppendingString("&body=")
-                    urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
-                    
-                    let mailURL = NSURL(string: urlString)
-                    if (UIApplication.shared.canOpenURL(mailURL!)) {
-                        UIApplication.shared.openURL(mailURL!)
+                    if MFMailComposeViewController.canSendMail() {
+                        let mail = MFMailComposeViewController()
+                        mail.mailComposeDelegate = self
+                        
+                        mail.setSubject("Come join me on Pummel Fitness")
+                        mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
+                        self.present(mail, animated: true, completion: nil)
+                    } else {
+                        PMHelper.showDoAgainAlert()
                     }
+                    
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
@@ -207,14 +200,14 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
         
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.searchBar.resignFirstResponder()
     }
 }
 
 extension ContactUserViewController: UISearchBarDelegate {
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        self.filterPhoneNumber(searchText)
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.filterPhoneNumber(filterValue: searchText)
     }
     
     func filterPhoneNumber(filterValue: String) {
@@ -265,8 +258,12 @@ extension ContactUserViewController: UISearchBarDelegate {
 }
 
 // MARK: MFMessageComposeViewControllerDelegate
-extension ContactUserViewController: MFMessageComposeViewControllerDelegate {
-    func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
+extension ContactUserViewController: MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate {
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
 }

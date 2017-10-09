@@ -16,7 +16,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
-    var tags = [Tag]()
+    var tags = [TagModel]()
     var arrayFeeds : [NSDictionary] = []
     var arrayDiscount : [NSDictionary] = []
     var isStopFetch: Bool!
@@ -168,8 +168,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                         var state = ""
                         var country = ""
                         if ((placeMark?.administrativeArea) != nil) {
-                            state = placeMark?.administrativeArea!
-                            country = placeMark?.country!
+                            state = (placeMark?.administrativeArea!)!
+                            country = (placeMark?.country!)!
                         }
                         
                         // TODO: need Check
@@ -421,45 +421,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             }
         }
     }
-
-    func timeAgoSinceDate(date:NSDate) -> String {
-        let calendar = NSCalendar.current
-        let unitFlags : NSCalendar.Unit = [.second, .minute, .hour, .day, .month, .year]
-        let now = NSDate()
-        let earliest = now.earlierDate(date as Date)
-        let latest = (earliest == now as Date) ? date : now
-        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendar.Options.MatchPreviousTimePreservingSmallerUnits)
-        
-        if (components.year >= 2) {
-            return "\(components.year)y"
-        } else if (components.year >= 1){
-            return "1y"
-        } else if (components.month >= 2) {
-            return "\(components.month)m"
-        } else if (components.month >= 1){
-            return "1m"
-        } else if (components.day >= 2) {
-            return "\(components.day)d"
-        } else if (components.day >= 1){
-            return "1d"
-        } else if (components.hour >= 2) {
-            return "\(components.hour)hr"
-        } else if (components.hour >= 1){
-            return "1hr"
-        } else if (components.minute >= 2) {
-            return "\(components.minute)m"
-        } else if (components.minute >= 1){
-            return "1m"
-        } else if (components.second >= 3) {
-            return "\(components.second)s"
-        } else {
-            return "Just now"
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
 }
 
 // MARK: - UITableViewDelegate
@@ -536,13 +497,15 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
         }
+        
         // Time
         let timeAgo = feed[kCreateAt] as! String
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        let dateFromString : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
-        cell.timeLB.text = self.timeAgoSinceDate(date: dateFromString)
+        let date : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
+        cell.timeLB.text = date.timeAgoSinceDate()
+        
         if (feed[kImageUrl] is NSNull == false) {
             let imageContentLink = feed[kImageUrl] as! String
             let postfixContent = widthHeightScreenx2
@@ -655,7 +618,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell , forRowAt indexPath: IndexPath) {
         if (indexPath.row == self.arrayFeeds.count - 1 && isLoading == false) {
             self.getListFeeds()
         }

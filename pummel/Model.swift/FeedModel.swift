@@ -84,7 +84,7 @@ class FeedModel: NSObject {
     
     func existInList(sessionList: [SessionModel]) -> Bool {
         for session in sessionList {
-            if (self.same(session)) {
+            if (self.same(session: session)) {
                 return true
             }
         }

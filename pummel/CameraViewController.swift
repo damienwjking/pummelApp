@@ -118,7 +118,7 @@ class CameraViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         if (self.videoURL == nil) {
             self.isRecordByCamera = true

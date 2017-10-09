@@ -69,18 +69,16 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     @IBOutlet weak var arrow: UIImageView!
     var sizingCell: TagCell?
     
-    var tags = [Tag]()
+    var tags = [TagModel]()
     var arrayTags : [NSDictionary] = []
     var tagIdsArray : NSMutableArray = []
-    var offset: Int = 0
-    var isStopGetListTag : Bool = false
-    var isStopGetListCoachTag: Bool = false
+    var tagOffset: Int = 0
+    var isStopLoadTag : Bool = false
     var haveAvatar = false
     var userInfo: NSDictionary!
     
     let imagePicker = UIImagePickerController()
     let defaults = UserDefaults.standard
-    var currentId : String = ""
     var settingCV:SettingsViewController!
     
     var location: Location? {
@@ -95,9 +93,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         
         self.setAvatar()
         self.updateUI()
-        self.getListTags()
         
-        currentId = PMHelper.getCurrentID()
         self.navigationItem.title = kNavEditProfile
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
@@ -182,8 +178,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         self.changeAvatarIMW.isUserInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
         self.collectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
@@ -276,8 +272,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.aboutDT.constant = self.view.frame.size.width - 30
-        offset = 0
-        isStopGetListTag = false
+        self.tagOffset = 0
+        self.isStopLoadTag = false
+        self.getListTags()
         
         //if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
             if self.location != nil {
@@ -322,229 +319,159 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
     }
 
     func getListTags() {
-        if (isStopGetListTag == false) {
-            var listTagsLink = kPMAPI_TAG_OFFSET
-            listTagsLink.append(String(offset))
-            Alamofire.request(.GET, listTagsLink)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    self.arrayTags = JSON as! [NSDictionary]
-                    if (self.arrayTags.count > 0) {
-                        for i in 0 ..< self.arrayTags.count {
-                            let tagContent = self.arrayTags[i]
-                            let tag = Tag()
-                            tag.name = tagContent[kTitle] as? String
-                            tag.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
-                            tag.tagColor = self.getRandomColorString()
-                            tag.tagType = (tagContent[kType] as? NSNumber)?.integerValue
-                            if tag.tagType == 0 || tag.tagType == 1 || tag.tagType == 2 || tag.tagType == 3 {
+        if (self.isStopLoadTag == false) {
+            TagRouter.getTagList(offset: self.tagOffset, completed: { (result, error) in
+                if (error == nil) {
+                    let tagList = result as! [TagModel]
+                    
+                    if (tagList.count == 0) {
+                        self.isStopLoadTag = true
+                        
+                        self.setSelectedForTag()
+                    } else {
+                        for tag in tagList {
+                            if (tag.existInList(tagList: self.tags) == false) {
                                 self.tags.append(tag)
                             }
                         }
-                        self.offset += 10
-                        self.collectionView.reloadData({
-                            self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
-                        })
-                    } else {
-                        self.isStopGetListTag = true
-                        if !(self.isStopGetListCoachTag) {
-                            var tagLink = kPMAPIUSER
-                            tagLink.append(self.currentId)
-                            tagLink.append("/tags")
-                            Alamofire.request(.GET, tagLink)
-                                .responseJSON { response in
-                                    if (response.response?.statusCode == 200) {
-                                        self.isStopGetListCoachTag = true
-                                        let tagArr = response.result.value as! [NSDictionary]
-                                        for i in 0 ..< tagArr.count {
-                                            let tagContent = tagArr[i]
-                                            let tagT = Tag()
-                                            tagT.name = tagContent[kTitle] as? String
-                                            tagT.tagId = String(format:"%0.f", (tagContent[kId]! as AnyObject).doubleValue)
-                                            tagT.tagColor = self.getRandomColorString()
-                                            let index = self.tags.indexOf({ $0.name == tagT.name
-                                            })
-                                        
-                                            if (index != nil) {
-                                                tagT.selected = true
-                                                self.tags.removeAtIndex(index!)
-                                                self.tags.insert(tagT, atIndex: index!)
-                                            }
-                                        }
-                                        self.collectionView.reloadData()                                        
-                                    }
-                            }
-                        }
-                }
-                    
-                case .Failure(let error):
-                    print("Request failed with error: \(String(describing: error))")
+                        
+                        self.tagOffset += 10
+                        self.getListTags()
                     }
-            }
-        } else
-        {
-            self.isStopGetListTag = true
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.isStopLoadTag = true
+                    
+                    self.setSelectedForTag()
+                }
+            }).fetchdata()
         }
     }
     
-    func updateUI() {
-        if (self.userInfo == nil) {
-            var prefix = kPMAPIUSER
-            prefix.append(currentId)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        if (response.result.value == nil) {return}
-                        self.userInfo = response.result.value as! NSDictionary
-                        if !(self.userInfo[kLastName] is NSNull) {
-                            self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
-                        } else {
-                            self.nameContentTF.text = self.userInfo[kFirstname] as? String
-                        }
-                        if !(self.userInfo[kBio] is NSNull) {
-                            self.aboutContentTV.text = self.userInfo[kBio] as! String
-                        } else {
-                            self.aboutContentTV.text = ""
-                        }
-                        
-                        let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
-                        self.aboutContentDT.constant = sizeAboutTV.height + 20
-                        
-                        self.genderContentTF.text = self.userInfo[kGender] as? String
-                        self.emailContentTF.text = self.userInfo[kEmail] as? String
-                        
-                        if !(self.userInfo[kDob] is NSNull) {
-                            let stringDob = self.userInfo[kDob] as! String
-                            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
-                        }
-                        
-                        if !(self.userInfo[kMobile] is NSNull) {
-                            self.mobileContentTF.text = self.userInfo[kMobile] as? String
-                        }
-                        
-                        if !(self.userInfo[kFacebookUrl] is NSNull) {
-                            self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
-                        }
-                        
-                        if !(self.userInfo[kInstagramUrl] is NSNull) {
-                            self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
-                        }
-                        
-                        if !(self.userInfo[kTwitterUrl] is NSNull) {
-                            self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
-                        }
-                        
-                        if !(self.userInfo[kEmergencyName] is NSNull) {
-                            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
-                        }
-                        
-                        if !(self.userInfo[kEmergencyMobile] is NSNull) {
-                            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
-                        }
-                        
-                        self.locationName.text = "..."
-                        if !(self.userInfo[kServiceArea] is NSNull) {
-                            if let val = self.userInfo[kServiceArea] as? String {
-                                if val != "" {
-                                    self.locationName.text = val
-                                }
-                            }
-                            
-                        }
-                    }else if response.response?.statusCode == 401 {
-                        let alertController = UIAlertController(title: pmmNotice, message: cookieExpiredNotice, preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // TODO: LOGOUT
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                        
-                    }
-            }
-        } else {
-            if !(self.userInfo[kLastName] is NSNull) {
-                self.nameContentTF.text = (self.userInfo[kFirstname] as! String) + " " + (self.userInfo[kLastName] as! String)
-            } else {
-                self.nameContentTF.text = self.userInfo[kFirstname] as? String
-            }
-            if !(self.userInfo[kBio] is NSNull) {
-                self.aboutContentTV.text = self.userInfo[kBio] as! String
-            } else {
-                self.aboutContentTV.text = ""
-            }
-            let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
-            self.aboutContentDT.constant = sizeAboutTV.height + 20
-            self.genderContentTF.text = self.userInfo[kGender] as? String
-            self.emailContentTF.text = self.userInfo[kEmail] as? String
-            if !(self.userInfo[kDob] is NSNull) {
-                let stringDob = self.userInfo[kDob] as! String
-                self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
-
-            }
-            if !(self.userInfo[kMobile] is NSNull) {
-                self.mobileContentTF.text = self.userInfo[kMobile] as? String
-            }
-            
-            if !(self.userInfo[kFacebookUrl] is NSNull) {
-                self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
-            }
-            
-            if !(self.userInfo[kInstagramUrl] is NSNull) {
-                self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
-            }
-            
-            if !(self.userInfo[kTwitterUrl] is NSNull) {
-                self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
-            }
-            
-            if !(self.userInfo[kEmergencyName] is NSNull) {
-                self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
-            }
-            
-            if !(self.userInfo[kEmergencyMobile] is NSNull) {
-                self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
-            }
-            
-            self.locationName.text = "..."
-            if !(self.userInfo[kServiceArea] is NSNull) {
-                if let val = self.userInfo[kServiceArea] as? String {
-                    if val != "" {
-                        self.locationName.text = val
+    func setSelectedForTag() {
+        let currentUserID = PMHelper.getCurrentID()
+        UserRouter.getUserTagList(userID: currentUserID) { (result, error) in
+            if (error == nil) {
+                let tagList = result as! [TagModel]
+                
+                for tag in self.tags {
+                    if (tag.existInList(tagList: tagList) == true) {
+                        tag.selected = true
                     }
                 }
+                
+                self.collectionView.reloadData {
+                    self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
+                }
+                
+            } else {
+                print("Request failed with error: \(String(describing: error))")
             }
+            }.fetchdata()
+    }
+    
+    func updateUI() {
+        let currentUserID = PMHelper.getCurrentID()
+        
+        if (self.userInfo == nil) {
+            UserRouter.getUserInfo(userID: currentUserID, completed: { (result, error) in
+                if (error == nil) {
+                    self.userInfo = result as! NSDictionary
+                    
+                    self.fillUserInfo()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
+        } else {
+            self.fillUserInfo()
         }
         
-        var prefixC = kPMAPICOACH
-        prefixC.append(PMHelper.getCurrentID())
-        
-        Alamofire.request(.GET, prefixC)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let coachInformationTotal = JSON as? NSDictionary {
-                    if !(coachInformationTotal[kQualification] is NSNull) {
-                        let qualificationText = coachInformationTotal[kQualification] as! String
-                        self.qualificationContentTF.text = qualificationText
-                        let sizeQualificationTV = self.qualificationContentTF.sizeThatFits(self.qualificationContentTF.frame.size)
-                        self.qualificationContentDT.constant = sizeQualificationTV.height + 20
-                    } else {
-                        self.qualificationContentTF.text = ""
-                    }
-                    
-                    if !(coachInformationTotal[kAchievement] is NSNull) {
-                        let achivementText = coachInformationTotal[kAchievement] as! String
-                        self.achivementContentTF.text = achivementText
-                        let sizeAchivementTV = self.achivementContentTF.sizeThatFits(self.achivementContentTF.frame.size)
-                        self.achivementContentTFDT.constant = sizeAchivementTV.height  + 20
-                    } else {
-                        self.achivementContentTF.text = ""
-                    }
+        UserRouter.getCoachInfo(userID: currentUserID) { (result, error) in
+            if (error == nil) {
+                let coachInformationTotal = result as! NSDictionary
+                
+                if (coachInformationTotal[kQualification] is NSNull == false) {
+                    let qualificationText = coachInformationTotal[kQualification] as! String
+                    self.qualificationContentTF.text = qualificationText
+                } else {
+                    self.qualificationContentTF.text = ""
                 }
-            case .Failure(let error):
+                
+                if (coachInformationTotal[kAchievement] is NSNull == false) {
+                    let achivementText = coachInformationTotal[kAchievement] as! String
+                    self.achivementContentTF.text = achivementText
+                } else {
+                    self.achivementContentTF.text = ""
+                }
+            } else {
                 print("Request failed with error: \(String(describing: error))")
+            }
+            }.fetchdata()
+    }
+    
+    func fillUserInfo() {
+        let firstName = self.userInfo[kFirstname] as! String
+        let lastName = self.userInfo[kLastName] as? String
+        if (lastName != nil && lastName?.isEmpty == false) {
+            self.nameContentTF.text = firstName + " " + lastName!
+        } else {
+            self.nameContentTF.text = firstName
+        }
+        
+        // TODO: check name aboutContentTV
+        if (self.userInfo[kBio] is NSNull == false) {
+            self.aboutContentTV.text = self.userInfo[kBio] as! String
+        } else {
+            self.aboutContentTV.text = ""
+        }
+        
+        if (self.userInfo[kGender] is NSNull == false) {
+            self.genderContentTF.text = self.userInfo[kGender] as? String
+        }
+        
+        if (self.userInfo[kEmail] is NSNull == false) {
+            self.emailContentTF.text = self.userInfo[kEmail] as? String
+        }
+        
+        if (self.userInfo[kDob] is NSNull == false) {
+            let stringDob = self.userInfo[kDob] as! String
+            self.dobContentTF.text = stringDob.substring(to: stringDob.index(stringDob.startIndex, offsetBy: 10))
+        }
+        
+        if (self.userInfo[kMobile] is NSNull == false) {
+            self.mobileContentTF.text = self.userInfo[kMobile] as? String
+        }
+        
+        if (self.userInfo[kFacebookUrl] is NSNull == false) {
+            self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
+        }
+        
+        if (self.userInfo[kInstagramUrl] is NSNull == false) {
+            self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
+        }
+        
+        if (self.userInfo[kTwitterUrl] is NSNull == false) {
+            self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
+        }
+        
+        if (self.userInfo[kEmergencyName] is NSNull == false) {
+            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
+        }
+        
+        if (self.userInfo[kEmergencyMobile] is NSNull == false) {
+            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
+        }
+        
+        self.locationName.text = "..."
+        if (self.userInfo[kServiceArea] is NSNull == false) {
+            if let val = self.userInfo[kServiceArea] as? String {
+                if val != "" {
+                    self.locationName.text = val
                 }
+            }
+            
         }
     }
     
@@ -1030,9 +957,6 @@ extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource,
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
         self.configureCell(cell, for: indexPath)
-        if (indexPath.row == tags.count - 1) {
-            self.getListTags()
-        }
         return cell
     }
     

@@ -42,52 +42,42 @@ class LogSessionSelectUserViewController: BaseViewController {
         self.loadDataWithPrefix(prefixAPI: kPMAPICOACH_OLD)
     }
     
-    func loadDataWithPrefix(prefixAPI:String) {
-        var prefix = kPMAPICOACHES
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(prefixAPI)
-        if prefixAPI == kPMAPICOACH_LEADS {
-            prefix.append("\(offsetNew)")
-        } else if prefixAPI == kPMAPICOACH_CURRENT {
-            prefix.append("\(offsetCurrent)")
-        } else if prefixAPI == kPMAPICOACH_OLD {
-            prefix.append("\(offsetOld)")
+    func loadDataWithPrefix(prefixAPI: String) {
+        var offset = offsetNew // kPMAPICOACH_LEADS
+        if (prefixAPI == kPMAPICOACH_CURRENT) {
+            offset = offsetCurrent
+        } else if (prefixAPI == kPMAPICOACH_OLD) {
+            offset = offsetOld
         }
         
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arrayMessageT = JSON as? [NSDictionary] {
-                    if prefixAPI == kPMAPICOACH_LEADS {
-                        self.arrayNew += arrayMessageT
-                        self.tbView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .None)
-                        
-                        self.offsetNew = self.arrayNew.count
-                        if arrayMessageT.count > 0 {
-                            self.loadDataWithPrefix(kPMAPICOACH_LEADS)
-                        }
-                    } else if prefixAPI == kPMAPICOACH_CURRENT {
-                        self.arrayCurrent += arrayMessageT
-                        self.tbView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .None)
-                        
-                        self.offsetCurrent = self.arrayCurrent.count
-                        if arrayMessageT.count > 0 {
-                            self.loadDataWithPrefix(kPMAPICOACH_CURRENT)
-                        }
-                    } else if prefixAPI == kPMAPICOACH_OLD {
-                        self.arrayOld += arrayMessageT
-                        self.tbView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
-                        
-                        self.offsetOld = self.arrayOld.count
-                        if arrayMessageT.count > 0 {
-                            self.loadDataWithPrefix(kPMAPICOACH_OLD)
-                        }
-                    }
+        let currentUserID = PMHelper.getCurrentID()
+        UserRouter.getLead(userID: currentUserID, type: prefixAPI, offset: offset) { (result, error) in
+            if (error == nil) {
+                let arrayMessageT =  result as! [NSDictionary]
+                if prefixAPI == kPMAPICOACH_LEADS {
+                    self.arrayNew += arrayMessageT
+                    self.offsetNew = self.offsetNew + 10
+                    
+                    self.tbView.reloadSections(IndexSet(integer: 0), with: .none)
+                } else if prefixAPI == kPMAPICOACH_CURRENT {
+                    self.arrayCurrent += arrayMessageT
+                    self.offsetCurrent = self.offsetCurrent + 10
+                    
+                    self.tbView.reloadSections(IndexSet(integer: 1), with: .none)
+                } else if prefixAPI == kPMAPICOACH_OLD {
+                    self.arrayOld += arrayMessageT
+                    self.offsetOld = self.offsetOld + 10
+                    
+                    self.tbView.reloadSections(IndexSet(integer: 2), with: .none)
                 }
-            case .Failure(let error):
+                
+                if arrayMessageT.count > 0 {
+                    self.loadDataWithPrefix(prefixAPI: prefixAPI)
+                }
+            } else {
                 print("Request failed with error: \(String(describing: error))")
-                }
-        }
+            }
+        }.fetchdata()
     }
     
     func leftBarButtonClicked() {
@@ -124,15 +114,15 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         return arrayOld.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.0
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50.0
     }
     
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let title = UILabel()
         title.font = .pmmMonLight16()
         title.textColor = UIColor.lightGray
@@ -173,7 +163,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         // Get name and image
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
             if (error == nil) {
-                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                 if visibleCell == true {
                     if let userInfo = result as? NSDictionary {
                         let name = userInfo.object(forKey: kFirstname) as! String
@@ -183,7 +173,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                         
                         if (imageURLString?.isEmpty == false) {
                             ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
-                                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                                 if visibleCell == true {
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
@@ -216,7 +206,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var userInfo:NSDictionary!
         
         if indexPath.section == 0 {
@@ -229,6 +219,6 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         
         self.userInfoSelect = userInfo
         self.performSegue(withIdentifier: "goLogSessionDetail", sender: nil)
-        self.tbView.deselectRow(at: indexPath, animated: false)
+        self.tbView.deselectRow(at: indexPath as IndexPath, animated: false)
     }
 }

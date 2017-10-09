@@ -56,7 +56,7 @@ class SignupViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         var fbButtonFrame = self.signupBT.frame
         fbButtonFrame.origin.y = self.signupBT.frame.origin.y + self.signupBT.frame.size.height + 20

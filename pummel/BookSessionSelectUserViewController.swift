@@ -19,7 +19,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
     var arrayOld: [NSDictionary] = []
     var offsetOld: Int = 0
     let defaults = UserDefaults.standard
-    var tag:Tag?
+    var tag:TagModel?
     var userInfoSelect:NSDictionary!
     
     override func viewDidLoad() {
@@ -66,51 +66,41 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
     }
     
     func loadDataWithPrefix(prefixAPI:String) {
-        var prefix = kPMAPICOACHES
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(prefixAPI)
-        if prefixAPI == kPMAPICOACH_LEADS {
-            prefix.append("\(offsetNew)")
-        } else if prefixAPI == kPMAPICOACH_CURRENT {
-            prefix.append("\(offsetCurrent)")
-        } else if prefixAPI == kPMAPICOACH_OLD {
-            prefix.append("\(offsetOld)")
+        var offset = offsetNew // kPMAPICOACH_LEADS
+        if (prefixAPI == kPMAPICOACH_CURRENT) {
+            offset = offsetCurrent
+        } else if (prefixAPI == kPMAPICOACH_OLD) {
+            offset = offsetOld
         }
         
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arrayMessageT = JSON as? [NSDictionary] {
-                    if prefixAPI == kPMAPICOACH_LEADS {
-                        self.arrayNew += arrayMessageT
-                        self.tbView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .None)
-                        
-                        self.offsetNew = self.arrayNew.count
-                        if arrayMessageT.count > 0 {
-                            self.loadDataWithPrefix(kPMAPICOACH_LEADS)
-                        }
-                    } else if prefixAPI == kPMAPICOACH_CURRENT {
-                        self.arrayCurrent += arrayMessageT
-                        self.tbView.reloadSections(NSIndexSet(index: 1), withRowAnimation: .None)
-                        
-                        self.offsetCurrent = self.arrayCurrent.count
-                        if arrayMessageT.count > 0 {
-                            self.loadDataWithPrefix(kPMAPICOACH_CURRENT)
-                        }
-                    } else if prefixAPI == kPMAPICOACH_OLD {
-                        self.arrayOld += arrayMessageT
-                        self.tbView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
-                        
-                        self.offsetOld = self.arrayOld.count
-                        if arrayMessageT.count > 0 {
-                            self.loadDataWithPrefix(kPMAPICOACH_OLD)
-                        }
-                    }
+        let currentUserID = PMHelper.getCurrentID()
+        UserRouter.getLead(userID: currentUserID, type: prefixAPI, offset: offset) { (result, error) in
+            if (error == nil) {
+                let arrayMessageT =  result as! [NSDictionary]
+                if prefixAPI == kPMAPICOACH_LEADS {
+                    self.arrayNew += arrayMessageT
+                    self.offsetNew = self.offsetNew + 10
+                    
+                    self.tbView.reloadSections(IndexSet(integer: 0), with: .none)
+                } else if prefixAPI == kPMAPICOACH_CURRENT {
+                    self.arrayCurrent += arrayMessageT
+                    self.offsetCurrent = self.offsetCurrent + 10
+                    
+                    self.tbView.reloadSections(IndexSet(integer: 1), with: .none)
+                } else if prefixAPI == kPMAPICOACH_OLD {
+                    self.arrayOld += arrayMessageT
+                    self.offsetOld = self.offsetOld + 10
+                    
+                    self.tbView.reloadSections(IndexSet(integer: 2), with: .none)
                 }
-            case .Failure(let error):
+                
+                if arrayMessageT.count > 0 {
+                    self.loadDataWithPrefix(prefixAPI: prefixAPI)
+                }
+            } else {
                 print("Request failed with error: \(String(describing: error))")
-                }
-        }
+            }
+            }.fetchdata()
     }
     
     func cancel() {
@@ -139,11 +129,11 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         return 3
     }
 
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.0
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50.0
     }
     

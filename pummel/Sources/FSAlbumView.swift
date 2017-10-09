@@ -40,7 +40,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     var imaginaryCollectionViewOffsetStartPosY: CGFloat = 0.0
     
     var cropBottomY: CGFloat  = 0.0
-    var dragStartPos: CGPoint = CGPointZero
+    var dragStartPos: CGPoint = CGPoint()
     let dragDiff: CGFloat     = 20.0
     
     static func instance() -> FSAlbumView {

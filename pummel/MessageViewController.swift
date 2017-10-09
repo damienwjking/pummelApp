@@ -9,12 +9,13 @@
 
 
 import UIKit
-import Alamofire
-import AlamofireImage
-import Foundation
 import Contacts
-import AddressBook
 import Mixpanel
+import Alamofire
+import MessageUI
+import Foundation
+import AddressBook
+import AlamofireImage
 
 class MessageViewController: BaseViewController {
     
@@ -33,18 +34,20 @@ class MessageViewController: BaseViewController {
     @IBOutlet weak var connectionsLB : UILabel?
     @IBOutlet weak var separeateline: UIView?
     
-    var arrayMessages: [NSMutableDictionary] = []
+    var arrayMessages: [MessageModel] = []
     let defaults = UserDefaults.standard
     var dataSourceArr : [NSDictionary] = []
-    var offset : Int = 0
-    var isStopLoadMessage : Bool = false
-    var isLoadingMessage : Bool = false
+    var messageOffset : Int = 0
+    var leadOffset : Int = 0
+    var isStopLoadLead = false
+    var isStopLoadMessage = false
+    var isLoadingMessage = false
     var saveIndexPath: NSIndexPath?
-    var isGoToMessageDetail : Bool = false
+    var isGoToMessageDetail = false
     var saveIndexPathScrollView : NSIndexPath?
     var arrayListLead :[NSDictionary] = []
     
-//    var currentContentOffset = CGPointZero
+//    var currentContentOffset = CGPoint()
     
     var refreshControl: UIRefreshControl!
     
@@ -79,7 +82,6 @@ class MessageViewController: BaseViewController {
         self.refreshControl.addTarget(self, action: #selector(refreshControlTable), for: .valueChanged)
         self.listMessageTB.addSubview(self.refreshControl)
         
-        self.getListLead()
         self.horizontalViewHeightConstraint!.constant = 0
     }
     
@@ -88,7 +90,7 @@ class MessageViewController: BaseViewController {
         
         self.listMessageTB.reloadData()
         
-        self.view.bringSubviewToFront(self.noMessageV)
+        self.view.bringSubview(toFront: self.noMessageV)
         
         if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
             self.noMessageTitleLB.text = "Get Connections With Your Clients"
@@ -99,10 +101,14 @@ class MessageViewController: BaseViewController {
         self.isGoToMessageDetail = false
         
         self.getMessage()
+        
+        self.leadOffset = 0
+        self.isStopLoadLead = false
+        self.getListLead()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         let moveScreenType = self.defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if (moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_3) {
@@ -137,52 +143,30 @@ class MessageViewController: BaseViewController {
     
     func refreshControlTable() {
         if (self.isLoadingMessage == false) {
-            self.listMessageTB.contentOffset = CGPointZero
+            self.listMessageTB.contentOffset = CGPoint()
             
             self.gotNewMessage()
             
+            self.leadOffset = 0
+            self.isStopLoadLead = false
             self.getListLead()
         }
     }
     
     func gotNewMessage() {
-        arrayMessages.removeAll()
-        self.listMessageTB.reloadData {
-            self.isStopLoadMessage = false
-            self.offset = 0
-            self.getMessage()
-        }
+        self.arrayMessages.removeAll()
+        self.isStopLoadMessage = false
+        self.messageOffset = 0
+        
+        self.getMessage()
     }
     
     func gotNewNotificationShowBage() {
-        arrayMessages.removeAll()
-        self.listMessageTB.reloadData {
-            self.isStopLoadMessage = false
-            self.offset = 0
-            self.getMessage()
-        }
-    }
-    
-    func getMessagetAtSaveIndexPathScrollView() {
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_CONVERSATION_OFFSET_V2)
-        prefix.append(String((self.saveIndexPath?.row)!))
-        prefix.append(kPM_PATH_LIMIT_ONE)
+        self.arrayMessages.removeAll()
+        self.isStopLoadMessage = false
+        self.messageOffset = 0
         
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                let arrayMessageT = JSON as! [NSMutableDictionary]
-                if (arrayMessageT.count > 0) {
-                    self.arrayMessages.removeAtIndex((self.saveIndexPath?.row)!)
-                    self.arrayMessages.insert(arrayMessageT[0], atIndex: (self.saveIndexPath?.row)!)
-                    self.listMessageTB.reloadData()
-                }
-            case .Failure(let error):
-                print("Request failed with error: \(String(describing: error))")
-                }
-        }
+        self.getMessage()
     }
     
     @IBAction func startConversation(sender: AnyObject) {
@@ -199,87 +183,69 @@ class MessageViewController: BaseViewController {
     }
     
     func getListLead() {
-        var prefix = kPMAPICOACHES
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPMAPICOACH_LEADS)
-        
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                self.arrayListLead = JSON as! [NSDictionary]
-                self.horizontalTableView.reloadData()
-                if (self.arrayListLead.count == 0) {
-                    self.horizontalViewHeightConstraint!.constant = 0
+        if (self.isStopLoadLead == false) {
+            let currentUserID = PMHelper.getCurrentID()
+            UserRouter.getLead(userID: currentUserID, type: kPMAPICOACH_LEADS, offset: self.leadOffset) { (result, error) in
+                if (error == nil) {
+                    let leadList =  result as! [NSDictionary]
+                    if leadList.count > 0 {
+                        self.getListLead()
+                        
+                        self.arrayListLead += leadList
+                        self.leadOffset = self.leadOffset + 10
+                        
+                        if (self.arrayListLead.count == 0) {
+                            self.horizontalViewHeightConstraint!.constant = 0
+                        } else {
+                            self.horizontalViewHeightConstraint!.constant = 180
+                        }
+                    } else {
+                        self.isStopLoadLead = true
+                    }
                 } else {
-                    self.horizontalViewHeightConstraint!.constant = 180
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.isStopLoadLead = true
                 }
-            case .Failure(let error):
-                print("Request failed with error: \(String(describing: error))")
-            }
+                }.fetchdata()
         }
     }
     
     func getMessage() {
-        if (isStopLoadMessage == false) {
-            if (offset == 0) {
+        if (self.isStopLoadMessage == false && self.isLoadingMessage == false) {
+            if (self.messageOffset == 0) {
                 self.view.makeToastActivity(message: "Loading")
             }
-            isLoadingMessage = true
             
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPM_PATH_CONVERSATION_OFFSET_V2)
-            prefix.append(String(offset))
+            self.isLoadingMessage = true
             
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in
-                    switch response.result {
-                    case .Success(let JSON):
-                        let arrayMessageT = JSON as! [NSDictionary]
-                        self.view.hideToastActivity()
-                        if (arrayMessageT.count > 0) {
-                            for (message) in arrayMessageT {
-                                var isExist = false
-                                for (localMessage) in self.arrayMessages {
-                                    let localMessageID = localMessage[kId] as? Int
-                                    let messageID = message[kId]  as? Int
-                                    
-                                    if (localMessageID != nil && messageID != nil) {
-                                        if (localMessageID == messageID) {
-                                            isExist = true
-                                            break
-                                        }
-                                    }
-                                }
-                                
-                                if (isExist == false) {
-                                    self.arrayMessages.append(message.mutableCopy() as! NSMutableDictionary)
-                                }
-
+            MessageRouter.getConversationList(offset: self.messageOffset, completed: { (result, error) in
+                self.view.hideToastActivity()
+                self.refreshControl.endRefreshing()
+                
+                self.isLoadingMessage = false
+                
+                if (error == nil) {
+                    let messageList = result as! [MessageModel]
+                    
+                    if (messageList.count == 0) {
+                        self.isStopLoadMessage = true
+                    } else {
+                        for message in messageList {
+                            if (message.existInList(messageList: self.arrayMessages) == false) {
+                                self.arrayMessages.append(message)
                             }
-                            
-                            self.isLoadingMessage = false
-                            self.noMessageV.isHidden = true
-                            
-                             self.listMessageTB.reloadData()
-                        } else {
-                            if self.arrayMessages.count <= 0 {
-                                self.noMessageV.isHidden = false
-                            }
-                            self.isLoadingMessage = false
-                            self.isStopLoadMessage = true
                         }
-                        
-                        self.updateMessageData()
-                    case .Failure(let error):
-                        self.view.hideToastActivity()
-                        self.offset -= 10
-                        self.isLoadingMessage = false
-                        print("Request failed with error: \(String(describing: error))")
                     }
                     
-                    self.refreshControl.endRefreshing()
-            }
+                    self.messageOffset = self.messageOffset + 10
+                    
+                    self.updateMessageData()
+                    self.listMessageTB.reloadData()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
         }
     }
     
@@ -288,99 +254,81 @@ class MessageViewController: BaseViewController {
         while i < self.arrayMessages.count {
             let message = arrayMessages[i]
             
-            let targetID: String? = message["targetId"] as? String
-            
-            if (targetID == nil || targetID?.isEmpty == true) {
-                var prefix = kPMAPIUSER
-                prefix.append(PMHelper.getCurrentID())
-                prefix.append(kPM_PATH_CONVERSATION)
-                prefix.append("/")
-                prefix.append(String(format:"%0.f", (message[kId]! as AnyObject).doubleValue))
-                
-                Alamofire.request(.GET, prefix)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
+            MessageRouter.getDetailConversation(messageID: message.messageID!, completed: { (result, error) in
+                if (error == nil) {
+                    // Check which on is sender
+                    let conversationsUserArray = result as! NSArray
+                    let conversationMe : NSDictionary!
+                    let conversationTarget: NSDictionary!
+                    
+                    let converstationTemp = conversationsUserArray[0] as! NSDictionary
+                    let tempUserID = String(format:"%0.f", (converstationTemp[kUserId]! as AnyObject).doubleValue)
+                    
+                    if (tempUserID == PMHelper.getCurrentID()) {
+                        conversationMe = conversationsUserArray[0] as! NSDictionary
+                        conversationTarget = conversationsUserArray[1]  as! NSDictionary
+                    } else {
+                        conversationMe = conversationsUserArray[1] as! NSDictionary
+                        conversationTarget = conversationsUserArray[0]  as! NSDictionary
+                    }
+                    
+                    message.targetUserID = String(format:"%0.f", (conversationTarget[kUserId]! as AnyObject).doubleValue)
+                    
+                    // Check New or old
+                    if (conversationMe[kLastOpenAt] is NSNull) {
+                        message.isOpen = false
+                    } else {
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = kFullDateFormat
+                        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
                         
-                        // Check which on is sender
-                        let conversationsUserArray = JSON as! NSArray
-                        let conversationMe : NSDictionary!
-                        let conversationTarget: NSDictionary!
-                        let converstationTemp = conversationsUserArray[0] as! NSDictionary
-                        if (String(format:"%0.f", converstationTemp[kUserId]!.doubleValue) == PMHelper.getCurrentID()) {
-                            conversationMe = conversationsUserArray[0] as! NSDictionary
-                            conversationTarget = conversationsUserArray[1]  as! NSDictionary
+                        let lastOpenAtM = dateFormatter.date(from: conversationMe[kLastOpenAt] as! String)
+                        let updateAtM =  dateFormatter.date(from: message.updateAt!)
+                        
+                        if (lastOpenAtM!.compare(updateAtM!) == .orderedAscending) {
+                            message.isOpen = false
                         } else {
-                            conversationMe = conversationsUserArray[1] as! NSDictionary
-                            conversationTarget = conversationsUserArray[0]  as! NSDictionary
+                            message.isOpen = true
+                        }
+                    }
+                    
+                    // Get name
+                    UserRouter.getUserInfo(userID: message.targetUserID!, completed: { (result, error) in
+                        let userInfo = result as! NSDictionary
+                        
+                        let name = userInfo.object(forKey: kFirstname) as! String
+                        message.targetUserName = name.uppercased()
+                        
+                        var imageURL = userInfo.object(forKey: kImageUrl) as? String
+                        if (imageURL?.isEmpty == true) {
+                            imageURL = " "
                         }
                         
-                        message["targetId"] = String(format:"%0.f", conversationTarget[kUserId]!.doubleValue)
-                        
-                        // Check New or old
-                        if (conversationMe[kLastOpenAt] is NSNull) {
-                            message[kLastOpenAt] = "0"
-                        } else {
-                            let dateFormatter = DateFormatter
-                            dateFormatter.dateFormat = kFullDateFormat
-                            dateFormatter.timeZone = NSTimeZone(name: "UTC")
+                        if (userInfo[kImageUrl] is NSNull == false) {
+                            let imageURLString = userInfo[kImageUrl] as! String
                             
-                            let lastOpenAtM = dateFormatter.date(from: conversationMe[kLastOpenAt] as! String)
-                            let updateAtM =  dateFormatter.date(from: message["updatedAt"] as! String)
-                            
-                            if (lastOpenAtM!.compare(updateAtM!) == NSComparisonResult.OrderedAscending) {
-                                message[kLastOpenAt] = "0"
-                            } else {
-                                message[kLastOpenAt] = "1"
-                            }
-                        }
-                        
-                        // Get name
-                        var prefixUser = kPMAPIUSER
-                        prefixUser.append(String(format:"%0.f", conversationTarget[kUserId]!.doubleValue))
-                        Alamofire.request(.GET, prefixUser)
-                            .responseJSON { response in switch response.result {
-                            case .Success(let JSON):
-                                let userInfo = JSON as! NSDictionary
-                                
-                                let name = userInfo.object(forKey: kFirstname) as! String
-                                message[kFirstname] = name.uppercased()
-                                
-                                var imageURL = userInfo.object(forKey: kImageUrl) as? String
-                                if (imageURL?.isEmpty == true) {
-                                    imageURL = " "
-                                }
-                                
-                                if (JSON[kImageUrl] is NSNull == false) {
-                                    let imageURLString = JSON[kImageUrl] as! String
-                                    
-                                    ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                                        if (error == nil) {
-                                            DispatchQueue.main.async(execute: {
-                                                let imageRes = result as! UIImage
-                                                message["userImage"] = imageRes
-                                                
-                                                self.listMessageTB.reloadData()
-                                            })
-                                        } else {
-                                            print("Request failed with error: \(String(describing: error))")
-                                        }
-                                    }).fetchdata()
+                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                if (error == nil) {
+                                    DispatchQueue.main.async(execute: {
+                                        let imageRes = result as! UIImage
+                                        message.targetUserImage = imageRes
+                                        
+                                        self.listMessageTB.reloadData()
+                                    })
                                 } else {
-                                    message["userImage"] = UIImage(named:"display-empty.jpg")
-                                    
-                                    self.listMessageTB.reloadData()
+                                    print("Request failed with error: \(String(describing: error))")
                                 }
-                                
-                            case .Failure(let error):
-                                print("Request failed with error: \(String(describing: error))")
-                                }
+                            }).fetchdata()
+                        } else {
+                            message.targetUserImage = UIImage(named:"display-empty.jpg")
+                            
+                            self.listMessageTB.reloadData()
                         }
-                        
-                    case .Failure(let error):
-                        print("Request failed with error: \(String(describing: error))")
-                        }
+                    }).fetchdata()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
                 }
-            }
+            }).fetchdata()
             
             // Get message
             var prefixT = kPMAPIUSER
@@ -432,7 +380,7 @@ class MessageViewController: BaseViewController {
                 let indexPathRow = sender as! Int
                 let message = arrayMessages[indexPathRow]
                 message[kLastOpenAt] = "1"
-                let cell = self.listMessageTB.cellForRowAtIndexPath(NSIndexPath.init(forRow: indexPathRow, inSection: 0)) as! MessageTableViewCell
+                let cell = self.listMessageTB.cellForRow(at: NSIndexPath(row: indexPathRow, section: 0) as IndexPath) as! MessageTableViewCell
                 
                 destinationVC.userIdTarget = cell.targetId
                 destinationVC.messageId = String(format:"%0.f", (message[kId]! as AnyObject).doubleValue)
@@ -442,46 +390,11 @@ class MessageViewController: BaseViewController {
             }
         }
     }
-
-    func timeAgoSinceDate(date:NSDate) -> String {
-        let calendar = NSCalendar.current
-        let unitFlags : NSCalendarUnit = [.Second, .Minute, .Hour, .Day, .Month, .Year]
-        let now = NSDate()
-        let earliest = now.earlierDate(date)
-        let latest = (earliest == now) ? date : now
-        let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options:NSCalendarOptions.MatchPreviousTimePreservingSmallerUnits)
-        
-        if (components.year >= 2) {
-            return "\(components.year)y"
-        } else if (components.year >= 1){
-            return "1y"
-        } else if (components.month >= 2) {
-            return "\(components.month)month"
-        } else if (components.month >= 1){
-            return "1m"
-        } else if (components.day >= 2) {
-            return "\(components.day)d"
-        } else if (components.day >= 1){
-            return "1d"
-        } else if (components.hour >= 2) {
-            return "\(components.hour)hr"
-        } else if (components.hour >= 1){
-            return "1hr"
-        } else if (components.minute >= 2) {
-            return "\(components.minute)m"
-        } else if (components.minute >= 1){
-            return "1m"
-        } else if (components.second >= 20) {
-            return "\(components.second)s"
-        } else {
-            return "Just now"
-        }
-    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
-    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
             if (scrollView == self.listMessageTB) {
                 if (self.arrayListLead.count == 0) {
@@ -501,7 +414,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (tableView == self.horizontalTableView) {
             if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
                 return 96
@@ -545,11 +458,11 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             
             // Chat time
             let timeAgo = message["updatedAt"] as! String
-            let dateFormatter = DateFormatter
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = kFullDateFormat
-            dateFormatter.timeZone = NSTimeZone(name: "UTC")
-            let dateFromString : NSDate = dateFormatter.date(from: timeAgo)!
-            cell.timeLB.text = self.timeAgoSinceDate(dateFromString)
+            dateFormatter.timeZone = NSTimeZone(name: "UTC") as! TimeZone
+            let date : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
+            cell.timeLB.text = date.timeAgoSinceDate()
             
             // User name
             let nameString: String? = message[kFirstname] as? String
@@ -606,11 +519,11 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             cell!.addButton.isHidden = true
             
             let lead = self.arrayListLead[indexPath.row]
-            let targetUserId = String(format:"%0.f", lead["userId"]!.doubleValue)
+            let targetUserId = String(format:"%0.f", (lead["userId"]! as AnyObject).doubleValue)
             
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                     if visibleCell == true {
                         let userInfo = result as! NSDictionary
                         let name = userInfo.object(forKey: kFirstname) as! String
@@ -620,7 +533,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                             let imageURLString = userInfo[kImageUrl] as! String
                             ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
-                                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                                     if visibleCell == true {
                                         let imageRes = result as! UIImage
                                         cell!.imageV.image = imageRes
@@ -640,7 +553,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }).fetchdata()
             
-            cell!.selectionStyle = .None
+            cell!.selectionStyle = .none
             return cell!
         }
     }
@@ -683,13 +596,13 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
         ABAddressBookRequestAccessWithCompletion(addressBookRef) {
             (granted: Bool, error: CFError!) in
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async() {
                 if granted == false {
                     //TODO: show message not enable contact
                 } else {
                     self.saveIndexPath = indexPath
-                    self.listMessageTB.deselectRow(at: indexPath, animated: false)
-                    let cell = self.horizontalTableView.cellForRowAtIndexPath(indexPath) as! HorizontalCell
+                    self.listMessageTB.deselectRow(at: indexPath as IndexPath, animated: false)
+                    let cell = self.horizontalTableView.cellForRow(at: indexPath as IndexPath) as! HorizontalCell
                     
                     if (cell.imageV.image != nil) {
                         self.view.makeToastActivity(message: "Loading")
@@ -735,7 +648,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 if twitterURL == nil {
                                     twitterURL = "1990-01-01"
                                 } else {
-                                    DOBString = DOBString?.substringToIndex(DOBString!.startIndex.advancedBy(10))
+                                    DOBString = DOBString?.substring(to: (DOBString?.index(DOBString?.startIndex, offsetBy: 10))!)
                                 }
                                 
                                 let newContact = CNMutableContact()
@@ -767,7 +680,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                     birthday.year = Int(DOBArray![0])!
                                     birthday.month = Int(DOBArray![1])!
                                     birthday.day = Int(DOBArray![2])!
-                                    newContact.birthday = birthday
+                                    newContact.birthday = birthday as DateComponents
                                 }
                                 
                                 
@@ -805,9 +718,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == self.arrayMessages.count - 1 && isLoadingMessage == false && tableView == self.listMessageTB) {
-            offset += 10
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: IndexPath) {
+        if (indexPath.row == self.arrayMessages.count - 1 && tableView == self.listMessageTB) {
             self.getMessage()
         }
     }
@@ -820,7 +732,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -828,7 +740,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         
         if (tableView == listMessageTB) {
             // Check new message here
-            self.clickOnConnectionImage(indexPath)
+            self.clickOnConnectionImage(indexPath: indexPath)
             
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
@@ -851,7 +763,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     let acceptClientAction = { (action:UIAlertAction!) -> Void in
                         self.view.makeToast(message: "Setting")
                         let lead = self.arrayListLead[indexPath.row]
-                        let targetUserId = String(format:"%0.f", lead[kUserId]!.doubleValue)
+                        let targetUserId = String(format:"%0.f", (lead[kUserId]! as AnyObject).doubleValue)
                         
                         let param = [kUserId: PMHelper.getCurrentID(),
                             kUserIdRequest: targetUserId]
@@ -867,6 +779,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 
                                 if response.response?.statusCode == 200 {
                                     self.arrayListLead.removeAll()
+                                    self.leadOffset = 0
+                                    self.isStopLoadLead = false
                                     self.getListLead()
                                 }
                         }
@@ -881,17 +795,31 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 let coachFirstName = currentInfo[kFirstname] as! String
                                 let userFirstName = userInfo[kFirstname] as! String
                                 
+                                if MFMailComposeViewController.canSendMail() {
+                                    let mail = MFMailComposeViewController()
+                                    mail.mailComposeDelegate = self
+                                    
+                                    mail.setSubject("Come join me on Pummel Fitness")
+                                    mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
+//                                    mail.set
+                                    self.present(mail, animated: true, completion: nil)
+                                } else {
+                                    PMHelper.showDoAgainAlert()
+                                }
+                                
+                                
+                                
                                 var urlString = "mailto:"
                                 urlString = urlString.stringByAppendingString(userMail)
                                 
                                 urlString = urlString.stringByAppendingString("?subject=")
-                                urlString = urlString.stringByAppendingString("Come%20join%20me%20on%20Pummel%20Fitness")
+                                urlString = urlString.stringByAppendingString("")
                                 
                                 urlString = urlString.stringByAppendingString("&from=")
                                 urlString = urlString.stringByAppendingString(currentMail)
                                 
                                 urlString = urlString.stringByAppendingString("&body=")
-                                urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
+                                urlString = urlString.stringByAppendingString("")
                                 
                                 let mailURL = NSURL(string: urlString)
                                 if (UIApplication.shared.canOpenURL(mailURL!)) {

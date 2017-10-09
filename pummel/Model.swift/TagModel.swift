@@ -25,8 +25,8 @@ class TagModel: NSObject {
         self.tagType = data.object(forKey: "text") as? Int
     }
     
-    func same(session: TagModel) -> Bool {
-        if (self.tagId == session.tagId) {
+    func same(tag: TagModel) -> Bool {
+        if (self.tagId == tag.tagId) {
             return true
         }
         
@@ -35,7 +35,7 @@ class TagModel: NSObject {
     
     func existInList(tagList: [TagModel]) -> Bool {
         for tag in tagList {
-            if (self.same(tag)) {
+            if (self.same(tag: tag)) {
                 return true
             }
         }

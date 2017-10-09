@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BLk-bc-fnm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BLk-bc-fnm">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Regular.otf">
+            <string>Montserrat-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--New Comment Image View Controller-->
         <scene sceneID="XNS-HY-OU1">
@@ -462,14 +467,14 @@
                                             <constraint firstAttribute="height" constant="30" id="QIL-iD-URv"/>
                                         </constraints>
                                     </view>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="MKb-r3-Z0L" customClass="RSKGrowingTextView" customModule="RSKGrowingTextView">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="MKb-r3-Z0L">
                                         <rect key="frame" x="33" y="18" width="471" height="33"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="33" id="4o1-M1-UHg"/>
                                         </constraints>
                                         <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardAppearance="alert"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="ADD A COMMENT"/>
@@ -480,7 +485,23 @@
                                                 <real key="value" value="0.0"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="delegate" destination="BLk-bc-fnm" id="bsZ-XL-bR7"/>
+                                        </connections>
                                     </textView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADD A COMMENT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uP2-Du-f8Z">
+                                        <rect key="frame" x="33" y="18" width="116" height="16"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ2-ru-EjU">
+                                        <rect key="frame" x="15" y="15" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="9xA-Me-1EL"/>
+                                            <constraint firstAttribute="height" constant="40" id="zf7-cE-po6"/>
+                                        </constraints>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2E-EX-DaY">
                                         <rect key="frame" x="552" y="15" width="40" height="40"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -489,27 +510,20 @@
                                             <constraint firstAttribute="width" constant="40" id="lMD-zo-NCR"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                        <state key="normal" image="send.png">
+                                        <state key="normal" image="send">
                                             <color key="titleColor" red="0.98431372549999996" green="0.30980392159999998" blue="0.1215686275" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="addComment" destination="BLk-bc-fnm" eventType="touchUpInside" id="6KJ-Tb-0TA"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ2-ru-EjU">
-                                        <rect key="frame" x="15" y="15" width="40" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="40" id="9xA-Me-1EL"/>
-                                            <constraint firstAttribute="height" constant="40" id="zf7-cE-po6"/>
-                                        </constraints>
-                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EO0-m0-Nnp">
                                         <rect key="frame" x="512" y="15" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="TAI-Qp-4U4"/>
                                             <constraint firstAttribute="width" constant="40" id="hJG-gq-Dnb"/>
                                         </constraints>
-                                        <state key="normal" image="cameraIcon.png"/>
+                                        <state key="normal" image="cameraIcon"/>
                                         <connections>
                                             <action selector="goNewPost" destination="BLk-bc-fnm" eventType="touchUpInside" id="g0R-Py-5Gb"/>
                                         </connections>
@@ -523,11 +537,13 @@
                                     <constraint firstItem="MKb-r3-Z0L" firstAttribute="leading" secondItem="44b-7e-kzU" secondAttribute="trailing" constant="15" id="Khv-Xw-h1E"/>
                                     <constraint firstItem="MKb-r3-Z0L" firstAttribute="top" secondItem="Wad-tq-H6Y" secondAttribute="top" constant="18" id="QXC-57-QnQ"/>
                                     <constraint firstAttribute="bottom" secondItem="MJ2-ru-EjU" secondAttribute="bottom" constant="15" id="Tbh-5G-8h7"/>
+                                    <constraint firstItem="uP2-Du-f8Z" firstAttribute="leading" secondItem="MKb-r3-Z0L" secondAttribute="leading" id="aks-yY-ybJ"/>
                                     <constraint firstItem="o2E-EX-DaY" firstAttribute="leading" secondItem="EO0-m0-Nnp" secondAttribute="trailing" id="czM-YQ-SbH"/>
                                     <constraint firstAttribute="bottom" secondItem="o2E-EX-DaY" secondAttribute="bottom" constant="15" id="ddw-w8-IVd"/>
                                     <constraint firstAttribute="bottom" secondItem="44b-7e-kzU" secondAttribute="bottom" constant="21" id="ebz-V4-gXF"/>
                                     <constraint firstAttribute="bottom" secondItem="EO0-m0-Nnp" secondAttribute="bottom" constant="15" id="fbw-8k-dBZ"/>
                                     <constraint firstItem="EO0-m0-Nnp" firstAttribute="leading" secondItem="MKb-r3-Z0L" secondAttribute="trailing" constant="8" id="hTd-Ld-upg"/>
+                                    <constraint firstItem="uP2-Du-f8Z" firstAttribute="top" secondItem="MKb-r3-Z0L" secondAttribute="top" id="kYY-59-AeL"/>
                                     <constraint firstItem="o2E-EX-DaY" firstAttribute="leading" secondItem="EO0-m0-Nnp" secondAttribute="trailing" id="kh0-bd-BDK"/>
                                     <constraint firstAttribute="bottom" secondItem="MKb-r3-Z0L" secondAttribute="bottom" constant="19" id="mri-fA-Crc"/>
                                     <constraint firstItem="44b-7e-kzU" firstAttribute="leading" secondItem="Wad-tq-H6Y" secondAttribute="leading" constant="15" id="t2D-NU-X5i"/>
@@ -551,11 +567,13 @@
                     <size key="freeformSize" width="600" height="1200"/>
                     <connections>
                         <outlet property="avatarTextBox" destination="MJ2-ru-EjU" id="JJ4-xN-fjh"/>
+                        <outlet property="commentPlaceHolder" destination="uP2-Du-f8Z" id="hlF-As-5hO"/>
+                        <outlet property="commentTextView" destination="MKb-r3-Z0L" id="q3B-Qy-fDj"/>
+                        <outlet property="commentTextViewHeightConstraint" destination="4o1-M1-UHg" id="rqo-3p-7rT"/>
                         <outlet property="cursorView" destination="44b-7e-kzU" id="glQ-pK-feT"/>
                         <outlet property="leftMarginLeftChatCT" destination="Khv-Xw-h1E" id="pxR-RV-emH"/>
                         <outlet property="postButton" destination="o2E-EX-DaY" id="SaA-34-jh7"/>
                         <outlet property="tableView" destination="jo1-xj-DFh" id="FHD-hF-kTh"/>
-                        <outlet property="textBox" destination="MKb-r3-Z0L" id="YYQ-O7-Zi1"/>
                         <segue destination="vmi-Cl-kb2" kind="show" identifier="goNewPost" id="BUm-2M-dlN"/>
                         <segue destination="bgr-Ja-OZZ" kind="show" identifier="clickURLLink" id="ts9-DY-x7O"/>
                     </connections>
@@ -609,10 +627,10 @@
     </scenes>
     <resources>
         <image name="cameraBig" width="48" height="38"/>
-        <image name="cameraIcon.png" width="24" height="19"/>
+        <image name="cameraIcon" width="24" height="19"/>
         <image name="context" width="31" height="31"/>
         <image name="display-empty.jpg" width="256" height="256"/>
         <image name="likeSml.png" width="13" height="12"/>
-        <image name="send.png" width="30" height="30"/>
+        <image name="send" width="30" height="30"/>
     </resources>
 </document>

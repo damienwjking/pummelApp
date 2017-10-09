@@ -44,7 +44,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
                     let ratio = self.frame.width / imageSize.width
                     
                     imageView.frame = CGRect(
-                        origin: CGPointZero,
+                        origin: CGPoint(),
                         size: CGSize(width: self.frame.width, height: imageSize.height * ratio)
                     )
                     
@@ -55,7 +55,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
                     let ratio = self.frame.height / imageSize.height
                     
                     imageView.frame = CGRect(
-                        origin: CGPointZero,
+                        origin: CGPoint(),
                         size: CGSize(width: imageSize.width * ratio, height: self.frame.size.height)
                     )
                     
@@ -74,7 +74,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
                     let ratio = self.frame.height / imageSize.height
                     
                     imageView.frame = CGRect(
-                        origin: CGPointZero,
+                        origin: CGPoint(),
                         size: CGSize(width: imageSize.width * ratio, height: self.frame.height)
                     )
                     
@@ -85,7 +85,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
                     let ratio = self.frame.width / imageSize.width
                     
                     imageView.frame = CGRect(
-                        origin: CGPointZero,
+                        origin: CGPoint(),
                         size: CGSize(width: self.frame.width, height: imageSize.height * ratio)
                     )
                     
@@ -116,7 +116,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
         self.clipsToBounds   = true
         self.imageView.alpha = 0.0
         
-        imageView.frame = CGRect(origin: CGPointZero, size: CGSizeZero)
+        imageView.frame = CGRect(origin: CGPoint(), size: CGSizeZero)
         
         self.maximumZoomScale = 2.0
         self.minimumZoomScale = 0.8

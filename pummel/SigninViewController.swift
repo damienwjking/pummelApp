@@ -39,7 +39,7 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         var fbButtonFrame = self.signinBT.frame
         fbButtonFrame.origin.y = self.signinBT.frame.origin.y + self.signinBT.frame.size.height + 20

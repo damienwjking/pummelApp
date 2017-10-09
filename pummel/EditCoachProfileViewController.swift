@@ -68,15 +68,12 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     var tagIdsArray : NSMutableArray = []
     var tagOffset: Int = 0
     var isStopGetListTag : Bool = false
-    var isStopGetListCoachTag: Bool = false
     var userInfo: NSDictionary!
     
     let imagePicker = UIImagePickerController()
-    var currentId : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        currentId = PMHelper.getCurrentID()
         
         self.navigationItem.title = kNavEditProfile
         self.navigationController?.navigationBar.barTintColor = UIColor.white
@@ -153,7 +150,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         
         self.changeAvatarIMW.layer.cornerRadius = 15
         self.changeAvatarIMW.clipsToBounds = true
-        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(LoginAndRegisterViewController.imageTapped)))
+        let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:(#selector(self.changeAvatarTapped)))
         self.changeAvatarIMW.isUserInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
@@ -204,8 +201,10 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         super.viewWillAppear(animated)
         self.setAvatar()
         self.updateUI()
+
+        self.tags.removeAll()
         self.tagOffset = 0
-        isStopGetListTag = false
+        self.isStopGetListTag = false
         self.getListTags()
     }
     
@@ -225,12 +224,10 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                             if (tag.existInList(tagList: self.tags) == false) {
                                 self.tags.append(tag)
                             }
-                            
-                            self.tagOffset += 10
-                            self.collectionView.reloadData {
-                                self.tagHeightConstraint.constant = self.collectionView.collectionViewLayout.collectionViewContentSize.height
-                            }
                         }
+                        
+                        self.tagOffset += 10
+                        self.getListTags()
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -266,124 +263,29 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     }
     
     func updateUI() {
+        let currentUserID = PMHelper.getCurrentID()
+        
         if (self.userInfo == nil) {
-            var prefix = kPMAPIUSER
-            prefix.append(currentId)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        if (response.result.value == nil) {return}
-                        self.userInfo = response.result.value as! NSDictionary
-                        if (self.userInfo[kLastName] is NSNull == false) {
-                            self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
-                        } else {
-                            self.nameContentTF.text = self.userInfo[kFirstname] as? String
-                        }
-                        if (self.userInfo[kBio] is NSNull == false) {
-                            self.aboutContentTV.text = self.userInfo[kBio] as! String
-                        } else {
-                            self.aboutContentTV.text = ""
-                        }
-                        
-//                        let sizeAboutTV = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
-//                        self.aboutContentDT.constant = sizeAboutTV.height + 20
-                        
-                        self.genderContentTF.text = self.userInfo[kGender] as? String
-                        self.emailContentTF.text = self.userInfo[kEmail] as? String
-                        
-                        if (self.userInfo[kDob] is NSNull == false) {
-                            let stringDob = self.userInfo[kDob] as! String
-                            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
-                        }
-                        
-                        if (self.userInfo[kMobile] is NSNull == false) {
-                            self.mobileContentTF.text = self.userInfo[kMobile] as? String
-                        }
-                        
-                        if (self.userInfo[kFacebookUrl] is NSNull == false) {
-                            self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
-                        }
-                        
-                        if (self.userInfo[kInstagramUrl] is NSNull == false) {
-                            self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
-                        }
-                        
-                        if (self.userInfo[kTwitterUrl] is NSNull == false) {
-                            self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
-                        }
-                        
-                        if (self.userInfo[kEmergencyName] is NSNull == false) {
-                            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
-                        }
-                        
-                        if (self.userInfo[kEmergencyMobile] is NSNull == false) {
-                            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
-                        }
-                    } else if response.response?.statusCode == 401 {
-                        PMHelper.showLogoutAlert()
-                    }
-            }
+            UserRouter.getUserInfo(userID: currentUserID, completed: { (result, error) in
+                if (error == nil) {
+                    self.userInfo = result as! NSDictionary
+                    
+                    self.fillUserInfo()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
         } else {
-            if (self.userInfo[kLastName] is NSNull == false) {
-                self.nameContentTF.text = ((self.userInfo[kFirstname] as! String).stringByAppendingString(" ")).stringByAppendingString((self.userInfo[kLastName] as! String))
-            } else {
-                self.nameContentTF.text = self.userInfo[kFirstname] as? String
-            }
-            
-            if (self.userInfo[kBio] is NSNull == false) {
-                self.aboutContentTV.text = self.userInfo[kBio] as! String
-            } else {
-                self.aboutContentTV.text = ""
-            }
-            
-            _ = self.aboutContentTV.sizeThatFits(self.aboutContentTV.frame.size)
-//            self.aboutContentDT.constant = sizeAboutTV.height + 20
-            self.genderContentTF.text = self.userInfo[kGender] as? String
-            self.emailContentTF.text = self.userInfo[kEmail] as? String
-            
-            if (self.userInfo[kDob] is NSNull == false) {
-                let stringDob = self.userInfo[kDob] as! String
-                self.dobContentTF.text = stringDob.substring(to: stringDob.index(0, offsetBy: 10))
-            }
-            
-            if (self.userInfo[kMobile] is NSNull == false) {
-                self.mobileContentTF.text = self.userInfo[kMobile] as? String
-            }
-            
-            if (self.userInfo[kFacebookUrl] is NSNull == false) {
-                self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
-            }
-            
-            if (self.userInfo[kInstagramUrl] is NSNull == false) {
-                self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
-            }
-            
-            if (self.userInfo[kTwitterUrl] is NSNull == false) {
-                self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
-            }
-            
-            if (self.userInfo[kEmergencyName] is NSNull == false) {
-                self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
-            }
-            
-            if (self.userInfo[kEmergencyMobile] is NSNull == false) {
-                self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
-            }
+            self.fillUserInfo()
         }
         
-        var prefixC = kPMAPICOACH
-        prefixC.append(PMHelper.getCurrentID())
-        
-        Alamofire.request(.GET, prefixC)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                let coachInformationTotal = JSON as! NSDictionary
+        UserRouter.getCoachInfo(userID: currentUserID) { (result, error) in
+            if (error == nil) {
+                let coachInformationTotal = result as! NSDictionary
                 
                 if (coachInformationTotal[kQualification] is NSNull == false) {
                     let qualificationText = coachInformationTotal[kQualification] as! String
                     self.qualificationContentTF.text = qualificationText
-//                    let sizeQualificationTV = self.qualificationContentTF.sizeThatFits(self.qualificationContentTF.frame.size)
-//                    self.qualificationContentDT.constant = sizeQualificationTV.height + 20
                 } else {
                     self.qualificationContentTF.text = ""
                 }
@@ -391,8 +293,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 if (coachInformationTotal[kAchievement] is NSNull == false) {
                     let achivementText = coachInformationTotal[kAchievement] as! String
                     self.achivementContentTF.text = achivementText
-//                    let sizeAchivementTV = self.achivementContentTF.sizeThatFits(self.achivementContentTF.frame.size)
-//                    self.achivementContentTFDT.constant = sizeAchivementTV.height  + 20
                 } else {
                     self.achivementContentTF.text = ""
                 }
@@ -402,10 +302,63 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 } else {
                     self.websiteUrlTF.text = ""
                 }
-                
-            case .Failure(let error):
+            } else {
                 print("Request failed with error: \(String(describing: error))")
-                }
+            }
+        }.fetchdata()
+    }
+    
+    func fillUserInfo() {
+        let firstName = self.userInfo[kFirstname] as! String
+        let lastName = self.userInfo[kLastName] as? String
+        if (lastName != nil && lastName?.isEmpty == false) {
+            self.nameContentTF.text = firstName + " " + lastName!
+        } else {
+            self.nameContentTF.text = firstName
+        }
+        
+        // TODO: check name aboutContentTV
+        if (self.userInfo[kBio] is NSNull == false) {
+            self.aboutContentTV.text = self.userInfo[kBio] as! String
+        } else {
+            self.aboutContentTV.text = ""
+        }
+        
+        if (self.userInfo[kGender] is NSNull == false) {
+            self.genderContentTF.text = self.userInfo[kGender] as? String
+        }
+        
+        if (self.userInfo[kEmail] is NSNull == false) {
+            self.emailContentTF.text = self.userInfo[kEmail] as? String
+        }
+        
+        if (self.userInfo[kDob] is NSNull == false) {
+            let stringDob = self.userInfo[kDob] as! String
+            self.dobContentTF.text = stringDob.substring(to: stringDob.index(stringDob.startIndex, offsetBy: 10))
+        }
+
+        if (self.userInfo[kMobile] is NSNull == false) {
+            self.mobileContentTF.text = self.userInfo[kMobile] as? String
+        }
+        
+        if (self.userInfo[kFacebookUrl] is NSNull == false) {
+            self.facebookUrlTF.text = self.userInfo[kFacebookUrl] as? String
+        }
+        
+        if (self.userInfo[kInstagramUrl] is NSNull == false) {
+            self.instagramUrlTF.text = self.userInfo[kInstagramUrl] as? String
+        }
+        
+        if (self.userInfo[kTwitterUrl] is NSNull == false) {
+            self.twitterUrlTF.text = self.userInfo[kTwitterUrl] as? String
+        }
+        
+        if (self.userInfo[kEmergencyName] is NSNull == false) {
+            self.emergencyNameTF.text = self.userInfo[kEmergencyName] as? String
+        }
+        
+        if (self.userInfo[kEmergencyMobile] is NSNull == false) {
+            self.emergencyMobileTF.text = self.userInfo[kEmergencyMobile] as? String
         }
     }
     
@@ -430,9 +383,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     
     func basicInfoUpdate() {
         if (self.checkRuleInputData() == false) {
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
             if (fullNameArr.count > 0) {
@@ -464,26 +414,43 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                          kEmergencyMobile:emergencyMobileTF.text!,
                          kFacebookUrl:facebookUrlTF.text!,
                          kTwitterUrl:twitterUrlTF.text!,
-                         kInstagramUrl:instagramUrlTF.text!,] as [String : Any] as [String : Any]
+                         kInstagramUrl:instagramUrlTF.text!,] as [String : Any]
             
             self.view.makeToastActivity(message: "Saving")
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        //TODO: Save access token here
-                        self.trainerInfoUpdate()
-                    }else {
+            UserRouter.changeCurrentUserInfo(posfix: "", param: param, completed: { (result, error) in
+                if (error == nil) {
+                    var prefix = kPMAPICOACH
+                    prefix.append(PMHelper.getCurrentID())
+                    
+                    let qualStr: String = (self.qualificationContentTF.text == nil) ? "" : self.qualificationContentTF.text
+                    let achiveStr: String = (self.achivementContentTF.text == nil) ? "" : self.achivementContentTF.text
+                    
+                    let param = [kUserId:PMHelper.getCurrentID(),
+                                 kQualification:qualStr,
+                                 kAchievement: achiveStr,
+                                 kWebsiteUrl:self.websiteUrlTF.text!] as [String : Any]
+                    
+                    UserRouter.changeCurrentCoachInfo(posfix: "", param: param, completed: { (result, error) in
                         self.view.hideToastActivity()
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
+                        
+                        let isChangeDataSuccess = result as! Bool
+                        
+                        if (isChangeDataSuccess == true) {
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
+                            print("Request failed with error: \(String(describing: error))")
+                            
+                            PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
                         }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                    }
-            }
+                    }).fetchdata()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.view.hideToastActivity()
+                    
+                    PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
+                }
+            }).fetchdata()
             
         } else {
             let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
@@ -497,35 +464,6 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         }
     }
     
-    func trainerInfoUpdate() {
-        var prefix = kPMAPICOACH
-        prefix.append(PMHelper.getCurrentID())
-        
-        let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
-        let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
-        
-        let param = [kUserId:PMHelper.getCurrentID(),
-                     kQualification:qualStr,
-                     kAchievement: achiveStr,
-                     kWebsiteUrl:websiteUrlTF.text!]
-        
-        Alamofire.request(.PUT, prefix, parameters: param)
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    self.navigationController?.popViewController(animated: true)
-                }else {
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                }
-        }
-    }
-    
     func done() {
         self.basicInfoUpdate()
         
@@ -535,7 +473,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         self.navigationController?.popViewController(animated: true)
     }
     
-    func showPopupToSelectProfileAvatar() {
+    func changeAvatarTapped() {
         let selectImageFromLibrary = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = true
             self.imagePicker.sourceType = .photoLibrary
@@ -543,29 +481,17 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-            self.imagePicker.sourceType = .Camera
-            self.imagePicker.cameraDevice = .Front
+            self.imagePicker.sourceType = .camera
+            self.imagePicker.cameraDevice = .front
             self.present(self.imagePicker, animated: true, completion: nil)
         }
-//        let takeVideoFromLibrary = { (action:UIAlertAction!) -> Void in
-//            self.imagePicker.allowsEditing = false
-//            self.imagePicker.sourceType = .photoLibrary
-//            self.imagePicker.mediaTypes = ["public.movie"]
-//            self.present(self.imagePicker, animated: true, completion: nil)
-//        }
-        
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: kSelectFromLibrary, style: UIAlertActionStyle.destructive, handler: selectImageFromLibrary))
         alertController.addAction(UIAlertAction(title: kTakePhoto, style: UIAlertActionStyle.destructive, handler: takePhotoWithFrontCamera))
-//        alertController.addAction(UIAlertAction(title: kTakeVideo, style: UIAlertActionStyle.destructive, handler: takeVideoFromLibrary))
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
-        self.present(alertController, animated: true) { }
-    }
-    
-    func imageTapped() {
-        showPopupToSelectProfileAvatar()
+        self.present(alertController, animated: true)
     }
     
     func setAvatar() {
@@ -583,7 +509,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     
     func checkRuleInputData() -> Bool {
         var returnValue  = false
-        if !(self.isValidEmail(emailContentTF.text!)) {
+        if !(self.isValidEmail(testStr: emailContentTF.text!)) {
             returnValue = true
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
                                                                attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
@@ -592,17 +518,17 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                                                                attributes:[NSForegroundColorAttributeName: UIColor.black])
         }
         
-        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
+        if (self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase(find: "facebook.com")) {
             self.showMsgLinkInValid()
             return true
         }
         
-        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase("twitter.com") {
+        if (self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase(find: "twitter.com")) {
             self.showMsgLinkInValid()
             return true
         }
         
-        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase("instagram.com") {
+        if (self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase(find: "instagram.com")) {
             self.showMsgLinkInValid()
             return true
         }
@@ -629,7 +555,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         if (testStr == "") {
             return false
         } else {
-            let dateFormatter = DateFormatter
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = kDateFormat
             let dateDOB = dateFormatter.date(from: testStr)
             
@@ -649,15 +575,15 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     }
     
     func datePickerValueChanged(sender:UIDatePicker) {
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "YYYY-MM-dd"
         self.dobContentTF.text = dateFormatter.string(from: sender.date)
         let dateDOB = dateFormatter.date(from: self.dobContentTF.text!)
         
         let date = NSDate()
         let calendar = NSCalendar.current
-        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-        let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+        let components = calendar.dateComponents([.day , .month , .year], from: date)
+        let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB)
         let year =  components.year
         let yearDOB = componentsDOB.year
         
@@ -670,27 +596,28 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         }
     }
     
-    func selectNewTag(tag: Tag) {
-        var linkAddTagToUser = kPMAPIUSER
-        linkAddTagToUser.append(currentId)
-        linkAddTagToUser.append("/tags")
-        Alamofire.request(.POST, linkAddTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                            }
-        }
+    func selectNewTag(tag: TagModel) {
+        TagRouter.selectTag(tagID: tag.tagId!) { (result, error) in
+            let isDeleteSuccess = result as! Bool
+            
+            if (isDeleteSuccess == true) {
+                // Do nothing
+            } else {
+                PMHelper.showDoAgainAlert()
+            }
+            }.fetchdata()
     }
     
-    func deleteATagUser(tag: Tag) {
-        var linkDeleteTagToUser = kPMAPIUSER
-        linkDeleteTagToUser.append(currentId)
-        linkDeleteTagToUser.append("/tags/")
-        linkDeleteTagToUser.append(tag.tagId!)
-        Alamofire.request(.DELETE, linkDeleteTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                }
-        }
+    func deleteATagUser(tag: TagModel) {
+        TagRouter.deleteTag(tagID: tag.tagId!) { (result, error) in
+            let isDeleteSuccess = result as! Bool
+            
+            if (isDeleteSuccess == true) {
+                // Do nothing
+            } else {
+                PMHelper.showDoAgainAlert()
+            }
+        }.fetchdata()
     }
     
     
@@ -710,16 +637,13 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
     }
     
     // MARK: UIImagePickerControllerDelegate
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let mediType = info[UIImagePickerControllerMediaType] as! String
         
         if (mediType == "public.image") {
             if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-                let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-                activityView.center = self.view.center
-                activityView.startAnimating()
-                avatarIMW.addSubview(activityView)
-                avatarIMW.contentMode = .ScaleAspectFill
+                self.avatarIMW.contentMode = .scaleAspectFill
+                
                 var imageData : NSData!
                 let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
                 var type : String!
@@ -727,17 +651,15 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 if assetPath.absoluteString!.hasSuffix("JPG") {
                     type = imageJpeg
                     filename = jpgeFile
-                    imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+                    imageData = UIImageJPEGRepresentation(pickedImage, 0.2)! as NSData
                 } else if assetPath.absoluteString!.hasSuffix("PNG") {
                     type = imagePng
                     filename = pngFile
-                    imageData = UIImagePNGRepresentation(pickedImage)
+                    imageData = UIImagePNGRepresentation(pickedImage)! as NSData
                 }
                 
                 if (imageData == nil) {
                     DispatchQueue.main.async(execute: {
-                        activityView.stopAnimating()
-                        activityView.removeFromSuperview()
                         //Your main thread code goes in here
                         let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .alert)
                         
@@ -752,106 +674,48 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                     })
                     
                 } else {
-                    var prefix = kPMAPIUSER
+                    self.avatarIMW.makeToastActivity()
                     
-                    prefix.append(PMHelper.getCurrentID())
-                    prefix.append(kPM_PATH_PHOTO_PROFILE)
-                    
-                    let parameters = [kUserId:PMHelper.getCurrentID(),
-                                      kProfilePic: "1"]
-                    
-                    Alamofire.upload(
-                        .POST,
-                        prefix,
-                        multipartFormData: { multipartFormData in
-                            multipartFormData.appendBodyPart(data: imageData, name: "file",
-                                fileName:filename, mimeType:type)
-                            for (key, value) in parameters {
-                                multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                            }
-                        },
-                        encodingCompletion: { encodingResult in
-                            switch encodingResult {
-                                
-                            case .Success(let upload, _, _):
-                                upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                                }
-                                upload.validate()
-                                upload.responseJSON { response in
-                                    if response.result.error != nil {
-                                        // failure
-                                        activityView.stopAnimating()
-                                        activityView.removeFromSuperview()
-                                    } else {
-                                        activityView.stopAnimating()
-                                        activityView.removeFromSuperview()
-                                        self.avatarIMW.image = pickedImage
-                                    }
-                                }
-                                
-                            case .Failure( _):
-                                activityView.stopAnimating()
-                                activityView.removeFromSuperview()
-                            }
+                    ImageVideoRouter.currentUserUploadAvatar(imageData: imageData as Data, completed: { (result, error) in
+                        self.avatarIMW.hideToastActivity()
+                        
+                        let isSuccess = result as! Bool
+                        if (isSuccess == true) {
+                            self.avatarIMW.image = pickedImage
                         }
-                    )
+                    }).fetchdata()
                 }
                 
             }
         } else if (mediType == "public.movie") {
-            let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
-            let videoData = NSData(contentsOfURL: videoPath)
-            let videoExtend = (videoPath.absoluteString!.components(separatedBy: ".").last?.lowercased())!
-            let videoType = "video/" + videoExtend
-            let videoName = "video." + videoExtend
-            
-            // Insert activity indicator
-            self.view.makeToastActivity(message: "Uploading")
-            
-            // send video by method mutipart to server
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPM_PATH_VIDEO)
-            
-            let parameters = [kUserId:PMHelper.getCurrentID(),
-                              kProfileVideo : "1"]
-            
-            Alamofire.upload(
-                .POST,
-                prefix,
-                multipartFormData: { multipartFormData in
-                    multipartFormData.appendBodyPart(data: videoData!,
-                        name: "file",
-                        fileName:videoName,
-                        mimeType:videoType)
-                    for (key, value) in parameters {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                    }
-                },
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
+            do {
+                let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
+                let videoData = try Data(contentsOf: videoPath as URL)
+                
+                // send video by method mutipart to server
+                self.view.makeToastActivity(message: "Uploading")
+                ImageVideoRouter.currentUserUploadVideo(videoData: videoData) { (result, error) in
+                    if (error == nil) {
+                        let percent = result as! Double
                         
-                    case .Success(let upload, _, _):
-                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                        }
-                        upload.validate()
-                        upload.responseJSON { response in
-                            // Do nothing
+                        if (percent >= 100.0) {
                             self.view.hideToastActivity()
                             self.navigationController?.popViewController(animated: true)
                         }
                         
-                    case .Failure( _): break
-                        // Do nothing
+                    } else {
+                        print("Request failed with error: \(String(describing: error))")
                     }
-                }
-            )
+                    }.fetchdata()
+            } catch {
+                print(error.localizedDescription)
+            }
         }
         
         dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
 }
@@ -863,16 +727,13 @@ extension EditCoachProfileViewController: UICollectionViewDataSource, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
-        self.configureCell(cell, for: indexPath)
-        if (indexPath.row == tags.count - 1) {
-            self.getListTags()
-        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kTagCell, for: indexPath) as! TagCell
+        self.configureCell(cell: cell, forIndexPath: indexPath as NSIndexPath)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, for: indexPath)
+        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath as NSIndexPath)
         var cellSize = self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
         
         if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
@@ -887,11 +748,11 @@ extension EditCoachProfileViewController: UICollectionViewDataSource, UICollecti
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         let tag = tags[indexPath.row]
         if (tag.selected) {
-            self.selectNewTag(tag)
-            tagIdsArray.addObject(tag.tagId!)
+            self.selectNewTag(tag: tag)
+            tagIdsArray.add(tag.tagId!)
         } else {
-            self.deleteATagUser(tag)
-            tagIdsArray.removeObject(tag.tagId!)
+            self.deleteATagUser(tag: tag)
+            tagIdsArray.remove(tag.tagId!)
         }
         let contentOffset = self.scrollView.contentOffset
         self.collectionView.reloadData()
@@ -910,7 +771,7 @@ extension EditCoachProfileViewController: UICollectionViewDataSource, UICollecti
 
 // MARK: - UITextFieldDelegate, UITextViewDelegate
 extension EditCoachProfileViewController: UITextFieldDelegate, UITextViewDelegate {
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if (textField.isEqual(self.nameContentTF)) {
             self.isFirstTVS = true
         }
@@ -935,13 +796,13 @@ extension EditCoachProfileViewController: UITextFieldDelegate, UITextViewDelegat
         datePickerView.setValue(UIColor.white, forKey: "textColor")
         datePickerView.datePickerMode = UIDatePickerMode.date
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(EditProfileViewController.datePickerValueChanged(_:)), for: .valueChanged)
+        datePickerView.addTarget(self, action:#selector(self.datePickerValueChanged(sender:)), for: .valueChanged)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         if textField.isEqual(self.emailContentTF) == true {
-            if (self.isValidEmail(self.emailContentTF.text!) == false) {
+            if (self.isValidEmail(testStr: self.emailContentTF.text!) == false) {
                 self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
                                                                         attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
             } else {
@@ -952,7 +813,7 @@ extension EditCoachProfileViewController: UITextFieldDelegate, UITextViewDelegat
         return true
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         if (textView.isEqual(self.aboutContentTV)) {
             self.isFirstTVS = true
         }

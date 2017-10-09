@@ -247,7 +247,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
 //    }
 //    
 //    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated: animated)
+//        super.viewDidAppear(animated)
 //        
 //        postHeightDT.constant = aboutCollectionView.collectionViewLayout.collectionViewContentSize.height
 //        self.scrollView.contentSize = CGSize.init(width: self.view.frame.width, height: aboutCollectionView.frame.origin.y + postHeightDT.constant)

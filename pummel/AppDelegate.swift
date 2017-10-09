@@ -161,12 +161,12 @@ extension AppDelegate {
 // MARK: - Notification
 extension AppDelegate {
     // implemented in your application delegate
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.hexString
         let defaults = UserDefaults.standard
         defaults.set(deviceTokenString, forKey: k_PM_PUSH_TOKEN)
         let mixpanel = Mixpanel.sharedInstance()
-        mixpanel?.people.addPushDeviceToken(deviceToken as Data)
+        mixpanel?.people.addPushDeviceToken(deviceToken)
         
         let currentId = PMHelper.getCurrentID()
         let param = [kUserId:currentId,

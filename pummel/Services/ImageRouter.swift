@@ -129,7 +129,7 @@ enum ImageVideoRouter: URLRequestConvertible {
         case .currentUserUploadAvatar:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_PHOTO_PROFILE
             
-        case .currentUserUploadAvatar:
+        case .currentUserUploadVideo:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_VIDEO
             
         }

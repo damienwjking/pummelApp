@@ -27,8 +27,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     var stopSearch: Bool = false
     var stopGetCoach: Bool = false
     var widthCell : CGFloat = 0.0
-    var currentOffset: CGPoint = CGPointZero
-    var touchPoint: CGPoint = CGPointZero
+    var currentOffset: CGPoint = CGPoint()
+    var touchPoint: CGPoint = CGPoint()
     var loadmoreTime = 0
     let badgeLabel = UILabel()
     
@@ -62,8 +62,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         refineSearchBT.titleLabel!.font = .pmmMonReg12()
         refineSearchBT.layer.cornerRadius = 5
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.startSearchCoachNotification), name: k_PM_FIRST_SEARCH_COACH, object: nil)
-        NotificationCenter.default.addObserver(self, selector:  #selector(self.updateSMLCBadge), name: k_PM_SHOW_MESSAGE_BADGE, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.startSearchCoachNotification), name: NSNotification.Name(rawValue: k_PM_FIRST_SEARCH_COACH), object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.updateSMLCBadge), name: NSNotification.Name(rawValue: k_PM_SHOW_MESSAGE_BADGE), object: nil)
         NotificationCenter.default.addObserver(self, selector:  #selector(self.updateLBadge(_:)), name: k_PM_UPDATE_LEAD_BADGE, object: nil)
     }
     
@@ -74,7 +74,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         let showSeachViewController = self.defaults.bool(forKey: "SHOW_SEARCH_AFTER_REGISTER")
         if (showSeachViewController == true) {
-            self.defaults.setBool(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+            self.defaults.set(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
             self.defaults.synchronize()
             performSegue(withIdentifier: "letUsHelp", sender: nil)
         }
@@ -83,17 +83,17 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(FindViewController.refind), name: "SELECTED_MIDDLE_TAB", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FindViewController.refind), name: NSNotification.Name(rawValue: "SELECTED_MIDDLE_TAB"), object: nil)
         
         self.stopSearch = false
         
         self.badgeLabel.alpha = 1
         
-        self.endPagingCarousel(self.collectionView)
+        self.endPagingCarousel(scrollView: self.collectionView)
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_1 {
@@ -114,7 +114,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NotificationCenter.default.removeObserver(self, name: "SELECTED_MIDDLE_TAB", object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "SELECTED_MIDDLE_TAB"), object: nil)
 
         self.badgeLabel.alpha = 0
     }
@@ -197,7 +197,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             if ((aVariable[kGender] as! String) != kDontCare) {
                 param["gender"] = aVariable[kGender]
             }
-            param["limit"] = 30
+            param["limit"] = 30 as AnyObject
             param["offset"] = self.loadmoreTime * 30
             param[kLong] = aVariable[kLong]
             param[kLat] = aVariable[kLat]
@@ -238,7 +238,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                                 self.arrayResult.removeAll()
                                 self.arrayResult = response.result.value  as! [NSDictionary]
                                 self.viewDidLayoutSubviews()
-                                self.collectionView.contentOffset = CGPointZero
+                                self.collectionView.contentOffset = CGPoint()
                                 
                                 // Post notification for dismiss search animation screen
                                 NotificationCenter.default.post(name: "AFTER_SEARCH_PAGE", object: nil)

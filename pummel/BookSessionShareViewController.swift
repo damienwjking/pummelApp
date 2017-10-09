@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import MessageUI
 import Alamofire
 
 class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
 
     @IBOutlet weak var tbView: UITableView!
     var image:UIImage?
-    var tag:Tag?
+    var tag:TagModel?
     var textToPost = ""
     var dateToPost = ""
     var userIdSelected = ""
@@ -24,7 +25,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
         super.viewDidLoad()
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(BookSessionViewController.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
         
         // TODO: add right invite button
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kInvite.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.invite))
@@ -51,15 +52,15 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
     }
     
     func invite() {
-        let inviteSMSAction = UIAlertAction(title: kInviteSMS, style: .Destructive) { (_) in
+        let inviteSMSAction = UIAlertAction(title: kInviteSMS, style: .destructive) { (_) in
             self.performSegue(withIdentifier: "inviteContactUser", sender: kSMS)
         }
         
-        let inviteMailAction = UIAlertAction(title: kInviteEmail, style: .Destructive) { (_) in
+        let inviteMailAction = UIAlertAction(title: kInviteEmail, style: .destructive) { (_) in
             self.performSegue(withIdentifier: "inviteContactUser", sender: kEmail)
         }
         
-        let cancelAction = UIAlertAction(title: kCancle, style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: kCancle, style: .cancel, handler: nil)
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alertController.addAction(inviteSMSAction)
@@ -83,7 +84,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
                 let userInfo = result as! NSDictionary
                 
                 if typeGroup == TypeGroup.Current.rawValue {
-                    self.showAlertMovetoOldAction(userInfo)
+                    self.showAlertMovetoOldAction(userInfo: userInfo)
                 } else {
                     self.showAlertMovetoCurrentAction(userInfo: userInfo, typeGroup: typeGroup)
                 }
@@ -110,7 +111,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
 
 //MARK: TableView
 extension BookSessionShareViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
     }
     
@@ -146,22 +147,21 @@ extension BookSessionShareViewController {
         let userID = String(format:"%0.f", (userInfo[kId]! as AnyObject).doubleValue)
         
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
-            let param = [kUserId : PMHelper.getCurrentID(),
-                         kUserIdRequest : userID]
+            self.view.makeToastActivity()
             
-            var prefix = kPMAPICOACHES
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPMAPICOACH_OLD)
-            prefix.append("/")
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
-                    self.view.hideToastActivity()
-                    if response.response?.statusCode == 200 {
-                        self.forceUpdate = true
-                        self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
-                        self.forceUpdate = false
-                    }
-            }
+            UserRouter.setOldLead(requestID: userID, completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                let isChangeSuccess = result as! result
+                if (isChangeSuccess) {
+                    self.forceUpdate = true
+                    
+                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
+                    
+                    self.forceUpdate = false
+                }
+                
+            }).fetchdata()
         }
         
         // Email action
@@ -174,31 +174,17 @@ extension BookSessionShareViewController {
                     let coachFirstName = currentInfo[kFirstname] as! String
                     let userFirstName = userInfo[kFirstname] as! String
                     
-//                    if MFMailComposeViewController.canSendMail() {
-//                        let mail = MFMailComposeViewController()
-//                        mail.mailComposeDelegate = self
-//                        mail.setToRecipients(["hello@pummel.fit"])
-//                        mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
-//                        mail.setSubject("Come join me on Pummel Fitness")
-//                        self.present(mail, animated: true, completion: nil)
-//                    }
-                    
-                    var urlString = "mailto:"
-                    urlString = urlString.stringByAppendingString(userMail)
-                    
-                    urlString = urlString.stringByAppendingString("?subject=")
-                    urlString = urlString.stringByAppendingString("Come%20join%20me%20on%20Pummel%20Fitness")
-                    
-                    urlString = urlString.stringByAppendingString("&from=")
-                    urlString = urlString.stringByAppendingString(currentMail)
-                    
-                    urlString = urlString.stringByAppendingString("&body=")
-                    urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
-                    
-                    let mailURL = NSURL(string: urlString)
-                    if (UIApplication.shared.canOpenURL(mailURL!)) {
-                        UIApplication.shared.openURL(mailURL!)
+                    if MFMailComposeViewController.canSendMail() {
+                        let mail = MFMailComposeViewController()
+                        mail.mailComposeDelegate = self
+                        
+                        mail.setSubject("Come join me on Pummel Fitness")
+                        mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
+                        self.present(mail, animated: true, completion: nil)
+                    } else {
+                        PMHelper.showDoAgainAlert()
                     }
+                    
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
@@ -208,20 +194,19 @@ extension BookSessionShareViewController {
         // Call action
         let phoneNumber = userInfo[kMobile] as? String
         let callClientAction = { (action:UIAlertAction!) -> Void in
-            var urlString = "tel:///"
-            urlString = urlString.stringByAppendingString(phoneNumber!)
+            let urlString = "tel:///" + phoneNumber!
             
             let tellURL = NSURL(string: urlString)
-            if (UIApplication.shared.canOpenURL(tellURL!)) {
-                UIApplication.shared.openURL(tellURL!)
+            if (UIApplication.shared.canOpenURL(tellURL! as URL)) {
+                UIApplication.shared.openURL(tellURL! as URL)
             }
         }
         
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
             // Special case: can not call tabbarviewcontroller
-            UserDefaults.standard.setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            UserDefaults.standard.setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            UserDefaults.standard.set(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            UserDefaults.standard.set(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
             
             self.navigationController?.popToRootViewController(animated: true)
         }
@@ -257,27 +242,21 @@ extension BookSessionShareViewController {
         let userID = String(format:"%0.f", (userInfo[kId]! as AnyObject).doubleValue)
         
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
-            let param = [kUserId : PMHelper.getCurrentID(),
-                         kUserIdRequest : userID]
+            self.view.makeToastActivity()
             
-            var prefix = kPMAPICOACHES
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPMAPICOACH_CURRENT)
-            prefix.append("/")
-            
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
-                    self.view.hideToastActivity()
-                    if response.response?.statusCode == 200 {
-                        self.forceUpdate = true
-                        if typeGroup == TypeGroup.NewLead.rawValue {
-                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 0, inSection: 0),NSIndexPath(forItem: 1, inSection: 0)], withRowAnimation: .None)
-                        } else {
-                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
-                        }
-                        self.forceUpdate = false
-                    }
-            }
+            UserRouter.setCurrentLead(requestID: userID, completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                let isChangeSuccess = result as! result
+                if (isChangeSuccess) {
+                    self.forceUpdate = true
+                    
+                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
+                    
+                    self.forceUpdate = false
+                }
+                
+            }).fetchdata()
         }
         
         // Email action
@@ -290,22 +269,17 @@ extension BookSessionShareViewController {
                     let coachFirstName = currentInfo[kFirstname] as! String
                     let userFirstName = userInfo[kFirstname] as! String
                     
-                    var urlString = "mailto:"
-                    urlString = urlString.stringByAppendingString(userMail)
-                    
-                    urlString = urlString.stringByAppendingString("?subject=")
-                    urlString = urlString.stringByAppendingString("Come%20join%20me%20on%20Pummel%20Fitness")
-                    
-                    urlString = urlString.stringByAppendingString("&from=")
-                    urlString = urlString.stringByAppendingString(currentMail)
-                    
-                    urlString = urlString.stringByAppendingString("&body=")
-                    urlString = urlString.stringByAppendingString("Hey%20\(userFirstName),%0A%0ACome%20join%20me%20on%20the%20Pummel%20Fitness%20app,%20where%20we%20can%20book%20appointments,%20log%20workouts,%20save%20transformation%20photos%20and%20chat%20for%20free.%0A%0ADownload%20the%20app%20at%20http://get.pummel.fit%0A%0AThanks,%0A%0ACoach%0A\(coachFirstName)")
-                    
-                    let mailURL = NSURL(string: urlString)
-                    if (UIApplication.shared.canOpenURL(mailURL!)) {
-                        UIApplication.shared.openURL(mailURL!)
+                    if MFMailComposeViewController.canSendMail() {
+                        let mail = MFMailComposeViewController()
+                        mail.mailComposeDelegate = self
+                        
+                        mail.setSubject("Come join me on Pummel Fitness")
+                        mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
+                        self.present(mail, animated: true, completion: nil)
+                    } else {
+                        PMHelper.showDoAgainAlert()
                     }
+                    
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
@@ -318,12 +292,11 @@ extension BookSessionShareViewController {
         if (phoneNumber != nil) {
             callClientAction = { (action:UIAlertAction!) -> Void in
                 let phoneNumber = userInfo[kMobile] as! String
-                var urlString = "tel:///"
-                urlString = urlString.stringByAppendingString(phoneNumber)
+                let urlString = "tel:///" + phoneNumber
                 
                 let tellURL = NSURL(string: urlString)
-                if (UIApplication.shared.canOpenURL(tellURL!)) {
-                    UIApplication.shared.openURL(tellURL!)
+                if (UIApplication.shared.canOpenURL(tellURL! as URL)) {
+                    UIApplication.shared.openURL(tellURL! as URL)
                 }
             }
         }
@@ -332,8 +305,8 @@ extension BookSessionShareViewController {
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
             // Special case: can not call tabbarviewcontroller
-            UserDefaults.standard.setObject(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            UserDefaults.standard.setObject(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
+            UserDefaults.standard.set(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
+            UserDefaults.standard.set(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
             
             self.navigationController?.popToRootViewController(animated: true)
         }
@@ -363,5 +336,11 @@ extension BookSessionShareViewController {
         alertController.addAction(UIAlertAction(title: kCancle, style: UIAlertActionStyle.cancel, handler: nil))
         
         self.present(alertController, animated: true) { }
+    }
+}
+
+extension BookSessionShareViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
     }
 }

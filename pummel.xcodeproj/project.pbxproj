@@ -44,6 +44,8 @@
 		BA1DA3DC1E5DD59F00E3BF7A /* CardViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */; };
 		BA22A2CA1F0C8E7B008FD47F /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA22A2C91F0C8E7B008FD47F /* UserModel.swift */; };
 		BA29B1391F132C530059AE9A /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29B1381F132C530059AE9A /* Extension.swift */; };
+		BA2E89D11F87728800A8A8BD /* MessageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2E89D01F87728800A8A8BD /* MessageRouter.swift */; };
+		BA2E89D31F87729700A8A8BD /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2E89D21F87729700A8A8BD /* MessageModel.swift */; };
 		BA2FA9621F1693A2004164D5 /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */; };
 		BA2FEA6C1F4F388D00146529 /* CreateBridgFile.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */; };
 		BA2FEA6D1F4F399200146529 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863751E4CD5D500E09CA7 /* Bolts.framework */; };
@@ -265,6 +267,8 @@
 		BA1DA3DB1E5DD59F00E3BF7A /* CardViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewCell.swift; sourceTree = "<group>"; };
 		BA22A2C91F0C8E7B008FD47F /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Model.swift/UserModel.swift; sourceTree = "<group>"; };
 		BA29B1381F132C530059AE9A /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		BA2E89D01F87728800A8A8BD /* MessageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageRouter.swift; sourceTree = "<group>"; };
+		BA2E89D21F87729700A8A8BD /* MessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
 		BA2FEA6A1F4F388D00146529 /* pummel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pummel-Bridging-Header.h"; sourceTree = "<group>"; };
 		BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateBridgFile.m; sourceTree = "<group>"; };
@@ -560,6 +564,7 @@
 				BA0314931E157C0300982622 /* SessionModel.swift */,
 				BA506FB21F8379C900FF1964 /* TagModel.swift */,
 				BA506FB01F83799900FF1964 /* FeedModel.swift */,
+				BA2E89D21F87729700A8A8BD /* MessageModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -571,6 +576,7 @@
 				BA02EE2A1EE7B14300495943 /* UserRouter.swift */,
 				BA003A9F1EEE3241002FE038 /* FeedRouter.swift */,
 				BA63D2A21F84D9F200D2D8C8 /* TagRouter.swift */,
+				BA2E89D01F87728800A8A8BD /* MessageRouter.swift */,
 				BA9881001F85F39B00DBF527 /* SessionRouter.swift */,
 				BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */,
 				BA003AA31EEE5532002FE038 /* PMHelper.swift */,
@@ -1223,6 +1229,7 @@
 				E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* MessageViewController.swift in Sources */,
 				F9EAE8E51D6EFA4900FD32BE /* SettingHelpSupportTableViewCell.swift in Sources */,
+				BA2E89D31F87729700A8A8BD /* MessageModel.swift in Sources */,
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
 				E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */,
@@ -1283,6 +1290,7 @@
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
 				BA15EBB61F551A8300B0A515 /* TestimonialModel.swift in Sources */,
 				F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */,
+				BA2E89D11F87728800A8A8BD /* MessageRouter.swift in Sources */,
 				F9FE14551CEBD29B004ABE34 /* FSAlbumView.swift in Sources */,
 				F96051B21DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift in Sources */,
 				F9827E991CB81F9E00841BF1 /* FeaturedViewController.swift in Sources */,

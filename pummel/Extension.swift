@@ -87,9 +87,48 @@ extension NSData {
             return nil //unknown
         }
     }
-    
+}
+
+extension Data {
     var hexString: String {
-        return map { String(format: "%02hhx", $0) }.joined()
+        return reduce("") {$0 + String(format: "%02x", $1)}
+    }
+}
+
+extension NSDate {
+    func timeAgoSinceDate() -> String {
+        let calendar = NSCalendar.current
+        let unitFlags = Set<Calendar.Component>([.second, .minute, .hour, .day, .month, .year])
+        let now = NSDate()
+        let earliest = now.earlierDate(self as Date)
+        let latest = (earliest == now as Date) ? self : now
+        let components = calendar.dateComponents(unitFlags, from: earliest, to: latest as Date)
+        
+        if (components.year! >= 2) {
+            return "\(String(describing: components.year))y"
+        } else if (components.year! >= 1){
+            return "1y"
+        } else if (components.month! >= 2) {
+            return "\(String(describing: components.month))m"
+        } else if (components.month! >= 1){
+            return "1m"
+        } else if (components.day! >= 2) {
+            return "\(String(describing: components.day))d"
+        } else if (components.day! >= 1){
+            return "1d"
+        } else if (components.hour! >= 2) {
+            return "\(String(describing: components.hour))hr"
+        } else if (components.hour! >= 1){
+            return "1hr"
+        } else if (components.minute! >= 2) {
+            return "\(String(describing: components.minute))m"
+        } else if (components.minute! >= 1){
+            return "1m"
+        } else if (components.second! >= 3) {
+            return "\(String(describing: components.second))s"
+        } else {
+            return "Just now"
+        }
     }
 }
 
@@ -201,5 +240,17 @@ extension UITableView {
 extension Array {
     func randomElement() -> Element {
         return self[Int(arc4random_uniform(UInt32(self.count)))]
+    }
+}
+
+extension UITextView {
+    func getHeightWithWidthFixed() -> CGFloat {
+        let constraintRect = CGSize(width: self.frame.size.width, height: CGFloat.greatestFiniteMagnitude)
+        
+        let boundingBox = self.text.boundingRect(with: constraintRect, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName: self.font], context: nil)
+        
+        let height = boundingBox.height + self.layoutMargins.top + self.layoutMargins.bottom
+        
+        return height
     }
 }

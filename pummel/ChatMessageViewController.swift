@@ -77,7 +77,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         if (self.needOpenKeyboard == true) {
             self.textBox.becomeFirstResponder()

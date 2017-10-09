@@ -10,13 +10,15 @@ import UIKit
 import Alamofire
 //import RSKGrowingTextView
 
-class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
+class FeedViewController: BaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
     var feedDetail : NSDictionary!
     var userFeed : NSDictionary!
    
-    @IBOutlet var textBox: RSKGrowingTextView!
+    @IBOutlet weak var commentTextView: UITextView!
+    @IBOutlet weak var commentPlaceHolder: UILabel!
+    @IBOutlet weak var commentTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var postButton: UIButton!
     
     @IBOutlet var cursorView: UIView!
@@ -46,15 +48,13 @@ class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
         if let userDic = feedDetail[kUser] as? NSDictionary {
             userFeed = userDic
         }
-        self.textBox.font = UIFont.pmmMonReg13()
-        self.textBox.delegate = self
-    
+        
         self.navigationItem.hidesBackButton = true;
         let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.tableViewTapped(recognizer:)))
         self.tableView.addGestureRecognizer(recognizer)
-        avatarTextBox.layer.cornerRadius = 20
-        avatarTextBox.clipsToBounds = true
-        avatarTextBox.isHidden = true
+        self.avatarTextBox.layer.cornerRadius = 20
+        self.avatarTextBox.clipsToBounds = true
+        self.avatarTextBox.isHidden = true
         self.getImageAvatarTextBox()
     }
     
@@ -92,7 +92,7 @@ class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
     
     func keyboardWillHide(notification: NSNotification) {
         self.view.frame.origin.y = 64
-        if (self.textBox.text == "") {
+        if (self.commentTextView.text == "") {
             self.cursorView.isHidden = false
             self.avatarTextBox.isHidden = true
             self.leftMarginLeftChatCT.constant = 15
@@ -127,7 +127,7 @@ class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
     }
     
     @IBAction func goNewPost() {
-        self.textBox.resignFirstResponder()
+        self.commentTextView.resignFirstResponder()
         self.performSegue(withIdentifier: "goNewPost", sender: nil)
     }
     
@@ -193,66 +193,27 @@ class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
     }
     
     @IBAction func addComment() {
-        let text = self.textBox.text
+        let text = self.commentTextView.text
         
-        if (text.isEmpty == false) {
+        if (text?.isEmpty == false) {
             let postId = String(format:"%0.f", (self.feedDetail[kId]! as AnyObject).doubleValue)
-            var link = kPMAPI
-            link.append("/api/posts/")
-            link.append(String(postId))
-            link.append("/comments")
             
             self.postButton.isUserInteractionEnabled = false
             
-            Alamofire.request(.POST, link, parameters: [kPostId:postId, kText:text])
-                .responseJSON { response in
-                    self.postButton.isUserInteractionEnabled = true
+            FeedRouter.postComment(postID: postId, text: text!, completed: { (result, error) in
+                self.postButton.isUserInteractionEnabled = true
+                
+                let isPostSuccess = result as! Bool
+                if (isPostSuccess == true) {
+                    self.commentTextView.text = ""
                     
-                    if response.response?.statusCode == 200 {
-                        self.textBox.text = ""
-                        
-                        self.offset = 0
-                        self.listComment.removeAll()
-                        self.getListComment()()
-                    } else {
-                        PMHelper.showDoAgainAlert()
-                    }
-            }
-        }
-    }
-    
-    func timeAgoSinceDate(date:NSDate) -> String {
-        let calendar = NSCalendar.current
-        let unitFlags = Set<Calendar.Component>([.second, .minute, .hour, .day, .month, .year])
-        let now = NSDate()
-        let earliest = now.earlierDate(date as Date)
-        let latest = (earliest == now as Date) ? date : now
-        let components = calendar.dateComponents(unitFlags, from: earliest, to: latest as Date)
-        
-        if (components.year! >= 2) {
-            return "\(String(describing: components.year))y"
-        } else if (components.year! >= 1){
-            return "1y"
-        } else if (components.month! >= 2) {
-            return "\(String(describing: components.month))m"
-        } else if (components.month! >= 1){
-            return "1m"
-        } else if (components.day! >= 2) {
-            return "\(String(describing: components.day))d"
-        } else if (components.day! >= 1){
-            return "1d"
-        } else if (components.hour! >= 2) {
-            return "\(String(describing: components.hour))hr"
-        } else if (components.hour! >= 1){
-            return "1hr"
-        } else if (components.minute! >= 2) {
-            return "\(String(describing: components.minute))m"
-        } else if (components.minute! >= 1){
-            return "1m"
-        } else if (components.second! >= 3) {
-            return "\(String(describing: components.second))s"
-        } else {
-            return "Just now"
+                    self.offset = 0
+                    self.listComment.removeAll()
+                    self.getListComment()
+                } else {
+                    PMHelper.showDoAgainAlert()
+                }
+            }).fetchdata()
         }
     }
     
@@ -261,7 +222,7 @@ class FeedViewController: BaseViewController, RSKGrowingTextViewDelegate {
         self.cursorView.isHidden = false
         self.avatarTextBox.isHidden = true
         self.leftMarginLeftChatCT.constant = 15
-        self.textBox.resignFirstResponder()
+        self.commentTextView.resignFirstResponder()
     }
     
     func leftButtonClicked() {
@@ -324,8 +285,8 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = kFullDateFormat
             dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-            let dateFromString : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
-            cell.timeLB.text = self.timeAgoSinceDate(date: dateFromString)
+            let date : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
+            cell.timeLB.text = date.timeAgoSinceDate()
             
             cell.imageContentIMV.image = nil
             if (feedDetail[kImageUrl] is NSNull == false) {
@@ -488,6 +449,15 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - UITextViewDelegate
 extension FeedViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        // Hide/unhide placeholder
+        let commentText = self.commentTextView.text! as NSString
+        self.commentPlaceHolder.isHidden = (commentText.length > 0)
+        
+        // Get height
+        self.commentTextViewHeightConstraint.constant = self.commentTextView.getHeightWithWidthFixed()
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         self.addComment()

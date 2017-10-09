@@ -88,7 +88,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         let moveScreenType = defaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_2 {

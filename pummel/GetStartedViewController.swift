@@ -55,7 +55,7 @@ class GetStartedViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated: animated)
+        super.viewDidAppear(animated)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.signinNotification), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
     }

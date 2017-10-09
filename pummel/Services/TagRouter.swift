@@ -11,13 +11,21 @@ import Alamofire
 import MapKit
 
 enum TagRouter: URLRequestConvertible {
-    static var specialColor = self.getRandomColorString()
+    static var specialColor = TagRouter.getRandomColorString()
     
     case getTagList(offset: Int, completed: CompletionBlock)
+    case selectTag(tagID: String, completed: CompletionBlock)
+    case deleteTag(tagID: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
         case .getTagList(_, let completed):
+            return completed
+            
+        case .selectTag(_, let completed):
+            return completed
+            
+        case .deleteTag(_, let completed):
             return completed
             
         }
@@ -28,16 +36,29 @@ enum TagRouter: URLRequestConvertible {
         case .getTagList:
             return .get
             
+        case .selectTag:
+            return .post
+            
+        case .deleteTag:
+            return .delete
+            
             
         }
     }
     
     var path: String {
+        let currentUserID = PMHelper.getCurrentID()
+        
         var prefix = ""
         switch self {
         case .getTagList(let offset, _):
             prefix = kPMAPI_TAG_OFFSET + String(offset)
             
+        case .selectTag:
+            prefix = kPMAPIUSER + currentUserID + "/tags"
+            
+        case .deleteTag(let tagID, _):
+            prefix = kPMAPIUSER + currentUserID + "/tags/" + tagID
             
         }
         
@@ -45,12 +66,18 @@ enum TagRouter: URLRequestConvertible {
     }
     
     var param: [String : Any]? {
-        let param: [String : Any]? = [:]
+        let currentUserID = PMHelper.getCurrentID()
         
+        var param: [String : Any]? = [:]
         switch self {
-//        case .reportFeed(let postID, _):
-//            param?[kPostId] = postID
-//            
+        case .selectTag(let tagID, _):
+            param?[kUserId] = currentUserID
+            param?["tagId"] = tagID
+            
+        case .deleteTag(let tagID, _):
+            param?[kUserId] = currentUserID
+            param?["tagId"] = tagID
+            
             
         default:
             break
@@ -82,7 +109,7 @@ enum TagRouter: URLRequestConvertible {
         switch self {
         case .getTagList:
             Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
-                print("PM: TagRouter 1")
+                print("PM: TagRouter get_all_tag")
                 
                 switch response.result {
                 case .success(let JSON):
@@ -103,7 +130,7 @@ enum TagRouter: URLRequestConvertible {
                                 tag.name?.uppercased() == kCycling) {
                                 tag.tagColor = TagRouter.specialColor
                             } else {
-                                tag.tagColor = self.getRandomColorString()
+                                tag.tagColor = TagRouter.getRandomColorString()
                             }
                             
                             tagList.append(tag)
@@ -120,10 +147,30 @@ enum TagRouter: URLRequestConvertible {
                 }
             })
             
+        case .selectTag, .deleteTag:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: TagRouter select_tag / delete_tag")
+                
+                switch response.result {
+                case .success(_):
+                    if response.response?.statusCode == 200 {
+                        self.comletedBlock(true, nil)
+                    } else {
+                        self.comletedBlock(false, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
+            
         }
     }
     
-    func getRandomColorString() -> String {
+    static func getRandomColorString() -> String {
         
         let randomRed: CGFloat = CGFloat(drand48())
         let randomGreen: CGFloat = CGFloat(drand48())
