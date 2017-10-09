@@ -14,8 +14,8 @@ enum TypeGroup:Int {
 }
 
 @objc protocol GroupLeadTableViewCellDelegate: class {
-    optional func selectUserWithID(userId:String, typeGroup:Int)
-    optional func selectUserWithCoachInfo(coachInfo:NSDictionary)
+    @objc optional func selectUserWithID(userId:String, typeGroup:Int)
+    @objc optional func selectUserWithCoachInfo(coachInfo:NSDictionary)
 }
 
 
@@ -33,7 +33,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         super.awakeFromNib()
         
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.Horizontal
+        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
         //layout.estimatedItemSize =  CGSize(width: 70, height: 70)
         self.cv.dataSource = self
         self.cv.delegate = self
@@ -44,7 +44,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         self.titleHeader.font = .pmmMonReg13()
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

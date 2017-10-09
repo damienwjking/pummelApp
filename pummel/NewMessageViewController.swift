@@ -43,7 +43,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         self.listUserTB.separatorStyle = UITableViewCellSeparatorStyle.none
         self.listUserSearchResultTB.delegate = self
         self.listUserSearchResultTB.dataSource = self
-        self.listUserSearchResultTB.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        self.listUserSearchResultTB.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.listUserSearchResultTB.separatorStyle = UITableViewCellSeparatorStyle.none
         self.toUserTF.delegate = self
         self.getListUser()
@@ -54,7 +54,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         return true
     }
     
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         textField.text = ""
         self.arrayListUserResult.removeAll()
         self.listUserSearchResultTB.reloadData()
@@ -80,7 +80,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         }
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         
     }
     
@@ -160,7 +160,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             
             cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
             
-            let idSender = String(format:"%0.f",user.object(forKey: kId)!.doubleValue)
+            let idSender = String(format:"%0.f",(user.object(forKey: kId)! as AnyObject).doubleValue)
             ImageVideoRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                     let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
@@ -192,7 +192,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let idSender = String(format:"%0.f",(user.object(forKey: kId)! as AnyObject).doubleValue)
             ImageVideoRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                     if visibleCell == true {
                         let imageRes = result as! UIImage
                         DispatchQueue.main.async(execute: {
@@ -245,6 +245,6 @@ extension String {
     }
     
     func containsIgnoringCase(find: String) -> Bool{
-        return self.range(of: find, options: NSStringCompareOptions.CaseInsensitiveSearch) != nil
+        return self.range(of: find, options: NSString.CompareOptions.CaseInsensitiveSearch) != nil
     }
 }

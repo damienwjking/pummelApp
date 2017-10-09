@@ -152,7 +152,7 @@ extension BookSessionShareViewController {
             UserRouter.setOldLead(requestID: userID, completed: { (result, error) in
                 self.view.hideToastActivity()
                 
-                let isChangeSuccess = result as! result
+                let isChangeSuccess = result as! Bool
                 if (isChangeSuccess) {
                     self.forceUpdate = true
                     
@@ -170,7 +170,6 @@ extension BookSessionShareViewController {
             UserRouter.getCurrentUserInfo(completed: { (result, error) in
                 if (error == nil) {
                     let currentInfo = result as! NSDictionary
-                    let currentMail = currentInfo[kEmail] as! String
                     let coachFirstName = currentInfo[kFirstname] as! String
                     let userFirstName = userInfo[kFirstname] as! String
                     
@@ -247,7 +246,7 @@ extension BookSessionShareViewController {
             UserRouter.setCurrentLead(requestID: userID, completed: { (result, error) in
                 self.view.hideToastActivity()
                 
-                let isChangeSuccess = result as! result
+                let isChangeSuccess = result as! Bool
                 if (isChangeSuccess) {
                     self.forceUpdate = true
                     
@@ -265,7 +264,6 @@ extension BookSessionShareViewController {
             UserRouter.getCurrentUserInfo(completed: { (result, error) in
                 if (error == nil) {
                     let currentInfo = result as! NSDictionary
-                    let currentMail = currentInfo[kEmail] as! String
                     let coachFirstName = currentInfo[kFirstname] as! String
                     let userFirstName = userInfo[kFirstname] as! String
                     

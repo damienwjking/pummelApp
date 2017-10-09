@@ -20,6 +20,8 @@ class MessageModel: NSObject {
     var isOpen = false
     var updateAt: String?
     
+    var messageImage: UIImage? // For cache image // TODO : need check to delete
+    
     
     
     var tagType: Int?
@@ -27,10 +29,10 @@ class MessageModel: NSObject {
     var selected = false
     
     func parseData(data: NSDictionary) {
-        self.username = data.object(forKey: "id") as? String
-        self.messageID = data.object(forKey: "status") as? String
-        self.text = data.object(forKey: "userId") as? String
-        self.tagType = data.object(forKey: "text") as? Int
+//        self.username = data.object(forKey: "id") as? String
+//        self.messageID = data.object(forKey: "status") as? String
+//        self.text = data.object(forKey: "userId") as? String
+//        self.tagType = data.object(forKey: "text") as? Int
     }
     
     func same(message: MessageModel) -> Bool {

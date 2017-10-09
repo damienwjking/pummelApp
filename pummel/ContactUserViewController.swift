@@ -133,7 +133,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
             var phoneNumberString = ""
             if contact.phoneNumbers.count != 0 {
                 let phoneNumber = contact.phoneNumbers.first?.value
-                phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
+                phoneNumberString = (phoneNumber?.stringValue.replacingOccurrences(of: "-", with: ""))!
             }
             
             cell?.detailTextLabel?.text = phoneNumberString
@@ -157,8 +157,8 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                 
                 var phoneNumberString = ""
                 if contact.phoneNumbers.count != 0 {
-                    let phoneNumber = contact.phoneNumbers.first?.value!
-                    phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
+                    let phoneNumber = contact.phoneNumbers.first?.value
+                    phoneNumberString = phoneNumber?.stringValue.replacingOccurrences(of: "-", with: "")
                 }
                 
                 let messageCompose = MFMessageComposeViewController()

@@ -455,7 +455,12 @@ extension FeedViewController: UITextViewDelegate {
         self.commentPlaceHolder.isHidden = (commentText.length > 0)
         
         // Get height
-        self.commentTextViewHeightConstraint.constant = self.commentTextView.getHeightWithWidthFixed()
+        var textHeight = self.commentTextView.getHeightWithWidthFixed()
+        if (textHeight > 200) {
+            textHeight = 200
+        }
+        
+        self.commentTextViewHeightConstraint.constant = textHeight
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

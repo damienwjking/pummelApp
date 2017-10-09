@@ -51,7 +51,7 @@ class PMHelper {
                 
                 // LOGOUT
                 UserDefaults.standard.set(0, forKey: "MESSAGE_BADGE_VALUE")
-                Alamofire.request(kPMAPI_LOGOUT, method: .delete).responseJSON(completionHandler: { (response) in
+                Alamofire.request(kPMAPI_LOGOUT, method: .delete).responseData(completionHandler: { (response) in
                     topController.view.hideToastActivity()
 
                     // Logout facebook
@@ -61,13 +61,14 @@ class PMHelper {
                     // Logout app
                     let defaults = UserDefaults.standard
                     
-                    let outputString = NSString(data: data!, encoding:String.Encoding.utf8)
+                    let data = response as! Data
+                    let outputString = NSString(data: data, encoding:String.Encoding.utf8)
                     if ((outputString?.contains(find: kLogoutSuccess)) != nil) {
                         defaults.set(false, forKey: k_PM_IS_LOGINED)
                         defaults.set(false, forKey: k_PM_IS_COACH)
                         let storage = HTTPCookieStorage.shared
                         for cookie in storage.cookies! {
-                            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
+                            Alamofire.SessionManager.default.session.configuration.httpCookieStorage?.deleteCookie(cookie)
                             storage.deleteCookie(cookie)
                         }
                         UserDefaults.standard.synchronize()
@@ -172,38 +173,57 @@ class PMHelper {
                             topController.view.hideToastActivity()
                             
                             let isCoach = result as! Bool
-                            if (isCoach == true) {
-                                //                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
-                                
-                                let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
-                                
-                                coachProfileVC.isCoach = true
-                                coachProfileVC.userID = userID
-                                coachProfileVC.coachDetail = userInfo
-                                coachProfileVC.profileStyle = .otherUser
-                                coachProfileVC.isFromChat = isFromChat
-                                
-                                if (showTestimonial == true) {
-                                    topController.present(coachProfileVC, animated: true, completion: {
-                                        coachProfileVC.showPostTestimonialViewController()
-                                    })
-                                } else {
-                                    topController.present(coachProfileVC, animated: true, completion: nil)
-                                }
+                            
+                            
+                            let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
+                            
+                            coachProfileVC.isCoach = isCoach
+                            coachProfileVC.userID = userID
+                            coachProfileVC.coachDetail = userInfo
+                            coachProfileVC.profileStyle = .otherUser
+                            coachProfileVC.isFromChat = isFromChat
+                            
+                            if (showTestimonial == true) {
+                                topController.present(coachProfileVC, animated: true, completion: {
+                                    coachProfileVC.showPostTestimonialViewController()
+                                })
                             } else {
-                                let userProfileVC = UIStoryboard(name: "UserProfile", bundle: nil).instantiateInitialViewController() as! UserProfileViewController
-                                
-                                userProfileVC.userDetail = userInfo
-                                userProfileVC.userId = userID
-                                
-                                if (showTestimonial == true) {
-                                    topController.present(userProfileVC, animated: true, completion: {
-                                        userProfileVC.showPostTestimonialViewController()
-                                    })
-                                } else {
-                                    topController.present(userProfileVC, animated: true, completion: nil)
-                                }
+                                topController.present(coachProfileVC, animated: true, completion: nil)
                             }
+                            
+                            
+//                            if (isCoach == true) {
+//                                //                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
+//                                
+//                                let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
+//                                
+//                                coachProfileVC.isCoach = true
+//                                coachProfileVC.userID = userID
+//                                coachProfileVC.coachDetail = userInfo
+//                                coachProfileVC.profileStyle = .otherUser
+//                                coachProfileVC.isFromChat = isFromChat
+//                                
+//                                if (showTestimonial == true) {
+//                                    topController.present(coachProfileVC, animated: true, completion: {
+//                                        coachProfileVC.showPostTestimonialViewController()
+//                                    })
+//                                } else {
+//                                    topController.present(coachProfileVC, animated: true, completion: nil)
+//                                }
+//                            } else {
+//                                let userProfileVC = UIStoryboard(name: "UserProfile", bundle: nil).instantiateInitialViewController() as! UserProfileViewController
+//                                
+//                                userProfileVC.userDetail = userInfo
+//                                userProfileVC.userId = userID
+//                                
+//                                if (showTestimonial == true) {
+//                                    topController.present(userProfileVC, animated: true, completion: {
+//                                        userProfileVC.showPostTestimonialViewController()
+//                                    })
+//                                } else {
+//                                    topController.present(userProfileVC, animated: true, completion: nil)
+//                                }
+//                            }
                             }.fetchdata()
                     } else {
                         print("Request failed with error: \(String(describing: error))")

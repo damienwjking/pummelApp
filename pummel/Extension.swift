@@ -247,7 +247,7 @@ extension UITextView {
     func getHeightWithWidthFixed() -> CGFloat {
         let constraintRect = CGSize(width: self.frame.size.width, height: CGFloat.greatestFiniteMagnitude)
         
-        let boundingBox = self.text.boundingRect(with: constraintRect, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName: self.font], context: nil)
+        let boundingBox = self.text.boundingRect(with: constraintRect, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName: self.font ?? UIFont.systemFont(ofSize: 13)], context: nil)
         
         let height = boundingBox.height + self.layoutMargins.top + self.layoutMargins.bottom
         

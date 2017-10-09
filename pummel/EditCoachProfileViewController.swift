@@ -561,8 +561,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             
             let date = NSDate()
             let calendar = NSCalendar.current
-            let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-            let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+            let components = calendar.dateComponents([.day , .month , .year], from: date as Date)
+            let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB!)
             let year =  components.year
             let yearDOB = componentsDOB.year
             
@@ -582,8 +582,8 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         
         let date = NSDate()
         let calendar = NSCalendar.current
-        let components = calendar.dateComponents([.day , .month , .year], from: date)
-        let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB)
+        let components = calendar.dateComponents([.day , .month , .year], from: date as Date)
+        let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB!)
         let year =  components.year
         let yearDOB = componentsDOB.year
         
@@ -676,7 +676,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 } else {
                     self.avatarIMW.makeToastActivity()
                     
-                    ImageVideoRouter.currentUserUploadAvatar(imageData: imageData as Data, completed: { (result, error) in
+                    ImageVideoRouter.currentUserUploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData as Data, textPost: "", completed: { (result, error) in
                         self.avatarIMW.hideToastActivity()
                         
                         let isSuccess = result as! Bool

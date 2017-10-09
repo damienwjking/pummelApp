@@ -11,7 +11,7 @@ import Alamofire
 import Foundation
 
 @objc protocol LogCellDelegate: class {
-    optional func LogCellClickAddCalendar(cell: LogTableViewCell)
+    @objc optional func LogCellClickAddCalendar(cell: LogTableViewCell)
 }
 
 class LogTableViewCell: UITableViewCell {
@@ -47,7 +47,7 @@ class LogTableViewCell: UITableViewCell {
     @IBAction func actionButtonClicked(sender: AnyObject) {
         if self.isUpComingCell {
             // Add calendar action
-            self.logCellDelegate?.LogCellClickAddCalendar!(self)
+            self.logCellDelegate?.LogCellClickAddCalendar!(cell: self)
         } else {
             // Rate action
         }
@@ -57,7 +57,7 @@ class LogTableViewCell: UITableViewCell {
         self.textLB.text = session.text
         
         if session.datetime?.isEmpty == false {
-            let localDateTimeString = self.convertUTCTimeToLocalTime(session.datetime!)
+            let localDateTimeString = self.convertUTCTimeToLocalTime(dateTimeString: session.datetime!)
             self.dateLB.text = self.convertDateTimeFromString(localDateTimeString)
             self.timeLB.text = self.getHourFromString(localDateTimeString)
         } else {
@@ -97,11 +97,11 @@ class LogTableViewCell: UITableViewCell {
     }
     
     func convertDateTimeFromString(dateTimeString: String) -> String {
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        let date = dateFormatter.date(from: dateTimeString)
+        let date = dateFormatter.date(dateTimeString)
         
-        let newDateFormatter = DateFormatter
+        let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = "EEE dd MMM"
 //        newDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
         let newDateString = newDateFormatter.string(from: date!)
@@ -110,11 +110,11 @@ class LogTableViewCell: UITableViewCell {
     }
     
     func getHourFromString(dateTimeString: String) -> String {
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        let date = dateFormatter.date(from: dateTimeString)
+        let date = dateFormatter.date(dateTimeString)
         
-        let newDateFormatter = DateFormatter
+        let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = "ha"
         newDateFormatter.timeZone = NSTimeZone.localTimeZone()
         let newDateString = newDateFormatter.string(from: date!).uppercased()

@@ -29,11 +29,11 @@ class ProgressViewController: BaseViewController {
         self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         
         if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
-            let sessionCoachVC = UIStoryboard(name: "Session", bundle: nil).instantiateViewControllerWithIdentifier("SessionCoachViewController")
+            let sessionCoachVC = UIStoryboard(name: "Session", bundle: nil).instantiateViewController(withIdentifier: "SessionCoachViewController")
             self.addChildViewController(sessionCoachVC)
             self.view.addSubview(sessionCoachVC.view)
         } else {
-            let sessionCLientVC = UIStoryboard(name: "Session", bundle: nil).instantiateViewControllerWithIdentifier("SessionClientViewController")
+            let sessionCLientVC = UIStoryboard(name: "Session", bundle: nil).instantiateViewController(withIdentifier: "SessionClientViewController")
             self.addChildViewController(sessionCLientVC)
             self.view.addSubview(sessionCLientVC.view)
         }

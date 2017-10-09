@@ -26,7 +26,7 @@ class ChatMessageHeaderTableViewCell: UITableViewCell {
         self.timeLB.font = .pmmMonLight11()
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
 }

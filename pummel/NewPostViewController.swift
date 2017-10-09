@@ -126,87 +126,30 @@ class NewPostViewController: BaseViewController, UIScrollViewDelegate {
         }
         
         if (self.imageSelected!.image != nil) {
-            self.isPosting = true
-            self.navigationItem.rightBarButtonItem?.isEnabled = false
-            self.view.makeToastActivity(message: "Posting")
             self.commentPhotoTV.resignFirstResponder()
             
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append("/posts/")
-            
             var imageData : NSData!
-            let type : String!
-            let filename : String!
             imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2)! as NSData : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as NSData
-            type = imageJpeg
-            filename = jpgeFile
-            
             
             let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
             
-            let parameters = [kUserId:PMHelper.getCurrentID(),
-                              kText: textPost]
+            self.isPosting = true
+            self.view.makeToastActivity(message: "Posting")
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
             
-            Alamofire.upload(
-                .POST,
-                prefix,
-                multipartFormData: { multipartFormData in
-                    multipartFormData.appendBodyPart(data: imageData, name: "file",
-                        fileName:filename, mimeType:type)
-                    for (key, value) in parameters {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                    }
-                },
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                       
-                    case .Success(let upload, _, _):
-                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                            dispatch_async(dispatch_get_main_queue()) {
-//                                let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                            }
-                        }
-                        upload.validate()
-                        upload.responseJSON { response in
-                            self.navigationItem.rightBarButtonItem?.isEnabled = true
-                             self.isPosting = false
-                            self.view.hideToastActivity()
-                            if response.result.error != nil {
-                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                                
-                                
-                                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                                    // ...
-                                }
-                                alertController.addAction(OKAction)
-                                self.present(alertController, animated: true) {
-                                    // ...
-                                }
-                            } else {
-                                self.navigationController?.popViewController(animated: true)
-                            }
-                        }
-                        
-                    case .Failure( _):
-                         self.isPosting = false
-                        self.navigationItem.rightBarButtonItem?.isEnabled = true
-                        self.view.hideToastActivity()
-                        
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                        
-                        
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                    }
+            ImageVideoRouter.currentUserUploadPhoto(posfix: "/posts/", imageData: imageData as Data, textPost: textPost!, completed: { (result, error) in
+                self.isPosting = false
+                self.view.hideToastActivity()
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                
+                let isUploadSuccess = result as! Bool
+                
+                if (isUploadSuccess == true) {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    PMHelper.showDoAgainAlert()
                 }
-            )
-
+            }).fetchdata()
         }
     }
     

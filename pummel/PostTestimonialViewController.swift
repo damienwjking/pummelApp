@@ -134,7 +134,7 @@ class PostTestimonialViewController: UIViewController {
     }
 
     func setupUI() {
-        self.backgroundImageView.addBlurEffect(0.5)
+        self.backgroundImageView.addBlurEffect(alpha: 0.5)
         
         let cancelImage = UIImage(named: "close")?.withRenderingMode(.alwaysTemplate)
         self.cancelButton.tintColor = UIColor.white
@@ -166,7 +166,7 @@ class PostTestimonialViewController: UIViewController {
         let description = self.testimonialTextView.text
         let rating = (self.ratingStarViewWidthConstraint.constant / 100.0) * 5.0
         
-        UserRouter.postTestimonial(userID: self.userID, description: description, location: location!, rating: rating) { (result, error) in
+        UserRouter.postTestimonial(userID: self.userID, description: description!, location: location!, rating: rating) { (result, error) in
             if (error == nil) {
                 self.dismiss(animated: true, completion: nil)
             } else {
@@ -180,7 +180,7 @@ class PostTestimonialViewController: UIViewController {
     }
     
     func ratingTapped(gesture: UITapGestureRecognizer) {
-        var touchLocation = gesture.locationInView(self.ratingStarView).x - 15
+        var touchLocation = gesture.location(in: self.ratingStarView).x - 15
         touchLocation = (touchLocation > 100) ? 100 : touchLocation
         touchLocation = (touchLocation < 0) ? 0 : touchLocation
         

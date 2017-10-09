@@ -461,7 +461,7 @@ extension String {
             NSParagraphStyleAttributeName:paragraphStyle.copy()]
         
         let text = self as NSString
-        let rect = text.boundingRectWithSize(size, options:.UsesLineFragmentOrigin, attributes: attributes, context:nil)
+        let rect = text.boundingRect(with: size, options:.usesLineFragmentOrigin, attributes: attributes, context:nil)
         return rect.size.height
     }
     

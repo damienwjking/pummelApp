@@ -17,6 +17,8 @@ enum SessionRouter: URLRequestConvertible {
     
     case postBookSession(userID: String, targetUserID: String?, message: String, type: String, dateTime: String, imageData: Data, completed: CompletionBlock)
     
+    case deleteSession(sessionID: String, completed: CompletionBlock)
+    
     
     var comletedBlock: CompletionBlock {
         switch self {
@@ -27,6 +29,9 @@ enum SessionRouter: URLRequestConvertible {
             return completed
             
         case .postBookSession(_, _, _, _, _, _, let completed):
+            return completed
+            
+        case .deleteSession(_, let completed):
             return completed
             
         }
@@ -43,12 +48,17 @@ enum SessionRouter: URLRequestConvertible {
         case .postBookSession:
             return .post
             
+        case .deleteSession:
+            return .post
+            
             
             
         }
     }
     
     var path: String {
+        let currentUserID = PMHelper.getCurrentID()
+        
         var prefix = ""
         switch self {
         case .postLogSession(let userID, let targetUserID, _, _, _, _, _, _, _, _, _):
@@ -63,6 +73,9 @@ enum SessionRouter: URLRequestConvertible {
             
         case .postBookSession(let userID, _, _, _, _, _, _):
             prefix = kPMAPICOACHES + userID + kPMAPICOACH_BOOK
+            
+        case .deleteSession:
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_DELETEACTIVITY
             
         }
         
@@ -100,7 +113,10 @@ enum SessionRouter: URLRequestConvertible {
             param?[kType] = type
             param?[kDatetime] = dateTime
 
-        
+        case .deleteSession(let sessionID):
+            param?[kActivityId] = sessionID
+            
+            
         }
         
         return param
@@ -229,6 +245,25 @@ enum SessionRouter: URLRequestConvertible {
                     self.comletedBlock(false, error)
                 }
             })
+            
+        case .deleteSession:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: SessionRouter delete_session")
+                
+                switch response.result {
+                case .success(_):
+                    if response.response?.statusCode == 200 {
+                        self.comletedBlock(true, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
+
             
         }
     }

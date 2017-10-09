@@ -83,7 +83,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector:  #selector(self.getListSession), name: k_PM_REFRESH_SESSION, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.getListSession), name: NSNotification.Name(rawValue: k_PM_REFRESH_SESSION), object: nil)
         self.getListSession()
     }
     
@@ -187,14 +187,14 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     
     func sortSession(isUpcoming: Bool) {
         if self.selectedSessionList.count > 0 {
-            self.selectedSessionList = self.selectedSessionList.sort { (session1, session2) -> Bool in
+            self.selectedSessionList = self.selectedSessionList.sorted { (session1, session2) -> Bool in
                 let lastOpen1 = session1.datetime
                 let lastOpen2 = session2.datetime
                 
                 if isUpcoming {
-                    return (lastOpen1!.compare(lastOpen2!) == NSComparisonResult.OrderedAscending)
+                    return (lastOpen1!.compare(lastOpen2!) == ComparisonResult.OrderedAscending)
                 } else {
-                    return (lastOpen1!.compare(lastOpen2!) == NSComparisonResult.OrderedDescending)
+                    return (lastOpen1!.compare(lastOpen2!) == ComparisonResult.OrderedDescending)
                 }
             }
         }
@@ -217,14 +217,14 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         let cell = tableView.dequeueReusableCell(withIdentifier: "LogTableViewCell") as! LogTableViewCell
         
         let now = NSDate()
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        let sessionDate = dateFormatter.date(from: session.datetime!)
+        let sessionDate = dateFormatter.date(session.datetime!)
         
         if now.compare(sessionDate!) == .OrderedAscending {
-            cell.setData(session, isUpComing: true)
+            cell.setData(session: session, isUpComing: true)
         } else {
-            cell.setData(session, isUpComing: false)
+            cell.setData(session: session, isUpComing: false)
         }
         
         cell.logCellDelegate = self
@@ -241,7 +241,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
         
         let session = self.selectedSessionList[indexPath.row]
         

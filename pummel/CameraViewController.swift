@@ -128,7 +128,7 @@ class CameraViewController: UIViewController {
             let permission = self.checkPermissionDeviceInput()
             
             if (permission == true) {
-                self.setupCameraSession(.Back)
+                self.setupCameraSession(cameraPosition: .back)
             } else {
                 self.showSettingAlert()
             }
@@ -157,11 +157,11 @@ class CameraViewController: UIViewController {
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutableRawPointer) {
         let currentItem = object as! AVPlayerItem
-        if currentItem.status == .ReadyToPlay {
+        if currentItem.status == .readyToPlay {
             let videoRect = self.videoPlayerLayer?.videoRect
-            if (videoRect?.width > videoRect?.height) {
+            if (Int((videoRect?.width)!) > Int((videoRect?.height)!)) {
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             } else {
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
@@ -180,25 +180,25 @@ class CameraViewController: UIViewController {
     //MARK: - Private function
     func showVideoLayout() {
         // Show Video URL in border view
-        self.videoPlayer = AVPlayer(URL: self.videoURL!)
-        self.videoPlayer!.actionAtItemEnd = .None
+        self.videoPlayer = AVPlayer(url: self.videoURL! as URL)
+        self.videoPlayer!.actionAtItemEnd = .none
         self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
         self.videoPlayerLayer!.frame = self.cameraBorderView.bounds
         
         self.cameraBorderView.layer.addSublayer(self.videoPlayerLayer!)
         
         // Catch size of video and crop
-        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+        self.videoPlayer!.currentItem!.addObserver(self, forKeyPath: "status", options: [.old, .new], context: nil)
         self.needRemoveKVO = true
         
         // Catch end video
         // Remove loop play video for
-        NotificationCenter.default.removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         
         // Add notification for loop play video
         NotificationCenter.default.addObserver(self,
                                                          selector: #selector(self.endVideoNotification),
-                                                         name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                         name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
                                                          object: self.videoPlayer!.currentItem)
     }
     
@@ -206,9 +206,9 @@ class CameraViewController: UIViewController {
         let playerItem = notification.object as! AVPlayerItem
         
         // Show first frame video
-        playerItem.seekToTime(kCMTimeZero)
+        playerItem.seek(to: kCMTimeZero)
         
-        self.videoPlayerSetPlay(false)
+        self.videoPlayerSetPlay(isPlay: false)
     }
     
     func setupBasicLayout() {
@@ -235,15 +235,15 @@ class CameraViewController: UIViewController {
     }
     
     func getTempVideoPath(fileName: String) -> String {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         //        let filePath = "\(documentsPath)/tempFile.mp4"
-        let templatePath = documentsPath.stringByAppendingFormat(fileName)
+        let templatePath = documentsPath.appendingFormat(fileName)
         
         // Remove file at template path
-        let fileManager = NSFileManager.defaultManager()
-        if (fileManager.fileExistsAtPath(templatePath)) {
+        let fileManager = FileManager.default
+        if (fileManager.fileExists(atPath: templatePath)) {
             do {
-                try fileManager.removeItemAtPath(templatePath)
+                try fileManager.removeItem(atPath: templatePath)
             } catch {
                 print("Could not clear temp folder: \(error)")
             }
@@ -255,8 +255,8 @@ class CameraViewController: UIViewController {
     func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: (_ exportURL:NSURL) -> Void) {
         //        self.getTempVideoPath()
         // Crop video to square
-        let asset: AVAsset = AVAsset(URL: videoURL)
-        let assetTrack: AVAssetTrack = asset.tracksWithMediaType("vide").first!
+        let asset: AVAsset = AVAsset(URL: videoURL as URL)
+        let assetTrack: AVAssetTrack = asset.tracks(withMediaType: "vide").first!
         
         let videoComposition: AVMutableVideoComposition = AVMutableVideoComposition()
         videoComposition.frameDuration = CMTimeMake(1, 60) // Frame 1/60
@@ -277,30 +277,30 @@ class CameraViewController: UIViewController {
         videoComposition.renderSize = CGSize(width: cropWidth, cropHeight)
         
         
-        let videoOrientation = self.orientationForTrack(assetTrack)
+        let videoOrientation = self.orientationForTrack(videoTrack: assetTrack)
         var t1 = CGAffineTransformIdentity
         var t2 = CGAffineTransformIdentity
         
         switch (videoOrientation) {
-        case .Portrait:
-            t1 = CGAffineTransformMakeTranslation(assetTrack.naturalSize.height - cropOffX, 0 - cropOffX)
-            t2 = CGAffineTransformRotate(t1, CGFloat(Double.pi/2))
+        case .portrait:
+            t1 = CGAffineTransform(translationX: assetTrack.naturalSize.height - cropOffX, y: 0 - cropOffX)
+            t2 = t1.rotated(by: CGFloat(Double.pi/2))
             
 //            transformer.setCropRectangle(CGRect(x: cropOffX, y: cropOffX, width: cropWidth, height: cropHeight), atTime: kCMTimeZero)
             break
-        case .PortraitUpsideDown:
-            t1 = CGAffineTransformMakeTranslation(0 - cropOffX, assetTrack.naturalSize.width - cropOffY ) // not fixed width is the real height in upside down
-            t2 = CGAffineTransformRotate(t1, CGFloat(-Double.pi/2))
+        case .portraitUpsideDown:
+            t1 = CGAffineTransform(translationX: 0 - cropOffX, y: assetTrack.naturalSize.width - cropOffY ) // not fixed width is the real height in upside down
+            t2 = t1.rotated(by: CGFloat(-Double.pi/2))
             break
-        case .LandscapeRight:
-            t1 = CGAffineTransformMakeTranslation(0 - cropOffX, 0 - cropOffY )
-            t2 = CGAffineTransformRotate(t1, 0)
+        case .landscapeRight:
+            t1 = CGAffineTransform(translationX: 0 - cropOffX, y: 0 - cropOffY )
+            t2 = t1.rotated(by: 0)
             
-            transformer.setCropRectangle(CGRect(x: cropOffX, y: cropOffY, width: cropWidth, height: cropHeight), atTime: kCMTimeZero)
+            transformer.setCropRectangle(CGRect(x: cropOffX, y: cropOffY, width: cropWidth, height: cropHeight), at: kCMTimeZero)
             break
-        case .LandscapeLeft:
-            t1 = CGAffineTransformMakeTranslation(assetTrack.naturalSize.width - cropOffX, assetTrack.naturalSize.height - cropOffY )
-            t2 = CGAffineTransformRotate(t1, CGFloat(Double.pi))
+        case .landscapeLeft:
+            t1 = CGAffineTransform(translationX: assetTrack.naturalSize.width - cropOffX, y: assetTrack.naturalSize.height - cropOffY )
+            t2 = t1.rotated(by: CGFloat(Double.pi))
             break
         default:
             print("no supported orientation has been found in this video")
@@ -308,26 +308,26 @@ class CameraViewController: UIViewController {
         }
         
         let finalTransform = t2;
-        transformer.setTransform(finalTransform, atTime: kCMTimeZero)
+        transformer.setTransform(finalTransform, at: kCMTimeZero)
         
         instruction.layerInstructions = NSArray(object: transformer) as! [AVVideoCompositionLayerInstruction]
         videoComposition.instructions = NSArray(object: instruction) as! [AVVideoCompositionInstructionProtocol]
         
-        let exportPath = self.getTempVideoPath("/library.mp4")
+        let exportPath = self.getTempVideoPath(fileName: "/library.mp4")
         
-        let exportUrl: NSURL = NSURL.fileURLWithPath(exportPath)
+        let exportUrl: NSURL = NSURL.fileURL(withPath: exportPath) as NSURL
         
         let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
        // exporter!.videoComposition = videoComposition
         exporter!.outputFileType = AVFileTypeMPEG4
-        exporter!.outputURL = exportUrl
+        exporter!.outputURL = exportUrl as URL
         exporter?.shouldOptimizeForNetworkUse = true
         exporter?.timeRange =  CMTimeRangeMake(CMTimeMakeWithSeconds(0.0, 0), asset.duration)
         
-        exporter?.exportAsynchronouslyWithCompletionHandler({
-            let outputURL:NSURL = exporter!.outputURL!
+        exporter?.exportAsynchronously(completionHandler: {
+            let outputURL:NSURL = exporter!.outputURL! as NSURL
             
-            completionHandler(exportURL: outputURL)
+            completionHandler(outputURL)
         })
     }
     
@@ -344,31 +344,31 @@ class CameraViewController: UIViewController {
     }
     
     func orientationForTrack(videoTrack: AVAssetTrack) -> UIInterfaceOrientation {
-        var orientation: UIInterfaceOrientation = .Portrait
+        var orientation: UIInterfaceOrientation = .portrait
         let t: CGAffineTransform = videoTrack.preferredTransform
         
         // Portrait
         if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0) {
-            orientation = .Portrait
+            orientation = .portrait
         }
         // PortraitUpsideDown
         if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0) {
-            orientation = .PortraitUpsideDown
+            orientation = .portraitUpsideDown
         }
         // LandscapeRight
         if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {
-            orientation = .LandscapeRight
+            orientation = .landscapeRight
         }
         // LandscapeLeft
         if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {
-            orientation = .LandscapeLeft
+            orientation = .landscapeLeft
         }
         
         return orientation
     }
     
     func cropAndUploadToServer() {
-        self.cropVideoCenterToSquare(self.videoURL!, completionHandler: { (exportURL) in
+        self.cropVideoCenterToSquare(videoURL: self.videoURL!, completionHandler: { (exportURL) in
             self.uploadCurrentVideo(exportURL)
             
             // Save Video to Library
@@ -377,12 +377,12 @@ class CameraViewController: UIViewController {
     }
     
     func saveVideoToLibrary(exportURL: NSURL) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
             let url = NSURL(string: exportURL.absoluteString!)
-            let urlData = NSData(contentsOfURL: url!)
+            let urlData = NSData(contentsOfURL: url! as URL)
             if(urlData != nil) {
-                dispatch_async(dispatch_get_main_queue(), {
-                    let exportPath = self.getTempVideoPath("/libraryTemp.mp4")
+                dispatch_get_main_queue().async(execute: {
+                    let exportPath = self.getTempVideoPath(fileName: "/libraryTemp.mp4")
                     
                     urlData?.writeToFile(exportPath as String, atomically: true)
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
@@ -392,11 +392,11 @@ class CameraViewController: UIViewController {
                     }
                 })
             }
-        })
+        }
     }
     
     func uploadCurrentVideo(videoURL: NSURL) {
-        let videoData = NSData(contentsOfURL: videoURL)
+        let videoData = NSData(contentsOfURL: videoURL as URL)
         let videoExtend = (videoURL.absoluteString!.components(separatedBy: ".").last?.lowercased())!
         let videoType = "video/" + videoExtend
         let videoName = "video." + videoExtend
@@ -605,32 +605,38 @@ extension CameraViewController: UIImagePickerControllerDelegate, UINavigationCon
 }
 
 extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
+    @available(iOS 4.0, *)
+    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
+        // Do nothing
+        // TODO: do something
+    }
+
     func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
         print("Finish record video")
         
         self.playButton.isUserInteractionEnabled = false
         
         // Save video to library
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            let urlData = NSData(contentsOfURL: outputFileURL)
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            let urlData = NSData(contentsOfURL: outputFileURL as URL)
             if(urlData != nil) {
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .UserDomainMask, true)[0]
                 let filePath="\(documentsPath)/tempFile.mp4"
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     urlData?.writeToFile(filePath, atomically: true)
                     PHPhotoLibrary.sharedPhotoLibrary().performChanges({
-                        PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: filePath))
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: NSURL(fileURLWithPath: filePath) as URL)
                     }) { completed, error in
                         self.videoURL = outputFileURL
                         
                         // Show video layout
-                        dispatch_async(dispatch_get_main_queue(), {
+                        dispatch_get_main_queue().async(execute: {
                             self.showVideoLayout()
                         })
                     }
                 })
             }
-        })
+        }
     }
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
@@ -650,9 +656,9 @@ extension CameraViewController: AVCaptureAudioDataOutputSampleBufferDelegate {
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
-        let devices = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo)
+        let devices = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
         
-        for device in devices {
+        for device in devices! {
             if ((device as? AVCaptureDevice) != nil) {
                 let device: AVCaptureDevice = device as! AVCaptureDevice
                 
@@ -669,15 +675,15 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         var permission = true
         
         // Micro permission
-        let microAuthStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio)
+        let microAuthStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeAudio)
         
         // Camera permission
-        let cameraAuthStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+        let cameraAuthStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
         
-        if (microAuthStatus == .Restricted ||
-            microAuthStatus == .Denied ||
-            cameraAuthStatus == .Restricted ||
-            cameraAuthStatus == .Denied) {
+        if (microAuthStatus == .restricted ||
+            microAuthStatus == .denied ||
+            cameraAuthStatus == .restricted ||
+            cameraAuthStatus == .denied) {
             permission = false
         }
         
@@ -685,8 +691,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     func setupCameraSession(cameraPosition: AVCaptureDevicePosition) {
-        let captureDevice = self.cameraWithPosition(cameraPosition)
-        let audioCaptureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeAudio)
+        let captureDevice = self.cameraWithPosition(position: cameraPosition)
+        let audioCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
         
         if (captureDevice != nil) {
             do {
@@ -706,7 +712,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 }
                 
                 let dataOutput = AVCaptureVideoDataOutput()
-                dataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(unsignedInt: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange as UInt32)]
+                dataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(value: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange as UInt32)]
                 dataOutput.alwaysDiscardsLateVideoFrames = true
                 
                 if (self.cameraSession.canAddOutput(dataOutput) == true) {

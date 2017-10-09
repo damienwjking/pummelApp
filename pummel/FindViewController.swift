@@ -64,7 +64,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.startSearchCoachNotification), name: NSNotification.Name(rawValue: k_PM_FIRST_SEARCH_COACH), object: nil)
         NotificationCenter.default.addObserver(self, selector:  #selector(self.updateSMLCBadge), name: NSNotification.Name(rawValue: k_PM_SHOW_MESSAGE_BADGE), object: nil)
-        NotificationCenter.default.addObserver(self, selector:  #selector(self.updateLBadge(_:)), name: k_PM_UPDATE_LEAD_BADGE, object: nil)
+        NotificationCenter.default.addObserver(self, selector:  #selector(self.updateLBadge(notification:)), name: NSNotification.Name(rawValue: k_PM_UPDATE_LEAD_BADGE), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -155,7 +155,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.horizontalViewSwipeUp))
-        swipeUp.direction = .Right // Up direction: horizontal table view tranform 90 degree
+        swipeUp.direction = .right // Up direction: horizontal table view tranform 90 degree
         self.horizontalTableView.addGestureRecognizer(swipeUp)
     }
     
@@ -181,92 +181,78 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.stopSearch = false
         self.loadmoreTime = 0
         
-        self.expandCollapseCoachView(false)
+        self.expandCollapseCoachView(isExpand: false)
         
         self.searchCoachPage()
     }
     
     func searchCoachPage() {
         if (self.stopSearch == false) {
-            var param : [String: AnyObject] = [:];
+            var param : [String: Any] = [:];
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
+            
+            var gender = ""
+            if ((aVariable[kGender] as! String) != kDontCare) {
+                gender = aVariable[kGender] as! String
+            }
+            
+            let offset = self.loadmoreTime * 30
+            let longitude = aVariable[kLong] as! CLLocationDegrees
+            let latitude = aVariable[kLat] as! CLLocationDegrees
+            let stage = aVariable[kState] as! String
+            let city = aVariable[kCity] as! String
+            
             var prefix = kPMAPICOACH_SEARCHV3
             
-            if ((aVariable[kGender] as! String) != kDontCare) {
-                param["gender"] = aVariable[kGender]
-            }
-            param["limit"] = 30 as AnyObject
-            param["offset"] = self.loadmoreTime * 30
-            param[kLong] = aVariable[kLong]
-            param[kLat] = aVariable[kLat]
-            param[kState] = aVariable[kState]
-            param[kCity] = aVariable[kCity]
-            
             let tagArray = aVariable["tagIds"] as? NSArray
-            if (tagArray != nil) {
-                var index = 0
-                for id in tagArray! {
-                    if (index == 0) {
-                        prefix.append("?")
-                    } else {
-                        prefix.append("&")
-                    }
-                    
-                    index = index + 1
-                    
-                    prefix.append("tagIds=".stringByAppendingString(id as! String))
-                    
-                }
-            }
             
-            Alamofire.request(.GET, prefix, parameters: param)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        if (response.result.value == nil) {
-                            self.stopSearch = true
-                            NotificationCenter.default.post(name: "AFTER_SEARCH_PAGE", object: nil)
-                            return
-                        }
+            UserRouter.searchCoachNearby(gender: gender, tags: tagArray!, longitude: longitude, latitute: latitude, stage: stage, city: city, offset: offset, completed: { (result, error) in
+                if (error == nil) {
+                    if (result == nil) {
+                        self.stopSearch = true
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AFTER_SEARCH_PAGE"), object: nil)
                         
-                        // First time search
-                        var needReloadCollection = true
-                        
-                        if (self.loadmoreTime == 0) {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                self.arrayResult.removeAll()
-                                self.arrayResult = response.result.value  as! [NSDictionary]
-                                self.viewDidLayoutSubviews()
-                                self.collectionView.contentOffset = CGPoint()
-                                
-                                // Post notification for dismiss search animation screen
-                                NotificationCenter.default.post(name: "AFTER_SEARCH_PAGE", object: nil)
-                            }
-                            
-                        } else {
-                            if ((response.result.value as! NSArray).count == 0) {
-                                self.stopSearch = true
-                                
-                                needReloadCollection = false
-                            } else {
-                                let rArray = response.result.value as! [NSDictionary]
-                                self.arrayResult += rArray
-                            }
-                        }
-                        
-                        if (needReloadCollection == true) {
-                            // Increase load more time and reload page
-                            self.collectionView.reloadData({
-                                self.loadmoreTime = self.loadmoreTime + 1
-                            })
-                        }
-                    } else if response.response?.statusCode == 401 {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        NotificationCenter.default.post(name: "AFTER_SEARCH_PAGE", object: nil)
+                        return
                     }
-            }
+                    
+                    // First time search
+                    var needReloadCollection = true
+                    
+                    if (self.loadmoreTime == 0) {
+                        PMHelper.actionWithDelaytime(delayTime: 2, delayAction: { (_) in
+                            self.arrayResult.removeAll()
+                            self.arrayResult = result  as! [NSDictionary]
+                            self.viewDidLayoutSubviews()
+                            self.collectionView.contentOffset = CGPoint()
+                            
+                            // Post notification for dismiss search animation screen
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AFTER_SEARCH_PAGE"), object: nil)
+                        })
+                    } else {
+                        if ((result as! NSArray).count == 0) {
+                            self.stopSearch = true
+                            
+                            needReloadCollection = false
+                        } else {
+                            let rArray = result as! [NSDictionary]
+                            self.arrayResult += rArray
+                        }
+                    }
+                    
+                    if (needReloadCollection == true) {
+                        // Increase load more time and reload page
+                        self.collectionView.reloadData {
+                            self.loadmoreTime = self.loadmoreTime + 1
+                        }
+                    }
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AFTER_SEARCH_PAGE"), object: nil)
+                }
+            }).fetchdata()
         } else {
             print("no more resul")
         }
@@ -282,7 +268,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                         self.stopGetCoach = true
                     } else {
                         for coachDetail in coachDetails {
-                            if (coachDetail.existInList(self.coachArray) == false) {
+                            if (coachDetail.existInList(userList: self.coachArray) == false) {
                                 self.coachArray.append(coachDetail)
                             }
                         }
@@ -309,13 +295,14 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destination as! ChatMessageViewController
             
-            let coachDetail = (sender as! NSArray)[0]
+            let coachDetail = (sender as! NSArray)[0] as! NSDictionary
             let message = (sender as! NSArray)[1] as! String
             
-            destination.coachName = ((coachDetail[kFirstname] as! String).stringByAppendingString(" ")).uppercased()
+            let firstName = coachDetail[kFirstname] as! String
+            destination.coachName = (firstName + " ").uppercased()
             destination.typeCoach = true
-            destination.coachId = String(format:"%0.f", coachDetail[kId]!!.doubleValue)
-            destination.userIdTarget =  String(format:"%0.f", coachDetail[kId]!!.doubleValue)
+            destination.coachId = String(format:"%0.f", (coachDetail[kId]! as AnyObject).doubleValue)
+            destination.userIdTarget =  String(format:"%0.f", (coachDetail[kId]! as AnyObject).doubleValue)
             destination.preMessage = message
             
             if (message.isEmpty == true) {
@@ -345,12 +332,12 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
             let badgeValue = notification.object as? Int
             
-            if (badgeValue != nil && badgeValue > 0) {
+            if (badgeValue != nil && badgeValue! > 0) {
                 // Create badge label
                 self.badgeLabel.textColor = UIColor.white
-                self.badgeLabel.font = UIFont.systemFontOfSize(12)
+                self.badgeLabel.font = UIFont.systemFont(ofSize: 12)
                 self.badgeLabel.backgroundColor = UIColor.pmmBrightOrangeColor()
-                self.badgeLabel.textAlignment = .Center
+                self.badgeLabel.textAlignment = .center
                 
                 // Add badge label value & layout
                 self.badgeLabel.text = String(format: "%d", badgeValue!)
@@ -376,19 +363,19 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
 //        self.performSegue(withIdentifier: "gotoCoachs", sender: nil)
         
         if (self.horizontalTableView.alpha == 0) {
-            self.expandCollapseCoachView(true)
+            self.expandCollapseCoachView(isExpand: true)
         } else {
-            self.expandCollapseCoachView(false)
+            self.expandCollapseCoachView(isExpand: false)
         }
     }
     
     @IBAction func horizontalViewClicked(sender: AnyObject) {
         // For expand coach view
-        self.expandCollapseCoachView(true)
+        self.expandCollapseCoachView(isExpand: true)
     }
     
     func horizontalViewSwipeUp() {
-        self.expandCollapseCoachView(false)
+        self.expandCollapseCoachView(isExpand: false)
     }
     
     func expandCollapseCoachView(isExpand: Bool) {
@@ -441,7 +428,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
 // MARK: - CardViewCellDelegate
 extension FindViewController: CardViewCellDelegate {
     func cardViewCellTagClicked(cell: CardViewCell) {
-        let indexPath = self.collectionView.indexPathForCell(cell)
+        let indexPath = self.collectionView.indexPath(for: cell)
         let cellIndex = indexPath!.row
         let userID = self.arrayResult[cellIndex][kUserId] as! Int
         let userIDString = String(format: "%ld", userID)
@@ -450,7 +437,7 @@ extension FindViewController: CardViewCellDelegate {
     }
     
     func cardViewCellMoreInfoClicked(cell: CardViewCell) {
-        let indexPath = self.collectionView.indexPathForCell(cell)
+        let indexPath = self.collectionView.indexPath(for: cell)
         let cellIndex = indexPath!.row
         let userID = self.arrayResult[cellIndex][kUserId] as! Int
         let userIDString = String(format: "%ld", userID)
@@ -470,14 +457,14 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         return self.coachArray.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
             self.horizontalViewHeightConstraint.constant = 0
             
             return 0
         } else {
             if (self.horizontalTableView.alpha == 1) {
-                self.expandCollapseCoachView(true)
+                self.expandCollapseCoachView(isExpand: true)
             }
             
             return 96
@@ -503,16 +490,16 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         let targetUserId = String(format:"%ld", coach.id)
         
         if (coach.firstname?.isEmpty == false) {
-            self.setupDataForCell(cell!, coach: coach)
+            self.setupDataForCell(cell: cell!, coach: coach)
         } else {
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                     if visibleCell == true {
                         let userData = result as! NSDictionary
-                        coach.parseData(userData)
+                        coach.parseData(data: userData)
                         
-                        self.setupDataForCell(cell!, coach: coach)
+                        self.setupDataForCell(cell: cell!, coach: coach)
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -520,7 +507,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
             }).fetchdata()
         }
         
-        cell!.selectionStyle = .None
+        cell!.selectionStyle = .none
         return cell!
     }
     
@@ -543,7 +530,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row < self.coachArray.count {
             let cellIndex = indexPath.row
             let userID = self.coachArray[cellIndex].id
@@ -575,21 +562,21 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.collectionView {
             if indexPath.row == self.arrayResult.count {
-                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("SearchNoCoach", for: indexPath) as! NoResultCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchNoCoach", for: indexPath) as! NoResultCell
                 
                 // add refind action
                 cell.refineSearchBT.addTarget(self, action: #selector(refind), for: .touchUpInside)
                 
                 // add Swipe gesture
-                if cell.gestureRecognizers?.count < 1 {
+                if (cell.gestureRecognizers?.count)! < 1 {
                     let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
-                    swipeRightGesture.direction = .Right
+                    swipeRightGesture.direction = .right
                     cell.addGestureRecognizer(swipeRightGesture)
                 }
                 
                 return cell
             } else {
-                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CardView", for: indexPath) as! CardViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CardView", for: indexPath) as! CardViewCell
                 cell.delegate = self
                 cell.clipsToBounds = false
                 
@@ -606,7 +593,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 cell.cardView.tags.removeAll()
                 for i in 0 ..< coachListTags.count {
                     let tagContent = coachListTags[i] as! NSDictionary
-                    let tag = Tag()
+                    let tag = TagModel()
                     tag.name = tagContent[kTitle] as? String
                     cell.cardView.tags.append(tag)
                 }
@@ -619,42 +606,39 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 cell.cardView.connectV.layer.cornerRadius = 50
                 cell.cardView.connectV.clipsToBounds = true
                 cell.cardView.nameLB.font = .pmmPlayFairReg24()
-                if !(coachDetail[kLastName] is NSNull) {
-                    cell.cardView.nameLB.text = ((coachDetail[kFirstname] as! String) .stringByAppendingString(" ")) .stringByAppendingString(coachDetail[kLastName] as! String)
+                
+                let firstName = coachDetail[kFirstname] as! String
+                if (coachDetail[kLastName] is NSNull == false) {
+                    let lastName = coachDetail[kLastName] as! String
+                    
+                    cell.cardView.nameLB.text = firstName + " " + lastName
                 } else {
-                    cell.cardView.nameLB.text = (coachDetail[kFirstname] as! String)
+                    cell.cardView.nameLB.text = firstName
                 }
                 
                 // Show Coach avatar
                 cell.cardView.addressLB.font = .pmmPlayFairReg11()
-                if !(coachTotalDetail[kServiceArea] is NSNull) {
+                if (coachTotalDetail[kServiceArea] is NSNull == false) {
                     cell.cardView.addressLB.text = coachTotalDetail[kServiceArea] as? String
                 }
-                let postfix = widthEqual.stringByAppendingString(String(self.view.frame.size.width)).stringByAppendingString(heighEqual).stringByAppendingString(String(self.view.frame.size.width))
-                if !(coachDetail[kImageUrl] is NSNull) {
+                
+                if (coachDetail[kImageUrl] is NSNull == false) {
                     let imageLink = coachDetail[kImageUrl] as! String
-                    var prefix = kPMAPI
-                    prefix.append(imageLink)
-                    prefix.append(postfix)
-                    if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
-                        let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
-                        cell.cardView.avatarIMV.image = imageRes
-                    } else {
-                        Alamofire.request(.GET, prefix)
-                            .responseImage { response in
-                                if (response.response?.statusCode == 200) {
-                                    let imageRes = response.result.value! as UIImage
-                                    cell.cardView.avatarIMV.image = imageRes
-                                    NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                                }
+                    
+                    ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
+                        if (error == nil) {
+                            let imageRes = result as! UIImage
+                            cell.cardView.avatarIMV.image = imageRes
+                        } else {
+                            print("Request failed with error: \(String(describing: error))")
                         }
-                    }
+                    }).fetchdata()
                 }
                 
                 // Business ImageView
                 cell.cardView.connectV.isHidden = true
                 if (coachDetail[kBusinessId] is NSNull == false) {
-                    let businessId = String(format:"%0.f", coachDetail[kBusinessId]!.doubleValue)
+                    let businessId = String(format:"%0.f", (coachDetail[kBusinessId]! as AnyObject).doubleValue)
                     
                     ImageVideoRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
                         if (error == nil) {
@@ -669,14 +653,14 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 }
                 
                 // add Swipe gesture
-                if cell.gestureRecognizers?.count < 2 {
+                if (cell.gestureRecognizers?.count)! < 2 {
                     
                     let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
-                    swipeLeftGesture.direction = .Left
+                    swipeLeftGesture.direction = .left
                     cell.addGestureRecognizer(swipeLeftGesture)
                     
                     let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
-                    swipeRightGesture.direction = .Right
+                    swipeRightGesture.direction = .right
                     cell.addGestureRecognizer(swipeRightGesture)
                 }
                 
@@ -692,7 +676,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
             return self.collectionViewLayout.itemSize
         }
         
-        return CGSizeZero
+        return CGSize()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -710,11 +694,11 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
     
     
     func checkPlayVideoOnPresentCell() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        PMHelper.actionWithDelaytime(delayTime: 0.1) { (_) in
             // Play video on present cell
             let cellIndex = Int(round(self.collectionView.contentOffset.x / self.widthCell))
-            let indexPath = NSIndexPath(forRow: cellIndex, inSection: 0)
-            let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as? CardViewCell
+            let indexPath = NSIndexPath(row: cellIndex, section: 0)
+            let cell = self.collectionView.cellForItem(at: indexPath as IndexPath) as? CardViewCell
             if (cell != nil) {
                 // Show video layout
                 let coachDetail = self.arrayResult[cellIndex]
@@ -724,44 +708,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                     cell?.playVideoButton.isHidden = false
                     cell?.playVideoButton.isUserInteractionEnabled = false
                 }
-                
-                // Show video layout < 23/06
-                //                let coachDetail = self.arrayResult[cellIndex]
-                //                let videoURL = coachDetail[kVideoURL] as? String
-                //                if (videoURL != nil && videoURL!.isEmpty == false) {
-                //                    cell!.showVideo(videoURL!)
-                //                }
-                
-                // Test
-                //                let videoURL = "https://pummel-prod.s3.amazonaws.com/videos/1497421626868-0.mov"
-                //                if (videoURL.isEmpty == false) {
-                //                    cell!.showVideo(videoURL)
-                //                }
             }
-            
-            // Tracking show video
-            //            if (cellIndex < self.arrayResult.count) {
-            //                let coachDetail = self.arrayResult[cellIndex]
-            //                let coachID = String(format: "%.0f", coachDetail[kUserId] as! Double)
-            //                TrackingPMAPI.sharedInstance.trackingProfileCard(coachID)
-            //            }
-            //
-            //            // Remove video layer
-            //            if (cellIndex > 0) {
-            //                let preCellIndex = NSIndexPath(forRow: cellIndex - 1, inSection: 0)
-            //                let preCell = self.collectionView.cellForItemAtIndexPath(preCellIndex) as? CardViewCell
-            //                if (preCell != nil) {
-            //                    preCell!.stopPlayVideo()
-            //                }
-            //            }
-            //
-            //            if (cellIndex < self.arrayResult.count - 1) {
-            //                let posCellIndex = NSIndexPath(forRow: cellIndex + 1, inSection: 0)
-            //                let posCell = self.collectionView.cellForItemAtIndexPath(posCellIndex) as? CardViewCell
-            //                if (posCell != nil) {
-            //                    posCell!.stopPlayVideo()
-            //                }
-            //            }
         }
     }
     
@@ -772,12 +719,12 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
             offsetX = remainSpace
         }
         
-        let newContentOffset = CGPoint(x: offsetX, 0)
+        let newContentOffset = CGPoint(x: offsetX, y: 0)
         
         UIView.animate(withDuration: 0.25, animations: {
             self.collectionView.contentOffset = newContentOffset
         }) { (_) in
-            self.endPagingCarousel(self.collectionView)
+            self.endPagingCarousel(scrollView: self.collectionView)
             self.checkPlayVideoOnPresentCell()
         }
     }
@@ -786,34 +733,34 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         var offsetX = self.collectionView.contentOffset.x - self.widthCell
         offsetX = offsetX < 0 ? 0 : offsetX
         
-        let newContentOffset = CGPoint(x: offsetX, 0)
+        let newContentOffset = CGPoint(x: offsetX, y: 0)
         
         UIView.animate(withDuration: 0.25, animations: {
             self.collectionView.contentOffset = newContentOffset
         }) { (_) in
-            self.endPagingCarousel(self.collectionView)
+            self.endPagingCarousel(scrollView: self.collectionView)
             self.checkPlayVideoOnPresentCell()
         }
     }
     
     func carouselLongPress(longPress:UILongPressGestureRecognizer) {
         switch longPress.state {
-        case .Began:
+        case .began:
             self.currentOffset = self.collectionView.contentOffset
-            self.touchPoint = longPress.locationOfTouch(0, inView: self.collectionView)
+            self.touchPoint = longPress.location(ofTouch: 0, in: self.collectionView)
             break
-        case .Changed:
-            let movePoint = longPress.locationOfTouch(0, inView: self.collectionView)
+        case .changed:
+            let movePoint = longPress.location(ofTouch: 0, in: self.collectionView)
             let deltaX = (self.touchPoint.x - movePoint.x)
             
             if deltaX > 3 {
                 let newOffsetX = self.currentOffset.x + deltaX
-                self.collectionView.setContentOffset(CGPoint(x: newOffsetX, 0), animated: false)
+                self.collectionView.setContentOffset(CGPoint(x: newOffsetX, y: 0), animated: false)
             }
             break
-        case .Ended:
+        case .ended:
             print("end")
-            self.endPagingCarousel(self.collectionView)
+            self.endPagingCarousel(scrollView: self.collectionView)
             
             break
         default:

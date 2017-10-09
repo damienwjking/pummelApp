@@ -329,44 +329,38 @@ class MessageViewController: BaseViewController {
                     print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
-            
+
             // Get message
-            var prefixT = kPMAPIUSER
-            prefixT.append(PMHelper.getCurrentID())
-            prefixT.append(kPM_PATH_CONVERSATION)
-            prefixT.append("/")
-            prefixT.append(String(format:"%0.f", (message[kId]! as AnyObject).doubleValue))
-            prefixT.append("/messages")
-            Alamofire.request(.GET, prefixT)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let arrayMessageThisConverId = JSON as! NSArray
+            MessageRouter.getDetailConversation(messageID: message.messageID!, completed: { (result, error) in
+                if (error == nil) {
+                    let arrayMessageThisConverId = result as! NSArray
                     if (arrayMessageThisConverId.count != 0) {
-                        let messageDetail = arrayMessageThisConverId[0]
-                        if (!(messageDetail[kText] is NSNull)) {
+                        let messageDetail = arrayMessageThisConverId[0] as! NSDictionary
+                        
+                        if ((messageDetail[kText] is NSNull) == false) {
                             if (messageDetail[kText] as! String == "") {
-                                message[kText] = "Media message"
+                                message.text = "Media message"
                             } else {
-                                message[kText] = messageDetail[kText]  as? String
+                                message.text = messageDetail[kText]  as? String
                             }
                         } else {
                             if (!(messageDetail[kImageUrl] is NSNull)) {
-                                message[kText] = sendYouAImage
+                                message.text = sendYouAImage
                             } else if (!(messageDetail[KVideoUrl] is NSNull)) {
-                                message[kText] = sendYouAVideo
+                                message.text = sendYouAVideo
                             } else {
-                                message[kText] = "Media messge"
+                                message.text = "Media messge"
                             }
                         }
                     } else {
-                        message[kText] = " "
+                        message.text = " "
                     }
                     
                     self.listMessageTB.reloadData()
-                case .Failure(let error):
+                } else {
                     print("Request failed with error: \(String(describing: error))")
-                    }
-            }
+                }
+            }).fetchdata()
             
             i = i + 1
         }
@@ -379,11 +373,11 @@ class MessageViewController: BaseViewController {
             if (self.isGoToMessageDetail == false) {
                 let indexPathRow = sender as! Int
                 let message = arrayMessages[indexPathRow]
-                message[kLastOpenAt] = "1"
+                message.isOpen = true
                 let cell = self.listMessageTB.cellForRow(at: NSIndexPath(row: indexPathRow, section: 0) as IndexPath) as! MessageTableViewCell
                 
                 destinationVC.userIdTarget = cell.targetId
-                destinationVC.messageId = String(format:"%0.f", (message[kId]! as AnyObject).doubleValue)
+                destinationVC.messageId = message.messageID
             } else {
                 let userID = sender as! String
                 destinationVC.userIdTarget = userID
@@ -421,7 +415,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             }
         } else {
             let message = arrayMessages[indexPath.row]
-            let text = message[kText] as? String
+            let text = message.text
             if (text == nil || text?.isEmpty == true || text == " ") {
                 return 0
             }
@@ -437,76 +431,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         if (tableView == listMessageTB && arrayMessages.count != 0) {
             let cell = tableView.dequeueReusableCell(withIdentifier: kMessageTableViewCell, for: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
-            let currentUserid = PMHelper.getCurrentID()
             
-            // TargetID
-            let targerID = message["targetId"] as? String
-            if (targerID?.isEmpty == false) {
-                cell.targetId = targerID
-                cell.isUserInteractionEnabled = true
-            } else {
-                cell.isUserInteractionEnabled = false
-            }
-            
-            
-            //Get Text
-            var prefix = kPMAPIUSER
-            prefix.append(currentUserid)
-            prefix.append(kPM_PATH_CONVERSATION)
-            prefix.append("/")
-            prefix.append(String(format:"%0.f", (message[kId]! as AnyObject).doubleValue))
-            
-            // Chat time
-            let timeAgo = message["updatedAt"] as! String
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = kFullDateFormat
-            dateFormatter.timeZone = NSTimeZone(name: "UTC") as! TimeZone
-            let date : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
-            cell.timeLB.text = date.timeAgoSinceDate()
-            
-            // User name
-            let nameString: String? = message[kFirstname] as? String
-            if nameString?.isEmpty == false {
-                cell.nameLB.text = nameString
-            } else {
-                cell.nameLB.text = ""
-            }
-            
-            // User image
-            let userImage = message["userImage"] as? UIImage
-            if userImage != nil {
-                cell.avatarIMV.image = userImage
-            } else {
-                cell.avatarIMV.image = UIImage(named:"display-empty.jpg")
-            }
-            
-            // Check New or old
-            let lastOpen = message[kLastOpenAt] as? String
-            if lastOpen?.isEmpty == true {
-                cell.isNewMessage = true
-                cell.nameLB.font = .pmmMonReg13()
-                cell.messageLB.font = .pmmMonReg16()
-                cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
-            } else {
-                if lastOpen == "0" {
-                    cell.isNewMessage = true
-                    cell.nameLB.font = .pmmMonReg13()
-                    cell.messageLB.font = .pmmMonReg16()
-                    cell.timeLB.textColor = UIColor(red: 255.0/255.0, green: 91.0/255.0, blue: 16.0/255.0, alpha: 1)
-                } else {
-                    cell.nameLB.font = .pmmMonLight13()
-                    cell.messageLB.font = .pmmMonLight16()
-                    cell.timeLB.textColor = UIColor.black
-                }
-            }
-            
-            // Get last text
-            let userMessage = message[kText] as? String
-            if lastOpen?.isEmpty == false {
-                cell.messageLB.text = userMessage
-            } else {
-                cell.messageLB.text = " "
-            }
+            cell.setupData(message: message)
             
             return cell
         } else {
@@ -526,34 +452,13 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                     if visibleCell == true {
                         let userInfo = result as! NSDictionary
-                        let name = userInfo.object(forKey: kFirstname) as! String
-                        cell!.name.text = name.uppercased()
-                        
-                        if (userInfo[kImageUrl] is NSNull == false) {
-                            let imageURLString = userInfo[kImageUrl] as! String
-                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                                if (error == nil) {
-                                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
-                                    if visibleCell == true {
-                                        let imageRes = result as! UIImage
-                                        cell!.imageV.image = imageRes
-                                        cell!.addButton.isHidden = false
-                                    }
-                                } else {
-                                    print("Request failed with error: \(String(describing: error))")
-                                }
-                            }).fetchdata()
-                        } else {
-                            cell?.imageV.image = UIImage(named: "display-empty.jpg")
-                            cell!.addButton.isHidden = false
-                        }
+                        cell?.setupData(leadDictionay: userInfo)
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
             
-            cell!.selectionStyle = .none
             return cell!
         }
     }
@@ -561,35 +466,27 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     func clickOnConnectionImage(indexPath: NSIndexPath) {
         self.saveIndexPath = indexPath
         let message = arrayMessages[indexPath.row]
-        let messageId = String(format:"%0.f", (message[kId]! as AnyObject).doubleValue)
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_CONVERSATION_V2)
-        prefix.append("/")
-        prefix.append(messageId)
-        
-        let param = [kConversationId:messageId,
-                     kUserId: PMHelper.getCurrentID()]
         
         self.view.makeToastActivity(message: "Loading")
-        Alamofire.request(.PUT, prefix, parameters: param)
-            .responseJSON { response in
-                self.view.hideToastActivity()
+        MessageRouter.setOpenMessage(messageID: message.messageID!) { (result, error) in
+            self.view.hideToastActivity()
+            
+            let isChangeSuccess = result as! Bool
+            if (isChangeSuccess == true) {
+                // TODO: get number badge: maybe call func get number badge in chat message
+//                let numberBadge = result as? Int
+//                let messageTabItem = self.tabBarController?.tabBar.items![3]
+//                if (numberBadge != nil && numberBadge > 0) {
+//                    messageTabItem?.badgeValue = String(format: "%d", numberBadge!)
+//                } else {
+//                    messageTabItem?.badgeValue = nil
+//                }
                 
-                if response.response?.statusCode == 200 {
-                    let numberBadge = response.result.value as? Int
-                    let messageTabItem = self.tabBarController?.tabBar.items![3]
-                    if (numberBadge != nil && numberBadge > 0) {
-                        messageTabItem?.badgeValue = String(format: "%d", numberBadge!)
-                    } else {
-                        messageTabItem?.badgeValue = nil
-                    }
-                    
-                    self.performSegue(withIdentifier: "checkChatMessage", sender: indexPath.row)
-                } else {
-                    PMHelper.showDoAgainAlert()
-                }
-        }
+                self.performSegue(withIdentifier: "checkChatMessage", sender: indexPath.row)
+            } else {
+                PMHelper.showDoAgainAlert()
+            }
+        }.fetchdata()
     }
     
     func clickOnRowMessage(indexPath: NSIndexPath) {
@@ -648,7 +545,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 if twitterURL == nil {
                                     twitterURL = "1990-01-01"
                                 } else {
-                                    DOBString = DOBString?.substring(to: (DOBString?.index(DOBString?.startIndex, offsetBy: 10))!)
+                                    DOBString = DOBString?.substring(to: (DOBString?.index((DOBString?.startIndex)!, offsetBy: 10))!)
                                 }
                                 
                                 let newContact = CNMutableContact()
@@ -685,14 +582,14 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 
                                 
                                 let alert = UIAlertController(title: pmmNotice, message: "", preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: { _ in }))
+                                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { _ in }))
                                 
                                 let request = CNSaveRequest()
-                                request.addContact(newContact, toContainerWithIdentifier: nil)
+                                request.add(newContact, toContainerWithIdentifier: nil)
                                 do {
                                     let store = CNContactStore()
                                     
-                                    let contacts = try store.unifiedContactsMatchingPredicate(CNContact.predicateForContactsMatchingName(fullName!), keysToFetch:[CNContactGivenNameKey, CNContactFamilyNameKey])
+                                    let contacts = try store.unifiedContactsMatchingPredicate(CNContact.predicateForContactsMatchingName(fullName!), keysToFetch:[CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey])
                                     
                                     if (contacts.count == 0) {
                                         try store.executeSaveRequest(request)

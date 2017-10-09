@@ -116,7 +116,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
             // Set color for link
             self.tvLink.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg16(),
                                               NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(),
-                                              NSUnderlineStyleAttributeName: NSNumber(int: 1)]
+                                              NSUnderlineStyleAttributeName: NSNumber(value: 1)]
             
             // Set height for link
             let textMarginVertical = self.tvLink.layoutMargins.left + self.tvLink.layoutMargins.right
@@ -133,7 +133,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         }
         
         // Get bussiness
-        let businessId = String(format:"%0.f", discountDetail[kBusinessId]!.doubleValue)
+        let businessId = String(format:"%0.f", (discountDetail[kBusinessId]! as AnyObject).doubleValue)
         ImageVideoRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight200) { (result, error) in
             if (error == nil) {
                 let imageRes = result as! UIImage

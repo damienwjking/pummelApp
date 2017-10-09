@@ -128,7 +128,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var twitterLink: String? = ""
     var facebookLink: String? = ""
     
-    var tags = [Tag]()
+    var tags = [TagModel]()
     var photoArray: NSMutableArray = []
     var testimonialArray = [TestimonialModel]()
     var offset: Int = 0
@@ -447,7 +447,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.tags.removeAll()
                     for i in 0 ..< tagArr.count {
                         let tagContent = tagArr[i]
-                        let tag = Tag()
+                        let tag = TagModel()
                         tag.name = tagContent[kTitle] as? String
                         self.tags.append(tag)
                     }
@@ -462,7 +462,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.tags.removeAll()
             for i in 0 ..< coachListTags.count {
                 let tagContent = coachListTags[i] as! NSDictionary
-                let tag = Tag()
+                let tag = TagModel()
                 tag.name = tagContent[kTitle] as? String
                 self.tags.append(tag)
             }

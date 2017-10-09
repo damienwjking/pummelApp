@@ -112,11 +112,11 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
         super.init(coder: aDecoder)!
         
         self.backgroundColor = fusumaBackgroundColor
-        self.frame.size      = CGSizeZero
+        self.frame.size      = CGSize()
         self.clipsToBounds   = true
         self.imageView.alpha = 0.0
         
-        imageView.frame = CGRect(origin: CGPoint(), size: CGSizeZero)
+        imageView.frame = CGRect(origin: CGPoint(), size: CGSize())
         
         self.maximumZoomScale = 2.0
         self.minimumZoomScale = 0.8

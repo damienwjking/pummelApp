@@ -36,7 +36,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.afterSearch), name: "AFTER_SEARCH_PAGE", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.afterSearch), name: NSNotification.Name(rawValue: "AFTER_SEARCH_PAGE"), object: nil)
     }
     
     func animationIndicator() {
@@ -105,9 +105,9 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         
         self.map.delegate = self
         let link = "http://tile.stamen.com/toner/{z}/{x}/{y}.png"
-        let ovlay = MKTileOverlay.init(URLTemplate: link)
+        let ovlay = MKTileOverlay.init(urlTemplate: link)
         ovlay.canReplaceMapContent = true
-        self.map.addOverlay(ovlay)
+        self.map.add(ovlay)
         overlayView.alpha = 0.7
         self.findFinessTF.font = .pmmMonReg11()
         locationManager = CLLocationManager()
@@ -119,19 +119,19 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         if (CLLocationManager.locationServicesEnabled())
         {
             switch(CLLocationManager.authorizationStatus()) {
-                case .Restricted, .Denied:
+                case .restricted, .denied:
                     let alertController = UIAlertController(title: pmmNotice, message: turnOneLocationServiceApp, preferredStyle: .alert)
                             let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                                 let settingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
                                 if let url = settingsUrl {
-                                    UIApplication.shared.openURL(url)
+                                    UIApplication.shared.openURL(url as URL)
                                 }
                         }
                         alertController.addAction(OKAction)
                     self.present(alertController, animated: true) {
                     // ...
                     }
-                case .AuthorizedAlways, .AuthorizedWhenInUse: break
+                case .authorizedAlways, .authorizedWhenInUse: break
             default: break
             }
         } else {
@@ -157,17 +157,13 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
     }
     
     func delayCheck() {
-        let seconds = 6.0
-        let delay = seconds * Double(NSEC_PER_SEC)  // nanoseconds per seconds
-        let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+        PMHelper.actionWithDelaytime(delayTime: 6) { (_) in
             if (self.getResultSearch == true) {
                 self.stopAnimation = true
             } else {
                 self.delayCheck()
             }
-        })
-
+        }
     }
     
     func afterSearch() {
@@ -206,7 +202,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
                         kState: state,
                         kCity: city]
                     
-                    NotificationCenter.default.post(name: k_PM_FIRST_SEARCH_COACH, object: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: k_PM_FIRST_SEARCH_COACH), object: nil)
                 }
             })
         }

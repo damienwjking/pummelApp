@@ -23,7 +23,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     @IBOutlet weak var businessIMV : UIImageView!
     
     weak var delegate : CardViewDelegate? = nil
-    var tags = [Tag]()
+    var tags = [TagModel]()
     var sizingCell: TagCell?
     
     override init(frame: CGRect) {
@@ -40,7 +40,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         // Shadow
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.25
-        layer.shadowOffset = CGSize(width: 0, 1.5)
+        layer.shadowOffset = CGSize(width: 0, height: 1.5)
         layer.shadowRadius = 4.0
         layer.shouldRasterize = true
         layer.rasterizationScale = SCREEN_SCALE
@@ -53,7 +53,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
         self.collectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
         self.collectionView.backgroundColor = UIColor.clear
-        self.sizingCell = (cellNib.instantiateWithOwner(nil, options: nil) as NSArray).firstObject as! TagCell?
+        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
     }
     
     
@@ -62,14 +62,14 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
-        self.configureCell(cell, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kTagCell, for: indexPath) as! TagCell
+        self.configureCell(cell: cell, forIndexPath: indexPath)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, for: indexPath)
+        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
         return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
     }
     
@@ -83,7 +83,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         }
     }
     
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
+    func configureCell(cell: TagCell, forIndexPath indexPath: IndexPath) {
         let tag = tags[indexPath.row]
         cell.tagName.text = tag.name
         cell.tagName.textColor = UIColor.black

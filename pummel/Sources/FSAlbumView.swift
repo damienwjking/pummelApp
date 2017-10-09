@@ -22,9 +22,9 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     weak var delegate: FSAlbumViewDelegate? = nil
     var imageSelected : UIImage!
-    var images: PHFetchResult!
+    var images: PHFetchResult<AnyObject>!
     var imageManager: PHCachingImageManager?
-    var previousPreheatRect: CGRect = CGRectZero
+    var previousPreheatRect: CGRect = CGRect()
     let cellSize = CGSize(width: 100, height: 100)
     
     // Variables for calculating the position
@@ -45,7 +45,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     static func instance() -> FSAlbumView {
         
-        return UINib(nibName: "FSAlbumView", bundle: NSBundle(forClass: self.classForCoder())).instantiateWithOwner(self, options: nil)[0] as! FSAlbumView
+        return UINib(nibName: "FSAlbumView", bundle: nil).instantiate(withOwner: self, options: nil)[0] as! FSAlbumView
     }
     
     func initialize() {
@@ -60,8 +60,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
      
         dragDirection = Direction.Up
         
-        
-        collectionView.register(UINib(nibName: "FSAlbumViewCell", bundle: NSBundle(forClass: self.classForCoder)), forCellWithReuseIdentifier: "FSAlbumViewCell")
+        let nib = UINib(nibName: "FSAlbumViewCell", bundle: nil)
+        collectionView.register(nib, forCellWithReuseIdentifier: "FSAlbumViewCell")
 		collectionView.backgroundColor = UIColor.white
         // Never load photos Unless the user allows to access to photo album
         checkPhotoAuth()
@@ -72,29 +72,29 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             NSSortDescriptor(key: "creationDate", ascending: false)
         ]
         
-        images = PHAsset.fetchAssetsWithMediaType(.Image, options: options)
+        images = PHAsset.fetchAssets(with: .image, options: options) as! PHFetchResult<AnyObject>
         
         if images.count > 0 {
             
-            changeImage(images[0] as! PHAsset)
+            changeImage(asset: images[0] as! PHAsset)
             collectionView.reloadData()
-            collectionView.selectItemAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), animated: false, scrollPosition: UICollectionViewScrollPosition.None)
+            collectionView.selectItem(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: UICollectionViewScrollPosition.top)
         }
         
-        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
+        PHPhotoLibrary.shared().register(self)
         
         self.pickingTheLastImageFromThePhotoLibrary()
     }
     
     deinit {
         
-        if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.Authorized {
+        if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.authorized {
             
-            PHPhotoLibrary.sharedPhotoLibrary().unregisterChangeObserver(self)
+            PHPhotoLibrary.shared().unregisterChangeObserver(self)
         }
     }
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         
         return true
     }
@@ -103,15 +103,15 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     // MARK: - UICollectionViewDelegate Protocol
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("FSAlbumViewCell", for: indexPath) as! FSAlbumViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FSAlbumViewCell", for: indexPath) as! FSAlbumViewCell
         
         let currentTag = cell.tag + 1
         cell.tag = currentTag
         
         let asset = self.images[indexPath.item] as! PHAsset
-        self.imageManager?.requestImageForAsset(asset,
+        self.imageManager?.requestImage(for: asset,
             targetSize: cellSize,
-            contentMode: .AspectFill,
+            contentMode: .aspectFill,
             options: nil) {
                 result, info in
                 
@@ -144,23 +144,23 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         let asset = images[indexPath.row] as! PHAsset
         
         let options = PHImageRequestOptions()
-        options.networkAccessAllowed = true
+        options.isNetworkAccessAllowed = true
         
-        self.imageManager?.requestImageForAsset(asset,
+        self.imageManager?.requestImage(for: asset,
             targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight),
-            contentMode: .AspectFill,
+            contentMode: .aspectFill,
             options: options) {
                 result, info in
                 self.imageSelected = result
         }
         
         dragDirection = Direction.Up
-        collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .Top, animated: true)
+        collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
     }
     
     
     // MARK: - ScrollViewDelegate
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView == collectionView {
             self.updateCachedAssets()
@@ -171,32 +171,28 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
-        let fetchResult = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: fetchOptions)
+        let fetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
         
-        if let lastAsset: PHAsset = fetchResult.lastObject as? PHAsset {
-            let manager = PHImageManager.defaultManager()
+        if let lastAsset: PHAsset = fetchResult.lastObject {
+            let manager = PHImageManager.default()
             let imageRequestOptions = PHImageRequestOptions()
             
-            manager.requestImageDataForAsset(lastAsset, options: imageRequestOptions) {
-                ( imageData: NSData?, dataUTI: String?,
-                orientation: UIImageOrientation,
-                info: [NSObject : AnyObject]?) -> Void in
-                
+            manager.requestImageData(for: lastAsset, options: imageRequestOptions, resultHandler: { (imageData, dataUTI, orientation, info) in
                 if let imageDataUnwrapped = imageData, let lastImageRetrieved = UIImage(data: imageDataUnwrapped) {
                     // do stuff with image
                     self.imageSelected = lastImageRetrieved
                 }
-            }
+            })
         }
     }
     
     
     //MARK: - PHPhotoLibraryChangeObserver
-    func photoLibraryDidChange(changeInstance: PHChange) {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async() {
             
-            let collectionChanges = changeInstance.changeDetailsForFetchResult(self.images)
+            let collectionChanges = changeInstance.changeDetails(for: self.images as! PHFetchResult<UIImage>)
             if collectionChanges != nil {
                 
                 self.images = collectionChanges!.fetchResultAfterChanges
@@ -236,13 +232,13 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
 internal extension UICollectionView {
     
     func aapl_indexPathsForElementsInRect(rect: CGRect) -> [NSIndexPath] {
-        let allLayoutAttributes = self.collectionViewLayout.layoutAttributesForElementsInRect(rect)
+        let allLayoutAttributes = self.collectionViewLayout.layoutAttributesForElements(in: rect)
         if (allLayoutAttributes?.count ?? 0) == 0 {return []}
         var indexPaths: [NSIndexPath] = []
         indexPaths.reserveCapacity(allLayoutAttributes!.count)
         for layoutAttributes in allLayoutAttributes! {
             let indexPath = layoutAttributes.indexPath
-            indexPaths.append(indexPath)
+            indexPaths.append(indexPath as NSIndexPath)
         }
         return indexPaths
     }
@@ -253,9 +249,9 @@ internal extension NSIndexSet {
     func aapl_indexPathsFromIndexesWithSection(section: Int) -> [NSIndexPath] {
         var indexPaths: [NSIndexPath] = []
         indexPaths.reserveCapacity(self.count)
-        self.enumerateIndexesUsingBlock {idx, stop in
-            indexPaths.append(NSIndexPath(forItem: idx, inSection: section))
-        }
+        self.enumerate({idx, stop in
+            indexPaths.append(IndexPath(row: idx, section: section) as NSIndexPath)
+        })
         return indexPaths
     }
 }
@@ -263,37 +259,34 @@ internal extension NSIndexSet {
 private extension FSAlbumView {
     
     func changeImage(asset: PHAsset) {
-        
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
             let options = PHImageRequestOptions()
-            options.networkAccessAllowed = true
+            options.isNetworkAccessAllowed = true
             
-            self.imageManager?.requestImageForAsset(asset,
-                targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight),
-                contentMode: .AspectFill,
-                options: options) {
-                    result, info in
-                    
+            self.imageManager?.requestImage(for: asset,
+                                            targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight),
+                                            contentMode: .aspectFill,
+                                            options: options) {
+                                                result, info in
+                                                
             }
-        })
+        }
     }
     
     // Check the status of authorization for PHPhotoLibrary
-    private func checkPhotoAuth() {
+    func checkPhotoAuth() {
         
         PHPhotoLibrary.requestAuthorization { (status) -> Void in
             switch status {
-            case .Authorized:
+            case .authorized:
                 self.imageManager = PHCachingImageManager()
                 if self.images != nil && self.images.count > 0 {
                     
-                    self.changeImage(self.images[0] as! PHAsset)
+                    self.changeImage(asset: self.images[0] as! PHAsset)
                 }
                 
-            case .Restricted, .Denied:
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            case .restricted, .denied:
+                DispatchQueue.main.async(execute: { () -> Void in
                     
                     self.delegate?.albumViewCameraRollUnauthorized()
                     
@@ -309,64 +302,64 @@ private extension FSAlbumView {
     func resetCachedAssets() {
         
         imageManager?.stopCachingImagesForAllAssets()
-        previousPreheatRect = CGRectZero
+        previousPreheatRect = CGRect()
     }
  
     func updateCachedAssets() {
         
         var preheatRect = self.collectionView!.bounds
-        preheatRect = CGRectInset(preheatRect, 0.0, -0.5 * CGRectGetHeight(preheatRect))
+        preheatRect = preheatRect.insetBy(dx: 0.0, dy: -0.5 * preheatRect.height)
         
-        let delta = abs(CGRectGetMidY(preheatRect) - CGRectGetMidY(self.previousPreheatRect))
-        if delta > CGRectGetHeight(self.collectionView!.bounds) / 3.0 {
+        let delta = abs(preheatRect.midY - self.previousPreheatRect.midY)
+        if delta > self.collectionView!.bounds.height / 3.0 {
             
             var addedIndexPaths: [NSIndexPath] = []
             var removedIndexPaths: [NSIndexPath] = []
             
-            self.computeDifferenceBetweenRect(self.previousPreheatRect, andRect: preheatRect, removedHandler: {removedRect in
-                let indexPaths = self.collectionView.aapl_indexPathsForElementsInRect(removedRect)
+            self.computeDifferenceBetweenRect(oldRect: self.previousPreheatRect, andRect: preheatRect, removedHandler: {removedRect in
+                let indexPaths = self.collectionView.aapl_indexPathsForElementsInRect(rect: removedRect)
                 removedIndexPaths += indexPaths
                 }, addedHandler: {addedRect in
-                    let indexPaths = self.collectionView.aapl_indexPathsForElementsInRect(addedRect)
+                    let indexPaths = self.collectionView.aapl_indexPathsForElementsInRect(rect: addedRect)
                     addedIndexPaths += indexPaths
             })
             
-            let assetsToStartCaching = self.assetsAtIndexPaths(addedIndexPaths)
-            let assetsToStopCaching = self.assetsAtIndexPaths(removedIndexPaths)
+            let assetsToStartCaching = self.assetsAtIndexPaths(indexPaths: addedIndexPaths)
+            let assetsToStopCaching = self.assetsAtIndexPaths(indexPaths: removedIndexPaths)
             
-            self.imageManager?.startCachingImagesForAssets(assetsToStartCaching,
+            self.imageManager?.startCachingImages(for: assetsToStartCaching,
                 targetSize: cellSize,
-                contentMode: .AspectFill,
+                contentMode: .aspectFill,
                 options: nil)
-            self.imageManager?.stopCachingImagesForAssets(assetsToStopCaching,
+            self.imageManager?.stopCachingImages(for: assetsToStopCaching,
                 targetSize: cellSize,
-                contentMode: .AspectFill,
+                contentMode: .aspectFill,
                 options: nil)
             
             self.previousPreheatRect = preheatRect
         }
     }
     
-    func computeDifferenceBetweenRect(oldRect: CGRect, andRect newRect: CGRect, removedHandler: CGRect->Void, addedHandler: CGRect->Void) {
-        if CGRectIntersectsRect(newRect, oldRect) {
-            let oldMaxY = CGRectGetMaxY(oldRect)
-            let oldMinY = CGRectGetMinY(oldRect)
-            let newMaxY = CGRectGetMaxY(newRect)
-            let newMinY = CGRectGetMinY(newRect)
+    func computeDifferenceBetweenRect(oldRect: CGRect, andRect newRect: CGRect, removedHandler: (CGRect)->Void, addedHandler: (CGRect)->Void) {
+        if newRect.intersects(oldRect) {
+            let oldMaxY = oldRect.maxY
+            let oldMinY = oldRect.minY
+            let newMaxY = newRect.maxY
+            let newMinY = newRect.minY
             if newMaxY > oldMaxY {
-                let rectToAdd = CGRect(x: newRect.origin.x, oldMaxY, newRect.size.width, (newMaxY - oldMaxY))
+                let rectToAdd = CGRect(x: newRect.origin.x, y: oldMaxY, width: newRect.size.width, height: (newMaxY - oldMaxY))
                 addedHandler(rectToAdd)
             }
             if oldMinY > newMinY {
-                let rectToAdd = CGRect(x: newRect.origin.x, newMinY, newRect.size.width, (oldMinY - newMinY))
+                let rectToAdd = CGRect(x: newRect.origin.x, y: newMinY, width: newRect.size.width, height: (oldMinY - newMinY))
                 addedHandler(rectToAdd)
             }
             if newMaxY < oldMaxY {
-                let rectToRemove = CGRect(x: newRect.origin.x, newMaxY, newRect.size.width, (oldMaxY - newMaxY))
+                let rectToRemove = CGRect(x: newRect.origin.x, y: newMaxY, width: newRect.size.width, height:(oldMaxY - newMaxY))
                 removedHandler(rectToRemove)
             }
             if oldMinY < newMinY {
-                let rectToRemove = CGRect(x: newRect.origin.x, oldMinY, newRect.size.width, (newMinY - oldMinY))
+                let rectToRemove = CGRect(x: newRect.origin.x, y: oldMinY, width: newRect.size.width, height:(newMinY - oldMinY))
                 removedHandler(rectToRemove)
             }
         } else {

@@ -39,13 +39,13 @@ class LoginAndRegisterViewController: UIViewController {
         // Add loginVC
         self.addChildViewController(loginVC)
         loginVC.didMove(toParentViewController: self)
-        loginVC.view.frame = CGRect(x: 0, 251, self.view.frame.size.width,  self.view.frame.size.height - 251)
+        loginVC.view.frame = CGRect(x: 0, y: 251, width: self.view.frame.size.width,  height: self.view.frame.size.height - 251)
         self.view.addSubview(loginVC.view)
         
         // Add registerVC and hidden it for initial
         self.addChildViewController(signupVC)
         signupVC.didMove(toParentViewController: self)
-        signupVC.view.frame = CGRect(x: 0, 251, self.view.frame.size.width, self.view.frame.size.height - 251)
+        signupVC.view.frame = CGRect(x: 0, y: 251, width: self.view.frame.size.width, height: self.view.frame.size.height - 251)
         self.view.addSubview(signupVC.view)
         
         self.updateLoginScreen()
@@ -58,11 +58,11 @@ class LoginAndRegisterViewController: UIViewController {
         self.addProfileIMV.isUserInteractionEnabled = true
         self.addProfileIMV.addGestureRecognizer(tapGestureRecognizer)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.loginSuccessAction), name: "LOGINSUCCESSNOTIFICATION", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.loginSuccessAction), name: NSNotification.Name(rawValue: "LOGINSUCCESSNOTIFICATION"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.signupSuccessAction), name: "SIGNUPSUCCESSNOTIFICATION", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.signupSuccessAction), name: NSNotification.Name(rawValue: "SIGNUPSUCCESSNOTIFICATION"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.forgotPasswordAction), name: "FORGOTPASSWORDNOTIFICATION", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.forgotPasswordAction), name: NSNotification.Name(rawValue: "FORGOTPASSWORDNOTIFICATION"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,7 +70,7 @@ class LoginAndRegisterViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
@@ -91,10 +91,10 @@ class LoginAndRegisterViewController: UIViewController {
         
         if (self.imageData == nil) {
             let noImage = UIImage(named: "display-empty.jpg")
-            self.imageData = UIImageJPEGRepresentation(noImage!, 0.5)
+            self.imageData = UIImageJPEGRepresentation(noImage!, 0.5) as! NSData
         }
         
-        ImageVideoRouter.currentUserUploadAvatar(imageData: self.imageData) { (result, error) in
+        ImageVideoRouter.currentUserUploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: self.imageData as Data) { (result, error) in
             self.view.hideToastActivity()
             
             let isSuccess = result as! Bool
@@ -168,8 +168,8 @@ class LoginAndRegisterViewController: UIViewController {
         }
         
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-            self.imagePicker.sourceType = .Camera
-            self.imagePicker.cameraDevice = .Front
+            self.imagePicker.sourceType = .camera
+            self.imagePicker.cameraDevice = .front
             self.present(self.imagePicker, animated: true, completion: nil)
         }
         
@@ -194,15 +194,15 @@ class LoginAndRegisterViewController: UIViewController {
         if (testStr == "") {
             return false
         } else {
-            let dateFormatter = DateFormatter
-            dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
-            dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
-            let dateDOB = dateFormatter.date(from: testStr)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = DateFormatter.Style.MediumStyle
+            dateFormatter.timeStyle = DateFormatter.Style.NoStyle
+            let dateDOB = dateFormatter.date(testStr)
             
             let date = NSDate()
             let calendar = NSCalendar.current
-            let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-            let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+            let components = calendar.dateComponents([.day , .month , .year], from: date as Date)
+            let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB!)
             let year =  components.year
             let yearDOB = componentsDOB.year
             
@@ -218,9 +218,9 @@ class LoginAndRegisterViewController: UIViewController {
 extension LoginAndRegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            self.profileIMV.contentMode = .ScaleAspectFill
+            self.profileIMV.contentMode = .scaleAspectFill
             self.profileIMV.image = pickedImage
-            self.imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+            self.imageData = UIImageJPEGRepresentation(pickedImage, 0.2) as! NSData
             self.cameraProfileIconIMV.isHidden = true
             self.addProfilePhototLB.textColor = UIColor(white: 225, alpha: 1.0)
         }

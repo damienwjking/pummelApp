@@ -6,8 +6,10 @@
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
-import Foundation
+import MapKit
+import Mixpanel
 import Alamofire
+import Foundation
 
 enum UserRouter: URLRequestConvertible {
     case getCurrentUserInfo(completed: CompletionBlock)
@@ -25,12 +27,14 @@ enum UserRouter: URLRequestConvertible {
     case getUserTagList(userID : String, completed: CompletionBlock)
     case getPhotoList(userID : String, offset: Int, completed: CompletionBlock)
     case signup(firstName: String, email: String, password: String, gender: String, completed: CompletionBlock)
+    case login(email: String, password: String, completed: CompletionBlock)
     case checkConnect(coachID: String, completed: CompletionBlock)
     
     case setLead(coachID: String, completed: CompletionBlock)
     case getLead(userID: String, type: String, offset: Int, completed: CompletionBlock)
     case setCurrentLead(requestID: String, completed: CompletionBlock)
     case setOldLead(requestID: String, completed: CompletionBlock)
+    case searchCoachNearby(gender: String, tags: NSArray, longitude: CLLocationDegrees, latitute: CLLocationDegrees, stage: String, city: String, offset: Int, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock? {
         switch self {
@@ -64,6 +68,8 @@ enum UserRouter: URLRequestConvertible {
             return completed
         case .signup(_ , _, _, _, let completed):
             return completed
+        case .login(_ , _, let completed):
+            return completed
         case .checkConnect(_, let completed):
             return completed
         case .setLead(_, let completed):
@@ -74,7 +80,10 @@ enum UserRouter: URLRequestConvertible {
             return completed
         case .setOldLead(_, let completed):
             return completed
-
+        case .searchCoachNearby(_, _, _, _, _, _, _, let completed):
+            return completed
+            
+            
         }
     }
     
@@ -110,6 +119,8 @@ enum UserRouter: URLRequestConvertible {
             return .get
         case .signup:
             return .post
+        case .login:
+            return .post
         case .checkConnect:
             return .post
         case .setLead:
@@ -120,6 +131,8 @@ enum UserRouter: URLRequestConvertible {
             return .put
         case .setOldLead:
             return .put
+        case .searchCoachNearby:
+            return .get
             
         }
     }
@@ -174,6 +187,9 @@ enum UserRouter: URLRequestConvertible {
         case .signup:
             prefix = kPMAPI_REGISTER
             
+        case .login:
+            prefix = kPMAPI_LOGIN
+            
         case .checkConnect:
             prefix = kPMAPICHECKUSERCONNECT
             
@@ -188,6 +204,24 @@ enum UserRouter: URLRequestConvertible {
             
         case .setOldLead:
             prefix = kPMAPICOACHES + currentUserID + kPMAPICOACH_OLD + "/"
+            
+        case .searchCoachNearby(_, let tags, _, _, _, _, _, _):
+            prefix = kPMAPICOACH_SEARCHV3
+            if (tags.count > 0) {
+                var index = 0
+                for id in tags {
+                    if (index == 0) {
+                        prefix = prefix + "?"
+                    } else {
+                        prefix = prefix + "&"
+                    }
+                    
+                    index = index + 1
+                    
+                    prefix = prefix + "tagIds=" + (id as! String)
+                }
+            }
+            
             
         }
         
@@ -254,6 +288,10 @@ enum UserRouter: URLRequestConvertible {
             param[kFirstname] = firstName as AnyObject
             param[kGender] = gender as AnyObject
             
+        case .login(let email, let password, _):
+            param[kEmail] = email as AnyObject
+            param[kPassword] = password as AnyObject
+            
         case .checkConnect(let coachID, _):
             param[kUserId] = currentUserID as AnyObject
             param[kCoachId] = coachID as AnyObject
@@ -266,10 +304,18 @@ enum UserRouter: URLRequestConvertible {
             param[kUserId] = currentUserID as AnyObject
             param[kUserIdRequest] = requestID as AnyObject
             
-        case .setCurrentLead(let requestID, _):
+        case .setOldLead(let requestID, _):
             param[kUserId] = currentUserID as AnyObject
             param[kUserIdRequest] = requestID as AnyObject
             
+        case .searchCoachNearby(let gender, _, let longitude, let latitude, let stage, let city, let offset, _):
+            param[kGender] = gender as AnyObject
+            param[kLimit] = 30 as AnyObject
+            param[kOffset] = offset as AnyObject
+            param[kLong] = longitude as AnyObject
+            param[kLat] = latitude as AnyObject
+            param[kState] = stage as AnyObject
+            param[kCity] = city as AnyObject
             
         default:
             break
@@ -580,6 +626,55 @@ enum UserRouter: URLRequestConvertible {
                 }
             })
             
+        case .login:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter login")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        UserRouter.saveCurrentUserInfo(response: response)
+                        
+                        // TODO : need check
+                        let userTotalInfo = JSON as! NSDictionary
+                        if let userinfo = userTotalInfo.object(forKey: "user") as? NSDictionary {
+                            let currentUserID = PMHelper.getCurrentID()
+                            
+                            let mixpanel = Mixpanel.sharedInstance()
+                            if mixpanel?.distinctId != "" {
+                                mixpanel?.identify(currentUserID)
+                            } else {
+                                mixpanel?.createAlias(currentUserID, forDistinctID: (mixpanel?.distinctId)!)
+                                mixpanel?.identify((mixpanel?.distinctId)!)
+                            }
+                            
+                            if let nameUser = userinfo.object(forKey: kFirstname) as? String {
+                                mixpanel?.people.set("$name", to: nameUser)
+                            }
+                            
+                            if let mailUser = userinfo[kEmail] as? String {
+                                mixpanel?.people.set("$email", to: mailUser)
+                            }
+                        }
+                        
+                        // Can't return respone object
+                        self.comletedBlock!(true as AnyObject, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(false as AnyObject, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 400) {
+                        let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
+                        self.comletedBlock!(false as AnyObject, error as NSError)
+                    } else if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(false as AnyObject, error as NSError)
+                    }
+                }
+            })
+            
         case .checkConnect:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter check_connect")
@@ -683,10 +778,54 @@ enum UserRouter: URLRequestConvertible {
                 }
             })
             
+        case .setOldLead:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter set_old_lead")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        self.comletedBlock!(true, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(false, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(false, error as NSError)
+                    }
+                }
+            })
+            
+        case .searchCoachNearby:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter search_coach_nearby")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let coachDetails = JSON as? [NSDictionary]
+                        
+                        self.comletedBlock!(coachDetails, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
         }
     }
     
-    static func saveCurrentUserInfo(response: DefaultDataResponse) {
+    static func saveCurrentUserInfo(response: DataResponse<Any>) {
         let defaults = UserDefaults.standard
         
         // Save access token here
@@ -732,7 +871,7 @@ enum UserRouter: URLRequestConvertible {
         }
     }
     
-    static func updateCookies(response: DefaultDataResponse) {
+    static func updateCookies(response: DataResponse<Any>) {
         let defaults = UserDefaults.standard
         
         if let
@@ -741,7 +880,7 @@ enum UserRouter: URLRequestConvertible {
             let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: URL)
             // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
             
-            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
+            Alamofire.SessionManager.default.session.configuration.httpCookieStorage?.setCookies(cookies, for: URL, mainDocumentURL: nil)
             defaults.set(headerFields, forKey: k_PM_HEADER_FILEDS)
             defaults.set(URL.absoluteString, forKey: k_PM_URL_LAST_COOKIE)
         }

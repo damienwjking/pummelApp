@@ -13,6 +13,7 @@ import MapKit
 enum MessageRouter: URLRequestConvertible {
     case getConversationList(offset: Int, completed: CompletionBlock)
     case getDetailConversation(messageID: String, completed: CompletionBlock)
+    case setOpenMessage(messageID: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
@@ -21,6 +22,11 @@ enum MessageRouter: URLRequestConvertible {
             
         case .getDetailConversation(_, let completed):
             return completed
+            
+        case .setOpenMessage(_, let completed):
+            return completed
+            
+            
             
         }
     }
@@ -32,6 +38,9 @@ enum MessageRouter: URLRequestConvertible {
             
         case .getDetailConversation:
             return .get
+            
+        case .setOpenMessage:
+            return .put
             
             
         }
@@ -46,7 +55,10 @@ enum MessageRouter: URLRequestConvertible {
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION_OFFSET_V2 + "\(offset)"
             
         case .getDetailConversation(let messageID, _):
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/" + messageID
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/" + messageID + kPM_PARTH_MESSAGE
+            
+        case .setOpenMessage(let messageID, _):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION_V2 + "/" + messageID
             
         }
         
@@ -54,12 +66,17 @@ enum MessageRouter: URLRequestConvertible {
     }
     
     var param: [String : Any]? {
-        let param: [String : Any]? = [:]
+        let currentUserID = PMHelper.getCurrentID()
+        
+        var param: [String : Any]? = [:]
         
         switch self {
-            //        case .reportFeed(let postID, _):
-            //            param?[kPostId] = postID
-            //
+//        case .getConversationList(let offset):
+            
+        case .setOpenMessage(let messageID):
+            param?[kUserId] =  currentUserID
+            param?[kConversationId] =  messageID
+            
             
         default:
             break
@@ -145,6 +162,26 @@ enum MessageRouter: URLRequestConvertible {
                 }
             })
             
+        case .setOpenMessage:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseString(completionHandler: { (response) in
+                print("PM: MessageRouter set_open_message")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        self.comletedBlock(true, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock(false, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
             
         }
     }

@@ -742,8 +742,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             
             let date = NSDate()
             let calendar = NSCalendar.current
-            let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-            let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+            let components = calendar.dateComponents([.day , .month , .year], from: date)
+            let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB!)
             let year =  components.year
             let yearDOB = componentsDOB.year
             
@@ -801,8 +801,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         
         let date = NSDate()
         let calendar = NSCalendar.current
-        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-        let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+        let components = calendar.dateComponents([.day , .month , .year], from: date)
+        let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB!)
         let year =  components.year
         let yearDOB = componentsDOB.year
         

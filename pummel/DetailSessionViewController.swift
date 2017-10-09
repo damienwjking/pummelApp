@@ -232,10 +232,10 @@ class DetailSessionViewController: BaseViewController {
             let imageLink = self.session.imageUrl
             var prefix = kPMAPI
             prefix.append(imageLink!)
-            let postfix = widthEqual.stringByAppendingString(self.sessionIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.sessionIMV.frame.size.width.description)
+            let postfix = widthEqual.stringByAppendingFormat(self.sessionIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.sessionIMV.frame.size.width.description)
             prefix.append(postfix)
-            if (NSCache.sharedInstance.object(forKey: prefix) != nil) {
-                let imageRes = NSCache.sharedInstance.object(forKey: prefix) as! UIImage
+            if (NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: prefix) != nil) {
+                let imageRes = NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: prefix) as! UIImage
                 self.sessionIMV.image = imageRes
             } else {
                 Alamofire.request(.GET, prefix)

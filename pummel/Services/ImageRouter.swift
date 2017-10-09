@@ -19,7 +19,7 @@ enum ImageVideoRouter: URLRequestConvertible {
     case getCoachAvatar(coachID : String, sizeString: String, completed: CompletionBlock)
     case getBusinessLogo(businessID : String, sizeString: String, completed: CompletionBlock)
     case getImage(imageURLString: String, sizeString: String, completed: CompletionBlock)
-    case currentUserUploadAvatar(imageData: Data, completed: CompletionBlock)
+    case currentUserUploadPhoto(posfix: String, imageData: Data, textPost: String, completed: CompletionBlock)
     case currentUserUploadVideo(videoData: Data, completed: CompletionBlock)
     
     var imageSize: String {
@@ -34,7 +34,7 @@ enum ImageVideoRouter: URLRequestConvertible {
             return sizeString
         case .getImage(_, let sizeString, _):
             return sizeString
-        case .currentUserUploadAvatar:
+        case .currentUserUploadPhoto:
             return ""
         case .currentUserUploadVideo:
             return ""
@@ -45,7 +45,7 @@ enum ImageVideoRouter: URLRequestConvertible {
     var fileData: Data? {
         var data: Data? = nil
         switch self {
-        case .currentUserUploadAvatar(let imageData, _):
+        case .currentUserUploadPhoto(_, let imageData, _, _):
             data = imageData
             
         case .currentUserUploadVideo(let videoData, _):
@@ -70,7 +70,7 @@ enum ImageVideoRouter: URLRequestConvertible {
             return completed
         case .getImage(_, _, let completed):
             return completed
-        case .currentUserUploadAvatar(_, let completed):
+        case .currentUserUploadPhoto(_, _, _, let completed):
             return completed
         case .currentUserUploadVideo(_, let completed):
             return completed
@@ -90,7 +90,7 @@ enum ImageVideoRouter: URLRequestConvertible {
             return .get
         case .getImage:
             return .get
-        case .currentUserUploadAvatar:
+        case .currentUserUploadPhoto:
             return .post
         case .currentUserUploadVideo:
             return .post
@@ -126,8 +126,8 @@ enum ImageVideoRouter: URLRequestConvertible {
                 prefix = ""
             }
             
-        case .currentUserUploadAvatar:
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_PHOTO_PROFILE
+        case .currentUserUploadPhoto(let posfix, _, _, _):
+            prefix = kPMAPIUSER + currentUserID + posfix
             
         case .currentUserUploadVideo:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_VIDEO
@@ -142,9 +142,13 @@ enum ImageVideoRouter: URLRequestConvertible {
         let currentUserID = PMHelper.getCurrentID()
         
         switch self {
-        case .currentUserUploadAvatar:
+        case .currentUserUploadPhoto(let posfix, _, let textPost, _):
             param[kUserId] = currentUserID as AnyObject
-            param[kProfilePic] = "1" as AnyObject
+            if (posfix == kPM_PATH_PHOTO_PROFILE) {
+                param[kProfilePic] = "1" as AnyObject
+            } else if (posfix == "/posts/") {
+                param[kText] = textPost as AnyObject
+            }
             
         case .currentUserUploadVideo:
             param[kUserId] = currentUserID as AnyObject
@@ -234,7 +238,7 @@ enum ImageVideoRouter: URLRequestConvertible {
                 self.comletedBlock(nil, error)
             }
             
-        case .currentUserUploadAvatar:
+        case .currentUserUploadPhoto:
             let filename = jpgeFile
             let type = imageJpeg
             

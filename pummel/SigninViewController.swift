@@ -30,8 +30,8 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         
         self.setupUI()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,13 +47,13 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         self.FBButton.frame = fbButtonFrame
         self.FBButton.delegate = self
         self.FBButton.readPermissions = ["public_profile", "email", "user_friends"]
-        self.FBButton.loginBehavior = .SystemAccount
+        self.FBButton.loginBehavior = .systemAccount
         self.scrollView.addSubview(self.FBButton)
     }
     
     func setupUI() {
         self.setNeedsStatusBarAppearanceUpdate()
-        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
+        self.emailTF.autocorrectionType = UITextAutocorrectionType.no
         
         self.emailTF.attributedPlaceholder = NSAttributedString(string:"EMAIL",
                                                                 attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
@@ -68,12 +68,14 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         self.emailTF.keyboardAppearance = .dark
         self.passwordTF.keyboardAppearance = .dark
         
-        let tapGestureRecognizer = UITapGestureRecognizer { (_) in
-            self.emailTF.resignFirstResponder()
-            self.passwordTF.resignFirstResponder()
-        }
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dissmissKeyboard(sender:)))
         self.scrollView.isUserInteractionEnabled = true
         self.scrollView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    func dissmissKeyboard(sender: Any) {
+        self.emailTF.resignFirstResponder()
+        self.passwordTF.resignFirstResponder()
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -87,68 +89,38 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func forgotPasswordButtonClicked(sender: AnyObject) {
-        NotificationCenter.default.post(name: "FORGOTPASSWORDNOTIFICATION", object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "FORGOTPASSWORDNOTIFICATION"), object: nil)
     }
     
     @IBAction func signinButtonClicked(sender: AnyObject) {
         let userEmail = self.emailTF.text!
         let userPassword = self.passwordTF.text!
-        self.view.makeToastActivity(message: "Loading")
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Login"]
         mixpanel?.track("IOS.Login", properties: properties)
         
-        Alamofire.request(.POST, kPMAPI_LOGIN, parameters: [kEmail:userEmail, kPassword:userPassword])
-            .responseJSON { response in
-                self.view.hideToastActivity()
-                
-                if response.response?.statusCode == 200 {
-                    let JSON = response.result.value
-                    
-                    UserRouter.saveCurrentUserInfo(response)
-                    let currentId = String(format:"%0.f",JSON!.object(forKey: kUserId)!.doubleValue)
-                    
-                    let mixpanel = Mixpanel.sharedInstance()
-                    if mixpanel.distinctId != "" {
-                        mixpanel.identify(currentId)
-                    } else {
-                        mixpanel.createAlias(currentId, forDistinctID: mixpanel.distinctId)
-                        mixpanel.identify(mixpanel.distinctId)
-                    }
-                    
-                    if let userinfo = JSON!.object(forKey: "user") as? NSDictionary {
-                        if let nameUser = userinfo.object(forKey: kFirstname) as? String {
-                            mixpanel.people.set("$name", to: nameUser)
-                        }
-                        
-                        if let mailUser = userinfo[kEmail] as? String {
-                            mixpanel.people.set("$email", to: mailUser)
-                        }
-                    }
-                    
-                    UserDefaults.standard.setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
-                    NotificationCenter.default.post(name: "LOGINSUCCESSNOTIFICATION", object: nil)
-                    FBSDKAppEvents.logEvent("Login")
-                } else {
-                    let alertController = UIAlertController(title: pmmNotice, message: signInNotice, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                }
-        }
+        self.view.makeToastActivity(message: "Loading")
+        UserRouter.login(email: userEmail, password: userPassword) { (result, error) in
+            self.view.hideToastActivity()
+            
+            let loginSuccess = result as! Bool
+            if (loginSuccess == true) {
+                UserDefaults.standard.set(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "LOGINSUCCESSNOTIFICATION"), object: nil)
+                FBSDKAppEvents.logEvent("Login")
+            } else {
+                PMHelper.showNoticeAlert(message: signInNotice)
+            }
+        }.fetchdata()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if (textField == self.emailTF) {
             self.passwordTF.becomeFirstResponder()
         } else if (textField == self.passwordTF) {
-            self.signinBT.sendActionsForControlEvents(.touchUpInside)
+            self.signinBT.sendActions(for: .touchUpInside)
         }
         
         return true
@@ -157,12 +129,7 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
 
 
 extension SigninViewController: FBSDKLoginButtonDelegate {
-    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
-        print("declined: \(result.declinedPermissions)")
-        print("granted:  \(result.grantedPermissions)")
-        print("isCan:    \(result.isCancelled)")
-        print("token:    \(result.token)")
-        
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         if ((error) != nil) {
             print("error: ", error)
         } else if result.isCancelled {
@@ -170,8 +137,10 @@ extension SigninViewController: FBSDKLoginButtonDelegate {
         } else {
             print("login success")
             
-            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,birthday,cover,picture.type(large)"], tokenString: FBSDKAccessToken.currentAccessToken().tokenString, version: nil, HTTPMethod: "GET")
-            req.startWithCompletionHandler({ (connection, result, error : NSError!) -> Void in
+            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,birthday,cover,picture.type(large)"], tokenString: FBSDKAccessToken.current().tokenString, version: nil, httpMethod: "GET")
+            
+            // For warning
+            let _ = req?.start(completionHandler: { (connection, result, error) in
                 if(error == nil) {
                     let fbData = result as! NSDictionary
                     
@@ -182,7 +151,7 @@ extension SigninViewController: FBSDKLoginButtonDelegate {
                     
                     var gender = fbData["gender"] as? String
                     if (gender != nil) {
-                        gender = gender?.capitalizedString
+                        gender = gender?.capitalized
                     }
                     
                     var pictureURL = ""
@@ -197,7 +166,7 @@ extension SigninViewController: FBSDKLoginButtonDelegate {
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                NotificationCenter.default.post(name: "LOGINSUCCESSNOTIFICATION", object: nil)
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "LOGINSUCCESSNOTIFICATION"), object: nil)
                             }
                         } else {
                             let loginManager: FBSDKLoginManager = FBSDKLoginManager()
@@ -207,13 +176,13 @@ extension SigninViewController: FBSDKLoginButtonDelegate {
                         }
                     }).fetchdata()
                 } else {
-                    print("error \(error)")
+                    print("error \(String(describing: error))")
                 }
             })
         }
     }
     
-    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 @objc protocol LeadAddedTableViewCellDelegate: class {
-    optional func removeUserWithID(userId:String)
+    @objc optional func removeUserWithID(userId:String)
 }
 
 class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -25,7 +25,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         super.awakeFromNib()
         
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.Horizontal
+        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
         self.cv.dataSource = self
         self.cv.delegate = self
         let nibName = UINib(nibName: "LeadAddedCollectionViewCell" , bundle:nil)
@@ -35,7 +35,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         self.titleHeader.font = .pmmMonReg13()
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
@@ -49,11 +49,11 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", for: indexPath) as! LeadAddedCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", forIndexPath: indexPath) as! LeadAddedCollectionViewCell
 
         ImageVideoRouter.getUserAvatar(userID: self.idUser, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {
-                let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
+                let updateCell = collectionView.cellForItem(at: indexPath)
                 if (updateCell != nil) {
                     let imageRes = result as! UIImage
                     cell.imgAvatar.image = imageRes
@@ -75,7 +75,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if self.delegateLeadAddedTableViewCell != nil {
-            self.delegateLeadAddedTableViewCell?.removeUserWithID!(idUser)
+            self.delegateLeadAddedTableViewCell?.removeUserWithID!(userId: idUser)
         }
     }
 }

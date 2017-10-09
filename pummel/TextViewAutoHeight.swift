@@ -41,7 +41,7 @@ class TextViewAutoHeight: UITextView {
     
     private func setUpInit() {
         for constraint in self.constraints {
-            if constraint.firstAttribute == NSLayoutAttribute.Height {
+            if constraint.firstAttribute == NSLayoutAttribute.height {
                 self.heightConstraint = constraint as? NSLayoutConstraint;
                 break;
             }
@@ -54,7 +54,7 @@ class TextViewAutoHeight: UITextView {
         finalContentSize.width  += (self.textContainerInset.left + self.textContainerInset.right ) / 2.0
         finalContentSize.height += (self.textContainerInset.top  + self.textContainerInset.bottom) / 2.0
         
-        fixTextViewHeigth(finalContentSize)
+        fixTextViewHeigth(finalContentSize: finalContentSize)
     }
     
     private func fixTextViewHeigth(finalContentSize:CGSize) {
@@ -65,10 +65,10 @@ class TextViewAutoHeight: UITextView {
             
             self.heightConstraint?.constant = customContentSize.height;
             
-            if finalContentSize.height <= CGRectGetHeight(self.frame) {
-                let textViewHeight = (CGRectGetHeight(self.frame) - self.contentSize.height * self.zoomScale)/2.0
+            if finalContentSize.height <= self.frame.height {
+                let textViewHeight = (self.frame.height - self.contentSize.height * self.zoomScale)/2.0
                 
-                self.contentOffset = CGPoint(x: 0, -(textViewHeight < 0.0 ? 0.0 : textViewHeight))
+                self.contentOffset = CGPoint(x: 0, y: -(textViewHeight < 0.0 ? 0.0 : textViewHeight))
                 
             }
         }

@@ -96,7 +96,6 @@
 		F91727631DB3343200C6E612 /* HorizontalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91727611DB3343200C6E612 /* HorizontalCell.swift */; };
 		F91727641DB3343200C6E612 /* HorizontalCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F91727621DB3343200C6E612 /* HorizontalCell.xib */; };
 		F91727661DB3BDCD00C6E612 /* like-image.png in Resources */ = {isa = PBXBuildFile; fileRef = F91727651DB3BDCD00C6E612 /* like-image.png */; };
-		F917276A1DB3DF5600C6E612 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91727691DB3DF5600C6E612 /* Spinner.swift */; };
 		F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */; };
 		F921CA701E1FB16200C223D7 /* longtime.png in Resources */ = {isa = PBXBuildFile; fileRef = F921CA6C1E1FB16200C223D7 /* longtime.png */; };
 		F921CA751E1FB87000C223D7 /* distance.png in Resources */ = {isa = PBXBuildFile; fileRef = F921CA711E1FB87000C223D7 /* distance.png */; };
@@ -179,8 +178,6 @@
 		F9EAE8EB1D6EFC6F00FD32BE /* SettingBigSeperateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8EA1D6EFC6F00FD32BE /* SettingBigSeperateTableViewCell.swift */; };
 		F9EAE8ED1D6EFF2700FD32BE /* SettingLogoutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8EC1D6EFF2700FD32BE /* SettingLogoutTableViewCell.swift */; };
 		F9EAE8F31D6F0E5200FD32BE /* FeaturedFeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8F21D6F0E5200FD32BE /* FeaturedFeedTableViewCell.swift */; };
-		F9EAE8F51D6FE86E00FD32BE /* NaviLazyTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8F41D6FE86E00FD32BE /* NaviLazyTableView.swift */; };
-		F9EAE8F71D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8F61D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift */; };
 		F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CBFC1CE1CA49007F68A5 /* Assets.xcassets */; };
 		F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9F3CBFE1CE1CA49007F68A5 /* LaunchScreen.storyboard */; };
 		F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F3CC3E1CE1F386007F68A5 /* NewMessageViewController.swift */; };
@@ -321,7 +318,6 @@
 		F91727611DB3343200C6E612 /* HorizontalCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalCell.swift; sourceTree = "<group>"; };
 		F91727621DB3343200C6E612 /* HorizontalCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HorizontalCell.xib; sourceTree = "<group>"; };
 		F91727651DB3BDCD00C6E612 /* like-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "like-image.png"; sourceTree = "<group>"; };
-		F91727691DB3DF5600C6E612 /* Spinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		F91C17571DBEDC42004D4789 /* Pummel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pummel.entitlements; sourceTree = "<group>"; };
 		F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		F921CA6C1E1FB16200C223D7 /* longtime.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = longtime.png; sourceTree = "<group>"; };
@@ -405,8 +401,6 @@
 		F9EAE8EA1D6EFC6F00FD32BE /* SettingBigSeperateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingBigSeperateTableViewCell.swift; sourceTree = "<group>"; };
 		F9EAE8EC1D6EFF2700FD32BE /* SettingLogoutTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingLogoutTableViewCell.swift; sourceTree = "<group>"; };
 		F9EAE8F21D6F0E5200FD32BE /* FeaturedFeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeaturedFeedTableViewCell.swift; sourceTree = "<group>"; };
-		F9EAE8F41D6FE86E00FD32BE /* NaviLazyTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaviLazyTableView.swift; sourceTree = "<group>"; };
-		F9EAE8F61D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaviUtilityLazyLoad.swift; sourceTree = "<group>"; };
 		F9F3CBFC1CE1CA49007F68A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F9F3CBFF1CE1CA49007F68A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F9F3CC3E1CE1F386007F68A5 /* NewMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageViewController.swift; sourceTree = "<group>"; };
@@ -716,9 +710,6 @@
 				F9AA81101DDF147500C3B71B /* TextViewAutoHeight.swift */,
 				F9FE14411CEBD29B004ABE34 /* Camera roll lib */,
 				F98BAF6C1D6217A7004BD41E /* NSCache+Singleton.swift */,
-				F9EAE8F41D6FE86E00FD32BE /* NaviLazyTableView.swift */,
-				F9EAE8F61D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift */,
-				F91727691DB3DF5600C6E612 /* Spinner.swift */,
 				F9ABEADA1DC347B90084B70E /* URLConstant.swift */,
 				F9ABEADC1DC34F250084B70E /* ColorConstant.swift */,
 				F9ABEADE1DC367620084B70E /* StringConstant.swift */,
@@ -1220,7 +1211,6 @@
 				F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */,
 				BA0E98791E6673BF0019A24A /* NoResultCell.swift in Sources */,
 				BA2FA9621F1693A2004164D5 /* NotificationRouter.swift in Sources */,
-				F9EAE8F51D6FE86E00FD32BE /* NaviLazyTableView.swift in Sources */,
 				F9EAE8E71D6EFA7A00FD32BE /* SettingNewConnectionsTableViewCell.swift in Sources */,
 				F9CA4A0C1D21466600E8A585 /* TagCell.swift in Sources */,
 				F9AF9DFA1D29C9410065F2D2 /* AboutCollectionViewCell.swift in Sources */,
@@ -1254,7 +1244,6 @@
 				F9CF54D51D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift in Sources */,
 				BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */,
 				F98C40A81CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift in Sources */,
-				F9EAE8F71D6FE8BB00FD32BE /* NaviUtilityLazyLoad.swift in Sources */,
 				F9EAE8E11D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift in Sources */,
 				BA506FB11F83799900FF1964 /* FeedModel.swift in Sources */,
 				E84D638A1E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift in Sources */,
@@ -1285,7 +1274,6 @@
 				BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */,
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
 				F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */,
-				F917276A1DB3DF5600C6E612 /* Spinner.swift in Sources */,
 				BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
 				BA15EBB61F551A8300B0A515 /* TestimonialModel.swift in Sources */,

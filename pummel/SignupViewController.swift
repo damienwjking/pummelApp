@@ -38,12 +38,12 @@ class SignupViewController: UIViewController {
     
     @IBAction func termOfService(sender: AnyObject) {
         let termOfServiceURL = NSURL(string: "http://pummel.fit/terms/")
-        UIApplication.shared.openURL(termOfServiceURL!)
+        UIApplication.shared.openURL(termOfServiceURL! as URL)
     }
     
     @IBAction func privacyPolicy(sender: AnyObject) {
         let privacyPolicyURL = NSURL(string: "http://pummel.fit/privacy/")
-        UIApplication.shared.openURL(privacyPolicyURL!)
+        UIApplication.shared.openURL(privacyPolicyURL! as URL)
     }
     
     override func viewDidLoad() {
@@ -51,8 +51,8 @@ class SignupViewController: UIViewController {
         
         self.setupUI()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -64,13 +64,13 @@ class SignupViewController: UIViewController {
         self.FBButton.frame = fbButtonFrame
         self.FBButton.delegate = self
         self.FBButton.readPermissions = ["public_profile", "email", "user_friends"]
-        self.FBButton.loginBehavior = .SystemAccount
+        self.FBButton.loginBehavior = .systemAccount
         self.scrollView.addSubview(self.FBButton)
     }
     
     func setupUI() {
-        self.nameTF.autocorrectionType = UITextAutocorrectionType.No
-        self.emailTF.autocorrectionType = UITextAutocorrectionType.No
+        self.nameTF.autocorrectionType = UITextAutocorrectionType.no
+        self.emailTF.autocorrectionType = UITextAutocorrectionType.no
         
         self.nameTF.attributedPlaceholder = NSAttributedString(string:"NAME",
                                                                attributes:[NSForegroundColorAttributeName: UIColor(white: 119/225, alpha: 1.0)])
@@ -89,17 +89,19 @@ class SignupViewController: UIViewController {
         self.passwordAttentionIM.isHidden = true
         self.emailAttentionIM.isHidden = true
         
-        let tapGestureRecognizer = UITapGestureRecognizer { (_) in
-            self.nameTF.resignFirstResponder()
-            self.emailTF.resignFirstResponder()
-            self.passwordTF.resignFirstResponder()
-        }
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dissmissKeyboard(sender:)))
         self.scrollView.isUserInteractionEnabled = true
         self.scrollView.addGestureRecognizer(tapGestureRecognizer)
         
         self.nameTF.keyboardAppearance = .dark
         self.passwordTF.keyboardAppearance = .dark
         self.emailTF.keyboardAppearance = .dark
+    }
+    
+    func dissmissKeyboard(sender: Any) {
+        self.nameTF.resignFirstResponder()
+        self.emailTF.resignFirstResponder()
+        self.passwordTF.resignFirstResponder()
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -144,7 +146,7 @@ class SignupViewController: UIViewController {
                     let isSigninSuccess = result as! Bool
                     
                     if (isSigninSuccess == true) {
-                        NotificationCenter.default.post(name: "SIGNUPSUCCESSNOTIFICATION", object: nil)
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SIGNUPSUCCESSNOTIFICATION"), object: nil)
                     }
                 } else {
                     if (error?.code == 400) {
@@ -165,18 +167,6 @@ class SignupViewController: UIViewController {
         }
     }
     
-    func updateCookies(response: Response<AnyObject, NSError>) {
-        if let
-            headerFields = response.response?.allHeaderFields as? [String: String],
-            let URL = response.request?.URL {
-            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: URL)
-            // Set the cookies back in our shared instance. They'll be sent back with each subsequent request.
-            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
-            self.defaults.set(headerFields, forKey: k_PM_HEADER_FILEDS)
-            self.defaults.set(URL.absoluteString, forKey: k_PM_URL_LAST_COOKIE)
-        }
-    }
-    
     func checkRuleInputData() -> Bool {
         var returnValue  = false
         
@@ -191,7 +181,7 @@ class SignupViewController: UIViewController {
                                                                  attributes:[NSForegroundColorAttributeName: UIColor(white: 225, alpha: 1.0)])
         }
         
-        if !(self.checkPassword(self.passwordTF.text!)) {
+        if !(self.checkPassword(testStr: self.passwordTF.text!)) {
             returnValue = true
             self.passwordAttentionIM.isHidden = false
             self.passwordTF.attributedText = NSAttributedString(string:self.passwordTF.text!,
@@ -236,14 +226,14 @@ extension SignupViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
-        self.checkRuleInputData();
+        let _ = self.checkRuleInputData() // dissmiss warning
         
         if (textField == self.nameTF) {
             self.emailTF.becomeFirstResponder()
         } else if (textField == self.emailTF) {
             self.passwordTF.becomeFirstResponder()
         } else if (textField == self.passwordTF) {
-            if (self.passwordTF.text?.characters.count < 8) {
+            if ((self.passwordTF.text?.characters.count)! < 8) {
                 let alertController = UIAlertController(title: pmmNotice, message: passwordNotice, preferredStyle: .alert)
                 let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                     // ...
@@ -261,7 +251,7 @@ extension SignupViewController: UITextFieldDelegate {
         return true
     }
     
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField.isEqual(self.genderTF) == true {
             self.showPopupToSelectGender()
             return false
@@ -273,12 +263,13 @@ extension SignupViewController: UITextFieldDelegate {
 
 // MARK: - FBSDKLoginButtonDelegate
 extension SignupViewController : FBSDKLoginButtonDelegate {
-    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
-        print("declined: \(result.declinedPermissions)")
-        print("granted:  \(result.grantedPermissions)")
-        print("isCan:    \(result.isCancelled)")
-        print("token:    \(result.token)")
-        
+    /**
+     Sent to the delegate when the button was used to login.
+     - Parameter loginButton: the sender
+     - Parameter result: The results of the login
+     - Parameter error: The error (if any) from the login
+     */
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         if ((error) != nil) {
             print("error: ", error)
         } else if result.isCancelled {
@@ -286,8 +277,10 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
         } else {
             print("login success")
             
-            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,birthday,cover,picture.type(large)"], tokenString: FBSDKAccessToken.currentAccessToken().tokenString, version: nil, HTTPMethod: "GET")
-            req.startWithCompletionHandler({ (connection, result, error : NSError!) -> Void in
+            let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,birthday,cover,picture.type(large)"], tokenString: FBSDKAccessToken.current().tokenString, version: nil, httpMethod: "GET")
+            
+            // For warning
+            let _ = req?.start(completionHandler: { (connection, result, error) in
                 if(error == nil) {
                     let fbData = result as! NSDictionary
                     
@@ -298,7 +291,7 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
                     
                     var gender = fbData["gender"] as? String
                     if (gender != nil) {
-                        gender = gender?.capitalizedString
+                        gender = gender?.capitalized
                     }
                     
                     var pictureURL = ""
@@ -313,7 +306,7 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
-                                NotificationCenter.default.post(name: "LOGINSUCCESSNOTIFICATION", object: nil)
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "LOGINSUCCESSNOTIFICATION"), object: nil)
                             }
                         } else {
                             let loginManager: FBSDKLoginManager = FBSDKLoginManager()
@@ -323,13 +316,13 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
                         }
                     }).fetchdata()
                 } else {
-                    print("error \(error)")
+                    print("error \(String(describing: error))")
                 }
             })
         }
     }
     
-    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         
     }
 }

@@ -15,7 +15,7 @@ import LocationPicker
 import CoreLocation
 import MapKit
 
-class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailComposeViewControllerDelegate, CLLocationManagerDelegate {
+class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationManagerDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMW: UIImageView!
@@ -307,14 +307,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                          kLat:(self.location?.coordinate.latitude)!,
                          kLong:(self.location?.coordinate.longitude)!] as [String : Any]
             
-            Alamofire.request(.PUT, prefix, parameters: param as? [String : AnyObject])
-                .responseJSON { response in switch response.result {
-                case .Success(_): break
-                    
-                case .Failure(let error):
-                    print(error)
-                    }
-            }
+            UserRouter.changeCurrentUserInfo(posfix: "", param: param, completed: { (result, error) in
+                // Do nothing
+            }).fetchdata()
         }
     }
 
@@ -517,17 +512,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         }
     }
     
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        controller.dismiss(animated: true, completion: {
-            self.navigationController?.popToRootViewController(animated: true)
-        })
-    }
-    
     func callBasicInfoUpdate() {
         if (self.checkRuleInputData() == true) {
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
             var lastname = ""
@@ -572,34 +558,23 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
                          kEmergencyMobile:emergencyMobileTF.text!] as [String : Any]
             
             self.view.makeToastActivity(message: "Saving")
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        //TODO: Save access token here
-                        self.trainerInfoUpdate()
-                        self.updateLocationCoach()
-                    }else {
-                        self.view.hideToastActivity()
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                    }
-            }
             
+            UserRouter.changeCurrentUserInfo(posfix: "", param: param, completed: { (result, error) in
+                let isUpdateSuccess = result as! Bool
+                
+                if (isUpdateSuccess == true) {
+                    self.trainerInfoUpdate()
+                    self.updateLocationCoach()
+                } else {
+                    self.view.hideToastActivity()
+                    
+                    PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
+                }
+            }).fetchdata()
         } else {
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true) {
-                // ...
-            }
+            self.view.hideToastActivity()
+            
+            PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
         }
     }
     
@@ -611,24 +586,18 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
         
         let param = [kUserId:PMHelper.getCurrentID(),
-                     "qualifications":qualStr, "achievements": achiveStr]
+        "qualifications":qualStr, "achievements": achiveStr] as [String: Any]
         
-        Alamofire.request(.PUT, prefix, parameters: param)
-            .responseJSON { response in
-                self.view.hideToastActivity()
-                if response.response?.statusCode == 200 {
-                    self.sendEmail()
-                } else {
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                }
-        }
+        UserRouter.changeCurrentCoachInfo(posfix: "", param: param) { (result, error) in
+            self.view.hideToastActivity()
+            
+            let isUpdateSuccess = result as! Bool
+            if (isUpdateSuccess == true) {
+                self.sendEmail()
+            } else {
+                PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
+            }
+        }.fetchdata()
     }
     
     func applyNowAction() {
@@ -711,15 +680,15 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         
         let param = [kUserId:PMHelper.getCurrentID()]
         
-        Alamofire.request(.PUT, prefix, parameters: param)
-            .responseJSON { response in switch response.result {
-            case .Success(_):
-                self.defaults.setBool(true, forKey: k_PM_IS_COACH)
+        UserRouter.changeCurrentCoachInfo(posfix: "", param: param) { (result, error) in
+            let isChangeSuccess = result as! Bool
+            
+            if (isChangeSuccess == true) {
+                self.defaults.set(true, forKey: k_PM_IS_COACH)
                 self.settingCV.settingTableView.reloadData()
                 self.basicInfoUpdate()
-            case .Failure(_): break
-                }
-        }
+            }
+        }.fetchdata()
     }
     
     func cancel() {
@@ -840,8 +809,8 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             
             let date = NSDate()
             let calendar = NSCalendar.current
-            let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-            let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+            let components = calendar.dateComponents([.day , .month , .year], from: date as Date)
+            let componentsDOB = calendar.dateComponents([.day , .month , .year], from:dateDOB!)
             let year =  components.year
             let yearDOB = componentsDOB.year
             
@@ -859,7 +828,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         datePickerView.setValue(UIColor.white, forKey: "textColor")
         datePickerView.datePickerMode = UIDatePickerMode.date
         sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(self.datePickerValueChanged(_:)), for: .valueChanged)
+        datePickerView.addTarget(self, action:#selector(self.datePickerValueChanged(sender:)), for: .valueChanged)
     }
     
     func datePickerValueChanged(sender:UIDatePicker) {
@@ -870,12 +839,12 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         
         let date = NSDate()
         let calendar = NSCalendar.current
-        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
-        let componentsDOB = calendar.components([.Day , .Month , .Year], fromDate:dateDOB!)
+        let components = calendar.dateComponents([.day , .month , .year], from: date as Date)
+        let componentsDOB = calendar.dateComponents([.day , .month , .year], from:dateDOB!)
         let year =  components.year
         let yearDOB = componentsDOB.year
         
-        if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
+        if (12 < (year! - yearDOB)) && ((year - yearDOB) < 101)  {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
                                                                   attributes:[NSForegroundColorAttributeName: UIColor.black])
         } else {
@@ -884,30 +853,29 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
         }
     }
     
-    func selectNewTag(tag: Tag) {
-        var linkAddTagToUser = kPMAPIUSER
-        linkAddTagToUser.append(currentId)
-        linkAddTagToUser.append("/tags")
-        Alamofire.request(.POST, linkAddTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
-                        .responseJSON { response in
-                            if response.response?.statusCode == 200 {
-                            }
-        }
+    func selectNewTag(tag: TagModel) {
+        TagRouter.selectTag(tagID: tag.tagId!) { (result, error) in
+            let isDeleteSuccess = result as! Bool
+            
+            if (isDeleteSuccess == true) {
+                // Do nothing
+            } else {
+                PMHelper.showDoAgainAlert()
+            }
+            }.fetchdata()
     }
     
-    func deleteATagUser(tag: Tag) {
-        var linkDeleteTagToUser = kPMAPIUSER
-        linkDeleteTagToUser.append(currentId)
-        linkDeleteTagToUser.append("/tags/")
-        linkDeleteTagToUser.append(tag.tagId!)
-        Alamofire.request(.DELETE, linkDeleteTagToUser, parameters: [kUserId: currentId, "tagId": tag.tagId!])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                }
-        }
+    func deleteATagUser(tag: TagModel) {
+        TagRouter.deleteTag(tagID: tag.tagId!) { (result, error) in
+            let isDeleteSuccess = result as! Bool
+            
+            if (isDeleteSuccess == true) {
+                // Do nothing
+            } else {
+                PMHelper.showDoAgainAlert()
+            }
+            }.fetchdata()
     }
-    
-    
 
     @IBAction func showPopupToSelectGender() {
         let selectMale = { (action:UIAlertAction!) -> Void in
@@ -933,7 +901,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, MFMailCompos
             locationPicker.showCurrentLocationButton = true
             locationPicker.useCurrentLocationAsHint = true
             locationPicker.showCurrentLocationInitially = true
-            locationPicker.mapType = .Standard
+            locationPicker.mapType = .standard
             
             let backItem = UIBarButtonItem()
             backItem.title = "BACK        "
@@ -955,13 +923,13 @@ extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(kTagCell, for: indexPath) as! TagCell
-        self.configureCell(cell, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kTagCell, for: indexPath) as! TagCell
+        self.configureCell(cell: cell, forIndexPath: indexPath)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        self.configureCell(self.sizingCell!, for: indexPath)
+        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
         var cellSize = self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
         
         if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
@@ -976,11 +944,11 @@ extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource,
         tags[indexPath.row].selected = !tags[indexPath.row].selected
         let tag = tags[indexPath.row]
         if (tag.selected) {
-            self.selectNewTag(tag)
-            tagIdsArray.addObject(tag.tagId!)
+            self.selectNewTag(tag: tag)
+            tagIdsArray.add(tag.tagId!)
         } else {
-            self.deleteATagUser(tag)
-            tagIdsArray.removeObject(tag.tagId!)
+            self.deleteATagUser(tag: tag)
+            tagIdsArray.remove(tag.tagId!)
         }
         let contentOffset = self.scrollView.contentOffset
         self.collectionView.reloadData()
@@ -1143,4 +1111,10 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
     }
 }
 
-
+extension EditCoachProfileForUpgradeViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismiss(animated: true, completion: {
+            self.navigationController?.popToRootViewController(animated: true)
+        })
+    }
+}

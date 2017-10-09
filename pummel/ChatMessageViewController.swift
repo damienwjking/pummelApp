@@ -44,7 +44,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChatMessageViewController.cancel))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .Normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationController!.navigationBar.isTranslucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.setNavigationTitle()
@@ -57,7 +57,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.chatTB.delegate = self
         self.chatTB.dataSource = self
         self.chatTB.separatorStyle = UITableViewCellSeparatorStyle.none
-        let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.handleTap(_:)))
+        let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.handleTap(recognizer:)))
         self.chatTB.addGestureRecognizer(recognizer)
         self.avatarTextBox.layer.cornerRadius = 20
         self.avatarTextBox.clipsToBounds = true
@@ -132,7 +132,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 }
             }
         } else {
-            self.sendMessage(false)
+            self.sendMessage(addEmptyMessage: false)
         }
     }
     
@@ -176,7 +176,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        self.sendMessage(true)
+        self.sendMessage(addEmptyMessage: true)
         return true
     }
     
@@ -216,7 +216,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                     if visibleCell == true {
                         DispatchQueue.main.async(execute: {
                             cell.avatarIMV.image = imageRes
@@ -263,7 +263,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
@@ -276,7 +276,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
                                         
-                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                                         if visibleCell == true {
                                             DispatchQueue.main.async(execute: {
                                                 cell.avatarIMV.image = imageRes
@@ -311,7 +311,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if (imageURLString?.isEmpty == false) {
                     ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
                         if (error == nil) {
-                            let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                            let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                             if visibleCell == true {
                                 let imageRes = result as! UIImage
                                 cell.photoIMW.image = imageRes
@@ -327,7 +327,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
@@ -338,7 +338,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                             if (imageURLString?.isEmpty == false) {
                                 ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
                                     if (error == nil) {
-                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
                                         if visibleCell == true {
                                             let imageRes = result as! UIImage
                                             cell.avatarIMV.image = imageRes
@@ -494,7 +494,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         let data = NSMutableData()
         let terminator = [0]
         for string in array {
-            if let encodedString = string.data(using: NSUTF8StringEncoding) {
+            if let encodedString = string.data(using: String.Encoding.utf8) {
                 data.append(encodedString)
                 data.append(terminator, length: 1)
             }

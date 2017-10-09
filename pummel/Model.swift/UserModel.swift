@@ -108,7 +108,7 @@ class UserModel: NSObject {
     
     func existInList(userList: [UserModel]) -> Bool {
         for user in userList {
-            if (self.same(user)) {
+            if (self.same(userCheck: user)) {
                 return true
             }
         }

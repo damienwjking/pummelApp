@@ -59,7 +59,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     
     func cardViewTagClicked() {
         if  self.delegate != nil {
-            self.delegate?.cardViewCellTagClicked(self)
+            self.delegate?.cardViewCellTagClicked(cell: self)
         }
     }
     
@@ -95,31 +95,31 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
             
             // Show Video
             let videoURL = NSURL(string: videoURLString)
-            self.videoPlayer = AVPlayer(URL: videoURL!)
-            self.videoPlayer!.actionAtItemEnd = .None
+            self.videoPlayer = AVPlayer(url: videoURL! as URL)
+            self.videoPlayer!.actionAtItemEnd = .none
             self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
             self.videoPlayerLayer?.frame = self.videoView!.bounds
             
             self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
             
-            self.videoPlayer?.currentItem?.addObserver(self, forKeyPath: "status", options: [.Old, .New], context: nil)
+            self.videoPlayer?.currentItem?.addObserver(self, forKeyPath: "status", options: [.old, .new], context: nil)
             
             // Remove loop play video for reuser cell
-            NotificationCenter.default.removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
             
             // Add notification for loop play video
             NotificationCenter.default.addObserver(self,
                                                              selector: #selector(self.endVideoNotification),
-                                                             name: AVPlayerItemDidPlayToEndTimeNotification,
+                                                             name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
                                                              object: videoPlayer?.currentItem)
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutableRawPointer) {
         let currentItem = object as! AVPlayerItem
-        if currentItem.status == .ReadyToPlay {
+        if currentItem.status == .readyToPlay {
             let videoRect = self.videoPlayerLayer?.videoRect
-            if (videoRect?.width > videoRect?.height) {
+            if (Int((videoRect?.width)!) > Int((videoRect?.height)!)) {
 //                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
                 self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             } else {
@@ -133,13 +133,13 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     func stopPlayVideo() {
         if (self.videoPlayer != nil )  {
             // Remove notification
-            NotificationCenter.default.removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
             
-            self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+            self.videoPlayer?.currentItem?.seek(to: kCMTimeZero)
             self.videoPlayer?.pause()
             
             self.isVideoPlaying = true // Set for stop play video
-            self.playVideoButtonClicked(self.playVideoButton)
+            self.playVideoButtonClicked(sender: self.playVideoButton)
         }
     }
     
@@ -150,7 +150,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         
         // Show first frame video
         let playerItem = notification.object as! AVPlayerItem
-        playerItem.seekToTime(kCMTimeZero)
+        playerItem.seek(to: kCMTimeZero)
         self.videoPlayer?.pause()
         
         self.isVideoPlaying = false
@@ -177,7 +177,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     
     @IBAction func moreInfoViewClicked(sender: AnyObject) {
         if (self.delegate != nil) {
-            self.delegate?.cardViewCellMoreInfoClicked(self)
+            self.delegate?.cardViewCellMoreInfoClicked(cell: self)
         }
     }
 }
