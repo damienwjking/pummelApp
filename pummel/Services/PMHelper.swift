@@ -62,8 +62,8 @@ class PMHelper {
                     let defaults = UserDefaults.standard
                     
                     let data = response as! Data
-                    let outputString = NSString(data: data, encoding:String.Encoding.utf8)
-                    if ((outputString?.contains(find: kLogoutSuccess)) != nil) {
+                    let outputString = NSString(data: data, encoding:String.Encoding.utf8.rawValue)
+                    if ((outputString?.contains(kLogoutSuccess)) != nil) {
                         defaults.set(false, forKey: k_PM_IS_LOGINED)
                         defaults.set(false, forKey: k_PM_IS_COACH)
                         let storage = HTTPCookieStorage.shared
@@ -89,49 +89,25 @@ class PMHelper {
         }
     }
     
-    class func showDoAgainAlert() {
-        if var topController = UIApplication.shared.keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-            
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            
-            alertController.addAction(OKAction)
-            
-            topController.present(alertController, animated: true, completion: nil)
-        }
+    class func showApplyAlert(message: String) {
+        PMHelper.showAlert(title: kApply, message: message)
     }
     
-    class func showApplyAlert(message: String) {
-        if var topController = UIApplication.shared.keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            
-            let alertController = UIAlertController(title: kApply, message: message, preferredStyle: .alert)
-            
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            
-            alertController.addAction(OKAction)
-            
-            topController.present(alertController, animated: true, completion: nil)
-        }
+    class func showDoAgainAlert() {
+        PMHelper.showAlert(title: pmmNotice, message: pleaseDoItAgain)
     }
     
     class func showNoticeAlert(message: String) {
+        PMHelper.showAlert(title: pmmNotice, message: message)
+    }
+
+    class func showAlert(title: String, message: String) {
         if var topController = UIApplication.shared.keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
             
-            let alertController = UIAlertController(title: pmmNotice, message: message, preferredStyle: .alert)
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             
             let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                 // ...

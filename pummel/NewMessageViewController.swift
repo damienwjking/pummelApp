@@ -120,7 +120,8 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     func getListUser() {
         if (self.isStopLoad == false) {
             self.isLoadingSearch = true
-            var prefix = kPMAPIUSER_OFFSET
+            var prefix =
+
             let offset = self.arrayListUser.count
             prefix.append(String(offset))
             Alamofire.request(.GET, prefix)
@@ -142,7 +143,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70 // Ceiling this value fixes disappearing separators
     }
     
@@ -209,7 +210,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         }
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
         if (tableView == listUserTB) {
             if (indexPath.row == self.arrayListUser.count - 1 && isLoading == false) {
                 offset += 10
@@ -222,7 +223,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         return (tableView == listUserTB) ? arrayListUser.count : arrayListUserResult.count
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
         performSegue(withIdentifier: "chatMessage", sender: indexPath.row)
     }

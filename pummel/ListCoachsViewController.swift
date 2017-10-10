@@ -50,7 +50,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     }
     
     //MARK: TableView
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
         return 140
     }
     
@@ -84,7 +84,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         return cell
     }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0.01
     }
     
@@ -98,23 +98,22 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     
     func showAlertMovetoOldAction(userID:String) {
         let clickMoveToOld = { (action:UIAlertAction!) -> Void in
-            var prefix = kPMAPICOACHES
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPMAPICOACH_OLD)
-            prefix.append("/")
+            self.view.makeToastActivity()
             
-            let param = [kUserId:PMHelper.getCurrentID(),
-                         kUserIdRequest:userID]
-            
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
-                    self.view.hideToastActivity()
-                    if response.response?.statusCode == 200 {
-                        self.forceUpdate = true
-                        self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
-                        self.forceUpdate = false
-                    }
-            }
+            UserRouter.setOldLead(requestID: userID, completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                let isChangeSuccess = result as! Bool
+                if (isChangeSuccess) {
+                    self.forceUpdate = true
+                    
+//                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
+                    self.tbView.reloadData()
+                    
+                    self.forceUpdate = false
+                }
+                
+            }).fetchdata()
         }
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -126,27 +125,21 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     
     func showAlertMovetoCurrentAction(userID:String,typeGroup:Int) {
         let clickMoveToCurrent = { (action:UIAlertAction!) -> Void in
-            var prefix = kPMAPICOACHES
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPMAPICOACH_CURRENT)
-            prefix.append("/")
+            self.view.makeToastActivity()
             
-            let param = [kUserId:PMHelper.getCurrentID(),
-                         kUserIdRequest:userID]
-            
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
-                    self.view.hideToastActivity()
-                    if response.response?.statusCode == 200 {
-                        self.forceUpdate = true
-                        if typeGroup == TypeGroup.NewLead.rawValue {
-                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 0, inSection: 0),NSIndexPath(forItem: 1, inSection: 0)], withRowAnimation: .None)
-                        } else {
-                            self.tbView.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 0),NSIndexPath(forItem: 2, inSection: 0)], withRowAnimation: .None)
-                        }
-                        self.forceUpdate = false
-                    }
-            }
+            UserRouter.setCurrentLead(requestID: userID, completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                let isChangeSuccess = result as! Bool
+                if (isChangeSuccess) {
+                    self.forceUpdate = true
+                    
+                    self.tbView.reloadData()
+                    
+                    self.forceUpdate = false
+                }
+                
+            }).fetchdata()
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

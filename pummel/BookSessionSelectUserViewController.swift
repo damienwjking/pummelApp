@@ -125,7 +125,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         return arrayOld.count
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
         return 3
     }
 
@@ -137,7 +137,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         return 50.0
     }
     
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let title = UILabel()
         title.font = .pmmMonLight16()
         title.textColor = UIColor.lightGray
@@ -187,7 +187,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         var userInfo:NSDictionary!
         
         if indexPath.section == 0 {

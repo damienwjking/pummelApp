@@ -386,7 +386,7 @@ class MessageViewController: BaseViewController {
     }
 }
 
-// MARK: - UITableViewDelegate, UITableViewDataSource
+// MARK: - UITableViewDelegate
 extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
@@ -615,7 +615,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: IndexPath) {
         if (indexPath.row == self.arrayMessages.count - 1 && tableView == self.listMessageTB) {
             self.getMessage()
         }
@@ -629,7 +629,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -662,25 +662,19 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         let lead = self.arrayListLead[indexPath.row]
                         let targetUserId = String(format:"%0.f", (lead[kUserId]! as AnyObject).doubleValue)
                         
-                        let param = [kUserId: PMHelper.getCurrentID(),
-                            kUserIdRequest: targetUserId]
-                        
-                        var prefix = kPMAPICOACHES
-                        prefix.append(PMHelper.getCurrentID())
-                        prefix.append(kPMAPICOACH_CURRENT)
-                        prefix.append("/")
-                        
-                        Alamofire.request(.PUT, prefix, parameters: param)
-                            .responseJSON { response in
-                                self.view.hideToastActivity()
-                                
-                                if response.response?.statusCode == 200 {
-                                    self.arrayListLead.removeAll()
-                                    self.leadOffset = 0
-                                    self.isStopLoadLead = false
-                                    self.getListLead()
-                                }
-                        }
+                        self.view.makeToastActivity()
+                        UserRouter.setCurrentLead(requestID: userID, completed: { (result, error) in
+                            self.view.hideToastActivity()
+                            
+                            let isChangeSuccess = result as! Bool
+                            if (isChangeSuccess) {
+                                self.arrayListLead.removeAll()
+                                self.leadOffset = 0
+                                self.isStopLoadLead = false
+                                self.getListLead()
+                            }
+                            
+                        }).fetchdata()
                     }
                     
                     // Email action
@@ -703,25 +697,6 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                 } else {
                                     PMHelper.showDoAgainAlert()
                                 }
-                                
-                                
-                                
-                                var urlString = "mailto:"
-                                urlString = urlString.stringByAppendingString(userMail)
-                                
-                                urlString = urlString.stringByAppendingString("?subject=")
-                                urlString = urlString.stringByAppendingString("")
-                                
-                                urlString = urlString.stringByAppendingString("&from=")
-                                urlString = urlString.stringByAppendingString(currentMail)
-                                
-                                urlString = urlString.stringByAppendingString("&body=")
-                                urlString = urlString.stringByAppendingString("")
-                                
-                                let mailURL = NSURL(string: urlString)
-                                if (UIApplication.shared.canOpenURL(mailURL!)) {
-                                    UIApplication.shared.openURL(mailURL!)
-                                }
                             } else {
                                 print("Request failed with error: \(String(describing: error))")
                             }
@@ -730,8 +705,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     
                     // Call action
                     let callClientAction = { (action:UIAlertAction!) -> Void in
-                        var urlString = "tel:///"
-                        urlString = urlString.stringByAppendingString(phoneNumber!)
+                        let urlString = "tel:///" + phoneNumber!
                         
                         let tellURL = NSURL(string: urlString)
                         if (UIApplication.shared.canOpenURL(tellURL!)) {
@@ -777,3 +751,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - MFMailComposeViewControllerDelegate
+extension MessageViewController : MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+}

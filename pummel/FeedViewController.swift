@@ -246,7 +246,7 @@ class FeedViewController: BaseViewController {
 
 // MARK: - UITableViewDelegate
 extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
         return 1
     }
     

@@ -101,7 +101,7 @@ class LogSessionSelectUserViewController: BaseViewController {
 // MARK: - UITableViewDelegate
 extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
         return 3
     }
     

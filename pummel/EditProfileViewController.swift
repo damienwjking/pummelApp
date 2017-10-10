@@ -306,9 +306,6 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     func done() {
         if (self.checkRuleInputData() == false) {
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            
             let fullNameArr = nameContentTF.text!.characters.split{$0 == " "}.map(String.init)
             var firstname = ""
             if (fullNameArr.count > 0) {
@@ -332,65 +329,40 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             let weightString = weightContentTF.text?.replacingOccurrences(of: " kgs", with: "")
             let heightString = heightContentTF.text?.replacingOccurrences(of: " cms", with: "")
             
-            let param = (dobContentTF.text! == "") ?
-                    [kUserId:PMHelper.getCurrentID(),
-                     kFirstname:firstname,
-                     kLastName: lastname,
-                     kMobile: mobileContentTF.text!,
-                     kDob: dobContentTF.text!,
-                     kGender:(genderContentTF.text?.uppercased())!,
-                     kBio: aboutContentTV.text,
-                     kWeight: weightString,
-                     kHeight: heightString,
-                     kFacebookUrl:facebookUrlTF.text!,
-                     kTwitterUrl:twitterUrlTF.text!,
-                     kInstagramUrl:instagramUrlTF.text!,
-                     kEmergencyName:emergencyNameTF.text!,
-                     kEmergencyMobile:emergencyMobileTF.text!] :
-                    
-                    [kUserId:PMHelper.getCurrentID(),
-                     kFirstname:firstname,
-                     kLastName: lastname,
-                     kMobile: mobileContentTF.text!,
-                     kGender:(genderContentTF.text?.uppercased())!,
-                     kBio: aboutContentTV.text,
-                     kWeight: weightString,
-                     kHeight: heightString,
-                     kFacebookUrl:facebookUrlTF.text!,
-                     kTwitterUrl:twitterUrlTF.text!,
-                     kInstagramUrl:instagramUrlTF.text!,
-                     kEmergencyName:emergencyNameTF.text!,
-                     kEmergencyMobile:emergencyMobileTF.text!]
+            var param = [kUserId:PMHelper.getCurrentID(),
+                kFirstname:firstname,
+                kLastName: lastname,
+                kMobile: mobileContentTF.text!,
+                kGender:(genderContentTF.text?.uppercased())!,
+                kBio: aboutContentTV.text,
+                kWeight: weightString,
+                kHeight: heightString,
+                kFacebookUrl:facebookUrlTF.text!,
+                kTwitterUrl:twitterUrlTF.text!,
+                kInstagramUrl:instagramUrlTF.text!,
+                kEmergencyName:emergencyNameTF.text!,
+                kEmergencyMobile:emergencyMobileTF.text!]
             
-            
-            // update weight height
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
-                    if response.response?.statusCode == 200 {
-                        //TODO: Save access token here
-                        self.navigationController?.popViewController(animated: true)
-                    } else {
-                        self.view.hideToastActivity()
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                    }
+            if (dobContentTF.text! == "") {
+                param[kDob] = dobContentTF.text!
             }
-
+                
+            var prefix = kPMAPIUSER
+            prefix.append(PMHelper.getCurrentID())
+                
+            UserRouter.changeCurrentUserInfo(posfix: "", param: param, completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                let isUpdateInfoSuccess = result as! Bool
+                if (isUpdateInfoSuccess == true) {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
+                }
+                
+            }).fetchdata()
         } else {
-            let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true) {
-                // ...
-            }
+            PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
         }
     }
     

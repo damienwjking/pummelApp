@@ -28,8 +28,9 @@ enum UserRouter: URLRequestConvertible {
     case getPhotoList(userID : String, offset: Int, completed: CompletionBlock)
     case signup(firstName: String, email: String, password: String, gender: String, completed: CompletionBlock)
     case login(email: String, password: String, completed: CompletionBlock)
+    case changePassword(currentPassword: String, newPassword: String, completed: CompletionBlock)
+    case forgotPassword(email: String, completed: CompletionBlock)
     case checkConnect(coachID: String, completed: CompletionBlock)
-    
     case setLead(coachID: String, completed: CompletionBlock)
     case getLead(userID: String, type: String, offset: Int, completed: CompletionBlock)
     case setCurrentLead(requestID: String, completed: CompletionBlock)
@@ -69,6 +70,10 @@ enum UserRouter: URLRequestConvertible {
         case .signup(_ , _, _, _, let completed):
             return completed
         case .login(_ , _, let completed):
+            return completed
+        case .changePassword(_, _, let completed):
+            return completed
+        case .forgotPassword(_, let completed):
             return completed
         case .checkConnect(_, let completed):
             return completed
@@ -120,6 +125,10 @@ enum UserRouter: URLRequestConvertible {
         case .signup:
             return .post
         case .login:
+            return .post
+        case .changePassword:
+            return .put
+        case .forgotPassword:
             return .post
         case .checkConnect:
             return .post
@@ -189,6 +198,12 @@ enum UserRouter: URLRequestConvertible {
             
         case .login:
             prefix = kPMAPI_LOGIN
+            
+        case .changePassword:
+            prefix = kPMAPIUSER + currentUserID + kPMAPI_CHANGEPASS
+            
+        case .forgotPassword:
+            prefix = kPMAPI_FORGOT
             
         case .checkConnect:
             prefix = kPMAPICHECKUSERCONNECT
@@ -291,6 +306,13 @@ enum UserRouter: URLRequestConvertible {
         case .login(let email, let password, _):
             param[kEmail] = email as AnyObject
             param[kPassword] = password as AnyObject
+            
+        case .changePassword(let currentPassword, let newPassword, _):
+            param[kPassword] = currentPassword as AnyObject
+            param[kPasswordNew] = newPassword as AnyObject
+            
+        case .forgotPassword(let email, _):
+            param[kEmail] = email
             
         case .checkConnect(let coachID, _):
             param[kUserId] = currentUserID as AnyObject
@@ -672,6 +694,30 @@ enum UserRouter: URLRequestConvertible {
                     } else {
                         self.comletedBlock!(false as AnyObject, error as NSError)
                     }
+                }
+            })
+            
+        case .changePassword:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter change_password")
+                
+                switch response.result {
+                case .success(_):
+                    self.comletedBlock!(true as AnyObject, nil)
+                case .failure(let error):
+                    self.comletedBlock!(false as AnyObject, error as NSError)
+                }
+            })
+            
+        case .forgotPassword:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter forgot_password")
+                
+                switch response.result {
+                case .success(_):
+                    self.comletedBlock!(true as AnyObject, nil)
+                case .failure(let error):
+                    self.comletedBlock!(false as AnyObject, error as NSError)
                 }
             })
             

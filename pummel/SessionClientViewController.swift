@@ -133,53 +133,37 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         if (self.canLoadMore == true && self.isloading == false) {
             self.isloading = true
             
-            
-//            UserRouter.getCompletedSession(offset: 0, completed: { (result, error) in
-//                if (error == nil) {
-//                    
-//                } else {
-//                    print("Request failed with error: \(String(describing: error))")
-//                }
-//            }).fetchdata()
-            
-//            
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPM_PATH_ACTIVITIES_USER)
-            prefix.append(String(self.offset))
-            
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in
-                    switch response.result {
-                    case .Success(let JSON):
-                        let sessionInfos = JSON as! [NSDictionary]
-                        
-                        if (sessionInfos.count > 0) {
-                            for sessionInfo in sessionInfos {
-                                let session = SessionModel()
-                                session.parseData(sessionInfo)
-                                
-                                if (session.existInList(self.sessionList) == false) {
-                                    self.sessionList.append(session)
-                                }
+            SessionRouter.getSessionList(offset: self.offset, completed: { (result, error) in
+                self.isloading = false
+                
+                if (error == nil) {
+                    let sessionInfos = result as! [NSDictionary]
+                    
+                    if (sessionInfos.count > 0) {
+                        for sessionInfo in sessionInfos {
+                            let session = SessionModel()
+                            session.parseData(data: sessionInfo)
+                            
+                            if (session.existInList(sessionList: self.sessionList) == false) {
+                                self.sessionList.append(session)
                             }
-                        } else {
-                            self.canLoadMore = false
                         }
-                    case .Failure(let error):
+                    } else {
                         self.canLoadMore = false
-                        print("Request failed with error: \(String(describing: error))")
                     }
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
                     
-                    self.isloading = false
-                    self.offset = self.offset + 20
-                    
-                    self.getListSession()
-                    
-                    self.presentedDateUpdated(self.calendarView.presentedDate)
-                    
-                    self.updateLayout()
-            }
+                    self.canLoadMore = false
+                }
+                
+                self.offset = self.offset + 20
+                self.getListSession()
+                
+                self.presentedDateUpdated(date: self.calendarView.presentedDate)
+                
+                self.updateLayout()
+            }).fetchdata()
         }
         
         self.calendarView.contentController.refreshPresentedMonth()
@@ -219,9 +203,9 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         let now = NSDate()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        let sessionDate = dateFormatter.date(session.datetime!)
+        let sessionDate = dateFormatter.date(from: session.datetime!)
         
-        if now.compare(sessionDate!) == .OrderedAscending {
+        if now.compare(sessionDate!) == .orderedAscending {
             cell.setData(session: session, isUpComing: true)
         } else {
             cell.setData(session: session, isUpComing: false)
@@ -232,7 +216,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         return cell
     }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if self.sessionList.count == 0 {
             return 0.01
         }
@@ -240,7 +224,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         return 0
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
         
         let session = self.selectedSessionList[indexPath.row]
@@ -248,42 +232,40 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.performSegue(withIdentifier: "userSessionDetail", sender: session)
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
         return true
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, editActionsForRowAtIndexPath indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteRowAction = UITableViewRowAction(style: .default, title: "Delete") { (action, indexPath) in
             if indexPath.row < self.selectedSessionList.count {
                 let session = self.selectedSessionList[indexPath.row]
+                let sessionID = "\(session.id)"
                 
-                let prefix = kPMAPIDELETEACTIVITY
-                let param = ["activityId":session.id]
-                
-                Alamofire.request(.POST, prefix, parameters: param)
-                    .responseJSON { response in
-                        if response.response?.statusCode == 200 {
-                            self.selectedSessionList.removeAtIndex(indexPath.row)
-                            tableView.reloadData()
-                            
-                            self.sessionList.removeAll()
-                            self.canLoadMore = true
-                            self.getListSession()
-                            
-                            self.calendarView.contentController.refreshPresentedMonth()
-                            
-                        }
-                }
+                SessionRouter.deleteSession(sessionID: sessionID, completed: { (result, error) in
+                    let isDeleteSuccess = result as! Bool
+                    
+                    if (isDeleteSuccess == true) {
+                        self.selectedSessionList.remove(at: indexPath.row)
+                        tableView.reloadData()
+                        
+                        self.sessionList.removeAll()
+                        self.canLoadMore = true
+                        self.getListSession()
+                        
+                        self.calendarView.contentController.refreshPresentedMonth()
+                    }
+                }).fetchdata()
             }
             
         }
-        deleteRowAction.backgroundColor = UIColor.pmmBrightOrangeColor()
         
+        deleteRowAction.backgroundColor = UIColor.pmmBrightOrangeColor()
         
         return [deleteRowAction]
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         // Call to show editing action
     }
     

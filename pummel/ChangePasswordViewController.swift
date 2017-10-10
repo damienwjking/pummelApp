@@ -34,65 +34,31 @@ class ChangePasswordViewController : BaseViewController {
     
     func done() {
         // Check new password & retype new password are the same
-        if self.newPassTF.text?.characters.count < 8 {
-            let alertController = UIAlertController(title: pmmNotice, message: passWordMinCharacter, preferredStyle: .alert)
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true) {
-                // ...
-            }
-            return
-        }
-        
-        if self.newPassTF.text == self.reTypePassTF.text {
-            self.view.makeToastActivity()
-            
-            let defaults = UserDefaults.standard
-            
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPMAPI_CHANGEPASS)
-            
-            let param = [kPassword:self.curPassTF.text!,
-                         kPasswordNew: self.newPassTF.text!]
-            
-            Alamofire.request(.PUT, prefix, parameters: param)
-                .responseJSON { response in
+        if (self.newPassTF.text?.characters.count)! < 8 {
+            PMHelper.showNoticeAlert(message: passWordMinCharacter)
+        } else {
+            if (self.newPassTF.text == self.reTypePassTF.text) {
+                self.view.makeToastActivity()
+                
+                let currentPassword = self.curPassTF.text
+                let newPassword = self.newPassTF.text
+                UserRouter.changePassword(currentPassword: currentPassword!, newPassword: newPassword!, completed: { (result, error) in
                     self.view.hideToastActivity()
-                    print(response.response?.statusCode)
-                    if response.response?.statusCode == 200 {
+                    
+                    if (error == nil) {
                         self.navigationController?.popViewController(animated: true)
-                    } else if response.response?.statusCode == 401 {
-                        let alertController = UIAlertController(title: pmmNotice, message: curPassWrong, preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
                     } else {
-                        self.view.hideToastActivity()
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseCheckYourInformationAgain, preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
+                        print("Request failed with error: \(String(describing: error))")
+                        
+                        if (error?.code == 401) {
+                            PMHelper.showNoticeAlert(message: curPassWrong)
+                        } else {
+                            PMHelper.showNoticeAlert(message: pleaseCheckYourInformationAgain)
                         }
                     }
-            }
-        } else {
-            let alertController = UIAlertController(title: pmmNotice, message: passWordNotMatch, preferredStyle: .alert)
-            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                // ...
-            }
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true) {
-                // ...
+                }).fetchdata()
+            } else {
+                PMHelper.showNoticeAlert(message: passWordNotMatch)
             }
         }
     }

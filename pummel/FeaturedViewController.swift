@@ -425,7 +425,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
 
 // MARK: - UITableViewDelegate
 extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
         return 2
     }
     

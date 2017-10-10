@@ -156,7 +156,8 @@ extension BookSessionShareViewController {
                 if (isChangeSuccess) {
                     self.forceUpdate = true
                     
-                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
+//                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
+                    self.tbView.reloadData()
                     
                     self.forceUpdate = false
                 }
@@ -250,7 +251,8 @@ extension BookSessionShareViewController {
                 if (isChangeSuccess) {
                     self.forceUpdate = true
                     
-                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
+//                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
+                    self.tbView.reloadData()
                     
                     self.forceUpdate = false
                 }
