@@ -225,7 +225,10 @@ enum ImageVideoRouter: URLRequestConvertible {
                         
                         if (response.result.isSuccess) {
                             let imageRes = response.result.value! as UIImage
-                            NSCache.sharedInstance.setObject(imageRes, forKey: self.path as AnyObject)
+                            
+                            let cache = NSCache<AnyObject, AnyObject>()
+                            cache.setObject(imageRes, forKey: self.path as AnyObject)
+                            
                             self.comletedBlock(imageRes, nil)
                         } else {
                             let error = NSError(domain: "Pummel", code: 1000, userInfo: nil) // simple error
@@ -306,8 +309,9 @@ enum ImageVideoRouter: URLRequestConvertible {
     }
     
     func getCacheImageWithLink(link: String) -> UIImage?  {
-        if (NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: link as AnyObject) != nil) {
-            let imageRes = NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: link as AnyObject) as! UIImage
+        let cache = NSCache<AnyObject, AnyObject>()
+        if (cache.object(forKey: link as AnyObject) != nil) {
+            let imageRes = cache.object(forKey: link as AnyObject) as! UIImage
             return imageRes
         }
         

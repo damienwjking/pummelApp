@@ -93,8 +93,11 @@ class ContactUserViewController: BaseViewController {
             
             do {
                 let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as! [CNKeyDescriptor])
+                
                 // Put them into "contacts"
-                contacts.append(containerResults)
+                for contact in containerResults {
+                    contacts.append(contact)
+                }
             } catch {
                 print("Error fetching results for container")
             }
@@ -158,7 +161,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                 var phoneNumberString = ""
                 if contact.phoneNumbers.count != 0 {
                     let phoneNumber = contact.phoneNumbers.first?.value
-                    phoneNumberString = phoneNumber?.stringValue.replacingOccurrences(of: "-", with: "")
+                    phoneNumberString = (phoneNumber?.stringValue.replacingOccurrences(of: "-", with: ""))!
                 }
                 
                 let messageCompose = MFMessageComposeViewController()
@@ -225,8 +228,8 @@ extension ContactUserViewController: UISearchBarDelegate {
                 
                 var phoneNumberString = ""
                 if contact.phoneNumbers.count != 0 {
-                    let phoneNumber = contact.phoneNumbers.first?.value as! CNPhoneNumber
-                    phoneNumberString = phoneNumber.stringValue.replacingOccurrences(of: "-", with: "")
+                    let phoneNumber = contact.phoneNumbers.first?.value
+                    phoneNumberString = (phoneNumber?.stringValue.replacingOccurrences(of: "-", with: ""))!
                 }
                 isFilterNumber = phoneNumberString.contains(filterString)
                 isFilterNumber = false // not available filter number now
@@ -244,7 +247,7 @@ extension ContactUserViewController: UISearchBarDelegate {
                     phoneName = phoneName.lowercased()
                     isFilterName = phoneName.contains(filterString)
                     
-                    var email = contact.emailAddresses[0].value as! String
+                    var email = contact.emailAddresses[0].value as String
                     email = email.lowercased()
                     isFilterEmail = email.contains(filterString)
                 }

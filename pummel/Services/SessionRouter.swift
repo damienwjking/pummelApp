@@ -11,6 +11,8 @@ import Alamofire
 import MapKit
 
 enum SessionRouter: URLRequestConvertible {
+    case getSessionList(offset: Int, completed: CompletionBlock)
+    
     case postLogSession(userID: String, targetUserID: String?, message: String, type: String, intensity: String, distance: String, longtime: String, calorie: String, dateTime: String, imageData: Data, completed: CompletionBlock)
     
     case editLogSession(sessionID: String, message: String, intensity: String, distance: String, longtime: String, calorie: String, dateTime: String, completed: CompletionBlock)
@@ -22,6 +24,9 @@ enum SessionRouter: URLRequestConvertible {
     
     var comletedBlock: CompletionBlock {
         switch self {
+        case .getSessionList(_, let completed):
+            return completed
+            
         case .postLogSession(_, _, _, _, _, _, _, _, _, _, let completed):
             return completed
             
@@ -39,6 +44,9 @@ enum SessionRouter: URLRequestConvertible {
     
     var method: Alamofire.HTTPMethod {
         switch self {
+        case .getSessionList:
+            return .get
+            
         case .postLogSession:
             return .post
             
@@ -61,6 +69,9 @@ enum SessionRouter: URLRequestConvertible {
         
         var prefix = ""
         switch self {
+        case .getSessionList(let offset, _):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_ACTIVITIES_USER + "\(offset)"
+            
         case .postLogSession(let userID, let targetUserID, _, _, _, _, _, _, _, _, _):
             if (targetUserID != nil && targetUserID?.isEmpty == false) {
                 prefix = kPMAPICOACH + userID + kPM_PATH_LOG_ACTIVITIES_COACH
@@ -116,7 +127,8 @@ enum SessionRouter: URLRequestConvertible {
         case .deleteSession(let sessionID):
             param?[kActivityId] = sessionID
             
-            
+        default:
+            break
         }
         
         return param
@@ -162,6 +174,20 @@ enum SessionRouter: URLRequestConvertible {
     
     func fetchdata() {
         switch self {
+        case .getSessionList:
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: SessionRouter get_session_list")
+                
+                switch response.result {
+                case .success(let JSON):
+                    let sessionInfos = JSON as! [NSDictionary]
+                    
+                    self.comletedBlock(sessionInfos, nil)
+                case .failure(let error):
+                    self.comletedBlock(nil, error as NSError)
+                }
+            })
+            
         case .postLogSession:
             let filename = jpgeFile
             let type = imageJpeg

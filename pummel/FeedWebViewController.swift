@@ -62,7 +62,7 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
     
     func loadWeb() {
         if (self.URL != nil) {
-            let request = URLRequest(url: self.URL as! URL)
+            let request = URLRequest(url: self.URL! as URL)
             self.webView.loadRequest(request)
         }
     }

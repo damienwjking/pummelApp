@@ -14,6 +14,8 @@ enum MessageRouter: URLRequestConvertible {
     case getConversationList(offset: Int, completed: CompletionBlock)
     case getDetailConversation(messageID: String, completed: CompletionBlock)
     case setOpenMessage(messageID: String, completed: CompletionBlock)
+    case createConversationWithUser(userID: String, completed: CompletionBlock)
+    case sendMessage(conversationID: String, text: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
@@ -26,7 +28,11 @@ enum MessageRouter: URLRequestConvertible {
         case .setOpenMessage(_, let completed):
             return completed
             
+        case .createConversationWithUser(_, let completed):
+            return completed
             
+        case .sendMessage(_, _, let completed):
+            return completed
             
         }
     }
@@ -42,6 +48,11 @@ enum MessageRouter: URLRequestConvertible {
         case .setOpenMessage:
             return .put
             
+        case .createConversationWithUser:
+            return .post
+            
+        case .sendMessage:
+            return .post
             
         }
     }
@@ -60,6 +71,12 @@ enum MessageRouter: URLRequestConvertible {
         case .setOpenMessage(let messageID, _):
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION_V2 + "/" + messageID
             
+        case .createConversationWithUser:
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/"
+            
+        case .sendMessage(let messageID, _, _):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/" + messageID + kPM_PARTH_MESSAGE_V2
+            
         }
         
         return prefix
@@ -77,6 +94,14 @@ enum MessageRouter: URLRequestConvertible {
             param?[kUserId] =  currentUserID
             param?[kConversationId] =  messageID
             
+        case .createConversationWithUser(let userID, _):
+            param?[kUserId] = currentUserID
+            param?[kUserIds] = [userID]
+            
+        case .sendMessage(let messageID, let text, _):
+            param?[kConversationId] = messageID
+            param?[kText] = text
+            param?["file"] = "nodata".dataUsingEncoding(String.Encoding.utf8)! as Any
             
         default:
             break
@@ -167,7 +192,51 @@ enum MessageRouter: URLRequestConvertible {
                 print("PM: MessageRouter set_open_message")
                 
                 switch response.result {
+                case .success( _):
+                    if response.response?.statusCode == 200 {
+                        self.comletedBlock(true, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock(false, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(false, error as NSError)
+                    }
+                }
+            })
+            
+        case .createConversationWithUser:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: MessageRouter create_conversation")
+                
+                switch response.result {
                 case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        let messageInfo = JSON as! NSDictionary
+                        
+                        self.comletedBlock(messageInfo, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .sendMessage:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: MessageRouter add_message")
+                
+                switch response.result {
+                case .success(_):
                     if response.response?.statusCode == 200 {
                         self.comletedBlock(true, nil)
                     } else {

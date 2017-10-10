@@ -47,7 +47,7 @@ class DetailSessionViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.sessionTagColorString = self.getRandomColorString()
+        self.sessionTagColorString = TagRouter.getRandomColorString()
         
         // Back button
         self.navigationController?.navigationBar.barTintColor = UIColor.white
@@ -65,7 +65,7 @@ class DetailSessionViewController: BaseViewController {
         
         self.initLayout()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(DetailSessionViewController.updateSession(_:)), name: k_PM_UPDATE_SESSION_NOTIFICATION, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateSession(notification:)), name: NSNotification.Name(rawValue: k_PM_UPDATE_SESSION_NOTIFICATION), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -230,23 +230,15 @@ class DetailSessionViewController: BaseViewController {
     func setSessionImage() {
         if self.session.imageUrl?.isEmpty == false {
             let imageLink = self.session.imageUrl
-            var prefix = kPMAPI
-            prefix.append(imageLink!)
-            let postfix = widthEqual.stringByAppendingFormat(self.sessionIMV.frame.size.width.description).stringByAppendingString(heighEqual).stringByAppendingString(self.sessionIMV.frame.size.width.description)
-            prefix.append(postfix)
-            if (NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: prefix) != nil) {
-                let imageRes = NSCache<AnyObject, AnyObject>.sharedInstance.object(forKey: prefix) as! UIImage
-                self.sessionIMV.image = imageRes
-            } else {
-                Alamofire.request(.GET, prefix)
-                    .responseImage { response in
-                        if (response.response?.statusCode == 200) {
-                            let imageRes = response.result.value! as UIImage
-                            self.sessionIMV.image = imageRes
-                            NSCache.sharedInstance.setObject(imageRes, forKey: prefix)
-                        }
+            
+            ImageVideoRouter.getImage(imageURLString: imageLink!, sizeString: widthHeightScreen, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.sessionIMV.image = imageRes
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
                 }
-            }
+            }).fetchdata()
         }
     }
     

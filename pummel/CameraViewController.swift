@@ -252,10 +252,10 @@ class CameraViewController: UIViewController {
         return templatePath
     }
     
-    func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: (_ exportURL:NSURL) -> Void) {
+    func cropVideoCenterToSquare(videoURL: NSURL, completionHandler: @escaping (_ exportURL:NSURL) -> Void) {
         //        self.getTempVideoPath()
         // Crop video to square
-        let asset: AVAsset = AVAsset(URL: videoURL as URL)
+        let asset: AVAsset = AVAsset(url: videoURL as URL)
         let assetTrack: AVAssetTrack = asset.tracks(withMediaType: "vide").first!
         
         let videoComposition: AVMutableVideoComposition = AVMutableVideoComposition()
@@ -274,12 +274,12 @@ class CameraViewController: UIViewController {
         let cropWidth = minWidthHeightVideo
         let cropHeight = minWidthHeightVideo
         
-        videoComposition.renderSize = CGSize(width: cropWidth, cropHeight)
+        videoComposition.renderSize = CGSize(width: cropWidth, height: cropHeight)
         
         
         let videoOrientation = self.orientationForTrack(videoTrack: assetTrack)
-        var t1 = CGAffineTransformIdentity
-        var t2 = CGAffineTransformIdentity
+        var t1 = CGAffineTransform.identity
+        var t2 = CGAffineTransform.identity
         
         switch (videoOrientation) {
         case .portrait:
@@ -369,7 +369,7 @@ class CameraViewController: UIViewController {
     
     func cropAndUploadToServer() {
         self.cropVideoCenterToSquare(videoURL: self.videoURL!, completionHandler: { (exportURL) in
-            self.uploadCurrentVideo(exportURL)
+            self.uploadCurrentVideo(videoURL: exportURL)
             
             // Save Video to Library
             //            self.saveVideoToLibrary(exportURL)
@@ -377,16 +377,16 @@ class CameraViewController: UIViewController {
     }
     
     func saveVideoToLibrary(exportURL: NSURL) {
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
+        PMHelper.actionWithDelaytime(delayTime: 0) { (_) in
             let url = NSURL(string: exportURL.absoluteString!)
-            let urlData = NSData(contentsOfURL: url! as URL)
+            let urlData = NSData(contentsOf: url! as URL)
             if(urlData != nil) {
-                dispatch_get_main_queue().async(execute: {
+                DispatchQueue.main.async(execute: {
                     let exportPath = self.getTempVideoPath(fileName: "/libraryTemp.mp4")
                     
-                    urlData?.writeToFile(exportPath as String, atomically: true)
-                    PHPhotoLibrary.sharedPhotoLibrary().performChanges({
-                        PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(NSURL(fileURLWithPath: exportPath as String))
+                    urlData?.write(toFile: exportPath as String, atomically: true)
+                    PHPhotoLibrary.shared().performChanges({
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: NSURL(fileURLWithPath: exportPath as String) as URL)
                     }) { completed, error in
                         self.dismiss(animated: true, completion: nil)
                     }
@@ -396,67 +396,28 @@ class CameraViewController: UIViewController {
     }
     
     func uploadCurrentVideo(videoURL: NSURL) {
-        let videoData = NSData(contentsOfURL: videoURL as URL)
-        let videoExtend = (videoURL.absoluteString!.components(separatedBy: ".").last?.lowercased())!
-        let videoType = "video/" + videoExtend
-        let videoName = "video." + videoExtend
-        
-        // Insert activity indicator
-        self.view.makeToastActivity(message: "Uploading")
-        
-        // send video by method mutipart to server
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_VIDEO)
-        var parameters = [String:AnyObject]()
-        
-        parameters = [kUserId : PMHelper.getCurrentID(),
-                      kProfileVideo : "1"]
-        
-        Alamofire.upload(
-            .POST,
-            prefix,
-            multipartFormData: { multipartFormData in
-                multipartFormData.appendBodyPart(data: videoData!,
-                    name: "file",
-                    fileName:videoName,
-                    mimeType:videoType)
-                for (key, value) in parameters {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                }
-            },
-            encodingCompletion: { encodingResult in
-                switch encodingResult {
+        do {
+            let videoData = try Data(contentsOf: videoURL as URL)
+            
+            // Insert activity indicator
+            self.view.makeToastActivity(message: "Uploading")
+            ImageVideoRouter.currentUserUploadVideo(videoData: videoData as Data) { (result, error) in
+                let isUploadSuccess = result as! Double
+                
+                self.view.hideToastActivity()
+                self.recordStatus = .pending
+                
+                if (isUploadSuccess >= 100) {
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PROFILE_GET_DETAIL"), object: nil, userInfo: nil)
                     
-                case .Success(let upload, _, _):
-                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                    }
-                    upload.validate()
-                    upload.responseJSON { response in
-                        self.view.hideToastActivity()
-                        
-                        self.recordStatus = .pending
-                        
-                        if (response.response?.statusCode == 200) {
-                            NotificationCenter.default.post(name: "PROFILE_GET_DETAIL", object: nil, userInfo: nil)
-                            
-                            self.dismiss(animated: true, completion: nil)
-                        } else {
-                            let alertController = UIAlertController(title: pmmNotice, message: "Please try again", preferredStyle: .alert)
-                            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                                self.recordStatus = .finish
-                            }
-                            alertController.addAction(OKAction)
-                            self.present(alertController, animated: true) {
-                                // ...
-                            }
-                        }
-                    }
-                    
-                case .Failure( _): break
-                    // Do nothing
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    PMHelper.showDoAgainAlert()
                 }
-        })
+                }.fetchdata()
+        } catch (let error) {
+            print(error.localizedDescription)
+        }
     }
     
     func videoPlayerSetPlay(isPlay: Bool) {
@@ -477,7 +438,7 @@ class CameraViewController: UIViewController {
         let alertController = UIAlertController(title: pmmNotice, message: kNoCameraPermission, preferredStyle: .alert)
         
         let settingsAction = UIAlertAction(title: "Settings", style: .default) { (action) in
-            UIApplication.shared.openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
+            UIApplication.shared.openURL(NSURL(string:UIApplicationOpenSettingsURLString)! as URL)
         }
         
         alertController.addAction(settingsAction)
@@ -501,7 +462,7 @@ class CameraViewController: UIViewController {
             
             self.videoPlayerLayer?.removeFromSuperlayer()
             
-            self.videoPlayerSetPlay(false)
+            self.videoPlayerSetPlay(isPlay: false)
             
         } else {
             self.pickerController.delegate = self
@@ -528,12 +489,11 @@ class CameraViewController: UIViewController {
             } else if (self.recordStatus == .finish) {
                 self.recordStatus = .uploading
                 
-                self.videoPlayerSetPlay(false)
-                self.videoPlayer?.currentItem?.seekToTime(kCMTimeZero)
+                self.videoPlayerSetPlay(isPlay: false)
+                self.videoPlayer?.currentItem?.seek(to: kCMTimeZero)
                 
                 // Notification for upload video in background
-                NotificationCenter.default.post(name: "PROFILE_UPLOAD_VIDEO", object: self.videoURL)
-                
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PROFILE_UPLOAD_VIDEO"), object: self.videoURL)
                 self.dismiss(animated: true, completion: nil)
             }
         } else {
@@ -547,7 +507,7 @@ class CameraViewController: UIViewController {
                 let input: AVCaptureDeviceInput = deviceInput as! AVCaptureDeviceInput
                 
                 if #available(iOS 10.0, *) {
-                    if (input.device.deviceType == "AVCaptureDeviceTypeBuiltInWideAngleCamera") {
+                    if (input.device.deviceType == AVCaptureDeviceType.builtInWideAngleCamera) {
                         self.cameraSession.beginConfiguration()
                         
                         // Remove current camera input
@@ -555,10 +515,10 @@ class CameraViewController: UIViewController {
                         
                         // Check current camera position
                         var captureDevice: AVCaptureDevice? = nil
-                        if (input.device.position == .Back) {
-                            captureDevice = self.cameraWithPosition(.Front)
+                        if (input.device.position == .back) {
+                            captureDevice = self.cameraWithPosition(position: .front)
                         } else {
-                            captureDevice = self.cameraWithPosition(.Back)
+                            captureDevice = self.cameraWithPosition(position: .back)
                         }
                         
                         // Add new camera input
@@ -584,22 +544,22 @@ class CameraViewController: UIViewController {
     
     @IBAction func playVideoButtonClicked(sender: AnyObject) {
         self.isVideoPlaying = !self.isVideoPlaying
-        self.videoPlayerSetPlay(self.isVideoPlaying)
+        self.videoPlayerSetPlay(isPlay: self.isVideoPlaying)
     }
     
     func startRecordVideo() {
         // Delete template if exist
-        let videoTemplatePath = self.getTempVideoPath("/video.mp4")
-        let videoTemplateURL = NSURL.fileURLWithPath(videoTemplatePath)
+        let videoTemplatePath = self.getTempVideoPath(fileName: "/video.mp4")
+        let videoTemplateURL = NSURL.fileURL(withPath: videoTemplatePath)
         
         // Record video to template file
-        self.cameraOutput.startRecordingToOutputFileURL(videoTemplateURL, recordingDelegate: self)
+        self.cameraOutput.startRecording(toOutputFileURL: videoTemplateURL, recordingDelegate: self)
         //            self.audioOutput.startRecordingToOutputFileURL(videoTemplateURL, recordingDelegate: self)
     }
 }
 
 extension CameraViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
     }
 }
@@ -618,28 +578,30 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
         
         // Save video to library
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let urlData = NSData(contentsOfURL: outputFileURL as URL)
-            if(urlData != nil) {
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .UserDomainMask, true)[0]
+            do {
+                let urlData = try Data(contentsOf: outputFileURL as URL)
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
                 let filePath="\(documentsPath)/tempFile.mp4"
-                DispatchQueue.main.async(execute: {
-                    urlData?.writeToFile(filePath, atomically: true)
-                    PHPhotoLibrary.sharedPhotoLibrary().performChanges({
-                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: NSURL(fileURLWithPath: filePath) as URL)
-                    }) { completed, error in
-                        self.videoURL = outputFileURL
-                        
-                        // Show video layout
-                        dispatch_get_main_queue().async(execute: {
-                            self.showVideoLayout()
-                        })
-                    }
-                })
+                let fileURL = URL(string: filePath)
+                
+                try urlData.write(to: fileURL!)
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: NSURL(fileURLWithPath: filePath) as URL)
+                }) { completed, error in
+                    self.videoURL = outputFileURL
+                    
+                    // Show video layout
+                    DispatchQueue.main.async(execute: {
+                        self.showVideoLayout()
+                    })
+                }
+            } catch (let error) {
+                print(error)
             }
         }
     }
     
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
+    private func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: URL!, fromConnections connections: [AnyObject]!) {
         print("Start record video")
     }
 }
@@ -649,7 +611,7 @@ extension CameraViewController: AVCaptureAudioDataOutputSampleBufferDelegate {
         
     }
     
-    func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         
     }
 }
@@ -726,7 +688,10 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 
                 self.cameraSession.commitConfiguration()
                 
-                let queue = dispatch_queue_create("com.invasivecode.videoQueue", DISPATCH_QUEUE_SERIAL)
+                let queue = DispatchQueue(label: "com.invasivecode.videoQueue")
+//                let queue = dispatch_queue_create("com.invasivecode.videoQueue", DISPATCH_QUEUE_SERIAL)
+                
+                
                 dataOutput.setSampleBufferDelegate(self, queue: queue)
                 
             }
@@ -741,7 +706,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         print(sampleBuffer)
     }
     
-    func captureOutput(captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         // Here you can count how many frames are dopped
 //        print(sampleBuffer)
     }

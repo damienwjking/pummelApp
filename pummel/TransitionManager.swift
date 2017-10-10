@@ -43,7 +43,7 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
         UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: UIViewAnimationOptions.CurveEaseIn, animations: {
             
             fromView.transform = offScreenLeft
-            toView.transform = CGAffineTransformIdentity
+            toView.transform = CGAffineTransform.identity
             
             }, completion: { finished in
                 

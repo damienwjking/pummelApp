@@ -71,7 +71,7 @@ class LoginAndRegisterViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -91,21 +91,21 @@ class LoginAndRegisterViewController: UIViewController {
         
         if (self.imageData == nil) {
             let noImage = UIImage(named: "display-empty.jpg")
-            self.imageData = UIImageJPEGRepresentation(noImage!, 0.5) as! NSData
+            self.imageData = UIImageJPEGRepresentation(noImage!, 0.5)! as NSData
         }
         
-        ImageVideoRouter.currentUserUploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: self.imageData as Data) { (result, error) in
+        ImageVideoRouter.currentUserUploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: self.imageData as Data, textPost: "") { (result, error) in
             self.view.hideToastActivity()
             
             let isSuccess = result as! Bool
             if (isSuccess == true) {
-                UserDefaults.standard.setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+                UserDefaults.standard.set(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                 self.performSegue(withIdentifier: "showClientSegue", sender: nil)
             } else {
                 let alertController = UIAlertController(title: pmmNotice, message: registerNoticeSuccessWithoutImage, preferredStyle: .alert)
                 
                 let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                    UserDefaults.standard.setBool(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
+                    UserDefaults.standard.set(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                     self.performSegue(withIdentifier: "showClientSegue", sender: nil)
                 }
                 alertController.addAction(OKAction)
@@ -195,9 +195,9 @@ class LoginAndRegisterViewController: UIViewController {
             return false
         } else {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = DateFormatter.Style.MediumStyle
-            dateFormatter.timeStyle = DateFormatter.Style.NoStyle
-            let dateDOB = dateFormatter.date(testStr)
+            dateFormatter.dateStyle = DateFormatter.Style.medium
+            dateFormatter.timeStyle = DateFormatter.Style.none
+            let dateDOB = dateFormatter.date(from: testStr)
             
             let date = NSDate()
             let calendar = NSCalendar.current
@@ -206,7 +206,7 @@ class LoginAndRegisterViewController: UIViewController {
             let year =  components.year
             let yearDOB = componentsDOB.year
             
-            if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
+            if (12 < (year! - yearDOB!)) && ((year! - yearDOB!) < 101)  {
                 return true
             } else {
                 return false
@@ -216,11 +216,11 @@ class LoginAndRegisterViewController: UIViewController {
 }
 
 extension LoginAndRegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.profileIMV.contentMode = .scaleAspectFill
             self.profileIMV.image = pickedImage
-            self.imageData = UIImageJPEGRepresentation(pickedImage, 0.2) as! NSData
+            self.imageData = UIImageJPEGRepresentation(pickedImage, 0.2)! as NSData
             self.cameraProfileIconIMV.isHidden = true
             self.addProfilePhototLB.textColor = UIColor(white: 225, alpha: 1.0)
         }
@@ -228,7 +228,7 @@ extension LoginAndRegisterViewController: UIImagePickerControllerDelegate, UINav
         dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
 }

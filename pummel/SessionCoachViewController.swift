@@ -140,38 +140,38 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
             prefix.append(kPM_PATH_ACTIVITIES_USER)
             prefix.append(String(self.offset))
             
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in
-                    switch response.result {
-                    case .Success(let JSON):
-                        let sessionInfos = JSON as! [NSDictionary]
-                        
-                        if (sessionInfos.count > 0) {
-                            for sessionInfo in sessionInfos {
-                                let session = SessionModel()
-                                session.parseData(sessionInfo)
-                                
-                                if (session.existInList(self.sessionList) == false) {
-                                    self.sessionList.append(session)
-                                }
+            SessionRouter.getSessionList(offset: self.offset, completed: { (result, error) in
+                self.isloading = false
+                
+                if (error == nil) {
+                    let sessionInfos = result as! [NSDictionary]
+                    
+                    if (sessionInfos.count > 0) {
+                        for sessionInfo in sessionInfos {
+                            let session = SessionModel()
+                            session.parseData(data: sessionInfo)
+                            
+                            if (session.existInList(sessionList: self.sessionList) == false) {
+                                self.sessionList.append(session)
                             }
-                        } else {
-                            self.canLoadMore = false
                         }
-                    case .Failure(let error):
+                    } else {
                         self.canLoadMore = false
-                        print("Request failed with error: \(String(describing: error))")
                     }
                     
                     self.offset = self.offset + 20
-                    self.isloading = false
                     
                     self.getListSession()
                     
                     self.presentedDateUpdated(self.calendarView.presentedDate)
                     
                     self.updateLayout()
-            }
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.canLoadMore = false
+                }
+            }).fetchdata()
         }
         
         self.calendarView.contentController.refreshPresentedMonth()
@@ -409,13 +409,17 @@ extension SessionCoachViewController: CVCalendarViewDelegate {
         return .sunday
     }
     
-    private func presentedDateUpdated(date: Date) {
+    func presentedDateUpdated(_ date: CVDate) {
         self.calendarView.contentController.refreshPresentedMonth()
+        
+        let yearValue = date.year
+        let monthValue = date.month
+        let dayValue = date.day
         
         // update month label
         let monthDateFormatter = DateFormatter()
         monthDateFormatter.dateFormat = "yyyy M"
-        let dateString = String(format:"%ld %ld", date.year, date.month)
+        let dateString = String(format:"%ld %ld", yearValue, monthValue)
         let convertDate = monthDateFormatter.date(from: dateString)
         
         let convertDateFormatter = DateFormatter()
@@ -428,7 +432,7 @@ extension SessionCoachViewController: CVCalendarViewDelegate {
         dateFormatter.timeZone = NSTimeZone.local
         //let eventDateString = dateFormatter.string(from: date)
         
-        let calendarString = String(format:"%ld%ld%ld%ld%ld", date.year, date.month/10, date.month%10, date.day/10, date.day%10)
+        let calendarString = String(format:"%ld%ld%ld%ld%ld", yearValue, monthValue / 10, monthValue % 10, dayValue / 10, dayValue % 10)
         
         let fullDateFormatter = DateFormatter()
         fullDateFormatter.dateFormat = kFullDateFormat
@@ -441,7 +445,7 @@ extension SessionCoachViewController: CVCalendarViewDelegate {
             let sessionDate = fullDateFormatter.date(from: session.datetime!)
             let sessionDateString = dateFormatter.string(from: sessionDate!)
             
-            if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
+            if NSDate().compare(sessionDate!) == .orderedAscending && calendarString == sessionDateString {
                 self.selectedSessionList.append(session)
             }
             
@@ -538,7 +542,9 @@ extension SessionCoachViewController: LogCellDelegate {
                 
                 let longTime = session.longtime > 0 ? session.longtime : 1
                 let calendar = NSCalendar.current
-                let endDate = calendar.date(byAdding: [.minute], value: longTime, to: startDate!)
+                var endDateComponent = DateComponents()
+                endDateComponent.minute = longTime
+                let endDate = calendar.date(byAdding: endDateComponent, to: startDate!)
                 
                 event.title = session.type!
                 event.startDate = startDate!

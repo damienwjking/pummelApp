@@ -89,7 +89,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             
             // Focus View
             self.focusView         = UIView(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
-            let tapRecognizer      = UITapGestureRecognizer(target: self, action:#selector(FSCameraView.focus(_:)))
+            let tapRecognizer      = UITapGestureRecognizer(target: self, action:#selector(self.focus(recognizer:)))
             tapRecognizer.delegate = self
             self.previewViewContainer.addGestureRecognizer(tapRecognizer)
             
@@ -145,20 +145,15 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         
         let fetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
         
-        if let lastAsset: PHAsset = fetchResult.lastObject as? PHAsset {
+        if let lastAsset: PHAsset = fetchResult.lastObject {
             let manager = PHImageManager.default()
-            let imageRequestOptions = PHImageRequestOptions()
             
-            manager.requestImageDataForAsset(lastAsset, options: imageRequestOptions) {
-                ( imageData: NSData?, dataUTI: String?,
-                orientation: UIImageOrientation,
-                info: [NSObject : AnyObject]?) -> Void in
-                
+            manager.requestImageData(for: lastAsset, options: nil, resultHandler: { (imageData, dataUTI, orientation, info) in
                 if let imageDataUnwrapped = imageData, let lastImageRetrieved = UIImage(data: imageDataUnwrapped) {
                     // do stuff with image
-                        self.goLibrary.setBackgroundImage(lastImageRetrieved, for: .normal) 
+                    self.goLibrary.setBackgroundImage(lastImageRetrieved, for: .normal)
                 }
-            }
+            })
         }
     }
     

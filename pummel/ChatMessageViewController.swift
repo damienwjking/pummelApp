@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class ChatMessageViewController : BaseViewController, UITableViewDataSource, UITableViewDelegate, RSKGrowingTextViewDelegate {
+class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate {
     var nameChatUser : String!
     
     @IBOutlet var textBox: RSKGrowingTextView!
@@ -68,8 +68,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatMessageViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         self.getArrayChat()
         
@@ -109,28 +109,20 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     }
 
     func getArrayChat() {
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_CONVERSATION)
-        prefix.append("/")
-        
-        if (messageId != nil) {
-            prefix.append(self.messageId as String)
-            prefix.append(kPM_PARTH_MESSAGE)
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    self.arrayChat = JSON as! NSArray
+        if (self.messageId != nil) {
+            MessageRouter.getDetailConversation(messageID: self.messageId) { (result, error) in
+                if (error == nil) {
+                    self.arrayChat = result as! NSArray
                     if(self.arrayChat.count > 0) {
-                        self.chatTB.reloadData({ 
-                            let lastIndex = NSIndexPath(forRow: self.arrayChat.count, inSection: 0)
-                            self.chatTB.scrollToRowAtIndexPath(lastIndex, atScrollPosition: UITableViewScrollPosition.Bottom, animated: false)
-                        })
+                        self.chatTB.reloadData {
+                            let lastIndex = NSIndexPath(row: self.arrayChat.count, section: 0)
+                            self.chatTB.scrollToRow(at: lastIndex as IndexPath, at: UITableViewScrollPosition.bottom, animated: false)
+                        }
                     }
-                case .Failure(let error):
+                } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
-            }
+                }.fetchdata()
         } else {
             self.sendMessage(addEmptyMessage: false)
         }
@@ -143,18 +135,15 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
             if (nameChatUser != nil) {
                 self.navigationItem.title = nameChatUser
             } else {
-                var prefixUser = kPMAPIUSER
-                prefixUser.append(userIdTarget)
-                Alamofire.request(.GET, prefixUser)
-                    .responseJSON { response in switch response.result {
-                    case .Success(let JSON):
-                        let userInfo = JSON as! NSDictionary
+                UserRouter.getUserInfo(userID: self.userIdTarget, completed: { (result, error) in
+                    if (error == nil) {
+                        let userInfo = result as! NSDictionary
                         let name = userInfo.object(forKey: kFirstname) as! String
                         self.navigationItem.title = name.uppercased()
-                    case .Failure(let error):
+                    } else {
                         print("Request failed with error: \(String(describing: error))")
                     }
-                }
+                }).fetchdata()
             }
         }
     }
@@ -186,8 +175,109 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         self.leftMarginLeftChatCT.constant = 40
     }
     
-    // MARK: UITableViewDelegate
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    // MARK: Outlet function
+    func cancel() {
+        if self.isSendMessage {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SEND_CHAT_MESSAGE"), object: nil)
+        }
+        
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func avatarClicked() {
+        PMHelper.showCoachOrUserView(userID: self.userIdTarget, showTestimonial: false, isFromChat: true)
+    }
+    
+    @IBAction func goPhoto(sender:UIButton!) {
+        performSegue(withIdentifier: "sendPhoto", sender: nil)
+        
+        // Tracker mixpanel
+        let mixpanel = Mixpanel.sharedInstance()
+        let properties = ["Name": "Navigation Click", "Label":"Go Send Picture Message"]
+        mixpanel?.track("IOS.ChatMessage", properties: properties)
+    }
+    
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        if (segue.identifier == "sendPhoto") {
+            self.textBox.resignFirstResponder()
+            let destinationVC = segue.destination as! SendPhotoViewController
+            destinationVC.messageId = self.messageId! as NSString
+            destinationVC.typeCoach = self.typeCoach
+            destinationVC.coachId = self.coachId
+            destinationVC.userIdTarget = self.userIdTarget! as NSString
+        }
+    }
+    
+    func sendMessage(addEmptyMessage:Bool) {
+        let values = (self.typeCoach == true) ? coachId : self.userIdTarget
+        
+        MessageRouter.createConversationWithUser(userID: values!) { (result, error) in
+            if (error == nil) {
+                let messageInfo = result as! NSDictionary
+                
+                let conversationId = String(format:"%0.f", (messageInfo.object(forKey: kId)! as AnyObject).doubleValue)
+                
+                //Add message to converstaton
+                self.messageId = conversationId
+                
+                if (addEmptyMessage) {
+                    self.addMessageToExistConverstation()
+                } else {
+                    self.getArrayChat()
+                }
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+        }.fetchdata()
+    }
+    
+    func addMessageToExistConverstation(){
+        MessageRouter.sendMessage(conversationID: self.messageId, text: self.textBox.text) { (result, error) in
+            self.isSending = false
+            
+            let isSendMessageSuccess = result as! Bool
+            if (isSendMessageSuccess == true) {
+                self.getArrayChat()
+                self.textBox.text = ""
+                self.textBox.resignFirstResponder()
+            }
+        }.fetchdata()
+    }
+    
+    @IBAction func clickOnSendButton() {
+        if !(self.textBox.text == "" && self.isSending == false) {
+            self.isSending = true
+            if (self.messageId != nil) {
+                self.addMessageToExistConverstation()
+            } else {
+                self.sendMessage(addEmptyMessage: true)
+            }
+            
+            self.isSendMessage = true
+            
+            // Tracker mixpanel
+            let mixpanel = Mixpanel.sharedInstance()
+            let properties = ["Name": "Navigation Click", "Label":"Send Message"]
+            mixpanel?.track("IOS.ChatMessage", properties: properties)
+        }
+    }
+
+    func stringArrayToNSData(array: [String]) -> NSData {
+        let data = NSMutableData()
+        let terminator = [0]
+        for string in array {
+            if let encodedString = string.data(using: String.Encoding.utf8) {
+                data.append(encodedString)
+                data.append(terminator, length: 1)
+            }
+        }
+        return data
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 0) {
             return 197
         } else {
@@ -195,7 +285,7 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
         }
     }
     
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row == 0) {
             return 197
         } else {
@@ -233,20 +323,17 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
                 if (nameChatUser != nil) {
                     cell.nameChatUserLB.text = nameChatUser
                 } else {
-                    var prefixUser = kPMAPIUSER
-                    prefixUser.append(userIdTarget)
-                    Alamofire.request(.GET, prefixUser)
-                        .responseJSON { response in switch response.result {
-                        case .Success(let JSON):
-                            let userInfo = JSON as! NSDictionary
+                    UserRouter.getUserInfo(userID: self.userIdTarget, completed: { (result, error) in
+                        if (error == nil) {
+                            let userInfo = result as! NSDictionary
                             let name = userInfo.object(forKey: kFirstname) as! String
                             cell.nameChatUserLB.text = name.uppercased()
-                        case .Failure(let error):
+                        } else {
                             print("Request failed with error: \(String(describing: error))")
                         }
-                    }
+                    }).fetchdata()
                 }
-
+                
             }
             
             cell.timeLB.isHidden = true
@@ -382,124 +469,8 @@ class ChatMessageViewController : BaseViewController, UITableViewDataSource, UIT
     
     
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
-    }
-    
-    // MARK: Outlet function
-    func cancel() {
-        if self.isSendMessage {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SEND_CHAT_MESSAGE"), object: nil)
-        }
-        
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    func avatarClicked() {
-        PMHelper.showCoachOrUserView(userID: self.userIdTarget, showTestimonial: false, isFromChat: true)
-    }
-    
-    @IBAction func goPhoto(sender:UIButton!) {
-        performSegue(withIdentifier: "sendPhoto", sender: nil)
-        
-        // Tracker mixpanel
-        let mixpanel = Mixpanel.sharedInstance()
-        let properties = ["Name": "Navigation Click", "Label":"Go Send Picture Message"]
-        mixpanel?.track("IOS.ChatMessage", properties: properties)
-    }
-    
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if (segue.identifier == "sendPhoto") {
-            self.textBox.resignFirstResponder()
-            let destinationVC = segue.destination as! SendPhotoViewController
-            destinationVC.messageId = self.messageId as! NSString
-            destinationVC.typeCoach = self.typeCoach
-            destinationVC.coachId = self.coachId
-            destinationVC.userIdTarget = self.userIdTarget as! NSString
-        }
-    }
-    
-    func sendMessage(addEmptyMessage:Bool) {
-        let values : [String]
-        
-        values = (self.typeCoach == true) ? [coachId] : [userIdTarget as String]
-        
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_CONVERSATION)
-        prefix.append("/")
-        
-        let param = [kUserId : PMHelper.getCurrentID(),
-                     kUserIds : values] as [String : Any]
-        
-        Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    let JSON = response.result.value
-                    let conversationId = String(format:"%0.f",JSON!.object(forKey: kId)!.doubleValue)
-                    //Add message to converstaton
-                    self.messageId = conversationId
-                    
-                    if (addEmptyMessage) {
-                        self.addMessageToExistConverstation()
-                    } else {
-                        self.getArrayChat()
-                    }
-                }
-        }
-        
-    }
-    
-    func addMessageToExistConverstation(){
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_CONVERSATION)
-        prefix.append("/")
-        prefix.append(self.messageId as String)
-        prefix.append(kPM_PARTH_MESSAGE_V2)
-        
-        let param = [kConversationId : self.messageId,
-                     kText : textBox.text,
-                     "file" : "nodata".dataUsingEncoding(NSUTF8StringEncoding)!]
-        
-        Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
-            .responseJSON { response in
-                self.isSending = false
-                if response.response?.statusCode == 200 {
-                    self.getArrayChat()
-                    self.textBox.text = ""
-                    self.textBox.resignFirstResponder()                }
-        }
-    }
-    
-    @IBAction func clickOnSendButton() {
-        if !(self.textBox.text == "" && self.isSending == false) {
-            self.isSending = true
-            if (self.messageId != nil) {
-                self.addMessageToExistConverstation()
-            } else {
-                self.sendMessage(addEmptyMessage: true)
-            }
-            
-            self.isSendMessage = true
-            
-            // Tracker mixpanel
-            let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Name": "Navigation Click", "Label":"Send Message"]
-            mixpanel?.track("IOS.ChatMessage", properties: properties)
-        }
-    }
-
-    func stringArrayToNSData(array: [String]) -> NSData {
-        let data = NSMutableData()
-        let terminator = [0]
-        for string in array {
-            if let encodedString = string.data(using: String.Encoding.utf8) {
-                data.append(encodedString)
-                data.append(terminator, length: 1)
-            }
-        }
-        return data
     }
 }
 

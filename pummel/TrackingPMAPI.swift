@@ -15,7 +15,7 @@ class TrackingPMAPI: NSObject {
     func trackingCallBackButtonClick(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKCALLBACK)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -26,7 +26,7 @@ class TrackingPMAPI: NSObject {
     func trackingConnectButtonCLick(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKCONNECT)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -37,7 +37,7 @@ class TrackingPMAPI: NSObject {
     func trackingMessageButtonCLick(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKMESSAGE)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -48,7 +48,7 @@ class TrackingPMAPI: NSObject {
     func trackingProfileCard(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKPROFILECARD)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -59,7 +59,7 @@ class TrackingPMAPI: NSObject {
     func trackingProfileViewed(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKPROFILEVIEW)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -70,7 +70,7 @@ class TrackingPMAPI: NSObject {
     func trackSocialFacebook(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKSOCIALFB)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -81,7 +81,7 @@ class TrackingPMAPI: NSObject {
     func trackSocialInstagram(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKSOCIALINSTA)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -92,7 +92,7 @@ class TrackingPMAPI: NSObject {
     func trackSocialTwitter(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKSOCIALTWI)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {
@@ -103,7 +103,7 @@ class TrackingPMAPI: NSObject {
     func trackSocialWeb(coachId:String) {
         let param = [kCoachId:coachId]
         let prefix = "\(kPMAPI)\(kPMAPI_TRACKSOCIALWEB)"
-        Alamofire.request(.POST, prefix, parameters: param)
+        Alamofire.request(prefix, method: .post, parameters: param)
             .responseJSON { response in
                 if response.response?.statusCode == 200 {
                 } else {

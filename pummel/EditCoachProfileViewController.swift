@@ -566,7 +566,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
             let year =  components.year
             let yearDOB = componentsDOB.year
             
-            if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
+            if (12 < (year! - yearDOB!)) && ((year! - yearDOB!) < 101)  {
                 return true
             } else {
                 return false
@@ -587,7 +587,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         let year =  components.year
         let yearDOB = componentsDOB.year
         
-        if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
+        if (12 < (year! - yearDOB!)) && ((year! - yearDOB!) < 1001)  {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
                                                                   attributes:[NSForegroundColorAttributeName: UIColor.black])
         } else {
@@ -646,15 +646,15 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 
                 var imageData : NSData!
                 let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
-                var type : String!
-                var filename: String!
+                
+                // TODO need check
                 if assetPath.absoluteString!.hasSuffix("JPG") {
-                    type = imageJpeg
-                    filename = jpgeFile
+//                    type = imageJpeg
+//                    filename = jpgeFile
                     imageData = UIImageJPEGRepresentation(pickedImage, 0.2)! as NSData
                 } else if assetPath.absoluteString!.hasSuffix("PNG") {
-                    type = imagePng
-                    filename = pngFile
+//                    type = imagePng
+//                    filename = pngFile
                     imageData = UIImagePNGRepresentation(pickedImage)! as NSData
                 }
                 
