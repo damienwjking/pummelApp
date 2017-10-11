@@ -21,6 +21,7 @@ enum SessionRouter: URLRequestConvertible {
     
     case deleteSession(sessionID: String, completed: CompletionBlock)
     
+    case getGroupInfo(groupType: TypeGroup, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
@@ -38,6 +39,10 @@ enum SessionRouter: URLRequestConvertible {
             
         case .deleteSession(_, let completed):
             return completed
+            
+        case .getGroupInfo(_, let completed):
+            return completed
+            
             
         }
     }
@@ -59,7 +64,8 @@ enum SessionRouter: URLRequestConvertible {
         case .deleteSession:
             return .post
             
-            
+        case .getGroupInfo:
+            return .get
             
         }
     }
@@ -87,6 +93,31 @@ enum SessionRouter: URLRequestConvertible {
             
         case .deleteSession:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_DELETEACTIVITY
+            
+        case .getGroupInfo(let groupType, _):
+            prefix = kPMAPICOACHES
+            if groupType == .CoachJustConnected ||
+                groupType == .CoachCurrent ||
+                groupType == .CoachOld {
+                prefix = kPMAPIUSER
+            }
+            
+            prefix = prefix + currentUserID
+            
+            if groupType == .NewLead {
+                prefix = prefix + kPMAPICOACH_LEADS
+            } else if groupType == .Current {
+                prefix = prefix + kPMAPICOACH_CURRENT
+            } else if groupType == .Old {
+                prefix = prefix + kPMAPICOACH_OLD
+            } else if groupType == .CoachJustConnected {
+                prefix = prefix + kPMAPICOACH_JUSTCONNECTED
+            } else if groupType == .CoachCurrent {
+                prefix = prefix + kPMAPICOACH_COACHCURRENT
+            } else if groupType == .CoachOld {
+                prefix = prefix + kPMAPICOACH_COACHOLD
+            }
+            
             
         }
         
@@ -290,6 +321,22 @@ enum SessionRouter: URLRequestConvertible {
                 }
             })
 
+        case .getGroupInfo:
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: SessionRouter get_group_info")
+                
+                switch response.result {
+                case .success(let JSON):
+                    let groupInfo = JSON as! [NSDictionary]
+                    self.comletedBlock(groupInfo, nil)
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(nil, error as NSError)
+                    }
+                }
+            })
             
         }
     }

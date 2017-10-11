@@ -188,8 +188,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     
     func searchCoachPage() {
         if (self.stopSearch == false) {
-            var param : [String: Any] = [:];
-            
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let aVariable = appDelegate.searchDetail as NSDictionary
             
@@ -203,8 +201,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             let latitude = aVariable[kLat] as! CLLocationDegrees
             let stage = aVariable[kState] as! String
             let city = aVariable[kCity] as! String
-            
-            var prefix = kPMAPICOACH_SEARCHV3
             
             let tagArray = aVariable["tagIds"] as? NSArray
             
@@ -494,7 +490,7 @@ extension FindViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let userData = result as! NSDictionary
                         coach.parseData(data: userData)

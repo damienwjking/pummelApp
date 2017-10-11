@@ -137,7 +137,7 @@ class NewPostViewController: BaseViewController, UIScrollViewDelegate {
             self.view.makeToastActivity(message: "Posting")
             self.navigationItem.rightBarButtonItem?.isEnabled = false
             
-            ImageVideoRouter.currentUserUploadPhoto(posfix: "/posts/", imageData: imageData as Data, textPost: textPost!, completed: { (result, error) in
+            ImageVideoRouter.uploadPhoto(posfix: "/posts/", imageData: imageData as Data, textPost: textPost!, completed: { (result, error) in
                 self.isPosting = false
                 self.view.hideToastActivity()
                 self.navigationItem.rightBarButtonItem?.isEnabled = true

@@ -1140,7 +1140,7 @@ extension ProfileViewController {
             self.isUploadingVideo = .uploading
             
             // send video by method mutipart to server
-            ImageVideoRouter.currentUserUploadVideo(videoData: videoData) { (result, error) in
+            ImageVideoRouter.uploadVideo(videoData: videoData) { (result, error) in
                 if (error == nil) {
                     let percent = result as! Double
                     

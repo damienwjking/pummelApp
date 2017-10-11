@@ -20,7 +20,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     var typeCoach : Bool = false
     var coachId: String!
     var userIdTarget: NSString!
-    var messageId: NSString!
+    var messageId: String!
     var arrayChat: NSArray!
     var otherKeyboardView: UIView!
     var viewKeyboard: UIView!
@@ -46,7 +46,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         self.commentPhotoTV.keyboardAppearance = .dark
         self.commentPhotoTV.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
         self.commentPhotoTV.delegate = self
-        self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRange(from:   self.commentPhotoTV.beginningOfDocument, toPosition:self.commentPhotoTV.beginningOfDocument)
+        self.commentPhotoTV.selectedTextRange = self.commentPhotoTV.textRange(from:   self.commentPhotoTV.beginningOfDocument, to:self.commentPhotoTV.beginningOfDocument)
         self.navigationItem.hidesBackButton = true;
         self.imagePicker.delegate = self
         
@@ -58,8 +58,8 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(SendPhotoViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -68,9 +68,9 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        let userInfo:NSDictionary = notification.userInfo!
-        let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardRectangle = keyboardFrame.cgRectValue()
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
         let keyboardHeight = keyboardRectangle.height
         if  (self.viewKeyboard != nil) {
             self.viewKeyboard.removeFromSuperview()
@@ -85,7 +85,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         }
         self.otherKeyboardView = UIView.init(frame:CGRect(x: 0, y: self.commentPhotoTV.frame.origin.y, width: self.view.frame.width, height: self.view.frame.size.height - self.commentPhotoTV.frame.origin.y))
         self.otherKeyboardView.backgroundColor = UIColor.clear
-        let recognizer = UITapGestureRecognizer(target: self, action:#selector(SendPhotoViewController.handleTap(_:)))
+        let recognizer = UITapGestureRecognizer(target: self, action:#selector(self.handleTap(recognizer:)))
         self.otherKeyboardView.addGestureRecognizer(recognizer)
         self.view.addSubview(self.otherKeyboardView)
         self.viewKeyboard.backgroundColor = UIColor.black
@@ -141,130 +141,56 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
     
     func sendMessage() {
         self.commentPhotoTV.resignFirstResponder()
-        let values : [String]
+        let values : String
         
         if (self.typeCoach == true) {
-            values = [coachId]
+            values = self.coachId
         } else {
-            values = [userIdTarget as String]
+            values = self.userIdTarget as String
         }
         
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_CONVERSATION)
-        prefix.append("/")
-        
-        let param = [kUserId : PMHelper.getCurrentID(),
-                     kUserIds : values]
-        
-        Alamofire.request(.POST, prefix, parameters: param as? [String : AnyObject])
-            .responseJSON { response in
-                if response.response?.statusCode == 200 {
-                    let JSON = response.result.value
-                    let conversationId = String(format:"%0.f",JSON!.object(forKey: kId)!.doubleValue)
-                    
-                    self.messageId = conversationId
-                    self.addMessageToExistConverstation()
-                } 
-        }
-        
+        MessageRouter.createConversationWithUser(userID: values) { (result, error) in
+            if (error == nil) {
+                let JSON = result as! NSDictionary
+                let conversationId = String(format:"%0.f", (JSON.object(forKey: kId)! as AnyObject).doubleValue)
+                
+                self.messageId = conversationId
+                self.addMessageToExistConverstation()
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+            }.fetchdata()
     }
     
-    func addMessageToExistConverstation(){
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        activityView.center = self.view.center
-        activityView.startAnimating()
-        self.view.addSubview(activityView)
-        var prefix = kPMAPIUSER
-        prefix.append(PMHelper.getCurrentID())
-        prefix.append(kPM_PATH_CONVERSATION)
-        prefix.append("/")
-        prefix.append(self.messageId as String)
-        prefix.append(kPM_PARTH_MESSAGE_V2)
-        
-        imageSelected?.image?.CGImage
-        var imageData : NSData!
-        let type : String!
-        let filename : String!
+    func addMessageToExistConverstation() {
+        var imageData : Data!
         imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
-        type = imageJpeg
-        filename = jpgeFile
+        
         let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "" : commentPhotoTV.text
-        var parameters = [String:AnyObject]()
-        parameters = [kConversationId:self.messageId as String, kText: textPost]
-        Alamofire.upload(
-            .POST,
-            prefix,
-            multipartFormData: { multipartFormData in
-                multipartFormData.appendBodyPart(data: imageData, name: "file",
-                    fileName:filename, mimeType:type)
-                for (key, value) in parameters {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                }
-            },
-            encodingCompletion: { encodingResult in
-                 self.view.hideToastActivity()
-                switch encodingResult {
-                case .Success(let upload, _, _):
-                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                    }
-                    upload.validate()
-                    upload.responseJSON { response in
-                        
-                        if response.result.error != nil {
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
-                            let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                            let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                                // ...
-                            }
-                            alertController.addAction(OKAction)
-                            self.present(alertController, animated: true) {
-                                // ...
-                            }
-                        } else {
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
-                            let dateFormatter = DateFormatter
-                            dateFormatter.dateFormat = kFullDateFormat
-                            dateFormatter.timeZone = NSTimeZone(name: "UTC")
-                            let dayCurrent = dateFormatter.string(from: NSDate())
-                            
-                            var prefixT = kPMAPIUSER
-                            prefixT.append(PMHelper.getCurrentID())
-                            prefixT.append(kPM_PATH_CONVERSATION)
-                            prefixT.append("/")
-                            prefixT.append(self.messageId as String)
-                            
-                            let param = [kConversationId:self.messageId as String,
-                                kLastOpenAt:dayCurrent,
-                                kUserId: PMHelper.getCurrentID()]
-                            
-                            Alamofire.request(.PUT, prefixT, parameters: param)
-                                .responseJSON { response in
-                                    if response.response?.statusCode == 200 {
-                                        print ("Set lastOpenAt to New")
-                                    }
-                            }
-                            self.navigationController?.popViewController(animated: true)
-                        }
-                    }
-                    
-                case .Failure(let encodingError):
-                    print(encodingError)
-                    activityView.stopAnimating()
-                    activityView.removeFromSuperview()
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                }
+        
+        let messageID = "\(self.messageId)"
+        MessageRouter.sendMessage(conversationID: messageID, text: textPost!, imageData: imageData) { (result, error) in
+            self.view.hideToastActivity()
+            
+            if (error == nil) {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = kFullDateFormat
+                dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+                let dayCurrent = dateFormatter.string(from: Date())
+                
+                let param = [kConversationId:self.messageId as String,
+                             kLastOpenAt:dayCurrent,
+                             kUserId: PMHelper.getCurrentID()]
+                
+                MessageRouter.updateMessageDetail(messageID: self.messageId as String, param: param, completed: { (result, error) in
+                    self.navigationController?.popViewController(animated: true)
+                }).fetchdata()
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+                
+                PMHelper.showDoAgainAlert()
             }
-        )
+        }.fetchdata()
     }
     
     @IBAction func showPopupToSelectImageWithSender() {
@@ -312,11 +238,11 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
                 subview.removeFromSuperview()
             }
             let height =  self.view.frame.size.width*image.size.height/image.size.width
-            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, 0, self.view.frame.size.width, height) : CGRect(x: 0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = image
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, frameT.size.height) : CGSize(width: self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
@@ -328,26 +254,26 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         
         alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(url)
+                UIApplication.shared.openURL(url as URL)
             }
             
         }))
         
-        alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
         }))
         
         self.present(alert, animated: true, completion: nil)
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        let currentText:NSString = textView.text
-        let updatedText = currentText.stringByReplacingCharactersInRange(range, withString:text)
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:NSString = textView.text! as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with:text)
         if updatedText.isEmpty {
             
             textView.text = addAComment
             textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
             
-            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             
             return false
         }
@@ -359,26 +285,26 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         return true
     }
     
-    func textViewDidChangeSelection(textView: UITextView) {
+    func textViewDidChangeSelection(_ textView: UITextView) {
         if self.view.window != nil {
             if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, toPosition: textView.beginningOfDocument)
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             }
         }
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
             }
             self.imageSelected!.image = pickedImage
             let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
-            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, 0, self.view.frame.size.width, height) : CGRect(x: 0, (self.view.frame.size.width - height)/2, self.view.frame.size.width, height)
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
             let imageViewScrollView = UIImageView.init(frame: frameT)
             imageViewScrollView.image = pickedImage
             self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, frameT.size.height) : CGSize(width: self.view.frame.size.width, self.view.frame.size.width)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
             self.imageSelected?.isHidden = true
             self.imageScrolView?.isHidden = false
         }
@@ -389,15 +315,15 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.main.scale)
         let offset = imageScrolView.contentOffset
         
-        CGContextTranslateCTM(UIGraphicsGetCurrentContext()!, -offset.x, -offset.y)
-        imageScrolView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        UIGraphicsGetCurrentContext()!.translateBy(x: -offset.x, y: -offset.y)
+        imageScrolView.layer.render(in: UIGraphicsGetCurrentContext()!)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         
         return image!
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
 }

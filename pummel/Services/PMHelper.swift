@@ -22,7 +22,7 @@ class PMHelper {
         return ""
     }
     
-    class func checkVisibleCell(tableView: UITableView, indexPath: NSIndexPath ) -> Bool {
+    class func checkVisibleCell(tableView: UITableView, indexPath: IndexPath ) -> Bool {
         var visibleCell = false
         for indexP in (tableView.indexPathsForVisibleRows)! {
             if (indexP.row == indexPath.row &&
@@ -61,7 +61,7 @@ class PMHelper {
                     // Logout app
                     let defaults = UserDefaults.standard
                     
-                    let data = response as! Data
+                    let data = response.result.value!
                     let outputString = NSString(data: data, encoding:String.Encoding.utf8.rawValue)
                     if ((outputString?.contains(kLogoutSuccess)) != nil) {
                         defaults.set(false, forKey: k_PM_IS_LOGINED)

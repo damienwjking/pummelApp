@@ -36,6 +36,8 @@ enum UserRouter: URLRequestConvertible {
     case setCurrentLead(requestID: String, completed: CompletionBlock)
     case setOldLead(requestID: String, completed: CompletionBlock)
     case searchCoachNearby(gender: String, tags: NSArray, longitude: CLLocationDegrees, latitute: CLLocationDegrees, stage: String, city: String, offset: Int, completed: CompletionBlock)
+    case getUserList(offset: Int, completed: CompletionBlock)
+    case getSearhUserList(offset: Int, character: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock? {
         switch self {
@@ -87,7 +89,10 @@ enum UserRouter: URLRequestConvertible {
             return completed
         case .searchCoachNearby(_, _, _, _, _, _, _, let completed):
             return completed
-            
+        case .getUserList(_, let completed):
+            return completed
+        case .getSearhUserList(_, _, let completed):
+            return completed
             
         }
     }
@@ -141,6 +146,10 @@ enum UserRouter: URLRequestConvertible {
         case .setOldLead:
             return .put
         case .searchCoachNearby:
+            return .get
+        case .getUserList:
+            return .get
+        case .getSearhUserList:
             return .get
             
         }
@@ -237,6 +246,11 @@ enum UserRouter: URLRequestConvertible {
                 }
             }
             
+        case .getUserList(let offset, _):
+            prefix = kPMAPIUSER_OFFSET + "\(offset)"
+            
+        case .getSearhUserList:
+            prefix = kPMAPISEARCHUSER
             
         }
         
@@ -312,7 +326,7 @@ enum UserRouter: URLRequestConvertible {
             param[kPasswordNew] = newPassword as AnyObject
             
         case .forgotPassword(let email, _):
-            param[kEmail] = email
+            param[kEmail] = email as AnyObject
             
         case .checkConnect(let coachID, _):
             param[kUserId] = currentUserID as AnyObject
@@ -338,6 +352,10 @@ enum UserRouter: URLRequestConvertible {
             param[kLat] = latitude as AnyObject
             param[kState] = stage as AnyObject
             param[kCity] = city as AnyObject
+            
+        case .getSearhUserList(let offet, let character, _):
+            param[kOffset] = offet as AnyObject
+            param["character"] = character as AnyObject
             
         default:
             break
@@ -848,6 +866,52 @@ enum UserRouter: URLRequestConvertible {
         case .searchCoachNearby:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter search_coach_nearby")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let coachDetails = JSON as? [NSDictionary]
+                        
+                        self.comletedBlock!(coachDetails, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .getUserList:
+            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter get_user_list")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let coachDetails = JSON as? [NSDictionary]
+                        
+                        self.comletedBlock!(coachDetails, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .getSearhUserList:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter get_search_user_list")
                 
                 switch response.result {
                 case .success(let JSON):

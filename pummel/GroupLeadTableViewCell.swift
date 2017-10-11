@@ -19,7 +19,7 @@ enum TypeGroup:Int {
 }
 
 
-class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
+class GroupLeadTableViewCell: UITableViewCell {
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
     var arrayMessages: [NSDictionary] = []
@@ -43,19 +43,29 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         self.cv.reloadData()
         self.titleHeader.font = .pmmMonReg13()
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
+    func getMessage() {
+        SessionRouter.getGroupInfo(groupType: self.typeGroup) { (result, error) in
+            if (error == nil) {
+                if let arrayMessageT = result as? [NSDictionary] {
+                    self.arrayMessages = arrayMessageT
+                    self.arrayCoachesInfo = arrayMessageT
+                    self.cv.reloadData()
+                }
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+        }.fetchdata()
+    }
+}
+
+extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.arrayMessages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadCollectionViewCell", for: indexPath) as! LeadCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeadCollectionViewCell", for: indexPath) as! LeadCollectionViewCell
         cell.btnAdd.isHidden = true
         
         let message = arrayMessages[indexPath.row]
@@ -69,10 +79,10 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                 targetUserId = "\(val)"
             }
         }
-    
+        
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
             if (error == nil) {
-                let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
+                let updateCell = collectionView.cellForItem(at: indexPath)
                 if (updateCell != nil) {
                     cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
                     cell.btnAdd.isHidden = false
@@ -90,7 +100,7 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                             
                             ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                                 if (error == nil) {
-                                    let updateCell = collectionView.cellForItemAtIndexPath(indexPath)
+                                    let updateCell = collectionView.cellForItem(at: indexPath)
                                     if (updateCell != nil) {
                                         let imageRes = result as! UIImage
                                         cell.imgAvatar.image = imageRes
@@ -105,14 +115,14 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
             } else {
                 print("Request failed with error: \(String(describing: error))")
             }
-        }.fetchdata()
+            }.fetchdata()
         
         return cell
     }
     
     func collectionView(collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
-                               sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let userInfo = arrayMessages[indexPath.row]
         
         var targetUserId = ""
@@ -135,46 +145,10 @@ class GroupLeadTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
                 targetUserId = "\(val)"
             }
             if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-                self.delegateGroupLeadTableViewCell?.selectUserWithCoachInfo!(self.arrayCoachesInfo[indexPath.row])
+                self.delegateGroupLeadTableViewCell?.selectUserWithCoachInfo!(coachInfo: self.arrayCoachesInfo[indexPath.row])
                 return
             }
-            self.delegateGroupLeadTableViewCell?.selectUserWithID!(targetUserId, typeGroup: self.typeGroup.rawValue)
-        }
-    }
-    
-    func getMessage() {
-        var prefix = kPMAPICOACHES
-        if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-            prefix = kPMAPIUSER
-        }
-        
-        prefix.append(PMHelper.getCurrentID())
-        
-        if self.typeGroup == TypeGroup.NewLead {
-            prefix.append(kPMAPICOACH_LEADS)
-        } else if self.typeGroup == TypeGroup.Current {
-            prefix.append(kPMAPICOACH_CURRENT)
-        } else if self.typeGroup == TypeGroup.Old {
-            prefix.append(kPMAPICOACH_OLD)
-        } else if self.typeGroup == TypeGroup.CoachJustConnected {
-            prefix.append(kPMAPICOACH_JUSTCONNECTED)
-        } else if self.typeGroup == TypeGroup.CoachCurrent {
-            prefix.append(kPMAPICOACH_COACHCURRENT)
-        } else if self.typeGroup == TypeGroup.CoachOld {
-            prefix.append(kPMAPICOACH_COACHOLD)
-        }
-        
-        Alamofire.request(.GET, prefix)
-            .responseJSON { response in switch response.result {
-            case .Success(let JSON):
-                if let arrayMessageT = JSON as? [NSDictionary] {
-                    self.arrayMessages = arrayMessageT
-                    self.arrayCoachesInfo = arrayMessageT
-                    self.cv.reloadData()
-                }
-            case .Failure(let error):
-                print("Request failed with error: \(String(describing: error))")
-                }
+            self.delegateGroupLeadTableViewCell?.selectUserWithID!(userId: targetUserId, typeGroup: self.typeGroup.rawValue)
         }
     }
 }

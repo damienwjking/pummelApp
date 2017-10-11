@@ -676,7 +676,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 } else {
                     self.avatarIMW.makeToastActivity()
                     
-                    ImageVideoRouter.currentUserUploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData as Data, textPost: "", completed: { (result, error) in
+                    ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData as Data, textPost: "", completed: { (result, error) in
                         self.avatarIMW.hideToastActivity()
                         
                         let isSuccess = result as! Bool
@@ -694,7 +694,7 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 
                 // send video by method mutipart to server
                 self.view.makeToastActivity(message: "Uploading")
-                ImageVideoRouter.currentUserUploadVideo(videoData: videoData) { (result, error) in
+                ImageVideoRouter.uploadVideo(videoData: videoData) { (result, error) in
                     if (error == nil) {
                         let percent = result as! Double
                         

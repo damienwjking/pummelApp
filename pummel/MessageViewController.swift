@@ -449,7 +449,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             
             UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let userInfo = result as! NSDictionary
                         cell?.setupData(leadDictionay: userInfo)
@@ -490,132 +490,132 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func clickOnRowMessage(indexPath: NSIndexPath) {
-        let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
-        ABAddressBookRequestAccessWithCompletion(addressBookRef) {
-            (granted: Bool, error: CFError!) in
-            DispatchQueue.main.async() {
-                if granted == false {
-                    //TODO: show message not enable contact
-                } else {
-                    self.saveIndexPath = indexPath
-                    self.listMessageTB.deselectRow(at: indexPath as IndexPath, animated: false)
-                    let cell = self.horizontalTableView.cellForRow(at: indexPath as IndexPath) as! HorizontalCell
-                    
-                    if (cell.imageV.image != nil) {
-                        self.view.makeToastActivity(message: "Loading")
-                        
-                        let userNumber = self.arrayListLead[indexPath.row]["userId"] as! Double
-                        let targetUserId = String(format:"%0.f", userNumber)
-                        
-                        UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
-                            self.view.hideToastActivity()
-                            
-                            if (error == nil) {
-                                let userInfo = result as! NSDictionary
-                                
-                                let firstName = userInfo.object(forKey: kFirstname) as? String
-                                let lastName = userInfo.object(forKey: kLastName) as? String
-                                
-                                var fullName = firstName
-                                if (lastName != nil && lastName?.isEmpty == false) {
-                                    fullName = String(format: "%@ %@", firstName!, lastName!)
-                                }
-                                
-                                var phoneNumber = userInfo.object(forKey: kMobile) as? String
-                                if phoneNumber == nil {
-                                    phoneNumber = ""
-                                }
-                                
-                                var emailString = userInfo.object(forKey: kEmail) as? String
-                                if emailString == nil {
-                                    emailString = ""
-                                }
-                                
-                                var facebookURL = userInfo.object(forKey: kFacebookUrl) as? String
-                                if facebookURL == nil {
-                                    facebookURL = ""
-                                }
-                                
-                                var twitterURL = userInfo.object(forKey: kTwitterUrl) as? String
-                                if twitterURL == nil {
-                                    twitterURL = ""
-                                }
-                                
-                                var DOBString = (userInfo.object(forKey: kDob) as? String)
-                                if twitterURL == nil {
-                                    twitterURL = "1990-01-01"
-                                } else {
-                                    DOBString = DOBString?.substring(to: (DOBString?.index((DOBString?.startIndex)!, offsetBy: 10))!)
-                                }
-                                
-                                let newContact = CNMutableContact()
-                                
-                                newContact.givenName = firstName!
-                                if (lastName != nil && lastName?.isEmpty == false) {
-                                    newContact.middleName = lastName!
-                                }
-                                
-                                if let image = cell.imageV.image,
-                                    let data = UIImagePNGRepresentation(image) {
-                                    newContact.imageData = data
-                                }
-                                
-                                let phone = CNLabeledValue(label: CNLabelWork, value:CNPhoneNumber(stringValue: phoneNumber!))
-                                newContact.phoneNumbers = [phone]
-                                let email = CNLabeledValue(label: CNLabelWork, value:emailString!)
-                                newContact.emailAddresses = [email]
-                                
-                                let facebookProfile = CNLabeledValue(label: "Facebook", value: CNSocialProfile(urlString: facebookURL, username: fullName, userIdentifier: fullName, service: CNSocialProfileServiceFacebook))
-                                
-                                let twitterProfile = CNLabeledValue(label: "Twitter", value: CNSocialProfile(urlString: twitterURL, username: fullName, userIdentifier: fullName, service: CNSocialProfileServiceTwitter))
-                                
-                                newContact.socialProfiles = [facebookProfile, twitterProfile]
-                                
-                                let DOBArray = DOBString?.components(separatedBy: "-")
-                                if (DOBArray?.count == 3) {
-                                    let birthday = NSDateComponents()
-                                    birthday.year = Int(DOBArray![0])!
-                                    birthday.month = Int(DOBArray![1])!
-                                    birthday.day = Int(DOBArray![2])!
-                                    newContact.birthday = birthday as DateComponents
-                                }
-                                
-                                
-                                let alert = UIAlertController(title: pmmNotice, message: "", preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { _ in }))
-                                
-                                let request = CNSaveRequest()
-                                request.add(newContact, toContainerWithIdentifier: nil)
-                                do {
-                                    let store = CNContactStore()
-                                    
-                                    let contacts = try store.unifiedContactsMatchingPredicate(CNContact.predicateForContactsMatchingName(fullName!), keysToFetch:[CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey])
-                                    
-                                    if (contacts.count == 0) {
-                                        try store.executeSaveRequest(request)
-                                    } else {
-                                        alert.message = contactExist
-                                        self.present(alert, animated: true, completion: nil)
-                                    }
-                                    
-                                    
-                                } catch let error{
-                                    print(error)
-                                    
-                                    alert.message = pleaseDoItAgain
-                                    self.present(alert, animated: true, completion: nil)
-                                }
-                            } else {
-                                print("Request failed with error: \(String(describing: error))")
-                            }
-                        }).fetchdata()
-                    }
-                }
-            }
-        }
+//        let addressBookRef: ABAddressBook = ABAddressBookCreateWithOptions(nil, nil).takeRetainedValue()
+//        ABAddressBookRequestAccessWithCompletion(addressBookRef) {
+//            (granted: Bool, error: CFError!) in
+//            DispatchQueue.main.async() {
+//                if granted == false {
+//                    //TODO: show message not enable contact
+//                } else {
+//                    self.saveIndexPath = indexPath
+//                    self.listMessageTB.deselectRow(at: indexPath as IndexPath, animated: false)
+//                    let cell = self.horizontalTableView.cellForRow(at: indexPath as IndexPath) as! HorizontalCell
+//                    
+//                    if (cell.imageV.image != nil) {
+//                        self.view.makeToastActivity(message: "Loading")
+//                        
+//                        let userNumber = self.arrayListLead[indexPath.row]["userId"] as! Double
+//                        let targetUserId = String(format:"%0.f", userNumber)
+//                        
+//                        UserRouter.getUserInfo(userID: targetUserId, completed: { (result, error) in
+//                            self.view.hideToastActivity()
+//                            
+//                            if (error == nil) {
+//                                let userInfo = result as! NSDictionary
+//                                
+//                                let firstName = userInfo.object(forKey: kFirstname) as? String
+//                                let lastName = userInfo.object(forKey: kLastName) as? String
+//                                
+//                                var fullName = firstName
+//                                if (lastName != nil && lastName?.isEmpty == false) {
+//                                    fullName = String(format: "%@ %@", firstName!, lastName!)
+//                                }
+//                                
+//                                var phoneNumber = userInfo.object(forKey: kMobile) as? String
+//                                if phoneNumber == nil {
+//                                    phoneNumber = ""
+//                                }
+//                                
+//                                var emailString = userInfo.object(forKey: kEmail) as? String
+//                                if emailString == nil {
+//                                    emailString = ""
+//                                }
+//                                
+//                                var facebookURL = userInfo.object(forKey: kFacebookUrl) as? String
+//                                if facebookURL == nil {
+//                                    facebookURL = ""
+//                                }
+//                                
+//                                var twitterURL = userInfo.object(forKey: kTwitterUrl) as? String
+//                                if twitterURL == nil {
+//                                    twitterURL = ""
+//                                }
+//                                
+//                                var DOBString = (userInfo.object(forKey: kDob) as? String)
+//                                if twitterURL == nil {
+//                                    twitterURL = "1990-01-01"
+//                                } else {
+//                                    DOBString = DOBString?.substring(to: (DOBString?.index((DOBString?.startIndex)!, offsetBy: 10))!)
+//                                }
+//                                
+//                                let newContact = CNMutableContact()
+//                                
+//                                newContact.givenName = firstName!
+//                                if (lastName != nil && lastName?.isEmpty == false) {
+//                                    newContact.middleName = lastName!
+//                                }
+//                                
+//                                if let image = cell.imageV.image,
+//                                    let data = UIImagePNGRepresentation(image) {
+//                                    newContact.imageData = data
+//                                }
+//                                
+//                                let phone = CNLabeledValue(label: CNLabelWork, value:CNPhoneNumber(stringValue: phoneNumber!))
+//                                newContact.phoneNumbers = [phone]
+//                                let email = CNLabeledValue(label: CNLabelWork, value:emailString!)
+//                                newContact.emailAddresses = [email]
+//                                
+//                                let facebookProfile = CNLabeledValue(label: "Facebook", value: CNSocialProfile(urlString: facebookURL, username: fullName, userIdentifier: fullName, service: CNSocialProfileServiceFacebook))
+//                                
+//                                let twitterProfile = CNLabeledValue(label: "Twitter", value: CNSocialProfile(urlString: twitterURL, username: fullName, userIdentifier: fullName, service: CNSocialProfileServiceTwitter))
+//                                
+//                                newContact.socialProfiles = [facebookProfile, twitterProfile]
+//                                
+//                                let DOBArray = DOBString?.components(separatedBy: "-")
+//                                if (DOBArray?.count == 3) {
+//                                    let birthday = NSDateComponents()
+//                                    birthday.year = Int(DOBArray![0])!
+//                                    birthday.month = Int(DOBArray![1])!
+//                                    birthday.day = Int(DOBArray![2])!
+//                                    newContact.birthday = birthday as DateComponents
+//                                }
+//                                
+//                                
+//                                let alert = UIAlertController(title: pmmNotice, message: "", preferredStyle: .alert)
+//                                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { _ in }))
+//                                
+//                                let request = CNSaveRequest()
+//                                request.add(newContact, toContainerWithIdentifier: nil)
+//                                do {
+//                                    let store = CNContactStore()
+//                                    
+//                                    let contacts = try store.unifiedContacts(matching: CNContact.predicateForContacts(matchingName: fullName!), keysToFetch:[CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
+//                                    
+//                                    if (contacts.count == 0) {
+//                                        try store.execute(request)
+//                                    } else {
+//                                        alert.message = contactExist
+//                                        self.present(alert, animated: true, completion: nil)
+//                                    }
+//                                    
+//                                    
+//                                } catch let error{
+//                                    print(error)
+//                                    
+//                                    alert.message = pleaseDoItAgain
+//                                    self.present(alert, animated: true, completion: nil)
+//                                }
+//                            } else {
+//                                print("Request failed with error: \(String(describing: error))")
+//                            }
+//                        }).fetchdata()
+//                    }
+//                }
+//            }
+//        }
     }
     
-    func tableView(_ tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell , forRowAt indexPath: IndexPath) {
         if (indexPath.row == self.arrayMessages.count - 1 && tableView == self.listMessageTB) {
             self.getMessage()
         }
@@ -629,7 +629,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -637,7 +637,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         
         if (tableView == listMessageTB) {
             // Check new message here
-            self.clickOnConnectionImage(indexPath: indexPath)
+            self.clickOnConnectionImage(indexPath: indexPath as NSIndexPath)
             
             properties = ["Name": "Navigation Click", "Label":"Add Contact"]
         } else {
@@ -663,7 +663,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         let targetUserId = String(format:"%0.f", (lead[kUserId]! as AnyObject).doubleValue)
                         
                         self.view.makeToastActivity()
-                        UserRouter.setCurrentLead(requestID: userID, completed: { (result, error) in
+                        UserRouter.setCurrentLead(requestID: targetUserId, completed: { (result, error) in
                             self.view.hideToastActivity()
                             
                             let isChangeSuccess = result as! Bool
@@ -682,7 +682,6 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         UserRouter.getCurrentUserInfo(completed: { (result, error) in
                             if (error == nil) {
                                 let currentInfo = result as! NSDictionary
-                                let currentMail = currentInfo[kEmail] as! String
                                 let coachFirstName = currentInfo[kFirstname] as! String
                                 let userFirstName = userInfo[kFirstname] as! String
                                 
@@ -708,8 +707,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         let urlString = "tel:///" + phoneNumber!
                         
                         let tellURL = NSURL(string: urlString)
-                        if (UIApplication.shared.canOpenURL(tellURL!)) {
-                            UIApplication.shared.openURL(tellURL!)
+                        if (UIApplication.shared.canOpenURL(tellURL! as URL)) {
+                            UIApplication.shared.openURL(tellURL! as URL)
                         }
                     }
                     

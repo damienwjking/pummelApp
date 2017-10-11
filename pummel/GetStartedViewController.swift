@@ -46,8 +46,8 @@ class GetStartedViewController: UIViewController {
             let urlString = defaults.object(forKey: k_PM_URL_LAST_COOKIE)
             let url = NSURL(string: urlString as! String)
             let headerFields = defaults.object(forKey: k_PM_HEADER_FILEDS) as! [String : String]
-            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: url!)
-            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: url!, mainDocumentURL: nil)
+            let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url! as URL)
+            Alamofire.SessionManager.default.session.configuration.httpCookieStorage?.setCookies(cookies, for: url! as URL, mainDocumentURL: nil)
             performSegue(withIdentifier: "showClientWithoutLogin", sender: nil)
         } else {
             performSegue(withIdentifier: "toSignin", sender: nil)
@@ -57,7 +57,7 @@ class GetStartedViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.signinNotification), name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.signinNotification), name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
     }
     
     func signinNotification() {
@@ -66,16 +66,16 @@ class GetStartedViewController: UIViewController {
         let userDefaults = UserDefaults.standard
         let moveScreenType = userDefaults.object(forKey: k_PM_MOVE_SCREEN) as! String
         if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_LOGIN {
-            userdefaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
+            userDefaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             userDefaults.synchronize()
             
-            self.gotSignin(UIButton()) // UIButton : to call function
+            self.gotSignin(sender: UIButton()) // UIButton : to call function
         }
     }
     
     // Button Action
     @IBAction func gotSignin(sender:UIButton!) {
-        NotificationCenter.default.removeObserver(self, name: k_PM_MOVE_SCREEN_NOTIFICATION, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
         
         let defaults = UserDefaults.standard
         if (defaults.object(forKey: k_PM_IS_LOGINED) == nil) {
@@ -84,8 +84,8 @@ class GetStartedViewController: UIViewController {
             let urlString = defaults.object(forKey: k_PM_URL_LAST_COOKIE)
             let url = NSURL(string: urlString as! String)
             let headerFields = defaults.object(forKey: k_PM_HEADER_FILEDS) as! [String : String]
-            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: url!)
-            Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: url!, mainDocumentURL: nil)
+            let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url! as URL)
+            Alamofire.SessionManager.default.session.configuration.httpCookieStorage?.setCookies(cookies, for: url! as URL, mainDocumentURL: nil)
             performSegue(withIdentifier: "showClientWithoutLogin", sender: nil)
         } else {
             performSegue(withIdentifier: "toSignin", sender: nil)
@@ -99,7 +99,7 @@ class GetStartedViewController: UIViewController {
         } else if(segue.identifier == "showClientWithoutLogin") {
             // Send token
             let application = UIApplication.shared
-            let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
         }

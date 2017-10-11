@@ -34,13 +34,13 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIView
         // get the duration of the animation
         // DON'T just type '0.5s' -- the reason why won't make sense until the next post
         // but for now it's important to just follow this approach
-        let duration = self.transitionDuration(transitionContext: transitionContext)
+        let duration = self.transitionDuration(using: transitionContext)
         
         // perform the animation!
         // for this example, just slid both fromView and toView to the left at the same time
         // meaning fromView is pushed off the screen and toView slides into view
         // we also use the block animation usingSpringWithDamping for a little bounce
-        UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+        UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.8, options: UIViewAnimationOptions.curveEaseIn, animations: {
             
             fromView.transform = offScreenLeft
             toView.transform = CGAffineTransform.identity

@@ -481,7 +481,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                         if visibleCell == true {
                             DispatchQueue.main.async(execute: {
                                 cell.avatarBT.setBackgroundImage(imageRes, for: .normal)
@@ -512,7 +512,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             
             ImageVideoRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
                 if (error == nil) {
-                    let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                    let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     
                     if (isUpdateCell) {
                         let imageRes = result as! UIImage
@@ -538,7 +538,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
             let isCoach = result as! Bool
-            let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+            let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
             
             if (isUpdateCell) {
                 cell.isUserInteractionEnabled = true
@@ -570,7 +570,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
             if (error == nil) {
-                let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                 
                 if (isUpdateCell) {
                     DispatchQueue.main.async(execute: {

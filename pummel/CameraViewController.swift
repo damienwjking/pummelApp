@@ -401,7 +401,7 @@ class CameraViewController: UIViewController {
             
             // Insert activity indicator
             self.view.makeToastActivity(message: "Uploading")
-            ImageVideoRouter.currentUserUploadVideo(videoData: videoData as Data) { (result, error) in
+            ImageVideoRouter.uploadVideo(videoData: videoData as Data) { (result, error) in
                 let isUploadSuccess = result as! Double
                 
                 self.view.hideToastActivity()

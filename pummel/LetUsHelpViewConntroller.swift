@@ -250,7 +250,7 @@ class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
         if (segue.identifier == "searching")
         {
             let destimation = segue.destination as! SearchingViewController
-            destimation.tagIdsArray = tagIdsArray.objectEnumerator().allObjects as? [String]! as! NSArray
+            destimation.tagIdsArray = tagIdsArray.objectEnumerator().allObjects as NSArray
             if (self.genderResultTF.text ==  kMALEU) {
                 destimation.gender = kMale
             } else if (self.genderResultTF.text ==  kFemaleU) {

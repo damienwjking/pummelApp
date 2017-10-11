@@ -49,7 +49,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LeadAddedCollectionViewCell", forIndexPath: indexPath) as! LeadAddedCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeadAddedCollectionViewCell", for: indexPath) as! LeadAddedCollectionViewCell
 
         ImageVideoRouter.getUserAvatar(userID: self.idUser, sizeString: widthHeight160) { (result, error) in
             if (error == nil) {

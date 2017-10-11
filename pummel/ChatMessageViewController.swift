@@ -11,16 +11,17 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate {
+class ChatMessageViewController : BaseViewController {
     var nameChatUser : String!
     
-    @IBOutlet var textBox: RSKGrowingTextView!
+    @IBOutlet weak var chatTextView: UITextView!
     @IBOutlet var backButton: UIButton!
     @IBOutlet var chatTB: UITableView!
     @IBOutlet var cursorView: UIView!
     @IBOutlet var leftMarginLeftChatCT: NSLayoutConstraint!
     @IBOutlet var chatTBDistantCT: NSLayoutConstraint!
     @IBOutlet var avatarTextBox: UIImageView!
+    @IBOutlet weak var chatTextViewHeightConstraint: NSLayoutConstraint!
     
     var typeCoach : Bool = false
     var coachName: String!
@@ -48,9 +49,6 @@ class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate
         self.navigationController!.navigationBar.isTranslucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.setNavigationTitle()
-       
-        self.textBox.font = .pmmMonReg13()
-        self.textBox.delegate = self
 
         self.navigationItem.hidesBackButton = true;
         
@@ -73,14 +71,14 @@ class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate
         
         self.getArrayChat()
         
-        self.textBox.text = self.preMessage
+        self.chatTextView.text = self.preMessage
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if (self.needOpenKeyboard == true) {
-            self.textBox.becomeFirstResponder()
+            self.chatTextView.becomeFirstResponder()
         }
     }
     
@@ -101,7 +99,7 @@ class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate
     }
     
     func handleTap(recognizer: UITapGestureRecognizer) {
-        self.textBox.resignFirstResponder()
+        self.chatTextView.resignFirstResponder()
         self.view.frame.origin.y = 64
         self.cursorView.isHidden = false
         self.avatarTextBox.isHidden = true
@@ -156,23 +154,11 @@ class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate
     
     func keyboardWillHide(notification: NSNotification) {
         self.view.frame.origin.y = 64
-        if (self.textBox.text == "") {
+        if (self.chatTextView.text == "") {
             self.cursorView.isHidden = false
             self.avatarTextBox.isHidden = true
             self.leftMarginLeftChatCT.constant = 15
         }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        self.sendMessage(addEmptyMessage: true)
-        return true
-    }
-    
-    func textViewDidBeginEditing(textView: UITextView) {
-        self.cursorView.isHidden = true
-        self.avatarTextBox.isHidden = false
-        self.leftMarginLeftChatCT.constant = 40
     }
     
     // MARK: Outlet function
@@ -199,9 +185,9 @@ class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate
     
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "sendPhoto") {
-            self.textBox.resignFirstResponder()
+            self.chatTextView.resignFirstResponder()
             let destinationVC = segue.destination as! SendPhotoViewController
-            destinationVC.messageId = self.messageId! as NSString
+            destinationVC.messageId = self.messageId
             destinationVC.typeCoach = self.typeCoach
             destinationVC.coachId = self.coachId
             destinationVC.userIdTarget = self.userIdTarget! as NSString
@@ -209,7 +195,7 @@ class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate
     }
     
     func sendMessage(addEmptyMessage:Bool) {
-        let values = (self.typeCoach == true) ? coachId : self.userIdTarget
+        let values = (self.typeCoach == true) ? self.coachId : self.userIdTarget
         
         MessageRouter.createConversationWithUser(userID: values!) { (result, error) in
             if (error == nil) {
@@ -232,20 +218,20 @@ class ChatMessageViewController : BaseViewController, RSKGrowingTextViewDelegate
     }
     
     func addMessageToExistConverstation(){
-        MessageRouter.sendMessage(conversationID: self.messageId, text: self.textBox.text) { (result, error) in
+        MessageRouter.sendMessage(conversationID: self.messageId, text: self.chatTextView.text, imageData: Data()) { (result, error) in
             self.isSending = false
             
             let isSendMessageSuccess = result as! Bool
             if (isSendMessageSuccess == true) {
                 self.getArrayChat()
-                self.textBox.text = ""
-                self.textBox.resignFirstResponder()
+                self.chatTextView.text = ""
+                self.chatTextView.resignFirstResponder()
             }
         }.fetchdata()
     }
     
     @IBAction func clickOnSendButton() {
-        if !(self.textBox.text == "" && self.isSending == false) {
+        if !(self.chatTextView.text == "" && self.isSending == false) {
             self.isSending = true
             if (self.messageId != nil) {
                 self.addMessageToExistConverstation()
@@ -306,7 +292,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         DispatchQueue.main.async(execute: {
                             cell.avatarIMV.image = imageRes
@@ -350,7 +336,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
@@ -363,7 +349,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                                     if (error == nil) {
                                         let imageRes = result as! UIImage
                                         
-                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                         if visibleCell == true {
                                             DispatchQueue.main.async(execute: {
                                                 cell.avatarIMV.image = imageRes
@@ -398,7 +384,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                 if (imageURLString?.isEmpty == false) {
                     ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
                         if (error == nil) {
-                            let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                            let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                             if visibleCell == true {
                                 let imageRes = result as! UIImage
                                 cell.photoIMW.image = imageRes
@@ -414,7 +400,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                 
                 UserRouter.getUserInfo(userID: userID, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let userInfo = result as! NSDictionary
                             
@@ -425,7 +411,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                             if (imageURLString?.isEmpty == false) {
                                 ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight120, completed: { (result, error) in
                                     if (error == nil) {
-                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                         if visibleCell == true {
                                             let imageRes = result as! UIImage
                                             cell.avatarIMV.image = imageRes
@@ -474,3 +460,28 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
     }
 }
 
+// MARK: - UITextViewDelegate, UITextFieldDelegate
+extension ChatMessageViewController : UITextViewDelegate, UITextFieldDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        if (textView == self.chatTextView) {
+            var heightText = self.chatTextView.getHeightWithWidthFixed()
+            if (heightText > 100) {
+                heightText = 100
+            }
+            
+            self.chatTextViewHeightConstraint.constant = heightText
+        }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        self.cursorView.isHidden = true
+        self.avatarTextBox.isHidden = false
+        self.leftMarginLeftChatCT.constant = 40
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        self.sendMessage(addEmptyMessage: true)
+        return true
+    }
+}

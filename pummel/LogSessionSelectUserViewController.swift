@@ -163,7 +163,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
         // Get name and image
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
             if (error == nil) {
-                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                 if visibleCell == true {
                     if let userInfo = result as? NSDictionary {
                         let name = userInfo.object(forKey: kFirstname) as! String
@@ -173,7 +173,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                         
                         if (imageURLString?.isEmpty == false) {
                             ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
-                                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                                 if visibleCell == true {
                                     if (error == nil) {
                                         let imageRes = result as! UIImage

@@ -19,7 +19,7 @@ class FeedThirdPartTableViewCell: UITableViewCell {
         // Initialization code
         self.userCommentLB.font = UIFont.pmmMonLight13()
         self.contentCommentTV.font = UIFont.pmmMonLight16()
-        self.contentCommentTV.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonLight16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(int: 1)]
+        self.contentCommentTV.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonLight16(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor(), NSUnderlineStyleAttributeName: NSNumber(value: 1)]
     }
 
 }

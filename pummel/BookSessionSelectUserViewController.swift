@@ -187,7 +187,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var userInfo:NSDictionary!
         
         if indexPath.section == 0 {

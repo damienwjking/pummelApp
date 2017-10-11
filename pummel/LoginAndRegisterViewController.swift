@@ -94,7 +94,7 @@ class LoginAndRegisterViewController: UIViewController {
             self.imageData = UIImageJPEGRepresentation(noImage!, 0.5)! as NSData
         }
         
-        ImageVideoRouter.currentUserUploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: self.imageData as Data, textPost: "") { (result, error) in
+        ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: self.imageData as Data, textPost: "") { (result, error) in
             self.view.hideToastActivity()
             
             let isSuccess = result as! Bool

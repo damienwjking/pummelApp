@@ -38,27 +38,23 @@ class HorizontalCell: UITableViewCell {
     }
     
     func setupData(leadDictionay: NSDictionary) {
-        let userInfo = result as! NSDictionary
-        let name = userInfo.object(forKey: kFirstname) as! String
-        cell!.name.text = name.uppercased()
+        let name = leadDictionay.object(forKey: kFirstname) as! String
+        self.name.text = name.uppercased()
         
-        if (userInfo[kImageUrl] is NSNull == false) {
-            let imageURLString = userInfo[kImageUrl] as! String
+        if (leadDictionay[kImageUrl] is NSNull == false) {
+            let imageURLString = leadDictionay[kImageUrl] as! String
             ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
-                    if visibleCell == true {
-                        let imageRes = result as! UIImage
-                        cell!.imageV.image = imageRes
-                        cell!.addButton.isHidden = false
-                    }
+                    let imageRes = result as! UIImage
+                    self.imageV.image = imageRes
+                    self.addButton.isHidden = false
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         } else {
-            cell?.imageV.image = UIImage(named: "display-empty.jpg")
-            cell!.addButton.isHidden = false
+            self.imageV.image = UIImage(named: "display-empty.jpg")
+            self.addButton.isHidden = false
         }
     }
 }

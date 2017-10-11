@@ -58,8 +58,8 @@ class LogTableViewCell: UITableViewCell {
         
         if session.datetime?.isEmpty == false {
             let localDateTimeString = self.convertUTCTimeToLocalTime(dateTimeString: session.datetime!)
-            self.dateLB.text = self.convertDateTimeFromString(localDateTimeString)
-            self.timeLB.text = self.getHourFromString(localDateTimeString)
+            self.dateLB.text = self.convertDateTimeFromString(dateTimeString: localDateTimeString)
+            self.timeLB.text = self.getHourFromString(dateTimeString: localDateTimeString)
         } else {
             self.dateLB.text = ""
             self.timeLB.text = ""
@@ -99,7 +99,7 @@ class LogTableViewCell: UITableViewCell {
     func convertDateTimeFromString(dateTimeString: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        let date = dateFormatter.date(dateTimeString)
+        let date = dateFormatter.date(from: dateTimeString)
         
         let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = "EEE dd MMM"
@@ -112,25 +112,25 @@ class LogTableViewCell: UITableViewCell {
     func getHourFromString(dateTimeString: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        let date = dateFormatter.date(dateTimeString)
+        let date = dateFormatter.date(from: dateTimeString)
         
         let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = "ha"
-        newDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        newDateFormatter.timeZone = NSTimeZone.local
         let newDateString = newDateFormatter.string(from: date!).uppercased()
         
         return newDateString
     }
     
     func convertUTCTimeToLocalTime(dateTimeString: String) -> String {
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
-        dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+        dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
         let date = dateFormatter.date(from: dateTimeString)
         
-        let newDateFormatter = DateFormatter
+        let newDateFormatter = DateFormatter()
         newDateFormatter.dateFormat = kFullDateFormat
-        newDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        newDateFormatter.timeZone = NSTimeZone.local
         let newDateString = newDateFormatter.string(from: date!)
         
         return newDateString

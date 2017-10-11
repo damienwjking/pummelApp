@@ -15,7 +15,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     
     @IBOutlet weak var tbView: UITableView!
     var image:UIImage?
-    var tag:Tag?
+    var tag:TagModel?
     var textToPost = ""
     var dateToPost = ""
     var userIdSelected = ""
@@ -26,7 +26,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         super.viewDidLoad()
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(BookSessionViewController.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
         
         let nibName = UINib(nibName: "GroupLeadTableViewCell", bundle:nil)
         self.tbView.register(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")
@@ -50,7 +50,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
     }
     
     //MARK: TableView
-    func tableView(_ tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
     }
     

@@ -15,7 +15,8 @@ enum MessageRouter: URLRequestConvertible {
     case getDetailConversation(messageID: String, completed: CompletionBlock)
     case setOpenMessage(messageID: String, completed: CompletionBlock)
     case createConversationWithUser(userID: String, completed: CompletionBlock)
-    case sendMessage(conversationID: String, text: String, completed: CompletionBlock)
+    case sendMessage(conversationID: String, text: String, imageData: Data, completed: CompletionBlock)
+    case updateMessageDetail(messageID: String, param: [String : Any], completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
@@ -31,10 +32,25 @@ enum MessageRouter: URLRequestConvertible {
         case .createConversationWithUser(_, let completed):
             return completed
             
-        case .sendMessage(_, _, let completed):
+        case .sendMessage(_, _, _, let completed):
+            return completed
+            
+        case .updateMessageDetail(_, _, let completed):
             return completed
             
         }
+    }
+    
+    var imageData: Data {
+        switch self {
+        case .sendMessage(_, _, let imageData, _):
+            return imageData
+            
+        default:
+            break
+        }
+        
+        return Data()
     }
     
     var method: Alamofire.HTTPMethod {
@@ -53,6 +69,10 @@ enum MessageRouter: URLRequestConvertible {
             
         case .sendMessage:
             return .post
+            
+        case .updateMessageDetail:
+            return .put
+            
             
         }
     }
@@ -74,34 +94,43 @@ enum MessageRouter: URLRequestConvertible {
         case .createConversationWithUser:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/"
             
-        case .sendMessage(let messageID, _, _):
+        case .sendMessage(let messageID, _, _, _):
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/" + messageID + kPM_PARTH_MESSAGE_V2
+            
+        case .updateMessageDetail(let messageID, _, _):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/" + messageID
+            
             
         }
         
         return prefix
     }
     
-    var param: [String : Any]? {
+    var param: [String : AnyObject]? {
         let currentUserID = PMHelper.getCurrentID()
         
-        var param: [String : Any]? = [:]
+        var param: [String : AnyObject]? = [:]
         
         switch self {
 //        case .getConversationList(let offset):
             
         case .setOpenMessage(let messageID):
-            param?[kUserId] =  currentUserID
-            param?[kConversationId] =  messageID
+            param?[kUserId] =  currentUserID as AnyObject
+            param?[kConversationId] =  messageID as AnyObject
             
         case .createConversationWithUser(let userID, _):
-            param?[kUserId] = currentUserID
-            param?[kUserIds] = [userID]
+            param?[kUserId] = currentUserID as AnyObject
+            param?[kUserIds] = [userID]  as AnyObject
             
-        case .sendMessage(let messageID, let text, _):
-            param?[kConversationId] = messageID
-            param?[kText] = text
-            param?["file"] = "nodata".data(usingEncoding: String.Encoding.utf8)! as Any
+        case .sendMessage(let messageID, let text, _, _):
+            param?[kConversationId] = messageID as AnyObject
+            param?[kText] = text as AnyObject
+            param?["file"] = "nodata".data(using: String.Encoding.utf8)! as AnyObject
+            
+        case .updateMessageDetail(_, let parameter, _):
+            for (key, value) in parameter {
+                param?[key] = value as AnyObject
+            }
             
         default:
             break
@@ -232,8 +261,40 @@ enum MessageRouter: URLRequestConvertible {
             })
             
         case .sendMessage:
+            let type = imageJpeg
+            let filename = jpgeFile
+            Alamofire.upload(multipartFormData: { (multipartFormData) in
+                multipartFormData.append(self.imageData,
+                                         withName: "file",
+                                         fileName: filename,
+                                         mimeType: type)
+                
+                for (key, value) in self.param! {
+                    multipartFormData.append(value.data(using: String.Encoding.utf8.rawValue)!, withName: key)
+                }
+            }, to: self.path, encodingCompletion: { (encodingResult) in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload.responseJSON { response in
+                        print("PM: MessageRouter send_message")
+                        
+                        if response.response?.statusCode == 200 {
+                            self.comletedBlock(true, nil)
+                        } else if (response.response?.statusCode == 401) {
+                            PMHelper.showLogoutAlert()
+                        } else {
+                            let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                            self.comletedBlock(false, error)
+                        }
+                    }
+                case .failure(let error):
+                    self.comletedBlock(false, error as NSError)
+                }
+            })
+            
+        case .updateMessageDetail:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
-                print("PM: MessageRouter add_message")
+                print("PM: MessageRouter update_message")
                 
                 switch response.result {
                 case .success(_):
@@ -251,6 +312,8 @@ enum MessageRouter: URLRequestConvertible {
                     }
                 }
             })
+            
+            
             
         }
     }

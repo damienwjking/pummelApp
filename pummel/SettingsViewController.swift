@@ -340,13 +340,13 @@ class SettingsViewController: BaseViewController {
             
             self.view.hideToastActivity()
             
-            let outputString = NSString(data: data!, encoding:NSUTF8StringEncoding)
+            let outputString = NSString(data: data, encoding:String.Encoding.utf8)
             if ((outputString?.contains(find: kLogoutSuccess)) != nil) {
                 self.defaults.set(false, forKey: k_PM_IS_LOGINED)
                 self.defaults.set(false, forKey: k_PM_IS_COACH)
-                let storage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+                let storage = HTTPCookieStorage.shared
                 for cookie in storage.cookies! {
-                    Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.deleteCookie(cookie)
+                    Alamofire.SessionManager.default.session.configuration.httpCookieStorage?.deleteCookie(cookie)
                     storage.deleteCookie(cookie)
                 }
                 UserDefaults.standard.synchronize()

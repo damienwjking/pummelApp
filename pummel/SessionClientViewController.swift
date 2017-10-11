@@ -57,7 +57,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         
         self.addSessionBT.layer.cornerRadius = 5
         
-        self.selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], for: .Normal)
+        self.selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], for: .normal)
         
         if self.defaults.object(forKey: k_PM_IS_UP_COMING) == nil {
             self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
@@ -160,7 +160,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                 self.offset = self.offset + 20
                 self.getListSession()
                 
-                self.presentedDateUpdated(date: self.calendarView.presentedDate)
+                self.presentedDateUpdated(self.calendarView.presentedDate)
                 
                 self.updateLayout()
             }).fetchdata()
@@ -176,9 +176,9 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                 let lastOpen2 = session2.datetime
                 
                 if isUpcoming {
-                    return (lastOpen1!.compare(lastOpen2!) == ComparisonResult.OrderedAscending)
+                    return (lastOpen1!.compare(lastOpen2!) == ComparisonResult.orderedAscending)
                 } else {
-                    return (lastOpen1!.compare(lastOpen2!) == ComparisonResult.OrderedDescending)
+                    return (lastOpen1!.compare(lastOpen2!) == ComparisonResult.orderedDescending)
                 }
             }
         }
@@ -232,11 +232,11 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.performSegue(withIdentifier: "userSessionDetail", sender: session)
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAtIndexPath indexPath: IndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteRowAction = UITableViewRowAction(style: .default, title: "Delete") { (action, indexPath) in
             if indexPath.row < self.selectedSessionList.count {
                 let session = self.selectedSessionList[indexPath.row]
@@ -265,43 +265,47 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         return [deleteRowAction]
     }
     
-    func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         // Call to show editing action
     }
     
     // MARK: CVCalendarViewDelegate
     func presentationMode() -> CalendarMode {
-        return .MonthView
+        return .monthView
     }
     
     func firstWeekday() -> Weekday {
-        return .Sunday
+        return .sunday
     }
     
-    func presentedDateUpdated(date: Date) {
+    func presentedDateUpdated(_ date: CVDate) {
         self.calendarView.contentController.refreshPresentedMonth()
         
+        let yearValue = date.year
+        let monthValue = date.month
+        let dayValue = date.day
+        
         // update month label
-        let monthDateFormatter = DateFormatter
+        let monthDateFormatter = DateFormatter()
         monthDateFormatter.dateFormat = "yyyy M"
-        let dateString = String(format:"%ld %ld", date.year, date.month)
+        let dateString = String(format:"%ld %ld", yearValue, monthValue)
         let convertDate = monthDateFormatter.date(from: dateString)
         
-        let convertDateFormatter = DateFormatter
+        let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = "LLLL yyyy"
         self.monthLabel.text = convertDateFormatter.string(from: convertDate!)
         
         // update session list
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        dateFormatter.timeZone = NSTimeZone.local
         //let eventDateString = dateFormatter.string(from: date)
         
-        let calendarString = String(format:"%ld%ld%ld%ld%ld", date.year, date.month/10, date.month%10, date.day/10, date.day%10)
+        let calendarString = String(format:"%ld%ld%ld%ld%ld", yearValue, monthValue / 10, monthValue % 10, dayValue / 10, dayValue % 10)
         
-        let fullDateFormatter = DateFormatter
+        let fullDateFormatter = DateFormatter()
         fullDateFormatter.dateFormat = kFullDateFormat
-        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        fullDateFormatter.timeZone = NSTimeZone.local
         
         var i = 0
         self.selectedSessionList.removeAll()
@@ -310,14 +314,14 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             let sessionDate = fullDateFormatter.date(from: session.datetime!)
             let sessionDateString = dateFormatter.string(from: sessionDate!)
             
-            if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
+            if NSDate().compare(sessionDate!) == .orderedAscending && calendarString == sessionDateString {
                 self.selectedSessionList.append(session)
             }
             
             i = i + 1
         }
         
-        self.sortSession(true)
+        self.sortSession(isUpcoming: true)
         self.sessionTableView.reloadData()
     }
     
@@ -346,16 +350,16 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
-        let dateFormatter = DateFormatter
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        dateFormatter.timeZone = NSTimeZone.local
         //let eventDateString = dateFormatter.string(from: date)
         
         let calendarString = String(format:"%ld%ld%ld%ld%ld", dayView.date.year, dayView.date.month/10, dayView.date.month%10, dayView.date.day/10, dayView.date.day%10)
         
-        let fullDateFormatter = DateFormatter
+        let fullDateFormatter = DateFormatter()
         fullDateFormatter.dateFormat = kFullDateFormat
-        fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+        fullDateFormatter.timeZone = NSTimeZone.local
         
         var i = 0
         var showDotMarker = false
@@ -364,7 +368,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             let sessionDate = fullDateFormatter.date(from: session.datetime!)
             let sessionDateString = dateFormatter.string(from: sessionDate!)
             
-            if NSDate().compare(sessionDate!) == .OrderedAscending && calendarString == sessionDateString {
+            if NSDate().compare(sessionDate!) == .orderedAscending && calendarString == sessionDateString {
                 showDotMarker = true
                 break;
             }
@@ -438,9 +442,9 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
             self.noSessionContentLB.text = "Completed appointments from your coach will appear here as well"
             
             // Update session table
-            let fullDateFormatter = DateFormatter
+            let fullDateFormatter = DateFormatter()
             fullDateFormatter.dateFormat = kFullDateFormat
-            fullDateFormatter.timeZone = NSTimeZone.localTimeZone()
+            fullDateFormatter.timeZone = NSTimeZone.local
             
             var i = 0
             self.selectedSessionList.removeAll()
@@ -448,41 +452,41 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                 let session = self.sessionList[i]
                 let sessionDate = fullDateFormatter.date(from: session.datetime!)
                 
-                if NSDate().compare(sessionDate!) == .OrderedDescending {
+                if NSDate().compare(sessionDate!) == .orderedDescending {
                     self.selectedSessionList.append(session)
                 }
                 
                 i = i + 1
             }
             
-            self.sortSession(false)
+            self.sortSession(isUpcoming: false)
             self.sessionTableView.reloadData()
         }
     }
     
     // MARK: LogCellDelegate
     func LogCellClickAddCalendar(cell: LogTableViewCell) {
-        let indexPath = self.sessionTableView.indexPathForCell(cell)
+        let indexPath = self.sessionTableView.indexPath(for: cell)
         let session = self.sessionList[indexPath!.row]
         
         let eventStore : EKEventStore = EKEventStore()
         
         // 'EKEntityTypeReminder' or 'EKEntityTypeEvent'
         
-        eventStore.requestAccessToEntityType(.Event, completion: {
+        eventStore.requestAccess(to: .event, completion: {
             (granted, error) in
             
             if (granted) && (error == nil) {
                 let event:EKEvent = EKEvent(eventStore: eventStore)
                 
-                let dateFormatter = DateFormatter
+                let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = kFullDateFormat
-                dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+                dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")! as TimeZone
                 let startDate = dateFormatter.date(from: session.datetime!)
                 
                 let longTime = session.longtime > 0 ? session.longtime : 1
                 let calendar = NSCalendar.current
-                let endDate = calendar.dateByAddingUnit(.Minute, value: longTime, toDate: startDate!, options: [])
+                let endDate = calendar.date(byAdding: .minute, value: longTime, to: startDate!)
                 
                 
                 event.title = session.type!
@@ -492,7 +496,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
                 event.calendar = eventStore.defaultCalendarForNewEvents
                 
                 do {
-                    try eventStore.saveEvent(event, span: .FutureEvents, commit: true)
+                    try eventStore.save(event, span: .futureEvents, commit: true)
                     let alertController = UIAlertController(title: "", message: "This session has been added to your calendar", preferredStyle: .alert)
                     let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
                         // ...

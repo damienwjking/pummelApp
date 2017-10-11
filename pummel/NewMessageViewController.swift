@@ -64,7 +64,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     }
     
     @available(iOS 10.0, *)
-    func textFieldDidEndEditing(textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
         if (textField.text == "") {
             self.listUserTB.isHidden = false
             self.arrayListUserResult.removeAll()
@@ -91,55 +91,46 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
     func getListUserSearch() {
         if (self.isStopLoadSearch == false) {
             self.isLoading = true
-            var prefix = kPMAPISEARCHUSER
             let offset = self.arrayListUserResult.count
-            prefix.append(String(offset))
-            prefix.append("&character=")
-//            prefix.append(self.toUserTF.text!)
-            prefix.append(self.toUserTF.text!.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
+            let character = (self.toUserTF.text?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed))!
             
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let resultArrS = JSON as! [NSDictionary]
+            UserRouter.getSearhUserList(offset: offset, character: character, completed: { (result, error) in
+                if (error == nil) {
+                    self.isLoadingSearch = false
+                    
+                    let resultArrS = result as! [NSDictionary]
                     if (resultArrS.count == 0) {
-                        self.isLoadingSearch = false
                         self.isStopLoadSearch = true
                     } else {
                         self.arrayListUserResult += resultArrS
-                        self.isLoadingSearch = false
                         self.listUserSearchResultTB.reloadData()
                     }
-                case .Failure(let error):
+                } else {
                     print("Request failed with error: \(String(describing: error))")
-                    }
-            }
+                }
+            }).fetchdata()
         }
     }
     
     func getListUser() {
         if (self.isStopLoad == false) {
             self.isLoadingSearch = true
-            var prefix =
-
             let offset = self.arrayListUser.count
-            prefix.append(String(offset))
-            Alamofire.request(.GET, prefix)
-                .responseJSON { response in switch response.result {
-                case .Success(let JSON):
-                    let resultArr = JSON as! [NSDictionary]
+            UserRouter.getUserList(offset: offset, completed: { (result, error) in
+                if (error == nil) {
+                    self.isLoading = false
+                    
+                    let resultArr = result as! [NSDictionary]
                     if (resultArr.count == 0) {
-                        self.isLoading = false
                         self.isStopLoad = true
                     } else {
                         self.arrayListUser += resultArr
-                        self.isLoading = false
                         self.listUserTB.reloadData()
                     }
-                case .Failure(let error):
+                } else {
                     print("Request failed with error: \(String(describing: error))")
-                    }
-            }
+                }
+            }).fetchdata()
         }
     }
     
@@ -193,7 +184,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
             let idSender = String(format:"%0.f",(user.object(forKey: kId)! as AnyObject).doubleValue)
             ImageVideoRouter.getUserAvatar(userID: idSender, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
-                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                    let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let imageRes = result as! UIImage
                         DispatchQueue.main.async(execute: {
@@ -210,7 +201,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         }
     }
     
-    func tableView(_ tableView: UITableView, willDisplayCell cell: UITableViewCell , forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell , forRowAt indexPath: IndexPath) {
         if (tableView == listUserTB) {
             if (indexPath.row == self.arrayListUser.count - 1 && isLoading == false) {
                 offset += 10
@@ -223,7 +214,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         return (tableView == listUserTB) ? arrayListUser.count : arrayListUserResult.count
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath as IndexPath, animated: false)
         performSegue(withIdentifier: "chatMessage", sender: indexPath.row)
     }
@@ -246,6 +237,6 @@ extension String {
     }
     
     func containsIgnoringCase(find: String) -> Bool{
-        return self.range(of: find, options: NSString.CompareOptions.CaseInsensitiveSearch) != nil
+        return self.range(of: find, options: NSString.CompareOptions.caseInsensitive) != nil
     }
 }

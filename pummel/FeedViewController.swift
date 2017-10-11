@@ -268,7 +268,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
                 
                 ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeight120, completed: { (result, error) in
                     if (error == nil) {
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath as NSIndexPath)
+                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                         if visibleCell == true {
                             let imageRes = result as! UIImage
                             cell.avatarBT.setBackgroundImage(imageRes, for: .normal)

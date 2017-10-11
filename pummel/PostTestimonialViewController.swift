@@ -43,17 +43,17 @@ class PostTestimonialViewController: UIViewController {
 
         self.setupUI()
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.ratingTapped(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.ratingTapped(gesture:)))
         self.ratingStarView.addGestureRecognizer(tapGesture)
         
-        let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapGesture(_:)))
+        let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapGesture(gesture:)))
         self.backgroundImageView.addGestureRecognizer(backgroundTapGesture)
         
-        let contentViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.contentViewTapGesture(_:)))
+        let contentViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.contentViewTapGesture(gesture:)))
         self.contentView.addGestureRecognizer(contentViewTapGesture)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -204,7 +204,7 @@ class PostTestimonialViewController: UIViewController {
 
 // MARK: - UITextViewDelegate, UITextFieldDelegate
 extension PostTestimonialViewController : UITextViewDelegate, UITextFieldDelegate {
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         let textViewText = NSString(string: textView.text)
         
         self.totalCharacterLabel.text = String(format: "%ld", textViewText.length)
@@ -230,7 +230,7 @@ extension PostTestimonialViewController : UITextViewDelegate, UITextFieldDelegat
         }
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         let newYOffset = self.scrollView.contentSize.height - self.scrollView.frame.size.height
         
         let offsetPoint = CGPoint(x: 0, y: newYOffset)
@@ -238,7 +238,7 @@ extension PostTestimonialViewController : UITextViewDelegate, UITextFieldDelegat
         self.scrollView.setContentOffset(offsetPoint, animated: true)
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         let offsetPoint = CGPoint(x: 0, y: 0)
         
         self.scrollView.setContentOffset(offsetPoint, animated: true)

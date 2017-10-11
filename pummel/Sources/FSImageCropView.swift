@@ -20,7 +20,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
             
             if image != nil {
                 
-                if !imageView.isDescendantOfView(self) {
+                if !imageView.isDescendant(of: self) {
                     self.imageView.alpha = 1.0
                     self.addSubview(imageView)
                 }
@@ -141,7 +141,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
 
     }
     
-    func scrollViewDidZoom(scrollView: UIScrollView) {
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
         
         let boundsSize = scrollView.bounds.size
         var contentsFrame = imageView.frame
@@ -166,7 +166,7 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
         
     }
     
-    func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         
         self.contentSize = CGSize(width: imageView.frame.width + 1, height: imageView.frame.height + 1)
     }

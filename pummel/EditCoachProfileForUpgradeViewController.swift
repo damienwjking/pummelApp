@@ -586,7 +586,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationMa
         let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
         
         let param = [kUserId:PMHelper.getCurrentID(),
-        "qualifications":qualStr, "achievements": achiveStr] as [String: Any]
+        "qualifications":qualStr ?? <#default value#>, "achievements": achiveStr ?? <#default value#>] as [String: Any]
         
         UserRouter.changeCurrentCoachInfo(posfix: "", param: param) { (result, error) in
             self.view.hideToastActivity()
@@ -814,7 +814,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationMa
             let year =  components.year
             let yearDOB = componentsDOB.year
             
-            if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
+            if (12 < (year! - yearDOB!)) && ((year! - yearDOB!) < 101)  {
                 return true
             } else {
                 return false
@@ -844,7 +844,7 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationMa
         let year =  components.year
         let yearDOB = componentsDOB.year
         
-        if (12 < (year! - yearDOB)) && ((year - yearDOB) < 101)  {
+        if (12 < (year! - yearDOB!)) && ((year! - yearDOB!) < 101)  {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
                                                                   attributes:[NSForegroundColorAttributeName: UIColor.black])
         } else {
@@ -924,12 +924,12 @@ extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kTagCell, for: indexPath) as! TagCell
-        self.configureCell(cell: cell, forIndexPath: indexPath)
+        self.configureCell(cell: cell, forIndexPath: indexPath as NSIndexPath)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
+        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath as NSIndexPath)
         var cellSize = self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
         
         if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
@@ -967,7 +967,7 @@ extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource,
 
 // MARK: - UITextFieldDelegate, UITextViewDelegate
 extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextViewDelegate {
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField.isEqual(self.genderContentTF) == true {
             self.didTapView()
             
@@ -987,7 +987,7 @@ extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextV
         } else if (textField == self.aboutContentTV) {
             self.emailContentTF.becomeFirstResponder()
         } else if (textField == self.emailContentTF) {
-            self.validateEmail()
+            let _ = self.validateEmail() // dissmiss warning
             
             self.mobileContentTF.becomeFirstResponder()
         } else if (textField == self.mobileContentTF) {
@@ -1009,21 +1009,19 @@ extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextV
         return true
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         textView.backgroundColor = UIColor.white
     }
 }
 
 // MARK: - UIImagePickerControllerDelegate
 extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-            activityView.center = self.view.center
-            activityView.startAnimating()
-            avatarIMW.addSubview(activityView)
-            avatarIMW.contentMode = .ScaleAspectFill
-            var imageData : NSData!
+            self.avatarIMW.makeToastActivity()
+            self.avatarIMW.contentMode = .scaleAspectFill
+            
+            var imageData : Data!
             let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
             var type : String!
             var filename: String!
@@ -1038,81 +1036,32 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
             }
             
             if (imageData == nil) {
-                DispatchQueue.main.async(execute: {
-                    activityView.stopAnimating()
-                    activityView.removeFromSuperview()
-                    //Your main thread code goes in here
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                })
-                
+                PMHelper.showNoticeAlert(message: pleaseChoosePngOrJpeg)
             } else {
-                var prefix = kPMAPIUSER
-                prefix.append(PMHelper.getCurrentID())
-                prefix.append(kPM_PATH_PHOTO_PROFILE)
-                
-                let parameters = [kUserId:PMHelper.getCurrentID(), kProfilePic: "1"]
-                
-                Alamofire.upload(
-                    .POST,
-                    prefix,
-                    multipartFormData: { multipartFormData in
-                        multipartFormData.appendBodyPart(data: imageData, name: "file",
-                            fileName:filename, mimeType:type)
-                        for (key, value) in parameters {
-                            multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                        }
-                    },
-                    encodingCompletion: { encodingResult in
-                        switch encodingResult {
-                            
-                        case .Success(let upload, _, _):
-                            upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                            }
-                            upload.validate()
-                            upload.responseJSON { response in
-                                if response.result.error != nil {
-                                    // failure
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                } else {
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                    self.avatarIMW.image = pickedImage
-                                    
-                                    self.haveAvatar = true
-                                }
-                            }
-                            
-                        case .Failure( _):
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
-                        }
+                ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData as Data, textPost: "", completed: { (result, error) in
+                    self.avatarIMW.hideToastActivity()
+                    
+                    let isUploadSuccess = result as! Bool
+                    if (isUploadSuccess == true) {
+                        self.avatarIMW.image = pickedImage
+                        
+                        self.haveAvatar = true
                     }
-                )
+                }).fetchdata()
             }
             
         }
         
-        
         dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
 }
 
 extension EditCoachProfileForUpgradeViewController: MFMailComposeViewControllerDelegate {
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: {
             self.navigationController?.popToRootViewController(animated: true)
         })
