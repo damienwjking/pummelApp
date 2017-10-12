@@ -125,7 +125,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         return arrayOld.count
     }
     
-    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
 
@@ -202,7 +202,7 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         self.performSegue(withIdentifier: "assignSessionToUser", sender: nil)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "assignSessionToUser" {
             let destination = segue.destination as! BookSessionToUserViewController
             destination.tag = self.tag

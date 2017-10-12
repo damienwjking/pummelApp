@@ -327,7 +327,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         mixpanel?.track("IOS.Profile", properties: properties)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "goEdit") {
             let destinationVC = segue.destination as! EditProfileViewController
             destinationVC.userInfo = self.coachDetail

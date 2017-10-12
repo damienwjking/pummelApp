@@ -233,7 +233,7 @@ class FeedViewController: BaseViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "goNewPost") {
             let destination = segue.destination as! NewCommentImageViewController
             destination.postId = String(format:"%0.f", (self.feedDetail[kId]! as AnyObject).doubleValue)
@@ -246,7 +246,7 @@ class FeedViewController: BaseViewController {
 
 // MARK: - UITableViewDelegate
 extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     

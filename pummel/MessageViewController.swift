@@ -189,19 +189,31 @@ class MessageViewController: BaseViewController {
                 if (error == nil) {
                     let leadList =  result as! [NSDictionary]
                     if leadList.count > 0 {
-                        self.getListLead()
-                        
-                        self.arrayListLead += leadList
-                        self.leadOffset = self.leadOffset + 10
-                        
-                        if (self.arrayListLead.count == 0) {
-                            self.horizontalViewHeightConstraint!.constant = 0
-                        } else {
-                            self.horizontalViewHeightConstraint!.constant = 180
+                        for newLead in leadList {
+                            let newLeadID = newLead[kUserId] as! Int
+                            
+                            var isExist = false
+                            for lead in self.arrayListLead {
+                                let leadID = lead[kUserId] as! Int
+                                
+                                if (newLeadID == leadID) {
+                                    isExist = true
+                                    break
+                                }
+                            }
+                            
+                            if (isExist == false) {
+                                self.arrayListLead.append(newLead)
+                            }
                         }
+                        
+                        self.leadOffset = self.leadOffset + 10
+                        self.getListLead()
                     } else {
                         self.isStopLoadLead = true
                     }
+                    
+                    self.horizontalTableView.reloadData()
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                     
@@ -275,7 +287,7 @@ class MessageViewController: BaseViewController {
                     message.targetUserID = String(format:"%0.f", (conversationTarget[kUserId]! as AnyObject).doubleValue)
                     
                     // Check New or old
-                    if (conversationMe[kLastOpenAt] is NSNull) {
+                    if (conversationMe[kLastOpenAt] == nil) {
                         message.isOpen = false
                     } else {
                         let dateFormatter = DateFormatter()
@@ -366,7 +378,7 @@ class MessageViewController: BaseViewController {
         }
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "checkChatMessage") {
             let destinationVC = segue.destination as! ChatMessageViewController
             
@@ -414,7 +426,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 return 96
             }
         } else {
-            let message = arrayMessages[indexPath.row]
+            let message = self.arrayMessages[indexPath.row]
             let text = message.text
             if (text == nil || text?.isEmpty == true || text == " ") {
                 return 0
@@ -428,7 +440,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (tableView == listMessageTB && arrayMessages.count != 0) {
+        if (tableView == listMessageTB) {
             let cell = tableView.dequeueReusableCell(withIdentifier: kMessageTableViewCell, for: indexPath) as! MessageTableViewCell
             let message = arrayMessages[indexPath.row]
             
@@ -623,8 +635,16 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tableView == self.listMessageTB) {
+            self.noMessageV.isHidden = (self.arrayMessages.count != 0)
+            
             return self.arrayMessages.count
         } else {
+            if (self.arrayListLead.count == 0) {
+                self.horizontalViewHeightConstraint!.constant = 0
+            } else {
+                self.horizontalViewHeightConstraint!.constant = 180
+            }
+            
             return self.arrayListLead.count
         }
     }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 
 class LogSessionSelectUserViewController: BaseViewController {
     
@@ -89,7 +88,7 @@ class LogSessionSelectUserViewController: BaseViewController {
         self.performSegue(withIdentifier: "goLogSessionDetail", sender: nil)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goLogSessionDetail" {
             let destination = segue.destination as! LogSessionClientDetailViewController
             destination.tag = self.tag!
@@ -100,8 +99,7 @@ class LogSessionSelectUserViewController: BaseViewController {
 
 // MARK: - UITableViewDelegate
 extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
     
@@ -201,7 +199,7 @@ extension LogSessionSelectUserViewController: UITableViewDelegate, UITableViewDa
                 cell.imgAvatar.layer.borderWidth = 3
                 cell.imgAvatar.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
             }
-        }.fetchdata()
+            }.fetchdata()
         
         return cell
     }

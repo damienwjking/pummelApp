@@ -167,7 +167,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.openWebview()
     }
 
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == kClickURLLink) {
             let destination = segue.destination as! FeedWebViewController
             destination.URL = sender as? NSURL

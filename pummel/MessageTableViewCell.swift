@@ -56,7 +56,7 @@ class MessageTableViewCell: UITableViewCell {
         }
         
         // User image
-        let userImage = message.messageImage
+        let userImage = message.targetUserImage
         if userImage != nil {
             self.avatarIMV.image = userImage
         } else {

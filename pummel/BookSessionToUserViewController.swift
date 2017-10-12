@@ -226,7 +226,7 @@ class BookSessionToUserViewController: BaseViewController {
         self.present(fusuma, animated: true, completion: nil)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "gotoShare" {
             let destination = segue.destination as! BookSessionShareViewController
             destination.tag = self.tag

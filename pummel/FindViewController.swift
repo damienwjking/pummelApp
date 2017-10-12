@@ -281,12 +281,13 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         }
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "letUsHelp") {
             // Do nothing
         } else if (segue.identifier == kGoConnect) {
             let destination = segue.destination as! ConnectViewController
-            let totalDetail = arrayResult[sender.tag]
+            let view = sender as! UIView
+            let totalDetail = arrayResult[view.tag]
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
         } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destination as! ChatMessageViewController

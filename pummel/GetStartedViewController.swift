@@ -90,7 +90,7 @@ class GetStartedViewController: UIViewController {
         }
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "toSignin") {
             let destinationVC = segue.destination as! LoginAndRegisterViewController
             destinationVC.isShowLogin = true

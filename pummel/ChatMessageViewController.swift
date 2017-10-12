@@ -48,7 +48,6 @@ class ChatMessageViewController : BaseViewController {
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationController!.navigationBar.isTranslucent = false;
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        self.setNavigationTitle()
 
         self.navigationItem.hidesBackButton = true;
         
@@ -69,8 +68,6 @@ class ChatMessageViewController : BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
-        self.getArrayChat()
-        
         self.chatTextView.text = self.preMessage
     }
     
@@ -80,6 +77,9 @@ class ChatMessageViewController : BaseViewController {
         if (self.needOpenKeyboard == true) {
             self.chatTextView.becomeFirstResponder()
         }
+        
+        self.getArrayChat()
+        self.setNavigationTitle()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -183,7 +183,7 @@ class ChatMessageViewController : BaseViewController {
         mixpanel?.track("IOS.ChatMessage", properties: properties)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "sendPhoto") {
             self.chatTextView.resignFirstResponder()
             let destinationVC = segue.destination as! SendPhotoViewController

@@ -219,7 +219,7 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         performSegue(withIdentifier: "chatMessage", sender: indexPath.row)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "chatMessage") {
             let destinationVC = segue.destination as! ChatMessageViewController
             let indexPathRow = sender as! Int

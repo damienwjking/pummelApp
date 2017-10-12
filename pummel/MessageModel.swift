@@ -18,21 +18,18 @@ class MessageModel: NSObject {
     var messageID: String?
     var text: String?
     var isOpen = false
+    var createdAt: String?
     var updateAt: String?
-    
-    var messageImage: UIImage? // For cache image // TODO : need check to delete
-    
-    
     
     var tagType: Int?
     
     var selected = false
     
     func parseData(data: NSDictionary) {
-//        self.username = data.object(forKey: "id") as? String
-//        self.messageID = data.object(forKey: "status") as? String
-//        self.text = data.object(forKey: "userId") as? String
-//        self.tagType = data.object(forKey: "text") as? Int
+        let messageID = data[kId] as! Int
+        self.messageID = String(format:"%ld", messageID)
+        self.createdAt = data[kCreateAt] as? String
+        self.updateAt = data[kUpdateAt] as? String
     }
     
     func same(message: MessageModel) -> Bool {

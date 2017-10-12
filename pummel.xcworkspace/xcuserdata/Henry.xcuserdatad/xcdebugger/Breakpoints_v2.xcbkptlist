@@ -26,22 +26,6 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/Services/SessionRouter.swift"
-            timestampString = "529299014.349648"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
-            landmarkName = "fetchdata()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/Services/SessionRouter.swift"
             timestampString = "529299023.545288"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -74,12 +58,12 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529488468.306814"
+                  timestampString = "529497917.293371"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "256"
                   endingLineNumber = "256"
-                  offsetFromSymbolStart = "6138">
+                  offsetFromSymbolStart = "6427">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -89,7 +73,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529488468.309323"
+                  timestampString = "529497917.299162"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "257"
@@ -122,12 +106,12 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529488468.337141"
+                  timestampString = "529497917.316529"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "277"
                   endingLineNumber = "277"
-                  offsetFromSymbolStart = "8942">
+                  offsetFromSymbolStart = "9231">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -137,7 +121,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529488468.341749"
+                  timestampString = "529497917.326637"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "278"
@@ -170,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/MessageViewController.swift"
-            timestampString = "529408501.886314"
+            timestampString = "529496057.61085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "494"
-            endingLineNumber = "494"
+            startingLineNumber = "506"
+            endingLineNumber = "506"
             landmarkName = "clickOnRowMessage(indexPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -233,44 +217,44 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "pummel/Services/UserRouter.swift"
-            timestampString = "529488195.18123"
+            filePath = "pummel/FeedDiscountView.swift"
+            timestampString = "529489019.995771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "456"
-            endingLineNumber = "456"
-            landmarkName = "fetchdata()"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Pummel.UserRouter.fetchdata () -&gt; ()"
+                  symbolName = "Pummel.FeedDiscountView.collectionView (__ObjC.UICollectionView, cellForItemAt : Foundation.IndexPath) -&gt; __ObjC.UICollectionViewCell"
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/UserRouter.swift"
-                  timestampString = "529488468.37485"
+                  urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/FeedDiscountView.swift"
+                  timestampString = "529497917.378746"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "456"
-                  endingLineNumber = "456"
-                  offsetFromSymbolStart = "8183">
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "279">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Pummel.UserRouter.(fetchdata () -&gt; ()).(closure #4)"
+                  symbolName = "Pummel.FeedDiscountView.collectionView (__ObjC.UICollectionView, cellForItemAt : Foundation.IndexPath) -&gt; __ObjC.UICollectionViewCell"
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/UserRouter.swift"
-                  timestampString = "529488468.377827"
+                  urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/FeedDiscountView.swift"
+                  timestampString = "529497917.381643"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "457"
-                  endingLineNumber = "457"
-                  offsetFromSymbolStart = "526">
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "1949">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -281,13 +265,61 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "pummel/Services/UserRouter.swift"
-            timestampString = "529488549.462872"
+            filePath = "pummel/MessageViewController.swift"
+            timestampString = "529493475.616519"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "457"
-            endingLineNumber = "457"
-            landmarkName = "fetchdata()"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
+            landmarkName = "startConversation(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/ChatMessageViewController.swift"
+            timestampString = "529494154.705376"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "sendMessage(addEmptyMessage:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/Model.swift/TagModel.swift"
+            timestampString = "529497882.963537"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
+            landmarkName = "parseData(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/LogSessionClientDetailViewController.swift"
+            timestampString = "529497904.954609"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "viewWillAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

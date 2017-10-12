@@ -377,11 +377,12 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         return false
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == kGoConnect) {
             let destination = segue.destination as! ConnectViewController
-            let tag = sender.tag
-            let feed = arrayFeeds[tag!] 
+            let view = sender as! UIView
+            let tag = view.tag
+            let feed = arrayFeeds[tag] 
             let currentFeedDetail = feed[kUser] as! NSDictionary
             destination.coachDetail = currentFeedDetail
             destination.isFromFeed = true
@@ -409,7 +410,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             }
         } else if (segue.identifier == "goToFeedDetail") {
             let destination = segue.destination as! FeedViewController
-            let feed = arrayFeeds[sender.tag] 
+            let view = sender as! UIView
+            let feed = arrayFeeds[view.tag]
             destination.feedDetail = feed
         } else if (segue.identifier == kClickURLLink) {
             let destination = segue.destination as! FeedWebViewController
@@ -425,7 +427,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
 
 // MARK: - UITableViewDelegate
 extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSectionsIntableView(_ tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     

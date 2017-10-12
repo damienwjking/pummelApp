@@ -684,7 +684,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
 //        }
 //    }
 //    
-//    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        if (segue.identifier == kGoConnect) {
 //            let destimation = segue.destination as! ConnectViewController
 //            destimation.coachDetail = self.coachDetail

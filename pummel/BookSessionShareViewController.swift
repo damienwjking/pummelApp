@@ -99,7 +99,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
         self.tbView.reloadData()
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "inviteContactUser") {
             let destination = segue.destination as! ContactUserViewController
             

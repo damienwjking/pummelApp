@@ -277,7 +277,7 @@ class DetailSessionViewController: BaseViewController {
     }
     
     // MARK: Segue
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "editLogSession" {
             let destinationVC = segue.destination as! LogSessionClientViewController
             destinationVC.editSession = sender as! SessionModel

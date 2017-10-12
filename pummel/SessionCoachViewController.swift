@@ -306,7 +306,7 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
     }
     
     // MARK: Segue
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "coachSessionDetail" {
             let destination = segue.destination as! DetailSessionViewController
             destination.session = sender as! SessionModel

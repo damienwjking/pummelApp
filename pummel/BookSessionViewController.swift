@@ -79,7 +79,7 @@ class BookSessionViewController: BaseViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "selectUser" {
             let destination = segue.destination as! BookSessionSelectUserViewController
             destination.tag = tagSelect

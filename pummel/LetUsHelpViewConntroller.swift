@@ -246,7 +246,7 @@ class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
         self.present(alertController, animated: true) { }
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "searching")
         {
             let destimation = segue.destination as! SearchingViewController

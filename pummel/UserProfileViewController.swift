@@ -151,7 +151,7 @@ class UserProfileViewController: BaseViewController  {
 //        performSegue(withIdentifier: "goEdit", sender: nil)
 //    }
 //    
-//    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        if (segue.identifier == "goEdit")
 //        {
 //            let destinationVC = segue.destination as! EditProfileViewController

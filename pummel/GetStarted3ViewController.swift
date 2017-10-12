@@ -36,7 +36,7 @@ class GetStarted3ViewController: UIViewController {
         performSegue(withIdentifier: "toRegister", sender: nil)
     }
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "toRegister")
         {
             let destinationVC = segue.destination as! LoginAndRegisterViewController
