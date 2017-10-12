@@ -20,12 +20,12 @@ PODS:
   - FirebaseCore (4.0.7):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseInstanceID (2.0.3)
-  - GoogleToolboxForMac/Defines (2.1.1)
-  - GoogleToolboxForMac/NSData+zlib (2.1.1):
-    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - FirebaseInstanceID (2.0.4)
+  - GoogleToolboxForMac/Defines (2.1.3)
+  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
   - LocationPicker (1.0.3)
-  - Mixpanel (3.2.1)
+  - Mixpanel (3.2.2)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
@@ -55,14 +55,14 @@ SPEC CHECKSUMS:
   Firebase: 9548cae14d69718add12d75a5b312893f7ef89c7
   FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
   FirebaseCore: 9a6cc1e3eaf75905390f9220596ad4fd8f92faee
-  FirebaseInstanceID: a4fc702b5a026f7322964376047f1a3f1f7cc6ff
-  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
+  FirebaseInstanceID: 70c2b877e9338971b2429ea5a4293df6961aa44e
+  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   LocationPicker: d54d59c9d14d52496e3e8167e67f13440d6bcf1e
-  Mixpanel: a88b1db0a1e381f9d37a1756aa37a9c670d22f61
+  Mixpanel: 524c6880d45d71faa7d0dcd10f52221c99b6d820
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   SwiftMessages: 09cea3336e3fb63c3578983c8aac65acaa6d884a
   UIColor+FlatColors: 6c699df7a575281794c688c64cee6c44fd1f93b4
 
-PODFILE CHECKSUM: 93524de3ad12ebb97a7cbb2ee11ece019260d73f
+PODFILE CHECKSUM: da59dc29495fb19cb4b72e0ccb6e2934e1775df3
 
 COCOAPODS: 1.2.1

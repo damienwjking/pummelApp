@@ -42,7 +42,7 @@ class TextViewAutoHeight: UITextView {
     private func setUpInit() {
         for constraint in self.constraints {
             if constraint.firstAttribute == NSLayoutAttribute.height {
-                self.heightConstraint = constraint as? NSLayoutConstraint;
+                self.heightConstraint = constraint
                 break;
             }
         }

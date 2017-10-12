@@ -582,11 +582,20 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationMa
         var prefix = kPMAPICOACH
         prefix.append(PMHelper.getCurrentID())
         
-        let qualStr = (self.qualificationContentTF.text == nil) ? "" : qualificationContentTF.text
-        let achiveStr = (self.achivementContentTF.text == nil) ? "" : achivementContentTF.text
+        var qualStr =  ""
+        if (self.qualificationContentTF.text != nil) {
+            qualStr = qualificationContentTF.text
+
+        }
+        
+        var achiveStr = ""
+        if (self.achivementContentTF.text != nil) {
+            achiveStr = achivementContentTF.text
+        }
         
         let param = [kUserId:PMHelper.getCurrentID(),
-        "qualifications":qualStr ?? <#default value#>, "achievements": achiveStr ?? <#default value#>] as [String: Any]
+        kQualification:qualStr,
+        kAchievement: achiveStr] as [String: Any]
         
         UserRouter.changeCurrentCoachInfo(posfix: "", param: param) { (result, error) in
             self.view.hideToastActivity()
@@ -1023,15 +1032,9 @@ extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDeleg
             
             var imageData : Data!
             let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
-            var type : String!
-            var filename: String!
             if assetPath.absoluteString!.hasSuffix("JPG") {
-                type = imageJpeg
-                filename = jpgeFile
                 imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
             } else if assetPath.absoluteString!.hasSuffix("PNG") {
-                type = imagePng
-                filename = pngFile
                 imageData = UIImagePNGRepresentation(pickedImage)
             }
             

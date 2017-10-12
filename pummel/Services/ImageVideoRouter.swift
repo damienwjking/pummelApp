@@ -21,7 +21,7 @@ enum ImageVideoRouter: URLRequestConvertible {
     case getImage(imageURLString: String, sizeString: String, completed: CompletionBlock)
     case uploadPhoto(posfix: String, imageData: Data, textPost: String, completed: CompletionBlock)
     case uploadVideo(videoData: Data, completed: CompletionBlock)
-    
+    case uploadPostImage(postID: String, imageData: Data, text: String, completed: CompletionBlock)
     
     var imageSize: String {
         switch self {
@@ -39,6 +39,9 @@ enum ImageVideoRouter: URLRequestConvertible {
             return ""
         case .uploadVideo:
             return ""
+        case .uploadPostImage:
+            return ""
+            
             
         }
     }
@@ -51,6 +54,10 @@ enum ImageVideoRouter: URLRequestConvertible {
             
         case .uploadVideo(let videoData, _):
             data = videoData
+            
+        case .uploadPostImage(_, let imageData, _, _):
+            data = imageData
+            
             
         default:
             break
@@ -75,6 +82,9 @@ enum ImageVideoRouter: URLRequestConvertible {
             return completed
         case .uploadVideo(_, let completed):
             return completed
+        case .uploadPostImage(_, _, _, let completed):
+            return completed
+            
             
         }
     }
@@ -94,6 +104,8 @@ enum ImageVideoRouter: URLRequestConvertible {
         case .uploadPhoto:
             return .post
         case .uploadVideo:
+            return .post
+        case .uploadPostImage:
             return .post
             
         }
@@ -132,6 +144,9 @@ enum ImageVideoRouter: URLRequestConvertible {
             
         case .uploadVideo:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_VIDEO
+         
+        case .uploadPostImage(let postID, _, _, _):
+            prefix = kPMAPI_POST + postID + kPM_PATH_COMMENT
             
         }
         
@@ -154,6 +169,10 @@ enum ImageVideoRouter: URLRequestConvertible {
         case .uploadVideo:
             param[kUserId] = currentUserID as AnyObject
             param[kProfileVideo] = "1" as AnyObject
+            
+        case .uploadPostImage(let postID, _, let text, _):
+            param[kPostId] = postID as AnyObject
+            param[kText] = text as AnyObject
             
         default:
             break
@@ -306,6 +325,36 @@ enum ImageVideoRouter: URLRequestConvertible {
                     self.comletedBlock(false as AnyObject, error)
                 }
             })
+            
+        case .uploadPostImage:
+            let filename = jpgeFile
+            let type = imageJpeg
+            
+            Alamofire.upload(multipartFormData: { (multipartFormData) in
+                multipartFormData.append(self.fileData!, withName: "file", fileName: filename, mimeType: type)
+                
+                for (key, value) in self.param! {
+                    multipartFormData.append(value.data(using: String.Encoding.utf8.rawValue)!, withName: key)
+                }
+            }, to: self.path, encodingCompletion: { (encodingResult) in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload.responseJSON { response in
+                        if (response.result.isSuccess) {
+                            self.comletedBlock(true as AnyObject, nil)
+                        } else {
+                            let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                            self.comletedBlock(false as AnyObject, error)
+                        }
+                    }
+                    
+                case .failure(_):
+                    let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                    self.comletedBlock(false as AnyObject, error)
+                }
+            })
+            
+            
         }
     }
     

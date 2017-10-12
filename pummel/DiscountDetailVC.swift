@@ -56,8 +56,8 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.lbFullText.text = ""
     }
     
-    func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.lightContent
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     override func viewWillAppear(_ animated: Bool) {

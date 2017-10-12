@@ -189,41 +189,40 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     //MARK: - PHPhotoLibraryChangeObserver
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-        
-        DispatchQueue.main.async() {
-            
-            let collectionChanges = changeInstance.changeDetails(for: self.images as! PHFetchResult<UIImage>)
-            if collectionChanges != nil {
-                
-                self.images = collectionChanges!.fetchResultAfterChanges
-                
-                let collectionView = self.collectionView!
-                
-                if !collectionChanges!.hasIncrementalChanges || collectionChanges!.hasMoves {
-                    
-                    collectionView.reloadData()
-                    
-                } else {
-                    
-                    collectionView.performBatchUpdates({
-                        let removedIndexes = collectionChanges!.removedIndexes
-                        if (removedIndexes?.count ?? 0) != 0 {
-                            collectionView.deleteItemsAtIndexPaths(removedIndexes!.aapl_indexPathsFromIndexesWithSection(0))
-                        }
-                        let insertedIndexes = collectionChanges!.insertedIndexes
-                        if (insertedIndexes?.count ?? 0) != 0 {
-                            collectionView.insertItemsAtIndexPaths(insertedIndexes!.aapl_indexPathsFromIndexesWithSection(0))
-                        }
-                        let changedIndexes = collectionChanges!.changedIndexes
-                        if (changedIndexes?.count ?? 0) != 0 {
-                            collectionView.reloadItemsAtIndexPaths(changedIndexes!.aapl_indexPathsFromIndexesWithSection(0))
-                        }
-                        }, completion: nil)
-                }
-                
-                self.resetCachedAssets()
-            }
-        }
+//        DispatchQueue.main.async() {
+//            
+//            let collectionChanges = changeInstance.changeDetails(for: self.images as! PHFetchResult<UIImage>)
+//            if collectionChanges != nil {
+//                
+//                self.images = collectionChanges!.fetchResultAfterChanges
+//                
+//                let collectionView = self.collectionView!
+//                
+//                if !collectionChanges!.hasIncrementalChanges || collectionChanges!.hasMoves {
+//                    
+//                    collectionView.reloadData()
+//                    
+//                } else {
+//                    
+//                    collectionView.performBatchUpdates({
+//                        let removedIndexes = collectionChanges!.removedIndexes
+//                        if (removedIndexes?.count ?? 0) != 0 {
+//                            collectionView.deleteItemsAtIndexPaths(removedIndexes!.aapl_indexPathsFromIndexesWithSection(0))
+//                        }
+//                        let insertedIndexes = collectionChanges!.insertedIndexes
+//                        if (insertedIndexes?.count ?? 0) != 0 {
+//                            collectionView.insertItemsAtIndexPaths(insertedIndexes!.aapl_indexPathsFromIndexesWithSection(0))
+//                        }
+//                        let changedIndexes = collectionChanges!.changedIndexes
+//                        if (changedIndexes?.count ?? 0) != 0 {
+//                            collectionView.reloadItemsAtIndexPaths(changedIndexes!.aapl_indexPathsFromIndexesWithSection(0))
+//                        }
+//                        }, completion: nil)
+//                }
+//                
+//                self.resetCachedAssets()
+//            }
+//        }
     }
 }
 

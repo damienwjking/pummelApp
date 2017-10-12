@@ -121,84 +121,25 @@ class NewCommentImageViewController: BaseViewController {
     
     func post() {
         if (isPosting == false) {
-            self.isPosting = true
             self.commentPhotoTV.resignFirstResponder()
-            var prefix = kPMAPI_POST
-            prefix.append(postId)
-            prefix.append("/comments")
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-            activityView.center = self.view.center
-            activityView.startAnimating()
-            var imageData : NSData!
-            let type : String!
-            let filename : String!
-            imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2)! as NSData : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as NSData
-            type = imageJpeg
-            filename = jpgeFile
-            let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
-            var parameters = [String:AnyObject]()
-            parameters = [kPostId:postId as AnyObject, kText: textPost as AnyObject]
             
-            Alamofire.upload(
-                .POST,
-                prefix,
-                multipartFormData: { multipartFormData in
-                    multipartFormData.appendBodyPart(data: imageData, name: "file",
-                                                     fileName:filename, mimeType:type)
-                    for (key, value) in parameters {
-                        multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                    }
-                },
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                    case .Success(let upload, _, _):
-                        self.isPosting = false
-                        upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                            dispatch_async(dispatch_get_main_queue()) {
-//                                let percent = (Float(totalBytesWritten) / Float(totalBytesExpectedToWrite))
-                            }
-                        }
-                        upload.validate()
-                        upload.responseJSON { response in
-                            
-                            if response.result.error != nil {
-                                activityView.stopAnimating()
-                                activityView.removeFromSuperview()
-                                let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                                
-                                
-                                let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                                    // ...
-                                }
-                                alertController.addAction(OKAction)
-                                self.present(alertController, animated: true) {
-                                    // ...
-                                }
-                            } else {
-                                activityView.stopAnimating()
-                                activityView.removeFromSuperview()
-                                self.navigationController?.popViewController(animated: true)
-                            }
-                        }
-                        
-                    case .Failure(_):
-                        self.isPosting = false
-                        activityView.stopAnimating()
-                        activityView.removeFromSuperview()
-                        
-                        let alertController = UIAlertController(title: pmmNotice, message: pleaseDoItAgain, preferredStyle: .alert)
-                        
-                        
-                        let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                            // ...
-                        }
-                        alertController.addAction(OKAction)
-                        self.present(alertController, animated: true) {
-                            // ...
-                        }
-                    }
+            let imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)
+            
+            let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "..." : commentPhotoTV.text
+            
+            self.isPosting = true
+            self.view.makeToastActivity()
+            ImageVideoRouter.uploadPostImage(postID: self.postId, imageData: imageData!, text: textPost!, completed: { (result, error) in
+                self.isPosting = false
+                self.view.hideToastActivity()
+                
+                let isUploadSuccess = result as! Bool
+                if (isUploadSuccess == true) {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    PMHelper.showDoAgainAlert()
                 }
-            )
+            }).fetchdata()
         }
     }
     

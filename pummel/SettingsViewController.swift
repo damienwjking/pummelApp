@@ -334,13 +334,13 @@ class SettingsViewController: BaseViewController {
     func logOut() {
         self.view.makeToastActivity(message: "Logging Out")
         UserDefaults.standard.set(0, forKey: "MESSAGE_BADGE_VALUE")
-        Alamofire.request(kPMAPI_LOGOUT, method: .delete).responseData { (data) in
+        Alamofire.request(kPMAPI_LOGOUT, method: .delete).responseData { (response) in
             let loginManager: FBSDKLoginManager = FBSDKLoginManager()
             loginManager.logOut()
             
             self.view.hideToastActivity()
             
-            let outputString = NSString(data: data, encoding:String.Encoding.utf8)
+            let outputString = String(data: response.result.value!, encoding: .utf8)
             if ((outputString?.contains(find: kLogoutSuccess)) != nil) {
                 self.defaults.set(false, forKey: k_PM_IS_LOGINED)
                 self.defaults.set(false, forKey: k_PM_IS_COACH)
