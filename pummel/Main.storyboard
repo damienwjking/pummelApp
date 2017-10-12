@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Lv3-q7-S3Q">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Lv3-q7-S3Q">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -117,6 +117,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="vIz-rC-3bn"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
                                 <state key="normal" title="I'M NEW">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -139,6 +140,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="CEz-pW-qds"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
                                 <state key="normal" title="SIGN IN">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -153,7 +155,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="gotSignin:" destination="gvo-rD-sYg" eventType="touchUpInside" id="ePe-CD-fBC"/>
+                                    <action selector="signInButtonClicked:" destination="gvo-rD-sYg" eventType="touchUpInside" id="dXs-ha-O6N"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -256,9 +258,9 @@
                     <connections>
                         <outlet property="backgroundV" destination="0By-A2-eel" id="AbJ-UQ-rXn"/>
                         <outlet property="betterTogetherTF" destination="PGb-t0-pqv" id="LZm-8n-SdK"/>
-                        <outlet property="getStartedBT" destination="ify-AG-SAg" id="bht-y2-zxb"/>
                         <outlet property="imNewBT" destination="nuA-t5-YnW" id="YTl-Ot-rlT"/>
                         <outlet property="reachYourGoalsTF" destination="Xc7-cd-nLp" id="Gxd-tu-DBu"/>
+                        <outlet property="signInButton" destination="ify-AG-SAg" id="5sd-Zh-dFj"/>
                         <segue destination="syr-Jg-EOc" kind="show" identifier="toSignin" id="kai-YL-km3"/>
                         <segue destination="ITn-La-CW1" kind="show" identifier="showClientWithoutLogin" id="yEe-tR-VD7"/>
                     </connections>
@@ -993,7 +995,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Lv3-q7-S3Q" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ezd-zK-8GQ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="ezd-zK-8GQ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1159,7 +1161,7 @@
                                 </variation>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Profile Photo (Optional)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qmr-zs-WX2">
-                                <rect key="frame" x="117" y="180" width="141" height="12"/>
+                                <rect key="frame" x="117.5" y="180" width="141" height="12"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="12" id="NIi-6q-tj9"/>
                                 </constraints>
@@ -1200,7 +1202,7 @@
                                             </mask>
                                         </variation>
                                         <connections>
-                                            <action selector="loginAction:" destination="syr-Jg-EOc" eventType="touchUpInside" id="2q6-YV-OQW"/>
+                                            <action selector="loginButtonClicked:" destination="syr-Jg-EOc" eventType="touchUpInside" id="cGq-ht-lu9"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JSh-z5-Jfd">
@@ -1210,7 +1212,7 @@
                                             <color key="titleColor" red="0.98431372549999996" green="0.98431372549999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="signupAction:" destination="syr-Jg-EOc" eventType="touchUpInside" id="LXv-WH-5Gv"/>
+                                            <action selector="signupButtonClicked:" destination="syr-Jg-EOc" eventType="touchUpInside" id="WUY-dd-MuX"/>
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZkP-P1-uee">
@@ -1389,6 +1391,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="kai-YL-km3"/>
-        <segue reference="eh9-yR-QNQ"/>
+        <segue reference="yEe-tR-VD7"/>
     </inferredMetricsTieBreakers>
 </document>

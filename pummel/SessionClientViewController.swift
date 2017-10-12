@@ -388,7 +388,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
     }
     
     // MARK: Outlet function
-    @IBAction func addSessionBTClicked(sender: AnyObject) {
+    @IBAction func addSessionBTClicked(_ sender: Any) {
         print("add session clicked")
         self.performSegue(withIdentifier: "userLogASession", sender: nil)
     }
@@ -398,7 +398,7 @@ class SessionClientViewController: BaseViewController, LogCellDelegate, UITableV
         self.performSegue(withIdentifier: "userLogASession", sender: nil)
     }
     
-    @IBAction func selecSegmentValueChanged(sender: AnyObject) {
+    @IBAction func selecSegmentValueChanged(_ sender: Any) {
         if self.selectSegment.selectedSegmentIndex == 0 {
             self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
         } else {

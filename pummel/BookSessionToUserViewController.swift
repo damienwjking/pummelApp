@@ -329,7 +329,7 @@ extension BookSessionToUserViewController : UITextViewDelegate {
 
 // MARK: - UIImagePickerControllerDelegate
 extension BookSessionToUserViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()

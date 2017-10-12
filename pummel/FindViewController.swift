@@ -365,7 +365,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         }
     }
     
-    @IBAction func horizontalViewClicked(sender: AnyObject) {
+    @IBAction func horizontalViewClicked(_ sender: Any) {
         // For expand coach view
         self.expandCollapseCoachView(isExpand: true)
     }

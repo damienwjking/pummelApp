@@ -204,7 +204,7 @@ enum ImageVideoRouter: URLRequestConvertible {
     func fetchdata() {
         switch self {
         case .getCurrentUserAvatar, .getUserAvatar, .getCoachAvatar, .getBusinessLogo:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: ImageRouter 1")
                 switch response.result {
                 case .success(let JSON):

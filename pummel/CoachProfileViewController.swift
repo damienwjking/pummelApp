@@ -644,7 +644,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
 //        }
 //    }
 //    
-//    @IBAction func phoneBTClicked(sender: AnyObject) {
+//    @IBAction func phoneBTClicked(_ sender: Any) {
 //    
 //    }
 //    
@@ -943,7 +943,7 @@ class CoachProfileViewController: BaseViewController, UITextViewDelegate {
 //        //        }
 //    }
 //    
-//    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+//    @IBAction func playVideoButtonClicked(_ sender: Any) {
 //        if (self.videoPlayer != nil) {
 //            self.isVideoPlaying = !self.isVideoPlaying
 //            self.videoPlayerSetPlay(self.isVideoPlaying)

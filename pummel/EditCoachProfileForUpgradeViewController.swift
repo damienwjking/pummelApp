@@ -1025,7 +1025,7 @@ extension EditCoachProfileForUpgradeViewController: UITextFieldDelegate, UITextV
 
 // MARK: - UIImagePickerControllerDelegate
 extension EditCoachProfileForUpgradeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             self.avatarIMW.makeToastActivity()
             self.avatarIMW.contentMode = .scaleAspectFill

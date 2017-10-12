@@ -169,7 +169,7 @@ class MessageViewController: BaseViewController {
         self.getMessage()
     }
     
-    @IBAction func startConversation(sender: AnyObject) {
+    @IBAction func startConversation(_ sender: Any) {
         self.newMessage()
     }
     

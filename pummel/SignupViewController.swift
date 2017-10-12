@@ -36,12 +36,12 @@ class SignupViewController: UIViewController {
     var FBButton = FBSDKLoginButton()
     let defaults = UserDefaults.standard
     
-    @IBAction func termOfService(sender: AnyObject) {
+    @IBAction func termOfService(_ sender: Any) {
         let termOfServiceURL = NSURL(string: "http://pummel.fit/terms/")
         UIApplication.shared.openURL(termOfServiceURL! as URL)
     }
     
-    @IBAction func privacyPolicy(sender: AnyObject) {
+    @IBAction func privacyPolicy(_ sender: Any) {
         let privacyPolicyURL = NSURL(string: "http://pummel.fit/privacy/")
         UIApplication.shared.openURL(privacyPolicyURL! as URL)
     }
@@ -114,7 +114,7 @@ class SignupViewController: UIViewController {
         self.spaceViewHeightConstraint.constant = 0
     }
     
-    @IBAction func signupButtonClicked(sender: AnyObject) {
+    @IBAction func signupButtonClicked(_ sender: Any) {
         if (self.checkRuleInputData() == false) {
             let name = self.nameTF.text
             let userEmail = self.emailTF.text

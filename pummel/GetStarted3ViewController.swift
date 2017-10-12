@@ -32,7 +32,7 @@ class GetStarted3ViewController: UIViewController {
     }
 
     // Button Action
-    @IBAction func buttonAction(sender:UIButton!) {
+    @IBAction func buttonAction(_ sender: Any) {
         performSegue(withIdentifier: "toRegister", sender: nil)
     }
     
@@ -44,7 +44,7 @@ class GetStarted3ViewController: UIViewController {
         }
     }
 
-    @IBAction func backToFirstScreenTour(sender:UIButton!) {
+    @IBAction func backToFirstScreenTour(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
     

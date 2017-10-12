@@ -161,7 +161,7 @@ enum MessageRouter: URLRequestConvertible {
     func fetchdata() {
         switch self {
         case .getConversationList:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: MessageRouter get_conversation")
                 
                 switch response.result {
@@ -194,7 +194,7 @@ enum MessageRouter: URLRequestConvertible {
             })
             
         case .getDetailConversation:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: MessageRouter get_detail_conversation")
                 
                 switch response.result {

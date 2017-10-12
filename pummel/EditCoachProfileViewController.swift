@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import Mixpanel
 
-class EditCoachProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class EditCoachProfileViewController: BaseViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var avatarIMW: UIImageView!
@@ -635,9 +635,11 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
         
         self.present(alertController, animated: true) { }
     }
-    
-    // MARK: UIImagePickerControllerDelegate
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension EditCoachProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let mediType = info[UIImagePickerControllerMediaType] as! String
         
         if (mediType == "public.image") {
@@ -649,12 +651,12 @@ class EditCoachProfileViewController: BaseViewController, UIImagePickerControlle
                 
                 // TODO need check
                 if assetPath.absoluteString!.hasSuffix("JPG") {
-//                    type = imageJpeg
-//                    filename = jpgeFile
+                    //                    type = imageJpeg
+                    //                    filename = jpgeFile
                     imageData = UIImageJPEGRepresentation(pickedImage, 0.2)! as NSData
                 } else if assetPath.absoluteString!.hasSuffix("PNG") {
-//                    type = imagePng
-//                    filename = pngFile
+                    //                    type = imagePng
+                    //                    filename = pngFile
                     imageData = UIImagePNGRepresentation(pickedImage)! as NSData
                 }
                 

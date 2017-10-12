@@ -206,7 +206,7 @@ enum SessionRouter: URLRequestConvertible {
     func fetchdata() {
         switch self {
         case .getSessionList:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: SessionRouter get_session_list")
                 
                 switch response.result {
@@ -322,7 +322,7 @@ enum SessionRouter: URLRequestConvertible {
             })
 
         case .getGroupInfo:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: SessionRouter get_group_info")
                 
                 switch response.result {

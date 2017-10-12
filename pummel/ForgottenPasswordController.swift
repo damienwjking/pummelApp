@@ -80,7 +80,7 @@ class ForgottenPasswordController: UIViewController {
         return .lightContent
     }
     
-    @IBAction func buttonSweetWithSender(sender: AnyObject) {
+    @IBAction func buttonSweetWithSender(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
     

@@ -174,7 +174,7 @@ class ChatMessageViewController : BaseViewController {
         PMHelper.showCoachOrUserView(userID: self.userIdTarget, showTestimonial: false, isFromChat: true)
     }
     
-    @IBAction func goPhoto(sender:UIButton!) {
+    @IBAction func goPhoto(_ sender: Any) {
         performSegue(withIdentifier: "sendPhoto", sender: nil)
         
         // Tracker mixpanel

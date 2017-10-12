@@ -44,7 +44,7 @@ class LogTableViewCell: UITableViewCell {
         self.actionBT.titleLabel!.font = .pmmMonReg10()
     }
     
-    @IBAction func actionButtonClicked(sender: AnyObject) {
+    @IBAction func actionButtonClicked(_ sender: Any) {
         if self.isUpComingCell {
             // Add calendar action
             self.logCellDelegate?.LogCellClickAddCalendar!(cell: self)

@@ -925,7 +925,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    @IBAction func cameraButtonClicked(sender: AnyObject) {
+    @IBAction func cameraButtonClicked(_ sender: Any) {
         let selectVideoFromLibrary = { (action:UIAlertAction!) -> Void in
             self.imagePickerController.allowsEditing = false
             self.imagePickerController.sourceType = .photoLibrary
@@ -953,7 +953,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    @IBAction func testimonialInviteButtonClicked(sender: AnyObject) {
+    @IBAction func testimonialInviteButtonClicked(_ sender: Any) {
         let userID = self.coachDetail[kId] as? Int
         if (userID != nil) {
             let userIDString = String(format: "%ld", userID!)
@@ -1171,7 +1171,7 @@ extension ProfileViewController {
         self.convertVideoToMP4AndUploadToServer(videoURL: videoURL as URL)
     }
     
-    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+    @IBAction func playVideoButtonClicked(_ sender: Any) {
         if (self.videoPlayer != nil) {
             self.isVideoPlaying = !self.isVideoPlaying
             self.videoPlayerSetPlay(isPlay: self.isVideoPlaying)
@@ -1181,7 +1181,7 @@ extension ProfileViewController {
 
 // MARK: - UIImagePickerControllerDelegate
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let type = info[UIImagePickerControllerMediaType] as! String
         
         if (type == "public.movie") {

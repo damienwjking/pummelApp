@@ -194,7 +194,7 @@ enum FeedRouter: URLRequestConvertible {
         
         switch self {
         case .getListFeed:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: FeedRouter 1")
                 
                 switch response.result {
@@ -214,7 +214,7 @@ enum FeedRouter: URLRequestConvertible {
             })
             
         case .getAndCheckFeedLike:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: FeedRouter 2")
                 
                 switch response.result {

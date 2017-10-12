@@ -15,7 +15,7 @@ class GetStartedViewController: UIViewController {
     @IBOutlet var betterTogetherTF : UILabel!
     @IBOutlet var reachYourGoalsTF : UILabel!
     @IBOutlet var imNewBT : UIButton!
-    @IBOutlet var getStartedBT : UIButton!
+    @IBOutlet weak var signInButton: UIButton!
     @IBOutlet var backgroundV : UIView!
     @IBOutlet var mainTextDistantCT: NSLayoutConstraint!
     
@@ -28,16 +28,14 @@ class GetStartedViewController: UIViewController {
         self.betterTogetherTF.font = .pmmPlayFairReg42()
         self.reachYourGoalsTF.font = .pmmPlayFairReg15()
         
-        self.getStartedBT.layer.cornerRadius = 2
-        self.getStartedBT.layer.borderWidth = 0.5
-        self.getStartedBT.layer.borderColor = UIColor.white.cgColor
-        self.getStartedBT.titleLabel?.font = .pmmMonReg13()
+        self.signInButton.layer.cornerRadius = 2
+        self.signInButton.layer.borderWidth = 0.5
+        self.signInButton.layer.borderColor = UIColor.white.cgColor
         
         self.imNewBT.layer.cornerRadius = 2
         self.imNewBT.layer.borderWidth = 0.5
         self.imNewBT.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
         self.imNewBT.layer.backgroundColor = UIColor.pmmBrightOrangeColor().cgColor
-        self.imNewBT.titleLabel?.font = .pmmMonReg13()
         
         let defaults = UserDefaults.standard
         if (defaults.object(forKey: k_PM_IS_LOGINED) == nil) {
@@ -69,12 +67,12 @@ class GetStartedViewController: UIViewController {
             userDefaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
             userDefaults.synchronize()
             
-            self.gotSignin(sender: UIButton()) // UIButton : to call function
+            self.signInButton.sendActions(for: .touchUpInside)
         }
     }
     
     // Button Action
-    @IBAction func gotSignin(sender:UIButton!) {
+    @IBAction func signInButtonClicked(_ sender: Any) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: k_PM_MOVE_SCREEN_NOTIFICATION), object: nil)
         
         let defaults = UserDefaults.standard

@@ -116,12 +116,12 @@ class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
         }
     }
 
-    @IBAction func closeLetUsHelp(sender:UIButton!) {
+    @IBAction func closeLetUsHelp(_ sender: Any) {
         _ = self.presentingViewController?.childViewControllers[0] as! BaseTabBarController
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func goSearching(sender:UIButton!) {
+    @IBAction func goSearching(_ sender: Any) {
         if (CLLocationManager.locationServicesEnabled())
         {
             locationManager.requestWhenInUseAuthorization()

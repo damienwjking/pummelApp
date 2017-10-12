@@ -156,7 +156,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         self.isVideoPlaying = false
     }
     
-    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+    @IBAction func playVideoButtonClicked(_ sender: Any) {
         self.isVideoPlaying = !self.isVideoPlaying
         if (self.isVideoPlaying == true) {
             self.videoPlayer?.play()
@@ -175,7 +175,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         self.avatarBorderView.isHidden = self.isVideoPlaying
     }
     
-    @IBAction func moreInfoViewClicked(sender: AnyObject) {
+    @IBAction func moreInfoViewClicked(_ sender: Any) {
         if (self.delegate != nil) {
             self.delegate?.cardViewCellMoreInfoClicked(cell: self)
         }

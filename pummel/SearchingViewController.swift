@@ -62,7 +62,7 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         }
     }
     
-    @IBAction func closeSearching(sender:UIButton!) {
+    @IBAction func closeSearching(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     

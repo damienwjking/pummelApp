@@ -161,7 +161,7 @@ class PostTestimonialViewController: UIViewController {
         self.submitButton.layer.masksToBounds = true
     }
     
-    @IBAction func submitButtonClicked(sender: AnyObject) {
+    @IBAction func submitButtonClicked(_ sender: Any) {
         let location = self.currentLocationTextField.text
         let description = self.testimonialTextView.text
         let rating = (self.ratingStarViewWidthConstraint.constant / 100.0) * 5.0
@@ -175,7 +175,7 @@ class PostTestimonialViewController: UIViewController {
         }.fetchdata()
     }
     
-    @IBAction func cancelButtonClicked(sender: AnyObject) {
+    @IBAction func cancelButtonClicked(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     

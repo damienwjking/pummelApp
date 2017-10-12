@@ -15,7 +15,7 @@ class LoginAndRegisterViewController: UIViewController {
     
     var loginVC : SigninViewController = SigninViewController(nibName: "SigninViewController", bundle: nil)
     var signupVC : SignupViewController = SignupViewController(nibName: "SignupViewController", bundle: nil)
-    var isShowLogin : Bool!
+    var isShowLogin = true
     
     @IBOutlet var underLineView: UIView!
     @IBOutlet weak var underLineViewLeadingContraint: NSLayoutConstraint!
@@ -116,16 +116,16 @@ class LoginAndRegisterViewController: UIViewController {
         }.fetchdata()
     }
     
-    @IBAction func backButtonClicked(sender:UIButton!) {
+    @IBAction func backButtonClicked(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func loginAction(sender:UIButton!) {
+    @IBAction func loginButtonClicked(_ sender: Any) {
         self.isShowLogin = true
         self.updateLoginScreen()
     }
     
-    @IBAction func signupAction(sender:UIButton!) {
+    @IBAction func signupButtonClicked(_ sender: Any) {
         self.isShowLogin = false
         self.updateLoginScreen()
     }
@@ -216,7 +216,7 @@ class LoginAndRegisterViewController: UIViewController {
 }
 
 extension LoginAndRegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.profileIMV.contentMode = .scaleAspectFill
             self.profileIMV.image = pickedImage

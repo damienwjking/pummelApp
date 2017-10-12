@@ -84,7 +84,7 @@ enum NotificationRouter: URLRequestConvertible {
     func fetchdata() {
         switch self {
         case .getNotificationBadge:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: NotificationRouter 1")
                 
                 switch response.result {
@@ -104,7 +104,7 @@ enum NotificationRouter: URLRequestConvertible {
             })
             
         case .resetSBadge, .resetLBadge, .resetCBadge:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: NotificationRouter 2")
                 
                 if (response.response?.statusCode == 401) {

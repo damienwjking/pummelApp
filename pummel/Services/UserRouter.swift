@@ -386,7 +386,7 @@ enum UserRouter: URLRequestConvertible {
     func fetchdata() {
         switch self {
         case .getCurrentUserInfo, .getUserInfo, .getCoachInfo:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 1")
                 
                 switch response.result {
@@ -453,7 +453,7 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .checkCoachOfUser:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 4")
                 
                 if response.response?.statusCode == 200 {
@@ -516,7 +516,7 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getTestimonial:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 7")
                 
                 switch response.result {
@@ -563,7 +563,7 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getFollowCoach:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 9")
                 
                 switch response.result {
@@ -594,7 +594,7 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getUserTagList:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter User_Tag_List")
                 
                 switch response.result {
@@ -617,7 +617,7 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getPhotoList:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 11")
                 
                 switch response.result {
@@ -796,7 +796,7 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getLead:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter get_lead")
                 
                 switch response.result {
@@ -887,7 +887,7 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .getUserList:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter get_user_list")
                 
                 switch response.result {
@@ -939,7 +939,7 @@ enum UserRouter: URLRequestConvertible {
         let defaults = UserDefaults.standard
         
         // Save access token here
-        let JSON = NSKeyedUnarchiver.unarchiveObject(with: response.data!) as! NSDictionary
+        let JSON = response.result.value as! NSDictionary
         self.updateCookies(response: response)
         let currentId = String(format:"%0.f", (JSON.object(forKey: kUserId)! as AnyObject).doubleValue)
         defaults.set(true, forKey: k_PM_IS_LOGINED)

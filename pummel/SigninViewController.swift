@@ -88,11 +88,11 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
         self.spaceViewHeightConstraint.constant = 0
     }
     
-    @IBAction func forgotPasswordButtonClicked(sender: AnyObject) {
+    @IBAction func forgotPasswordButtonClicked(_ sender: Any) {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "FORGOTPASSWORDNOTIFICATION"), object: nil)
     }
     
-    @IBAction func signinButtonClicked(sender: AnyObject) {
+    @IBAction func signinButtonClicked(_ sender: Any) {
         let userEmail = self.emailTF.text!
         let userPassword = self.passwordTF.text!
         

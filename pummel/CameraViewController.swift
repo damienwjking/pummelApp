@@ -448,13 +448,13 @@ class CameraViewController: UIViewController {
     
     // MARK: - Outlet function
     
-    @IBAction func closeButtonClicked(sender: AnyObject) {
+    @IBAction func closeButtonClicked(_ sender: Any) {
         if (self.recordStatus != .uploading) {
             self.dismiss(animated: true, completion: nil)
         }
     }
     
-    @IBAction func retakeButtonClicked(sender: AnyObject) {
+    @IBAction func retakeButtonClicked(_ sender: Any) {
         if (self.isRecordByCamera) {
             self.videoURL = nil
             
@@ -472,7 +472,7 @@ class CameraViewController: UIViewController {
         }
     }
     
-    @IBAction func playButtonClicked(sender: AnyObject) {
+    @IBAction func playButtonClicked(_ sender: Any) {
         let permission = self.checkPermissionDeviceInput()
         
         if (permission == true) {
@@ -501,7 +501,7 @@ class CameraViewController: UIViewController {
         }
     }
     
-    @IBAction func changeCameraButtonClicked(sender: AnyObject) {
+    @IBAction func changeCameraButtonClicked(_ sender: Any) {
         for deviceInput in self.cameraSession.inputs {
             if ((deviceInput as? AVCaptureDeviceInput) != nil) {
                 let input: AVCaptureDeviceInput = deviceInput as! AVCaptureDeviceInput
@@ -542,7 +542,7 @@ class CameraViewController: UIViewController {
         }
     }
     
-    @IBAction func playVideoButtonClicked(sender: AnyObject) {
+    @IBAction func playVideoButtonClicked(_ sender: Any) {
         self.isVideoPlaying = !self.isVideoPlaying
         self.videoPlayerSetPlay(isPlay: self.isVideoPlaying)
     }
@@ -559,7 +559,7 @@ class CameraViewController: UIViewController {
 }
 
 extension CameraViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
     }
 }

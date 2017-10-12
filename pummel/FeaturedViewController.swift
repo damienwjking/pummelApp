@@ -367,7 +367,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         cell.layer.borderColor = UIColor.clear.cgColor
     }
     
-    func goConnect(sender:UIButton!) {
+    func goConnect(_ sender: Any) {
         self.performSegue(withIdentifier: kGoConnect, sender: sender)
     }
     

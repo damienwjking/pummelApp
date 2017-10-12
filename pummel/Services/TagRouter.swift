@@ -108,7 +108,7 @@ enum TagRouter: URLRequestConvertible {
     func fetchdata() {
         switch self {
         case .getTagList:
-            Alamofire.request(self.URLRequest as! URLRequestConvertible).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: TagRouter get_all_tag")
                 
                 switch response.result {

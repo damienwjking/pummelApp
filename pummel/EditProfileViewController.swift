@@ -136,8 +136,8 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         self.changeAvatarIMW.isUserInteractionEnabled = true
         self.changeAvatarIMW.addGestureRecognizer(tapGestureRecognizer)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(EditProfileViewController.didTapView))
         self.tapView.addGestureRecognizer(tap)
@@ -233,9 +233,9 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
         
         if (self.userInfo[kDob] is NSNull == false) {
-            let stringDob = self.userInfo[kDob] as! String
+            let stringDob = self.userInfo[kDob]! as! String
 //            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
-            self.dobContentTF.text = stringDob.substring(to: stringDob.index(0, offsetBy: 10))
+//            self.dobContentTF.text = stringDob.substring(to: stringDob.index(0, offsetBy: 10))
         } else {
             self.dobContentTF.text = ""
         }
@@ -326,8 +326,9 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             
             self.view.makeToastActivity(message: "Saving")
             
-            let weightString = weightContentTF.text?.replacingOccurrences(of: " kgs", with: "")
-            let heightString = heightContentTF.text?.replacingOccurrences(of: " cms", with: "")
+            let weightString = weightContentTF.text!.replacingOccurrences(of: " kgs", with: "")
+            
+            let heightString = heightContentTF.text!.replacingOccurrences(of: " cms", with: "")
             
             var param = [kUserId:PMHelper.getCurrentID(),
                 kFirstname:firstname,
@@ -341,7 +342,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                 kTwitterUrl:twitterUrlTF.text!,
                 kInstagramUrl:instagramUrlTF.text!,
                 kEmergencyName:emergencyNameTF.text!,
-                kEmergencyMobile:emergencyMobileTF.text!]
+                kEmergencyMobile:emergencyMobileTF.text!] as [String : Any]
             
             if (dobContentTF.text! == "") {
                 param[kDob] = dobContentTF.text!
@@ -403,71 +404,25 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         activityView.center = self.view.center
         activityView.startAnimating()
         avatarIMW.addSubview(activityView)
-        avatarIMW.contentMode = .ScaleAspectFill
-        var imageData : NSData!
-        let type = imageJpeg
-        let filename = jpgeFile
+        avatarIMW.contentMode = .scaleAspectFill
+        var imageData : Data!
         imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
         
             if (imageData == nil) {
-                DispatchQueue.main.async(execute: {
-                    activityView.stopAnimating()
-                    activityView.removeFromSuperview()
-                    //Your main thread code goes in here
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                })
+                PMHelper.showNoticeAlert(message: pleaseChoosePngOrJpeg)
             }  else {
-                var prefix = kPMAPIUSER
-                prefix.append(PMHelper.getCurrentID())
-                prefix.append(kPM_PATH_PHOTO_PROFILE)
+                self.view.makeToastActivity()
                 
-                let parameters = [kUserId:PMHelper.getCurrentID(),
-                                  kProfilePic: "1"]
-                
-                Alamofire.upload(
-                    .POST,
-                    prefix,
-                    multipartFormData: { multipartFormData in
-                        multipartFormData.appendBodyPart(data: imageData, name: "file",
-                            fileName:filename, mimeType:type)
-                        for (key, value) in parameters {
-                            multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                        }
-                    },
-                    encodingCompletion: { encodingResult in
-                        switch encodingResult {
-                            
-                        case .Success(let upload, _, _):
-                            upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                            }
-                            upload.validate()
-                            upload.responseJSON { response in
-                                if response.result.error != nil {
-                                    // failure
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                } else {
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                    self.avatarIMW.image = pickedImage
-                                }
-                            }
-                            
-                        case .Failure( _):
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
-                        }
+                ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData, textPost: "", completed: { (result, error) in
+                    self.view.hideToastActivity()
+                    
+                    let isUploadSuccess = result as! Bool
+                    if (isUploadSuccess == true) {
+                        self.avatarIMW.image = pickedImage
+                    } else {
+                        PMHelper.showDoAgainAlert()
                     }
-                )
+                }).fetchdata()
         }
     }
     
@@ -480,12 +435,12 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
             
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(url)
+                UIApplication.shared.openURL(url as URL)
             }
             
         }))
         
-        alert.addAction(UIAlertAction(title: kCancle, style: .Cancel, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
             
         }))
         
@@ -521,88 +476,35 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
     }
 
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
             activityView.center = self.view.center
             activityView.startAnimating()
             avatarIMW.addSubview(activityView)
-            avatarIMW.contentMode = .ScaleAspectFill
-            var imageData : NSData!
+            avatarIMW.contentMode = .scaleAspectFill
+            var imageData : Data!
             let assetPath = info[UIImagePickerControllerReferenceURL] as! NSURL
-            var type : String!
-            var filename: String!
             if assetPath.absoluteString!.hasSuffix("JPG") {
-                type = imageJpeg
-                filename = jpgeFile
                 imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
             } else if assetPath.absoluteString!.hasSuffix("PNG") {
-                type = imagePng
-                filename = pngFile
                 imageData = UIImagePNGRepresentation(pickedImage)
             }
             
             if (imageData == nil) {
-                DispatchQueue.main.async(execute: {
-                    activityView.stopAnimating()
-                    activityView.removeFromSuperview()
-                    //Your main thread code goes in here
-                    let alertController = UIAlertController(title: pmmNotice, message: pleaseChoosePngOrJpeg, preferredStyle: .alert)
-                    
-                    
-                    let OKAction = UIAlertAction(title: kOk, style: .default) { (action) in
-                        // ...
-                    }
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true) {
-                        // ...
-                    }
-                })
-
+                PMHelper.showNoticeAlert(message: pleaseChoosePngOrJpeg)
             } else {
-                var prefix = kPMAPIUSER
-                prefix.append(PMHelper.getCurrentID())
-                prefix.append(kPM_PATH_PHOTO_PROFILE)
-                
-                let parameters = [kUserId:PMHelper.getCurrentID(),
-                                  kProfilePic: "1"]
-                
-                Alamofire.upload(
-                    .POST,
-                    prefix,
-                    multipartFormData: { multipartFormData in
-                        multipartFormData.appendBodyPart(data: imageData, name: "file",
-                            fileName:filename, mimeType:type)
-                        for (key, value) in parameters {
-                            multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding)!, name: key)
-                        }
-                    },
-                    encodingCompletion: { encodingResult in
-                        switch encodingResult {
-                            
-                        case .Success(let upload, _, _):
-                            upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-                            }
-                            upload.validate()
-                            upload.responseJSON { response in
-                                if response.result.error != nil {
-                                    // failure
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                } else {
-                                    activityView.stopAnimating()
-                                    activityView.removeFromSuperview()
-                                    self.avatarIMW.image = pickedImage
-                                }
-                            }
-                            
-                        case .Failure( _):
-                            activityView.stopAnimating()
-                            activityView.removeFromSuperview()
-                        }
+                self.view.makeToastActivity()
+                ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData, textPost: "", completed: { (result, error) in
+                    self.view.hideToastActivity()
+                    
+                    let isUploadSuccess = result as! Bool
+                    if (isUploadSuccess == true) {
+                        self.avatarIMW.image = pickedImage
+                    } else {
+                        PMHelper.showDoAgainAlert()
                     }
-                )
+                }).fetchdata()
             }
             
         }
@@ -611,11 +513,11 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
             textView.resignFirstResponder()
             return false
@@ -626,7 +528,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     func checkRuleInputData() -> Bool {
         var returnValue  = false
-        if !(self.isValidEmail(emailContentTF.text!)) {
+        if !(self.isValidEmail(testStr: emailContentTF.text!)) {
             returnValue = true
             emailContentTF.attributedText = NSAttributedString(string:emailContentTF.text!,
                                                                  attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
@@ -656,17 +558,17 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                                                                 attributes:[NSForegroundColorAttributeName: UIColor.black])
         }
         
-        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase("facebook.com") {
+        if self.facebookUrlTF.text != "" && !self.facebookUrlTF.text!.containsIgnoringCase(find: "facebook.com") {
             self.showMsgLinkInValid()
             return true
         }
         
-        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase("twitter.com") {
+        if self.twitterUrlTF.text != "" && !self.twitterUrlTF.text!.containsIgnoringCase(find: "twitter.com") {
             self.showMsgLinkInValid()
             return true
         }
         
-        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase("instagram.com") {
+        if self.instagramUrlTF.text != "" && !self.instagramUrlTF.text!.containsIgnoringCase(find: "instagram.com") {
             self.showMsgLinkInValid()
             return true
         }
@@ -712,14 +614,14 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
             dateFormatter.dateFormat = "YYYY-mm-dd"
             let dateDOB = dateFormatter.date(from: testStr)
             
-            let date = NSDate()
+            let date = Date()
             let calendar = NSCalendar.current
             let components = calendar.dateComponents([.day , .month , .year], from: date)
             let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB!)
             let year =  components.year
             let yearDOB = componentsDOB.year
             
-            if (12 < (year - yearDOB)) && ((year - yearDOB) < 101)  {
+            if (12 < (year! - yearDOB!)) && ((year! - yearDOB!) < 101)  {
                 return true
             } else {
                 return false
@@ -727,7 +629,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
     }
     
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField.isEqual(self.genderContentTF) == true {
             self.dobContentTF.resignFirstResponder()
             self.weightContentTF.resignFirstResponder()
@@ -771,14 +673,14 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         self.dobContentTF.text = dateFormatter.string(from: sender.date)
         let dateDOB = dateFormatter.date(from: self.dobContentTF.text!)
         
-        let date = NSDate()
+        let date = Date()
         let calendar = NSCalendar.current
         let components = calendar.dateComponents([.day , .month , .year], from: date)
         let componentsDOB = calendar.dateComponents([.day , .month , .year], from: dateDOB!)
         let year =  components.year
         let yearDOB = componentsDOB.year
         
-        if (12 < (year - yearDOB)) && ((year - yearDOB) < 1001)  {
+        if (12 < (year! - yearDOB!)) && ((year! - yearDOB!) < 1001)  {
             self.dobContentTF.attributedText = NSAttributedString(string:self.dobContentTF.text!,
                                                            attributes:[NSForegroundColorAttributeName: UIColor.black])
         } else {

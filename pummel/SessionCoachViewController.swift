@@ -235,11 +235,11 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
 //        cancleTitleLabel.attributedText = cancleAttributedText
     }
     
-    @IBAction func addSessionBTClicked(sender: AnyObject) {
+    @IBAction func addSessionBTClicked(_ sender: Any) {
         self.rightButtonClicked()
     }
 
-    @IBAction func selecSegmentValueChanged(sender: AnyObject) {
+    @IBAction func selecSegmentValueChanged(_ sender: Any) {
         if self.selectSegment.selectedSegmentIndex == 0 {
             self.defaults.setValue(1, forKey: k_PM_IS_UP_COMING)
         } else {

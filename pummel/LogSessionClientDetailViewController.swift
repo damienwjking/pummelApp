@@ -371,7 +371,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         
     }
     
-    @IBAction func publicButtonClicked(sender: AnyObject) {
+    @IBAction func publicButtonClicked(_ sender: Any) {
         self.isPublic = !self.isPublic
         
         if self.isPublic == true {
@@ -594,7 +594,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         }.fetchdata()
     }
     
-    @IBAction func showPopupToSelectImage(sender: AnyObject) {
+    @IBAction func showPopupToSelectImage(_ sender: Any) {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.imagePicker.allowsEditing = false
             self.imagePicker.sourceType = .photoLibrary
@@ -669,7 +669,7 @@ extension LogSessionClientDetailViewController: FusumaDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             for(subview) in self.imageScrolView.subviews {

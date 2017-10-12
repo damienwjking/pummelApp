@@ -154,7 +154,7 @@ class NewPostViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     
-    @IBAction func showPopupToSelectImage(sender:UIButton!) {
+    @IBAction func showPopupToSelectImage(_ sender: Any) {
         let selectFromLibraryHandler = { (action:UIAlertAction!) -> Void in
             self.selectFromLibrary = true
             self.imagePicker.allowsEditing = false
@@ -182,7 +182,7 @@ class NewPostViewController: BaseViewController, UIScrollViewDelegate {
     }
 
     
-    @IBAction func showCameraRoll(sender:UIButton!) {
+    @IBAction func showCameraRoll(_ sender: Any) {
         let fusuma = FusumaViewController()
         fusuma.delegate = self
         fusuma.defaultMode = .Camera
@@ -240,7 +240,7 @@ extension NewPostViewController : UITextViewDelegate {
 
 // MARK: - UIImagePickerControllerDelegate
 extension NewPostViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             for(subview) in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
