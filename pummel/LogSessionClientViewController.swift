@@ -155,7 +155,7 @@ extension LogSessionClientViewController : UITableViewDelegate, UITableViewDataS
         
         let tag = tags[indexPath.row]
         //        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercased())!)
-        let tagName = tag.name?.uppercased()
+        let tagName = tag.tagTitle?.uppercased()
         cell.LogTitleLB.text = tagName
         cell.tagTypeLabel.text = ""
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
@@ -210,7 +210,7 @@ extension LogSessionClientViewController : UICollectionViewDelegate, UICollectio
     
     func configureCell(cell: ActivityCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name?.uppercased()
+        cell.tagName.text = tag.tagTitle?.uppercased()
         cell.tagBackgroundV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
     }
 }

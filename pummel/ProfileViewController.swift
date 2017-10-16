@@ -448,15 +448,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         if (coachDetail[kTags] == nil) {
             UserRouter.getUserTagList(userID: self.userID, completed: { (result, error) in
                 if (error == nil) {
-                    let tagArr = result as! [NSDictionary]
-                    
-                    self.tags.removeAll()
-                    for i in 0 ..< tagArr.count {
-                        let tagContent = tagArr[i]
-                        let tag = TagModel()
-                        tag.name = tagContent[kTitle] as? String
-                        self.tags.append(tag)
-                    }
+                    self.tags = result as! [TagModel]
                     
                     self.reloadLayout()
                 } else {
@@ -469,7 +461,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             for i in 0 ..< coachListTags.count {
                 let tagContent = coachListTags[i] as! NSDictionary
                 let tag = TagModel()
-                tag.name = tagContent[kTitle] as? String
+                tag.tagTitle = tagContent[kTitle] as? String
                 self.tags.append(tag)
             }
             
@@ -1304,10 +1296,11 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             // Do nothing
         } else {
             let photo = self.photoArray[indexPath.row] as! NSDictionary
-            let photoID = photo["uploadId"] as! String
+            let photoID = photo["uploadId"] as! Int
+            let photoIDString = String(format:"%ld", photoID)
             
             self.view.makeToastActivity()
-            FeedRouter.getPhotoPost(photoID: photoID, completed: { (result, error) in
+            FeedRouter.getPhotoPost(photoID: photoIDString, completed: { (result, error) in
                 self.view.hideToastActivity()
                 
                 let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .alert)

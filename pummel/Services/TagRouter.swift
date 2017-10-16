@@ -120,14 +120,11 @@ enum TagRouter: URLRequestConvertible {
                         
                         for tagDetail in tagDetails {
                             let tag = TagModel()
-                            
-                            tag.name = tagDetail[kTitle] as? String
-                            tag.tagId = String(format:"%0.f", (tagDetail[kId]! as AnyObject).doubleValue)
-                            tag.tagType = (tagDetail[kType] as? NSNumber)?.intValue
+                            tag.parseData(data: tagDetail)
                             
                             // Special tag: "body building", "Cycling"
-                            if (tag.name?.uppercased() == kBodyBuilding ||
-                                tag.name?.uppercased() == kCycling) {
+                            if (tag.tagTitle?.uppercased() == kBodyBuilding ||
+                                tag.tagTitle?.uppercased() == kCycling) {
                                 tag.tagColor = TagRouter.specialColor
                             } else {
                                 tag.tagColor = TagRouter.getRandomColorString()

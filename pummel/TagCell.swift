@@ -44,7 +44,7 @@ class TagCell: UICollectionViewCell {
     }
     
     func setupData(tag: TagModel) {
-        self.tagName.text = tag.name
+        self.tagName.text = tag.tagTitle
         self.tagName.textColor = UIColor.black
         self.layer.borderColor = UIColor.clear.cgColor
     }

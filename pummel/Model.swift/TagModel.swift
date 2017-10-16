@@ -11,18 +11,18 @@ import Foundation
 import UIKit
 
 class TagModel: NSObject {
-    var name: String?
-    var tagId: String?
+    var tagId: Int?
     var tagColor: String?
+    var updateAt: String?
     var tagType: Int?
-    
+    var tagTitle: String?
     var selected = false
     
     func parseData(data: NSDictionary) {
-        self.name = data.object(forKey: "id") as? String
-        self.tagId = data.object(forKey: "status") as? String
-        self.tagColor = data.object(forKey: "userId") as? String
-        self.tagType = data.object(forKey: "text") as? Int
+        self.tagId = data.object(forKey: "id") as? Int
+        self.tagTitle = data.object(forKey: "title") as? String
+        self.updateAt = data.object(forKey: "updatedAt") as? String
+        self.tagType = data.object(forKey: "type") as? Int
     }
     
     func same(tag: TagModel) -> Bool {

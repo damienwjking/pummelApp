@@ -600,7 +600,15 @@ enum UserRouter: URLRequestConvertible {
                 switch response.result {
                 case .success(let JSON):
                     if (JSON is NSNull == false) {
-                        let tagList = JSON as! [NSDictionary]
+                        let tagDetails = JSON as! [NSDictionary]
+                        
+                        var tagList: [TagModel] = []
+                        for tagDetail in tagDetails {
+                            let tag = TagModel()
+                            tag.parseData(data: tagDetail)
+                            
+                            tagList.append(tag)
+                        }
                         
                         self.comletedBlock!(tagList as AnyObject, nil)
                     } else {
