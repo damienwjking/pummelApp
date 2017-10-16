@@ -650,7 +650,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 }
                 
                 // add Swipe gesture
-                if (cell.gestureRecognizers != nil && (cell.gestureRecognizers?.count)! < 2) {
+                if (cell.gestureRecognizers == nil || (cell.gestureRecognizers?.count)! < 2) {
                     
                     let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
                     swipeLeftGesture.direction = .left

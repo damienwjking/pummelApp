@@ -574,10 +574,11 @@ class EditCoachProfileViewController: BaseViewController {
         }
     }
     
-    func datePickerValueChanged(sender:UIDatePicker) {
+    func datePickerValueChanged(_ sender: Any) {
+        let datePicker = sender as! UIDatePicker
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "YYYY-MM-dd"
-        self.dobContentTF.text = dateFormatter.string(from: sender.date)
+        self.dobContentTF.text = dateFormatter.string(from: datePicker.date)
         let dateDOB = dateFormatter.date(from: self.dobContentTF.text!)
         
         let date = NSDate()
@@ -796,13 +797,15 @@ extension EditCoachProfileViewController: UITextFieldDelegate, UITextViewDelegat
         }
     }
     
-    @IBAction func textFieldEditingWithSender(sender: UITextField) {
+    @IBAction func textFieldEditingWithSender(_ sender: Any) {
         let datePickerView:UIDatePicker = UIDatePicker()
         datePickerView.backgroundColor = UIColor.black
         datePickerView.setValue(UIColor.white, forKey: "textColor")
         datePickerView.datePickerMode = UIDatePickerMode.date
-        sender.inputView = datePickerView
-        datePickerView.addTarget(self, action:#selector(self.datePickerValueChanged(sender:)), for: .valueChanged)
+        
+        let textField = sender as! UITextField
+        textField.inputView = datePickerView
+        datePickerView.addTarget(self, action:#selector(self.datePickerValueChanged(_:)), for: .valueChanged)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

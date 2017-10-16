@@ -240,7 +240,7 @@ class ChatMessageViewController : BaseViewController {
         }.fetchdata()
     }
     
-    @IBAction func clickOnSendButton(_ sender: Any) {
+    @IBAction func sendMessageButtonClicked(_ sender: Any) {
         if !(self.chatTextView.text == "" && self.isSending == false) {
             self.isSending = true
             if (self.messageId != nil) {

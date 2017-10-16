@@ -12,7 +12,7 @@ import UIKit
     func cardViewTagClicked()
 }
 
-class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
+class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
    
     @IBOutlet var connectV : UIView!
     @IBOutlet var nameLB: UILabel!
@@ -67,6 +67,11 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
         
         return cell
     }
+    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
+//        return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath)
