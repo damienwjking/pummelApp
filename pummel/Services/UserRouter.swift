@@ -658,8 +658,6 @@ enum UserRouter: URLRequestConvertible {
                     if (response.response?.statusCode == 400) {
                         let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
                         self.comletedBlock!(false as AnyObject, error as NSError)
-                    } else if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(false as AnyObject, error as NSError)
                     }
@@ -707,8 +705,6 @@ enum UserRouter: URLRequestConvertible {
                     if (response.response?.statusCode == 400) {
                         let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
                         self.comletedBlock!(false as AnyObject, error as NSError)
-                    } else if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(false as AnyObject, error as NSError)
                     }
@@ -740,34 +736,10 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .checkConnect:
-            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseString(completionHandler: { (response) in
                 print("PM: UserRouter check_connect")
                 
-                
-                // TODO:    user responseJSON/responseString
-                //          return "Connected"/"..."
-                
-                self.comletedBlock!(response as AnyObject, nil)
-                
-                //                switch response.result {
-                //                case .success(let JSON):
-                //                    if (JSON is NSNull == false) {
-                //                        // Can't return respone object
-                //                        self.comletedBlock!("Connected" as AnyObject, nil)
-                //                    } else {
-                //                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                //                        self.comletedBlock!("" as AnyObject, error)
-                //                    }
-                //                case .failure(let error):
-                //                    if (response.response?.statusCode == 400) {
-                //                        let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
-                //                        self.comletedBlock!("" as AnyObject, error as NSError)
-                //                    } else if (response.response?.statusCode == 401) {
-                //                        PMHelper.showLogoutAlert()
-                //                    } else {
-                //                        self.comletedBlock!("" as AnyObject, error as NSError)
-                //                    }
-                //                }
+                self.comletedBlock!(response.result.value as AnyObject, nil)
             })
             
         case .setLead:

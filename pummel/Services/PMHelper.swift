@@ -150,7 +150,6 @@ class PMHelper {
                             
                             let isCoach = result as! Bool
                             
-                            
                             let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
                             
                             coachProfileVC.isCoach = isCoach

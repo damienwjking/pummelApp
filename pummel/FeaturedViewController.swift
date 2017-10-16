@@ -296,7 +296,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func showListContext(sender: UIButton) {
         let selectReport = { (action:UIAlertAction!) -> Void in
             let feed = self.arrayFeeds[sender.tag]
-            let postId = String(format:"%0.f", feed.id)
+            let postId = String(format:"%ld", feed.id)
             
             FeedRouter.reportFeed(postID: postId, completed: { (result, error) in
                 if (error == nil) {
@@ -524,7 +524,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         // Check Coach
         cell.isUserInteractionEnabled = false
         var coachLink  = kPMAPICOACH
-        let coachId = String(format:"%0.f", feed.userId)
+        let coachId = String(format:"%ld", feed.userId)
         coachLink.append(coachId)
         
         cell.avatarBT.layer.borderWidth = 0

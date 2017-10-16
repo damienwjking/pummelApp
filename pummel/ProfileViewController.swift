@@ -250,6 +250,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.connectButton.layer.cornerRadius = 55/2
         self.connectButton.layer.masksToBounds = true
         
+        if (self.profileStyle == .otherUser && self.isCoach == false) {
+            self.connectView.alpha = 0
+        } else {
+            self.connectView.alpha = 1
+        }
+        
         self.avatarIMV.layer.borderWidth = 0
         self.avatarIMV.clipsToBounds = true
         self.avatarIMV.layer.cornerRadius = 125/2
@@ -363,7 +369,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         var prefix = kPMAPIUSER
         prefix.append(self.userID)
         
-        UserRouter.getCurrentUserInfo { (result, error) in
+        UserRouter.getUserInfo(userID: self.userID) { (result, error) in
             self.tabBarController?.navigationItem.rightBarButtonItem?.isEnabled = true
             
             if (error == nil) {
@@ -761,26 +767,23 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             
             self.connectButton.isUserInteractionEnabled = false
             
-            let coachID = self.coachDetail[kId] as! String
-            UserRouter.checkConnect(coachID: coachID, completed: { (result, error) in
+            let coachID = self.coachDetail[kId] as! Int
+            let coachIDString = String(format:"%ld", coachID)
+            UserRouter.checkConnect(coachID: coachIDString, completed: { (result, error) in
                 self.connectButton.isUserInteractionEnabled = true
                 
-                if (error == nil) {
-                    let resultString = result as! String
-                    
-                    if (resultString.isEmpty == false) {
-                        if (resultString == "Connected") {
-                            self.connectButton.setImage(UIImage(named: "mail"), for: .normal)
-                            self.connectButton.backgroundColor = UIColor.pmmLightSkyBlueColor()
-                            self.isConnected = true
-                            
-                            if self.isFromChat {
-                                self.connectButton.isUserInteractionEnabled = false
-                            }
+                let resultString = result as? String
+                
+                if (resultString?.isEmpty == false) {
+                    if (resultString == "Connected") {
+                        self.connectButton.setImage(UIImage(named: "mail"), for: .normal)
+                        self.connectButton.backgroundColor = UIColor.pmmLightSkyBlueColor()
+                        self.isConnected = true
+                        
+                        if self.isFromChat {
+                            self.connectButton.isUserInteractionEnabled = false
                         }
                     }
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
         }

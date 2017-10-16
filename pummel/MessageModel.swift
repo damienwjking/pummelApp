@@ -34,6 +34,10 @@ class MessageModel: NSObject {
         // Other param will fill later
     }
     
+    func synsOtherData() {
+        
+    }
+    
     func same(message: MessageModel) -> Bool {
         if (self.messageID == message.messageID) {
             return true

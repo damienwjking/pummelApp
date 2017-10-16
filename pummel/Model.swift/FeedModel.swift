@@ -41,12 +41,13 @@ class FeedModel: NSObject {
         self.userDetail = user
         
         let firstName = user[kFirstname] as! String
-        let lastName = user[kLastName] as? String
-        if (lastName == nil || lastName?.isEmpty == true) {
-            self.userName = firstName
-        } else {
-            self.userName = firstName + lastName!
-        }
+//        let lastName = user[kLastName] as? String
+//        if (lastName == nil || lastName?.isEmpty == true) {
+//            self.userName = firstName
+//        } else {
+//            self.userName = firstName + lastName!
+//        }
+        self.userName = firstName // now not append last name
         
         let userImage = user[kImageUrl] as? String
         if (userImage != nil && userImage?.isEmpty == false) {

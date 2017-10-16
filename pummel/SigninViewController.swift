@@ -107,6 +107,9 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
             
             let loginSuccess = result as! Bool
             if (loginSuccess == true) {
+                self.emailTF.text = ""
+                self.passwordTF.text = ""
+                
                 UserDefaults.standard.set(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "LOGINSUCCESSNOTIFICATION"), object: nil)
                 FBSDKAppEvents.logEvent("Login")
