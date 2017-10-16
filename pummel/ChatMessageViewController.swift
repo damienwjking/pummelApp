@@ -29,13 +29,14 @@ class ChatMessageViewController : BaseViewController {
     var userIdTarget: String!
     var targerUser: NSDictionary!
     var messageId: String!
-    var arrayChat: NSArray!
+    var arrayChat: [NSDictionary] = []
     
     var preMessage: String = ""
     
     var isSending: Bool = false
     var isSendMessage = false
     var needOpenKeyboard = false
+    var isStopGetChat = false
     
     let defaults = UserDefaults.standard
     
@@ -107,15 +108,22 @@ class ChatMessageViewController : BaseViewController {
     }
 
     func getArrayChat() {
-        if (self.messageId != nil) {
+        if (self.messageId != nil && self.isStopGetChat == false) {
             MessageRouter.getDetailConversation(messageID: self.messageId) { (result, error) in
                 if (error == nil) {
-                    self.arrayChat = result as! NSArray
-                    if(self.arrayChat.count > 0) {
+                    let chatDetails = result as! [NSDictionary]
+                    
+                    if (chatDetails.count > 0) {
+                        for chatDetail in chatDetails {
+                            self.arrayChat.append(chatDetail)
+                        }
+                        
                         self.chatTB.reloadData {
                             let lastIndex = NSIndexPath(row: self.arrayChat.count, section: 0)
                             self.chatTB.scrollToRow(at: lastIndex as IndexPath, at: UITableViewScrollPosition.bottom, animated: false)
                         }
+                    } else {
+                        self.isStopGetChat = true
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -209,6 +217,7 @@ class ChatMessageViewController : BaseViewController {
                 if (addEmptyMessage) {
                     self.addMessageToExistConverstation()
                 } else {
+                    self.isStopGetChat = false
                     self.getArrayChat()
                 }
             } else {
@@ -223,6 +232,7 @@ class ChatMessageViewController : BaseViewController {
             
             let isSendMessageSuccess = result as! Bool
             if (isSendMessageSuccess == true) {
+                self.isStopGetChat = false
                 self.getArrayChat()
                 self.chatTextView.text = ""
                 self.chatTextView.resignFirstResponder()
@@ -327,8 +337,9 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
             return cell
         } else {
             let num = arrayChat.count
-            let message = arrayChat[num-indexPath.row] as! NSDictionary
-            if (message[kImageUrl] is NSNull) {
+            let message = arrayChat[num - indexPath.row]
+            let messageImageURL = message[kImageUrl] as? String
+            if (messageImageURL == nil || messageImageURL?.isEmpty == true) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: kChatMessageWithoutImageTableViewCell, for: indexPath as IndexPath) as! ChatMessageWithoutImageTableViewCell
                 
                 let userID = String(format:"%0.f",(message[kUserId]! as AnyObject).doubleValue)
@@ -392,10 +403,21 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                             }
                         } else {
                             print("Request failed with error: \(String(describing: error))")
+                            
+                            let index = self.arrayChat.index(of: message)
+                            if (index != nil) {
+                                let tempMessage1 = message.mutableCopy() as! NSMutableDictionary
+                                tempMessage1.setValue("", forKey: kImageUrl)
+                                
+                                self.arrayChat.remove(at: index!)
+                                self.arrayChat.insert(tempMessage1, at: index!)
+                            }
+                            
+                            
+                            self.chatTB.reloadData()
                         }
                     }).fetchdata()
                 }
-                
                 
                 let userID = String(format:"%0.f",(message[kUserId]! as AnyObject).doubleValue)
                 

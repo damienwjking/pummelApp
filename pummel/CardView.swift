@@ -85,7 +85,7 @@ class CardView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
     
     func configureCell(cell: TagCell, forIndexPath indexPath: IndexPath) {
         let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
+        cell.tagName.text = tag.tagTitle
         cell.tagName.textColor = UIColor.black
         cell.layer.borderColor = UIColor.clear.cgColor
     }

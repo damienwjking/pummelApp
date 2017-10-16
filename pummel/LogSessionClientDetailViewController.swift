@@ -124,7 +124,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         self.minuteLB.text = "0"
         
         if self.editSession.id == 0 {
-            let title = self.tag.name?.components(separatedBy: " ").joined(separator: "")
+            let title = self.tag.tagTitle?.components(separatedBy: " ").joined(separator: "")
             self.titleButton.setTitle(String(format: "#%@", (title!.uppercased())), for: .normal)
         } else {
             self.titleButton.setTitle(self.editSession.type?.uppercased(), for: .normal)
@@ -416,7 +416,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
             
             let currentUserID = PMHelper.getCurrentID()
             let message = (self.contentTV.text != "ADD A COMMENT...") ? self.contentTV.text : "..."
-            let type = "#" + (self.tag.name?.uppercased())!
+            let type = "#" + (self.tag.tagTitle?.uppercased())!
             
             self.view.makeToastActivity(message: "Saving")
             SessionRouter.postLogSession(userID: currentUserID,

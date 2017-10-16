@@ -291,7 +291,7 @@ extension LetUsHelpViewController : UICollectionViewDataSource, UICollectionView
                 tagIdsArray.add(tag.tagId!)
                 
                 let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Select Tags", "Label":"\(tag.name!)"]
+                let properties = ["Name": "Select Tags", "Label":"\(tag.tagTitle!)"]
                 mixpanel?.track("IOS.FindATrainer", properties: properties)
             } else {
                 let alertController = UIAlertController(title: nil, message: "Select just a few tags to broaden your search", preferredStyle: .alert)
@@ -311,7 +311,7 @@ extension LetUsHelpViewController : UICollectionViewDataSource, UICollectionView
     
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
+        cell.tagName.text = tag.tagTitle
         cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clear
         cell.tagNameLeftMarginConstraint.constant = tag.selected ? 8 : 25

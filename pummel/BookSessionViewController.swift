@@ -102,7 +102,7 @@ extension BookSessionViewController : UITableViewDelegate, UITableViewDataSource
         
         let tag = tags[indexPath.row]
         
-        let tagName = tag.name?.uppercased()
+        let tagName = tag.tagTitle?.uppercased()
         cell.bookTitleLB.text = tagName
         cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         

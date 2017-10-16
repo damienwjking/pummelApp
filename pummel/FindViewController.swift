@@ -591,7 +591,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 for i in 0 ..< coachListTags.count {
                     let tagContent = coachListTags[i] as! NSDictionary
                     let tag = TagModel()
-                    tag.name = tagContent[kTitle] as? String
+                    tag.tagTitle = tagContent[kTitle] as? String
                     cell.cardView.tags.append(tag)
                 }
                 cell.cardView.collectionView.reloadData()
@@ -650,7 +650,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 }
                 
                 // add Swipe gesture
-                if (cell.gestureRecognizers?.count)! < 2 {
+                if (cell.gestureRecognizers != nil && (cell.gestureRecognizers?.count)! < 2) {
                     
                     let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
                     swipeLeftGesture.direction = .left

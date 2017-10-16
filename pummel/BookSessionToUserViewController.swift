@@ -83,7 +83,7 @@ class BookSessionToUserViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let tagTitle = self.tag!.name?.components(separatedBy: " ").joined(separator: "")
+        let tagTitle = self.tag!.tagTitle?.components(separatedBy: " ").joined(separator: "")
         self.title = String(format: "#%@", (tagTitle!.uppercased()))
     }
     
@@ -138,7 +138,7 @@ class BookSessionToUserViewController: BaseViewController {
             }
             
             let currentUserID = PMHelper.getCurrentID()
-            let type = "#" + (self.tag?.name?.uppercased())!
+            let type = "#" + (self.tag?.tagTitle?.uppercased())!
             let selectedDate = self.convertLocalTimeToUTCTime(dateTimeString: self.dateTF.text!)
             
             self.view.makeToastActivity(message: "Saving")

@@ -353,7 +353,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
+        cell.tagName.text = tag.tagTitle
         cell.tagName.textColor = UIColor.black
         cell.layer.borderColor = UIColor.clear.cgColor
     }

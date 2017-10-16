@@ -863,7 +863,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationMa
     }
     
     func selectNewTag(tag: TagModel) {
-        TagRouter.selectTag(tagID: tag.tagId!) { (result, error) in
+        let tagID = String(format:"%ld", tag.tagId!)
+        
+        TagRouter.selectTag(tagID: tagID) { (result, error) in
             let isDeleteSuccess = result as! Bool
             
             if (isDeleteSuccess == true) {
@@ -875,7 +877,9 @@ class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationMa
     }
     
     func deleteATagUser(tag: TagModel) {
-        TagRouter.deleteTag(tagID: tag.tagId!) { (result, error) in
+        let tagID = String(format:"%ld", tag.tagId!)
+        
+        TagRouter.deleteTag(tagID: tagID) { (result, error) in
             let isDeleteSuccess = result as! Bool
             
             if (isDeleteSuccess == true) {
@@ -966,7 +970,7 @@ extension EditCoachProfileForUpgradeViewController:  UICollectionViewDataSource,
     
     func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
         let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
+        cell.tagName.text = tag.tagTitle
         cell.tagName.textColor =  tag.selected ? UIColor.white : UIColor.pmmWarmGreyColor()
         cell.tagImage.backgroundColor = UIColor.init(hexString: tag.tagColor!)
         cell.tagBackgroundV.backgroundColor = tag.selected ? UIColor.init(hexString: tag.tagColor!) : UIColor.clear
