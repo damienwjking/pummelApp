@@ -245,6 +245,9 @@ class MessageViewController: BaseViewController {
                     } else {
                         for message in messageList {
                             if (message.existInList(messageList: self.arrayMessages) == false) {
+                                message.delegate = self
+                                message.synsOtherData()
+                                
                                 self.arrayMessages.append(message)
                             }
                         }
@@ -252,129 +255,11 @@ class MessageViewController: BaseViewController {
                     
                     self.messageOffset = self.messageOffset + 10
                     
-                    self.updateMessageData()
                     self.listMessageTB.reloadData()
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
-        }
-    }
-    
-    func updateMessageData() {
-        var i = 0
-        while i < self.arrayMessages.count {
-            let message = arrayMessages[i]
-            
-            MessageRouter.getDetailConversation(messageID: message.messageID!, completed: { (result, error) in
-                if (error == nil) {
-                    // Check which on is sender
-                    let conversationsUserArray = result as! NSArray
-                    let conversationMe : NSDictionary!
-                    let conversationTarget: NSDictionary!
-                    
-                    let converstationTemp = conversationsUserArray[0] as! NSDictionary
-                    let tempUserID = String(format:"%0.f", (converstationTemp[kUserId]! as AnyObject).doubleValue)
-                    
-                    if (tempUserID == PMHelper.getCurrentID()) {
-                        conversationMe = conversationsUserArray[0] as! NSDictionary
-                        conversationTarget = conversationsUserArray[1]  as! NSDictionary
-                    } else {
-                        conversationMe = conversationsUserArray[1] as! NSDictionary
-                        conversationTarget = conversationsUserArray[0]  as! NSDictionary
-                    }
-                    
-                    message.targetUserID = String(format:"%0.f", (conversationTarget[kUserId]! as AnyObject).doubleValue)
-                    
-                    // Check New or old
-                    if (conversationMe[kLastOpenAt] == nil) {
-                        message.isOpen = false
-                    } else {
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = kFullDateFormat
-                        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-                        
-                        let lastOpenAtM = dateFormatter.date(from: conversationMe[kLastOpenAt] as! String)
-                        let updateAtM =  dateFormatter.date(from: message.updateAt!)
-                        
-                        if (lastOpenAtM!.compare(updateAtM!) == .orderedAscending) {
-                            message.isOpen = false
-                        } else {
-                            message.isOpen = true
-                        }
-                    }
-                    
-                    // Get name
-                    UserRouter.getUserInfo(userID: message.targetUserID!, completed: { (result, error) in
-                        let userInfo = result as! NSDictionary
-                        
-                        let name = userInfo.object(forKey: kFirstname) as! String
-                        message.targetUserName = name.uppercased()
-                        
-                        var imageURL = userInfo.object(forKey: kImageUrl) as? String
-                        if (imageURL?.isEmpty == true) {
-                            imageURL = " "
-                        }
-                        
-                        if (userInfo[kImageUrl] is NSNull == false) {
-                            let imageURLString = userInfo[kImageUrl] as! String
-                            
-                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                                if (error == nil) {
-                                    DispatchQueue.main.async(execute: {
-                                        let imageRes = result as! UIImage
-                                        message.targetUserImage = imageRes
-                                        
-                                        self.listMessageTB.reloadData()
-                                    })
-                                } else {
-                                    print("Request failed with error: \(String(describing: error))")
-                                }
-                            }).fetchdata()
-                        } else {
-                            message.targetUserImage = UIImage(named:"display-empty.jpg")
-                            
-                            self.listMessageTB.reloadData()
-                        }
-                    }).fetchdata()
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }).fetchdata()
-
-            // Get message
-            MessageRouter.getDetailConversation(messageID: message.messageID!, completed: { (result, error) in
-                if (error == nil) {
-                    let arrayMessageThisConverId = result as! NSArray
-                    if (arrayMessageThisConverId.count != 0) {
-                        let messageDetail = arrayMessageThisConverId[0] as! NSDictionary
-                        
-                        if ((messageDetail[kText] is NSNull) == false) {
-                            if (messageDetail[kText] as! String == "") {
-                                message.text = "Media message"
-                            } else {
-                                message.text = messageDetail[kText]  as? String
-                            }
-                        } else {
-                            if (!(messageDetail[kImageUrl] is NSNull)) {
-                                message.text = sendYouAImage
-                            } else if (!(messageDetail[KVideoUrl] is NSNull)) {
-                                message.text = sendYouAVideo
-                            } else {
-                                message.text = "Media messge"
-                            }
-                        }
-                    } else {
-                        message.text = " "
-                    }
-                    
-                    self.listMessageTB.reloadData()
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }).fetchdata()
-            
-            i = i + 1
         }
     }
     
@@ -395,6 +280,13 @@ class MessageViewController: BaseViewController {
                 destinationVC.userIdTarget = userID
             }
         }
+    }
+}
+
+// MARK: - MessageModelDelegate
+extension MessageViewController: MessageModelDelegate {
+    func messageModelSynsDataSuccess() {
+        self.listMessageTB.reloadData()
     }
 }
 
@@ -426,14 +318,16 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 return 96
             }
         } else {
-            let message = self.arrayMessages[indexPath.row]
-            let text = message.text
-            if (text == nil || text?.isEmpty == true || text == " ") {
-                return 0
+            if (indexPath.row < self.arrayMessages.count) {
+                let message = self.arrayMessages[indexPath.row]
+                let text = message.text
+                if (text == nil || text?.isEmpty == true || text == " ") {
+                    return 0
+                }
+                
+                return 120
+                // Ceiling this value fixes disappearing separators
             }
-            
-            return 120
-            // Ceiling this value fixes disappearing separators
         }
         
         return 0
@@ -442,9 +336,12 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == listMessageTB) {
             let cell = tableView.dequeueReusableCell(withIdentifier: kMessageTableViewCell, for: indexPath) as! MessageTableViewCell
-            let message = arrayMessages[indexPath.row]
             
-            cell.setupData(message: message)
+            if (indexPath.row < self.arrayMessages.count) {
+                let message = self.arrayMessages[indexPath.row]
+                
+                cell.setupData(message: message)
+            }
             
             return cell
         } else {
