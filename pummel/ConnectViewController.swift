@@ -170,7 +170,7 @@ class ConnectViewController: BaseViewController {
         }
     }
     
-    @IBAction func sendUsAMessage(sender: UIButton) {
+    @IBAction func sendUsAMessage(_ sender: Any) {
         if let firstName = coachDetail[kFirstname] as? String {
             let mixpanel = Mixpanel.sharedInstance()
             let properties = ["Name": "Send Message", "Label":"\(firstName.uppercased())"]
@@ -223,7 +223,7 @@ class ConnectViewController: BaseViewController {
         }.fetchdata()
     }
     
-    @IBAction func keepLooking(sender:UIButton) {
+    @IBAction func keepLooking(_ sender: Any) {
         if coachDetail != nil {
             if let firstName = coachDetail[kFirstname] as? String {
                 let mixpanel = Mixpanel.sharedInstance()

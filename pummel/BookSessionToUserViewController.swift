@@ -122,7 +122,7 @@ class BookSessionToUserViewController: BaseViewController {
         if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
             PMHelper.showNoticeAlert(message: pleaseInputADate)
         } else {
-            var imageData : Data!
+            var imageData = Data()
             if self.imageSelected.image != nil {
                 imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2)! as Data : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as Data
             }

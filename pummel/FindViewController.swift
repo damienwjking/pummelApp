@@ -565,7 +565,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 cell.refineSearchBT.addTarget(self, action: #selector(refind), for: .touchUpInside)
                 
                 // add Swipe gesture
-                if (cell.gestureRecognizers?.count)! < 1 {
+                if (cell.gestureRecognizers == nil || (cell.gestureRecognizers?.count)! < 1) {
                     let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
                     swipeRightGesture.direction = .right
                     cell.addGestureRecognizer(swipeRightGesture)

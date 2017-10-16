@@ -13,7 +13,7 @@ import UIKit
     func loadMoreDiscount()
 }
 
-class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class FeedDiscountView: UIView {
     
     var cv: UICollectionView!
     var cvLayout: UICollectionViewFlowLayout!
@@ -53,52 +53,6 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         super.init(coder: aDecoder)
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.arrayResult.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DiscountColectionViewCell", for: indexPath) as! DiscountColectionViewCell
-        
-        // add Swipe gesture
-        if (cell.gestureRecognizers?.count)! < 2 {
-            
-            let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
-            swipeLeftGesture.direction = .left
-            cell.addGestureRecognizer(swipeLeftGesture)
-            
-            let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
-            swipeRightGesture.direction = .right
-            cell.addGestureRecognizer(swipeRightGesture)
-        }
-        
-        if indexPath.row >= self.arrayResult.count {
-            return cell
-        }
-        
-        let discountDetail = self.arrayResult[indexPath.row]
-        cell.setData(discountDetail: discountDetail)
-        
-        if indexPath.row == self.arrayResult.count - 1 {
-            self.delegate?.loadMoreDiscount()
-        }
-        
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return self.cvLayout.itemSize
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.row >= self.arrayResult.count {
-            return
-        }
-        
-        let discountDetail = self.arrayResult[indexPath.row]
-        self.delegate?.goToDetailDiscount(discountDetail: discountDetail)
-    }
-    
     func endPagingCarousel(scrollView: UIScrollView) {
         if scrollView == self.cv {
             // custom pageing
@@ -133,5 +87,49 @@ class FeedDiscountView: UIView, UICollectionViewDataSource, UICollectionViewDele
         }) { (_) in
             self.endPagingCarousel(scrollView: self.cv)
         }
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+extension FeedDiscountView : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.arrayResult.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DiscountColectionViewCell", for: indexPath) as! DiscountColectionViewCell
+        
+        let discountDetail = self.arrayResult[indexPath.row]
+        cell.setData(discountDetail: discountDetail)
+        
+        // add Swipe gesture
+        if (cell.gestureRecognizers == nil || (cell.gestureRecognizers?.count)! < 2) {
+            let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeLeft))
+            swipeLeftGesture.direction = .left
+            cell.addGestureRecognizer(swipeLeftGesture)
+            
+            let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(carouselSwipeRight))
+            swipeRightGesture.direction = .right
+            cell.addGestureRecognizer(swipeRightGesture)
+        }
+        
+        if indexPath.row == self.arrayResult.count - 1 {
+            self.delegate?.loadMoreDiscount()
+        }
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return self.cvLayout.itemSize
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row >= self.arrayResult.count {
+            return
+        }
+        
+        let discountDetail = self.arrayResult[indexPath.row]
+        self.delegate?.goToDetailDiscount(discountDetail: discountDetail)
     }
 }

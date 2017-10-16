@@ -105,27 +105,27 @@ extension NSDate {
         let components = calendar.dateComponents(unitFlags, from: earliest, to: latest as Date)
         
         if (components.year! >= 2) {
-            return "\(String(describing: components.year))y"
+            return "\(components.year!) y"
         } else if (components.year! >= 1){
-            return "1y"
+            return "1 y"
         } else if (components.month! >= 2) {
-            return "\(String(describing: components.month))m"
+            return "\(components.month!) m"
         } else if (components.month! >= 1){
-            return "1m"
+            return "1 month"
         } else if (components.day! >= 2) {
-            return "\(String(describing: components.day))d"
+            return "\(components.day!) d"
         } else if (components.day! >= 1){
-            return "1d"
+            return "1 d"
         } else if (components.hour! >= 2) {
-            return "\(String(describing: components.hour))hr"
+            return "\(components.hour!) hr"
         } else if (components.hour! >= 1){
-            return "1hr"
+            return "1 hr"
         } else if (components.minute! >= 2) {
-            return "\(String(describing: components.minute))m"
+            return "\(components.minute!) m"
         } else if (components.minute! >= 1){
-            return "1m"
+            return "1 m"
         } else if (components.second! >= 3) {
-            return "\(String(describing: components.second))s"
+            return "\(components.second!) s"
         } else {
             return "Just now"
         }

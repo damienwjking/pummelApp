@@ -13,7 +13,7 @@ import Alamofire
 class FeedViewController: BaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    var feedDetail : NSDictionary!
+    var feedDetail : FeedModel!
     var userFeed : NSDictionary!
    
     @IBOutlet weak var commentTextView: UITextView!
@@ -45,7 +45,7 @@ class FeedViewController: BaseViewController {
         self.tableView.estimatedRowHeight = 77
         self.tableView.rowHeight = UITableViewAutomaticDimension
         
-        if let userDic = feedDetail[kUser] as? NSDictionary {
+        if let userDic = feedDetail.userDetail {
             userFeed = userDic
         }
         
@@ -101,7 +101,7 @@ class FeedViewController: BaseViewController {
     
     func getListComment() {
         if (stopGetListComment == false) {
-            let postId = String(format:"%0.f", (feedDetail[kId]! as AnyObject).doubleValue)
+            let postId = String(format:"%ld", self.feedDetail.id)
             
             FeedRouter.getComment(postID: postId, offset: self.offset, limit: 10, completed: { (result, error) in
                 if (error == nil) {
@@ -111,9 +111,7 @@ class FeedViewController: BaseViewController {
                         self.offset += 10
                         self.getListComment()
                         
-                        self.tableView.beginUpdates()
                         self.tableView.reloadData()
-                        self.tableView.endUpdates()
                     } else {
                         self.stopGetListComment = true
                     }
@@ -133,7 +131,7 @@ class FeedViewController: BaseViewController {
     
     func likeThisPost(sender: UIButton!) {
         //Post Likes
-        let postID = String(format:"%0.f", (self.feedDetail[kId]! as AnyObject).doubleValue)
+        let postID = String(format:"%ld", self.feedDetail.id)
         FeedRouter.sendLikePost(postID: postID) { (result, error) in
             let isSendSuccess = result as! Bool
             
@@ -196,7 +194,7 @@ class FeedViewController: BaseViewController {
         let text = self.commentTextView.text
         
         if (text?.isEmpty == false) {
-            let postId = String(format:"%0.f", (self.feedDetail[kId]! as AnyObject).doubleValue)
+            let postId = String(format:"%ld", self.feedDetail.id)
             
             self.postButton.isUserInteractionEnabled = false
             
@@ -206,8 +204,10 @@ class FeedViewController: BaseViewController {
                 let isPostSuccess = result as! Bool
                 if (isPostSuccess == true) {
                     self.commentTextView.text = ""
+                    self.commentPlaceHolder.isHidden = false
                     
                     self.offset = 0
+                    self.stopGetListComment = false
                     self.listComment.removeAll()
                     self.getListComment()
                 } else {
@@ -236,7 +236,7 @@ class FeedViewController: BaseViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "goNewPost") {
             let destination = segue.destination as! NewCommentImageViewController
-            destination.postId = String(format:"%0.f", (self.feedDetail[kId]! as AnyObject).doubleValue)
+            destination.postId = String(format:"%ld", self.feedDetail.id)
         } else if (segue.identifier == kClickURLLink) {
             let destination = segue.destination as! FeedWebViewController
             destination.URL = sender as? NSURL
@@ -281,18 +281,18 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
             }
             
-            let timeAgo = feedDetail[kCreateAt] as! String
+            let timeAgo = self.feedDetail.createdAt
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = kFullDateFormat
             dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-            let date : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
+            let date : NSDate = dateFormatter.date(from: timeAgo!)! as NSDate
             cell.timeLB.text = date.timeAgoSinceDate()
             
             cell.imageContentIMV.image = nil
-            if (feedDetail[kImageUrl] is NSNull == false) {
-                let imageContentLink = feedDetail[kImageUrl] as! String
+            if (self.feedDetail.imageUrl != nil && self.feedDetail.imageUrl?.isEmpty == false) {
+                let imageContentLink = self.feedDetail.imageUrl
                 
-                ImageVideoRouter.getImage(imageURLString: imageContentLink, sizeString: widthHeightScreenx2, completed: { (result, error) in
+                ImageVideoRouter.getImage(imageURLString: imageContentLink!, sizeString: widthHeightScreenx2, completed: { (result, error) in
                     if (error == nil) {
                         let imageRes = result as! UIImage
                         cell.imageContentIMV.image = imageRes
@@ -306,7 +306,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
             cell.shareBT.addTarget(self, action: #selector(self.showListContext(sender:)), for: .touchUpInside)
             cell.likeBT.addTarget(self, action: #selector(self.likeThisPost(sender:)), for: .touchUpInside)
             //Get Likes status
-            let postID = String(format:"%0.f", (self.feedDetail[kId]! as AnyObject).doubleValue)
+            let postID = String(format:"%ld", self.feedDetail.id)
             
             cell.likeBT.isUserInteractionEnabled = true
             cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
@@ -331,7 +331,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
             }).fetchdata()
             
             // Check Coach
-            let userID = String(format:"%0.f", (feedDetail[kUserId]! as AnyObject).doubleValue)
+            let userID = String(format:"%ld", self.feedDetail.userId)
             
             cell.coachLB.text = ""
             cell.avatarBT.layer.borderWidth = 0
@@ -359,7 +359,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
         } else if (indexPath.row == 1) {
             let cell = tableView.dequeueReusableCell(withIdentifier: kFeedSecondPartTableViewCell, for: indexPath) as! FeedSecondPartTableViewCell
             //Get Likes
-            let postID = String(format:"%0.f", (self.feedDetail[kId]! as AnyObject).doubleValue)
+            let postID = String(format:"%ld", self.feedDetail.id)
             FeedRouter.getLikePost(postID: postID, completed: { (result, error) in
                 if (error == nil) {
                     let likeJson = result as! NSDictionary
@@ -380,7 +380,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
             cell.userCommentLB.text = (userFeed[kFirstname] as! String).uppercased()
             
             cell.contentCommentTV.delegate = self
-            cell.contentCommentTV.text = feedDetail[kText] as? String
+            cell.contentCommentTV.text = self.feedDetail.text
             cell.contentCommentTVConstraint.constant = (cell.contentCommentTV.text?.heightWithConstrainedWidth(width: cell.contentCommentTV.frame.width, font: cell.contentCommentTV.font!))! + 20
             return cell
         } else {
@@ -456,8 +456,8 @@ extension FeedViewController: UITextViewDelegate {
         
         // Get height
         var textHeight = self.commentTextView.getHeightWithWidthFixed()
-        if (textHeight > 200) {
-            textHeight = 200
+        if (textHeight > 100) {
+            textHeight = 100
         }
         
         self.commentTextViewHeightConstraint.constant = textHeight

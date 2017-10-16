@@ -32,11 +32,12 @@ class FeedFirstPartTableViewCell: UITableViewCell {
         self.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
     }
     
-    @IBAction func like(sender: UIButton!) {
-        if ((sender.backgroundImage(for: .normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
-            sender.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
+    @IBAction func like(_ sender: Any) {
+        let button: UIButton = sender as! UIButton
+        if ((button.backgroundImage(for: .normal)?.isEqual(UIImage(named: "like.png"))) ==  true) {
+            button.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
         } else {
-            sender.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
+            button.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
         }
     }
 

@@ -341,7 +341,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             let navc = segue.destination as! UINavigationController
             let destination = navc.topViewController as! FeedViewController
             destination.fromPhoto = true
-            if let feed = sender as? NSDictionary {
+            if let feed = sender as? FeedModel {
                 destination.feedDetail = feed
             }
         } else if segue.identifier == "showCamera" {
@@ -1315,7 +1315,10 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
                     if let arr = result as? NSArray {
                         if arr.count > 0 {
                             if let dic = arr.object(at: 0) as? NSDictionary {
-                                self.performSegue(withIdentifier: "goToFeedDetail", sender: dic)
+                                let feed = FeedModel()
+                                feed.parseData(data: dic)
+                                
+                                self.performSegue(withIdentifier: "goToFeedDetail", sender: feed)
                                 return
                             }
                         }

@@ -30,6 +30,8 @@ class MessageModel: NSObject {
         self.messageID = String(format:"%ld", messageID)
         self.createdAt = data[kCreateAt] as? String
         self.updateAt = data[kUpdateAt] as? String
+        
+        // Other param will fill later
     }
     
     func same(message: MessageModel) -> Bool {

@@ -17,7 +17,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
     var tags = [TagModel]()
-    var arrayFeeds : [NSDictionary] = []
+    var arrayFeeds : [FeedModel] = []
     var arrayDiscount : [NSDictionary] = []
     var isStopFetch: Bool!
     var offset: Int = 0
@@ -59,8 +59,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.tableFeed.rowHeight = UITableViewAutomaticDimension
        
         self.isStopFetch = false
-        if (self.isLoading == false &&
-            self.isGoFeedDetail == false &&
+        if (self.isGoFeedDetail == false &&
             self.isGoProfileDetail == false) {
             self.refresh()
         }
@@ -146,9 +145,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func refreshControlTable() {
-        if (isLoading == false) {
-            self.refresh()
-        }
+        self.refresh()
     }
     
     func getDiscountList() {
@@ -214,24 +211,26 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     func getListFeeds() {
-        if (self.isStopFetch == false) {
+        if (self.isStopFetch == false && self.isLoading == false) {
             self.isLoading = true
             
             FeedRouter.getListFeed(offset: self.arrayFeeds.count, completed: { (result, error) in
+                self.isLoading = false
+                
                 if (error == nil) {
-                    let arr = result as! [NSDictionary]
+                    let arr = result as! [FeedModel]
                     
                     if (arr.count > 0) {
-                        self.arrayFeeds += arr
-                        self.tableFeed.reloadData(completion: {
-                            // Hidden table view if no data
-                            self.tableFeed.isHidden = (self.arrayFeeds.count == 0)
-                        })
+                        for feed in arr {
+                            if (feed.existInList(feedList: self.arrayFeeds) == false) {
+                                self.arrayFeeds.append(feed)
+                            }
+                        }
+                        
+                        self.tableFeed.reloadData()
                     } else {
                         self.isStopFetch = true
                     }
-                    
-                    self.isLoading = false
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
@@ -297,14 +296,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func showListContext(sender: UIButton) {
         let selectReport = { (action:UIAlertAction!) -> Void in
             let feed = self.arrayFeeds[sender.tag]
-            let postId = String(format:"%0.f", (feed[kId]! as AnyObject).doubleValue)
-//            Alamofire.request(.PUT, kPMAPI_REPORT, parameters: ["postId":postId])
-//                .responseJSON { response in
-//                    if response.response?.statusCode == 200 {
-//                        self.arrayFeeds.removeAtIndex(sender.tag)
-//                        self.tableFeed.reloadData()
-//                    }
-//            }
+            let postId = String(format:"%0.f", feed.id)
             
             FeedRouter.reportFeed(postID: postId, completed: { (result, error) in
                 if (error == nil) {
@@ -332,8 +324,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     func goProfile(sender: UIButton) {
         let feed = arrayFeeds[sender.tag]
-        let userID = feed[kUserId] as! Double
-        let userIDString = String(format: "%0.0f", userID)
+        let userIDString = String(format: "%ld", feed.userId)
         
         self.isGoProfileDetail = true
         PMHelper.showCoachOrUserView(userID: userIDString)
@@ -383,7 +374,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let view = sender as! UIView
             let tag = view.tag
             let feed = arrayFeeds[tag] 
-            let currentFeedDetail = feed[kUser] as! NSDictionary
+            let currentFeedDetail = feed.userDetail
             destination.coachDetail = currentFeedDetail
             destination.isFromFeed = true
         } else if (segue.identifier == kSendMessageConnection) {
@@ -440,13 +431,13 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             return nil
         }
         
-        if headerDiscount == nil {
-            headerDiscount = FeedDiscountView.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
-            headerDiscount.delegate = self
+        if self.headerDiscount == nil {
+            self.headerDiscount = FeedDiscountView.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
+            self.headerDiscount.delegate = self
         }
-        headerDiscount.arrayResult = self.arrayDiscount
+        self.headerDiscount.arrayResult = self.arrayDiscount
         
-        return headerDiscount
+        return self.headerDiscount
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -460,6 +451,10 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         if section == 0 {
             return 0
         }
+        
+        // Hidden table view if no data
+        self.tableFeed.isHidden = (self.arrayFeeds.count == 0)
+        
         return self.arrayFeeds.count
     }
     
@@ -468,15 +463,13 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.separatorInset = UIEdgeInsets()
         let feed = arrayFeeds[indexPath.row]
-        let userFeed = feed[kUser] as! NSDictionary
         // Name
-        let firstname = userFeed[kFirstname] as? String
-        cell.nameLB.text = firstname?.uppercased()
+        cell.nameLB.text = feed.userName.uppercased()
         
         // Avatar
-        if (userFeed[kImageUrl] is NSNull == false) {
+        if (feed.userImageURL != nil && feed.userImageURL?.isEmpty == false) {
             cell.avatarBT.setBackgroundImage(nil, for: .normal)
-            let imageLink = userFeed[kImageUrl] as? String
+            let imageLink = feed.userImageURL
             
             if (imageLink?.isEmpty == false) {
                 ImageVideoRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
@@ -501,18 +494,18 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         // Time
-        let timeAgo = feed[kCreateAt] as! String
+        let timeAgo = feed.createdAt
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = kFullDateFormat
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        let date : NSDate = dateFormatter.date(from: timeAgo)! as NSDate
+        let date : NSDate = dateFormatter.date(from: timeAgo!)! as NSDate
         cell.timeLB.text = date.timeAgoSinceDate()
         
-        if (feed[kImageUrl] is NSNull == false) {
-            let imageContentLink = feed[kImageUrl] as! String
+        if (feed.imageUrl != nil && feed.imageUrl?.isEmpty == false) {
+            let imageContentLink = feed.imageUrl
             let postfixContent = widthHeightScreenx2
             
-            ImageVideoRouter.getImage(imageURLString: imageContentLink, sizeString: postfixContent, completed: { (result, error) in
+            ImageVideoRouter.getImage(imageURLString: imageContentLink!, sizeString: postfixContent, completed: { (result, error) in
                 if (error == nil) {
                     let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     
@@ -531,7 +524,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         // Check Coach
         cell.isUserInteractionEnabled = false
         var coachLink  = kPMAPICOACH
-        let coachId = String(format:"%0.f", (userFeed[kId]! as AnyObject).doubleValue)
+        let coachId = String(format:"%0.f", feed.userId)
         coachLink.append(coachId)
         
         cell.avatarBT.layer.borderWidth = 0
@@ -568,7 +561,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         //Get Likes
         //            cell.likeBT.isUserInteractionEnabled = true
         //            cell.imageContentIMV.isUserInteractionEnabled = true
-        let feedID = String(format:"%0.f", (feed[kId]! as AnyObject).doubleValue)
+        let feedID = String(format:"%ld", feed.id)
         
         FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
             if (error == nil) {
@@ -597,13 +590,13 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         cell.layoutIfNeeded()
         cell.firstContentCommentTV.layoutIfNeeded()
         cell.firstContentCommentTV.delegate = self
-        cell.firstContentCommentTV.text = feed[kText] as? String
+        cell.firstContentCommentTV.text = feed.text
         
         let marginTopBottom = cell.firstContentCommentTV.layoutMargins.top + cell.firstContentCommentTV.layoutMargins.bottom
         let marginLeftRight = cell.firstContentCommentTV.layoutMargins.left + cell.firstContentCommentTV.layoutMargins.right
         cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(width: cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
         
-        cell.firstUserCommentLB.text = firstname?.uppercased()
+        cell.firstUserCommentLB.text = feed.userName.uppercased()
         cell.viewAllBT.tag = indexPath.row
         cell.viewAllBT.addTarget(self, action: #selector(self.goToFeedDetail(sender:)), for: .touchUpInside)
         
@@ -616,12 +609,12 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         cell.avatarBT.tag = indexPath.row
         cell.avatarBT.addTarget(self, action: #selector(self.goProfile(sender:)), for: .touchUpInside)
         cell.likeBT.tag = indexPath.row
-        cell.postId = String(format:"%0.f", (feed[kId]! as AnyObject).doubleValue)
+        cell.postId = String(format:"%ld", feed.id)
         return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell , forRowAt indexPath: IndexPath) {
-        if (indexPath.row == self.arrayFeeds.count - 1 && isLoading == false) {
+        if (indexPath.row == self.arrayFeeds.count - 1) {
             self.getListFeeds()
         }
     }

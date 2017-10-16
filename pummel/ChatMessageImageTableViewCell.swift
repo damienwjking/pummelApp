@@ -13,6 +13,7 @@ class ChatMessageImageTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLB: UILabel!
     @IBOutlet weak var messageLB: UILabel!
     @IBOutlet weak var photoIMW: UIImageView!
+    @IBOutlet weak var photoIMWHeightConstraint: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -21,7 +22,6 @@ class ChatMessageImageTableViewCell: UITableViewCell {
         self.nameLB.font = .pmmMonLight13()
         self.messageLB.font = .pmmMonLight16()
         self.messageLB.numberOfLines = 10
-        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

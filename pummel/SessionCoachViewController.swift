@@ -13,7 +13,7 @@ import AlamofireImage
 import EventKit
 import CVCalendar
 
-class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
+class SessionCoachViewController: BaseViewController {
     
     @IBOutlet weak var selectSegment: UISegmentedControl!
     
@@ -49,6 +49,7 @@ class SessionCoachViewController: BaseViewController, CVCalendarMenuViewDelegate
         
         self.calendarMenuView.menuViewDelegate = self
         self.calendarView.calendarAppearanceDelegate = self
+        self.calendarView.animatorDelegate = self
         self.calendarView.calendarDelegate = self
         
         self.monthLabel.font = UIFont.pmmMonReg13()
@@ -400,7 +401,7 @@ extension SessionCoachViewController: UITableViewDelegate, UITableViewDataSource
 }
 
 // MARK: CVCalendarViewDelegate
-extension SessionCoachViewController: CVCalendarViewDelegate {
+extension SessionCoachViewController: CVCalendarViewDelegate, CVCalendarMenuViewDelegate, CVCalendarViewAppearanceDelegate {
     func presentationMode() -> CalendarMode {
         return .monthView
     }

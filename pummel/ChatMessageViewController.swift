@@ -230,7 +230,7 @@ class ChatMessageViewController : BaseViewController {
         }.fetchdata()
     }
     
-    @IBAction func clickOnSendButton() {
+    @IBAction func clickOnSendButton(_ sender: Any) {
         if !(self.chatTextView.text == "" && self.isSending == false) {
             self.isSending = true
             if (self.messageId != nil) {
@@ -342,6 +342,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                             
                             let name = userInfo.object(forKey: kFirstname) as! String
                             cell.nameLB.text = name.uppercased()
+                            
                             if (userInfo[kImageUrl] is NSNull == false) {
                                 let userImageURL = userInfo[kImageUrl] as! String
                                 
@@ -381,7 +382,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
                 
                 let imageURLString = message.object(forKey: kImageUrl) as? String
                 
-                if (imageURLString?.isEmpty == false) {
+                if (imageURLString != nil && imageURLString?.isEmpty == false) {
                     ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight640, completed: { (result, error) in
                         if (error == nil) {
                             let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)

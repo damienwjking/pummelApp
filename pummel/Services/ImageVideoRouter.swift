@@ -14,6 +14,8 @@ typealias CompletionBlock = (_ result: Any?, _ error: NSError?) -> Void
 //typealias ResponseCompletionBlock = (response:  Response<AnyObject, NSError>, error: NSError?) -> Void
 
 enum ImageVideoRouter: URLRequestConvertible {
+    static let imageCache = NSCache<NSString, UIImage>()
+    
     case getCurrentUserAvatar(sizeString: String, completed: CompletionBlock)
     case getUserAvatar(userID : String, sizeString: String, completed: CompletionBlock)
     case getCoachAvatar(coachID : String, sizeString: String, completed: CompletionBlock)
@@ -236,7 +238,7 @@ enum ImageVideoRouter: URLRequestConvertible {
             })
         case .getImage:
             if (self.path.isEmpty == false) {
-                let image = self.getCacheImageWithLink(link: self.path)
+                let image = self.getCacheImageWithLink(link: self.path as NSString)
                 if (image != nil) {
                     self.comletedBlock(image, nil)
                 } else {
@@ -246,8 +248,7 @@ enum ImageVideoRouter: URLRequestConvertible {
                         if (response.result.isSuccess) {
                             let imageRes = response.result.value! as UIImage
                             
-                            let cache = NSCache<AnyObject, AnyObject>()
-                            cache.setObject(imageRes, forKey: self.path as AnyObject)
+                            ImageVideoRouter.imageCache.setObject(imageRes, forKey: self.path as NSString)
                             
                             self.comletedBlock(imageRes, nil)
                         } else {
@@ -358,10 +359,10 @@ enum ImageVideoRouter: URLRequestConvertible {
         }
     }
     
-    func getCacheImageWithLink(link: String) -> UIImage?  {
-        let cache = NSCache<AnyObject, AnyObject>()
-        if (cache.object(forKey: link as AnyObject) != nil) {
-            let imageRes = cache.object(forKey: link as AnyObject) as! UIImage
+    func getCacheImageWithLink(link: NSString) -> UIImage?  {
+        let cache = ImageVideoRouter.imageCache
+        if (cache.object(forKey: link) != nil) {
+            let imageRes = cache.object(forKey: link)!
             return imageRes
         }
         

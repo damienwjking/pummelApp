@@ -409,9 +409,9 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                 }
             }
             
-            var imageData : NSData!
+            var imageData = Data()
             if (self.imageSelected.image != nil) {
-                imageData = (self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2)! as NSData : UIImageJPEGRepresentation(self.cropAndSave(), 0.2)! as NSData
+                imageData = ((self.imageSelected?.isHidden != true) ? UIImageJPEGRepresentation(imageSelected!.image!, 0.2) : UIImageJPEGRepresentation(self.cropAndSave(), 0.2))!
             }
             
             let currentUserID = PMHelper.getCurrentID()
@@ -428,7 +428,7 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
                                          longtime: self.longtimeSelected,
                                          calorie: calorieSelected,
                                          dateTime: selectedDate,
-                                         imageData: imageData as Data, completed: { (result, error) in
+                                         imageData: imageData, completed: { (result, error) in
                                             self.view.hideToastActivity()
                                             
                                             let isPostSuccess = result as! Bool

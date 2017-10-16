@@ -125,7 +125,7 @@ enum MessageRouter: URLRequestConvertible {
         case .sendMessage(let messageID, let text, _, _):
             param?[kConversationId] = messageID as AnyObject
             param?[kText] = text as AnyObject
-            param?["file"] = "nodata".data(using: String.Encoding.utf8)! as AnyObject
+            param?["file"] = "nodata" as AnyObject
             
         case .updateMessageDetail(_, let parameter, _):
             for (key, value) in parameter {

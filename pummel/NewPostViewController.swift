@@ -95,14 +95,18 @@ class NewPostViewController: BaseViewController, UIScrollViewDelegate {
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        viewKeyboard.removeFromSuperview()
-        otherKeyboardView.removeFromSuperview()
+        if (self.viewKeyboard != nil) {
+            viewKeyboard.removeFromSuperview()
+            otherKeyboardView.removeFromSuperview()
+        }
     }
     
     func otherKeyBoardViewTapped(recognizer: UITapGestureRecognizer) {
-        viewKeyboard.removeFromSuperview()
-        otherKeyboardView.removeFromSuperview()
-        self.commentPhotoTV.resignFirstResponder()
+        if (self.viewKeyboard != nil) {
+            viewKeyboard.removeFromSuperview()
+            otherKeyboardView.removeFromSuperview()
+            self.commentPhotoTV.resignFirstResponder()
+        }
     }
     
     func setAvatar() {

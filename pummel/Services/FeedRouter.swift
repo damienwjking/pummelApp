@@ -77,7 +77,7 @@ enum FeedRouter: URLRequestConvertible {
             return .get
             
         case .postComment:
-            return .get
+            return .post
             
         case .getPhotoPost:
             return .get
@@ -200,9 +200,17 @@ enum FeedRouter: URLRequestConvertible {
                 switch response.result {
                 case .success(let JSON):
                     if response.response?.statusCode == 200 {
-                        let userDetail = JSON as! [NSDictionary]
+                        let feedDetails = JSON as! [NSDictionary]
                         
-                        self.comletedBlock(userDetail as AnyObject, nil)
+                        var feedList: [FeedModel] = []
+                        for feedDetail in feedDetails {
+                            let feed = FeedModel()
+                            feed.parseData(data: feedDetail)
+                            
+                            feedList.append(feed)
+                        }
+                        
+                        self.comletedBlock(feedList as AnyObject, nil)
                     }
                 case .failure(let error):
                     if (response.response?.statusCode == 401) {
@@ -253,17 +261,13 @@ enum FeedRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: FeedRouter 3")
                 
-                switch response.result {
-                case .success( _):
-                    if response.response?.statusCode == 200 {
-                        self.comletedBlock(true, nil)
-                    }
-                case .failure(let error):
-                    if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        self.comletedBlock(false, error as NSError)
-                    }
+                if response.response?.statusCode == 200 {
+                    self.comletedBlock(true, nil)
+                } else if (response.response?.statusCode == 401) {
+                    PMHelper.showLogoutAlert()
+                } else {
+                    let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                    self.comletedBlock(false, error)
                 }
             })
             

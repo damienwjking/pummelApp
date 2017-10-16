@@ -175,14 +175,38 @@ class BookSessionSelectUserViewController: BaseViewController, UITableViewDelega
         cell.lbName.text = "..."
         cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
         
-        ImageVideoRouter.getUserAvatar(userID: targetUserId, sizeString: widthHeight160) { (result, error) in
+        // Get name and image
+        UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
             if (error == nil) {
-                let imageRes = result as! UIImage
-                cell.imgAvatar.image = imageRes
+                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                if visibleCell == true {
+                    if let userInfo = result as? NSDictionary {
+                        let name = userInfo.object(forKey: kFirstname) as! String
+                        cell.lbName.text = name.uppercased()
+                        
+                        let imageURLString = userInfo[kImageUrl] as? String
+                        
+                        if (imageURLString?.isEmpty == false) {
+                            ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
+                                let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
+                                if visibleCell == true {
+                                    if (error == nil) {
+                                        let imageRes = result as! UIImage
+                                        cell.imgAvatar.image = imageRes
+                                    } else {
+                                        print("Request failed with error: \(String(describing: error))")
+                                    }
+                                }
+                            }).fetchdata()
+                        }
+                        
+                        
+                    }
+                }
             } else {
                 print("Request failed with error: \(String(describing: error))")
             }
-        }.fetchdata()
+            }.fetchdata()
     
         return cell
     }

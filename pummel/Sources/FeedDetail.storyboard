@@ -490,7 +490,7 @@
                                         </connections>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADD A COMMENT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uP2-Du-f8Z">
-                                        <rect key="frame" x="33" y="18" width="116" height="16"/>
+                                        <rect key="frame" x="37" y="26" width="116" height="16"/>
                                         <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -537,13 +537,13 @@
                                     <constraint firstItem="MKb-r3-Z0L" firstAttribute="leading" secondItem="44b-7e-kzU" secondAttribute="trailing" constant="15" id="Khv-Xw-h1E"/>
                                     <constraint firstItem="MKb-r3-Z0L" firstAttribute="top" secondItem="Wad-tq-H6Y" secondAttribute="top" constant="18" id="QXC-57-QnQ"/>
                                     <constraint firstAttribute="bottom" secondItem="MJ2-ru-EjU" secondAttribute="bottom" constant="15" id="Tbh-5G-8h7"/>
-                                    <constraint firstItem="uP2-Du-f8Z" firstAttribute="leading" secondItem="MKb-r3-Z0L" secondAttribute="leading" id="aks-yY-ybJ"/>
+                                    <constraint firstItem="uP2-Du-f8Z" firstAttribute="leading" secondItem="MKb-r3-Z0L" secondAttribute="leading" constant="4" id="aks-yY-ybJ"/>
                                     <constraint firstItem="o2E-EX-DaY" firstAttribute="leading" secondItem="EO0-m0-Nnp" secondAttribute="trailing" id="czM-YQ-SbH"/>
                                     <constraint firstAttribute="bottom" secondItem="o2E-EX-DaY" secondAttribute="bottom" constant="15" id="ddw-w8-IVd"/>
                                     <constraint firstAttribute="bottom" secondItem="44b-7e-kzU" secondAttribute="bottom" constant="21" id="ebz-V4-gXF"/>
                                     <constraint firstAttribute="bottom" secondItem="EO0-m0-Nnp" secondAttribute="bottom" constant="15" id="fbw-8k-dBZ"/>
                                     <constraint firstItem="EO0-m0-Nnp" firstAttribute="leading" secondItem="MKb-r3-Z0L" secondAttribute="trailing" constant="8" id="hTd-Ld-upg"/>
-                                    <constraint firstItem="uP2-Du-f8Z" firstAttribute="top" secondItem="MKb-r3-Z0L" secondAttribute="top" id="kYY-59-AeL"/>
+                                    <constraint firstItem="uP2-Du-f8Z" firstAttribute="top" secondItem="MKb-r3-Z0L" secondAttribute="top" constant="8" id="kYY-59-AeL"/>
                                     <constraint firstItem="o2E-EX-DaY" firstAttribute="leading" secondItem="EO0-m0-Nnp" secondAttribute="trailing" id="kh0-bd-BDK"/>
                                     <constraint firstAttribute="bottom" secondItem="MKb-r3-Z0L" secondAttribute="bottom" constant="19" id="mri-fA-Crc"/>
                                     <constraint firstItem="44b-7e-kzU" firstAttribute="leading" secondItem="Wad-tq-H6Y" secondAttribute="leading" constant="15" id="t2D-NU-X5i"/>
