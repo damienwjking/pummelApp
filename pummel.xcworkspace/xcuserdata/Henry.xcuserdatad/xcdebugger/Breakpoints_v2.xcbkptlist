@@ -26,7 +26,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529842699.73845"
+                  timestampString = "529863423.645468"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "256"
@@ -41,7 +41,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529842699.740963"
+                  timestampString = "529863423.650573"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "257"
@@ -74,7 +74,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529842699.7483"
+                  timestampString = "529863423.658915"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "277"
@@ -89,7 +89,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "529842699.751094"
+                  timestampString = "529863423.66145"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "278"
@@ -160,22 +160,6 @@
             startingLineNumber = "173"
             endingLineNumber = "173"
             landmarkName = "startConversation(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/LogSessionClientDetailViewController.swift"
-            timestampString = "529814901.268154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "421"
-            endingLineNumber = "421"
-            landmarkName = "saveClicked()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -266,7 +250,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/BookSessionToUserViewController.swift"
-                  timestampString = "529842699.830159"
+                  timestampString = "529863423.71786"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "146"
@@ -281,7 +265,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/BookSessionToUserViewController.swift"
-                  timestampString = "529842699.833131"
+                  timestampString = "529863423.720976"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "147"
@@ -304,86 +288,6 @@
             startingLineNumber = "336"
             endingLineNumber = "336"
             landmarkName = "presentedDateUpdated(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pods/CVCalendar/CVCalendar/CVCalendarDayView.swift"
-            timestampString = "529822562.413556"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
-            landmarkName = "moveMarker()"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pods/CVCalendar/CVCalendar/CVCalendarDayView.swift"
-            timestampString = "529822612.023076"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "380"
-            endingLineNumber = "380"
-            landmarkName = "moveMarker()"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/Services/UserRouter.swift"
-            timestampString = "529841859.514708"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "679"
-            endingLineNumber = "679"
-            landmarkName = "fetchdata()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/SigninViewController.swift"
-            timestampString = "529830269.700356"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "signinButtonClicked(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/Services/PMHelper.swift"
-            timestampString = "529831007.847598"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
-            landmarkName = "showCoachOrUserView(userID:showTestimonial:isFromChat:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -426,7 +330,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/ProfileViewController.swift"
-                  timestampString = "529842699.922132"
+                  timestampString = "529863423.758562"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "854"
@@ -441,7 +345,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/ProfileViewController.swift"
-                  timestampString = "529842699.926204"
+                  timestampString = "529863423.762766"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "854"
@@ -474,7 +378,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/ProfileViewController.swift"
-                  timestampString = "529842699.935314"
+                  timestampString = "529863423.770878"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "881"
@@ -489,7 +393,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/ProfileViewController.swift"
-                  timestampString = "529842699.948631"
+                  timestampString = "529863423.776184"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "881"
@@ -522,7 +426,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/ProfileViewController.swift"
-                  timestampString = "529842699.973866"
+                  timestampString = "529863423.784892"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "909"
@@ -537,7 +441,7 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/ProfileViewController.swift"
-                  timestampString = "529842699.979009"
+                  timestampString = "529863423.789879"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "909"
@@ -617,54 +521,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "pummel/EditProfileViewController.swift"
-            timestampString = "529840551.203228"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
-            landmarkName = "viewWillAppear(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/EditCoachProfileViewController.swift"
-            timestampString = "529841469.802668"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "249"
-            endingLineNumber = "249"
-            landmarkName = "setSelectedForTag()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/Services/UserRouter.swift"
-            timestampString = "529841576.76839"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "598"
-            endingLineNumber = "598"
-            landmarkName = "fetchdata()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "pummel/EditCoachProfileForUpgradeViewController.swift"
             timestampString = "529841761.338126"
             startingColumnNumber = "9223372036854775807"
@@ -681,13 +537,93 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "pummel/Model.swift/TagModel.swift"
-            timestampString = "529842698.095201"
+            filePath = "pummel/EditCoachProfileViewController.swift"
+            timestampString = "529860468.589387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
-            landmarkName = "parseData(data:)"
+            startingLineNumber = "456"
+            endingLineNumber = "456"
+            landmarkName = "basicInfoUpdate()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/EditCoachProfileViewController.swift"
+            timestampString = "529860478.671156"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
+            landmarkName = "basicInfoUpdate()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/Services/UserRouter.swift"
+            timestampString = "529860514.058598"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
+            landmarkName = "fetchdata()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/MessageModel.swift"
+            timestampString = "529861622.059485"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "synsOtherData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/MessageModel.swift"
+            timestampString = "529861718.64761"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "synsOtherData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/ChatMessageViewController.swift"
+            timestampString = "529861998.326632"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
+            landmarkName = "sendMessageButtonClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

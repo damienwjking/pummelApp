@@ -242,7 +242,7 @@ enum UserRouter: URLRequestConvertible {
                     
                     index = index + 1
                     
-                    prefix = prefix + "tagIds=" + (id as! String)
+                    prefix = prefix + "tagIds=\(id)"
                 }
             }
             
@@ -414,20 +414,13 @@ enum UserRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter 2")
                 
-                switch response.result {
-                case .success(let JSON):
-                    if (JSON is NSNull == false) {
-                        self.comletedBlock!(true as AnyObject, nil)
-                    } else {
-                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(false as AnyObject, error)
-                    }
-                case .failure(let error):
-                    if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        self.comletedBlock!(false as AnyObject, error as NSError)
-                    }
+                if (response.response?.statusCode == 200) {
+                    self.comletedBlock!(true as AnyObject, nil)
+                } else if (response.response?.statusCode == 401) {
+                    PMHelper.showLogoutAlert()
+                } else {
+                    let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                    self.comletedBlock!(false as AnyObject, error as NSError)
                 }
             })
             

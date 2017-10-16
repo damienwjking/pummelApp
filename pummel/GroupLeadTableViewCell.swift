@@ -59,7 +59,7 @@ class GroupLeadTableViewCell: UITableViewCell {
     }
 }
 
-extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
+extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.arrayMessages.count
     }
@@ -120,9 +120,7 @@ extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewData
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let userInfo = arrayMessages[indexPath.row]
         
         var targetUserId = ""

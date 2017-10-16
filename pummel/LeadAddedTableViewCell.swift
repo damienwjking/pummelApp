@@ -13,7 +13,7 @@ import Alamofire
     @objc optional func removeUserWithID(userId:String)
 }
 
-class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
+class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
@@ -66,9 +66,7 @@ class LeadAddedTableViewCell: UITableViewCell, UICollectionViewDelegate, UIColle
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                               sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50,height: 50)
     }
     
