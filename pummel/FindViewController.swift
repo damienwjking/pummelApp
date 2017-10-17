@@ -11,8 +11,6 @@
 import UIKit
 import MapKit
 import Mixpanel
-import Alamofire
-//import ReactiveUI
 import Cartography
 import UIColor_FlatColors
 

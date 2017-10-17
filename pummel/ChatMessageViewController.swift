@@ -7,8 +7,6 @@
 //
 
 import UIKit
-//import RSKGrowingTextView
-import Alamofire
 import Mixpanel
 
 class ChatMessageViewController : BaseViewController {
@@ -70,6 +68,7 @@ class ChatMessageViewController : BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         self.chatTextView.text = self.preMessage
+        self.textViewDidChange(self.chatTextView)
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -9,7 +9,6 @@
 import UIKit
 import MapKit
 import Mixpanel
-import Alamofire
 import Foundation
 
 class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITextViewDelegate, FeedDiscountViewDelegate, CLLocationManagerDelegate {
@@ -223,6 +222,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     if (arr.count > 0) {
                         for feed in arr {
                             if (feed.existInList(feedList: self.arrayFeeds) == false) {
+                                feed.synsNumberLike()
+                                
                                 self.arrayFeeds.append(feed)
                             }
                         }
@@ -556,36 +557,14 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             }
             }.fetchdata()
         
-        cell.likeBT.setBackgroundImage(UIImage(named: "like.png"), for: .normal)
+        // Like
+        cell.likeLB.text = feed.likeTotal + " likes"
         
-        //Get Likes
-        //            cell.likeBT.isUserInteractionEnabled = true
-        //            cell.imageContentIMV.isUserInteractionEnabled = true
-        let feedID = String(format:"%ld", feed.id)
-        
-        FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
-            if (error == nil) {
-                let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
-                
-                if (isUpdateCell) {
-                    DispatchQueue.main.async(execute: {
-                        let likeJson = result as! NSDictionary
-                        
-                        // Update like number
-                        let likeNumber = String(format:"%0.f", (likeJson["likeNumber"]! as AnyObject).doubleValue)
-                        cell.likeLB.text = likeNumber + " likes"
-                        
-                        // Update current user liked
-                        let userLikedFeed = likeJson["currentUserLiked"] as! Bool
-                        if (userLikedFeed == true) {
-                            cell.likeBT.setBackgroundImage(UIImage(named: "liked.png"), for: .normal)
-                        }
-                    })
-                }
-            } else {
-                print("Request failed with error: \(String(describing: error))")
-            }
-            }.fetchdata()
+        if (feed.isLiked == true) {
+            cell.likeBT.setBackgroundImage(UIImage(named: "liked"), for: .normal)
+        } else {
+            cell.likeBT.setBackgroundImage(UIImage(named: "like"), for: .normal)
+        }
         
         cell.layoutIfNeeded()
         cell.firstContentCommentTV.layoutIfNeeded()

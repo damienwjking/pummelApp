@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 
 @objc protocol LeadAddedTableViewCellDelegate: class {
     @objc optional func removeUserWithID(userId:String)

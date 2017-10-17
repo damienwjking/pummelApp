@@ -6,10 +6,9 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 
-import UIKit
-import Alamofire
-import Mixpanel
 import AVKit
+import UIKit
+import Mixpanel
 import AVFoundation
 
 

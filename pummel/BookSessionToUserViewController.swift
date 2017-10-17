@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import Foundation
-import Alamofire
 
 class BookSessionToUserViewController: BaseViewController {
     

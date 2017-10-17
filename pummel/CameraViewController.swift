@@ -10,7 +10,6 @@ import UIKit
 import AVKit
 import AVFoundation
 import PhotosUI
-import Alamofire
 
 enum RecordStatus: Int {
     case pending, recording, finish, uploading

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 
 enum TypeGroup:Int {
     case NewLead = 0, Current, Old, CoachJustConnected, CoachCurrent, CoachOld

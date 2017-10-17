@@ -8,7 +8,6 @@
 
 import UIKit
 import MessageUI
-import Alamofire
 
 class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCellDelegate, LeadAddedTableViewCellDelegate {
 

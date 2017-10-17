@@ -6,14 +6,13 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 
-import Foundation
 import UIKit
-import Alamofire
+import MapKit
 import Mixpanel
 import MessageUI
-import LocationPicker
+import Foundation
 import CoreLocation
-import MapKit
+import LocationPicker
 
 class EditCoachProfileForUpgradeViewController: BaseViewController, CLLocationManagerDelegate {
     

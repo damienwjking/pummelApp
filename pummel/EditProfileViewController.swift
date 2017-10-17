@@ -6,12 +6,11 @@
 //  Copyright © 2016 pummel. All rights reserved.
 //
 
-import Foundation
 import UIKit
-import Alamofire
 import Mixpanel
+import Foundation
 
-class EditProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UITextViewDelegate, FusumaDelegate {
+class EditProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var scrollViewBottomDT: NSLayoutConstraint!
@@ -396,57 +395,6 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         self.present(fusuma, animated: true, completion: nil)
     }
     
-    // Fusuma delegate
-    func fusumaImageSelected(image: UIImage) {
-        
-        let pickedImage = image
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        activityView.center = self.view.center
-        activityView.startAnimating()
-        avatarIMW.addSubview(activityView)
-        avatarIMW.contentMode = .scaleAspectFill
-        var imageData : Data!
-        imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
-        
-            if (imageData == nil) {
-                PMHelper.showNoticeAlert(message: pleaseChoosePngOrJpeg)
-            }  else {
-                self.view.makeToastActivity()
-                
-                ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData, textPost: "", completed: { (result, error) in
-                    self.view.hideToastActivity()
-                    
-                    let isUploadSuccess = result as! Bool
-                    if (isUploadSuccess == true) {
-                        self.avatarIMW.image = pickedImage
-                    } else {
-                        PMHelper.showDoAgainAlert()
-                    }
-                }).fetchdata()
-        }
-    }
-    
-    func fusumaCameraRollUnauthorized() {
-        
-        print("Camera roll unauthorized")
-        
-        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
-            
-            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(url as URL)
-            }
-            
-        }))
-        
-        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
-            
-        }))
-        
-        self.present(alert, animated: true, completion: nil)
-    }
-    
     func imageTapped()
     {
         showPopupToSelectProfileAvatar()
@@ -516,15 +464,6 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n" {
-            textView.resignFirstResponder()
-            return false
-        }
-        return true
-    }
-    
     
     func checkRuleInputData() -> Bool {
         var returnValue  = false
@@ -629,35 +568,6 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
     }
     
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if textField.isEqual(self.genderContentTF) == true {
-            self.dobContentTF.resignFirstResponder()
-            self.weightContentTF.resignFirstResponder()
-            self.heightContentTF.resignFirstResponder()
-            self.emailContentTF.resignFirstResponder()
-            self.nameContentTF.resignFirstResponder()
-            self.mobileContentTF.resignFirstResponder()
-            self.aboutContentTV.resignFirstResponder()
-            self.showPopupToSelectGender()
-            return false
-        } else if (textField.isEqual(self.nameContentTF)){
-            isFirstTVS = true
-            return true
-        } else if (textField.isEqual(self.weightContentTF)){
-            let weightString = weightContentTF.text?.replacingOccurrences(of: " kgs", with: "")
-            self.weightContentTF.text = weightString
-            
-            return true
-        } else if (textField.isEqual(self.heightContentTF)){
-            let heightString = heightContentTF.text?.replacingOccurrences(of: " cms", with: "")
-            self.heightContentTF.text = heightString
-            
-            return true
-        } else {
-            return true
-        }
-    }
-    
     @IBAction func DOBBeginEditing(_ sender: Any) {
         let datePickerView:UIDatePicker = UIDatePicker()
         datePickerView.backgroundColor = UIColor.black
@@ -692,20 +602,6 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                                                            attributes:[NSForegroundColorAttributeName:  UIColor.pmmRougeColor()])
         }
     }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        if textField.isEqual(self.emailContentTF) == true {
-            if (self.isValidEmail(testStr: self.emailContentTF.text!) == false) {
-                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                 attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
-            } else {
-                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
-                                                                 attributes:[NSForegroundColorAttributeName: UIColor.black])
-            }
-        }
-        return true
-    }
 
     @IBAction func showPopupToSelectGender() {
         let selectMale = { (action:UIAlertAction!) -> Void in
@@ -722,3 +618,109 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     }
 }
 
+// MARK: - FusumaDelegate
+extension EditProfileViewController: FusumaDelegate {
+    func fusumaImageSelected(image: UIImage) {
+        
+        let pickedImage = image
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityView.center = self.view.center
+        activityView.startAnimating()
+        avatarIMW.addSubview(activityView)
+        avatarIMW.contentMode = .scaleAspectFill
+        var imageData : Data!
+        imageData = UIImageJPEGRepresentation(pickedImage, 0.2)
+        
+        if (imageData == nil) {
+            PMHelper.showNoticeAlert(message: pleaseChoosePngOrJpeg)
+        }  else {
+            self.view.makeToastActivity()
+            
+            ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: imageData, textPost: "", completed: { (result, error) in
+                self.view.hideToastActivity()
+                
+                let isUploadSuccess = result as! Bool
+                if (isUploadSuccess == true) {
+                    self.avatarIMW.image = pickedImage
+                } else {
+                    PMHelper.showDoAgainAlert()
+                }
+            }).fetchdata()
+        }
+    }
+    
+    func fusumaCameraRollUnauthorized() {
+        
+        print("Camera roll unauthorized")
+        
+        let alert = UIAlertController(title: "Access Requested", message: "Saving image needs to access your photo album", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (action) -> Void in
+            
+            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(url as URL)
+            }
+            
+        }))
+        
+        alert.addAction(UIAlertAction(title: kCancle, style: .cancel, handler: { (action) -> Void in
+            
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension EditProfileViewController: UITextFieldDelegate, UITextViewDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        if textField.isEqual(self.emailContentTF) == true {
+            if (self.isValidEmail(testStr: self.emailContentTF.text!) == false) {
+                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
+                                                                        attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
+            } else {
+                self.emailContentTF.attributedText = NSAttributedString(string:self.emailContentTF.text!,
+                                                                        attributes:[NSForegroundColorAttributeName: UIColor.black])
+            }
+        }
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField.isEqual(self.genderContentTF) == true {
+            self.dobContentTF.resignFirstResponder()
+            self.weightContentTF.resignFirstResponder()
+            self.heightContentTF.resignFirstResponder()
+            self.emailContentTF.resignFirstResponder()
+            self.nameContentTF.resignFirstResponder()
+            self.mobileContentTF.resignFirstResponder()
+            self.aboutContentTV.resignFirstResponder()
+            self.showPopupToSelectGender()
+            return false
+        } else if (textField.isEqual(self.nameContentTF)){
+            isFirstTVS = true
+            return true
+        } else if (textField.isEqual(self.weightContentTF)){
+            let weightString = weightContentTF.text?.replacingOccurrences(of: " kgs", with: "")
+            self.weightContentTF.text = weightString
+            
+            return true
+        } else if (textField.isEqual(self.heightContentTF)){
+            let heightString = heightContentTF.text?.replacingOccurrences(of: " cms", with: "")
+            self.heightContentTF.text = heightString
+            
+            return true
+        } else {
+            return true
+        }
+    }
+}

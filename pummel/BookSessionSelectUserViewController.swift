@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 
 class BookSessionSelectUserViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
 
