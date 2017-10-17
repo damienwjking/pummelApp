@@ -35,6 +35,7 @@ enum UserRouter: URLRequestConvertible {
     case checkConnect(coachID: String, completed: CompletionBlock)
     case setLead(coachID: String, completed: CompletionBlock)
     case getLead(userID: String, type: String, offset: Int, completed: CompletionBlock)
+    case getActiveUser(userID: String, offset: Int, completed: CompletionBlock)
     case setCurrentLead(requestID: String, completed: CompletionBlock)
     case setOldLead(requestID: String, completed: CompletionBlock)
     case searchCoachNearby(gender: String, tags: NSArray, longitude: CLLocationDegrees, latitute: CLLocationDegrees, stage: String, city: String, offset: Int, completed: CompletionBlock)
@@ -84,6 +85,8 @@ enum UserRouter: URLRequestConvertible {
         case .setLead(_, let completed):
             return completed
         case .getLead(_, _, _, let completed):
+            return completed
+        case .getActiveUser(_, _, let completed):
             return completed
         case .setCurrentLead(_, let completed):
             return completed
@@ -142,6 +145,8 @@ enum UserRouter: URLRequestConvertible {
         case .setLead:
             return .post
         case .getLead:
+            return .get
+        case .getActiveUser:
             return .get
         case .setCurrentLead:
             return .put
@@ -225,6 +230,9 @@ enum UserRouter: URLRequestConvertible {
         case .getLead(let userID, let type, let offset, _):
             prefix = kPMAPICOACHES + userID + type + "\(offset)"
             
+        case .getActiveUser(let userID, _, _):
+            prefix = kPMAPICOACHES + userID + kPM_PATH_TOTAL_ACTIVE_USER
+            
         case .setCurrentLead:
             prefix = kPMAPICOACHES + currentUserID + kPMAPICOACH_CURRENT + "/"
             
@@ -299,8 +307,13 @@ enum UserRouter: URLRequestConvertible {
                 param["gender"] = gender! as AnyObject
             }
             
+        case .getActiveUser(let userID, let offset, _):
+            param[kUserId] = userID as AnyObject
+            param[kOffset] = offset as AnyObject
+            param[kLimit] = 20 as AnyObject
+            
         case .postTestimonial(let userID, let description, let location, let rating, _):
-            param["userId"] = userID as AnyObject
+            param[kUserId] = userID as AnyObject
             param["userCommentId"] = currentUserID as AnyObject
             param["description"] = description as AnyObject
             param["userCommentLocation"] = location as AnyObject
@@ -804,6 +817,29 @@ enum UserRouter: URLRequestConvertible {
                         let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
                         self.comletedBlock!(nil, error as NSError)
                     } else if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .getActiveUser:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter set_active_user")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let activeUser = JSON as! NSDictionary
+                        
+                        self.comletedBlock!(activeUser, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
                         PMHelper.showLogoutAlert()
                     } else {
                         self.comletedBlock!(nil, error as NSError)

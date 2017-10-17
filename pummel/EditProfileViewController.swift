@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Mixpanel
 import Foundation
 
 class EditProfileViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -233,8 +232,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         
         if (self.userInfo[kDob] is NSNull == false) {
             let stringDob = self.userInfo[kDob]! as! String
-//            self.dobContentTF.text = stringDob.substringToIndex(stringDob.startIndex.advancedBy(10))
-//            self.dobContentTF.text = stringDob.substring(to: stringDob.index(0, offsetBy: 10))
+            self.dobContentTF.text = stringDob.substring(to: stringDob.index(stringDob.startIndex, offsetBy: 10))
         } else {
             self.dobContentTF.text = ""
         }
@@ -316,12 +314,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                     lastname.append(fullNameArr[i])
                     lastname.append(" ")
                 }
-            } 
-
-            // Tracker mixpanel
-            let mixpanel = Mixpanel.sharedInstance()
-            let properties = ["Name": "Navigation Click", "Label":"Save Profile"]
-            mixpanel?.track("IOS.Profile.EditProfile", properties: properties)
+            }
             
             self.view.makeToastActivity(message: "Saving")
             

@@ -87,7 +87,7 @@ class LogTableViewCell: UITableViewCell {
             let isCoach = result as! Bool
             
             if isCoach {
-                self.avatarIMV.layer.borderWidth = 3
+                self.avatarIMV.layer.borderWidth = 2
                 self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
             }
         }.fetchdata()
