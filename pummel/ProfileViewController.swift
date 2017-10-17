@@ -14,7 +14,6 @@ import AVKit
 import Mixpanel
 import PhotosUI
 import MessageUI
-import Alamofire
 import AVFoundation
 
 enum VideoStatus: Int {

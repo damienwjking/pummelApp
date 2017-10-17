@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import Alamofire
-import CoreLocation
 import Mixpanel
+import CoreLocation
 
 class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
     @IBOutlet var letUsHelpTF : UILabel!

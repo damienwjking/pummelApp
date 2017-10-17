@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 import Mixpanel
 
 class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {

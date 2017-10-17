@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 import Foundation
 
 class LogSessionClientDetailViewController: BaseViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {

@@ -8,8 +8,6 @@
 
 import UIKit
 import Foundation
-import Alamofire
-import AlamofireImage
 import EventKit
 import CVCalendar
 

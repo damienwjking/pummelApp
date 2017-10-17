@@ -11,11 +11,9 @@
 import UIKit
 import Contacts
 import Mixpanel
-import Alamofire
 import MessageUI
 import Foundation
 import AddressBook
-import AlamofireImage
 
 class MessageViewController: BaseViewController {
     

@@ -24,6 +24,9 @@ class FeedModel: NSObject {
     var userName = ""
     var userImageURL: String?
     
+    var isLiked = false
+    var likeTotal = ""
+    
     var userDetail: NSDictionary? // Temp for reformat
     
     func parseData(data: NSDictionary) {
@@ -53,6 +56,21 @@ class FeedModel: NSObject {
         if (userImage != nil && userImage?.isEmpty == false) {
             self.userImageURL = userImage
         }
+    }
+    
+    func synsNumberLike() {
+        let feedID = String(format:"%ld", self.id)
+        
+        FeedRouter.getAndCheckFeedLike(feedID: feedID) { (result, error) in
+            if (error == nil) {
+                let likeJson = result as! NSDictionary
+                
+                self.likeTotal = likeJson["likeNumber"] as! String
+                self.isLiked = likeJson["currentUserLiked"] as! Bool
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+            }.fetchdata()
     }
     
     func same(feed: FeedModel) -> Bool {

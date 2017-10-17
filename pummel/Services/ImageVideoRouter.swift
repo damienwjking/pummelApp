@@ -9,6 +9,7 @@
 import Mixpanel
 import Alamofire
 import Foundation
+import AlamofireImage
 
 typealias CompletionBlock = (_ result: Any?, _ error: NSError?) -> Void
 //typealias ResponseCompletionBlock = (response:  Response<AnyObject, NSError>, error: NSError?) -> Void

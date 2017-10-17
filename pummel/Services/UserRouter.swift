@@ -12,6 +12,8 @@ import Alamofire
 import Foundation
 
 enum UserRouter: URLRequestConvertible {
+    static let userCache = NSCache<NSString, NSString>()
+    
     case getCurrentUserInfo(completed: CompletionBlock)
     case getUserInfo(userID : String, completed: CompletionBlock)
     case getCoachInfo(userID : String, completed: CompletionBlock)
@@ -446,20 +448,35 @@ enum UserRouter: URLRequestConvertible {
             })
             
         case .checkCoachOfUser:
-            Alamofire.request(self).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 4")
-                
-                if response.response?.statusCode == 200 {
+            let cache = UserRouter.userCache
+            let coachCache = cache.object(forKey: self.path as NSString)
+            if (coachCache != nil) {
+                if (coachCache == "1") {
                     self.comletedBlock!(true as AnyObject, nil)
                 } else {
-                    if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(false as AnyObject, error as NSError)
-                    }
+                    let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                    self.comletedBlock!(false as AnyObject, error as NSError)
                 }
-            })
+            } else {
+                Alamofire.request(self).responseJSON(completionHandler: { (response) in
+                    print("PM: UserRouter 4")
+                    
+                    if response.response?.statusCode == 200 {
+                        UserRouter.userCache.setObject("1", forKey: self.path as NSString)
+                        
+                        self.comletedBlock!(true as AnyObject, nil)
+                    } else {
+                        if (response.response?.statusCode == 401) {
+                            PMHelper.showLogoutAlert()
+                        } else {
+                            UserRouter.userCache.setObject("0", forKey: self.path as NSString)
+                            
+                            let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                            self.comletedBlock!(false as AnyObject, error as NSError)
+                        }
+                    }
+                })
+            }
             
         case .authenticateFacebook:
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in

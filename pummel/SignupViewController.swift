@@ -8,7 +8,6 @@
 
 import UIKit
 import Mixpanel
-import Alamofire
 import FBSDKCoreKit
 import FBSDKShareKit
 import FBSDKLoginKit

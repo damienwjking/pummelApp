@@ -8,7 +8,6 @@
 
 import UIKit
 import Mixpanel
-import Alamofire
 import FBSDKCoreKit
 
 class LoginAndRegisterViewController: UIViewController {

@@ -207,7 +207,7 @@ extension PostTestimonialViewController : UITextViewDelegate, UITextFieldDelegat
     func textViewDidChange(_ textView: UITextView) {
         let textViewText = NSString(string: textView.text)
         
-        self.totalCharacterLabel.text = String(format: "%ld", textViewText.length)
+        self.totalCharacterLabel.text = String(format: "%ld", 300 - textViewText.length)
         
         if (textViewText.length == 0) {
             self.testimonialPlaceHolder.isHidden = false

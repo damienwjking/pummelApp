@@ -8,7 +8,6 @@
 
 import UIKit
 import MapKit
-import Alamofire
 
 class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 

@@ -8,9 +8,6 @@
 
 import UIKit
 
-import UIKit
-import Alamofire
-
 class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, GroupLeadTableViewCellDelegate {
     
     @IBOutlet weak var tbView: UITableView!
