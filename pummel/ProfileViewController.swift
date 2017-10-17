@@ -818,10 +818,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 let mixpanel = Mixpanel.sharedInstance()
                 let properties = ["Name": "Send Message", "Label":"\(firstName.uppercased())"]
                 mixpanel?.track("IOS.SendMessageToCoach", properties: properties)
-                let coachID = self.coachDetail[kId] as! String
+                let coachID = self.coachDetail[kId] as! Int
+                let coachIDString = String(format:"%ld", coachID)
                 
                 self.view.makeToastActivity(message: "Connecting")
-                UserRouter.setLead(coachID: coachID, completed: { (result, error) in
+                UserRouter.setLead(coachID: coachIDString, completed: { (result, error) in
                     self.view.hideToastActivity()
                     
                     if let val = self.coachDetail[kId] as? Int {

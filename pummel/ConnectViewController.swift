@@ -121,6 +121,7 @@ class ConnectViewController: BaseViewController {
         self.thirdConnectingIconV.layer.cornerRadius = 5
         self.fourthConnectingIconV.layer.cornerRadius = 5
         
+        self.view.layoutIfNeeded()
         self.meBigIndicatorView.layer.cornerRadius = self.meBigIndicatorView.frame.width/2
         self.meMedIndicatorView.layer.cornerRadius = self.meMedIndicatorView.frame.width/2
         self.meSmallIndicatorView.layer.cornerRadius = self.meSmallIndicatorView.frame.width/2

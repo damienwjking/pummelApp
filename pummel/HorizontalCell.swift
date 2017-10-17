@@ -41,9 +41,9 @@ class HorizontalCell: UITableViewCell {
         let name = leadDictionay.object(forKey: kFirstname) as! String
         self.name.text = name.uppercased()
         
-        if (leadDictionay[kImageUrl] is NSNull == false) {
-            let imageURLString = leadDictionay[kImageUrl] as! String
-            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+        let imageURLString = leadDictionay[kImageUrl] as? String
+        if (imageURLString != nil && imageURLString?.isEmpty == false) {
+            ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.imageV.image = imageRes
