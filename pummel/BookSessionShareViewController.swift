@@ -26,7 +26,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
         
-        // TODO: add right invite button
+        // add right invite button
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kInvite.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.invite))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         

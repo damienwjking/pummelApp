@@ -169,10 +169,8 @@ class BaseViewController: UIViewController {
                         self.tabBarController?.selectedIndex = 2
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_3D_TOUCH_2 {
-                    if (((self as? ProgressViewController) != nil) ||
-                        ((self as? LogSessionClientViewController) != nil) ||
-                        ((self as? SessionCoachViewController) != nil) ||
-                        ((self as? SessionClientViewController) != nil)) {
+                    if (((self as? LogSessionClientViewController) != nil) ||
+                        ((self as? SessionCoachViewController) != nil)) {
                         // Do nothing
                     } else {
                         self.tabBarController?.selectedIndex = 1
@@ -198,10 +196,8 @@ class BaseViewController: UIViewController {
                         self.tabBarController?.selectedIndex = 3
                     }
                 } else if moveScreenType == k_PM_MOVE_SCREEN_NOTI_INCOMING_SESSION {
-                    if (((self as? ProgressViewController) != nil) ||
-                        ((self as? LogSessionClientViewController) != nil) ||
-                        ((self as? SessionCoachViewController) != nil) ||
-                        ((self as? SessionClientViewController) != nil)) {
+                    if (((self as? LogSessionClientViewController) != nil) ||
+                        ((self as? SessionCoachViewController) != nil)) {
                         // Do nothing
                     } else {
                         self.tabBarController?.selectedIndex = 1

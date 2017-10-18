@@ -23,14 +23,14 @@ class BookSessionViewController: BaseViewController {
         
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        
-        let nibName = UINib(nibName: "BookSessionTableViewCell", bundle:nil)
-        self.tbView.register(nibName, forCellReuseIdentifier: "BookSessionTableViewCell")
     
         self.navigationItem.setHidesBackButton(true, animated: false)
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.backButtonClicked))
+        
+        let nibName = UINib(nibName: "BookSessionTableViewCell", bundle:nil)
+        self.tbView.register(nibName, forCellReuseIdentifier: "BookSessionTableViewCell")
         
         self.getListTags()
     }
@@ -100,14 +100,12 @@ extension BookSessionViewController : UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: "BookSessionTableViewCell") as! BookSessionTableViewCell
         
         let tag = tags[indexPath.row]
-        
-        let tagName = tag.tagTitle?.uppercased()
-        cell.bookTitleLB.text = tagName
-        cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        cell.setupData(tag: tag)
         
         if (indexPath.row == tags.count - 1) {
             self.getListTags()
         }
+        
         return cell
     }
     

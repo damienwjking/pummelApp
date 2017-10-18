@@ -71,20 +71,23 @@ class SessionCoachViewController: BaseViewController {
         }
         
         self.initTableView()
-        self.initNavigationBar()
     }
     
     override func viewDidLayoutSubviews() {
         self.calendarMenuView.commitMenuViewUpdate()
         self.calendarView.commitCalendarViewUpdate()
-        
-        
+    
         super.viewDidLayoutSubviews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.setupTabbar()
+        self.setupNavigationBar()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(SessionCoachViewController.getListSession), name: NSNotification.Name(rawValue: k_PM_REFRESH_SESSION), object: nil)
+        
         self.getListSession()
     }
     
@@ -119,14 +122,24 @@ class SessionCoachViewController: BaseViewController {
         self.sessionTableView.separatorInset = UIEdgeInsetsMake(0, SCREEN_WIDTH, 0, 0)
     }
     
-    func initNavigationBar() {
+    func setupNavigationBar() {
         // Remove Button At Left Navigationbar Item
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
+        
         // ADD + Button At Right Navigationbar Item
         var image = UIImage(named: "icon_add")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(self.rightButtonClicked))
         self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.black
+    }
+    
+    func setupTabbar() {
+        self.tabBarController?.title = kNavSession
+        self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        
+        let selectedImage = UIImage(named: "sessionsPressed")
+        self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
     }
     
     // MARK: Private function
@@ -157,19 +170,19 @@ class SessionCoachViewController: BaseViewController {
                     } else {
                         self.canLoadMore = false
                     }
-                    
-                    self.offset = self.offset + 20
-                    
-                    self.getListSession()
-                    
-                    self.presentedDateUpdated(self.calendarView.presentedDate)
-                    
-                    self.updateLayout()
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                     
                     self.canLoadMore = false
                 }
+                
+                self.offset = self.offset + 20
+                
+                self.getListSession()
+                
+                self.presentedDateUpdated(self.calendarView.presentedDate)
+                
+                self.updateLayout()
             }).fetchdata()
         }
         
@@ -193,45 +206,29 @@ class SessionCoachViewController: BaseViewController {
     
     // MARK: Outlet function
     func rightButtonClicked() {
-        let logAction = UIAlertAction(title: kLog, style: UIAlertActionStyle.destructive, handler: { (action:UIAlertAction!) -> Void in
-            self.performSegue(withIdentifier: "coachLogASession", sender: nil)
-        })
-        
-        let bookAction = UIAlertAction(title: kBook, style: UIAlertActionStyle.destructive, handler: { (action:UIAlertAction!) -> Void in
-            self.performSegue(withIdentifier: "coachMakeABook", sender: nil)
-        })
-        
-        let cancleAction = UIAlertAction(title: kCancle, style: .cancel, handler: { (UIAlertAction) in
+        if (defaults.bool(forKey: k_PM_IS_COACH) == true) {
+            let logAction = UIAlertAction(title: kLog, style: UIAlertActionStyle.destructive, handler: { (action:UIAlertAction!) -> Void in
+                self.performSegue(withIdentifier: "coachLogASession", sender: nil)
+            })
             
-        })
-        
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        alertController.addAction(logAction)
-        alertController.addAction(bookAction)
-        alertController.addAction(cancleAction)
-        
-        self.present(alertController, animated: true) { }
-        
-//        let logAttributedText = NSMutableAttributedString(string: kLog)
-//        let logRange = NSRange(location: 0, length: logAttributedText.length)
-//        logAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg16(), range: logRange)
-//        logAttributedText.addAttribute(NSForegroundColorAttributeName, value: UIColor.pmmBrightOrangeColor(), range: logRange)
-//        guard let logTitleLabel = logAction.valueForKey("__representer")?.valueForKey("label") as? UILabel else { return }
-//        logTitleLabel.attributedText = logAttributedText
-//        
-//        let bookAttributedText = NSMutableAttributedString(string: kBook)
-//        let bookRange = NSRange(location: 0, length: bookAttributedText.length)
-//        bookAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg16(), range: bookRange)
-//        bookAttributedText.addAttribute(NSForegroundColorAttributeName, value: UIColor.pmmBrightOrangeColor(), range: bookRange)
-//        guard let bookTitleLabel = bookAction.valueForKey("__representer")?.valueForKey("label") as? UILabel else { return }
-//        bookTitleLabel.attributedText = bookAttributedText
-//        
-//        let cancleAttributedText = NSMutableAttributedString(string: kCancle)
-//        let cancleRange = NSRange(location: 0, length: cancleAttributedText.length)
-//        cancleAttributedText.addAttribute(NSFontAttributeName, value: UIFont.pmmMonReg18(), range: cancleRange)
-//        guard let cancleTitleLabel = cancleAction.valueForKey("__representer")?.valueForKey("label") as? UILabel else { return }
-//        cancleTitleLabel.attributedText = cancleAttributedText
+            let bookAction = UIAlertAction(title: kBook, style: UIAlertActionStyle.destructive, handler: { (action:UIAlertAction!) -> Void in
+                self.performSegue(withIdentifier: "coachMakeABook", sender: nil)
+            })
+            
+            let cancleAction = UIAlertAction(title: kCancle, style: .cancel, handler: { (UIAlertAction) in
+                
+            })
+            
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            alertController.addAction(logAction)
+            alertController.addAction(bookAction)
+            alertController.addAction(cancleAction)
+            
+            self.present(alertController, animated: true)
+        } else {
+            self.performSegue(withIdentifier: "coachLogASession", sender: nil)
+        }
     }
     
     @IBAction func addSessionBTClicked(_ sender: Any) {
@@ -315,11 +312,7 @@ class SessionCoachViewController: BaseViewController {
 
 extension SessionCoachViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.selectedSessionList.count > 0 {
-            self.noSessionV.isHidden = true
-        } else {
-            self.noSessionV.isHidden = false
-        }
+        self.noSessionV.isHidden = (self.selectedSessionList.count > 0)
         
         return self.selectedSessionList.count
     }

@@ -14,7 +14,6 @@
 		9C1C541C1C7938070083E47B /* pummelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C541B1C7938070083E47B /* pummelTests.swift */; };
 		9C1C54271C7938070083E47B /* pummelUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54261C7938070083E47B /* pummelUITests.swift */; };
 		9C1C54351C793A500083E47B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54341C793A4F0083E47B /* ProfileViewController.swift */; };
-		9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C54361C793AA70083E47B /* ProgressViewController.swift */; };
 		9C1C543B1C793AF30083E47B /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543A1C793AF30083E47B /* MessageViewController.swift */; };
 		9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543C1C793B280083E47B /* FindViewController.swift */; };
 		9C1C543F1C793D070083E47B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C543E1C793D070083E47B /* SettingsViewController.swift */; };
@@ -52,6 +51,7 @@
 		BA2FEA6E1F4F399200146529 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */; };
 		BA2FEA6F1F4F399200146529 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */; };
 		BA2FEA701F4F399200146529 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */; };
+		BA37E1321F970AC0009811DA /* LogSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA37E1311F970AC0009811DA /* LogSessionTableViewCell.xib */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA506FB11F83799900FF1964 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA506FB01F83799900FF1964 /* FeedModel.swift */; };
 		BA506FB31F8379C900FF1964 /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA506FB21F8379C900FF1964 /* TagModel.swift */; };
@@ -104,8 +104,6 @@
 		F96051B21DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96051B11DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift */; };
 		F964FEC11D215E33008F7C94 /* SearchingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F964FEC01D215E33008F7C94 /* SearchingViewController.swift */; };
 		F964FEC31D21E049008F7C94 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F964FEC21D21E049008F7C94 /* Images.xcassets */; };
-		F96846FE1E06B4AC009EB06C /* ShareClientSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96846FD1E06B4AC009EB06C /* ShareClientSessionViewController.swift */; };
-		F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96846FF1E06B4CF009EB06C /* SessionClientViewController.swift */; };
 		F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847011E06B509009EB06C /* SessionCoachViewController.swift */; };
 		F96847041E06B51A009EB06C /* LogSessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */; };
 		F96847061E06B532009EB06C /* LogSessionClientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */; };
@@ -233,7 +231,6 @@
 		9C1C54261C7938070083E47B /* pummelUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pummelUITests.swift; sourceTree = "<group>"; };
 		9C1C54281C7938070083E47B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C1C54341C793A4F0083E47B /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		9C1C54361C793AA70083E47B /* ProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
 		9C1C543A1C793AF30083E47B /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		9C1C543C1C793B280083E47B /* FindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindViewController.swift; sourceTree = "<group>"; };
 		9C1C543E1C793D070083E47B /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -269,6 +266,7 @@
 		BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
 		BA2FEA6A1F4F388D00146529 /* pummel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pummel-Bridging-Header.h"; sourceTree = "<group>"; };
 		BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateBridgFile.m; sourceTree = "<group>"; };
+		BA37E1311F970AC0009811DA /* LogSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogSessionTableViewCell.xib; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA506FB01F83799900FF1964 /* FeedModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedModel.swift; path = Model.swift/FeedModel.swift; sourceTree = "<group>"; };
 		BA506FB21F8379C900FF1964 /* TagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TagModel.swift; path = Model.swift/TagModel.swift; sourceTree = "<group>"; };
@@ -327,8 +325,6 @@
 		F96051B11DACFA3400AD4D70 /* FeedFourthPartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedFourthPartTableViewCell.swift; sourceTree = "<group>"; };
 		F964FEC01D215E33008F7C94 /* SearchingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchingViewController.swift; sourceTree = "<group>"; };
 		F964FEC21D21E049008F7C94 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		F96846FD1E06B4AC009EB06C /* ShareClientSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareClientSessionViewController.swift; sourceTree = "<group>"; };
-		F96846FF1E06B4CF009EB06C /* SessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionClientViewController.swift; sourceTree = "<group>"; };
 		F96847011E06B509009EB06C /* SessionCoachViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCoachViewController.swift; sourceTree = "<group>"; };
 		F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientViewController.swift; sourceTree = "<group>"; };
 		F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientDetailViewController.swift; sourceTree = "<group>"; };
@@ -584,7 +580,6 @@
 				F9F3CC401CE221F8007F68A5 /* UserTableViewCell.swift */,
 				F9FE13C71CEAF5F9004ABE34 /* MessageTableViewCell.swift */,
 				F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */,
-				BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */,
 				F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */,
 				F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */,
 			);
@@ -630,6 +625,8 @@
 				BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */,
 				BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */,
 				BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */,
+				BA16B48F1E099E3A0093FBD9 /* LogSessionTableViewCell.swift */,
+				BA37E1311F970AC0009811DA /* LogSessionTableViewCell.xib */,
 				E87FB0111E0AD91A0091856B /* BookSessionTableViewCell.swift */,
 				E87FB0121E0AD91A0091856B /* BookSessionTableViewCell.xib */,
 				E8D778E31E0AF6A50011E164 /* LeadCollectionViewCell.swift */,
@@ -809,9 +806,6 @@
 			children = (
 				BA0314921E157BD600982622 /* SessionList */,
 				F968470B1E06B5BF009EB06C /* Cell */,
-				9C1C54361C793AA70083E47B /* ProgressViewController.swift */,
-				F96846FF1E06B4CF009EB06C /* SessionClientViewController.swift */,
-				F96846FD1E06B4AC009EB06C /* ShareClientSessionViewController.swift */,
 				F96847011E06B509009EB06C /* SessionCoachViewController.swift */,
 				BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */,
 				F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */,
@@ -1085,6 +1079,7 @@
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
 				E8499E6E1EEF89A7008A65C2 /* DiscountColectionViewCell.xib in Resources */,
 				F9ABEAE31DC4B4F50084B70E /* Session.storyboard in Resources */,
+				BA37E1321F970AC0009811DA /* LogSessionTableViewCell.xib in Resources */,
 				F983C2A41D013779002DA578 /* avatar.png in Resources */,
 				F9ABEAEE1DC4BC140084B70E /* UserProfile.storyboard in Resources */,
 				F9741E0D1D89A83900D61868 /* display-empty.jpg in Resources */,
@@ -1185,7 +1180,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F96846FE1E06B4AC009EB06C /* ShareClientSessionViewController.swift in Sources */,
 				F96847041E06B51A009EB06C /* LogSessionClientViewController.swift in Sources */,
 				F9ABEADF1DC367620084B70E /* StringConstant.swift in Sources */,
 				F9827E981CB81F9E00841BF1 /* EditProfileViewController.swift in Sources */,
@@ -1234,7 +1228,6 @@
 				F9EAE8E91D6EFC3400FD32BE /* SettingSmallSeperateTableViewCell.swift in Sources */,
 				BA54913E1F6FB0C7001A2DEF /* PostTestimonialViewController.swift in Sources */,
 				F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */,
-				9C1C54371C793AA70083E47B /* ProgressViewController.swift in Sources */,
 				F9827EC11CBC27CF00841BF1 /* LoginAndRegisterViewController.swift in Sources */,
 				F970A2AC1D26393F00932BFC /* CardView.swift in Sources */,
 				F98BAF6D1D6217A7004BD41E /* NSCache+Singleton.swift in Sources */,
@@ -1273,7 +1266,6 @@
 				F9EAE8E31D6EFA0900FD32BE /* SettingNotificationHeaderTableViewCell.swift in Sources */,
 				BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */,
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
-				F96847001E06B4CF009EB06C /* SessionClientViewController.swift in Sources */,
 				BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
 				BA15EBB61F551A8300B0A515 /* TestimonialModel.swift in Sources */,

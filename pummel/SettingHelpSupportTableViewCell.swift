@@ -17,4 +17,12 @@ class SettingHelpSupportTableViewCell: UITableViewCell {
         self.helpAndSupportLB.font = .pmmMonReg11()
         self.helpAndSupportLB.textColor = UIColor.black
     }
+    
+    func setData(text: String, canSelect: Bool = true) {
+        self.helpAndSupportLB.text = text
+        
+        if (canSelect == false) {
+            self.selectionStyle = .none
+        }
+    }
 }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bn-X7-I3Z">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8bn-X7-I3Z">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,76 +21,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="FRn-Di-WUq">
-                                <rect key="frame" x="0.0" y="333.5" width="375" height="0.0"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" id="Jbc-ho-mFT"/>
-                                </constraints>
-                                <collectionViewLayout key="collectionViewLayout" id="UPW-53-HgY" customClass="FlowLayout" customModule="Pummel" customModuleProvider="target"/>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="kActivityCell" id="QNQ-7B-jpu">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="8bn-X7-I3Z" id="udz-Dh-e1G"/>
-                                    <outlet property="delegate" destination="8bn-X7-I3Z" id="g1e-9M-1tc"/>
-                                </connections>
-                            </collectionView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="H6u-hR-lTz">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LogSessionTableViewCell" rowHeight="70" id="JBF-zm-mKO" customClass="LogSessionTableViewCell" customModule="Pummel" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="70"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JBF-zm-mKO" id="EZP-de-Q3K">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NBL-bo-JLk">
-                                                    <rect key="frame" x="15" y="15" width="40" height="40"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="40" id="FyL-Qa-eL9"/>
-                                                        <constraint firstAttribute="height" constant="40" id="u5s-M7-HAR"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RUNNING" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ajW-OH-0vd">
-                                                    <rect key="frame" x="70" y="26.5" width="284" height="17"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" red="0.3921568627" green="0.3921568627" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pIS-TF-AF6">
-                                                    <rect key="frame" x="31" y="26.5" width="9" height="17"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" red="0.39215686274509803" green="0.39215686274509803" blue="0.39215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="pIS-TF-AF6" firstAttribute="centerY" secondItem="NBL-bo-JLk" secondAttribute="centerY" id="FBM-pz-TtY"/>
-                                                <constraint firstItem="ajW-OH-0vd" firstAttribute="centerY" secondItem="NBL-bo-JLk" secondAttribute="centerY" id="Fdc-K9-jFP"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="ajW-OH-0vd" secondAttribute="trailing" constant="13" id="J6g-Io-xeN"/>
-                                                <constraint firstItem="pIS-TF-AF6" firstAttribute="centerX" secondItem="NBL-bo-JLk" secondAttribute="centerX" id="KEe-OF-7a0"/>
-                                                <constraint firstItem="NBL-bo-JLk" firstAttribute="leading" secondItem="EZP-de-Q3K" secondAttribute="leadingMargin" constant="7" id="iuD-3L-iEb"/>
-                                                <constraint firstItem="NBL-bo-JLk" firstAttribute="centerY" secondItem="EZP-de-Q3K" secondAttribute="centerY" id="pyP-SL-0bP"/>
-                                                <constraint firstItem="ajW-OH-0vd" firstAttribute="leading" secondItem="NBL-bo-JLk" secondAttribute="trailing" constant="15" id="zYX-m4-HdT"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="LogTitleLB" destination="ajW-OH-0vd" id="g9u-hm-Y2Y"/>
-                                            <outlet property="statusIMV" destination="NBL-bo-JLk" id="fq8-WY-ESc"/>
-                                            <outlet property="tagTypeLabel" destination="pIS-TF-AF6" id="6iZ-N0-jpl"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="8bn-X7-I3Z" id="zSf-dP-ZXU"/>
                                     <outlet property="delegate" destination="8bn-X7-I3Z" id="vIK-6I-GBs"/>
@@ -103,15 +35,10 @@
                             <constraint firstItem="H6u-hR-lTz" firstAttribute="centerX" secondItem="t6g-yp-Guk" secondAttribute="centerX" id="Hp8-xE-Ana"/>
                             <constraint firstItem="H6u-hR-lTz" firstAttribute="height" secondItem="t6g-yp-Guk" secondAttribute="height" id="Itb-nm-QoD"/>
                             <constraint firstItem="H6u-hR-lTz" firstAttribute="width" secondItem="t6g-yp-Guk" secondAttribute="width" id="eiV-K9-CUY"/>
-                            <constraint firstItem="FRn-Di-WUq" firstAttribute="centerY" secondItem="t6g-yp-Guk" secondAttribute="centerY" id="jaD-8o-Isi"/>
-                            <constraint firstItem="FRn-Di-WUq" firstAttribute="centerX" secondItem="t6g-yp-Guk" secondAttribute="centerX" id="k2V-yE-qkJ"/>
                             <constraint firstItem="H6u-hR-lTz" firstAttribute="centerY" secondItem="t6g-yp-Guk" secondAttribute="centerY" id="lSR-em-Ghg"/>
-                            <constraint firstItem="FRn-Di-WUq" firstAttribute="width" secondItem="t6g-yp-Guk" secondAttribute="width" id="oOn-Mq-hde"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="collectionView" destination="FRn-Di-WUq" id="yJr-Gc-PIZ"/>
-                        <outlet property="flowLayout" destination="UPW-53-HgY" id="QEj-pY-Zk5"/>
                         <outlet property="tableView" destination="H6u-hR-lTz" id="GA0-Jk-sa1"/>
                         <segue destination="kwg-uW-nE1" kind="show" identifier="selectUser" id="dsT-eQ-vRG"/>
                         <segue destination="N3f-Ry-iKt" kind="show" identifier="goLogSessionDetail" id="agN-yW-rD1"/>

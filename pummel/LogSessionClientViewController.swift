@@ -12,7 +12,6 @@ import Foundation
 class LogSessionClientViewController: BaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var collectionView: UICollectionView!
     
     var tags = [TagModel]()
     var arrayTags : [NSDictionary] = []
@@ -34,7 +33,7 @@ class LogSessionClientViewController: BaseViewController {
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(LogSessionClientViewController.backClicked))
         
-        self.initCollectionView()
+        self.initTableView()
         
         self.getListTags()
     }
@@ -67,18 +66,9 @@ class LogSessionClientViewController: BaseViewController {
     }
     
     // MARK: Init
-    func initCollectionView() {
-        let cellNib = UINib(nibName: kActivityCell, bundle: nil)
-        self.collectionView.register(cellNib, forCellWithReuseIdentifier: kActivityCell)
-        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! ActivityCell?
-        
-        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
-            self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 0, 8, 8)
-        } else {
-            self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
-        }
-        
-        self.flowLayout.isSearch = true
+    func initTableView() {
+        let nibName = UINib(nibName: "LogSessionTableViewCell", bundle:nil)
+        self.tableView.register(nibName, forCellReuseIdentifier: "LogSessionTableViewCell")
     }
     
     // MARK: Private function
@@ -99,7 +89,6 @@ class LogSessionClientViewController: BaseViewController {
                         
                         self.tagOffset += 10
                         
-                        self.collectionView.reloadData()
                         self.tableView.reloadData()
                     }
                 } else {
@@ -152,11 +141,7 @@ extension LogSessionClientViewController : UITableViewDelegate, UITableViewDataS
         let cell = tableView.dequeueReusableCell(withIdentifier: "LogSessionTableViewCell") as! LogSessionTableViewCell
         
         let tag = tags[indexPath.row]
-        //        let tagName = String(format: "#%ld %@", tag.tagType!, (tag.name?.uppercased())!)
-        let tagName = tag.tagTitle?.uppercased()
-        cell.LogTitleLB.text = tagName
-        cell.tagTypeLabel.text = ""
-        cell.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
+        cell.setupData(tag: tag)
         
         if (indexPath.row == tags.count - 1) {
             self.getListTags()
@@ -180,35 +165,5 @@ extension LogSessionClientViewController : UITableViewDelegate, UITableViewDataS
         } else {
             self.performSegue(withIdentifier: "goLogSessionDetail", sender: tag)
         }
-    }
-}
-
-// MARK: - UICollectionViewDelegate
-extension LogSessionClientViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tags.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kActivityCell, for: indexPath) as! ActivityCell
-        
-        self.configureCell(cell: cell, forIndexPath: indexPath as NSIndexPath)
-        
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath as NSIndexPath)
-        return (self.sizingCell?.systemLayoutSizeFitting(UILayoutFittingCompressedSize))!
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "selectUser", sender: nil)
-    }
-    
-    func configureCell(cell: ActivityCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.tagTitle?.uppercased()
-        cell.tagBackgroundV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
     }
 }

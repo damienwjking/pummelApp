@@ -15,5 +15,6 @@ class SettingLogoutTableViewCell: UITableViewCell {
         super.awakeFromNib()
 
         self.logoutLB.font = .pmmMonReg11()
+        self.logoutLB.textColor = UIColor.pmmBrightOrangeColor()
     }
 }

@@ -20,8 +20,11 @@ class LogSessionTableViewCell: UITableViewCell {
         
         self.statusIMV.layer.masksToBounds = true
         self.statusIMV.layer.cornerRadius = 20
-        
-        self.LogTitleLB.font = .pmmMonReg13()
-        self.tagTypeLabel.font = .pmmMonReg13()
+    }
+    
+    func setupData(tag: TagModel) {
+        self.LogTitleLB.text = tag.tagTitle?.uppercased()
+        self.tagTypeLabel.text = ""
+        self.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
     }
 }

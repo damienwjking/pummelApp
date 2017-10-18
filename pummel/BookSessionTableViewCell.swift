@@ -15,15 +15,13 @@ class BookSessionTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         self.statusIMV.layer.masksToBounds = true
         self.statusIMV.layer.cornerRadius = 20
-        self.bookTitleLB.font = .pmmMonReg13()
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+ 
+    func setupData(tag: TagModel) {
+        self.bookTitleLB.text = tag.tagTitle?.uppercased()
+        self.statusIMV.backgroundColor = UIColor.init(hexString: tag.tagColor!)
     }
-    
 }

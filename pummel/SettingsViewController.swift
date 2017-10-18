@@ -582,7 +582,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .unitOfMeasure_Value:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = self.defaults.object(forKey: kUnit) as? String
+            let unitValue = self.defaults.object(forKey: kUnit) as! String
+            cell.setData(text: unitValue)
             return cell
             
         case .discovery_Title:
@@ -603,8 +604,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .fitnessProfessional_Message:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.selectionStyle = .none
-            cell.helpAndSupportLB.text = kVerifiedFitnessProfessional
+            cell.setData(text: kVerifiedFitnessProfessional)
+            
             return cell
             
         case .applyNow_Button:
@@ -642,19 +643,19 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .contactUs_HelpSupport:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = kHelpSupport
+            cell.setData(text: kHelpSupport)
             return cell
         case .contactUs_FeedBack:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = kFeedback
+            cell.setData(text: kFeedback)
             return cell
         case .contactUs_SharePummel:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = kSharePummel
+            cell.setData(text: kSharePummel)
             return cell
         case .contactUs_InviteFriend:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = kInviteFriend
+            cell.setData(text: kInviteFriend)
             return cell
             
         case .legal_Title:
@@ -663,15 +664,15 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .legal_PrivacyPolicy:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = kPrivacy
+            cell.setData(text: kPrivacy)
             return cell
         case .legal_TermService:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = kTermOfService
+            cell.setData(text: kTermOfService)
             return cell
         case .legal_ChangePassword:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = kChangePassword
+            cell.setData(text: kChangePassword)
             return cell
             
         case .logout_Button:
@@ -680,9 +681,10 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             
         case .pummel_Version:
             let cell = tableView.dequeueReusableCell(withIdentifier: kSettingHelpSupportTableViewCell, for: indexPath) as! SettingHelpSupportTableViewCell
-            cell.helpAndSupportLB.text = UIApplication.versionBuild()
-            cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
-            cell.selectionStyle = .none
+            let versionString = UIApplication.versionBuild()
+            cell.setData(text: versionString, canSelect: false)
+            cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0) // remove last separator line
+            
             return cell
             
         case .space_SmallSeparateLine:
