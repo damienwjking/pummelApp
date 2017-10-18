@@ -120,9 +120,6 @@ class LogSessionClientViewController: BaseViewController {
             } else {
                destination.tag = (sender as! TagModel)
             }
-        } else if segue.identifier == "selectUser" {
-            let destination = segue.destination as! LogSessionSelectUserViewController
-            destination.tag = sender as? TagModel
         }
     }
 }
@@ -160,10 +157,6 @@ extension LogSessionClientViewController : UITableViewDelegate, UITableViewDataS
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
         
         let tag = tags[indexPath.row]
-        if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
-            self.performSegue(withIdentifier: "selectUser", sender: tag)
-        } else {
-            self.performSegue(withIdentifier: "goLogSessionDetail", sender: tag)
-        }
+        self.performSegue(withIdentifier: "goLogSessionDetail", sender: tag)
     }
 }

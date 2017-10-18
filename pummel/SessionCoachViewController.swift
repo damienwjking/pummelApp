@@ -50,11 +50,6 @@ class SessionCoachViewController: BaseViewController {
         self.calendarView.animatorDelegate = self
         self.calendarView.calendarDelegate = self
         
-        self.monthLabel.font = UIFont.pmmMonReg13()
-        self.noSessionYetLB.font = UIFont.pmmPlayFairReg18()
-        self.noSessionContentLB.font = UIFont.pmmMonLight13()
-        self.addSessionBT.titleLabel!.font = UIFont.pmmMonReg12()
-        
         self.addSessionBT.layer.cornerRadius = 5
         
         self.selectSegment.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13()], for: .normal)
@@ -263,7 +258,7 @@ class SessionCoachViewController: BaseViewController {
             self.separateLineView.isHidden = false
             
             // To Call function presentedDateUpdated
-            self.calendarView.presentedDate = self.calendarView.presentedDate
+            self.presentedDateUpdated(self.calendarView.presentedDate)
             
             // Subtitle no session
             self.noSessionContentLB.text = "Upcoming appointments from your coach will appear here as well"

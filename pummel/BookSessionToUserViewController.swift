@@ -108,14 +108,6 @@ class BookSessionToUserViewController: BaseViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func next() {
-        if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
-            PMHelper.showNoticeAlert(message: pleaseInputADate)
-        } else {
-             self.performSegue(withIdentifier: "gotoShare", sender: nil)
-        }
-    }
-    
     func done() {
         if (self.dateTF.text == "" || self.dateTF.text == "ADD A DATE") {
             PMHelper.showNoticeAlert(message: pleaseInputADate)
@@ -222,16 +214,6 @@ class BookSessionToUserViewController: BaseViewController {
         fusuma.defaultMode = .Camera
         fusuma.modeOrder = .CameraFirst
         self.present(fusuma, animated: true, completion: nil)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "gotoShare" {
-            let destination = segue.destination as! BookSessionShareViewController
-            destination.tag = self.tag
-            destination.image = self.imageSelected.image
-            destination.textToPost = (self.contentTV.text == "") ? "..." : self.contentTV.text
-            destination.dateToPost = self.dateTF.text!
-        }
     }
 }
 

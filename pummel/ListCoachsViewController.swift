@@ -74,7 +74,7 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         cell.delegateGroupLeadTableViewCell = self
         
         if cell.arrayMessages.count <= 0 || self.forceUpdate == true {
-            cell.getMessage()
+            cell.getUserLead()
         } else {
             cell.cv.reloadData()
         }

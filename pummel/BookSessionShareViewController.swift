@@ -18,7 +18,6 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
     var dateToPost = ""
     var userIdSelected = ""
     let defaults = UserDefaults.standard
-    var forceUpdate = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,11 +42,6 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
         self.title = kClients.uppercased()
         
         self.resetLBadge()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func invite() {
@@ -132,11 +126,9 @@ extension BookSessionShareViewController: UITableViewDelegate, UITableViewDataSo
         }
         cell.userIdSelected = self.userIdSelected
         cell.delegateGroupLeadTableViewCell = self
-        if cell.arrayMessages.count <= 0 || self.forceUpdate == true {
-            cell.getMessage()
-        } else {
-            cell.cv.reloadData()
-        }
+        
+        cell.getNewUserLead()
+        
         return cell
     }
 }
@@ -153,12 +145,7 @@ extension BookSessionShareViewController {
                 
                 let isChangeSuccess = result as! Bool
                 if (isChangeSuccess) {
-                    self.forceUpdate = true
-                    
-//                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
                     self.tbView.reloadData()
-                    
-                    self.forceUpdate = false
                 }
                 
             }).fetchdata()
@@ -248,12 +235,7 @@ extension BookSessionShareViewController {
                 
                 let isChangeSuccess = result as! Bool
                 if (isChangeSuccess) {
-                    self.forceUpdate = true
-                    
-//                    self.tbView.reloadRows(at: [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)], with: .fade)
                     self.tbView.reloadData()
-                    
-                    self.forceUpdate = false
                 }
                 
             }).fetchdata()

@@ -183,7 +183,7 @@ class MessageViewController: BaseViewController {
     func getListLead() {
         if (self.isStopLoadLead == false) {
             let currentUserID = PMHelper.getCurrentID()
-            UserRouter.getLead(userID: currentUserID, type: kPMAPICOACH_LEADS, offset: self.leadOffset) { (result, error) in
+            UserRouter.getLead(userID: currentUserID, offset: self.leadOffset) { (result, error) in
                 if (error == nil) {
                     let leadList =  result as! [NSDictionary]
                     if leadList.count > 0 {
@@ -205,7 +205,7 @@ class MessageViewController: BaseViewController {
                             }
                         }
                         
-                        self.leadOffset = self.leadOffset + 10
+                        self.leadOffset = self.leadOffset + 20
                         self.getListLead()
                     } else {
                         self.isStopLoadLead = true

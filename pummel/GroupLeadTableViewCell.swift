@@ -28,6 +28,9 @@ class GroupLeadTableViewCell: UITableViewCell {
     weak var delegateGroupLeadTableViewCell: GroupLeadTableViewCellDelegate?
     var userIdSelected = ""
     
+    var userOffset = 0
+    var isStopLoadUser = false
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -43,18 +46,35 @@ class GroupLeadTableViewCell: UITableViewCell {
         self.titleHeader.font = .pmmMonReg13()
     }
     
-    func getMessage() {
-        SessionRouter.getGroupInfo(groupType: self.typeGroup) { (result, error) in
-            if (error == nil) {
-                if let arrayMessageT = result as? [NSDictionary] {
-                    self.arrayMessages = arrayMessageT
-                    self.arrayCoachesInfo = arrayMessageT
-                    self.cv.reloadData()
+    func getUserLead() {
+        if (self.isStopLoadUser == false) {
+            SessionRouter.getGroupInfo(groupType: self.typeGroup, offset: self.userOffset) { (result, error) in
+                if (error == nil) {
+                    if let arrayMessageT = result as? [NSDictionary] {
+                        self.arrayMessages += arrayMessageT
+                        self.arrayCoachesInfo += arrayMessageT
+                        self.userOffset = self.userOffset + 20
+                        
+                        self.cv.reloadData()
+                        
+                        if (arrayMessageT.count == 0) {
+                            self.isStopLoadUser = true
+                        }
+                    }
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
                 }
-            } else {
-                print("Request failed with error: \(String(describing: error))")
-            }
-        }.fetchdata()
+                }.fetchdata()
+        }
+    }
+    
+    func getNewUserLead() {
+        self.arrayMessages.removeAll()
+        self.arrayCoachesInfo.removeAll()
+        self.userOffset = 0
+        self.isStopLoadUser = false
+        
+        self.getUserLead()
     }
 }
 
@@ -67,9 +87,11 @@ extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewData
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeadCollectionViewCell", for: indexPath) as! LeadCollectionViewCell
         cell.btnAdd.isHidden = true
         
-        let message = arrayMessages[indexPath.row]
+        let message = self.arrayMessages[indexPath.row]
         var targetUserId = ""
-        if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+        if (self.typeGroup == TypeGroup.CoachJustConnected ||
+            self.typeGroup == TypeGroup.CoachOld ||
+            self.typeGroup == TypeGroup.CoachCurrent) {
             if let val = message["coachId"] as? Int {
                 targetUserId = "\(val)"
             }
@@ -77,6 +99,10 @@ extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewData
             if let val = message["userId"] as? Int {
                 targetUserId = "\(val)"
             }
+        }
+        
+        if (indexPath.row == self.arrayMessages.count - 2) {
+            self.getUserLead()
         }
         
         UserRouter.getUserInfo(userID: targetUserId) { (result, error) in

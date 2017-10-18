@@ -107,7 +107,6 @@
 		F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847011E06B509009EB06C /* SessionCoachViewController.swift */; };
 		F96847041E06B51A009EB06C /* LogSessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */; };
 		F96847061E06B532009EB06C /* LogSessionClientDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */; };
-		F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */; };
 		F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96847091E06B570009EB06C /* BookSessionViewController.swift */; };
 		F96847111E06B726009EB06C /* LogSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847101E06B726009EB06C /* LogSession.storyboard */; };
 		F96847131E06B737009EB06C /* BookSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96847121E06B737009EB06C /* BookSession.storyboard */; };
@@ -328,7 +327,6 @@
 		F96847011E06B509009EB06C /* SessionCoachViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCoachViewController.swift; sourceTree = "<group>"; };
 		F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientViewController.swift; sourceTree = "<group>"; };
 		F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogSessionClientDetailViewController.swift; sourceTree = "<group>"; };
-		F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareLogSessionClientViewController.swift; sourceTree = "<group>"; };
 		F96847091E06B570009EB06C /* BookSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookSessionViewController.swift; sourceTree = "<group>"; };
 		F96847101E06B726009EB06C /* LogSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogSession.storyboard; sourceTree = "<group>"; };
 		F96847121E06B737009EB06C /* BookSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BookSession.storyboard; sourceTree = "<group>"; };
@@ -811,10 +809,8 @@
 				F96847031E06B51A009EB06C /* LogSessionClientViewController.swift */,
 				E84D638D1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift */,
 				F96847051E06B532009EB06C /* LogSessionClientDetailViewController.swift */,
-				F96847071E06B557009EB06C /* ShareLogSessionClientViewController.swift */,
 				F96847091E06B570009EB06C /* BookSessionViewController.swift */,
 				F96847141E06BC24009EB06C /* BookSessionToUserViewController.swift */,
-				E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */,
 				E84D63871E1D5D4E00CF8B67 /* BookSessionSelectUserViewController.swift */,
 				BA04AB681E252BAC00F987BD /* ContactUserViewController.swift */,
 			);
@@ -832,6 +828,7 @@
 				F964FEC01D215E33008F7C94 /* SearchingViewController.swift */,
 				F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */,
 				E8C444E91E20AA19006F0548 /* ListCoachsViewController.swift */,
+				E8D778D91E0AF08B0011E164 /* BookSessionShareViewController.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -1289,7 +1286,6 @@
 				F98D5DA91E417764002C0C7A /* ChangePasswordViewController.swift in Sources */,
 				E84890A31EEE5733003201A9 /* FeedDiscountView.swift in Sources */,
 				F9ABEAE11DC36C3B0084B70E /* FontConstant.swift in Sources */,
-				F96847081E06B557009EB06C /* ShareLogSessionClientViewController.swift in Sources */,
 				F977EC0D1DAD442F007024EB /* NewCommentImageViewController.swift in Sources */,
 				BA0314941E157C0300982622 /* SessionModel.swift in Sources */,
 				F91727631DB3343200C6E612 /* HorizontalCell.swift in Sources */,

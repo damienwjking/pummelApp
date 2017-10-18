@@ -21,7 +21,7 @@ enum SessionRouter: URLRequestConvertible {
     
     case deleteSession(sessionID: String, completed: CompletionBlock)
     
-    case getGroupInfo(groupType: TypeGroup, completed: CompletionBlock)
+    case getGroupInfo(groupType: TypeGroup, offset: Int, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
@@ -40,7 +40,7 @@ enum SessionRouter: URLRequestConvertible {
         case .deleteSession(_, let completed):
             return completed
             
-        case .getGroupInfo(_, let completed):
+        case .getGroupInfo(_, _, let completed):
             return completed
             
             
@@ -94,7 +94,7 @@ enum SessionRouter: URLRequestConvertible {
         case .deleteSession:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_DELETEACTIVITY
             
-        case .getGroupInfo(let groupType, _):
+        case .getGroupInfo(let groupType, _, _):
             prefix = kPMAPICOACHES
             if groupType == .CoachJustConnected ||
                 groupType == .CoachCurrent ||
@@ -105,18 +105,19 @@ enum SessionRouter: URLRequestConvertible {
             prefix = prefix + currentUserID
             
             if groupType == .NewLead {
-                prefix = prefix + kPMAPICOACH_LEADS
+                prefix = prefix + kPM_PATH_LEADS
             } else if groupType == .Current {
-                prefix = prefix + kPMAPICOACH_CURRENT
+                prefix = prefix + kPM_PATH_CURRENT
             } else if groupType == .Old {
-                prefix = prefix + kPMAPICOACH_OLD
+                prefix = prefix + kPM_PATH_OLD
             } else if groupType == .CoachJustConnected {
-                prefix = prefix + kPMAPICOACH_JUSTCONNECTED
+                prefix = prefix + kPM_PATH_JUSTCONNECTED
             } else if groupType == .CoachCurrent {
-                prefix = prefix + kPMAPICOACH_COACHCURRENT
+                prefix = prefix + kPM_PATH_COACHCURRENT
             } else if groupType == .CoachOld {
-                prefix = prefix + kPMAPICOACH_COACHOLD
+                prefix = prefix + kPM_PATH_COACHOLD
             }
+            
             
             
         }
@@ -125,6 +126,8 @@ enum SessionRouter: URLRequestConvertible {
     }
     
     var param: [String : Any]? {
+        let currentUserID = PMHelper.getCurrentID()
+        
         var param: [String : Any]? = [:]
         
         switch self {
@@ -157,6 +160,12 @@ enum SessionRouter: URLRequestConvertible {
 
         case .deleteSession(let sessionID):
             param?[kActivityId] = sessionID
+            
+        case .getGroupInfo(_, let offset, _):
+            param?[kUserId] = currentUserID
+            param?[kOffset] = offset
+            param?[kLimit] = 20
+            
             
         default:
             break
@@ -322,7 +331,7 @@ enum SessionRouter: URLRequestConvertible {
             })
 
         case .getGroupInfo:
-            Alamofire.request(self).responseJSON(completionHandler: { (response) in
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: SessionRouter get_group_info")
                 
                 switch response.result {
