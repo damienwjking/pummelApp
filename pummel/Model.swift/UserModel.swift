@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol UserModelDelegate {
+    func userModelSynsCompleted()
+}
+
 class UserModel: NSObject {
+    var delegate: UserModelDelegate?
+    
     var id: Int = 0
     var businessId: Int = 0
     var mixpanel_id: String? = ""
@@ -46,14 +52,19 @@ class UserModel: NSObject {
     var sessionNotification: Int = 0
     var units: String = "Metric"
     
-    var image: UIImage? = nil
+    var imageCache: UIImage? = nil
     var imageUrl: String? = nil
     var videoUrl: NSURL? = nil
     var twitterUrl: String? = ""
     var facebookUrl: String? = ""
     var instagramUrl: String? = ""
     
+    var isSynsCompleted = true // Flag for syns case
+    var userDictionary: NSDictionary? // Template
+    
     func parseData(data: NSDictionary) {
+        self.userDictionary = data // Template
+        
         self.id = data["id"] as! Int
         self.businessId = data["id"] as! Int
         self.mixpanel_id = data["mixpanel_id"] as? String
@@ -96,6 +107,30 @@ class UserModel: NSObject {
         self.twitterUrl = data["twitterUrl"] as? String
         self.facebookUrl = data["facebookUrl"] as? String
         self.instagramUrl = data["instagramUrl"] as? String
+    }
+    
+    func synsData() {
+        self.isSynsCompleted = false
+        
+        let userID = String(format: "%ld", self.id)
+        UserRouter.getUserInfo(userID: userID) { (result, error) in
+            self.isSynsCompleted = true
+            if (error == nil) {
+                let userInfo = result as! NSDictionary
+                
+                self.parseData(data: userInfo)
+                
+                if (self.delegate != nil) {
+                    self.delegate?.userModelSynsCompleted()
+                }
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+        }.fetchdata()
+    }
+    
+    func convertToDictionary() -> NSDictionary {
+        return self.userDictionary!
     }
     
     func same(userCheck: UserModel) -> Bool {

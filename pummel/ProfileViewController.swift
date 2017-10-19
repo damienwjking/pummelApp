@@ -121,7 +121,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var isCoach = UserDefaults.standard.bool(forKey: k_PM_IS_COACH)
     var profileStyle: ProfileStyle = .currentUser
     
-    let defaults = UserDefaults.standard
+    let userDefaults = UserDefaults.standard
     
     var instagramLink: String? = ""
     var twitterLink: String? = ""
@@ -178,6 +178,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         // Add notification for update video url
         NotificationCenter.default.addObserver(self, selector: #selector(self.profileGetNewDetail), name: NSNotification.Name(rawValue: "PROFILE_GET_DETAIL"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.uploadVideoWithNotification), name: NSNotification.Name(rawValue: "PROFILE_UPLOAD_VIDEO"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.afterFirstLogin), name: NSNotification.Name(rawValue: "AFTER_FIRST_LOGIN"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -234,6 +235,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         return .lightContent
     }
     
+    func afterFirstLogin() {
+        if (self.profileStyle == .currentUser) {
+            self.isCoach = self.userDefaults.bool(forKey: k_PM_IS_COACH)
+        }
+    }
     
     func setupUI() {
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
@@ -378,11 +384,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 self.userNameLabel.text = firstName?.uppercased()
                 
                 if (self.profileStyle == .currentUser) {
-                    self.defaults.set(self.coachDetail["newleadNotification"] as! Int == 0 ? false : true, forKey: kNewConnections)
-                    self.defaults.set(self.coachDetail["messageNotification"] as! Int == 0 ? false : true, forKey: kMessage)
-                    self.defaults.set(self.coachDetail["sessionNotification"] as! Int == 0 ? false : true, forKey: kSessions)
-                    self.defaults.set(self.coachDetail[kUnits], forKey: kUnit)
-                    self.defaults.set(firstName, forKey: kFirstname)
+                    self.userDefaults.set(self.coachDetail["newleadNotification"] as! Int == 0 ? false : true, forKey: kNewConnections)
+                    self.userDefaults.set(self.coachDetail["messageNotification"] as! Int == 0 ? false : true, forKey: kMessage)
+                    self.userDefaults.set(self.coachDetail["sessionNotification"] as! Int == 0 ? false : true, forKey: kSessions)
+                    self.userDefaults.set(self.coachDetail[kUnits], forKey: kUnit)
+                    self.userDefaults.set(firstName, forKey: kFirstname)
+                    self.userDefaults.synchronize()
                 }
                 
                 if let val = self.coachDetail[kId] as? Int {
@@ -824,8 +831,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 UserRouter.setLead(coachID: coachIDString, completed: { (result, error) in
                     self.view.hideToastActivity()
                     
-                    if let val = self.coachDetail[kId] as? Int {
-                        TrackingPMAPI.sharedInstance.trackingConnectButtonCLick(coachId: "\(val)")
+                    let isConnectSuccess = result as! Bool
+                    if (isConnectSuccess == true) {
+                        if let val = self.coachDetail[kId] as? Int {
+                            TrackingPMAPI.sharedInstance.trackingConnectButtonCLick(coachId: "\(val)")
+                        }
                     }
                     
                     self.performSegue(withIdentifier: kGoConnect, sender: self)

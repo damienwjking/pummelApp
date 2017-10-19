@@ -762,11 +762,10 @@ enum UserRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter forgot_password")
                 
-                switch response.result {
-                case .success(_):
+                if (response.response?.statusCode == 200) {
                     self.comletedBlock!(true as AnyObject, nil)
-                case .failure(let error):
-                    self.comletedBlock!(false as AnyObject, error as NSError)
+                } else {
+                    self.comletedBlock!(false as AnyObject, nil)
                 }
             })
             
@@ -781,24 +780,15 @@ enum UserRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: UserRouter set_lead")
                 
-                switch response.result {
-                case .success(let JSON):
-                    if (JSON is NSNull == false) {
-                        // Can't return respone object
-                        self.comletedBlock!(true as AnyObject, nil)
-                    } else {
-                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
-                        self.comletedBlock!(false as AnyObject, error)
-                    }
-                case .failure(let error):
-                    if (response.response?.statusCode == 400) {
-                        let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
-                        self.comletedBlock!(false as AnyObject, error as NSError)
-                    } else if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        self.comletedBlock!(false as AnyObject, error as NSError)
-                    }
+                if (response.response?.statusCode == 200) {
+                    self.comletedBlock!(true as AnyObject, nil)
+                } else if (response.response?.statusCode == 400) {
+                    let error = NSError(domain: "Error", code: 400, userInfo: nil) // Create duplicate emial error
+                    self.comletedBlock!(false as AnyObject, error as NSError)
+                } else if (response.response?.statusCode == 401) {
+                    PMHelper.showLogoutAlert()
+                } else {
+                    self.comletedBlock!(false as AnyObject, nil)
                 }
             })
             
@@ -964,6 +954,9 @@ enum UserRouter: URLRequestConvertible {
             let isCoach = result as! Bool
             
             defaults.set(isCoach, forKey: k_PM_IS_COACH)
+            defaults.synchronize()
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AFTER_FIRST_LOGIN"), object: nil)
             }.fetchdata()
         
         

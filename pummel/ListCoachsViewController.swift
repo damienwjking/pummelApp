@@ -73,11 +73,8 @@ class ListCoachsViewController: BaseViewController, UITableViewDelegate, UITable
         cell.userIdSelected = self.userIdSelected
         cell.delegateGroupLeadTableViewCell = self
         
-        if cell.arrayMessages.count <= 0 || self.forceUpdate == true {
-            cell.getUserLead()
-        } else {
-            cell.cv.reloadData()
-        }
+        cell.getNewUserLead()
+        
         return cell
     }
     

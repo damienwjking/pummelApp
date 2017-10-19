@@ -208,7 +208,7 @@ class PMHelper {
         }
     }
     
-    class func actionWithDelaytime(delayTime: Double, delayAction: @escaping (Void) -> Void) {
+    class func actionWithDelaytime(delayTime: Double, delayAction: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             delayAction()
         }

@@ -30,6 +30,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     var loadmoreTime = 0
     let badgeLabel = UILabel()
     
+    var lastTrackingCoachID = ""
+    
     @IBOutlet weak var noResultViewVerticalConstraint: NSLayoutConstraint! // default -32
     @IBOutlet weak var noResultLB: UILabel!
     @IBOutlet weak var noResultContentLB: UILabel!
@@ -583,6 +585,16 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 coachTotalDetail = arrayResult[cellIndex]
                 let coachDetail = coachTotalDetail[kUser] as! NSDictionary
                 let coachListTags = coachDetail[kTags] as! NSArray
+                
+                if (coachDetail[kId] is NSNull == false) {
+                    let coachID = String(format:"%0.f", (coachDetail[kId]! as AnyObject).doubleValue)
+                    
+                    if (self.lastTrackingCoachID != coachID) {
+                     TrackingPMAPI.sharedInstance.trackingProfileCard(coachId: coachID)
+                    }
+                    
+                    self.lastTrackingCoachID = coachID
+                }
                 
                 // Show tag
                 cell.cardView.tags.removeAll()

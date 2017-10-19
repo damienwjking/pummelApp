@@ -21,8 +21,7 @@ enum TypeGroup:Int {
 class GroupLeadTableViewCell: UITableViewCell {
     @IBOutlet weak var cv: UICollectionView!
     @IBOutlet weak var titleHeader: UILabel!
-    var arrayMessages: [NSDictionary] = []
-    var arrayCoachesInfo: [NSDictionary] = []
+    var arrayUserLead: [UserModel] = []
     let defaults = UserDefaults.standard
     var typeGroup:TypeGroup!
     weak var delegateGroupLeadTableViewCell: GroupLeadTableViewCellDelegate?
@@ -50,15 +49,37 @@ class GroupLeadTableViewCell: UITableViewCell {
         if (self.isStopLoadUser == false) {
             SessionRouter.getGroupInfo(groupType: self.typeGroup, offset: self.userOffset) { (result, error) in
                 if (error == nil) {
-                    if let arrayMessageT = result as? [NSDictionary] {
-                        self.arrayMessages += arrayMessageT
-                        self.arrayCoachesInfo += arrayMessageT
-                        self.userOffset = self.userOffset + 20
-                        
-                        self.cv.reloadData()
-                        
-                        if (arrayMessageT.count == 0) {
+                    if let userDetails = result as? [NSDictionary] {
+                        if (userDetails.count == 0) {
                             self.isStopLoadUser = true
+                        } else {
+                            for userInfo in userDetails {
+                                let userTemp = UserModel()
+                                
+                                if (self.typeGroup == TypeGroup.CoachJustConnected ||
+                                    self.typeGroup == TypeGroup.CoachOld ||
+                                    self.typeGroup == TypeGroup.CoachCurrent) {
+                                    if let val = userInfo["coachId"] as? Int {
+                                        userTemp.id = val
+                                    }
+                                } else{
+                                    if let val = userInfo["userId"] as? Int {
+                                        userTemp.id = val
+                                    }
+                                }
+                                
+                                if (userTemp.existInList(userList: self.arrayUserLead) == false) {
+                                    userTemp.delegate = self
+                                    userTemp.synsData()
+                                    
+                                    
+                                    self.arrayUserLead.append(userTemp)
+                                }
+                            }
+                
+                            self.userOffset = self.userOffset + 20
+                            
+                            self.cv.reloadData()
                         }
                     }
                 } else {
@@ -69,8 +90,7 @@ class GroupLeadTableViewCell: UITableViewCell {
     }
     
     func getNewUserLead() {
-        self.arrayMessages.removeAll()
-        self.arrayCoachesInfo.removeAll()
+        self.arrayUserLead.removeAll()
         self.userOffset = 0
         self.isStopLoadUser = false
         
@@ -78,82 +98,65 @@ class GroupLeadTableViewCell: UITableViewCell {
     }
 }
 
+// MARK: - UserModelDelegate
+extension GroupLeadTableViewCell: UserModelDelegate {
+    func userModelSynsCompleted() {
+        self.cv.reloadData()
+    }
+}
+
+// MARK: - UICollectionViewDelegate
 extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.arrayMessages.count
+        return self.arrayUserLead.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeadCollectionViewCell", for: indexPath) as! LeadCollectionViewCell
-        cell.btnAdd.isHidden = true
         
-        let message = self.arrayMessages[indexPath.row]
-        var targetUserId = ""
-        if (self.typeGroup == TypeGroup.CoachJustConnected ||
-            self.typeGroup == TypeGroup.CoachOld ||
-            self.typeGroup == TypeGroup.CoachCurrent) {
-            if let val = message["coachId"] as? Int {
-                targetUserId = "\(val)"
-            }
-        } else{
-            if let val = message["userId"] as? Int {
-                targetUserId = "\(val)"
-            }
-        }
-        
-        if (indexPath.row == self.arrayMessages.count - 2) {
+        // Loadmore
+        if (indexPath.row == self.arrayUserLead.count - 2) {
             self.getUserLead()
         }
         
-        UserRouter.getUserInfo(userID: targetUserId) { (result, error) in
-            if (error == nil) {
-                let updateCell = collectionView.cellForItem(at: indexPath)
-                if (updateCell != nil) {
-                    cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
-                    cell.btnAdd.isHidden = false
-                    if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-                        cell.btnAdd.isHidden = true
-                    }
-                    
-                    if let userInfo = result as? NSDictionary {
-                        let name = userInfo.object(forKey: kFirstname) as! String
-                        cell.nameUser.text = name.uppercased()
-                        self.arrayCoachesInfo[indexPath.row] = userInfo
-                        
-                        if (userInfo[kImageUrl] is NSNull == false) {
-                            let imageURLString = userInfo[kImageUrl] as! String
+        // Hide/Unhide add button
+        cell.btnAdd.isHidden = false
+        if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+            cell.btnAdd.isHidden = true
+        }
+        
+        cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
+        let userLead = self.arrayUserLead[indexPath.row]
+        if (userLead.isSynsCompleted == true) {
+            cell.nameUser.text = userLead.firstname?.uppercased()
+            
+            if (userLead.imageUrl != nil && userLead.imageUrl?.isEmpty == false) {
+                if (userLead.imageCache != nil) {
+                    cell.imgAvatar.image = userLead.imageCache
+                } else {
+                    ImageVideoRouter.getImage(imageURLString: userLead.imageUrl!, sizeString: widthHeight160, completed: { (result, error) in
+                        if (error == nil) {
+                            let imageRes = result as! UIImage
+                            cell.imgAvatar.image = imageRes
                             
-                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                                if (error == nil) {
-                                    let updateCell = collectionView.cellForItem(at: indexPath)
-                                    if (updateCell != nil) {
-                                        let imageRes = result as! UIImage
-                                        cell.imgAvatar.image = imageRes
-                                    }
-                                } else {
-                                    print("Request failed with error: \(String(describing: error))")
-                                }
-                            }).fetchdata()
+                            userLead.imageCache = imageRes
+                        } else {
+                            print("Request failed with error: \(String(describing: error))")
                         }
-                    }
+                    }).fetchdata()
                 }
-            } else {
-                print("Request failed with error: \(String(describing: error))")
             }
-            }.fetchdata()
+        }
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let userInfo = arrayMessages[indexPath.row]
+        let userInfo = self.arrayUserLead[indexPath.row]
         
-        var targetUserId = ""
-        if let val = userInfo["userId"] as? Int {
-            targetUserId = "\(val)"
-        }
+        let targetUserId = "\(userInfo.id)"
         
-        if userIdSelected == targetUserId {
+        if self.userIdSelected == targetUserId {
             return CGSize(width: 0,height: 90)
         }
         return CGSize(width: 90,height: 90)
@@ -161,17 +164,18 @@ extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.delegateGroupLeadTableViewCell != nil {
-            let userInfo = arrayMessages[indexPath.row]
+            let userInfo = self.arrayUserLead[indexPath.row]
+            let targetUserId = "\(userInfo.id)"
             
-            var targetUserId = ""
-            if let val = userInfo["userId"] as? Int {
-                targetUserId = "\(val)"
+            if self.typeGroup == TypeGroup.CoachJustConnected ||
+                self.typeGroup == TypeGroup.CoachOld ||
+                self.typeGroup == TypeGroup.CoachCurrent {
+                let userDictionary = userInfo.convertToDictionary()
+                
+                self.delegateGroupLeadTableViewCell?.selectUserWithCoachInfo!(coachInfo: userDictionary)
+            } else {
+                self.delegateGroupLeadTableViewCell?.selectUserWithID!(userId: targetUserId, typeGroup: self.typeGroup.rawValue)
             }
-            if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-                self.delegateGroupLeadTableViewCell?.selectUserWithCoachInfo!(coachInfo: self.arrayCoachesInfo[indexPath.row])
-                return
-            }
-            self.delegateGroupLeadTableViewCell?.selectUserWithID!(userId: targetUserId, typeGroup: self.typeGroup.rawValue)
         }
     }
 }

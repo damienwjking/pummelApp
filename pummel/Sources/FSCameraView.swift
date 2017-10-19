@@ -157,10 +157,8 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    @IBAction func shotButtonPressed(sender: UIButton) {
-        
+    @IBAction func shotButtonPressed(_ sender: Any) {
         guard let imageOutput = imageOutput else {
-            
             return
         }
         
@@ -204,7 +202,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    @IBAction func flipButtonPressed(sender: UIButton) {
+    @IBAction func flipButtonPressed(_ sender: Any) {
 
         if !cameraIsAvailable() {
 
@@ -248,7 +246,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         session?.startRunning()
     }
     
-    @IBAction func flashButtonPressed(sender: UIButton) {
+    @IBAction func flashButtonPressed(_ sender: Any) {
 
         if !cameraIsAvailable() {
 

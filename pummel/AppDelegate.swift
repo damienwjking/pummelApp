@@ -246,14 +246,14 @@ extension AppDelegate {
             SwiftMessages.show(config: notificationConfig, view: notification)
             
             let foregroundButton = UIButton()
-            foregroundButton.addTarget(self, action: #selector(self.foreGroundButtonClicked(sender:)), for: .touchUpInside)
+            foregroundButton.addTarget(self, action: #selector(self.foreGroundButtonClicked(_:)), for: .touchUpInside)
             foregroundButton.frame = CGRect(x: 0, y: 0, width: 1000, height: 1000)
             
             notification.addSubview(foregroundButton)
         }
     }
     
-    func foreGroundButtonClicked(sender: UIButton) {
+    func foreGroundButtonClicked(_ sender: Any) {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: self.notificationText), object: nil)
     }
 }

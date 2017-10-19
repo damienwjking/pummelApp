@@ -91,8 +91,8 @@ enum SessionRouter: URLRequestConvertible {
         case .postBookSession(let userID, _, _, _, _, _, _):
             prefix = kPMAPICOACHES + userID + kPMAPICOACH_BOOK
             
-        case .deleteSession:
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_DELETEACTIVITY
+        case .deleteSession(let sessionID, _):
+            prefix = kPMAPIUSER + currentUserID + "/activities/" + sessionID + "/delete"
             
         case .getGroupInfo(let groupType, _, _):
             prefix = kPMAPICOACHES
@@ -117,9 +117,6 @@ enum SessionRouter: URLRequestConvertible {
             } else if groupType == .CoachOld {
                 prefix = prefix + kPM_PATH_COACHOLD
             }
-            
-            
-            
         }
         
         return prefix
@@ -159,6 +156,7 @@ enum SessionRouter: URLRequestConvertible {
             param?[kDatetime] = dateTime
 
         case .deleteSession(let sessionID):
+            param?[kUserId] = currentUserID
             param?[kActivityId] = sessionID
             
         case .getGroupInfo(_, let offset, _):
@@ -316,17 +314,13 @@ enum SessionRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: SessionRouter delete_session")
                 
-                switch response.result {
-                case .success(_):
-                    if response.response?.statusCode == 200 {
-                        self.comletedBlock(true, nil)
-                    }
-                case .failure(let error):
-                    if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        self.comletedBlock(false, error as NSError)
-                    }
+                if response.response?.statusCode == 200 {
+                    self.comletedBlock(true, nil)
+                } else if (response.response?.statusCode == 401) {
+                    PMHelper.showLogoutAlert()
+                } else {
+                    let error = NSError(domain: "Pummel", code: 500, userInfo: nil)
+                    self.comletedBlock(false, error)
                 }
             })
 

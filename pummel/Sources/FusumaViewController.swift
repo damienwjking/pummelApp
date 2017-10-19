@@ -135,7 +135,7 @@ public enum FusumaModeOrder {
         return false
     }
     
-    @IBAction func closeButtonPressed(sender: UIButton) {
+    @IBAction func closeButtonPressed(_ sender: Any) {
 
         self.dismiss(animated: true, completion: {
             
@@ -148,12 +148,12 @@ public enum FusumaModeOrder {
         changeMode(mode: FusumaMode.Library)
     }
     
-    @IBAction func photoButtonPressed(sender: UIButton) {
+    @IBAction func photoButtonPressed(_ sender: Any) {
     
         changeMode(mode: FusumaMode.Camera)
     }
     
-    @IBAction func doneButtonPressed(sender: UIButton) {
+    @IBAction func doneButtonPressed(_ sender: Any) {
         
         let image = albumView.imageSelected as UIImage
         delegate?.fusumaImageSelected(image: image)
@@ -213,26 +213,23 @@ extension FusumaViewController {
     
     
     func dishighlightButtons() {
-        
         cameraButton.tintColor  = fusumaBaseTintColor
         libraryButton.tintColor = fusumaBaseTintColor
         
-        if (cameraButton.layer.sublayers?.count)! > 1 {
+        if (cameraButton.layer.sublayers != nil && (cameraButton.layer.sublayers?.count)! > 1) {
             for layer in cameraButton.layer.sublayers! {
                 if let borderColor = layer.borderColor {
                     if UIColor(cgColor: borderColor) == fusumaTintColor {
-                        
                         layer.removeFromSuperlayer()
                     }
                 }
             }
         }
         
-        if (libraryButton.layer.sublayers?.count)! > 1 {
+        if (libraryButton.layer.sublayers != nil && (libraryButton.layer.sublayers?.count)! > 1) {
             for layer in libraryButton.layer.sublayers! {
                 if let borderColor = layer.borderColor {
                     if UIColor(cgColor: borderColor) == fusumaTintColor {
-                        
                         layer.removeFromSuperlayer()
                     }
                 }

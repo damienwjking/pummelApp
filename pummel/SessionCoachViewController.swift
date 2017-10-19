@@ -45,6 +45,8 @@ class SessionCoachViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(SessionCoachViewController.reloadSessionList), name: NSNotification.Name(rawValue: k_PM_REFRESH_SESSION), object: nil)
+        
         self.calendarMenuView.menuViewDelegate = self
         self.calendarView.calendarAppearanceDelegate = self
         self.calendarView.animatorDelegate = self
@@ -81,9 +83,7 @@ class SessionCoachViewController: BaseViewController {
         self.setupTabbar()
         self.setupNavigationBar()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(SessionCoachViewController.getListSession), name: NSNotification.Name(rawValue: k_PM_REFRESH_SESSION), object: nil)
-        
-        self.getListSession()
+        self.reloadSessionList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -95,21 +95,17 @@ class SessionCoachViewController: BaseViewController {
             self.performSegue(withIdentifier: "coachLogASession", sender: nil)
         }
         
-        // Update Calendar
-        self.calendarView.presentedDate = CVDate(date: NSDate() as Date)
-        self.updateLayout()
-        
         self.resetSBadge()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: Init
     func initTableView() {
         self.sessionTableView.estimatedRowHeight = 100
+        self.sessionTableView.rowHeight = UITableViewAutomaticDimension
         
         let nibName = UINib(nibName: "LogTableViewCell", bundle:nil)
         self.sessionTableView.register(nibName, forCellReuseIdentifier: "LogTableViewCell")
@@ -138,6 +134,15 @@ class SessionCoachViewController: BaseViewController {
     }
     
     // MARK: Private function
+    func reloadSessionList() {
+        self.sessionList.removeAll()
+        self.canLoadMore = true
+        self.isloading = false
+        self.offset = 0
+        
+        self.getListSession()
+    }
+    
     func getListSession() {
         if (self.canLoadMore == true && self.isloading == false) {
             self.isloading = true
@@ -366,9 +371,7 @@ extension SessionCoachViewController: UITableViewDelegate, UITableViewDataSource
                         self.selectedSessionList.remove(at: indexPath.row)
                         tableView.reloadData()
                         
-                        self.sessionList.removeAll()
-                        self.canLoadMore = true
-                        self.getListSession()
+                        self.reloadSessionList()
                         
                         self.calendarView.contentController.refreshPresentedMonth()
                     }
@@ -499,6 +502,10 @@ extension SessionCoachViewController: CVCalendarViewDelegate, CVCalendarMenuView
     
     func dotMarker(moveOffsetOnDayView dayView: DayView) -> CGFloat {
         return 9
+    }
+    
+    func dotMarker(shouldMoveOnHighlightingOnDayView dayView: DayView) -> Bool {
+        return false
     }
     
     func dotMarker(colorOnDayView dayView: DayView) -> [UIColor] {
