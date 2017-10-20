@@ -81,8 +81,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
         
-        self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(FindViewController.refind), name: NSNotification.Name(rawValue: "SELECTED_MIDDLE_TAB"), object: nil)
         
         self.stopSearch = false
@@ -142,6 +140,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                                                     action: #selector(FindViewController.btnCoachsClick))
             self.tabBarController?.navigationItem.leftBarButtonItem = leftBarButtonItem
         }
+        self.tabBarController?.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
     }
     
     func setupHorizontalView() {
@@ -390,7 +389,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                 
                 self.horizontalButton.isHidden = true
                 
-                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmLightBrightOrangeColor()], for: .normal)
+                self.tabBarController?.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
                 
                 self.horizontalView.layoutIfNeeded()
             }) { (_) in
@@ -410,7 +409,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                 
                 self.horizontalButton.isHidden = false
                 
-                self.tabBarController?.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
+                self.tabBarController?.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
                 
                 self.horizontalView.layoutIfNeeded()
             }) { (_) in

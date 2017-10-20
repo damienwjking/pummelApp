@@ -30,6 +30,16 @@ extension UIView {
     }
 }
 
+extension UIBarButtonItem {
+    func setAttributeForAllStage(textFont: UIFont = UIFont.pmmMonReg13(), textColor: UIColor = UIColor.pmmBrightOrangeColor()) {
+        self.setTitleTextAttributes([NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor], for: .normal)
+        
+        self.setTitleTextAttributes([NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor], for: .highlighted)
+        
+        self.setTitleTextAttributes([NSFontAttributeName: textFont, NSForegroundColorAttributeName: textColor], for: .disabled)
+    }
+}
+
 extension UIImageView {
     func roundCorners(corners:UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))

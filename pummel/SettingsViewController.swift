@@ -91,8 +91,9 @@ class SettingsViewController: BaseViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationController!.navigationBar.isTranslucent = false;
        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "DONE", style: .plain, target: self, action: #selector(SettingsViewController.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: kDone, style: .plain, target: self, action: #selector(SettingsViewController.done))
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
+        
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         if self.defaults.object(forKey: kNewConnections) == nil {

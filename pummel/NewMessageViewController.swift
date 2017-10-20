@@ -31,7 +31,8 @@ class NewMessageViewController: BaseViewController, UITableViewDelegate, UITable
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(NewMessageViewController.cancel))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
+        
         self.toLB.font = .pmmMonReg13()
         self.toUserTF.attributedPlaceholder = NSAttributedString(string:"|",
             attributes:([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()]))

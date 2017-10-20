@@ -27,7 +27,7 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
         
         // add right invite button
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kInvite.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.invite))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         
         let nibName = UINib(nibName: "GroupLeadTableViewCell", bundle:nil)
         self.tbView.register(nibName, forCellReuseIdentifier: "GroupLeadTableViewCell")

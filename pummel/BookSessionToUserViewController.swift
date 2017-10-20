@@ -51,7 +51,7 @@ class BookSessionToUserViewController: BaseViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.leftBarButtonClicked))
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true

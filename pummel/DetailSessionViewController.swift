@@ -60,7 +60,7 @@ class DetailSessionViewController: BaseViewController {
         
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kEdit.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.editClicked))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         
         self.initLayout()
         

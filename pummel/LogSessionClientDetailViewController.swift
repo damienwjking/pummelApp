@@ -252,13 +252,12 @@ class LogSessionClientDetailViewController: BaseViewController, UIImagePickerCon
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(LogSessionClientDetailViewController.backClicked))
         
         if self.editSession.id == 0 {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.saveClicked))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: kSave.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.saveClicked))
         } else {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kSave.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.editClicked))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: kSave.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.editClicked))
         }
         
-        
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
     }
     
     func initInformation() {

@@ -29,7 +29,7 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
         self.activityIndicator.isHidden = false
         
 //        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.backButtonClicked))
-//        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+//        self.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
         
         
         

@@ -22,13 +22,13 @@ class ChangePasswordViewController : BaseViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
         self.navigationController!.navigationBar.isTranslucent = false;
         
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: kDone.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChangePasswordViewController.done))
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"DONE", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChangePasswordViewController.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChangePasswordViewController.cancel))
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: kCancle.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChangePasswordViewController.cancel))
+        self.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
     }
     
     func done() {

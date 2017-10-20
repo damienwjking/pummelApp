@@ -310,7 +310,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             }
             
             self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"SETTINGS", style:.plain, target: self, action: #selector(self.setting))
-            self.tabBarController?.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for:.normal)
+            self.tabBarController?.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         } else if (self.profileStyle == .otherUser) {
             self.backButton.isHidden = false
             self.userNameLabel.isHidden = false

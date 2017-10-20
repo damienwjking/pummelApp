@@ -80,11 +80,13 @@ class EditCoachProfileViewController: BaseViewController {
         self.navigationController!.navigationBar.isTranslucent = false;
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"DONE", style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.done))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
+        
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"CANCEL", style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.cancel))
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName:UIFont.pmmMonReg13(), NSForegroundColorAttributeName:UIColor.pmmBrightOrangeColor()], for: .normal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: kCancle.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.cancel))
+        self.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
+        
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         
