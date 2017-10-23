@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 protocol ConversationDelegate {
-    func messageModelSynsDataSuccess()
+    func ConversationSynsDataSuccess()
 }
 
 class ConversationModel: NSObject {
@@ -21,7 +21,7 @@ class ConversationModel: NSObject {
     var targetUserName: String?
     var targetUserImage: UIImage?
     
-    var messageID: String?
+    var conversationID: String?
     var text: String?
     var isOpen = false
     var createdAt: String?
@@ -32,8 +32,8 @@ class ConversationModel: NSObject {
     var selected = false
     
     func parseData(data: NSDictionary) {
-        let messageID = data[kId] as! Int
-        self.messageID = String(format:"%ld", messageID)
+        let conversationID = data[kId] as! Int
+        self.conversationID = String(format:"%ld", conversationID)
         self.createdAt = data[kCreateAt] as? String
         self.updateAt = data[kUpdateAt] as? String
         
@@ -73,31 +73,11 @@ class ConversationModel: NSObject {
     }
     
     func synsOtherData() {
-        MessageRouter.getDetailConversation(messageID: self.messageID!, completed: { (result, error) in
+        MessageRouter.getDetailConversation(conversationID: self.conversationID!, completed: { (result, error) in
             if (error == nil) {
                 // Get lastest message
-                let arrayMessageThisConverId = result as! NSArray
-                if (arrayMessageThisConverId.count != 0) {
-                    let messageDetail = arrayMessageThisConverId[0] as! NSDictionary
-                    
-                    if ((messageDetail[kText] is NSNull) == false) {
-                        if (messageDetail[kText] as! String == "") {
-                            self.text = "Media message"
-                        } else {
-                            self.text = messageDetail[kText]  as? String
-                        }
-                    } else {
-                        if (!(messageDetail[kImageUrl] is NSNull)) {
-                            self.text = sendYouAImage
-                        } else if (!(messageDetail[KVideoUrl] is NSNull)) {
-                            self.text = sendYouAVideo
-                        } else {
-                            self.text = "Media messge"
-                        }
-                    }
-                } else {
-                    self.text = " "
-                }
+                let arrayMessageThisConverId = result as! [MessageModel]
+                self.text = arrayMessageThisConverId[0].text
                 
                 // Get name
                 UserRouter.getUserInfo(userID: self.targetUserID!, completed: { (result, error) in
@@ -122,7 +102,7 @@ class ConversationModel: NSObject {
                                         self.targetUserImage = imageRes
                                         
                                         if (self.delegate != nil) {
-                                            self.delegate?.messageModelSynsDataSuccess()
+                                            self.delegate?.ConversationSynsDataSuccess()
                                         }
                                     })
                                 } else {
@@ -133,7 +113,7 @@ class ConversationModel: NSObject {
                             self.targetUserImage = UIImage(named:"display-empty.jpg")
                             
                             if (self.delegate != nil) {
-                                self.delegate?.messageModelSynsDataSuccess()
+                                self.delegate?.ConversationSynsDataSuccess()
                             }
                         }
                     } else {
@@ -146,17 +126,17 @@ class ConversationModel: NSObject {
         }).fetchdata()
     }
     
-    func same(message: ConversationModel) -> Bool {
-        if (self.messageID == message.messageID) {
+    func same(conversation: ConversationModel) -> Bool {
+        if (self.conversationID == conversation.conversationID) {
             return true
         }
         
         return false
     }
     
-    func existInList(messageList: [ConversationModel]) -> Bool {
-        for message in messageList {
-            if (self.same(message: message)) {
+    func existInList(conversationList: [ConversationModel]) -> Bool {
+        for conversation in conversationList {
+            if (self.same(conversation: conversation)) {
                 return true
             }
         }
