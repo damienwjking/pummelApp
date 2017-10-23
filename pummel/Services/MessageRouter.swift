@@ -12,7 +12,7 @@ import MapKit
 
 enum MessageRouter: URLRequestConvertible {
     case getConversationList(offset: Int, completed: CompletionBlock)
-    case getDetailConversation(messageID: String, completed: CompletionBlock)
+    case getDetailConversation(conversationID: String, completed: CompletionBlock)
     case setOpenMessage(messageID: String, completed: CompletionBlock)
     case createConversationWithUser(userID: String, completed: CompletionBlock)
     case sendMessage(conversationID: String, text: String, imageData: Data, completed: CompletionBlock)
@@ -83,10 +83,10 @@ enum MessageRouter: URLRequestConvertible {
         var prefix = ""
         switch self {
         case .getConversationList(let offset, _):
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION_OFFSET_V2 + "\(offset)"
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION_OFFSET_V3 + "\(offset)"
             
-        case .getDetailConversation(let messageID, _):
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/" + messageID + kPM_PARTH_MESSAGE
+        case .getDetailConversation(let conversationID, _):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION + "/" + conversationID + kPM_PARTH_MESSAGE
             
         case .setOpenMessage(let messageID, _):
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_CONVERSATION_V2 + "/" + messageID
@@ -167,12 +167,12 @@ enum MessageRouter: URLRequestConvertible {
                 switch response.result {
                 case .success(let JSON):
                     if response.response?.statusCode == 200 {
-                        var messageList: [MessageModel] = []
+                        var messageList: [ConversationModel] = []
                         
                         let messageDetails = JSON as! [NSDictionary]
                         
                         for messageDetail in messageDetails {
-                            let message = MessageModel()
+                            let message = ConversationModel()
                             
                             message.parseData(data: messageDetail)
                             
@@ -200,10 +200,19 @@ enum MessageRouter: URLRequestConvertible {
                 switch response.result {
                 case .success(let JSON):
                     if response.response?.statusCode == 200 {
-                        let messageDetail = JSON as! NSArray
+                        let messageDetails = JSON as! [NSDictionary]
                         
-                        if (messageDetail.count > 0) {
-                            self.comletedBlock(messageDetail, nil)
+                        if (messageDetails.count > 0) {
+                            var messages: [MessageModel] = []
+                            
+                            for messageDetail in messageDetails {
+                                let message = MessageModel()
+                                message.parseData(data: messageDetail)
+                                
+                                messages.append(message)
+                            }
+                            
+                            self.comletedBlock(messages, nil)
                         } else {
                             let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
                             self.comletedBlock(nil, error)

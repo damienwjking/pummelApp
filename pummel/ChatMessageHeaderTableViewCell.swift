@@ -20,10 +20,6 @@ class ChatMessageHeaderTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.avatarIMV.layer.cornerRadius = 40
         self.avatarIMV.clipsToBounds = true
-        self.connectToLB.font = .pmmMonReg11()
-        self.nameChatUserLB.font = .pmmMonReg11()
-        self.startConversationLB.font = .pmmMonLight11()
-        self.timeLB.font = .pmmMonLight11()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

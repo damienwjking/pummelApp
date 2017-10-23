@@ -214,4 +214,14 @@ class PMHelper {
         }
     }
     
+    class func getDate(fromString string: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = kFullDateFormat
+        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        
+        let date = dateFormatter.date(from: string)
+        
+        return date
+    }
+    
 }

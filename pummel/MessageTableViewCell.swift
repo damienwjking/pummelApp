@@ -29,7 +29,7 @@ class MessageTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    func setupData(message: MessageModel) {
+    func setupData(message: ConversationModel) {
         // TargetID
         let targerID = message.targetUserID
         if (targerID?.isEmpty == false) {
@@ -64,21 +64,17 @@ class MessageTableViewCell: UITableViewCell {
         }
         
         // Check New or old
-        let lastOpen = message.isOpen
-        let userMessage = message.text
-        if lastOpen == false {
+        if (message.isOpen == false) {
             self.isNewMessage = true
             self.nameLB.font = .pmmMonReg13()
             self.messageLB.font = .pmmMonReg16()
             self.timeLB.textColor = UIColor.pmmBrightOrangeColor()
-            
-            self.messageLB.text = userMessage
         } else {
             self.nameLB.font = .pmmMonLight13()
             self.messageLB.font = .pmmMonLight16()
             self.timeLB.textColor = UIColor.black
-            
-            self.messageLB.text = " "
         }
+        
+        self.messageLB.text = message.text
     }
 }

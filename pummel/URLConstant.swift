@@ -64,7 +64,7 @@ let kPM_PATH_VIDEO                  = "/videos"
 let kPM_PATH_PHOTOV2                = "/photosV2?offset="
 let kPM_PATH_CONVERSATION           = "/conversations"
 let kPM_PATH_CONVERSATION_V2        = "/conversationsV2"
-let kPM_PATH_CONVERSATION_OFFSET_V2 = "/conversationsVersion2?offset="
+let kPM_PATH_CONVERSATION_OFFSET_V3 = "/conversationsVersion3?offset="
 //let kPM_PATH_CONVERSATION_OFFSET    = "/conversations?offset="    // No use
 let kPM_PATH_DELETEACTIVITY         = "/activities/deleteActivity"
 let kPM_PATH_DEVICES                = "/devices"

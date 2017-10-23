@@ -19,13 +19,21 @@ class ChatMessageImageTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.avatarIMV.layer.cornerRadius = 20
         self.avatarIMV.clipsToBounds = true
-        self.nameLB.font = .pmmMonLight13()
-        self.messageLB.font = .pmmMonLight16()
-        self.messageLB.numberOfLines = 10
+        
+        self.selectionStyle = UITableViewCellSelectionStyle.none
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+    func setupData(message: MessageModel) {
+        self.photoIMW.image = message.imageContentCache
+        
+        self.avatarIMV.image = message.imageCache
+        self.nameLB.text = message.nameCache
+        
+        if (message.text == nil) {
+            self.messageLB.text = ""
+        } else {
+            self.messageLB.text = message.text
+        }
     }
 }
 

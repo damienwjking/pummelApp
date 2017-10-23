@@ -35,6 +35,7 @@
 		BA0E98791E6673BF0019A24A /* NoResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0E98781E6673BF0019A24A /* NoResultCell.swift */; };
 		BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1043061E083749006DB43D /* LogTableViewCell.swift */; };
 		BA131BFF1E16B76400CA9A83 /* LogTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */; };
+		BA139ECC1F9DE854007CF073 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA139ECB1F9DE854007CF073 /* MessageModel.swift */; };
 		BA1404181E2E5F700075CC3A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1404171E2E5F700075CC3A /* BaseViewController.swift */; };
 		BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */; };
 		BA141CB81E0ADD3A0076D4B8 /* ActivityCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */; };
@@ -44,13 +45,16 @@
 		BA22A2CA1F0C8E7B008FD47F /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA22A2C91F0C8E7B008FD47F /* UserModel.swift */; };
 		BA29B1391F132C530059AE9A /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29B1381F132C530059AE9A /* Extension.swift */; };
 		BA2E89D11F87728800A8A8BD /* MessageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2E89D01F87728800A8A8BD /* MessageRouter.swift */; };
-		BA2E89D31F87729700A8A8BD /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2E89D21F87729700A8A8BD /* MessageModel.swift */; };
+		BA2E89D31F87729700A8A8BD /* ConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2E89D21F87729700A8A8BD /* ConversationModel.swift */; };
 		BA2FA9621F1693A2004164D5 /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */; };
 		BA2FEA6C1F4F388D00146529 /* CreateBridgFile.m in Sources */ = {isa = PBXBuildFile; fileRef = BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */; };
 		BA2FEA6D1F4F399200146529 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863751E4CD5D500E09CA7 /* Bolts.framework */; };
 		BA2FEA6E1F4F399200146529 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863771E4CD5E900E09CA7 /* FBSDKCoreKit.framework */; };
 		BA2FEA6F1F4F399200146529 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85863791E4CD5FC00E09CA7 /* FBSDKLoginKit.framework */; };
 		BA2FEA701F4F399200146529 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E858637B1E4CD60300E09CA7 /* FBSDKShareKit.framework */; };
+		BA34A71B1F9E42340059EADD /* ChatMessageHeaderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA34A71A1F9E42340059EADD /* ChatMessageHeaderTableViewCell.xib */; };
+		BA34A71D1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA34A71C1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib */; };
+		BA34A71F1F9E43470059EADD /* ChatMessageImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA34A71E1F9E43470059EADD /* ChatMessageImageTableViewCell.xib */; };
 		BA37E1321F970AC0009811DA /* LogSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA37E1311F970AC0009811DA /* LogSessionTableViewCell.xib */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA506FB11F83799900FF1964 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA506FB01F83799900FF1964 /* FeedModel.swift */; };
@@ -253,6 +257,7 @@
 		BA0E98781E6673BF0019A24A /* NoResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoResultCell.swift; sourceTree = "<group>"; };
 		BA1043061E083749006DB43D /* LogTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTableViewCell.swift; sourceTree = "<group>"; };
 		BA131BFE1E16B76400CA9A83 /* LogTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogTableViewCell.xib; sourceTree = "<group>"; };
+		BA139ECB1F9DE854007CF073 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		BA1404171E2E5F700075CC3A /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		BA141CB51E0ADD2C0076D4B8 /* ActivityCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
 		BA141CB71E0ADD3A0076D4B8 /* ActivityCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityCell.xib; sourceTree = "<group>"; };
@@ -262,10 +267,13 @@
 		BA22A2C91F0C8E7B008FD47F /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Model.swift/UserModel.swift; sourceTree = "<group>"; };
 		BA29B1381F132C530059AE9A /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		BA2E89D01F87728800A8A8BD /* MessageRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageRouter.swift; sourceTree = "<group>"; };
-		BA2E89D21F87729700A8A8BD /* MessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		BA2E89D21F87729700A8A8BD /* ConversationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationModel.swift; sourceTree = "<group>"; };
 		BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
 		BA2FEA6A1F4F388D00146529 /* pummel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pummel-Bridging-Header.h"; sourceTree = "<group>"; };
 		BA2FEA6B1F4F388D00146529 /* CreateBridgFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateBridgFile.m; sourceTree = "<group>"; };
+		BA34A71A1F9E42340059EADD /* ChatMessageHeaderTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatMessageHeaderTableViewCell.xib; sourceTree = "<group>"; };
+		BA34A71C1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatMessageWithoutImageTableViewCell.xib; sourceTree = "<group>"; };
+		BA34A71E1F9E43470059EADD /* ChatMessageImageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatMessageImageTableViewCell.xib; sourceTree = "<group>"; };
 		BA37E1311F970AC0009811DA /* LogSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogSessionTableViewCell.xib; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA506FB01F83799900FF1964 /* FeedModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedModel.swift; path = Model.swift/FeedModel.swift; sourceTree = "<group>"; };
@@ -554,7 +562,8 @@
 				BA0314931E157C0300982622 /* SessionModel.swift */,
 				BA506FB21F8379C900FF1964 /* TagModel.swift */,
 				BA506FB01F83799900FF1964 /* FeedModel.swift */,
-				BA2E89D21F87729700A8A8BD /* MessageModel.swift */,
+				BA2E89D21F87729700A8A8BD /* ConversationModel.swift */,
+				BA139ECB1F9DE854007CF073 /* MessageModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -580,8 +589,11 @@
 				F9F3CC401CE221F8007F68A5 /* UserTableViewCell.swift */,
 				F9FE13C71CEAF5F9004ABE34 /* MessageTableViewCell.swift */,
 				F98C40A51CF2524600ECC66E /* ChatMessageImageTableViewCell.swift */,
+				BA34A71E1F9E43470059EADD /* ChatMessageImageTableViewCell.xib */,
 				F98C40A71CF2526500ECC66E /* ChatMessageWithoutImageTableViewCell.swift */,
+				BA34A71C1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib */,
 				F920416E1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift */,
+				BA34A71A1F9E42340059EADD /* ChatMessageHeaderTableViewCell.xib */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -1044,6 +1056,7 @@
 				F9FE14601CEBD29B004ABE34 /* rotatecamera@2x.png in Resources */,
 				F91727641DB3343200C6E612 /* HorizontalCell.xib in Resources */,
 				F9F3CC1B1CE1CA49007F68A5 /* Assets.xcassets in Resources */,
+				BA34A71F1F9E43470059EADD /* ChatMessageImageTableViewCell.xib in Resources */,
 				F9C17B821E4354E000CE3A8B /* shareLogo.png in Resources */,
 				BAC670C51F53BEC300D5EA28 /* TestimonialCell.xib in Resources */,
 				F9FE13CC1CEB1B3E004ABE34 /* Montserrat-Light.ttf in Resources */,
@@ -1053,6 +1066,7 @@
 				BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */,
 				F9ABEAD11DC21FA20084B70E /* Profile.storyboard in Resources */,
 				F9ABEAF01DC4BD930084B70E /* Search.storyboard in Resources */,
+				BA34A71D1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib in Resources */,
 				E8D778EA1E0AF6F00011E164 /* GroupLeadTableViewCell.xib in Resources */,
 				E86A65DA1E0BD8C400FF2935 /* LeadAddedCollectionViewCell.xib in Resources */,
 				F9FE145A1CEBD29B004ABE34 /* FSCameraView.xib in Resources */,
@@ -1060,6 +1074,7 @@
 				F9248D901E177C3E0019491F /* icon_delete.png in Resources */,
 				F9ABEAE81DC4B9440084B70E /* CoachProfile.storyboard in Resources */,
 				E87FB0141E0AD91A0091856B /* BookSessionTableViewCell.xib in Resources */,
+				BA34A71B1F9E42340059EADD /* ChatMessageHeaderTableViewCell.xib in Resources */,
 				E86A65D61E0BD80400FF2935 /* LeadAddedTableViewCell.xib in Resources */,
 				E8499E721EEFBE36008A65C2 /* Discount.storyboard in Resources */,
 				F9F3CC1C1CE1CA49007F68A5 /* LaunchScreen.storyboard in Resources */,
@@ -1214,7 +1229,7 @@
 				E8D778DA1E0AF08B0011E164 /* BookSessionShareViewController.swift in Sources */,
 				9C1C543B1C793AF30083E47B /* MessageViewController.swift in Sources */,
 				F9EAE8E51D6EFA4900FD32BE /* SettingHelpSupportTableViewCell.swift in Sources */,
-				BA2E89D31F87729700A8A8BD /* MessageModel.swift in Sources */,
+				BA2E89D31F87729700A8A8BD /* ConversationModel.swift in Sources */,
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
 				E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */,
@@ -1268,6 +1283,7 @@
 				BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */,
 				F9FE14571CEBD29B004ABE34 /* FSAlbumViewCell.swift in Sources */,
 				BA141CB61E0ADD2C0076D4B8 /* ActivityCell.swift in Sources */,
+				BA139ECC1F9DE854007CF073 /* MessageModel.swift in Sources */,
 				9C1C543D1C793B280083E47B /* FindViewController.swift in Sources */,
 				BA15EBB61F551A8300B0A515 /* TestimonialModel.swift in Sources */,
 				F968470A1E06B570009EB06C /* BookSessionViewController.swift in Sources */,

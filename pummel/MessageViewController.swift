@@ -32,7 +32,7 @@ class MessageViewController: BaseViewController {
     @IBOutlet weak var connectionsLB : UILabel?
     @IBOutlet weak var separeateline: UIView?
     
-    var arrayMessages: [MessageModel] = []
+    var conversationList: [ConversationModel] = []
     let defaults = UserDefaults.standard
     var dataSourceArr : [NSDictionary] = []
     var messageOffset : Int = 0
@@ -98,7 +98,7 @@ class MessageViewController: BaseViewController {
         
         self.isGoToMessageDetail = false
         
-        self.getMessage()
+        self.getConversation()
         
         self.leadOffset = 0
         self.isStopLoadLead = false
@@ -152,19 +152,19 @@ class MessageViewController: BaseViewController {
     }
     
     func gotNewMessage() {
-        self.arrayMessages.removeAll()
+        self.conversationList.removeAll()
         self.isStopLoadMessage = false
         self.messageOffset = 0
         
-        self.getMessage()
+        self.getConversation()
     }
     
     func gotNewNotificationShowBage() {
-        self.arrayMessages.removeAll()
+        self.conversationList.removeAll()
         self.isStopLoadMessage = false
         self.messageOffset = 0
         
-        self.getMessage()
+        self.getConversation()
     }
     
     @IBAction func startConversation(_ sender: Any) {
@@ -221,7 +221,7 @@ class MessageViewController: BaseViewController {
         }
     }
     
-    func getMessage() {
+    func getConversation() {
         if (self.isStopLoadMessage == false && self.isLoadingMessage == false) {
             if (self.messageOffset == 0) {
                 self.view.makeToastActivity(message: "Loading")
@@ -236,28 +236,42 @@ class MessageViewController: BaseViewController {
                 self.isLoadingMessage = false
                 
                 if (error == nil) {
-                    let messageList = result as! [MessageModel]
+                    let conversations = result as! [ConversationModel]
                     
-                    if (messageList.count == 0) {
+                    if (conversations.count == 0) {
                         self.isStopLoadMessage = true
                     } else {
-                        for message in messageList {
-                            if (message.existInList(messageList: self.arrayMessages) == false) {
-                                message.delegate = self
-                                message.synsOtherData()
+                        for conversation in conversations {
+                            if (conversation.existInList(conversationList: self.conversationList) == false) {
+                                conversation.delegate = self
+                                conversation.synsOtherData()
                                 
-                                self.arrayMessages.append(message)
+                                self.conversationList.append(conversation)
                             }
                         }
                     }
                     
                     self.messageOffset = self.messageOffset + 10
                     
+                    self.sortConversationList()
                     self.listMessageTB.reloadData()
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                 }
             }).fetchdata()
+        }
+    }
+    
+    func sortConversationList() {
+        self.conversationList.sort { (conversation1, conversation2) -> Bool in
+            let date1 = PMHelper.getDate(fromString: conversation1.updateAt!)
+            let date2 = PMHelper.getDate(fromString: conversation2.updateAt!)
+            
+            if (date1 == nil || date2 == nil) {
+                return false
+            } else {
+                return ((date1?.compare(date2!)) == .orderedDescending)
+            }
         }
     }
     
@@ -267,12 +281,12 @@ class MessageViewController: BaseViewController {
             
             if (self.isGoToMessageDetail == false) {
                 let indexPathRow = sender as! Int
-                let message = arrayMessages[indexPathRow]
-                message.isOpen = true
+                let conversation = self.conversationList[indexPathRow]
+                conversation.isOpen = true
                 let cell = self.listMessageTB.cellForRow(at: NSIndexPath(row: indexPathRow, section: 0) as IndexPath) as! MessageTableViewCell
                 
                 destinationVC.userIdTarget = cell.targetId
-                destinationVC.messageId = message.messageID
+                destinationVC.messageId = conversation.conversationID
             } else {
                 let userID = sender as! String
                 destinationVC.userIdTarget = userID
@@ -281,9 +295,9 @@ class MessageViewController: BaseViewController {
     }
 }
 
-// MARK: - MessageModelDelegate
-extension MessageViewController: MessageModelDelegate {
-    func messageModelSynsDataSuccess() {
+// MARK: - ConversationDelegate
+extension MessageViewController: ConversationDelegate {
+    func ConversationSynsDataSuccess() {
         self.listMessageTB.reloadData()
     }
 }
@@ -316,8 +330,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                 return 96
             }
         } else {
-            if (indexPath.row < self.arrayMessages.count) {
-                let message = self.arrayMessages[indexPath.row]
+            if (indexPath.row < self.conversationList.count) {
+                let message = self.conversationList[indexPath.row]
                 let text = message.text
                 if (text == nil || text?.isEmpty == true || text == " ") {
                     return 0
@@ -335,8 +349,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         if (tableView == listMessageTB) {
             let cell = tableView.dequeueReusableCell(withIdentifier: kMessageTableViewCell, for: indexPath) as! MessageTableViewCell
             
-            if (indexPath.row < self.arrayMessages.count) {
-                let message = self.arrayMessages[indexPath.row]
+            if (indexPath.row < self.conversationList.count) {
+                let message = self.conversationList[indexPath.row]
                 
                 cell.setupData(message: message)
             }
@@ -372,10 +386,10 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func clickOnConnectionImage(indexPath: NSIndexPath) {
         self.saveIndexPath = indexPath
-        let message = arrayMessages[indexPath.row]
+        let conversation = conversationList[indexPath.row]
         
         self.view.makeToastActivity(message: "Loading")
-        MessageRouter.setOpenMessage(messageID: message.messageID!) { (result, error) in
+        MessageRouter.setOpenMessage(messageID: conversation.conversationID!) { (result, error) in
             self.view.hideToastActivity()
             
             let isChangeSuccess = result as! Bool
@@ -523,16 +537,16 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell , forRowAt indexPath: IndexPath) {
-        if (indexPath.row == self.arrayMessages.count - 1 && tableView == self.listMessageTB) {
-            self.getMessage()
+        if (indexPath.row == self.conversationList.count - 1 && tableView == self.listMessageTB) {
+            self.getConversation()
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tableView == self.listMessageTB) {
-            self.noMessageV.isHidden = (self.arrayMessages.count != 0)
+            self.noMessageV.isHidden = (self.conversationList.count != 0)
             
-            return self.arrayMessages.count
+            return self.conversationList.count
         } else {
             if (self.arrayListLead.count == 0) {
                 self.horizontalViewHeightConstraint!.constant = 0

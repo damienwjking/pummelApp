@@ -2,7 +2,7 @@
 //  MessageModel.swift
 //  pummel
 //
-//  Created by Nguyễn Tấn Phúc on 10/6/17.
+//  Created by Nguyễn Tấn Phúc on 10/23/17.
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
@@ -10,154 +10,128 @@ import Foundation
 
 import UIKit
 
-protocol MessageModelDelegate {
-    func messageModelSynsDataSuccess()
+
+protocol MessageDelegate {
+    func MessageSynsDataCompleted(message: MessageModel)
 }
 
 class MessageModel: NSObject {
-    var delegate : MessageModelDelegate? 
+    var delegate: MessageDelegate? = nil
     
+    var id: String?  = ""
+    var text: String? = " "
+    var userId: String? = ""
+    var uploadId: String? = ""
+    var imageUrl: String? = ""
+    var updatedAt: String? = ""
+    var createdAt: String? = ""
+    var videoUrl: String? = ""
+    var conversationId: String? = ""
     
-    var targetUserID: String?
-    var targetUserName: String?
-    var targetUserImage: UIImage?
-    
-    var messageID: String?
-    var text: String?
-    var isOpen = false
-    var createdAt: String?
-    var updateAt: String?
-    
-    var tagType: Int?
-    
-    var selected = false
+    var nameCache = ""
+    var imageCache: UIImage? = nil
+    var imageContentCache: UIImage? = nil
     
     func parseData(data: NSDictionary) {
-        let messageID = data[kId] as! Int
-        self.messageID = String(format:"%ld", messageID)
-        self.createdAt = data[kCreateAt] as? String
-        self.updateAt = data[kUpdateAt] as? String
+        let id = data[kId] as? Int
+        let userId = data[kUserId] as? Int
+        let uploadId = data["uploadId"] as? Int
+        let conversationId = data["conversationId"] as? Int
         
-        // Other param will fill later
+        if (id != nil) {
+            self.id = String(id!)
+        }
+        
+        if (userId != nil) {
+            self.userId = String(userId!)
+        }
+        
+        if (uploadId != nil) {
+            self.uploadId = String(uploadId!)
+        }
+        
+        if (conversationId != nil) {
+            self.conversationId = String(conversationId!)
+        }
+        
+        self.imageUrl = data["imageUrl"] as? String
+        self.videoUrl = data["videoUrl"] as? String
+        self.createdAt = data["createdAt"] as? String
+        self.updatedAt = data["updatedAt"] as? String
+        
+        self.text = data["text"] as? String
+        if (self.text != nil) {
+            if (self.text == "") {
+                self.text = "Media message"
+            }
+        } else {
+            if (self.imageUrl != nil) {
+                self.text = sendYouAImage
+            } else if (self.videoUrl != nil) {
+                self.text = sendYouAVideo
+            } else {
+                self.text = ""
+            }
+        }
     }
     
     func synsOtherData() {
-        MessageRouter.getDetailConversation(messageID: self.messageID!, completed: { (result, error) in
+        UserRouter.getUserInfo(userID: self.userId!, completed: { (result, error) in
             if (error == nil) {
-                // Get lastest message
-                let arrayMessageThisConverId = result as! NSArray
-                if (arrayMessageThisConverId.count != 0) {
-                    let messageDetail = arrayMessageThisConverId[0] as! NSDictionary
+                    let userInfo = result as! NSDictionary
                     
-                    if ((messageDetail[kText] is NSNull) == false) {
-                        if (messageDetail[kText] as! String == "") {
-                            self.text = "Media message"
-                        } else {
-                            self.text = messageDetail[kText]  as? String
-                        }
-                    } else {
-                        if (!(messageDetail[kImageUrl] is NSNull)) {
-                            self.text = sendYouAImage
-                        } else if (!(messageDetail[KVideoUrl] is NSNull)) {
-                            self.text = sendYouAVideo
-                        } else {
-                            self.text = "Media messge"
-                        }
-                    }
-                } else {
-                    self.text = " "
-                }
-            
-                // Check which on is sender
-                let conversationsUserArray = result as! NSArray
-                let conversationMe : NSDictionary!
-                let conversationTarget: NSDictionary!
-                
-                if (conversationsUserArray.count <= 1) {
-                    conversationMe = conversationsUserArray[0] as! NSDictionary
-                    conversationTarget = conversationsUserArray[0]  as! NSDictionary
-                } else {
-                    let converstationTemp = conversationsUserArray[0] as! NSDictionary
-                    let tempUserID = String(format:"%0.f", (converstationTemp[kUserId]! as AnyObject).doubleValue)
+                    let firstName = userInfo.object(forKey: kFirstname) as! String
+                    self.nameCache = firstName.uppercased()
                     
-                    if (tempUserID == PMHelper.getCurrentID()) {
-                        conversationMe = conversationsUserArray[0] as! NSDictionary
-                        conversationTarget = conversationsUserArray[1]  as! NSDictionary
-                    } else {
-                        conversationMe = conversationsUserArray[1] as! NSDictionary
-                        conversationTarget = conversationsUserArray[0]  as! NSDictionary
-                    }
-                }
-                
-                self.targetUserID = String(format:"%0.f", (conversationTarget[kUserId]! as AnyObject).doubleValue)
-                
-                // Check New or old
-                if (conversationMe[kLastOpenAt] == nil) {
-                    self.isOpen = false
-                } else {
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = kFullDateFormat
-                    dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-                    
-                    let lastOpenAtM = dateFormatter.date(from: conversationMe[kLastOpenAt] as! String)
-                    let updateAtM =  dateFormatter.date(from: self.updateAt!)
-                    
-                    if (lastOpenAtM!.compare(updateAtM!) == .orderedAscending) {
-                        self.isOpen = false
-                    } else {
-                        self.isOpen = true
-                    }
-                }
-                
-                // Get name
-                UserRouter.getUserInfo(userID: self.targetUserID!, completed: { (result, error) in
-                    if (error == nil) {
-                        let userInfo = result as! NSDictionary
+                    if (userInfo[kImageUrl] is NSNull == false) {
+                        let userImageURL = userInfo[kImageUrl] as! String
                         
-                        let name = userInfo.object(forKey: kFirstname) as! String
-                        self.targetUserName = name.uppercased()
-                        
-                        var imageURL = userInfo.object(forKey: kImageUrl) as? String
-                        if (imageURL?.isEmpty == true) {
-                            imageURL = " "
-                        }
-                        
-                        if (userInfo[kImageUrl] is NSNull == false) {
-                            let imageURLString = userInfo[kImageUrl] as! String
-                            
-                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                                if (error == nil) {
-                                    DispatchQueue.main.async(execute: {
-                                        let imageRes = result as! UIImage
-                                        self.targetUserImage = imageRes
-                                        
-                                        if (self.delegate != nil) {
-                                            self.delegate?.messageModelSynsDataSuccess()
-                                        }
-                                    })
-                                } else {
-                                    print("Request failed with error: \(String(describing: error))")
-                                }
-                            }).fetchdata()
-                        } else {
-                            self.targetUserImage = UIImage(named:"display-empty.jpg")
-                            
-                            if (self.delegate != nil) {
-                                self.delegate?.messageModelSynsDataSuccess()
+                        ImageVideoRouter.getImage(imageURLString: userImageURL, sizeString: widthHeight160, completed: { (result, error) in
+                            if (error == nil) {
+                                let imageRes = result as! UIImage
+                                self.imageCache = imageRes
+                            } else {
+                                print("Request failed with error: \(String(describing: error))")
+                                
+                                self.imageCache = UIImage(named: "display-empty.jpg")
                             }
-                        }
+                            
+                            self.callDelegate()
+                        }).fetchdata()
                     } else {
-                        print("Request failed with error: \(String(describing: error))")
+                        self.imageCache = UIImage(named: "display-empty.jpg")
+                        
+                        self.callDelegate()
                     }
-                }).fetchdata()
             } else {
                 print("Request failed with error: \(String(describing: error))")
             }
         }).fetchdata()
+        
+        // Get image content
+        if (self.imageUrl != nil && self.imageUrl?.isEmpty == false) {
+            ImageVideoRouter.getImage(imageURLString: self.imageUrl!, sizeString: widthHeight640, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.imageContentCache = imageRes
+                } else {
+                    self.imageUrl = nil
+                }
+                
+                self.callDelegate()
+            }).fetchdata()
+        }
     }
     
+    func callDelegate() {
+        if (self.delegate != nil) {
+            self.delegate?.MessageSynsDataCompleted(message: self)
+        }
+    }
+    
+    
     func same(message: MessageModel) -> Bool {
-        if (self.messageID == message.messageID) {
+        if (self.id == message.id) {
             return true
         }
         

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Light.ttf">
+            <string>Montserrat-Light</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="740" id="6g4-q2-YSx" customClass="ChatMessageImageTableViewCell" customModule="Pummel" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="383" height="740"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6g4-q2-YSx" id="7Hc-fJ-6j4">
+                <rect key="frame" x="0.0" y="0.0" width="383" height="739.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="display-empty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="DN6-XG-Ozj">
+                        <rect key="frame" x="15" y="15" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="u8c-4l-Hac"/>
+                            <constraint firstAttribute="width" constant="40" id="yaF-dE-r7V"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePm-sg-7xm">
+                        <rect key="frame" x="0.0" y="740" width="383" height="0.5"/>
+                        <color key="backgroundColor" red="0.81176470590000005" green="0.81176470590000005" blue="0.81176470590000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="Teb-nM-lGt"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NAME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9mX-Dg-022">
+                        <rect key="frame" x="70" y="24" width="298" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="xDx-uh-fzm"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="13"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7nC-gh-KaL">
+                        <rect key="frame" x="70" y="53" width="298" height="295.5"/>
+                        <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="16"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gl0-YK-xX6">
+                        <rect key="frame" x="0.0" y="356.5" width="383" height="383"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="gl0-YK-xX6" secondAttribute="height" multiplier="1:1" id="P7q-B3-un5"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="gl0-YK-xX6" firstAttribute="leading" secondItem="7Hc-fJ-6j4" secondAttribute="leadingMargin" constant="-8" id="2ff-i1-zgS"/>
+                    <constraint firstItem="ePm-sg-7xm" firstAttribute="leading" secondItem="7Hc-fJ-6j4" secondAttribute="leadingMargin" constant="-8" id="3tP-R5-nMS"/>
+                    <constraint firstItem="9mX-Dg-022" firstAttribute="top" secondItem="7Hc-fJ-6j4" secondAttribute="topMargin" constant="16" id="7B1-m8-Zas"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="9mX-Dg-022" secondAttribute="trailing" constant="7" id="8NQ-gO-8wL"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="ePm-sg-7xm" secondAttribute="bottom" constant="-9" id="93U-cA-I8E"/>
+                    <constraint firstItem="gl0-YK-xX6" firstAttribute="top" secondItem="7nC-gh-KaL" secondAttribute="bottom" constant="8" id="O4v-A9-Pm8"/>
+                    <constraint firstItem="9mX-Dg-022" firstAttribute="leading" secondItem="DN6-XG-Ozj" secondAttribute="trailing" constant="15" id="S3n-WP-xrc"/>
+                    <constraint firstItem="DN6-XG-Ozj" firstAttribute="top" secondItem="7Hc-fJ-6j4" secondAttribute="topMargin" constant="7" id="Wul-sm-XsS"/>
+                    <constraint firstItem="DN6-XG-Ozj" firstAttribute="leading" secondItem="7Hc-fJ-6j4" secondAttribute="leadingMargin" constant="7" id="bmq-y0-dy2"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ePm-sg-7xm" secondAttribute="trailing" constant="-8" id="ceB-br-rVT"/>
+                    <constraint firstItem="7nC-gh-KaL" firstAttribute="top" secondItem="9mX-Dg-022" secondAttribute="bottom" constant="8" id="oMt-Ey-tkx"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="7nC-gh-KaL" secondAttribute="trailing" constant="7" id="qAI-0F-mei"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="gl0-YK-xX6" secondAttribute="trailing" constant="-8" id="qDs-7P-F1u"/>
+                    <constraint firstItem="7nC-gh-KaL" firstAttribute="leading" secondItem="7Hc-fJ-6j4" secondAttribute="leadingMargin" constant="62" id="rFs-Z3-GjG"/>
+                    <constraint firstItem="ePm-sg-7xm" firstAttribute="top" secondItem="gl0-YK-xX6" secondAttribute="bottom" constant="0.5" id="zLH-AA-uax"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="avatarIMV" destination="DN6-XG-Ozj" id="fDh-F4-yd9"/>
+                <outlet property="messageLB" destination="7nC-gh-KaL" id="5vQ-kO-CnO"/>
+                <outlet property="nameLB" destination="9mX-Dg-022" id="JPj-Er-fx6"/>
+                <outlet property="photoIMW" destination="gl0-YK-xX6" id="NyP-lX-65t"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="display-empty.jpg" width="256" height="256"/>
+    </resources>
+</document>
