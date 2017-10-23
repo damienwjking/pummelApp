@@ -404,7 +404,7 @@ extension ChatMessageViewController : UITableViewDelegate, UITableViewDataSource
             
             return 1
         } else {
-            if (self.messageList != nil) {
+            if (self.messageList.count != 0) {
                 chatTBDistantCT.constant = 0
                 tableView.isScrollEnabled = true
                 return self.messageList.count + 1
