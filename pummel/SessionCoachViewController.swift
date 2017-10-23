@@ -38,7 +38,7 @@ class SessionCoachViewController: BaseViewController {
     var isloading = false
     var canLoadMore = true
     
-    var offset = 0
+    var sessionOffset = 0
     var sessionList = [SessionModel]()
     var selectedSessionList = [SessionModel]()
     
@@ -138,7 +138,7 @@ class SessionCoachViewController: BaseViewController {
         self.sessionList.removeAll()
         self.canLoadMore = true
         self.isloading = false
-        self.offset = 0
+        self.sessionOffset = 0
         
         self.getListSession()
     }
@@ -147,12 +147,7 @@ class SessionCoachViewController: BaseViewController {
         if (self.canLoadMore == true && self.isloading == false) {
             self.isloading = true
             
-            var prefix = kPMAPIUSER
-            prefix.append(PMHelper.getCurrentID())
-            prefix.append(kPM_PATH_ACTIVITIES_USER)
-            prefix.append(String(self.offset))
-            
-            SessionRouter.getSessionList(offset: self.offset, completed: { (result, error) in
+            SessionRouter.getSessionList(offset: self.sessionOffset, completed: { (result, error) in
                 self.isloading = false
                 
                 if (error == nil) {
@@ -176,7 +171,7 @@ class SessionCoachViewController: BaseViewController {
                     self.canLoadMore = false
                 }
                 
-                self.offset = self.offset + 20
+                self.sessionOffset = self.sessionOffset + 20
                 
                 self.getListSession()
                 

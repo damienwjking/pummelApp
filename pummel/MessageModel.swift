@@ -73,15 +73,20 @@ class MessageModel: NSObject {
                 let conversationMe : NSDictionary!
                 let conversationTarget: NSDictionary!
                 
-                let converstationTemp = conversationsUserArray[0] as! NSDictionary
-                let tempUserID = String(format:"%0.f", (converstationTemp[kUserId]! as AnyObject).doubleValue)
-                
-                if (tempUserID == PMHelper.getCurrentID()) {
+                if (conversationsUserArray.count <= 1) {
                     conversationMe = conversationsUserArray[0] as! NSDictionary
-                    conversationTarget = conversationsUserArray[1]  as! NSDictionary
-                } else {
-                    conversationMe = conversationsUserArray[1] as! NSDictionary
                     conversationTarget = conversationsUserArray[0]  as! NSDictionary
+                } else {
+                    let converstationTemp = conversationsUserArray[0] as! NSDictionary
+                    let tempUserID = String(format:"%0.f", (converstationTemp[kUserId]! as AnyObject).doubleValue)
+                    
+                    if (tempUserID == PMHelper.getCurrentID()) {
+                        conversationMe = conversationsUserArray[0] as! NSDictionary
+                        conversationTarget = conversationsUserArray[1]  as! NSDictionary
+                    } else {
+                        conversationMe = conversationsUserArray[1] as! NSDictionary
+                        conversationTarget = conversationsUserArray[0]  as! NSDictionary
+                    }
                 }
                 
                 self.targetUserID = String(format:"%0.f", (conversationTarget[kUserId]! as AnyObject).doubleValue)
@@ -106,39 +111,43 @@ class MessageModel: NSObject {
                 
                 // Get name
                 UserRouter.getUserInfo(userID: self.targetUserID!, completed: { (result, error) in
-                    let userInfo = result as! NSDictionary
-                    
-                    let name = userInfo.object(forKey: kFirstname) as! String
-                    self.targetUserName = name.uppercased()
-                    
-                    var imageURL = userInfo.object(forKey: kImageUrl) as? String
-                    if (imageURL?.isEmpty == true) {
-                        imageURL = " "
-                    }
-                    
-                    if (userInfo[kImageUrl] is NSNull == false) {
-                        let imageURLString = userInfo[kImageUrl] as! String
+                    if (error == nil) {
+                        let userInfo = result as! NSDictionary
                         
-                        ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
-                            if (error == nil) {
-                                DispatchQueue.main.async(execute: {
-                                    let imageRes = result as! UIImage
-                                    self.targetUserImage = imageRes
-                                    
-                                    if (self.delegate != nil) {
-                                        self.delegate?.messageModelSynsDataSuccess()
-                                    }
-                                })
-                            } else {
-                                print("Request failed with error: \(String(describing: error))")
-                            }
-                        }).fetchdata()
-                    } else {
-                        self.targetUserImage = UIImage(named:"display-empty.jpg")
+                        let name = userInfo.object(forKey: kFirstname) as! String
+                        self.targetUserName = name.uppercased()
                         
-                        if (self.delegate != nil) {
-                            self.delegate?.messageModelSynsDataSuccess()
+                        var imageURL = userInfo.object(forKey: kImageUrl) as? String
+                        if (imageURL?.isEmpty == true) {
+                            imageURL = " "
                         }
+                        
+                        if (userInfo[kImageUrl] is NSNull == false) {
+                            let imageURLString = userInfo[kImageUrl] as! String
+                            
+                            ImageVideoRouter.getImage(imageURLString: imageURLString, sizeString: widthHeight160, completed: { (result, error) in
+                                if (error == nil) {
+                                    DispatchQueue.main.async(execute: {
+                                        let imageRes = result as! UIImage
+                                        self.targetUserImage = imageRes
+                                        
+                                        if (self.delegate != nil) {
+                                            self.delegate?.messageModelSynsDataSuccess()
+                                        }
+                                    })
+                                } else {
+                                    print("Request failed with error: \(String(describing: error))")
+                                }
+                            }).fetchdata()
+                        } else {
+                            self.targetUserImage = UIImage(named:"display-empty.jpg")
+                            
+                            if (self.delegate != nil) {
+                                self.delegate?.messageModelSynsDataSuccess()
+                            }
+                        }
+                    } else {
+                        print("Request failed with error: \(String(describing: error))")
                     }
                 }).fetchdata()
             } else {

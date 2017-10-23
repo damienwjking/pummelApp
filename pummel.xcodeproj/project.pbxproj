@@ -61,6 +61,7 @@
 		BA81A4431EE68CA5002D626E /* ImageVideoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageVideoRouter.swift */; };
 		BA8884C11EEA4F1800FFD734 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C01EEA4F1800FFD734 /* Camera.storyboard */; };
 		BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */; };
+		BA8F3F1D1F9D9B7C00B49633 /* FeaturedFeedTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8F3F1C1F9D9B7C00B49633 /* FeaturedFeedTableViewCell.xib */; };
 		BA9881011F85F39B00DBF527 /* SessionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9881001F85F39B00DBF527 /* SessionRouter.swift */; };
 		BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA439561F0DE8CC001D122A /* NumberConstant.swift */; };
 		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
@@ -275,6 +276,7 @@
 		BA81A4421EE68CA5002D626E /* ImageVideoRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageVideoRouter.swift; sourceTree = "<group>"; };
 		BA8884C01EEA4F1800FFD734 /* Camera.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square_kwickie_thumnail_gradient.png; sourceTree = "<group>"; };
+		BA8F3F1C1F9D9B7C00B49633 /* FeaturedFeedTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeaturedFeedTableViewCell.xib; sourceTree = "<group>"; };
 		BA9881001F85F39B00DBF527 /* SessionRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRouter.swift; sourceTree = "<group>"; };
 		BAA439561F0DE8CC001D122A /* NumberConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberConstant.swift; sourceTree = "<group>"; };
 		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
@@ -880,6 +882,7 @@
 			isa = PBXGroup;
 			children = (
 				F9EAE8F21D6F0E5200FD32BE /* FeaturedFeedTableViewCell.swift */,
+				BA8F3F1C1F9D9B7C00B49633 /* FeaturedFeedTableViewCell.xib */,
 				F9CF54D41D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift */,
 				F9CF54D61D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift */,
 				F9CF54D81D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift */,
@@ -1099,6 +1102,7 @@
 				F9827F361CBCCF7600841BF1 /* Montserrat-Regular.otf in Resources */,
 				F911B23F1E55288600F464B2 /* GoogleService-Info.plist in Resources */,
 				F9ADEFDC1CBF868D00991D68 /* tour2@3x.jpg in Resources */,
+				BA8F3F1D1F9D9B7C00B49633 /* FeaturedFeedTableViewCell.xib in Resources */,
 				F9ABEAE61DC4B8170084B70E /* Connection.storyboard in Resources */,
 				F9C1FB9E1E2531530002CDFF /* pummel_logo_message.png in Resources */,
 				BA0DB1AB1E1EA31D00CBE586 /* icon_intensity.png in Resources */,

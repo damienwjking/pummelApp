@@ -13,6 +13,8 @@ import MapKit
 enum SessionRouter: URLRequestConvertible {
     case getSessionList(offset: Int, completed: CompletionBlock)
     
+    case getUpcommingSession(offset: Int, completed: CompletionBlock)
+    
     case postLogSession(userID: String, targetUserID: String?, message: String, type: String, intensity: String, distance: String, longtime: String, calorie: String, dateTime: String, imageData: Data, completed: CompletionBlock)
     
     case editLogSession(sessionID: String, message: String, intensity: String, distance: String, longtime: String, calorie: String, dateTime: String, completed: CompletionBlock)
@@ -26,6 +28,9 @@ enum SessionRouter: URLRequestConvertible {
     var comletedBlock: CompletionBlock {
         switch self {
         case .getSessionList(_, let completed):
+            return completed
+            
+        case .getUpcommingSession(_, let completed):
             return completed
             
         case .postLogSession(_, _, _, _, _, _, _, _, _, _, let completed):
@@ -50,6 +55,9 @@ enum SessionRouter: URLRequestConvertible {
     var method: Alamofire.HTTPMethod {
         switch self {
         case .getSessionList:
+            return .get
+            
+        case .getUpcommingSession:
             return .get
             
         case .postLogSession:
@@ -77,6 +85,9 @@ enum SessionRouter: URLRequestConvertible {
         switch self {
         case .getSessionList(let offset, _):
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_ACTIVITIES_USER + "\(offset)"
+            
+        case .getUpcommingSession:
+            prefix = kPMAPIUSER + currentUserID + "/upcommingActivities"
             
         case .postLogSession(let userID, let targetUserID, _, _, _, _, _, _, _, _, _):
             if (targetUserID != nil && targetUserID?.isEmpty == false) {
@@ -128,6 +139,12 @@ enum SessionRouter: URLRequestConvertible {
         var param: [String : Any]? = [:]
         
         switch self {
+        case .getUpcommingSession(let offset, _):
+            param?[kUserId] = currentUserID
+            param?[kOffset] = offset
+            param?[kLimit] = 20
+            param?["currentDate"] = Date()
+            
         case .postLogSession(let userID, let targetUserID, let message, let type, let intensity, let distance, let longtime, let calorie, let dateTime, _, _):
             param?[kUserId] = userID
             param?[kUserIdTarget] = targetUserID
@@ -215,6 +232,20 @@ enum SessionRouter: URLRequestConvertible {
         case .getSessionList:
             Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: SessionRouter get_session_list")
+                
+                switch response.result {
+                case .success(let JSON):
+                    let sessionInfos = JSON as! [NSDictionary]
+                    
+                    self.comletedBlock(sessionInfos, nil)
+                case .failure(let error):
+                    self.comletedBlock(nil, error as NSError)
+                }
+            })
+            
+        case .getUpcommingSession:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: SessionRouter get_upcomming_session")
                 
                 switch response.result {
                 case .success(let JSON):

@@ -202,7 +202,7 @@ enum MessageRouter: URLRequestConvertible {
                     if response.response?.statusCode == 200 {
                         let messageDetail = JSON as! NSArray
                         
-                        if (messageDetail.count >= 2) {
+                        if (messageDetail.count > 0) {
                             self.comletedBlock(messageDetail, nil)
                         } else {
                             let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error

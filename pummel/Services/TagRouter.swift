@@ -14,12 +14,16 @@ enum TagRouter: URLRequestConvertible {
     static var specialColor = TagRouter.getRandomColorString()
     
     case getTagList(offset: Int, completed: CompletionBlock)
+    case getSearchTagList(offset: Int, completed: CompletionBlock)
     case selectTag(tagID: String, completed: CompletionBlock)
     case deleteTag(tagID: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
         case .getTagList(_, let completed):
+            return completed
+            
+        case .getSearchTagList(_, let completed):
             return completed
             
         case .selectTag(_, let completed):
@@ -34,6 +38,9 @@ enum TagRouter: URLRequestConvertible {
     var method: Alamofire.HTTPMethod {
         switch self {
         case .getTagList:
+            return .get
+            
+        case .getSearchTagList:
             return .get
             
         case .selectTag:
@@ -53,6 +60,9 @@ enum TagRouter: URLRequestConvertible {
         switch self {
         case .getTagList(let offset, _):
             prefix = kPMAPI_TAG_OFFSET + String(offset)
+            
+        case .getSearchTagList(let offset, _):
+            prefix = kPMAPI_SEARCH_TAG_OFFSET + String(offset)
             
         case .selectTag:
             prefix = kPMAPIUSER + currentUserID + "/tags"
@@ -110,6 +120,43 @@ enum TagRouter: URLRequestConvertible {
         case .getTagList:
             Alamofire.request(self).responseJSON(completionHandler: { (response) in
                 print("PM: TagRouter get_all_tag")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        var tagList: [TagModel] = []
+                        
+                        let tagDetails = JSON as! [NSDictionary]
+                        
+                        for tagDetail in tagDetails {
+                            let tag = TagModel()
+                            tag.parseData(data: tagDetail)
+                            
+                            // Special tag: "body building", "Cycling"
+                            if (tag.tagTitle?.uppercased() == kBodyBuilding ||
+                                tag.tagTitle?.uppercased() == kCycling) {
+                                tag.tagColor = TagRouter.specialColor
+                            } else {
+                                tag.tagColor = TagRouter.getRandomColorString()
+                            }
+                            
+                            tagList.append(tag)
+                        }
+                        
+                        self.comletedBlock(tagList as AnyObject, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .getSearchTagList:
+            Alamofire.request(self).responseJSON(completionHandler: { (response) in
+                print("PM: TagRouter get_search_tag")
                 
                 switch response.result {
                 case .success(let JSON):

@@ -98,6 +98,11 @@ class BookSessionShareViewController: BaseViewController, GroupLeadTableViewCell
             
             let styleInvite = sender as! String
             destination.styleInvite = styleInvite
+        } else if (segue.identifier == "showChat") {
+            let destinationVC = segue.destination as! ChatMessageViewController
+            
+            let userID = sender as! String
+            destinationVC.userIdTarget = userID
         }
     }
 }
@@ -190,11 +195,7 @@ extension BookSessionShareViewController {
         
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
-            // Special case: can not call tabbarviewcontroller
-            UserDefaults.standard.set(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            UserDefaults.standard.set(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
-            
-            self.navigationController?.popToRootViewController(animated: true)
+            self.performSegue(withIdentifier: "showChat", sender: userID)
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in
@@ -285,11 +286,7 @@ extension BookSessionShareViewController {
         
         // Send message action
         let sendMessageClientAction = { (action:UIAlertAction!) -> Void in
-            // Special case: can not call tabbarviewcontroller
-            UserDefaults.standard.set(k_PM_MOVE_SCREEN_MESSAGE_DETAIL, forKey: k_PM_MOVE_SCREEN)
-            UserDefaults.standard.set(userID, forKey: k_PM_MOVE_SCREEN_MESSAGE_DETAIL)
-            
-            self.navigationController?.popToRootViewController(animated: true)
+            self.performSegue(withIdentifier: "showChat", sender: userID)
         }
         
         let viewProfileAction = { (action:UIAlertAction!) -> Void in

@@ -295,17 +295,12 @@ enum FeedRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: FeedRouter 5")
                 
-                switch response.result {
-                case .success( _):
-                    if response.response?.statusCode == 200 {
-                        self.comletedBlock(true, nil)
-                    }
-                case .failure(let error):
-                    if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        self.comletedBlock(false, error as NSError)
-                    }
+                if response.response?.statusCode == 200 {
+                    self.comletedBlock(true, nil)
+                } else if (response.response?.statusCode == 401) {
+                    PMHelper.showLogoutAlert()
+                } else {
+                    self.comletedBlock(false, nil)
                 }
             })
             

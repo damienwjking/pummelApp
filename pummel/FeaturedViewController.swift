@@ -39,6 +39,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(FeaturedViewController.refreshControlTable), for: .valueChanged)
         self.tableFeed.addSubview(refreshControl)
+        
+        let cellNib = UINib(nibName: "FeaturedFeedTableViewCell", bundle: nil)
+        self.tableFeed.register(cellNib, forCellReuseIdentifier: "FeaturedFeedTableViewCell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -127,6 +130,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.tableFeed.isHidden = true
         self.arrayFeeds.removeAll()
         self.arrayDiscount.removeAll()
+        
         self.tableFeed.reloadData { 
             self.refreshControl.endRefreshing()
             self.isStopFetch = false
@@ -284,9 +288,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     }
     
     
-    func goToFeedDetail(sender: UIButton) {
+    func goToFeedDetail(feed: FeedModel) {
         self.isGoFeedDetail = true
-        self.performSegue(withIdentifier: "goToFeedDetail", sender: sender)
+        self.performSegue(withIdentifier: "goToFeedDetail", sender: feed)
         
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
@@ -294,14 +298,13 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         mixpanel?.track("IOS.Feed", properties: properties)
     }
     
-    func showListContext(sender: UIButton) {
+    func showListContext(feed: FeedModel) {
         let selectReport = { (action:UIAlertAction!) -> Void in
-            let feed = self.arrayFeeds[sender.tag]
             let postId = String(format:"%ld", feed.id)
             
             FeedRouter.reportFeed(postID: postId, completed: { (result, error) in
                 if (error == nil) {
-                    self.arrayFeeds.remove(at: sender.tag)
+//                    self.arrayFeeds.remove(at: self.arrayFeeds.)
                     self.tableFeed.reloadData()
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -309,10 +312,13 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             }).fetchdata()
 
         }
+        
         let share = { (action:UIAlertAction!) -> Void in
             self.sharePummel()
         }
+        
         let selectCancle = { (action:UIAlertAction!) -> Void in
+            
         }
         
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -323,8 +329,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.present(alertController, animated: true) { }
     }
     
-    func goProfile(sender: UIButton) {
-        let feed = arrayFeeds[sender.tag]
+    func goProfile(feed: FeedModel) {
         let userIDString = String(format: "%ld", feed.userId)
         
         self.isGoProfileDetail = true
@@ -363,12 +368,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.performSegue(withIdentifier: kGoConnect, sender: sender)
     }
     
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        self.performSegue(withIdentifier: kClickURLLink, sender: URL)
-        
-        return false
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == kGoConnect) {
             let destination = segue.destination as! ConnectViewController
@@ -402,8 +401,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             }
         } else if (segue.identifier == "goToFeedDetail") {
             let destination = segue.destination as! FeedViewController
-            let view = sender as! UIView
-            let feed = arrayFeeds[view.tag]
+            let feed = sender as! FeedModel
             destination.feedDetail = feed
         } else if (segue.identifier == kClickURLLink) {
             let destination = segue.destination as! FeedWebViewController
@@ -464,131 +462,10 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.separatorInset = UIEdgeInsets()
         let feed = arrayFeeds[indexPath.row]
-        // Name
-        cell.nameLB.text = feed.userName.uppercased()
         
-        // Avatar
-        if (feed.userImageURL != nil && feed.userImageURL?.isEmpty == false) {
-            cell.avatarBT.setBackgroundImage(nil, for: .normal)
-            let imageLink = feed.userImageURL
-            
-            if (imageLink?.isEmpty == false) {
-                ImageVideoRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
-                    if (error == nil) {
-                        let imageRes = result as! UIImage
-                        
-                        let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
-                        if visibleCell == true {
-                            DispatchQueue.main.async(execute: {
-                                cell.avatarBT.setBackgroundImage(imageRes, for: .normal)
-                            })
-                        }
-                    } else {
-                        print("Request failed with error: \(String(describing: error))")
-                    }
-                    }.fetchdata()
-            } else {
-                cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
-            }
-        } else {
-            cell.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
-        }
+        cell.setupData(feed: feed)
+        cell.delegate = self
         
-        // Time
-        let timeAgo = feed.createdAt
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = kFullDateFormat
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        let date : NSDate = dateFormatter.date(from: timeAgo!)! as NSDate
-        cell.timeLB.text = date.timeAgoSinceDate()
-        
-        if (feed.imageUrl != nil && feed.imageUrl?.isEmpty == false) {
-            let imageContentLink = feed.imageUrl
-            let postfixContent = widthHeightScreenx2
-            
-            ImageVideoRouter.getImage(imageURLString: imageContentLink!, sizeString: postfixContent, completed: { (result, error) in
-                if (error == nil) {
-                    let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
-                    
-                    if (isUpdateCell) {
-                        let imageRes = result as! UIImage
-                        DispatchQueue.main.async(execute: {
-                            cell.imageContentIMV.image = imageRes
-                        })
-                    }
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }).fetchdata()
-        }
-        
-        // Check Coach
-        cell.isUserInteractionEnabled = false
-        var coachLink  = kPMAPICOACH
-        let coachId = String(format:"%ld", feed.userId)
-        coachLink.append(coachId)
-        
-        cell.avatarBT.layer.borderWidth = 0
-        cell.coachLB.text = ""
-        cell.coachLBTraillingConstraint.constant = 0
-        
-        UserRouter.checkCoachOfUser(userID: coachId) { (result, error) in
-            let isCoach = result as! Bool
-            let isUpdateCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
-            
-            if (isUpdateCell) {
-                cell.isUserInteractionEnabled = true
-                cell.isCoach = false
-                
-                if (error == nil) {
-                    if (isCoach == true) {
-                        cell.isCoach = true
-                        cell.avatarBT.layer.borderWidth = 2
-                        
-                        cell.coachLBTraillingConstraint.constant = 5
-                        UIView.animate(withDuration: 0.3, animations: {
-                            cell.coachLB.layoutIfNeeded()
-                            cell.coachLB.text = kCoach.uppercased()
-                        })
-                    }
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }
-            }.fetchdata()
-        
-        // Like
-        cell.likeLB.text = feed.likeTotal + " likes"
-        
-        if (feed.isLiked == true) {
-            cell.likeBT.setBackgroundImage(UIImage(named: "liked"), for: .normal)
-        } else {
-            cell.likeBT.setBackgroundImage(UIImage(named: "like"), for: .normal)
-        }
-        
-        cell.layoutIfNeeded()
-        cell.firstContentCommentTV.layoutIfNeeded()
-        cell.firstContentCommentTV.delegate = self
-        cell.firstContentCommentTV.text = feed.text
-        
-        let marginTopBottom = cell.firstContentCommentTV.layoutMargins.top + cell.firstContentCommentTV.layoutMargins.bottom
-        let marginLeftRight = cell.firstContentCommentTV.layoutMargins.left + cell.firstContentCommentTV.layoutMargins.right
-        cell.firstContentTextViewConstraint.constant = (cell.firstContentCommentTV.text?.heightWithConstrainedWidth(width: cell.firstContentCommentTV.frame.width - marginLeftRight, font: cell.firstContentCommentTV.font!))! + marginTopBottom + 1 // 1: magic number
-        
-        cell.firstUserCommentLB.text = feed.userName.uppercased()
-        cell.viewAllBT.tag = indexPath.row
-        cell.viewAllBT.addTarget(self, action: #selector(self.goToFeedDetail(sender:)), for: .touchUpInside)
-        
-        cell.commentBT.tag = indexPath.row
-        cell.commentBT.addTarget(self, action: #selector(self.goToFeedDetail(sender:)), for: .touchUpInside)
-        
-        cell.shareBT.tag = indexPath.row
-        cell.shareBT.addTarget(self, action: #selector(self.showListContext(sender:)), for: .touchUpInside)
-        
-        cell.avatarBT.tag = indexPath.row
-        cell.avatarBT.addTarget(self, action: #selector(self.goProfile(sender:)), for: .touchUpInside)
-        cell.likeBT.tag = indexPath.row
-        cell.postId = String(format:"%ld", feed.id)
         return cell
     }
     
@@ -596,6 +473,42 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         if (indexPath.row == self.arrayFeeds.count - 1) {
             self.getListFeeds()
         }
+    }
+}
+
+extension FeaturedViewController : FeaturedFeedTableViewCellDelegate {
+    func FeaturedFeedCellGoToDetail(cell : FeaturedFeedTableViewCell) {
+        let indexPath = self.tableFeed.indexPath(for: cell)
+        
+        if (indexPath != nil) {
+            let feed = self.arrayFeeds[(indexPath?.row)!]
+            
+            self.goToFeedDetail(feed: feed)
+        }
+    }
+    
+    func FeaturedFeedCellShowContext(cell : FeaturedFeedTableViewCell) {
+        let indexPath = self.tableFeed.indexPath(for: cell)
+        
+        if (indexPath != nil) {
+            let feed = self.arrayFeeds[(indexPath?.row)!]
+            
+            self.showListContext(feed: feed)
+        }
+    }
+    
+    func FeaturedFeedCellShowProfile(cell : FeaturedFeedTableViewCell) {
+        let indexPath = self.tableFeed.indexPath(for: cell)
+        
+        if (indexPath != nil) {
+            let feed = self.arrayFeeds[(indexPath?.row)!]
+            
+            self.goProfile(feed: feed)
+        }
+    }
+    
+    func FeaturedFeedCellInteractWithURL(URL: URL) {
+        self.performSegue(withIdentifier: kClickURLLink, sender: URL)
     }
 }
 

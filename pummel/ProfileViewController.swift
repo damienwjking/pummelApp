@@ -235,6 +235,14 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         return .lightContent
     }
     
+    override var prefersStatusBarHidden: Bool {
+        if (self.profileStyle == .currentUser) {
+            return false
+        } else {
+            return true // Hide status bar
+        }
+    }
+    
     func afterFirstLogin() {
         if (self.profileStyle == .currentUser) {
             self.isCoach = self.userDefaults.bool(forKey: k_PM_IS_COACH)

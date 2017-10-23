@@ -87,7 +87,7 @@ class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
     
     func getListTags() {
         if (isStopGetListTag == false) {
-            TagRouter.getTagList(offset: self.tagOffset, completed: { (result, error) in
+            TagRouter.getSearchTagList(offset: self.tagOffset, completed: { (result, error) in
                 if (error == nil) {
                     let tagList = result as! [TagModel]
                     

@@ -11,10 +11,10 @@ import Foundation
 //-----------------------------PRODUCTION------------------------------------//
 
 // Product
-let kPMAPI                          = "http://api.pummel.fit"
+//let kPMAPI                          = "http://api.pummel.fit"
 
 // Developer
-//let kPMAPI                          = "http://dev.pummel.fit"
+let kPMAPI                          = "http://dev.pummel.fit"
 
 // PM API Link
 let kPMAPI_BUSINESS                 = kPMAPI + "//api/businesses/"
@@ -43,6 +43,7 @@ let kPMAPI_REGISTER                 = kPMAPI + "/api/register"
 //let kPMAPI_TAG4_OFFSET              = kPMAPI + "/api/tags4?offset="       ||
 //let kPMAPI_TAGALL_OFFSET            = kPMAPI + "/api/tagsAll?offset="     \/
 let kPMAPI_TAG_OFFSET               = kPMAPI + "/api/tagsAll?offset="
+let kPMAPI_SEARCH_TAG_OFFSET               = kPMAPI + "/api/searchTags?offset="
 
 let kPMAPI_DISCOUNTS                = kPMAPI + "/api/discounts"
 let kPMAPI_POSTOFPHOTO              = kPMAPI + "/api/postOfPhoto"

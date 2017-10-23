@@ -115,7 +115,20 @@ class ChatMessageViewController : BaseViewController {
                     
                     if (chatDetails.count > 0) {
                         for chatDetail in chatDetails {
-                            self.arrayChat.append(chatDetail)
+                            let chatDetailID = chatDetail[kId] as! Int
+                            
+                            var isExist = false
+                            for chat in self.arrayChat {
+                                let chatID = chat[kId] as! Int
+                                
+                                if (chatID == chatDetailID) {
+                                    isExist = true
+                                }
+                            }
+                            
+                            if (isExist == false) {
+                                self.arrayChat.append(chatDetail)
+                            }
                         }
                         
                         self.chatTB.reloadData {
@@ -233,6 +246,7 @@ class ChatMessageViewController : BaseViewController {
             let isSendMessageSuccess = result as! Bool
             if (isSendMessageSuccess == true) {
                 self.isStopGetChat = false
+                self.arrayChat.removeAll()
                 self.getArrayChat()
                 self.chatTextView.text = ""
                 self.chatTextView.resignFirstResponder()

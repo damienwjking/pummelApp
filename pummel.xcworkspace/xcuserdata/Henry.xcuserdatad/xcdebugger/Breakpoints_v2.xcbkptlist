@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/Services/SessionRouter.swift"
-            timestampString = "530098919.478084"
+            timestampString = "530437108.119229"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "263"
-            endingLineNumber = "263"
+            startingLineNumber = "294"
+            endingLineNumber = "294"
             landmarkName = "fetchdata()"
             landmarkType = "7">
             <Locations>
@@ -26,26 +26,26 @@
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "530163865.287314"
+                  timestampString = "530437108.688997"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "263"
-                  endingLineNumber = "263"
-                  offsetFromSymbolStart = "4460">
+                  startingLineNumber = "294"
+                  endingLineNumber = "294"
+                  offsetFromSymbolStart = "6060">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #4 (Alamofire.DataResponse&lt;Any&gt;) -&gt; () in Pummel.SessionRouter.fetchdata() -&gt; ()"
+                  symbolName = "closure #5 (Alamofire.DataResponse&lt;Any&gt;) -&gt; () in Pummel.SessionRouter.fetchdata() -&gt; ()"
                   moduleName = "Pummel"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/henry/iCloud%20Drive%20(Archive)%20-%201/Desktop/PROJECT/PummelApp/pummel/Services/SessionRouter.swift"
-                  timestampString = "530163865.289444"
+                  timestampString = "530437108.691864"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "264"
-                  endingLineNumber = "264"
+                  startingLineNumber = "295"
+                  endingLineNumber = "295"
                   offsetFromSymbolStart = "348">
                </Location>
             </Locations>
@@ -58,7 +58,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/MessageViewController.swift"
-            timestampString = "529922681.357641"
+            timestampString = "530437108.119345"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "401"
@@ -106,7 +106,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/MessageViewController.swift"
-            timestampString = "529922681.357641"
+            timestampString = "530437108.119465"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "171"
@@ -122,7 +122,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/FeedViewController.swift"
-            timestampString = "530122616.9619"
+            timestampString = "530425776.09789"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "467"
@@ -137,60 +137,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "pummel/FeedFirstPartTableViewCell.swift"
-            timestampString = "529818447.799169"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "like(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/ChatMessageViewController.swift"
-            timestampString = "530122616.962392"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
-            landmarkName = "sendMessage(addEmptyMessage:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/NewMessageViewController.swift"
-            timestampString = "530122616.962673"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "textFieldShouldReturn(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "pummel/ProfileViewController.swift"
-            timestampString = "530122616.962882"
+            timestampString = "530437108.119567"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "864"
-            endingLineNumber = "864"
+            startingLineNumber = "872"
+            endingLineNumber = "872"
             landmarkName = "clickOnFacebook()"
             landmarkType = "7">
          </BreakpointContent>
@@ -202,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/ProfileViewController.swift"
-            timestampString = "530122616.963108"
+            timestampString = "530437108.11962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "891"
-            endingLineNumber = "891"
+            startingLineNumber = "899"
+            endingLineNumber = "899"
             landmarkName = "clickOnTwitter()"
             landmarkType = "7">
          </BreakpointContent>
@@ -218,60 +170,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "pummel/ProfileViewController.swift"
-            timestampString = "530122616.963297"
+            timestampString = "530437108.119672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "919"
-            endingLineNumber = "919"
+            startingLineNumber = "927"
+            endingLineNumber = "927"
             landmarkName = "clickOnInstagram()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/ChatMessageViewController.swift"
-            timestampString = "530122616.963411"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
-            landmarkName = "sendMessage(addEmptyMessage:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/ChatMessageViewController.swift"
-            timestampString = "530122616.96351"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
-            landmarkName = "addMessageToExistConverstation()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "pummel/ChatMessageViewController.swift"
-            timestampString = "530122616.963607"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "407"
-            endingLineNumber = "407"
-            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -329,22 +233,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "pummel/ChatMessageViewController.swift"
-            timestampString = "530122616.964446"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "244"
-            endingLineNumber = "244"
-            landmarkName = "sendMessageButtonClicked(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "pummel/BookSessionToUserViewController.swift"
             timestampString = "530122616.964576"
             startingColumnNumber = "9223372036854775807"
@@ -393,13 +281,93 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "pummel/FeaturedViewController.swift"
-            timestampString = "530077095.823097"
+            filePath = "pummel/Services/SessionRouter.swift"
+            timestampString = "530437108.119838"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "288"
-            endingLineNumber = "288"
-            landmarkName = "goToFeedDetail(sender:)"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
+            landmarkName = "fetchdata()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/ChatMessageViewController.swift"
+            timestampString = "530437108.119892"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
+            landmarkName = "sendMessage(addEmptyMessage:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/MessageViewController.swift"
+            timestampString = "530437108.120498"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "235"
+            endingLineNumber = "235"
+            landmarkName = "getMessage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/MessageModel.swift"
+            timestampString = "530437108.120591"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "parseData(data:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/ChatMessageViewController.swift"
+            timestampString = "530437108.120655"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
+            landmarkName = "sendMessageButtonClicked(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "pummel/ChatMessageViewController.swift"
+            timestampString = "530437108.121145"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "245"
+            endingLineNumber = "245"
+            landmarkName = "addMessageToExistConverstation()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
