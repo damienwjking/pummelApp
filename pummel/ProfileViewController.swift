@@ -646,7 +646,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     func updateUIUser() {
-        self.specifiesViewHeightConstraint.constant = 0
         self.addressIconIMV.isHidden = true
         self.addressLB.isHidden = true
         
@@ -798,18 +797,26 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     func reloadLayout() {
         // Specialities list
         self.specialitiesCollectionView.reloadData(completion: {
-            let heightCollectionView = self.specialitiesCollectionView.collectionViewLayout.collectionViewContentSize.height
-            
-            self.specifiesCollectionViewHeightConstraint.constant = heightCollectionView < 78 ? 78 : heightCollectionView
-            
-            self.specifiesViewHeightConstraint.constant = ((heightCollectionView + 50) < 128) ? 128 : (heightCollectionView + 50)
+            if (self.tags.count == 0) {
+                self.specifiesViewHeightConstraint.constant = 0
+            } else {
+                let heightCollectionView = self.specialitiesCollectionView.collectionViewLayout.collectionViewContentSize.height
+                
+                self.specifiesCollectionViewHeightConstraint.constant = heightCollectionView < 78 ? 78 : heightCollectionView
+                
+                self.specifiesViewHeightConstraint.constant = ((heightCollectionView + 50) < 128) ? 128 : (heightCollectionView + 50)
+            }
         })
         
         // Photo list
         self.postCollectionView.reloadData(completion: {
-            self.postCollectionViewHeightConstraint.constant = self.postCollectionView.collectionViewLayout.collectionViewContentSize.height
-            
-            self.postViewHeightConstraint.constant = self.postCollectionViewHeightConstraint.constant + 50
+            if (self.photoArray.count == 0) {
+                self.postViewHeightConstraint.constant = 0
+            } else {
+                self.postCollectionViewHeightConstraint.constant = self.postCollectionView.collectionViewLayout.collectionViewContentSize.height
+                
+                self.postViewHeightConstraint.constant = self.postCollectionViewHeightConstraint.constant + 50
+            }
         })
     }
     

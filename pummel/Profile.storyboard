@@ -35,7 +35,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kQo-ns-tiX">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="1318"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dUz-At-R3A">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dUz-At-R3A">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                                         <subviews>
                                             <view clipsSubviews="YES" alpha="0.0050000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pss-Fx-2Jc">
@@ -183,7 +183,7 @@
                                             <constraint firstItem="2Qg-F7-KVb" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="yjc-O5-yty"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ji1-bA-I3U">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ji1-bA-I3U">
                                         <rect key="frame" x="0.0" y="300" width="600" height="91"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0la-qy-atd">
@@ -268,7 +268,7 @@
                                             <constraint firstItem="Y3s-QY-MfM" firstAttribute="top" secondItem="CB6-ZE-SuX" secondAttribute="top" id="wgi-3y-O7p"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uEh-DN-xjd">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uEh-DN-xjd">
                                         <rect key="frame" x="0.0" y="391" width="600" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SPECIALITIES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rgf-jJ-cvo">
@@ -314,7 +314,7 @@
                                             <constraint firstAttribute="trailing" secondItem="fwM-Te-ye7" secondAttribute="trailing" constant="10" id="vZd-u7-RtW"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jWn-RP-O2e">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jWn-RP-O2e">
                                         <rect key="frame" x="0.0" y="519" width="600" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ABOUT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OC8-KJ-oRw">
@@ -407,7 +407,7 @@
                                             <constraint firstAttribute="trailing" secondItem="9L0-4i-uS6" secondAttribute="trailing" constant="16" id="ySE-9n-Q8b"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iVC-Pn-vvT">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iVC-Pn-vvT">
                                         <rect key="frame" x="0.0" y="971" width="600" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WEBSITE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQE-PS-uYO">
@@ -442,7 +442,7 @@
                                             <constraint firstItem="4Yg-Xu-Qca" firstAttribute="top" secondItem="qQE-PS-uYO" secondAttribute="bottom" constant="8" id="j1n-Gv-hic"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DGe-7s-4tb">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DGe-7s-4tb">
                                         <rect key="frame" x="0.0" y="1099" width="600" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QUALIFICATIONS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZCO-Ub-tbd">
@@ -476,7 +476,7 @@
                                             <constraint firstItem="ZCO-Ub-tbd" firstAttribute="top" secondItem="DGe-7s-4tb" secondAttribute="top" constant="8" id="vSD-6C-EgC"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="78j-T5-gZq">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="78j-T5-gZq">
                                         <rect key="frame" x="0.0" y="1227" width="600" height="128"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="geo-W6-3io">
@@ -510,7 +510,7 @@
                                             <constraint firstAttribute="trailing" secondItem="geo-W6-3io" secondAttribute="trailing" constant="16" id="xO3-F7-dHM"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A0L-qf-SG7">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A0L-qf-SG7">
                                         <rect key="frame" x="0.0" y="1355" width="600" height="94"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SOCIAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vjg-Fu-OS7">
@@ -621,7 +621,7 @@
                                             <constraint firstItem="vjg-Fu-OS7" firstAttribute="top" secondItem="A0L-qf-SG7" secondAttribute="top" constant="8" id="b1H-bS-eDi"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HHY-WR-iCJ">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HHY-WR-iCJ">
                                         <rect key="frame" x="0.0" y="1449" width="600" height="203"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="POST" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qri-1r-v9Z">
@@ -3431,7 +3431,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ey2-z7-s6W" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="7N0-97-9tW">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

@@ -9,7 +9,7 @@
 import UIKit
 import Mixpanel
 
-class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
+class SendPhotoViewController: BaseViewController {
     
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var commentPhotoTV : UITextView!
@@ -34,8 +34,8 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
          self.navigationItem.hidesBackButton = true;
         let image = UIImage(named: "close")!.withRenderingMode(.alwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(SendPhotoViewController.close))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SendPhotoViewController.post))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(self.close))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.post))
         self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         
         self.avatarIMV.layer.cornerRadius = 20
@@ -168,7 +168,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         
         let textPost = (commentPhotoTV.text == nil || commentPhotoTV.text == addAComment) ? "" : commentPhotoTV.text
         
-        let messageID = "\(self.messageId)"
+        let messageID = "\(self.messageId!)"
         MessageRouter.sendMessage(conversationID: messageID, text: textPost!, imageData: imageData) { (result, error) in
             self.view.hideToastActivity()
             
@@ -212,7 +212,6 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         self.present(alertController, animated: true) { }
     }
     
-    
     func showCameraRoll() {
         let fusuma = FusumaViewController()
         fusuma.delegate = self
@@ -220,14 +219,67 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         fusuma.modeOrder = .CameraFirst
         self.present(fusuma, animated: true, completion: nil)
     }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+}
+
+// MARK: - UITextViewDelegate
+extension SendPhotoViewController : UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:NSString = textView.text! as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with:text)
+        if updatedText.isEmpty {
+            
+            textView.text = addAComment
+            textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
+            
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            
+            return false
+        }
+        else if textView.textColor == UIColor(white:204.0/255.0, alpha: 1.0) && !text.isEmpty {
+            textView.text = nil
+            textView.textColor = UIColor.pmmWarmGreyTwoColor()
+        }
+        
         return true
     }
     
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.view.window != nil {
+            if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
+        }
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension SendPhotoViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            for(subview) in self.imageScrolView.subviews {
+                subview.removeFromSuperview()
+            }
+            self.imageSelected!.image = pickedImage
+            let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
+            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
+            let imageViewScrollView = UIImageView.init(frame: frameT)
+            imageViewScrollView.image = pickedImage
+            self.imageScrolView.addSubview(imageViewScrollView)
+            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
+            self.imageSelected?.isHidden = true
+            self.imageScrolView?.isHidden = false
+        }
+        dismiss(animated: true, completion: nil)
+    }
     
-    // Fusuma delegate
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+
+// MARK: - FusumaDelegate
+extension SendPhotoViewController: FusumaDelegate, UIScrollViewDelegate {
     func fusumaImageSelected(image: UIImage) {
         self.imageSelected!.image = image
         if (self.selectFromLibrary == true) {
@@ -265,52 +317,6 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         self.present(alert, animated: true, completion: nil)
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let currentText:NSString = textView.text! as NSString
-        let updatedText = currentText.replacingCharacters(in: range, with:text)
-        if updatedText.isEmpty {
-            
-            textView.text = addAComment
-            textView.textColor = UIColor(white:204.0/255.0, alpha: 1.0)
-            
-            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
-            
-            return false
-        }
-        else if textView.textColor == UIColor(white:204.0/255.0, alpha: 1.0) && !text.isEmpty {
-            textView.text = nil
-            textView.textColor = UIColor.pmmWarmGreyTwoColor()
-        }
-        
-        return true
-    }
-    
-    func textViewDidChangeSelection(_ textView: UITextView) {
-        if self.view.window != nil {
-            if textView.textColor ==  UIColor(white:204.0/255.0, alpha: 1.0) {
-                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
-            }
-        }
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            for(subview) in self.imageScrolView.subviews {
-                subview.removeFromSuperview()
-            }
-            self.imageSelected!.image = pickedImage
-            let height =  self.view.frame.size.width*pickedImage.size.height/pickedImage.size.width
-            let frameT = (height > self.view.frame.width) ? CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: height) : CGRect(x: 0, y: (self.view.frame.size.width - height)/2, width: self.view.frame.size.width, height: height)
-            let imageViewScrollView = UIImageView.init(frame: frameT)
-            imageViewScrollView.image = pickedImage
-            self.imageScrolView.addSubview(imageViewScrollView)
-            self.imageScrolView.contentSize =  (height > self.view.frame.width) ? CGSize(width: self.view.frame.size.width, height: frameT.size.height) : CGSize(width: self.view.frame.size.width, height: self.view.frame.size.width)
-            self.imageSelected?.isHidden = true
-            self.imageScrolView?.isHidden = false
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    
     func cropAndSave() -> UIImage {
         UIGraphicsBeginImageContextWithOptions(imageScrolView.bounds.size, true, UIScreen.main.scale)
         let offset = imageScrolView.contentOffset
@@ -323,7 +329,7 @@ class SendPhotoViewController: BaseViewController, FusumaDelegate, UITextViewDel
         return image!
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews[0]
     }
 }

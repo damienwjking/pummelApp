@@ -80,7 +80,7 @@ class ChatMessageViewController : BaseViewController {
     func setupNavigationBar() {
         var image = UIImage(named: "blackArrow")
         image = image?.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(ChatMessageViewController.cancel))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:image, style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.cancel))
         self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         
         self.navigationController!.navigationBar.isTranslucent = false;

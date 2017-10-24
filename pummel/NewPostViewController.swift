@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewPostViewController: BaseViewController, UIScrollViewDelegate {
+class NewPostViewController: BaseViewController {
 
     @IBOutlet weak var avatarIMV : UIImageView!
     @IBOutlet weak var commentPhotoTV : UITextView!
@@ -246,7 +246,7 @@ extension NewPostViewController : UITextViewDelegate {
 extension NewPostViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            for(subview) in self.imageScrolView.subviews {
+            for subview in self.imageScrolView.subviews {
                 subview.removeFromSuperview()
             }
             self.imageSelected!.image = pickedImage
@@ -270,8 +270,7 @@ extension NewPostViewController : UIImagePickerControllerDelegate, UINavigationC
 }
 
 // MARK: - FusumaDelegate
-extension NewPostViewController : FusumaDelegate {
-    
+extension NewPostViewController : FusumaDelegate, UIScrollViewDelegate {
     // Fusuma delegate
     func fusumaImageSelected(image: UIImage) {
         self.imageSelected!.image = image
@@ -325,4 +324,9 @@ extension NewPostViewController : FusumaDelegate {
         
         return image!
     }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews[0]
+    }
+    
 }
