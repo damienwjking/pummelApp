@@ -56,6 +56,10 @@
 		BA34A71D1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA34A71C1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib */; };
 		BA34A71F1F9E43470059EADD /* ChatMessageImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA34A71E1F9E43470059EADD /* ChatMessageImageTableViewCell.xib */; };
 		BA37E1321F970AC0009811DA /* LogSessionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA37E1311F970AC0009811DA /* LogSessionTableViewCell.xib */; };
+		BA38FBEB1F9F2CB10004330A /* BookAndBuy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA38FBEA1F9F2CB10004330A /* BookAndBuy.storyboard */; };
+		BA38FBEE1F9F32790004330A /* BookAndBuyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA38FBED1F9F32790004330A /* BookAndBuyViewController.swift */; };
+		BA38FBF11F9F32DC0004330A /* BookAndBuyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA38FBF01F9F32DC0004330A /* BookAndBuyTableViewCell.swift */; };
+		BA38FBF31F9F32EC0004330A /* BookAndBuyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA38FBF21F9F32EC0004330A /* BookAndBuyTableViewCell.xib */; };
 		BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */; };
 		BA506FB11F83799900FF1964 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA506FB01F83799900FF1964 /* FeedModel.swift */; };
 		BA506FB31F8379C900FF1964 /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA506FB21F8379C900FF1964 /* TagModel.swift */; };
@@ -273,6 +277,10 @@
 		BA34A71C1F9E42D50059EADD /* ChatMessageWithoutImageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatMessageWithoutImageTableViewCell.xib; sourceTree = "<group>"; };
 		BA34A71E1F9E43470059EADD /* ChatMessageImageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatMessageImageTableViewCell.xib; sourceTree = "<group>"; };
 		BA37E1311F970AC0009811DA /* LogSessionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogSessionTableViewCell.xib; sourceTree = "<group>"; };
+		BA38FBEA1F9F2CB10004330A /* BookAndBuy.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BookAndBuy.storyboard; sourceTree = "<group>"; };
+		BA38FBED1F9F32790004330A /* BookAndBuyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookAndBuyViewController.swift; sourceTree = "<group>"; };
+		BA38FBF01F9F32DC0004330A /* BookAndBuyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookAndBuyTableViewCell.swift; sourceTree = "<group>"; };
+		BA38FBF21F9F32EC0004330A /* BookAndBuyTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookAndBuyTableViewCell.xib; sourceTree = "<group>"; };
 		BA4A66861E1D494000F5A218 /* DetailSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailSessionViewController.swift; sourceTree = "<group>"; };
 		BA506FB01F83799900FF1964 /* FeedModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedModel.swift; path = Model.swift/FeedModel.swift; sourceTree = "<group>"; };
 		BA506FB21F8379C900FF1964 /* TagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TagModel.swift; path = Model.swift/TagModel.swift; sourceTree = "<group>"; };
@@ -505,6 +513,7 @@
 				F9ABEAF91DC4C88E0084B70E /* Base */,
 				F9EAE8EE1D6F0BAE00FD32BE /* Feed */,
 				F95835A31D6DFACC00D6D483 /* Profile */,
+				BA38FBEC1F9F32260004330A /* BookAndBuy */,
 				F98BAF6B1D621789004BD41E /* Others */,
 				F9CA4A031D21011500E8A585 /* Search */,
 				F9CA49FC1D20F62E00E8A585 /* Session */,
@@ -562,6 +571,24 @@
 				BA139ECB1F9DE854007CF073 /* MessageModel.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		BA38FBEC1F9F32260004330A /* BookAndBuy */ = {
+			isa = PBXGroup;
+			children = (
+				BA38FBEF1F9F32B30004330A /* Cell */,
+				BA38FBED1F9F32790004330A /* BookAndBuyViewController.swift */,
+			);
+			path = BookAndBuy;
+			sourceTree = "<group>";
+		};
+		BA38FBEF1F9F32B30004330A /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				BA38FBF01F9F32DC0004330A /* BookAndBuyTableViewCell.swift */,
+				BA38FBF21F9F32EC0004330A /* BookAndBuyTableViewCell.xib */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		BA81A4411EE68C71002D626E /* Services */ = {
@@ -767,6 +794,7 @@
 				F96847121E06B737009EB06C /* BookSession.storyboard */,
 				F9ABEAE51DC4B8170084B70E /* Connection.storyboard */,
 				F9ABEAE71DC4B9440084B70E /* CoachProfile.storyboard */,
+				BA38FBEA1F9F2CB10004330A /* BookAndBuy.storyboard */,
 				F9ABEAED1DC4BC140084B70E /* UserProfile.storyboard */,
 				F9ABEAE91DC4BB710084B70E /* FeedDetail.storyboard */,
 				F9ABEAEB1DC4BB7E0084B70E /* PostFeed.storyboard */,
@@ -1087,8 +1115,10 @@
 				F9827F491CBD242900841BF1 /* SigninViewController.xib in Resources */,
 				9C1C54111C7938070083E47B /* LaunchScreen.storyboard in Resources */,
 				E8499E6E1EEF89A7008A65C2 /* DiscountColectionViewCell.xib in Resources */,
+				BA38FBF31F9F32EC0004330A /* BookAndBuyTableViewCell.xib in Resources */,
 				F9ABEAE31DC4B4F50084B70E /* Session.storyboard in Resources */,
 				BA37E1321F970AC0009811DA /* LogSessionTableViewCell.xib in Resources */,
+				BA38FBEB1F9F2CB10004330A /* BookAndBuy.storyboard in Resources */,
 				F983C2A41D013779002DA578 /* avatar.png in Resources */,
 				F9ABEAEE1DC4BC140084B70E /* UserProfile.storyboard in Resources */,
 				F9741E0D1D89A83900D61868 /* display-empty.jpg in Resources */,
@@ -1201,6 +1231,7 @@
 				BA29B1391F132C530059AE9A /* Extension.swift in Sources */,
 				F9FE14591CEBD29B004ABE34 /* FSCameraView.swift in Sources */,
 				BA9881011F85F39B00DBF527 /* SessionRouter.swift in Sources */,
+				BA38FBF11F9F32DC0004330A /* BookAndBuyTableViewCell.swift in Sources */,
 				F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */,
 				F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */,
 				BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */,
@@ -1241,6 +1272,7 @@
 				F98BAF6D1D6217A7004BD41E /* NSCache+Singleton.swift in Sources */,
 				F9AA81111DDF147500C3B71B /* TextViewAutoHeight.swift in Sources */,
 				BA1404181E2E5F700075CC3A /* BaseViewController.swift in Sources */,
+				BA38FBEE1F9F32790004330A /* BookAndBuyViewController.swift in Sources */,
 				E86A65D91E0BD8C400FF2935 /* LeadAddedCollectionViewCell.swift in Sources */,
 				F9CF54D51D7F3AD200BE144F /* FeedFirstPartTableViewCell.swift in Sources */,
 				BA4A66871E1D494000F5A218 /* DetailSessionViewController.swift in Sources */,
