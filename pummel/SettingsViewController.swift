@@ -441,7 +441,6 @@ class SettingsViewController: BaseViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
             if segue.identifier == "LocationPicker" {
                 let locationPicker = segue.destination as! LocationPickerViewController
                 locationPicker.location = self.location
@@ -452,7 +451,7 @@ class SettingsViewController: BaseViewController {
                 
                 let backItem = UIBarButtonItem()
                 backItem.title = "BACK        "
-                backItem.setTitleTextAttributes([NSFontAttributeName: UIFont.pmmMonReg13(), NSForegroundColorAttributeName: UIColor.pmmBrightOrangeColor()], for: .normal)
+                backItem.setAttributeForAllStage()
 
                 navigationItem.backBarButtonItem = backItem
                 self.navigationController?.navigationBar.backIndicatorImage = UIImage()
@@ -499,40 +498,45 @@ class SettingsViewController: BaseViewController {
                 switch response.result {
                 case .success(let JSON):
                     let googleMapJSON = JSON as! NSDictionary
-                    let locationArr = ((googleMapJSON["results"] as! NSArray)[0]  as! NSDictionary)["address_components"]  as! NSArray
+                    let locations = googleMapJSON["results"] as! NSArray
                     
-                    var i = 0
-                    while (i < locationArr.count) {
-                        let dictionary = locationArr[i] as! NSDictionary
+                    if (locations.count > 0) {
+                        let locationArr = (locations[0]  as! NSDictionary)["address_components"]  as! NSArray
                         
-                        let types = dictionary["types"] as! NSArray
-                        var typeIndex = 0
-                        var isAreaLevel1 = false
-                        var isAreaLevel2 = false
-                        while (typeIndex < types.count) {
-                            let type = types[typeIndex]
+                        var i = 0
+                        while (i < locationArr.count) {
+                            let dictionary = locationArr[i] as! NSDictionary
                             
-                            if type as! String == "administrative_area_level_1" {
-                                isAreaLevel1 = true
-                                break
-                            } else if type as! String == "administrative_area_level_2" {
-                                isAreaLevel2 = true
-                                break
+                            let types = dictionary["types"] as! NSArray
+                            var typeIndex = 0
+                            var isAreaLevel1 = false
+                            var isAreaLevel2 = false
+                            while (typeIndex < types.count) {
+                                let type = types[typeIndex]
+                                
+                                if type as! String == "administrative_area_level_1" {
+                                    isAreaLevel1 = true
+                                    break
+                                } else if type as! String == "administrative_area_level_2" {
+                                    isAreaLevel2 = true
+                                    break
+                                }
+                                
+                                typeIndex = typeIndex + 1;
                             }
                             
-                            typeIndex = typeIndex + 1;
+                            if isAreaLevel1 {
+                                self.mapState = dictionary["short_name"] as! String
+                            }
+                            
+                            if isAreaLevel2 {
+                                self.mapCity = dictionary["short_name"] as! String
+                            }
+                            
+                            i = i + 1;
                         }
-                        
-                        if isAreaLevel1 {
-                            self.mapState = dictionary["short_name"] as! String
-                        }
-                        
-                        if isAreaLevel2 {
-                            self.mapCity = dictionary["short_name"] as! String
-                        }
-                        
-                        i = i + 1;
                     }
+                    
                 case .failure(let error):
                     print(error)
                 }

@@ -118,45 +118,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6A1-Kb-27B">
-                                        <rect key="frame" x="10" y="87" width="300" height="330"/>
+                                        <rect key="frame" x="10" y="172" width="300" height="160"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity.png" translatesAutoresizingMaskIntoConstraints="NO" id="xBN-fN-He3">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noActivity" translatesAutoresizingMaskIntoConstraints="NO" id="xBN-fN-He3">
                                                 <rect key="frame" x="67" y="0.0" width="165" height="160"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="165" id="GnY-e5-TTS"/>
                                                     <constraint firstAttribute="height" constant="160" id="quI-f1-BBv"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Activity Yet" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ul5-hp-CQ3">
-                                                <rect key="frame" x="0.0" y="180" width="300" height="50"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="300" id="U6O-gs-DCt"/>
-                                                    <constraint firstAttribute="height" constant="50" id="l4V-Ba-kCB"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.094117647058823528" green="0.094117647058823528" blue="0.094117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect with coaches and see their updates here" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u8g-NB-NlQ">
-                                                <rect key="frame" x="0.0" y="240" width="300" height="42"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="42" id="vnM-HX-d2n"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                <color key="textColor" red="0.39215686274509803" green="0.39215686274509803" blue="0.39215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="u8g-NB-NlQ" secondAttribute="bottom" constant="48" id="0Ci-SJ-oiJ"/>
                                             <constraint firstItem="xBN-fN-He3" firstAttribute="centerX" secondItem="6A1-Kb-27B" secondAttribute="centerX" id="89R-E2-qj4"/>
-                                            <constraint firstItem="u8g-NB-NlQ" firstAttribute="centerX" secondItem="6A1-Kb-27B" secondAttribute="centerX" id="E4V-UH-6v5"/>
-                                            <constraint firstItem="u8g-NB-NlQ" firstAttribute="width" secondItem="6A1-Kb-27B" secondAttribute="width" id="HiT-JJ-oUy"/>
-                                            <constraint firstItem="Ul5-hp-CQ3" firstAttribute="top" secondItem="xBN-fN-He3" secondAttribute="bottom" constant="20" id="Uhf-oY-LGF"/>
-                                            <constraint firstItem="Ul5-hp-CQ3" firstAttribute="centerX" secondItem="6A1-Kb-27B" secondAttribute="centerX" id="fhB-tw-2in"/>
                                             <constraint firstItem="xBN-fN-He3" firstAttribute="top" secondItem="6A1-Kb-27B" secondAttribute="top" id="gYl-0R-qKU"/>
-                                            <constraint firstItem="u8g-NB-NlQ" firstAttribute="top" secondItem="Ul5-hp-CQ3" secondAttribute="bottom" constant="10" id="jLi-Ji-OC0"/>
+                                            <constraint firstAttribute="bottom" secondItem="xBN-fN-He3" secondAttribute="bottom" id="smS-xH-HqD"/>
                                             <constraint firstAttribute="width" constant="300" id="wxp-jg-Erc"/>
                                         </constraints>
                                     </view>
@@ -191,8 +167,6 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
-                        <outlet property="connectWithCoachLB" destination="u8g-NB-NlQ" id="UP2-4f-RwC"/>
-                        <outlet property="noActivityYetLB" destination="Ul5-hp-CQ3" id="Orn-CU-1Ym"/>
                         <outlet property="tableFeed" destination="PWt-iK-hgy" id="OsT-HW-2MD"/>
                         <segue destination="cbx-O6-eji" kind="presentation" identifier="goConnect" id="Ac1-pw-fXy"/>
                         <segue destination="i79-xW-CTq" kind="show" identifier="goNewPost" id="5s5-d3-Bto"/>
@@ -287,6 +261,6 @@
     </scenes>
     <resources>
         <image name="feed" width="21" height="21"/>
-        <image name="noActivity.png" width="166" height="162"/>
+        <image name="noActivity" width="166" height="162"/>
     </resources>
 </document>

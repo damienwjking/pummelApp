@@ -983,7 +983,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     let messageCompose = MFMessageComposeViewController()
                     messageCompose.messageComposeDelegate = self
                     
-                    messageCompose.body = "Please give me a testimonial : pummel://givetestimonial/coachId=\(userIDString)"
+                    messageCompose.body = "Hi there, can you please provide a testimonial for me.  Just click the link, install the Pummel app, and you can write the testimonial directly in the app.  pummel://givetestionial/coachid=\(userIDString)"
                     
                     self.present(messageCompose, animated: true, completion: nil)
                 } else {
@@ -997,7 +997,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     mail.mailComposeDelegate = self
                     
                     mail.setSubject("Please give me a testimonial")
-                    mail.setMessageBody("Please give me a testimonial : pummel://givetestimonial/coachId=\(userIDString)", isHTML: true)
+                    mail.setMessageBody("Hi there, can you please provide a testimonial for me.  Just click the link, install the Pummel app, and you can write the testimonial directly in the app.  pummel://givetestionial/coachid=\(userIDString)", isHTML: true)
                     self.present(mail, animated: true, completion: nil)
                 } else {
                     PMHelper.showDoAgainAlert()
@@ -1164,14 +1164,15 @@ extension ProfileViewController {
                 if (error == nil) {
                     let percent = result as! Double
                     
-                    if (percent < 100.0) {
-                        self.uploadingLabel.text = String(format: "Uploading %0.0f%@", percent, "%")
-                    } else {
-                        self.isUploadingVideo = .normal
-                        
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PROFILE_GET_DETAIL"), object: nil, userInfo: nil)
-                    }
-                    
+                    PMHelper.actionWithDelaytime(delayTime: 0, delayAction: {
+                        if (percent < 100.0) {
+                            self.uploadingLabel.text = String(format: "Uploading %0.0f%@", percent, "%")
+                        } else {
+                            self.isUploadingVideo = .normal
+                            
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PROFILE_GET_DETAIL"), object: nil, userInfo: nil)
+                        }
+                    })
                 } else {
                     print("Request failed with error: \(String(describing: error))")
                     

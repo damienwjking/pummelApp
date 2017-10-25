@@ -140,15 +140,13 @@ class MessageViewController: BaseViewController {
     }
     
     func refreshControlTable() {
-        if (self.isLoadingMessage == false) {
-            self.listMessageTB.contentOffset = CGPoint()
-            
-            self.gotNewMessage()
-            
-            self.leadOffset = 0
-            self.isStopLoadLead = false
-            self.getListLead()
-        }
+        self.listMessageTB.contentOffset = CGPoint()
+        
+        self.gotNewMessage()
+        
+        self.leadOffset = 0
+        self.isStopLoadLead = false
+        self.getListLead()
     }
     
     func gotNewMessage() {
@@ -160,11 +158,7 @@ class MessageViewController: BaseViewController {
     }
     
     func gotNewNotificationShowBage() {
-        self.conversationList.removeAll()
-        self.isStopLoadMessage = false
-        self.messageOffset = 0
-        
-        self.getConversation()
+        self.gotNewMessage()
     }
     
     @IBAction func startConversation(_ sender: Any) {

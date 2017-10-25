@@ -35,7 +35,7 @@ class SendPhotoViewController: BaseViewController {
          self.navigationItem.hidesBackButton = true;
         let image = UIImage(named: "close")!.withRenderingMode(.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(self.close))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.post))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "SEND", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.sendButtonClicked))
         self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
         
         self.avatarIMV.layer.cornerRadius = 20
@@ -125,7 +125,7 @@ class SendPhotoViewController: BaseViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func post() {
+    func sendButtonClicked() {
         self.view.makeToast(message: "Sending")
         if (self.messageId != nil) {
             self.addMessageToExistConverstation()

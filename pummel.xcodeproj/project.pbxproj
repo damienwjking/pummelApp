@@ -167,9 +167,7 @@
 		F9CF54D71D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CF54D61D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift */; };
 		F9CF54D91D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CF54D81D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift */; };
 		F9CF54E11D7F9BFD00BE144F /* NewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CF54E01D7F9BFD00BE144F /* NewPostViewController.swift */; };
-		F9CF54E51D801F2100BE144F /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */; };
 		F9D35AB61D266C6C00F47709 /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */; };
-		F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */; };
 		F9EAE8DD1D6EF8AD00FD32BE /* SettingDiscoveryHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8DC1D6EF8AD00FD32BE /* SettingDiscoveryHeaderTableViewCell.swift */; };
 		F9EAE8DF1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8DE1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift */; };
 		F9EAE8E11D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAE8E01D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift */; };
@@ -392,9 +390,7 @@
 		F9CF54D61D7F3AE100BE144F /* FeedSecondPartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedSecondPartTableViewCell.swift; sourceTree = "<group>"; };
 		F9CF54D81D7F3AF100BE144F /* FeedThirdPartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedThirdPartTableViewCell.swift; sourceTree = "<group>"; };
 		F9CF54E01D7F9BFD00BE144F /* NewPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPostViewController.swift; sourceTree = "<group>"; };
-		F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		F9D35AB51D266C6B00F47709 /* ConnectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
-		F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoachProfileViewController.swift; sourceTree = "<group>"; };
 		F9EAE8DC1D6EF8AD00FD32BE /* SettingDiscoveryHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingDiscoveryHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		F9EAE8DE1D6EF8F500FD32BE /* SettingLocationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingLocationTableViewCell.swift; sourceTree = "<group>"; };
 		F9EAE8E01D6EF93A00FD32BE /* SettingMaxDistanceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingMaxDistanceTableViewCell.swift; sourceTree = "<group>"; };
@@ -614,10 +610,8 @@
 			isa = PBXGroup;
 			children = (
 				F9EAE8DB1D6EF88500FD32BE /* Cell */,
-				9C1C543E1C793D070083E47B /* SettingsViewController.swift */,
 				9C1C54341C793A4F0083E47B /* ProfileViewController.swift */,
-				F9CF54E41D801F2100BE144F /* UserProfileViewController.swift */,
-				F9D35AB71D26814500F47709 /* CoachProfileViewController.swift */,
+				9C1C543E1C793D070083E47B /* SettingsViewController.swift */,
 				F9827E951CB81F9E00841BF1 /* EditProfileViewController.swift */,
 				F9B4670C1DE54C4E00C63DFB /* EditCoachProfileViewController.swift */,
 				E8779E1B1E084E3900E5D742 /* EditCoachProfileForUpgradeViewController.swift */,
@@ -1233,11 +1227,9 @@
 				F9CA4A0A1D21466600E8A585 /* FlowLayout.swift in Sources */,
 				F9FE145D1CEBD29B004ABE34 /* FusumaViewController.swift in Sources */,
 				E86A65D51E0BD80400FF2935 /* LeadAddedTableViewCell.swift in Sources */,
-				F9CF54E51D801F2100BE144F /* UserProfileViewController.swift in Sources */,
 				BA1043071E083749006DB43D /* LogTableViewCell.swift in Sources */,
 				BA81A4431EE68CA5002D626E /* ImageVideoRouter.swift in Sources */,
 				F9B4670D1DE54C4E00C63DFB /* EditCoachProfileViewController.swift in Sources */,
-				F9D35AB81D26814500F47709 /* CoachProfileViewController.swift in Sources */,
 				F90634331D7F2C5800105B97 /* FeedViewController.swift in Sources */,
 				E8C444EA1E20AA19006F0548 /* ListCoachsViewController.swift in Sources */,
 				BA2FEA6C1F4F388D00146529 /* CreateBridgFile.m in Sources */,

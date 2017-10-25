@@ -22,8 +22,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     var offset: Int = 0
     var offsetDiscount: Int = 0
     
-    @IBOutlet weak var noActivityYetLB: UILabel!
-    @IBOutlet weak var connectWithCoachLB: UILabel!
     var refreshControl: UIRefreshControl!
     var isLoading : Bool = false
     var isLoadDiscount : Bool = false
@@ -65,8 +63,6 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             self.isGoProfileDetail == false) {
             self.refresh()
         }
-        self.noActivityYetLB.font = .pmmPlayFairReg18()
-        self.connectWithCoachLB.font = .pmmMonLight13()
         
         self.resetCBadge()
     }

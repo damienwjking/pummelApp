@@ -305,9 +305,9 @@ enum ImageVideoRouter: URLRequestConvertible {
                 switch encodingResult {
                 case .success(let upload, _, _):
                     upload.uploadProgress(closure: { (Progress) in
-                        print("Upload Progress: \(Progress.fractionCompleted)")
+                        print("Upload Progress: \(Progress.fractionCompleted * 100)")
                         
-                        self.comletedBlock(Progress.fractionCompleted, nil)
+                        self.comletedBlock(Progress.fractionCompleted * 100, nil)
                     })
                     
                     // 0 : upload faile

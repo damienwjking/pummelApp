@@ -145,11 +145,6 @@ class ChatMessageViewController : BaseViewController {
                         }
                         
                         self.sortMessageList()
-                        
-                        self.chatTB.reloadData {
-                            let lastIndex = NSIndexPath(row: self.messageList.count, section: 0)
-                            self.chatTB.scrollToRow(at: lastIndex as IndexPath, at: UITableViewScrollPosition.bottom, animated: false)
-                        }
                     } else {
                         self.isStopGetChat = true
                     }
@@ -452,5 +447,10 @@ extension ChatMessageViewController : UITextViewDelegate, UITextFieldDelegate {
 extension ChatMessageViewController: MessageDelegate {
     func MessageSynsDataCompleted(message: MessageModel) {
         self.chatTB.reloadData()
+        
+        PMHelper.actionWithDelaytime(delayTime: 0.69) {
+            let lastIndex = NSIndexPath(row: self.messageList.count, section: 0)
+            self.chatTB.scrollToRow(at: lastIndex as IndexPath, at: UITableViewScrollPosition.bottom, animated: true)
+        }
     }
 }

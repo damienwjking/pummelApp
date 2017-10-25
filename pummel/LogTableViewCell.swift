@@ -67,8 +67,12 @@ class LogTableViewCell: UITableViewCell {
         self.isUpComingCell = isUpComing
         if isUpComing {
             self.actionBT.setTitle("Add to Calendar", for: .normal)
+            self.actionBT.isHidden = false // Update 25/10
+            self.actionView.isHidden = false // Update 25/10
         } else {
             self.actionBT.setTitle("Rate", for: .normal)
+            self.actionBT.isHidden = true // Update 25/10
+            self.actionView.isHidden = true // Update 25/10
         }
         
         self.typeLB.text = session.type
