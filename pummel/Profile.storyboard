@@ -358,7 +358,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9L0-4i-uS6">
-                                                <rect key="frame" x="550" y="17" width="34" height="25"/>
+                                                <rect key="frame" x="550" y="17.5" width="34" height="25"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="11"/>
                                                 <state key="normal" title="INVITE">
                                                     <color key="titleColor" red="1" green="0.35686274509999999" blue="0.062745098040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -681,6 +681,13 @@
                                             <constraint firstItem="Y7I-8h-TdF" firstAttribute="top" secondItem="qri-1r-v9Z" secondAttribute="bottom" constant="22" id="vwR-j7-d89"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DDs-7L-56u">
+                                        <rect key="frame" x="0.0" y="1652" width="600" height="0.0"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" id="aC5-AS-Y7P"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="dUz-At-R3A" firstAttribute="leading" secondItem="kQo-ns-tiX" secondAttribute="leading" id="0Fr-E2-YdI"/>
@@ -697,17 +704,21 @@
                                     <constraint firstItem="thJ-Uy-xW3" firstAttribute="top" secondItem="jWn-RP-O2e" secondAttribute="bottom" id="HpU-yk-9Lk"/>
                                     <constraint firstAttribute="trailing" secondItem="jWn-RP-O2e" secondAttribute="trailing" id="L1E-j4-V20"/>
                                     <constraint firstAttribute="trailing" secondItem="iVC-Pn-vvT" secondAttribute="trailing" id="QSL-AF-ks6"/>
+                                    <constraint firstAttribute="bottom" secondItem="DDs-7L-56u" secondAttribute="bottom" id="Sh4-zA-tXT"/>
                                     <constraint firstAttribute="trailing" secondItem="DGe-7s-4tb" secondAttribute="trailing" id="SvR-LU-Tlz"/>
                                     <constraint firstItem="78j-T5-gZq" firstAttribute="leading" secondItem="kQo-ns-tiX" secondAttribute="leading" id="T9A-mp-pNk"/>
                                     <constraint firstItem="DGe-7s-4tb" firstAttribute="top" secondItem="iVC-Pn-vvT" secondAttribute="bottom" id="Tvb-64-aiJ"/>
                                     <constraint firstItem="iVC-Pn-vvT" firstAttribute="top" secondItem="thJ-Uy-xW3" secondAttribute="bottom" id="USy-eC-2TY"/>
+                                    <constraint firstItem="DDs-7L-56u" firstAttribute="top" secondItem="HHY-WR-iCJ" secondAttribute="bottom" id="VGL-pE-m6o"/>
                                     <constraint firstItem="A0L-qf-SG7" firstAttribute="leading" secondItem="kQo-ns-tiX" secondAttribute="leading" id="VJM-UJ-7gN"/>
+                                    <constraint firstItem="DDs-7L-56u" firstAttribute="centerX" secondItem="HHY-WR-iCJ" secondAttribute="centerX" id="XWq-gU-C6g"/>
                                     <constraint firstAttribute="trailing" secondItem="ji1-bA-I3U" secondAttribute="trailing" id="Zh9-31-XG3"/>
                                     <constraint firstItem="CB6-ZE-SuX" firstAttribute="centerX" secondItem="ji1-bA-I3U" secondAttribute="centerX" id="ZzM-ts-Imt"/>
                                     <constraint firstItem="DGe-7s-4tb" firstAttribute="leading" secondItem="kQo-ns-tiX" secondAttribute="leading" id="c1c-nS-Mth"/>
                                     <constraint firstItem="HHY-WR-iCJ" firstAttribute="leading" secondItem="kQo-ns-tiX" secondAttribute="leading" id="cY7-6E-364"/>
                                     <constraint firstItem="thJ-Uy-xW3" firstAttribute="centerX" secondItem="kQo-ns-tiX" secondAttribute="centerX" id="etB-V4-kB3"/>
                                     <constraint firstAttribute="trailing" secondItem="uEh-DN-xjd" secondAttribute="trailing" id="fIY-r6-PiI"/>
+                                    <constraint firstItem="DDs-7L-56u" firstAttribute="width" secondItem="HHY-WR-iCJ" secondAttribute="width" id="gVi-Js-iQT"/>
                                     <constraint firstItem="uEh-DN-xjd" firstAttribute="top" secondItem="ji1-bA-I3U" secondAttribute="bottom" id="hfJ-DL-s8g"/>
                                     <constraint firstAttribute="trailing" secondItem="78j-T5-gZq" secondAttribute="trailing" id="l8M-Cs-SkK"/>
                                     <constraint firstItem="ji1-bA-I3U" firstAttribute="top" secondItem="dUz-At-R3A" secondAttribute="bottom" id="lhi-Hq-fyE"/>
@@ -718,16 +729,29 @@
                                     <constraint firstAttribute="trailing" secondItem="A0L-qf-SG7" secondAttribute="trailing" id="qNg-d7-eWE"/>
                                     <constraint firstAttribute="trailing" secondItem="HHY-WR-iCJ" secondAttribute="trailing" id="rDS-bX-dhr"/>
                                     <constraint firstItem="thJ-Uy-xW3" firstAttribute="width" secondItem="iVC-Pn-vvT" secondAttribute="width" id="rj3-0I-snC"/>
-                                    <constraint firstAttribute="bottom" secondItem="HHY-WR-iCJ" secondAttribute="bottom" id="w0U-bH-hEd"/>
                                 </constraints>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6wI-SM-rcc">
+                                <rect key="frame" x="0.0" y="1248" width="600" height="70"/>
+                                <color key="backgroundColor" red="1" green="0.35686274509999999" blue="0.062745098040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="E8W-Od-J60"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="17"/>
+                                <state key="normal" title="Book &amp; Buy">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="kQo-ns-tiX" firstAttribute="height" secondItem="8AJ-1I-hAp" secondAttribute="height" id="6xh-Wz-IuJ"/>
                             <constraint firstItem="kQo-ns-tiX" firstAttribute="top" secondItem="8AJ-1I-hAp" secondAttribute="top" id="IY5-c5-hWn"/>
+                            <constraint firstItem="6wI-SM-rcc" firstAttribute="centerX" secondItem="8AJ-1I-hAp" secondAttribute="centerX" id="Kpm-OM-KcB"/>
+                            <constraint firstItem="6wI-SM-rcc" firstAttribute="width" secondItem="8AJ-1I-hAp" secondAttribute="width" id="Ufv-Ru-YNC"/>
                             <constraint firstItem="kQo-ns-tiX" firstAttribute="centerX" secondItem="8AJ-1I-hAp" secondAttribute="centerX" id="Xrp-HL-fW7"/>
                             <constraint firstItem="kQo-ns-tiX" firstAttribute="width" secondItem="8AJ-1I-hAp" secondAttribute="width" id="bEw-9n-Bw7"/>
+                            <constraint firstItem="xD0-dy-nta" firstAttribute="top" secondItem="6wI-SM-rcc" secondAttribute="bottom" id="pjy-xl-sR5"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="profile.png" id="mq7-s8-ADm">
@@ -754,6 +778,9 @@
                         <outlet property="backButton" destination="Khe-Fh-MlV" id="jwW-WQ-XZR"/>
                         <outlet property="bigBigIndicatorView" destination="Pss-Fx-2Jc" id="LWO-XX-gLN"/>
                         <outlet property="bigIndicatorView" destination="H39-IH-xZm" id="boe-Xq-cIz"/>
+                        <outlet property="bookAndBuyButton" destination="6wI-SM-rcc" id="CPq-8u-hA0"/>
+                        <outlet property="bookAndBuyView" destination="DDs-7L-56u" id="D1s-uz-7l8"/>
+                        <outlet property="bookAndBuyViewHeightConstraint" destination="aC5-AS-Y7P" id="5ts-kK-2S8"/>
                         <outlet property="businessIMV" destination="fwM-Te-ye7" id="Sr0-Zj-XUu"/>
                         <outlet property="cameraButton" destination="db4-N2-14n" id="82Q-SC-2DI"/>
                         <outlet property="connectButton" destination="Y3s-QY-MfM" id="nbD-Tp-bDX"/>
@@ -3431,7 +3458,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ey2-z7-s6W" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="7N0-97-9tW">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

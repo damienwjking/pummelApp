@@ -113,6 +113,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     @IBOutlet weak var twiterDT: NSLayoutConstraint!
     @IBOutlet weak var instagramDT: NSLayoutConstraint!
     
+    @IBOutlet weak var bookAndBuyView: UIView!
+    @IBOutlet weak var bookAndBuyButton: UIButton!
+    @IBOutlet weak var bookAndBuyViewHeightConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var locationView: UIView!
     @IBOutlet weak var locationBackgroundImageView: UIImageView!
     
@@ -306,6 +310,8 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     func setupUIForProfileStyle() {
         self.testimonialInviteButton.isHidden = true
+        self.bookAndBuyButton.isHidden = true
+        self.bookAndBuyViewHeightConstraint.constant = 0
         
         if (self.profileStyle == .currentUser) {
             self.backButton.isHidden = true
@@ -313,7 +319,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             
             self.cameraButton.isHidden = false
             
-            if (self.isCoach) {
+            if (self.isCoach == true) {
                 self.testimonialInviteButton.isHidden = false
             }
             
@@ -324,6 +330,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.userNameLabel.isHidden = false
             
             self.cameraButton.isHidden = true
+            
+            if (self.isCoach == true) {
+                self.bookAndBuyButton.isHidden = false
+                self.bookAndBuyViewHeightConstraint.constant = 70
+            }
         }
     }
     
