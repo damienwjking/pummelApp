@@ -605,6 +605,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                         UserRouter.getCurrentUserInfo(completed: { (result, error) in
                             if (error == nil) {
                                 let currentInfo = result as! NSDictionary
+                                let currentUserID = PMHelper.getCurrentID()
                                 let coachFirstName = currentInfo[kFirstname] as! String
                                 let userFirstName = userInfo[kFirstname] as! String
                                 
@@ -612,8 +613,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                                     let mail = MFMailComposeViewController()
                                     mail.mailComposeDelegate = self
                                     
+                                    mail.setToRecipients([userMail])
                                     mail.setSubject("Come join me on Pummel Fitness")
-                                    mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
+                                    mail.setMessageBody("Hey \(userFirstName),<br /><br />Come join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.<br /><br />Download the app at http://get.pummel.fit<br /><br />Thanks,<br /><br />Coach<br />\(coachFirstName)<br />Link to my profile: pummel://coachid=\(currentUserID)", isHTML: true)
 //                                    mail.set
                                     self.present(mail, animated: true, completion: nil)
                                 } else {

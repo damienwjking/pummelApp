@@ -180,6 +180,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                 if (error == nil) {
                     let currentInfo = result as! NSDictionary
                     let coachFirstName = currentInfo[kFirstname] as! String
+                    let currentUserID = PMHelper.getCurrentID()
                     
                     let contact = self.filterContacts[indexPath.row]
                     let userFirstName = contact.givenName
@@ -189,7 +190,7 @@ extension ContactUserViewController: UITableViewDelegate, UITableViewDataSource 
                         mail.mailComposeDelegate = self
                         
                         mail.setSubject("Come join me on Pummel Fitness")
-                        mail.setMessageBody("Hey \(userFirstName),\n\nCome join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.\n\nDownload the app at http://get.pummel.fit\n\nThanks,\n\nCoach\n\(coachFirstName)", isHTML: true)
+                        mail.setMessageBody("Hey \(userFirstName),<br /><br />Come join me on the Pummel Fitness app, where we can book appointments, log workouts, save transformation photos and chat for free.<br /><br />Download the app at http://get.pummel.fit<br /><br />Thanks,<br /><br />Coach<br />\(coachFirstName)<br />Link to my profile: pummel://coachid=\(currentUserID)", isHTML: true)
                         self.present(mail, animated: true, completion: nil)
                     } else {
                         PMHelper.showDoAgainAlert()
