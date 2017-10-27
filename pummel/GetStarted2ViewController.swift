@@ -15,7 +15,6 @@ class GetStarted2ViewController: UIViewController {
     @IBOutlet var matchedToYouTF : UILabel!
     @IBOutlet var imInBT : UIButton!
     @IBOutlet var backgroundV : UIView!
-    @IBOutlet var mainTextDistantCT: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,16 +28,9 @@ class GetStarted2ViewController: UIViewController {
         self.imInBT.layer.borderWidth = 0.5
         self.imInBT.layer.borderColor = UIColor.white.cgColor
         self.imInBT.titleLabel?.font = .pmmMonReg13()
-        self.updateUI()
     }
     
     @IBAction func backToFirstScreenTour(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
-    }
-    
-    func updateUI() {
-        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
-            self.mainTextDistantCT.constant = 40
-        }
     }
 }

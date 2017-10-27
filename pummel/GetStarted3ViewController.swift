@@ -15,7 +15,6 @@ class GetStarted3ViewController: UIViewController {
     @IBOutlet var shareTF : UILabel!
     @IBOutlet var letSetItBT : UIButton!
     @IBOutlet var backgroundV : UIView!
-    @IBOutlet var mainTextDistantCT: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +27,6 @@ class GetStarted3ViewController: UIViewController {
         self.letSetItBT.layer.borderWidth = 0.5
         self.letSetItBT.layer.borderColor = UIColor.white.cgColor
         self.letSetItBT.titleLabel?.font = .pmmMonReg13()
-        self.updateUI()
     }
 
     // Button Action
@@ -46,17 +44,6 @@ class GetStarted3ViewController: UIViewController {
 
     @IBAction func backToFirstScreenTour(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func updateUI() {
-        if (CURRENT_DEVICE == .phone && SCREEN_MAX_LENGTH == 568.0) {
-            self.mainTextDistantCT.constant = 40
-        }
     }
     
 }

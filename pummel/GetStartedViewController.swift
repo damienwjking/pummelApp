@@ -17,7 +17,6 @@ class GetStartedViewController: UIViewController {
     @IBOutlet var imNewBT : UIButton!
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet var backgroundV : UIView!
-    @IBOutlet var mainTextDistantCT: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,10 +100,5 @@ class GetStartedViewController: UIViewController {
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
