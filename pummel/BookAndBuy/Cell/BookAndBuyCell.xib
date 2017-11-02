@@ -27,27 +27,26 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="car-gs-338">
                         <rect key="frame" x="10" y="5" width="355" height="150"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-83.5" translatesAutoresizingMaskIntoConstraints="NO" id="Lbh-1y-cES">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Lbh-1y-cES">
                                 <rect key="frame" x="0.0" y="0.0" width="116" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Lbh-1y-cES" secondAttribute="height" multiplier="17:22" id="Jg3-M7-Kvm"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$20.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="3f7-Gi-Ysv">
-                                <rect key="frame" x="7.5" y="114" width="101" height="26"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="3f7-Gi-Ysv">
+                                <rect key="frame" x="7.5" y="140" width="101" height="0.0"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="22"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Label Label Label Label " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jsr-Aq-Ll1">
-                                <rect key="frame" x="136" y="10" width="199" height="16"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jsr-Aq-Ll1">
+                                <rect key="frame" x="136" y="10" width="199" height="0.0"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
                                 <color key="textColor" red="1" green="0.35686274509999999" blue="0.062745098040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ikB-vk-ac1">
-                                <rect key="frame" x="136" y="31" width="199" height="64"/>
-                                <string key="text">Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label </string>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="ikB-vk-ac1">
+                                <rect key="frame" x="136" y="15" width="199" height="0.0"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -62,6 +61,9 @@
                                 <state key="normal" title="BUY NOW">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="buyNowButtonClicked:" destination="k2u-Ws-CLe" eventType="touchUpInside" id="d6q-DQ-vWL"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -77,7 +79,7 @@
                             <constraint firstItem="3f7-Gi-Ysv" firstAttribute="bottom" secondItem="Lbh-1y-cES" secondAttribute="bottom" constant="-10" id="Igb-1p-edq"/>
                             <constraint firstItem="ikB-vk-ac1" firstAttribute="top" secondItem="jsr-Aq-Ll1" secondAttribute="bottom" constant="5" id="T1m-nt-uo3"/>
                             <constraint firstItem="ikB-vk-ac1" firstAttribute="leading" secondItem="jsr-Aq-Ll1" secondAttribute="leading" id="Yqs-zv-ADu"/>
-                            <constraint firstItem="JeZ-E2-GKc" firstAttribute="top" secondItem="ikB-vk-ac1" secondAttribute="bottom" constant="5" id="ZsL-UE-0ln"/>
+                            <constraint firstItem="JeZ-E2-GKc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="ikB-vk-ac1" secondAttribute="bottom" constant="5" id="ZsL-UE-0ln"/>
                             <constraint firstItem="JeZ-E2-GKc" firstAttribute="leading" secondItem="ikB-vk-ac1" secondAttribute="leading" id="djo-dc-UPg"/>
                             <constraint firstItem="3f7-Gi-Ysv" firstAttribute="width" secondItem="Lbh-1y-cES" secondAttribute="width" constant="-15" id="kK1-aq-KBj"/>
                             <constraint firstAttribute="bottom" secondItem="JeZ-E2-GKc" secondAttribute="bottom" constant="10" id="kdw-Un-iPf"/>
@@ -96,6 +98,7 @@
             <connections>
                 <outlet property="borderView" destination="car-gs-338" id="eVY-wx-AoT"/>
                 <outlet property="buyNowButton" destination="JeZ-E2-GKc" id="6kG-Ej-ihg"/>
+                <outlet property="priceLabel" destination="3f7-Gi-Ysv" id="MHL-mh-1KV"/>
                 <outlet property="productImageView" destination="Lbh-1y-cES" id="eyp-J4-D8Q"/>
                 <outlet property="subTitleLabel" destination="ikB-vk-ac1" id="AiV-2B-0kY"/>
                 <outlet property="titleLabel" destination="jsr-Aq-Ll1" id="uzT-SO-9MQ"/>
@@ -103,7 +106,4 @@
             <point key="canvasLocation" x="101.5" y="322"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="Icon-83.5" width="83" height="83"/>
-    </resources>
 </document>

@@ -82,7 +82,10 @@ let kPM_PATH_ACTIVITIES_USER        = "/activitiesuser?limit=20&offset="
 let kPM_PATH_UPCOMING_SESSION       = "/upcommingActivities?limit=20&offset="
 let kPM_PATH_COMPLETED_SESSION      = "/completedActivities?limit=20&offset="
 let kPM_PATH_TOTAL_ACTIVE_USER      = "/totalActive"
-let kPM_PATH_TOTAL_LEAD             = "totalLeads"
+let kPM_PATH_TOTAL_LEAD             = "/totalLeads"
+let kPM_PATH_PRODUCT                = "/product"
+let kPM_PATH_PURCHASE_PRODUCT       = "/productBought"
+
 
 let kPM_PATH_M_BADGE_S_BADGE        = "/numberofNewMessageAndNewSessionAndLeadAndComment"
 let kPM_PATH_RESET_S_BADGE          = "/resetsNotificationBadge"

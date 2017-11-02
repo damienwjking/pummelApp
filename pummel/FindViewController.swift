@@ -30,15 +30,20 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     var leadOffset = 0
     var isStopGetLead: Bool = false
     
-    var arrayTags : NSArray!
-    var widthCell : CGFloat = 0.0
-    let badgeLabel = UILabel()
-    
     var totalFollowCoach = 0
     var totalLead = 0
+    var totalPurchaseProduct = 0
     var numberNewMessage = 0
     var numberProfileView = 0
     var numberSocialClick = 0
+    
+    var purchaseProductOffset = 0
+    var isStopGetPurchaseProduct = false
+    var purchaseProductList: [ProductModel] = []
+    
+    var arrayTags : NSArray!
+    var widthCell : CGFloat = 0.0
+    let badgeLabel = UILabel()
     
     var lastTrackingCoachID = ""
     
@@ -120,6 +125,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             
             self.getFollowCoach()
         }
+        self.getPurchaseProduct()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -317,22 +323,17 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     
                     // Get lead list
                     let coachDetails = resultDetail["list"] as! [NSDictionary]
-                    var coachArray: [UserModel] = []
-                    for coachDetail in coachDetails {
-                        let user = UserModel()
-                        
-                        user.id = coachDetail[kCoachId] as! Int
-                        coachArray.append(user)
-                    }
-                    
                     if (coachDetails.count == 0) {
                         self.isStopGetFollowCoach = true
                     } else {
-                        for coachDetail in coachArray {
-                            if (coachDetail.existInList(userList: self.followCoachList) == false) {
-                                coachDetail.delegate = self
-                                coachDetail.synsData()
-                                self.followCoachList.append(coachDetail)
+                        for coachDetail in coachDetails {
+                            let user = UserModel()
+                            user.id = coachDetail[kCoachId] as! Int
+                            
+                            if (user.existInList(userList: self.followCoachList) == false) {
+                                user.delegate = self
+                                user.synsData()
+                                self.followCoachList.append(user)
                             }
                         }
                     }
@@ -362,6 +363,37 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                 print("Request failed with error: \(String(describing: error))")
             }
             }.fetchdata()
+    }
+    
+    func getPurchaseProduct() {
+        if (self.isStopGetPurchaseProduct == false) {
+            ProductRouter.getPurchaseProduct(offset: self.purchaseProductOffset) { (result, error) in
+                if (error == nil) {
+                    let resultDetail = result as! NSDictionary
+                    
+                    // Get total
+                    self.totalPurchaseProduct = resultDetail["total"] as! Int
+                    
+                    // Get list
+                    let productDetails = resultDetail["list"] as! [NSDictionary]
+                    for productDetail in productDetails {
+                        let product = ProductModel()
+                        product.parseData(data: productDetail)
+                        
+                        if (product.existInList(productList: self.purchaseProductList) == false) {
+                            self.purchaseProductList.append(product)
+                        }
+                    }
+                    
+                    self.updateLayout()
+                    self.purchaseProductOffset = self.purchaseProductOffset + 20
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.isStopGetPurchaseProduct = true
+                }
+                }.fetchdata()
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -467,9 +499,16 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             self.trackViewHeightContraint.constant = 100
         }
         
+        // Second view: product view
+        self.secondTitleLabel.text = "PURCHASES (\(self.totalPurchaseProduct))"
+        if (self.totalPurchaseProduct > 0) {
+            self.secondViewHeightConstraint.constant = 145
+        } else {
+            self.secondViewHeightConstraint.constant = 0
+        }
         self.secondCollectionView.reloadData()
         
-        
+        // Animation
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }

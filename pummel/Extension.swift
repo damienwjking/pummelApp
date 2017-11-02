@@ -151,6 +151,22 @@ extension String {
         let emailTest = NSPredicate(format:"SELF MATCHES %@", kEmailRegEx)
         return emailTest.evaluate(with: self)
     }
+    
+    func isNumber() -> Bool {
+        do {
+            let numberRegex = try NSRegularExpression(pattern: "[0-9]", options:.caseInsensitive)
+            let weightString = testStr as NSString
+            let results = numberRegex.matches(in: testStr, options: [], range: NSMakeRange(0, weightString.length))
+            
+            if results.count == weightString.length {
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            return false
+        }
+    }
 }
 
 extension Dictionary {

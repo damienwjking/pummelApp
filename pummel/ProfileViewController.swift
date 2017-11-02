@@ -310,8 +310,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     
     func setupUIForProfileStyle() {
         self.testimonialInviteButton.isHidden = true
-        self.bookAndBuyButton.isHidden = true
-        self.bookAndBuyViewHeightConstraint.constant = 0
         
         if (self.profileStyle == .currentUser) {
             self.backButton.isHidden = true
@@ -330,11 +328,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.userNameLabel.isHidden = false
             
             self.cameraButton.isHidden = true
-            
-            if (self.isCoach == true) {
-                self.bookAndBuyButton.isHidden = false
-                self.bookAndBuyViewHeightConstraint.constant = 60 - 1 // -1 for button over view
-            }
         }
     }
     
@@ -379,11 +372,16 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             
             destination.videoURL = sender as? NSURL
         } else if (segue.identifier == kGoConnect) {
-            let destimation = segue.destination as! ConnectViewController
-            destimation.coachDetail = self.coachDetail
-            destimation.isFromProfile = true
-            destimation.isFromFeed = self.isFromFeed
-            destimation.isConnected = self.isConnected
+            let destination = segue.destination as! ConnectViewController
+            destination.coachDetail = self.coachDetail
+            destination.isFromProfile = true
+            destination.isFromFeed = self.isFromFeed
+            destination.isConnected = self.isConnected
+        } else if (segue.identifier == "goBookAndBuy") {
+            let destination = segue.destination as! UINavigationController
+            let bookBuyVC = destination.topViewController as! BookAndBuyViewController
+            
+            bookBuyVC.coachID = self.userID
         }
     }
     
@@ -568,6 +566,16 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 let coachInformationTotal = result as! NSDictionary
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
                 
+                let totalProduct = coachInformationTotal["nProduct"] as? Int
+                if (self.profileStyle == .otherUser && totalProduct != nil && totalProduct! > 0) {
+                    self.bookAndBuyButton.isHidden = false
+                    self.bookAndBuyViewHeightConstraint.constant = 60 - 1 // -1 for button over view
+                } else {
+                    self.bookAndBuyButton.isHidden = true
+                    self.bookAndBuyViewHeightConstraint.constant = 0                }
+                
+                
+                // Testimonial
                 let totalTestimonial = coachInformationTotal[kTotalTestimonial] as? Int
                 if (totalTestimonial == nil) {
                     self.testimonialTitle.text = "TESTIMONIALS"
@@ -575,6 +583,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.testimonialTitle.text = "TESTIMONIALS (\(totalTestimonial!))"
                 }
                 
+                // Point
                 var totalPoint = 0.0
                 if (self.isCoach == true) {
                     self.connectionContentLB.text = "100%"
@@ -605,6 +614,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.locationView.isHidden = true
                 }
                 
+                // user info
                 let bioText = coachInformation[kBio] as? String
                 if (bioText != nil && bioText?.isEmpty == false) {
                     self.aboutTV.text = coachInformation[kBio] as! String

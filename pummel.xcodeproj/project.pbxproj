@@ -66,6 +66,7 @@
 		BA54913C1F6FA29D001A2DEF /* PostTestimonial.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA54913B1F6FA29D001A2DEF /* PostTestimonial.storyboard */; };
 		BA54913E1F6FB0C7001A2DEF /* PostTestimonialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA54913D1F6FB0C7001A2DEF /* PostTestimonialViewController.swift */; };
 		BA63D2A31F84D9F200D2D8C8 /* TagRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA63D2A21F84D9F200D2D8C8 /* TagRouter.swift */; };
+		BA6ADD1E1FAAD759002981D2 /* ProductRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6ADD1D1FAAD759002981D2 /* ProductRouter.swift */; };
 		BA81A4431EE68CA5002D626E /* ImageVideoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA81A4421EE68CA5002D626E /* ImageVideoRouter.swift */; };
 		BA8884C11EEA4F1800FFD734 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C01EEA4F1800FFD734 /* Camera.storyboard */; };
 		BA8884C31EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */; };
@@ -293,6 +294,7 @@
 		BA54913B1F6FA29D001A2DEF /* PostTestimonial.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PostTestimonial.storyboard; sourceTree = "<group>"; };
 		BA54913D1F6FB0C7001A2DEF /* PostTestimonialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTestimonialViewController.swift; sourceTree = "<group>"; };
 		BA63D2A21F84D9F200D2D8C8 /* TagRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagRouter.swift; sourceTree = "<group>"; };
+		BA6ADD1D1FAAD759002981D2 /* ProductRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRouter.swift; sourceTree = "<group>"; };
 		BA81A4421EE68CA5002D626E /* ImageVideoRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageVideoRouter.swift; sourceTree = "<group>"; };
 		BA8884C01EEA4F1800FFD734 /* Camera.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		BA8884C21EEA4FB800FFD734 /* square_kwickie_thumnail_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = square_kwickie_thumnail_gradient.png; sourceTree = "<group>"; };
@@ -614,6 +616,7 @@
 				BA02EE2A1EE7B14300495943 /* UserRouter.swift */,
 				BA003A9F1EEE3241002FE038 /* FeedRouter.swift */,
 				BA63D2A21F84D9F200D2D8C8 /* TagRouter.swift */,
+				BA6ADD1D1FAAD759002981D2 /* ProductRouter.swift */,
 				BA2E89D01F87728800A8A8BD /* MessageRouter.swift */,
 				BA9881001F85F39B00DBF527 /* SessionRouter.swift */,
 				BA2FA9611F1693A2004164D5 /* NotificationRouter.swift */,
@@ -1291,6 +1294,7 @@
 				F9EAE8E91D6EFC3400FD32BE /* SettingSmallSeperateTableViewCell.swift in Sources */,
 				BA54913E1F6FB0C7001A2DEF /* PostTestimonialViewController.swift in Sources */,
 				F9F3CC3F1CE1F386007F68A5 /* NewMessageViewController.swift in Sources */,
+				BA6ADD1E1FAAD759002981D2 /* ProductRouter.swift in Sources */,
 				F9827EC11CBC27CF00841BF1 /* LoginAndRegisterViewController.swift in Sources */,
 				F970A2AC1D26393F00932BFC /* CardView.swift in Sources */,
 				F98BAF6D1D6217A7004BD41E /* NSCache+Singleton.swift in Sources */,

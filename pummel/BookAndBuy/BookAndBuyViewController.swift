@@ -8,10 +8,12 @@
 
 import UIKit
 
-class BookAndBuyViewController: UIViewController {
+class BookAndBuyViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
     
-    
+    var coachID = ""
+    var productOffset = 0
+    var isStopGetProduct = false
     var productList: [ProductModel] = []
     
     override func viewDidLoad() {
@@ -21,6 +23,12 @@ class BookAndBuyViewController: UIViewController {
         self.setupTableView()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.getProduct()
+    }
+    
     func setupNavigationBar() {
         // Titlte
         self.navigationItem.title = kNavBookBuy
@@ -51,14 +59,53 @@ class BookAndBuyViewController: UIViewController {
     }
     
     func getProduct() {
-        
+        if (self.isStopGetProduct == false) {
+            if (self.productOffset == 0) {
+                self.view.makeToastActivity()
+            }
+            
+            ProductRouter.getProductList(userID: self.coachID, offset: self.productOffset) { (result, error) in
+                self.view.hideToastActivity()
+                
+                if (error == nil) {
+                    let productList = result as! [ProductModel]
+                    
+                    if (productList.count == 0) {
+                        self.isStopGetProduct = true
+                    } else {
+                        for product in productList {
+                            if (product.existInList(productList: self.productList) == false) {
+                                self.productList.append(product)
+                            }
+                        }
+                    }
+                    
+                    self.productOffset = self.productOffset + 20
+                    self.tableView.reloadData()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                    
+                    self.isStopGetProduct = true
+                }
+                }.fetchdata()
+        }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "goPurchaseDetail") {
+            let product: ProductModel = sender as! ProductModel
+            let destination = segue.destination as! ProductDetailViewController
+            
+            destination.product = product
+        }
+    }
+    
 }
 
 // MARK: - UITableViewDelegate
 extension BookAndBuyViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.productList.count + 10
+        return self.productList.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -69,15 +116,27 @@ extension BookAndBuyViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "BookAndBuyCell") as! BookAndBuyCell
             
-            //        let product = self.productList[indexPath.row - 1]
-            //        cell.setupData(product: product)
+            let product = self.productList[indexPath.row - 1]
+            cell.setupData(product: product)
+            cell.delegate = self
             
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "goPurchaseDetail", sender: nil)
+        
     }
-    
+}
+
+extension BookAndBuyViewController: BookAndBuyCellDelegate {
+    func bookAndBuyBuyNowButtonClicked(cell: BookAndBuyCell) {
+        let indexPath = self.tableView.indexPath(for: cell)
+        
+        if (indexPath != nil) {
+            let product = self.productList[(indexPath?.row)!]
+            
+            self.performSegue(withIdentifier: "goPurchaseDetail", sender: product)
+        }
+    }
 }

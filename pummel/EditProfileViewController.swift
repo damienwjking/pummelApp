@@ -150,7 +150,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         
         var weightText = self.weightContentTF.text
         if weightText?.isEmpty == false {
-            if isNumber(testStr: weightText!) {
+            if (weightText?.isNumber() == true) {
                 weightText = numberFormat.string(from: NSNumber(value: Int(weightText!)!))
                 self.weightContentTF.text = weightText! + " kgs"
             }
@@ -158,7 +158,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         
         var heightText = self.heightContentTF.text
         if heightText?.isEmpty == false {
-            if isNumber(testStr: heightText!) {
+            if (heightText?.isNumber() == true) {
                 heightText = numberFormat.string(from: NSNumber(value: Int(heightText!)!))
                 self.heightContentTF.text = heightText! + " cms"
             }
@@ -476,7 +476,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                
         // check number weight height
         let weightString = self.weightContentTF.text!.replacingOccurrences(of: " kgs", with: "")
-        if !(self.isNumber(testStr: weightString)) {
+        if (weightText?.isNumber() == false) {
             returnValue = true
             weightContentTF.attributedText = NSAttributedString(string:weightContentTF.text!,
                                                                 attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
@@ -486,7 +486,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
         
         let heightString = self.heightContentTF.text!.replacingOccurrences(of: " cms", with: "")
-        if !(self.isNumber(testStr: heightString)) {
+        if (heightString.isNumber() == false) {
             returnValue = true
             heightContentTF.attributedText = NSAttributedString(string:heightContentTF.text!,
                                                                 attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])
