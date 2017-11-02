@@ -72,7 +72,6 @@ class GroupLeadTableViewCell: UITableViewCell {
                                     userTemp.delegate = self
                                     userTemp.synsData()
                                     
-                                    
                                     self.arrayUserLead.append(userTemp)
                                 }
                             }
@@ -119,33 +118,13 @@ extension GroupLeadTableViewCell: UICollectionViewDelegate, UICollectionViewData
             self.getUserLead()
         }
         
-        // Hide/Unhide add button
-        cell.btnAdd.isHidden = false
-        if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
-            cell.btnAdd.isHidden = true
-        }
-        
-        cell.imgAvatar.image = UIImage(named: "display-empty.jpg")
         let userLead = self.arrayUserLead[indexPath.row]
-        if (userLead.isSynsCompleted == true) {
-            cell.nameUser.text = userLead.firstname?.uppercased()
-            
-            if (userLead.imageUrl != nil && userLead.imageUrl?.isEmpty == false) {
-                if (userLead.imageCache != nil) {
-                    cell.imgAvatar.image = userLead.imageCache
-                } else {
-                    ImageVideoRouter.getImage(imageURLString: userLead.imageUrl!, sizeString: widthHeight160, completed: { (result, error) in
-                        if (error == nil) {
-                            let imageRes = result as! UIImage
-                            cell.imgAvatar.image = imageRes
-                            
-                            userLead.imageCache = imageRes
-                        } else {
-                            print("Request failed with error: \(String(describing: error))")
-                        }
-                    }).fetchdata()
-                }
-            }
+        cell.setupData(userInfo: userLead)
+        
+        // Hide/Unhide add button
+        cell.setupLayout(isShowAddButton: true)
+        if self.typeGroup == TypeGroup.CoachJustConnected || self.typeGroup == TypeGroup.CoachOld || self.typeGroup == TypeGroup.CoachCurrent {
+            cell.setupLayout(isShowAddButton: false)
         }
         
         return cell

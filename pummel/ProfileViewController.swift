@@ -333,7 +333,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             
             if (self.isCoach == true) {
                 self.bookAndBuyButton.isHidden = false
-                self.bookAndBuyViewHeightConstraint.constant = 70
+                self.bookAndBuyViewHeightConstraint.constant = 60 - 1 // -1 for button over view
             }
         }
     }
@@ -874,7 +874,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func clickOnFacebook() {
+    @IBAction func facebookButtonClicked(_ sender: Any) {
         if (self.facebookLink != "") {
             let facebookUrl = NSURL(string: self.facebookLink!)
             
@@ -901,7 +901,35 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    @IBAction func clickOnTwitter() {
+    @IBAction func instagramButtonClicked(_ sender: Any) {
+        if (self.instagramLink  != "") {
+            let instagramUrl = NSURL(string: self.instagramLink!)
+            
+            if UIApplication.shared.canOpenURL(instagramUrl! as URL)
+            {
+                UIApplication.shared.openURL(instagramUrl! as URL)
+                
+            } else {
+                //redirect to safari because the user doesn't have Instagram
+                UIApplication.shared.openURL(NSURL(string: "http://instagram.com/")! as URL)
+            }
+            
+            // Tracker mixpanel
+            if let firstName = coachDetail[kFirstname] as? String {
+                let mixpanel = Mixpanel.sharedInstance()
+                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercased())"]
+                mixpanel?.track("IOS.SocialClick", properties: properties)
+            }
+            
+            if (self.isCoach == true) {
+                if let val = self.coachDetail[kId] as? Int {
+                    TrackingPMAPI.sharedInstance.trackSocialInstagram(coachId: "\(val)")
+                }
+            }
+        }
+    }
+    
+    @IBAction func twitterButtonClicked(_ sender: Any) {
         if (self.twitterLink != "") {
             let twitterUrl = NSURL(string: self.twitterLink!)
             
@@ -923,34 +951,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             if (self.isCoach == true) {
                 if let val = self.coachDetail[kId] as? Int {
                     TrackingPMAPI.sharedInstance.trackSocialTwitter(coachId: "\(val)")
-                }
-            }
-        }
-    }
-    
-    @IBAction func clickOnInstagram() {
-        if (self.instagramLink  != "") {
-            let instagramUrl = NSURL(string: self.instagramLink!)
-           
-            if UIApplication.shared.canOpenURL(instagramUrl! as URL)
-            {
-                UIApplication.shared.openURL(instagramUrl! as URL)
-                
-            } else {
-                //redirect to safari because the user doesn't have Instagram
-                UIApplication.shared.openURL(NSURL(string: "http://instagram.com/")! as URL)
-            }
-            
-            // Tracker mixpanel
-            if let firstName = coachDetail[kFirstname] as? String {
-                let mixpanel = Mixpanel.sharedInstance()
-                let properties = ["Name": "Instagram", "Label":"\(firstName.uppercased())"]
-                mixpanel?.track("IOS.SocialClick", properties: properties)
-            }
-            
-            if (self.isCoach == true) {
-                if let val = self.coachDetail[kId] as? Int {
-                    TrackingPMAPI.sharedInstance.trackSocialInstagram(coachId: "\(val)")
                 }
             }
         }
@@ -1024,6 +1024,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             
             self.present(alertViewController, animated: true, completion: nil)
         }
+    }
+    
+    @IBAction func bookAndBuyButtonClicked(_ sender: Any) {
+        self.performSegue(withIdentifier: "goBookAndBuy", sender: nil)
     }
 }
 

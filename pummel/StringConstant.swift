@@ -250,6 +250,7 @@ let kMessageUpgradedCoach = "Thanks for your Pummel Fitness coach application, w
 let kNavSetting = "SETTINGS"
 let kNavProfile = "PROFILE"
 let kNavEditProfile = "EDIT PROFILE"
+let kNavBookBuy = "BOOK & BUY OPTIONS"
 let kNavSession = "SESSIONS"
 let kLogSession = "LOG SESSION"
 let kNavMessage = "MESSAGES"

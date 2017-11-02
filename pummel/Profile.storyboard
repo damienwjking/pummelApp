@@ -536,7 +536,7 @@
                                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 </state>
                                                                 <connections>
-                                                                    <action selector="clickOnFacebook" destination="cCo-RY-fr6" eventType="touchUpInside" id="UjX-w7-ERy"/>
+                                                                    <action selector="facebookButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="muf-ma-LfG"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -559,7 +559,7 @@
                                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 </state>
                                                                 <connections>
-                                                                    <action selector="clickOnInstagram" destination="cCo-RY-fr6" eventType="touchUpInside" id="AuC-EN-blc"/>
+                                                                    <action selector="instagramButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="zCQ-Gb-VNe"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -582,7 +582,7 @@
                                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 </state>
                                                                 <connections>
-                                                                    <action selector="clickOnTwitter" destination="cCo-RY-fr6" eventType="touchUpInside" id="kQo-rX-l1Y"/>
+                                                                    <action selector="twitterButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="5Lq-CS-USE"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -732,15 +732,18 @@
                                 </constraints>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6wI-SM-rcc">
-                                <rect key="frame" x="0.0" y="1248" width="600" height="70"/>
+                                <rect key="frame" x="0.0" y="1258" width="600" height="60"/>
                                 <color key="backgroundColor" red="1" green="0.35686274509999999" blue="0.062745098040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="70" id="E8W-Od-J60"/>
+                                    <constraint firstAttribute="height" constant="60" id="E8W-Od-J60"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="17"/>
                                 <state key="normal" title="Book &amp; Buy">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="bookAndBuyButtonClicked:" destination="cCo-RY-fr6" eventType="touchUpInside" id="f4p-jf-5Lv"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -841,11 +844,20 @@
                         <segue destination="Ey2-z7-s6W" kind="show" identifier="goToFeedDetail" id="9KE-GK-Txi"/>
                         <segue destination="Vs9-sk-5r4" kind="presentation" identifier="showCamera" id="tuE-Dx-0uG"/>
                         <segue destination="Bf0-Pv-jPx" kind="presentation" identifier="goConnect" id="0TE-Bw-92Y"/>
+                        <segue destination="OBg-Wi-034" kind="presentation" identifier="goBookAndBuy" id="rmM-yL-XG0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TRW-qQ-UbN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-835" y="4196"/>
+        </scene>
+        <!--BookAndBuy-->
+        <scene sceneID="N0A-zi-1ki">
+            <objects>
+                <viewControllerPlaceholder storyboardName="BookAndBuy" id="OBg-Wi-034" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hbm-Ea-leE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="242" y="4513"/>
         </scene>
         <!--FeedDetail-->
         <scene sceneID="WsS-8Z-Y2b">
@@ -1283,8 +1295,8 @@
                                             <constraint firstAttribute="height" constant="0.5" id="76c-rn-dmg"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YQw-OD-UCf">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="0.0"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YQw-OD-UCf">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="1596"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                 </subviews>
@@ -1482,7 +1494,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="alF-c5-Fbl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="942" y="5945"/>
+            <point key="canvasLocation" x="1134" y="6667"/>
         </scene>
         <!--Edit Coach Profile View Controller-->
         <scene sceneID="6pm-gm-YkK">
@@ -1898,8 +1910,8 @@
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J3u-4M-e8d">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="0.0"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J3u-4M-e8d">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="1754"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                 </subviews>
@@ -2127,7 +2139,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zYl-Z2-3Av" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2317" y="5945"/>
+            <point key="canvasLocation" x="2248" y="6846"/>
         </scene>
         <!--Main-->
         <scene sceneID="OHX-sA-mDp">
@@ -2135,7 +2147,7 @@
                 <viewControllerPlaceholder storyboardName="Main" id="KQN-0Y-s0R" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FHM-Nb-SfW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1838" y="6820"/>
+            <point key="canvasLocation" x="-1782" y="6600"/>
         </scene>
         <!--Location Picker View Controller-->
         <scene sceneID="rpW-c9-9q6">
@@ -2153,7 +2165,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8YZ-7g-8Yq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1408" y="8902"/>
+            <point key="canvasLocation" x="-1580" y="7766"/>
         </scene>
         <!--Change Password View Controller-->
         <scene sceneID="vdA-FM-vMl">
@@ -2282,7 +2294,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rsF-51-gR0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2966" y="7075"/>
+            <point key="canvasLocation" x="-2547" y="6366"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="7Y3-hs-KhB">
@@ -2602,7 +2614,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="de5-Af-Pnq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1000" y="5944"/>
+            <point key="canvasLocation" x="-1671" y="5345"/>
         </scene>
         <!--Edit Coach Profile For Upgrade View Controller-->
         <scene sceneID="vnx-Po-tLy">
@@ -3434,7 +3446,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WqQ-iW-jwc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="316.80000000000001" y="7391.6041979010497"/>
+            <point key="canvasLocation" x="-331" y="6982"/>
         </scene>
         <!--Camera-->
         <scene sceneID="EsJ-B7-AL2">
@@ -3442,7 +3454,7 @@
                 <viewControllerPlaceholder storyboardName="Camera" id="Vs9-sk-5r4" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BXk-br-VUN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-137" y="3520"/>
+            <point key="canvasLocation" x="244" y="3534"/>
         </scene>
         <!--Connection-->
         <scene sceneID="t2N-jH-vfv">
@@ -3450,7 +3462,7 @@
                 <viewControllerPlaceholder storyboardName="Connection" id="Bf0-Pv-jPx" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R7w-2r-ggn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="138" y="3859"/>
+            <point key="canvasLocation" x="243" y="3864"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="a8x-wc-WOd">
@@ -3484,6 +3496,6 @@
         <image name="profile_camera" width="37" height="37"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="y6l-V7-3Lq"/>
+        <segue reference="okc-uz-SIC"/>
     </inferredMetricsTieBreakers>
 </document>

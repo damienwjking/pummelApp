@@ -367,7 +367,10 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
                     let visibleCell = PMHelper.checkVisibleCell(tableView: tableView, indexPath: indexPath)
                     if visibleCell == true {
                         let userInfo = result as! NSDictionary
-                        cell?.setupData(leadDictionay: userInfo)
+                        
+                        let user = UserModel()
+                        user.parseData(data: userInfo)
+                        cell?.setupData(userInfo: user)
                     }
                 } else {
                     print("Request failed with error: \(String(describing: error))")

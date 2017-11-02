@@ -37,13 +37,11 @@ class HorizontalCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setupData(leadDictionay: NSDictionary) {
-        let name = leadDictionay.object(forKey: kFirstname) as! String
-        self.name.text = name.uppercased()
+    func setupData(userInfo: UserModel) {
+        self.name.text = userInfo.firstname?.uppercased()
         
-        let imageURLString = leadDictionay[kImageUrl] as? String
-        if (imageURLString != nil && imageURLString?.isEmpty == false) {
-            ImageVideoRouter.getImage(imageURLString: imageURLString!, sizeString: widthHeight160, completed: { (result, error) in
+        if (userInfo.imageUrl != nil && userInfo.imageUrl?.isEmpty == false) {
+            ImageVideoRouter.getImage(imageURLString: userInfo.imageUrl!, sizeString: widthHeight160, completed: { (result, error) in
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.imageV.image = imageRes

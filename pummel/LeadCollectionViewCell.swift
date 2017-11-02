@@ -10,15 +10,47 @@ import UIKit
 
 class LeadCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var btnAdd: UIButton!
-    @IBOutlet weak var imgAvatar: UIImageView!
+    @IBOutlet weak var addButton: UIButton!
+    @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nameUser: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.imgAvatar.layer.cornerRadius = self.imgAvatar.frame.size.width/2.0
-        self.imgAvatar.clipsToBounds = true
-        self.btnAdd.layer.cornerRadius = self.btnAdd.frame.size.width/2.0
+        self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width/2.0
+        self.avatarImageView.clipsToBounds = true
+        
+        self.addButton.layer.cornerRadius = self.addButton.frame.size.width/2.0
     }
 
+    func setupData(userInfo: UserModel) {
+        self.nameUser.text = userInfo.firstname?.uppercased()
+        
+        if (userInfo.imageUrl != nil && userInfo.imageUrl?.isEmpty == false) {
+            ImageVideoRouter.getImage(imageURLString: userInfo.imageUrl!, sizeString: widthHeight160, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.avatarImageView.image = imageRes
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
+        } else {
+            self.avatarImageView.image = UIImage(named: "display-empty.jpg")
+        }
+        
+        // Check coach
+        let userID = String(format: "%ld", userInfo.id)
+        UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
+            let isCoach = result as! Bool
+            
+            if (isCoach == true) {
+                self.avatarImageView.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
+                self.avatarImageView.layer.borderWidth = 2
+            }
+        }.fetchdata()
+    }
+    
+    func setupLayout(isShowAddButton: Bool) {
+        self.addButton.isHidden = !isShowAddButton
+    }
 }

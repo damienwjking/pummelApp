@@ -13,6 +13,9 @@ import AVFoundation
 @objc protocol CardViewCellDelegate {
     func cardViewCellTagClicked(cell: CardViewCell)
     func cardViewCellMoreInfoClicked(cell: CardViewCell)
+    func cardViewSwipeLeft()
+    func cardViewSwipeRight()
+    func cardViewRefineButtonClicked()
 }
 
 class CardViewCell: UICollectionViewCell, CardViewDelegate {
@@ -31,8 +34,7 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
     var videoPlayerLayer: AVPlayerLayer? = nil
     var isVideoPlaying = false
     
-    
-    weak var delegate : CardViewCellDelegate? = nil
+    var delegate : CardViewCellDelegate? = nil
     
     @IBOutlet weak var avatarImageViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var avatarImageViewLeadingConstraint: NSLayoutConstraint!
@@ -55,124 +57,114 @@ class CardViewCell: UICollectionViewCell, CardViewDelegate {
         self.cardView.avatarIMV.layer.masksToBounds = true
         
         self.playVideoButton.isHidden = true
+        
+        self.clipsToBounds = false
+        
+        // add Swipe gesture
+        if (self.gestureRecognizers == nil || (self.gestureRecognizers?.count)! < 2) {
+            
+            let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeLeftGesture(_:)))
+            swipeLeftGesture.direction = .left
+            self.addGestureRecognizer(swipeLeftGesture)
+            
+            let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeRightGesture(_:)))
+            swipeRightGesture.direction = .right
+            self.addGestureRecognizer(swipeRightGesture)
+        }
+    }
+    
+    func swipeLeftGesture(_ sender: Any) {
+        if (self.delegate != nil) {
+            self.delegate?.cardViewSwipeLeft()
+        }
+    }
+    
+    func swipeRightGesture(_ sender: Any) {
+        if (self.delegate != nil) {
+            self.delegate?.cardViewSwipeRight()
+        }
+    }
+    
+    func setupData(coachTotalDetail: NSDictionary) {
+        let coachDetail = coachTotalDetail[kUser] as! NSDictionary
+        
+        // Tag
+        let coachListTags = coachDetail[kTags] as! NSArray
+        
+        self.cardView.tags.removeAll()
+        for i in 0 ..< coachListTags.count {
+            let tagContent = coachListTags[i] as! NSDictionary
+            let tag = TagModel()
+            tag.tagTitle = tagContent[kTitle] as? String
+            self.cardView.tags.append(tag)
+        }
+        self.cardView.collectionView.reloadData()
+        
+        // Coach detail
+        self.cardView.avatarIMV.image = nil
+        self.cardView.translatesAutoresizingMaskIntoConstraints = false
+        self.cardView.backgroundColor = self.cardView.backgroundColor
+        self.cardView.connectV.layer.cornerRadius = 50
+        self.cardView.connectV.clipsToBounds = true
+        self.cardView.nameLB.font = .pmmPlayFairReg24()
+        
+        let firstName = coachDetail[kFirstname] as! String
+        if (coachDetail[kLastName] is NSNull == false) {
+            let lastName = coachDetail[kLastName] as! String
+            
+            self.cardView.nameLB.text = firstName + " " + lastName
+        } else {
+            self.cardView.nameLB.text = firstName
+        }
+        
+        // Coach avatar
+        self.cardView.addressLB.font = .pmmPlayFairReg11()
+        if (coachTotalDetail[kServiceArea] is NSNull == false) {
+            self.cardView.addressLB.text = coachTotalDetail[kServiceArea] as? String
+        }
+        
+        if (coachDetail[kImageUrl] is NSNull == false) {
+            let imageLink = coachDetail[kImageUrl] as! String
+            
+            ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.cardView.avatarIMV.image = imageRes
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
+        }
+        
+        // Business ImageView
+        self.cardView.connectV.isHidden = true
+        if (coachDetail[kBusinessId] is NSNull == false) {
+            let businessId = String(format:"%0.f", (coachDetail[kBusinessId]! as AnyObject).doubleValue)
+            
+            ImageVideoRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight120, completed: { (result, error) in
+                if (error == nil) {
+                    self.cardView.connectV.isHidden = false
+                    
+                    let imageRes = result as! UIImage
+                    self.cardView.businessIMV.image = imageRes
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
+        }
+        
+        // Video
+        let videoURL = coachDetail[kVideoURL] as? String
+        if (videoURL != nil && videoURL!.isEmpty == false) {
+            self.playVideoButton.isHidden = false
+            self.playVideoButton.isUserInteractionEnabled = false
+        }
     }
     
     func cardViewTagClicked() {
         if  self.delegate != nil {
             self.delegate?.cardViewCellTagClicked(cell: self)
         }
-    }
-    
-    func showVideoLayout() {
-        let avatarSize: CGFloat = 37.0
-        
-        self.avatarImageViewTopConstraint.constant = 10
-        self.avatarImageViewLeadingConstraint.constant = 10
-        self.avatarImageViewWidthConstraint.constant = avatarSize - self.frame.width
-        
-        UIView.animate(withDuration: 0.3) { 
-            self.layoutIfNeeded()
-            
-            self.avatarBorderView.layer.cornerRadius = (avatarSize + 2)/2
-            self.avatarBorderView.layer.borderWidth = 3
-            
-            self.cardView.avatarIMV.layer.cornerRadius = avatarSize/2
-        }
-    }
-    
-    func showVideo(videoURLString: String) {
-        if (self.firstShowVideo == false) {
-            self.firstShowVideo = true
-            // check Video URL
-            if (videoURLString.isEmpty == true) {
-                return
-            }
-            
-            self.showVideoLayout()
-            
-            // show play button
-            self.playVideoButton.isHidden = false
-            
-            // Show Video
-            let videoURL = NSURL(string: videoURLString)
-            self.videoPlayer = AVPlayer(url: videoURL! as URL)
-            self.videoPlayer!.actionAtItemEnd = .none
-            self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer)
-            self.videoPlayerLayer?.frame = self.videoView!.bounds
-            
-            self.videoView!.layer.addSublayer(self.videoPlayerLayer!)
-            
-            self.videoPlayer?.currentItem?.addObserver(self, forKeyPath: "status", options: [.old, .new], context: nil)
-            
-            // Remove loop play video for reuser cell
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-            
-            // Add notification for loop play video
-            NotificationCenter.default.addObserver(self,
-                                                             selector: #selector(self.endVideoNotification),
-                                                             name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                                                             object: videoPlayer?.currentItem)
-        }
-    }
-    
-    func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutableRawPointer) {
-        let currentItem = object as! AVPlayerItem
-        if currentItem.status == .readyToPlay {
-            let videoRect = self.videoPlayerLayer?.videoRect
-            if (Int((videoRect?.width)!) > Int((videoRect?.height)!)) {
-//                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspect
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            } else {
-                self.videoPlayerLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
-            }
-            
-            self.videoPlayer?.currentItem?.removeObserver(self, forKeyPath: "status")
-        }
-    }
-    
-    func stopPlayVideo() {
-        if (self.videoPlayer != nil )  {
-            // Remove notification
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-            
-            self.videoPlayer?.currentItem?.seek(to: kCMTimeZero)
-            self.videoPlayer?.pause()
-            
-            self.isVideoPlaying = true // Set for stop play video
-            self.playVideoButtonClicked(sender: self.playVideoButton)
-        }
-    }
-    
-    func endVideoNotification(notification: NSNotification) {
-        // Show play button + info view
-        self.playVideoButton.setImage(UIImage(named: "icon_play_video"), for: .normal)
-        self.moreInfoView.isHidden = false
-        
-        // Show first frame video
-        let playerItem = notification.object as! AVPlayerItem
-        playerItem.seek(to: kCMTimeZero)
-        self.videoPlayer?.pause()
-        
-        self.isVideoPlaying = false
-    }
-    
-    @IBAction func playVideoButtonClicked(_ sender: Any) {
-        self.isVideoPlaying = !self.isVideoPlaying
-        if (self.isVideoPlaying == true) {
-            self.videoPlayer?.play()
-            
-            // Hidden play button + info view
-            self.playVideoButton.setImage(nil, for: .normal)
-        } else {
-            self.videoPlayer?.pause()
-            
-            // Show play button + info view
-            self.playVideoButton.setImage(UIImage(named: "icon_play_video"), for: .normal)
-        }
-        
-        self.moreInfoView.isHidden = self.isVideoPlaying
-        self.cardView.avatarIMV.isHidden = self.isVideoPlaying
-        self.avatarBorderView.isHidden = self.isVideoPlaying
     }
     
     @IBAction func moreInfoViewClicked(_ sender: Any) {

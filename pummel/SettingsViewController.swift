@@ -383,7 +383,7 @@ class SettingsViewController: BaseViewController {
             self.defaults.set(metric, forKey: kUnit)
             
             let param = [kUserId:PMHelper.getCurrentID(),
-                         kFirstname:self.defaults.object(forKey: kFirstname) as! String,
+                         kFirstname:PMHelper.getCurrentFirstName(),
                          kUnits: metric]
             
             UserRouter.changeCurrentUserInfo(posfix: "", param: param, completed: { (result, error) in
@@ -399,7 +399,7 @@ class SettingsViewController: BaseViewController {
             self.defaults.set(imperial, forKey: kUnit)
             
             let param = [kUserId:PMHelper.getCurrentID(),
-                         kFirstname:self.defaults.object(forKey: kFirstname) as! String,
+                         kFirstname:PMHelper.getCurrentFirstName(),
                          kUnits: imperial]
             
             UserRouter.changeCurrentUserInfo(posfix: "", param: param, completed: { (result, error) in

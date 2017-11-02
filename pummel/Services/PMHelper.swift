@@ -22,6 +22,15 @@ class PMHelper {
         return ""
     }
     
+    class func getCurrentFirstName() -> String {
+        let firstName = UserDefaults.standard.object(forKey: kFirstname) as? String
+        
+        if (firstName != nil) {
+            return firstName!
+        }
+        return ""
+    }
+    
     class func checkVisibleCell(tableView: UITableView, indexPath: IndexPath ) -> Bool {
         var visibleCell = false
         for indexP in (tableView.indexPathsForVisibleRows)! {

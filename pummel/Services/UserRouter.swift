@@ -25,6 +25,7 @@ enum UserRouter: URLRequestConvertible {
     case getCompletedSession(offset: Int, completed: CompletionBlock)
     case getTestimonial(userID: String, offset: Int, completed: CompletionBlock)
     case postTestimonial(userID: String, description: String, location: String, rating: CGFloat, completed: CompletionBlock)
+    case getTotalLead(offset: Int, completed: CompletionBlock)
     case getFollowCoach(offset: Int, completed: CompletionBlock)
     case getUserTagList(userID : String, completed: CompletionBlock)
     case getPhotoList(userID : String, offset: Int, completed: CompletionBlock)
@@ -41,6 +42,7 @@ enum UserRouter: URLRequestConvertible {
     case searchCoachNearby(gender: String, tags: NSArray, longitude: CLLocationDegrees, latitute: CLLocationDegrees, stage: String, city: String, offset: Int, completed: CompletionBlock)
     case getUserList(offset: Int, completed: CompletionBlock)
     case getSearhUserList(offset: Int, character: String, completed: CompletionBlock)
+    case getTrackInfo(completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock? {
         switch self {
@@ -65,6 +67,8 @@ enum UserRouter: URLRequestConvertible {
         case .getTestimonial(_, _, let completed):
             return completed
         case .postTestimonial(_, _, _, _, let completed):
+            return completed
+        case .getTotalLead(_, let completed):
             return completed
         case .getFollowCoach(_, let completed):
             return completed
@@ -98,6 +102,8 @@ enum UserRouter: URLRequestConvertible {
             return completed
         case .getSearhUserList(_, _, let completed):
             return completed
+        case .getTrackInfo(let completed):
+            return completed
             
         }
     }
@@ -126,6 +132,8 @@ enum UserRouter: URLRequestConvertible {
             return .get
         case .postTestimonial:
             return .post
+        case .getTotalLead:
+            return .get
         case .getFollowCoach:
             return .get
         case .getUserTagList:
@@ -158,6 +166,8 @@ enum UserRouter: URLRequestConvertible {
             return .get
         case .getSearhUserList:
             return .get
+        case .getTrackInfo:
+            return .post
             
         }
     }
@@ -200,8 +210,11 @@ enum UserRouter: URLRequestConvertible {
         case .postTestimonial(let userID, _, _, _, _):
             prefix = kPMAPIUSER + userID + kPM_PATH_TESTIMONIAL
             
-        case .getFollowCoach(let offset, _):
-            prefix = kPMAPIUSER + currentUserID + kPM_PATH_USERCOACH_OFFSET + "\(offset)"
+        case .getTotalLead:
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_TOTAL_LEAD
+            
+        case .getFollowCoach:
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_USERCOACH_V2
             
         case .getUserTagList(let userID, _):
             prefix = kPMAPIUSER + userID + "/tags"
@@ -261,6 +274,9 @@ enum UserRouter: URLRequestConvertible {
             
         case .getSearhUserList:
             prefix = kPMAPISEARCHUSER
+            
+        case .getTrackInfo:
+            prefix = kPMAPI_COACH_TRACK
             
         }
         
@@ -355,6 +371,14 @@ enum UserRouter: URLRequestConvertible {
             param[kOffset] = offset as AnyObject
             param[kLimit] = 20 as AnyObject
             
+        case .getTotalLead(let offset, _):
+            param[kOffset] = offset as AnyObject
+            param[kLimit] = 20 as AnyObject
+            
+        case .getFollowCoach(let offset, _):
+            param[kOffset] = offset as AnyObject
+            param[kLimit] = 20 as AnyObject
+            
         case .setCurrentLead(let requestID, _):
             param[kUserId] = currentUserID as AnyObject
             param[kUserIdRequest] = requestID as AnyObject
@@ -375,6 +399,9 @@ enum UserRouter: URLRequestConvertible {
         case .getSearhUserList(let offet, let character, _):
             param[kOffset] = offet as AnyObject
             param["character"] = character as AnyObject
+            
+        case .getTrackInfo:
+            param[kCoachId] = currentUserID as AnyObject
             
         default:
             break
@@ -589,24 +616,39 @@ enum UserRouter: URLRequestConvertible {
                 }
             })
             
-        case .getFollowCoach:
-            Alamofire.request(self).responseJSON(completionHandler: { (response) in
-                print("PM: UserRouter 9")
+        case .getTotalLead:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter get_total_lead")
                 
                 switch response.result {
                 case .success(let JSON):
                     if (JSON is NSNull == false) {
-                        let userDetails = JSON as! NSArray
+                        let result = JSON as! NSDictionary
                         
-                        var coachArray: [UserModel] = []
-                        for userDetail in userDetails {
-                            let user = UserModel()
-                            
-                            user.id = (userDetail as! NSDictionary)[kCoachId] as! Int
-                            coachArray.append(user)
-                        }
+                        self.comletedBlock!(result as AnyObject, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .getFollowCoach:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter get_follow_coach")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let result = JSON as! NSDictionary
                         
-                        self.comletedBlock!(coachArray as AnyObject, nil)
+                        self.comletedBlock!(result as AnyObject, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
                         self.comletedBlock!(nil, error)
@@ -921,6 +963,29 @@ enum UserRouter: URLRequestConvertible {
                 case .success(let JSON):
                     if (JSON is NSNull == false) {
                         let coachDetails = JSON as? [NSDictionary]
+                        
+                        self.comletedBlock!(coachDetails, nil)
+                    } else {
+                        let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
+                        self.comletedBlock!(nil, error)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock!(nil, error as NSError)
+                    }
+                }
+            })
+            
+        case .getTrackInfo:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: UserRouter get_track_info")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if (JSON is NSNull == false) {
+                        let coachDetails = JSON as! NSDictionary
                         
                         self.comletedBlock!(coachDetails, nil)
                     } else {

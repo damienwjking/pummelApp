@@ -47,6 +47,7 @@ let kPMAPI_SEARCH_TAG_OFFSET               = kPMAPI + "/api/searchTags?offset="
 
 let kPMAPI_DISCOUNTS                = kPMAPI + "/api/discounts"
 let kPMAPI_POSTOFPHOTO              = kPMAPI + "/api/postOfPhoto"
+let kPMAPI_COACH_TRACK              = kPMAPI + "/api/mobileCoachTrack"
 
 // PM Link
 let kPM                             = "http://pummel.fit"
@@ -81,6 +82,7 @@ let kPM_PATH_ACTIVITIES_USER        = "/activitiesuser?limit=20&offset="
 let kPM_PATH_UPCOMING_SESSION       = "/upcommingActivities?limit=20&offset="
 let kPM_PATH_COMPLETED_SESSION      = "/completedActivities?limit=20&offset="
 let kPM_PATH_TOTAL_ACTIVE_USER      = "/totalActive"
+let kPM_PATH_TOTAL_LEAD             = "totalLeads"
 
 let kPM_PATH_M_BADGE_S_BADGE        = "/numberofNewMessageAndNewSessionAndLeadAndComment"
 let kPM_PATH_RESET_S_BADGE          = "/resetsNotificationBadge"
@@ -90,6 +92,7 @@ let kPM_PATH_DECREASE_M_BADGE       = "/decreasemNotificationBadge"
 let kPM_PATH_TESTIMONIAL            = "/testimonial"
 let kPM_PATH_TESTIMONIAL_OFFSET     = "/testimonial?limit=20&offset="
 let kPM_PATH_USERCOACH_OFFSET       = "/userCoach?limit=20&offset="
+let kPM_PATH_USERCOACH_V2           = "/userCoachV2"
 
 let kPM_PATH_LEADS               = "/leads"
 let kPM_PATH_CURRENT             = "/current"

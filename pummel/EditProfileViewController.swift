@@ -59,29 +59,15 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = kNavEditProfile
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-        self.navigationController!.navigationBar.isTranslucent = false;
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kDone, style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.done))
-        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
-        
-        self.navigationItem.setHidesBackButton(true, animated: false)
-        
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: kCancle.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.cancel))
-        
-        self.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
-        
-        self.navigationItem.setHidesBackButton(true, animated: false)
-        
+        self.setupNavigationBar()
 
-        avatarIMW.layer.cornerRadius = 50
-        avatarIMW.clipsToBounds = true
-        imagePicker.delegate = self
+        self.avatarIMW.layer.cornerRadius = 50
+        self.avatarIMW.clipsToBounds = true
+        self.imagePicker.delegate = self
         
-        changeAvatarIMW.layer.cornerRadius = changeAvatarIMW.frame.height/2
-        changeAvatarIMW.clipsToBounds = true
+        self.changeAvatarIMW.layer.cornerRadius = changeAvatarIMW.frame.height/2
+        self.changeAvatarIMW.clipsToBounds = true
         
         self.nameLB.font = .pmmMonLight11()
         self.aboutLB.font = .pmmMonLight11()
@@ -95,7 +81,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         self.emergencyMobileLB.font = .pmmMonLight11()
         
         self.privateInformationLB.font = .pmmMonReg11()
-        emergencyInformationLB.font = .pmmMonReg11()
+        self.emergencyInformationLB.font = .pmmMonReg11()
         self.healthDataLB.font = .pmmMonReg11()
         self.socialLB.font = .pmmMonReg11()
         
@@ -179,7 +165,23 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
         }
     }
     
-    
+    func setupNavigationBar() {
+        self.navigationItem.title = kNavEditProfile
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        self.navigationController!.navigationBar.isTranslucent = false;
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:kDone, style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.done))
+        self.navigationItem.rightBarButtonItem?.setAttributeForAllStage()
+        
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: kCancle.uppercased(), style: UIBarButtonItemStyle.plain, target: self, action: #selector(EditProfileViewController.cancel))
+        
+        self.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
+        
+        self.navigationItem.setHidesBackButton(true, animated: false)
+    }
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
