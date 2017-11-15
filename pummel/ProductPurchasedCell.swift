@@ -19,7 +19,6 @@ class ProductPurchasedCell: UICollectionViewCell {
         super.awakeFromNib()
         
         self.borderView.layer.cornerRadius = 4
-        
         self.borderView.layer.shadowColor = UIColor.lightGray.cgColor
         self.borderView.layer.shadowOffset = CGSize(width: 3, height: 3)
         self.borderView.layer.shadowRadius = 3
@@ -27,6 +26,18 @@ class ProductPurchasedCell: UICollectionViewCell {
     }
 
     func setupData(product: ProductModel) {
+        self.productNameLabel.text = product.title
+        self.productDescriptionLabel.text = product.subTitle
         
+        if (product.imageUrl.isEmpty == false) {
+            ImageVideoRouter.getImage(imageURLString: product.imageUrl, sizeString: widthHeight200, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.productImageView.image = imageRes
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+            }).fetchdata()
+        }
     }
 }

@@ -114,27 +114,7 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         self.nameLB.text = feed.userName.uppercased()
         
         // Avatar
-        if (feed.userImageURL != nil && feed.userImageURL?.isEmpty == false) {
-            self.avatarBT.setBackgroundImage(nil, for: .normal)
-            let imageLink = feed.userImageURL
-            
-            if (imageLink?.isEmpty == false) {
-                ImageVideoRouter.getImage(imageURLString: imageLink!, sizeString: widthHeight120) { (result, error) in
-                    if (error == nil) {
-                        PMHelper.actionWithDelaytime(delayTime: 0, delayAction: {
-                            let imageRes = result as! UIImage
-                            self.avatarBT.setBackgroundImage(imageRes, for: .normal)
-                        })
-                    } else {
-                        print("Request failed with error: \(String(describing: error))")
-                    }
-                    }.fetchdata()
-            } else {
-                self.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
-            }
-        } else {
-            self.avatarBT.setBackgroundImage(UIImage(named: "display-empty.jpg"), for: .normal)
-        }
+        self.avatarBT.setBackgroundImage(feed.userImageCache, for: .normal)
         
         // Time
         let timeAgo = feed.createdAt
@@ -144,21 +124,8 @@ class FeaturedFeedTableViewCell: UITableViewCell {
         let date : NSDate = dateFormatter.date(from: timeAgo!)! as NSDate
         self.timeLB.text = date.timeAgoSinceDate()
         
-        if (feed.imageUrl != nil && feed.imageUrl?.isEmpty == false) {
-            let imageContentLink = feed.imageUrl
-            let postfixContent = widthHeightScreenx2
-            
-            ImageVideoRouter.getImage(imageURLString: imageContentLink!, sizeString: postfixContent, completed: { (result, error) in
-                if (error == nil) {
-                    PMHelper.actionWithDelaytime(delayTime: 0, delayAction: {
-                        let imageRes = result as! UIImage
-                        self.imageContentIMV.image = imageRes
-                    })
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }).fetchdata()
-        }
+        // Content image
+        self.imageContentIMV.image = feed.contentImageCache
         
         // Check Coach
         self.isUserInteractionEnabled = false

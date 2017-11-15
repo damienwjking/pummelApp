@@ -99,7 +99,7 @@ class GroupLeadTableViewCell: UITableViewCell {
 
 // MARK: - UserModelDelegate
 extension GroupLeadTableViewCell: UserModelDelegate {
-    func userModelSynsCompleted() {
+    func userModelSynsCompleted(user: UserModel) {
         self.cv.reloadData()
     }
 }

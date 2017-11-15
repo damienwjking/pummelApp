@@ -16,8 +16,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var tableFeed: UITableView!
     var sizingCell: TagCell?
     var tags = [TagModel]()
-    var arrayFeeds : [FeedModel] = []
-    var arrayDiscount : [NSDictionary] = []
+    var feedList : [FeedModel] = []
+    var discountList : [DiscountModel] = []
     var isStopFetch: Bool!
     var offset: Int = 0
     var offsetDiscount: Int = 0
@@ -124,8 +124,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     
     func refresh() {
         self.tableFeed.isHidden = true
-        self.arrayFeeds.removeAll()
-        self.arrayDiscount.removeAll()
+        self.feedList.removeAll()
+        self.discountList.removeAll()
         
         self.tableFeed.reloadData { 
             self.refreshControl.endRefreshing()
@@ -139,7 +139,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                 self.setupLocation()
             }
             
-            self.getListFeeds()
+            self.getFeedList()
         }
     }
     
@@ -189,31 +189,38 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
     func callAPIDiscount(lontitude: CLLocationDegrees?, latitude: CLLocationDegrees?, state: String?, country: String?) {
         FeedRouter.getDiscount(longitude: lontitude, latitude: latitude, state: state, country: country, offset: self.offsetDiscount) { (result, error) in
             if (error == nil) {
-                let discountArray = result as! [NSDictionary]
+                let discountArray = result as! [DiscountModel]
+                
+                for discount in discountArray {
+                    if (discount.existInList(discountList: self.discountList) == false) {
+                        discount.synsImage()
+                        discount.delegate = self // TODO: move to subable place
+                        
+                        self.discountList.append(discount)
+                    }
+                }
                 
                 self.offsetDiscount += 10
-                self.arrayDiscount += discountArray
                 if (discountArray.count > 0) {
-                    if self.arrayDiscount.count == discountArray.count {
+                    if self.discountList.count == discountArray.count {
                         self.tableFeed.reloadData()
                     } else if self.headerDiscount != nil {
-                        self.headerDiscount.arrayResult = self.arrayDiscount
+                        self.headerDiscount.arrayResult = self.discountList
                     } else {
                         self.tableFeed.reloadData()
                     }
                 }
-                
             } else {
                 print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
     }
     
-    func getListFeeds() {
+    func getFeedList() {
         if (self.isStopFetch == false && self.isLoading == false) {
             self.isLoading = true
             
-            FeedRouter.getListFeed(offset: self.arrayFeeds.count, completed: { (result, error) in
+            FeedRouter.getListFeed(offset: self.feedList.count, completed: { (result, error) in
                 self.isLoading = false
                 
                 if (error == nil) {
@@ -221,10 +228,13 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
                     
                     if (arr.count > 0) {
                         for feed in arr {
-                            if (feed.existInList(feedList: self.arrayFeeds) == false) {
+                            if (feed.existInList(feedList: self.feedList) == false) {
                                 feed.synsNumberLike()
+                                feed.synsImage()
                                 
-                                self.arrayFeeds.append(feed)
+                                feed.delegate = self
+                                
+                                self.feedList.append(feed)
                             }
                         }
                         
@@ -248,9 +258,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         mixpanel?.track("IOS.Feed", properties: properties)
     }
     
-    func goToDetailDiscount(discountDetail: NSDictionary) {
+    func goToDetailDiscount(discount: DiscountModel) {
         self.isGoFeedDetail = true
-        self.performSegue(withIdentifier: kGoDiscount, sender:discountDetail)
+        self.performSegue(withIdentifier: kGoDiscount, sender:discount)
     }
     
     func loadMoreDiscount() {
@@ -300,7 +310,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             
             FeedRouter.reportFeed(postID: postId, completed: { (result, error) in
                 if (error == nil) {
-//                    self.arrayFeeds.remove(at: self.arrayFeeds.)
+//                    self.feedList.remove(at: self.arrayFeeds.)
                     self.tableFeed.reloadData()
                 } else {
                     print("Request failed with error: \(String(describing: error))")
@@ -369,7 +379,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let destination = segue.destination as! ConnectViewController
             let view = sender as! UIView
             let tag = view.tag
-            let feed = arrayFeeds[tag] 
+            let feed = feedList[tag]
             let currentFeedDetail = feed.userDetail
             destination.coachDetail = currentFeedDetail
             destination.isFromFeed = true
@@ -404,8 +414,38 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             destination.URL = sender as? NSURL
         } else if segue.identifier == kGoDiscount {
             let destination = segue.destination as! DiscountDetailVC
-            if let dic = sender as? NSDictionary {
-                destination.discountDetail = dic
+            if let dic = sender as? DiscountModel {
+                destination.discount = dic
+            }
+        }
+    }
+}
+
+// MARK: - DiscountModelDelegate
+extension FeaturedViewController: DiscountDelegate {
+    func discountSynsDataCompleted(discount: DiscountModel) {
+        self.headerDiscount.cv.reloadData()
+    }
+}
+
+// MARK: - FeedModelDelegate
+extension FeaturedViewController: FeedDelegate {
+    func feedSynsDataCompleted(feed: FeedModel) {
+        let index = self.feedList.index(of: feed)
+        
+        if (index != nil) {
+            let indexPath = IndexPath(row: index!, section: 1)
+        
+            self.tableFeed.reloadRows(at: [indexPath], with: .fade)
+            
+            let invisibleIndexPath = self.tableFeed.indexPathsForVisibleRows!
+            
+            for inviIndex in invisibleIndexPath {
+                if (indexPath.row == inviIndex.row) {
+                    
+                    
+                    break
+                }
             }
         }
     }
@@ -422,7 +462,7 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             return nil
         }
         
-        if self.arrayDiscount.count == 0 {
+        if self.discountList.count == 0 {
             return nil
         }
         
@@ -430,13 +470,13 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
             self.headerDiscount = FeedDiscountView.init(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 200))
             self.headerDiscount.delegate = self
         }
-        self.headerDiscount.arrayResult = self.arrayDiscount
+        self.headerDiscount.arrayResult = self.discountList
         
         return self.headerDiscount
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 && self.arrayDiscount.count > 0 {
+        if (section == 0 && self.discountList.count > 0) {
             return 200
         }
         return 0.001
@@ -448,16 +488,16 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         // Hidden table view if no data
-        self.tableFeed.isHidden = (self.arrayFeeds.count == 0)
+        self.tableFeed.isHidden = (self.feedList.count == 0)
         
-        return self.arrayFeeds.count
+        return self.feedList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kFeaturedFeedTableViewCell) as! FeaturedFeedTableViewCell
         
         cell.separatorInset = UIEdgeInsets()
-        let feed = arrayFeeds[indexPath.row]
+        let feed = feedList[indexPath.row]
         
         cell.setupData(feed: feed)
         cell.delegate = self
@@ -466,8 +506,8 @@ extension FeaturedViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell , forRowAt indexPath: IndexPath) {
-        if (indexPath.row == self.arrayFeeds.count - 1) {
-            self.getListFeeds()
+        if (indexPath.row == self.feedList.count - 1) {
+            self.getFeedList()
         }
     }
 }
@@ -477,7 +517,7 @@ extension FeaturedViewController : FeaturedFeedTableViewCellDelegate {
         let indexPath = self.tableFeed.indexPath(for: cell)
         
         if (indexPath != nil) {
-            let feed = self.arrayFeeds[(indexPath?.row)!]
+            let feed = self.feedList[(indexPath?.row)!]
             
             self.goToFeedDetail(feed: feed)
         }
@@ -487,7 +527,7 @@ extension FeaturedViewController : FeaturedFeedTableViewCellDelegate {
         let indexPath = self.tableFeed.indexPath(for: cell)
         
         if (indexPath != nil) {
-            let feed = self.arrayFeeds[(indexPath?.row)!]
+            let feed = self.feedList[(indexPath?.row)!]
             
             self.showListContext(feed: feed)
         }
@@ -497,7 +537,7 @@ extension FeaturedViewController : FeaturedFeedTableViewCellDelegate {
         let indexPath = self.tableFeed.indexPath(for: cell)
         
         if (indexPath != nil) {
-            let feed = self.arrayFeeds[(indexPath?.row)!]
+            let feed = self.feedList[(indexPath?.row)!]
             
             self.goProfile(feed: feed)
         }

@@ -476,7 +476,7 @@ class EditProfileViewController: BaseViewController, UIImagePickerControllerDele
                
         // check number weight height
         let weightString = self.weightContentTF.text!.replacingOccurrences(of: " kgs", with: "")
-        if (weightText?.isNumber() == false) {
+        if (weightString.isNumber() == false) {
             returnValue = true
             weightContentTF.attributedText = NSAttributedString(string:weightContentTF.text!,
                                                                 attributes:[NSForegroundColorAttributeName: UIColor.pmmRougeColor()])

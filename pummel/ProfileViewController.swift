@@ -132,7 +132,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var facebookLink: String? = ""
     
     var tags = [TagModel]()
-    var photoArray: NSMutableArray = []
+    var photoArray: [PhotoModel] = []
     var testimonialArray = [TestimonialModel]()
     var offset: Int = 0
     var testimonialOffset = 0
@@ -497,17 +497,24 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             UserRouter.getPhotoList(userID: self.userID, offset: self.offset, completed: { (result, error) in
                 
                 if (error == nil) {
-                    if let arrayphoto = result as? NSArray {
-                        if (arrayphoto.count == 0) {
-                            self.isStopGetListPhotos = true
-                        } else {
-                            self.offset += 10
-                            self.photoArray.addObjects(from: arrayphoto as [AnyObject])
-                            self.getListImage()
-                        }
+                    let arrayphoto = result as! [PhotoModel]
+                    
+                    if (arrayphoto.count == 0) {
+                        self.isStopGetListPhotos = true
+                    } else {
+                        self.offset += 10
                         
-                        self.reloadLayout()
+                        for photo in arrayphoto {
+                            if (photo.existInList(photoList: self.photoArray) == false) {
+                                photo.delegate = self
+                                photo.synsImage()
+                                
+                                self.photoArray.append(photo)
+                            }
+                        }
                     }
+                    
+                    self.reloadLayout()
                 } else {
                     self.isStopGetListPhotos = true
                     print("Request failed with error: \(String(describing: error))")
@@ -520,27 +527,18 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         if (self.isStopGetTestimonial == false) {
             UserRouter.getTestimonial(userID: self.userID, offset: self.testimonialOffset) { (result, error) in
                 if (error == nil) {
-                    let testimonialDicts = result as! NSArray
+                    let testimonialList = result as! [TestimonialModel]
                     
-                    if (testimonialDicts.count == 0) {
+                    if (testimonialList.count == 0) {
                         self.isStopGetTestimonial = true
-                    }
-                    
-                    for testimonialDict in testimonialDicts {
-                        let testimo = TestimonialModel()
-                        
-                        testimo.parseData(data: testimonialDict as! NSDictionary)
-                        
-                        var isExist = false
-                        for test in self.testimonialArray {
-                            if (test.id == testimo.id) {
-                                isExist = true
-                                break
+                    } else {
+                        for testimonial in testimonialList {
+                            if (testimonial.existInList(testimonialList: self.testimonialArray) == false) {
+                                testimonial.delegate = self
+                                testimonial.synsDataImage()
+                                
+                                self.testimonialArray.append(testimonial)
                             }
-                        }
-                        
-                        if (isExist == false) {
-                            self.testimonialArray.append(testimo)
                         }
                     }
                     
@@ -840,8 +838,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             }
         })
     }
-    
-    // MARK: - Outlet function
+}
+
+// MARK: - Outlet function
+extension ProfileViewController {
     @IBAction func editButtonClicked() {
         if (self.isCoach != true) {
             performSegue(withIdentifier: "goEdit", sender: nil)
@@ -976,12 +976,12 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
             self.present(self.imagePickerController, animated: true, completion: nil)
         }
         let takePhotoWithFrontCamera = { (action:UIAlertAction!) -> Void in
-//            self.imagePickerController.allowsEditing = false
-//            self.imagePickerController.sourceType = .Camera
-//            self.imagePickerController.delegate = self
-//            self.imagePickerController.mediaTypes = ["public.movie"]
-//            
-//            self.present(self.imagePickerController, animated: true, completion: nil)
+            //            self.imagePickerController.allowsEditing = false
+            //            self.imagePickerController.sourceType = .Camera
+            //            self.imagePickerController.delegate = self
+            //            self.imagePickerController.mediaTypes = ["public.movie"]
+            //
+            //            self.present(self.imagePickerController, animated: true, completion: nil)
             
             self.performSegue(withIdentifier: "showCamera", sender: nil)
         }
@@ -1225,6 +1225,20 @@ extension ProfileViewController {
     }
 }
 
+// MARK: - TestimonialDelegate
+extension ProfileViewController: TestimonialDelegate {
+    func testimonialSynsDataCompleted(testimonial: TestimonialModel) {
+        self.testimonialCollectionView.reloadData()
+    }
+}
+
+// MARK: - PhotoDelegate
+extension ProfileViewController: PhotoDelegate {
+    func photoSynsDataCompleted(photo: PhotoModel) {
+        self.postCollectionView.reloadData()
+    }
+}
+
 // MARK: - UIImagePickerControllerDelegate
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -1306,16 +1320,14 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kAboutCollectionViewCell, for: indexPath) as! AboutCollectionViewCell
             
-            let photoDictionary = self.photoArray[indexPath.row] as! NSDictionary
-            cell.setupData(photoDictionary: photoDictionary)
+            if indexPath.row == self.photoArray.count - 1 {
+                self.getListImage()
+            }
+            
+            let photo = self.photoArray[indexPath.row]
+            cell.setupData(photo: photo)
             
             return cell
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == self.photoArray.count - 1 {
-            self.getListImage()
         }
     }
     
@@ -1346,12 +1358,10 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         } else if (collectionView == self.testimonialCollectionView) {
             // Do nothing
         } else {
-            let photo = self.photoArray[indexPath.row] as! NSDictionary
-            let photoID = photo["uploadId"] as! Int
-            let photoIDString = String(format:"%ld", photoID)
+            let photo = self.photoArray[indexPath.row]
             
             self.view.makeToastActivity()
-            FeedRouter.getPhotoPost(photoID: photoIDString, completed: { (result, error) in
+            FeedRouter.getPhotoPost(photoID: photo.uploadId, completed: { (result, error) in
                 self.view.hideToastActivity()
                 
                 let alertController = UIAlertController(title: pmmNotice, message: notfindPhoto, preferredStyle: .alert)

@@ -9,7 +9,7 @@
 import UIKit
 
 class TestimonialCell: UICollectionViewCell {
-    var userID = ""
+    var testimonial: TestimonialModel? = nil
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var descriptionTextView: UITextView!
@@ -39,7 +39,7 @@ class TestimonialCell: UICollectionViewCell {
     }
 
     func setupData(testimonial: TestimonialModel) {
-        self.userID = String(format: "%ld", testimonial.userCommentId)
+        self.testimonial = testimonial
         
         self.locationLabel.text = testimonial.userCommentLocation
         
@@ -54,55 +54,14 @@ class TestimonialCell: UICollectionViewCell {
         
         // cache
         self.userNameLabel.text = testimonial.nameCache
-        if (testimonial.imageCache != nil) {
-            self.avatarImageView.image = testimonial.imageCache
-        }
-        
-        if (testimonial.needUpdate == true) {
-            UserRouter.getUserInfo(userID: userID) { (result, error) in
-                if (error == nil) {
-                    let userInfo = result as! NSDictionary
-                    
-                    let firstName = userInfo[kFirstname] as! String
-                    let lastName = userInfo[kLastName] as? String
-                    
-                    self.userNameLabel.text = firstName
-                    if (lastName != nil && lastName?.isEmpty == false) {
-                        self.userNameLabel.text = firstName + " " + lastName!
-                    }
-                    
-                    testimonial.nameCache = self.userNameLabel.text!
-                    
-                    let imageURL = userInfo[kImageUrl] as? String
-                    if (imageURL != nil && imageURL?.isEmpty == false) {
-                        ImageVideoRouter.getImage(imageURLString: imageURL!, sizeString: widthHeight120) { (result, error) in
-                            testimonial.needUpdate = false
-                            
-                            if (error == nil) {
-                                let imageRes = result as! UIImage
-                                self.avatarImageView.image = imageRes
-                                
-                                testimonial.imageCache = imageRes
-                            } else {
-                                let imageRes = UIImage(named: "display-empty.jpg")
-                                self.avatarImageView.image = imageRes
-                                
-                                testimonial.imageCache = imageRes
-                                
-                                print("Request failed with error: \(String(describing: error))")
-                            }
-                            }.fetchdata()
-                    }
-                    
-                    
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-                }.fetchdata()
+        if (testimonial.userImageCache != nil) {
+            self.avatarImageView.image = testimonial.userImageCache
         }
     }
     
     func avatarImageViewClicked() {
-        PMHelper.showCoachOrUserView(userID: self.userID)
+        if (self.testimonial != nil) {
+            PMHelper.showCoachOrUserView(userID: (self.testimonial?.userCommentId)!)
+        }
     }
 }

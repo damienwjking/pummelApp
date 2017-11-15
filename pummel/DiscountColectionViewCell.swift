@@ -38,41 +38,19 @@ class DiscountColectionViewCell: UICollectionViewCell {
         self.bntDiscount.setTitleColor(UIColor.white, for: .normal)
     }
 
-    func setData(discountDetail:NSDictionary) {
-        self.lbTitle.text = ""
-        self.lbSubTitle.text = ""
-        self.lbText.text = ""
+    func setData(discount: DiscountModel) {
+        self.lbTitle.text = discount.title
+        self.lbSubTitle.text = discount.subTitle
+        self.lbText.text = discount.text
+        
         self.bntDiscount.isHidden = true
-        
-        if let val = discountDetail[kTitle] as? String {
-            self.lbTitle.text = val
-        }
-        
-        if let val = discountDetail[kSubTitle] as? String {
-            self.lbSubTitle.text = val
-        }
-        
-        if let val = discountDetail[kText] as? String {
-            self.lbText.text = val
-        }
-        
-        if let val = discountDetail[kDiscount] as? String {
-            self.bntDiscount.setTitle(val, for: .normal)
+        if (discount.discount.count > 0) {
+            self.bntDiscount.setTitle(discount.discount, for: .normal)
             self.bntDiscount.isHidden = false
         }
         
-        
-        if (discountDetail[kImageUrl] is NSNull == false) {
-            let imageLink = discountDetail[kImageUrl] as! String
-            
-            ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
-                if (error == nil) {
-                    let imageRes = result as! UIImage
-                    self.imgCover.image = imageRes
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }).fetchdata()
+        if (discount.imageUrl.isEmpty == false) {
+            self.imgCover.image = discount.imageCache
         }
     }
 }

@@ -117,7 +117,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             self.leadOffset = 0
             self.isStopGetLead = false
             
-//            self.getTotalLead()
+            self.getTotalLead()
             self.getCoachTrackInfo()
         } else {
             self.followCoachOffset = 0
@@ -281,22 +281,19 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     
                     // Get lead list
                     let leadDetails = resultDetail["list"] as! [NSDictionary]
-                    var leadList: [UserModel] = []
-                    for leadDetail in leadDetails {
-                        let user = UserModel()
-                        
-                        user.id = leadDetail[kCoachId] as! Int
-                        leadList.append(user)
-                    }
                     
-                    if (leadList.count == 0) {
+                    if (leadDetails.count == 0) {
                         self.isStopGetLead = true
                     } else {
-                        for leadUser in leadList {
-                            if (leadUser.existInList(userList: self.followCoachList) == false) {
-                                leadUser.delegate = self
-                                leadUser.synsData()
-                                self.followCoachList.append(leadUser)
+                        for leadDetail in leadDetails {
+                            let user = UserModel()
+                            user.id = leadDetail[kCoachId] as! Int
+                            
+                            if (user.existInList(userList: self.leadList) == false) {
+                                user.delegate = self
+                                user.synsData()
+                                
+                                self.leadList.append(user)
                             }
                         }
                     }
@@ -333,6 +330,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                             if (user.existInList(userList: self.followCoachList) == false) {
                                 user.delegate = self
                                 user.synsData()
+                                
                                 self.followCoachList.append(user)
                             }
                         }
@@ -377,10 +375,13 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     // Get list
                     let productDetails = resultDetail["list"] as! [NSDictionary]
                     for productDetail in productDetails {
+                        let productInfo = productDetail["product"] as! NSDictionary
                         let product = ProductModel()
-                        product.parseData(data: productDetail)
+                        product.parseData(data: productInfo)
                         
                         if (product.existInList(productList: self.purchaseProductList) == false) {
+                            product.isBought = true
+                            
                             self.purchaseProductList.append(product)
                         }
                     }
@@ -404,6 +405,12 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
             let view = sender as! UIView
             let totalDetail = arrayResult[view.tag]
             destination.coachDetail = totalDetail[kUser] as! NSDictionary
+        } else if (segue.identifier == "goBookAndBuy") {
+            let destination = segue.destination as! UINavigationController
+            let bookBuyVC = destination.topViewController as! BookAndBuyViewController
+            
+            let product: ProductModel = sender as! ProductModel
+            bookBuyVC.productBought = product
         } else if (segue.identifier == kSendMessageConnection) {
             let destination = segue.destination as! ChatMessageViewController
             
@@ -483,12 +490,11 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         }
         
         if (self.totalLead > 0 || self.totalFollowCoach > 0) {
+            self.firstCollectionView.reloadData()
             self.firstViewHeightConstraint.constant = 145
         } else {
             self.firstViewHeightConstraint.constant = 0
         }
-        
-        self.firstCollectionView.reloadData()
         
         // Update track view
         self.totalNewMessageLabel.text = "\(self.numberNewMessage)"
@@ -497,16 +503,18 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         if (self.numberNewMessage > 0 || self.numberProfileView > 0 || self.numberSocialClick > 0) {
             self.trackViewHeightContraint.constant = 100
+        } else {
+            self.trackViewHeightContraint.constant = 0
         }
         
         // Second view: product view
         self.secondTitleLabel.text = "PURCHASES (\(self.totalPurchaseProduct))"
         if (self.totalPurchaseProduct > 0) {
+            self.secondCollectionView.reloadData()
             self.secondViewHeightConstraint.constant = 145
         } else {
             self.secondViewHeightConstraint.constant = 0
         }
-        self.secondCollectionView.reloadData()
         
         // Animation
         UIView.animate(withDuration: 0.3) {
@@ -521,8 +529,18 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
 
 // MARK: - UserModelDelegate
 extension FindViewController: UserModelDelegate {
-    func userModelSynsCompleted() {
-        self.updateLayout()
+    func userModelSynsCompleted(user: UserModel) {
+        let followCoachIndex = self.followCoachList.index(of: user)
+        if (followCoachIndex != nil) {
+            let indexPath = IndexPath(item: followCoachIndex!, section: 0)
+            self.firstCollectionView.reloadItems(at: [indexPath])
+        }
+        
+        let leadIndex = self.leadList.index(of: user)
+        if (leadIndex != nil) {
+            let indexPath = IndexPath(item: leadIndex!, section: 0)
+            self.firstCollectionView.reloadItems(at: [indexPath])
+        }
     }
 }
 
@@ -591,7 +609,7 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
                 return self.followCoachList.count
             }
         } else if (collectionView == self.secondCollectionView) {
-            return self.followCoachList.count
+            return self.purchaseProductList.count
         } else if collectionView == self.searchCollectionView {
             return self.arrayResult.count + 1
         }
@@ -603,21 +621,30 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
         if (collectionView == self.firstCollectionView) {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LeadCollectionViewCell", for: indexPath) as! LeadCollectionViewCell
             
-            if (indexPath.row == self.followCoachList.count - 2) {
-                if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
+            var user: UserModel
+            if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
+                if (indexPath.row == self.leadList.count - 2) {
                     self.getTotalLead()
-                } else {
+                }
+                
+                user = self.leadList[indexPath.row]
+            } else {
+                if (indexPath.row == self.followCoachList.count - 2) {
                     self.getFollowCoach()
                 }
+                
+                user = self.followCoachList[indexPath.row]
             }
             
-            let coach = self.followCoachList[indexPath.row]
-            cell.setupData(userInfo: coach)
+            cell.setupData(userInfo: user)
             cell.setupLayout(isShowAddButton: false)
             
             return cell
         } else if (collectionView == self.secondCollectionView) {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductPurchasedCell", for: indexPath) as! ProductPurchasedCell
+            
+            let product = self.purchaseProductList[indexPath.row]
+            cell.setupData(product: product)
             
             return cell
         } else if (collectionView == self.searchCollectionView) {
@@ -666,8 +693,19 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if (collectionView == self.firstCollectionView) {
-            let leadUser = self.followCoachList[indexPath.row]
+            var leadUser: UserModel
+            if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
+                leadUser = self.leadList[indexPath.row]
+            } else {
+                leadUser = self.followCoachList[indexPath.row]
+            }
+            
             self.showLeadOption(leadUser: leadUser)
+        } else if (collectionView == self.secondCollectionView) {
+            // Show product detail
+            let product = self.purchaseProductList[indexPath.row]
+            
+            self.performSegue(withIdentifier: "goBookAndBuy", sender: product)
         } else if (collectionView == self.searchCollectionView) {
             if indexPath.row < self.arrayResult.count {
                 let cellIndex = indexPath.row

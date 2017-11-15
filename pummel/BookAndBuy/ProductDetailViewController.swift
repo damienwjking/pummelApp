@@ -27,6 +27,7 @@ class ProductDetailViewController: BaseViewController {
         super.viewDidLoad()
 
         self.setupLayout()
+        self.setupNavigationBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,11 +36,37 @@ class ProductDetailViewController: BaseViewController {
         self.fillData()
     }
     
+    func setupNavigationBar() {
+        // Titlte
+        self.navigationItem.title = kNavBookBuy
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        self.navigationController!.navigationBar.isTranslucent = false;
+        
+        // Left button
+        let closeImage = UIImage(named: "close")?.withRenderingMode(.alwaysOriginal)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: closeImage, style: .plain, target: self, action: #selector(self.leftBarButtonClicked(_:)))
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        // Right button
+        self.navigationItem.rightBarButtonItem = nil
+    }
+    
     func setupLayout() {
         self.borderView.layer.cornerRadius = 4
         self.borderView.layer.borderWidth = 1
         self.borderView.layer.borderColor = UIColor.lightGray.cgColor
         self.borderView.layer.masksToBounds = true
+        
+        self.payNowButton.isHidden = (self.product?.isBought)!
+    }
+    
+    func leftBarButtonClicked(_ sender: Any) {
+        if (self.product?.isBought == false) {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     func fillData() {
@@ -48,7 +75,8 @@ class ProductDetailViewController: BaseViewController {
             self.subTitleLabel.text = self.product?.subTitle
             self.descriptionLabel.text = self.product?.productDescription
             
-//            self.totalMoneyLabel
+            self.qualityTextField.text = "1"
+            self.updatePrice(quality: 1)
             
             if (self.product?.imageUrl.isEmpty == false) {
                 ImageVideoRouter.getImage(imageURLString: (self.product?.imageUrl)!, sizeString: widthHeight320, completed: { (result, error) in
@@ -70,7 +98,45 @@ class ProductDetailViewController: BaseViewController {
 }
 
 extension ProductDetailViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return ((self.product?.isBought)! == false)
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return string.isNumber()
+        let canInput = string.isNumber()
+        
+        if (canInput == true) {
+            let oldString = textField.text! as NSString
+            let qtyString = oldString.replacingCharacters(in: range, with: string)
+            
+            let qty = Double(qtyString)
+            if (qty != nil) {
+                var quality = Int(qty!)
+                
+                if (quality >= 1000) {
+                    quality = 999
+                }
+                
+                self.updatePrice(quality: quality)
+            } else {
+                self.updatePrice(quality: 0)
+            }
+        }
+        
+        return canInput
+    }
+    
+    func updatePrice(quality: Int) {
+        let numberFormat = NumberFormatter()
+        numberFormat.currencySymbol = "$"
+        numberFormat.numberStyle = .currency
+        numberFormat.formatWidth = 3
+        numberFormat.generatesDecimalNumbers = true
+        numberFormat.alwaysShowsDecimalSeparator = false
+        
+        let totalMoney = Double((self.product?.amount)!) * Double(quality)
+        let moneyString = numberFormat.string(from: NSNumber(value: totalMoney))
+        
+        self.totalMoneyLabel.text = moneyString
     }
 }

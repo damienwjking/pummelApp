@@ -311,9 +311,17 @@ enum FeedRouter: URLRequestConvertible {
                 switch response.result {
                 case .success(let JSON):
                     if response.response?.statusCode == 200 {
-                        let result = JSON as! [NSDictionary]
+                        let discountDetails = JSON as! [NSDictionary]
                         
-                        self.comletedBlock(result, nil)
+                        var discountList: [DiscountModel] = []
+                        for discountDetail in discountDetails {
+                            let discount = DiscountModel()
+                            discount.parseData(data: discountDetail)
+                            
+                            discountList.append(discount)
+                        }
+                        
+                        self.comletedBlock(discountList, nil)
                     }
                 case .failure(let error):
                     if (response.response?.statusCode == 401) {

@@ -155,10 +155,10 @@ extension String {
     func isNumber() -> Bool {
         do {
             let numberRegex = try NSRegularExpression(pattern: "[0-9]", options:.caseInsensitive)
-            let weightString = testStr as NSString
-            let results = numberRegex.matches(in: testStr, options: [], range: NSMakeRange(0, weightString.length))
+            let numberString = self as NSString
+            let results = numberRegex.matches(in: self, options: [], range: NSMakeRange(0, numberString.length))
             
-            if results.count == weightString.length {
+            if results.count == numberString.length {
                 return true
             } else {
                 return false
@@ -166,6 +166,14 @@ extension String {
         } catch {
             return false
         }
+    }
+}
+
+extension CGFloat {
+    static func from(string: String) -> CGFloat? {
+        guard let n = NumberFormatter().number(from: string) else { return nil}
+        
+        return CGFloat(n)
     }
 }
 

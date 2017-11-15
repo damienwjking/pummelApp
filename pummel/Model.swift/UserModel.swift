@@ -9,7 +9,7 @@
 import UIKit
 
 protocol UserModelDelegate {
-    func userModelSynsCompleted()
+    func userModelSynsCompleted(user: UserModel)
 }
 
 class UserModel: NSObject {
@@ -52,7 +52,6 @@ class UserModel: NSObject {
     var sessionNotification: Int = 0
     var units: String = "Metric"
     
-    var imageCache: UIImage? = nil
     var imageUrl: String? = nil
     var videoUrl: NSURL? = nil
     var twitterUrl: String? = ""
@@ -60,6 +59,7 @@ class UserModel: NSObject {
     var instagramUrl: String? = ""
     
     var isSynsCompleted = true // Flag for syns case
+    var userImageCache: UIImage? = nil
     var userDictionary: NSDictionary? // Template
     
     func parseData(data: NSDictionary) {
@@ -120,13 +120,36 @@ class UserModel: NSObject {
                 
                 self.parseData(data: userInfo)
                 
-                if (self.delegate != nil) {
-                    self.delegate?.userModelSynsCompleted()
-                }
+                self.synsImage()
             } else {
                 print("Request failed with error: \(String(describing: error))")
             }
+            
+            self.callDelegate()
         }.fetchdata()
+    }
+    
+    func synsImage() {
+        self.userImageCache = UIImage(named: "display-empty.jpg")
+        
+        if (self.imageUrl != nil && self.imageUrl?.isEmpty == false) {
+            ImageVideoRouter.getImage(imageURLString: self.imageUrl!, sizeString: widthHeight160, completed: { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.userImageCache = imageRes
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+                
+                self.callDelegate()
+            }).fetchdata()
+        }
+    }
+    
+    func callDelegate() {
+        if (self.delegate != nil) {
+            self.delegate?.userModelSynsCompleted(user: self)
+        }
     }
     
     func convertToDictionary() -> NSDictionary {

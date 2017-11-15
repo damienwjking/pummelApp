@@ -16,6 +16,8 @@ class BookAndBuyViewController: BaseViewController {
     var isStopGetProduct = false
     var productList: [ProductModel] = []
     
+    var productBought: ProductModel? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,7 +28,11 @@ class BookAndBuyViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.getProduct()
+        if (self.productBought == nil) {
+            self.getProduct()
+        } else {
+            self.performSegue(withIdentifier: "goPurchaseDetail", sender: self.productBought)
+        }
     }
     
     func setupNavigationBar() {
@@ -40,6 +46,9 @@ class BookAndBuyViewController: BaseViewController {
         let closeImage = UIImage(named: "close")?.withRenderingMode(.alwaysOriginal)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: closeImage, style: .plain, target: self, action: #selector(self.leftBarButtonClicked(_:)))
         self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        // Right button
+        self.navigationItem.rightBarButtonItem = nil
     }
     
     func setupTableView() {
@@ -75,6 +84,8 @@ class BookAndBuyViewController: BaseViewController {
                     } else {
                         for product in productList {
                             if (product.existInList(productList: self.productList) == false) {
+                                product.checkIsPurchase()
+                                
                                 self.productList.append(product)
                             }
                         }
@@ -105,6 +116,10 @@ class BookAndBuyViewController: BaseViewController {
 // MARK: - UITableViewDelegate
 extension BookAndBuyViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (self.productBought != nil) {
+            return 0
+        }
+        
         return self.productList.count + 1
     }
     
@@ -124,9 +139,6 @@ extension BookAndBuyViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
 }
 
 extension BookAndBuyViewController: BookAndBuyCellDelegate {
@@ -134,7 +146,7 @@ extension BookAndBuyViewController: BookAndBuyCellDelegate {
         let indexPath = self.tableView.indexPath(for: cell)
         
         if (indexPath != nil) {
-            let product = self.productList[(indexPath?.row)!]
+            let product = self.productList[(indexPath?.row)! - 1]
             
             self.performSegue(withIdentifier: "goPurchaseDetail", sender: product)
         }

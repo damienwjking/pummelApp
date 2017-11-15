@@ -23,7 +23,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var tvLinkHeightConstraint: NSLayoutConstraint!
     
-    var discountDetail:NSDictionary!
+    var discount : DiscountModel!
     
     // MARK: - Life Circle
     override func viewDidLoad() {
@@ -45,6 +45,9 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
         self.btnDiscount.layer.cornerRadius = 15
         self.btnDiscount.layer.borderWidth = 1
         self.btnDiscount.setTitleColor(UIColor.white, for: .normal)
+        
+        self.imgLogo.layer.cornerRadius = 75
+        self.imgLogo.clipsToBounds = true
         
         self.lbTitle.text = ""
         self.lbSubTitle.text = ""
@@ -72,45 +75,26 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     }
     
     func updateData() {
-        self.imgLogo.layer.cornerRadius = 75
-        self.imgLogo.clipsToBounds = true
+        self.discount.delegate = self
         
-        if (discountDetail[kImageUrl] is NSNull == false) {
-            let imageLink = discountDetail[kImageUrl] as! String
-
-            ImageVideoRouter.getImage(imageURLString: imageLink, sizeString: widthHeightScreen, completed: { (result, error) in
-                if (error == nil) {
-                    let imageRes = result as! UIImage
-                    self.imgCover.image = imageRes
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }).fetchdata()
-        }
+        self.lbTitle.text = self.discount.title
+        self.lbSubTitle.text = self.discount.subTitle
+        self.lbText.text = self.discount.text
+        self.lbDescription.text = self.discount.subtext
+        self.lbFullText.text = self.discount.fullText
         
-        if let val = discountDetail[kTitle] as? String {
-            self.lbTitle.text = val
-        }
+        self.imgCover.image = self.discount.imageCache
         
-        if let val = discountDetail[kSubTitle] as? String {
-            self.lbSubTitle.text = val
-        }
+        self.imgLogo.image = self.discount.businessImageCache
         
-        if let val = discountDetail[kText] as? String {
-            self.lbText.text = val
-        }
-        
-        if let val = discountDetail[kDiscount] as? String {
-            self.btnDiscount.setTitle(val, for: .normal)
+        self.btnDiscount.isHidden = true
+        if (self.discount.discount.count > 0) {
+            self.btnDiscount.setTitle(self.discount.discount, for: .normal)
             self.btnDiscount.isHidden = false
         }
         
-        if let val = discountDetail[kSubText] as? String {
-            self.lbDescription.text = val
-        }
-        
-        if let val = discountDetail[kWebsite] as? String {
-            self.tvLink.text = val
+        if (self.discount.website.isEmpty == false) {
+            self.tvLink.text = self.discount.website
             
             // Set color for link
             self.tvLink.linkTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg16(),
@@ -122,26 +106,10 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
             let textMarginHorizontal = self.tvLink.layoutMargins.top + self.tvLink.layoutMargins.bottom
             
             let textWidth = self.tvLink.frame.size.width - textMarginVertical
-            let heightLinkText = val.heightWithConstrainedWidth(width: textWidth, font: self.tvLink.font!)
+            let heightLinkText = self.tvLink.text.heightWithConstrainedWidth(width: textWidth, font: self.tvLink.font!)
             
             self.tvLinkHeightConstraint.constant = heightLinkText + textMarginHorizontal
         }
-        
-        if let val = discountDetail[kFullText] as? String {
-            self.lbFullText.text = val
-        }
-        
-        // Get bussiness
-        let businessId = String(format:"%0.f", (discountDetail[kBusinessId]! as AnyObject).doubleValue)
-        ImageVideoRouter.getBusinessLogo(businessID: businessId, sizeString: widthHeight200) { (result, error) in
-            if (error == nil) {
-                let imageRes = result as! UIImage
-                
-                self.imgLogo.image = imageRes
-            } else {
-                print("Request failed with error: \(String(describing: error))")
-            }
-        }.fetchdata()
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
@@ -150,8 +118,8 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     }
     
     func openWebview() {
-        if let val = discountDetail[kWebsite] as? String {
-            let urlWeb = NSURL(string: val)
+        if (self.discount.website.isEmpty == false) {
+            let urlWeb = NSURL(string: self.discount.website)
             if urlWeb != nil {
                 self.performSegue(withIdentifier: kClickURLLink, sender: urlWeb)
             }
@@ -174,6 +142,12 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func backButtonClicked() {
-        _ = self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
+    }
+}
+
+extension DiscountDetailVC: DiscountDelegate {
+    func discountSynsDataCompleted(discount: DiscountModel) {
+        self.updateData()
     }
 }

@@ -25,18 +25,7 @@ class LeadCollectionViewCell: UICollectionViewCell {
     func setupData(userInfo: UserModel) {
         self.nameUser.text = userInfo.firstname?.uppercased()
         
-        if (userInfo.imageUrl != nil && userInfo.imageUrl?.isEmpty == false) {
-            ImageVideoRouter.getImage(imageURLString: userInfo.imageUrl!, sizeString: widthHeight160, completed: { (result, error) in
-                if (error == nil) {
-                    let imageRes = result as! UIImage
-                    self.avatarImageView.image = imageRes
-                } else {
-                    print("Request failed with error: \(String(describing: error))")
-                }
-            }).fetchdata()
-        } else {
-            self.avatarImageView.image = UIImage(named: "display-empty.jpg")
-        }
+        self.avatarImageView.image = userInfo.userImageCache
         
         // Check coach
         let userID = String(format: "%ld", userInfo.id)

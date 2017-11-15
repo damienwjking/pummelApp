@@ -576,9 +576,17 @@ enum UserRouter: URLRequestConvertible {
                 switch response.result {
                 case .success(let JSON):
                     if (JSON is NSNull == false) {
-                        let userDetail = JSON as! NSArray
+                        let testimonialDetails = JSON as! [NSDictionary]
                         
-                        self.comletedBlock!(userDetail, nil)
+                        var testimonialList: [TestimonialModel] = []
+                        for testimonialDetail in testimonialDetails {
+                            let testimonial = TestimonialModel()
+                            testimonial.parseData(data: testimonialDetail)
+                            
+                            testimonialList.append(testimonial)
+                        }
+                        
+                        self.comletedBlock!(testimonialList, nil)
                     } else {
                         let error = NSError(domain: "Error", code: 500, userInfo: nil) // Create simple error
                         self.comletedBlock!(nil, error as NSError)
@@ -700,7 +708,15 @@ enum UserRouter: URLRequestConvertible {
                 switch response.result {
                 case .success(let JSON):
                     if (JSON is NSNull == false) {
-                        let photoList = JSON as! NSArray
+                        let photoDetails = JSON as! [NSDictionary]
+                        
+                        var photoList: [PhotoModel] = []
+                        for photoDetail in photoDetails {
+                            let photo = PhotoModel()
+                            photo.parseData(data: photoDetail)
+                            
+                            photoList.append(photo)
+                        }
                         
                         self.comletedBlock!(photoList as AnyObject, nil)
                     } else {

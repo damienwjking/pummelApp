@@ -10,7 +10,13 @@ import Foundation
 
 import UIKit
 
+protocol FeedDelegate {
+    func feedSynsDataCompleted(feed: FeedModel)
+}
+
 class FeedModel: NSObject {
+    var delegate: FeedDelegate? = nil
+    
     var id = 0
     var status = 0
     var uploadId = 0
@@ -28,6 +34,9 @@ class FeedModel: NSObject {
     var likeTotal = ""
     
     var userDetail: NSDictionary? // Temp for reformat
+    var contentImageCache: UIImage? // replace cache object
+    var userImageCache: UIImage? // replace cache object
+    
     
     func parseData(data: NSDictionary) {
         self.id = data.object(forKey: "id") as! Int
@@ -55,6 +64,44 @@ class FeedModel: NSObject {
         let userImage = user[kImageUrl] as? String
         if (userImage != nil && userImage?.isEmpty == false) {
             self.userImageURL = userImage
+        }
+    }
+    
+    func synsImage() {
+        // User image
+        let userImageDefault = UIImage(named: "display-empty.jpg")
+        self.userImageCache = userImageDefault
+        
+        if (self.userImageURL != nil && self.userImageURL?.isEmpty == false) {
+            ImageVideoRouter.getImage(imageURLString: self.userImageURL!, sizeString: widthHeight120) { (result, error) in
+                if (error == nil) {
+                    let imageRes = result as! UIImage
+                    self.userImageCache = imageRes
+                    
+                    self.callDelegate()
+                } else {
+                    print("Request failed with error: \(String(describing: error))")
+                }
+                }.fetchdata()
+        }
+        
+        // Content image
+        self.contentImageCache = nil
+        ImageVideoRouter.getImage(imageURLString: self.imageUrl!, sizeString: widthHeightScreenx2, completed: { (result, error) in
+            if (error == nil) {
+                let imageRes = result as! UIImage
+                self.contentImageCache = imageRes
+                
+                self.callDelegate()
+            } else {
+                print("Request failed with error: \(String(describing: error))")
+            }
+        }).fetchdata()
+    }
+    
+    func callDelegate() {
+        if (self.delegate != nil) {
+            self.delegate?.feedSynsDataCompleted(feed: self)
         }
     }
     

@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol FeedDiscountViewDelegate {
-    func goToDetailDiscount(discountDetail: NSDictionary)
+    func goToDetailDiscount(discount: DiscountModel)
     func loadMoreDiscount()
 }
 
@@ -17,7 +17,7 @@ class FeedDiscountView: UIView {
     
     var cv: UICollectionView!
     var cvLayout: UICollectionViewFlowLayout!
-    var arrayResult : [NSDictionary] = [] {
+    var arrayResult : [DiscountModel] = [] {
         didSet {
             self.cv.reloadData()
         }
@@ -99,8 +99,8 @@ extension FeedDiscountView : UICollectionViewDataSource, UICollectionViewDelegat
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DiscountColectionViewCell", for: indexPath) as! DiscountColectionViewCell
         
-        let discountDetail = self.arrayResult[indexPath.row]
-        cell.setData(discountDetail: discountDetail)
+        let discount = self.arrayResult[indexPath.row]
+        cell.setData(discount: discount)
         
         // add Swipe gesture
         if (cell.gestureRecognizers == nil || (cell.gestureRecognizers?.count)! < 2) {
@@ -129,7 +129,9 @@ extension FeedDiscountView : UICollectionViewDataSource, UICollectionViewDelegat
             return
         }
         
-        let discountDetail = self.arrayResult[indexPath.row]
-        self.delegate?.goToDetailDiscount(discountDetail: discountDetail)
+        if (self.delegate != nil) {
+            let discount = self.arrayResult[indexPath.row]
+            self.delegate?.goToDetailDiscount(discount: discount)
+        }
     }
 }

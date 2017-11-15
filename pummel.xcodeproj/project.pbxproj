@@ -82,6 +82,8 @@
 		BABA7C721FA333FD00B2965D /* ProductDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABA7C711FA333FD00B2965D /* ProductDetailViewController.swift */; };
 		BAC670C41F53BEC300D5EA28 /* TestimonialCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC670C21F53BEC300D5EA28 /* TestimonialCell.swift */; };
 		BAC670C51F53BEC300D5EA28 /* TestimonialCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAC670C31F53BEC300D5EA28 /* TestimonialCell.xib */; };
+		BAE245A01FB991E100441DA6 /* DicountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE2459F1FB991E100441DA6 /* DicountModel.swift */; };
+		BAE245A21FB9A28900441DA6 /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE245A11FB9A28900441DA6 /* PhotoModel.swift */; };
 		BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */; };
 		E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */; };
 		E84890A31EEE5733003201A9 /* FeedDiscountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84890A21EEE5733003201A9 /* FeedDiscountView.swift */; };
@@ -310,6 +312,8 @@
 		BABA7C711FA333FD00B2965D /* ProductDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewController.swift; sourceTree = "<group>"; };
 		BAC670C21F53BEC300D5EA28 /* TestimonialCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestimonialCell.swift; sourceTree = "<group>"; };
 		BAC670C31F53BEC300D5EA28 /* TestimonialCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestimonialCell.xib; sourceTree = "<group>"; };
+		BAE2459F1FB991E100441DA6 /* DicountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DicountModel.swift; sourceTree = "<group>"; };
+		BAE245A11FB9A28900441DA6 /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
 		BAF163A21EF7D7C600B844A9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		E81675851DFF0E9000BC9CC9 /* HRToast+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HRToast+UIView.swift"; sourceTree = "<group>"; };
 		E84890A21EEE5733003201A9 /* FeedDiscountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedDiscountView.swift; sourceTree = "<group>"; };
@@ -584,6 +588,8 @@
 				BA2E89D21F87729700A8A8BD /* ConversationModel.swift */,
 				BA139ECB1F9DE854007CF073 /* MessageModel.swift */,
 				BABA7C6B1FA2F53B00B2965D /* ProductModel.swift */,
+				BAE2459F1FB991E100441DA6 /* DicountModel.swift */,
+				BAE245A11FB9A28900441DA6 /* PhotoModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1255,6 +1261,7 @@
 				F9FE14591CEBD29B004ABE34 /* FSCameraView.swift in Sources */,
 				BA9881011F85F39B00DBF527 /* SessionRouter.swift in Sources */,
 				BA38FBF11F9F32DC0004330A /* BookAndBuyCell.swift in Sources */,
+				BAE245A01FB991E100441DA6 /* DicountModel.swift in Sources */,
 				F920416F1CEEB03800CC6876 /* ChatMessageHeaderTableViewCell.swift in Sources */,
 				F96847021E06B509009EB06C /* SessionCoachViewController.swift in Sources */,
 				BAF163A31EF7D7C600B844A9 /* CameraViewController.swift in Sources */,
@@ -1317,6 +1324,7 @@
 				F98C40A61CF2524600ECC66E /* ChatMessageImageTableViewCell.swift in Sources */,
 				F9EAE8EB1D6EFC6F00FD32BE /* SettingBigSeperateTableViewCell.swift in Sources */,
 				E8C1930C1EF14E4D0073C452 /* TrackingPMAPI.swift in Sources */,
+				BAE245A21FB9A28900441DA6 /* PhotoModel.swift in Sources */,
 				BA63D2A31F84D9F200D2D8C8 /* TagRouter.swift in Sources */,
 				E84D638E1E1D677800CF8B67 /* LogSessionSelectUserViewController.swift in Sources */,
 				BAC670C41F53BEC300D5EA28 /* TestimonialCell.swift in Sources */,

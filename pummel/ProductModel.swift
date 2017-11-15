@@ -6,9 +6,8 @@
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
-import Foundation
-
 import UIKit
+import Foundation
 
 class ProductModel: NSObject {
     var id = ""
@@ -27,6 +26,8 @@ class ProductModel: NSObject {
     var amount: CGFloat = 0.0
     var status = 0
     
+    var isBought = false // 
+    
     func parseData(data: NSDictionary) {
         let id = data[kId] as? Int
         if (id != nil) {
@@ -43,17 +44,17 @@ class ProductModel: NSObject {
             self.title = title!
         }
         
-        let subTitle = data["subTitle"] as? String
+        let subTitle = data[kSubTitle] as? String
         if (subTitle != nil) {
             self.subTitle = subTitle!
         }
         
-        let productDescription = data["description"] as? String
+        let productDescription = data[kDescription] as? String
         if (productDescription != nil) {
             self.productDescription = productDescription!
         }
         
-        let imageUrl = data["imageUrl"] as? String
+        let imageUrl = data[kImageUrl] as? String
         if (imageUrl != nil) {
             self.imageUrl = imageUrl!
         }
@@ -101,5 +102,11 @@ class ProductModel: NSObject {
         }
         
         return false
+    }
+    
+    func checkIsPurchase() {
+        ProductRouter.checkBought(productID: self.id) { (result, error) in
+            print(result)
+        }.fetchdata()
     }
 }
