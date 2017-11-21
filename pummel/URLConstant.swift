@@ -86,6 +86,7 @@ let kPM_PATH_TOTAL_LEAD             = "/totalLeads"
 let kPM_PATH_PRODUCT                = "/product"
 let kPM_PATH_PURCHASE_PRODUCT       = "/productBought"
 let kPM_PATH_CHECK_BOUGHT           = "/checkBought"
+let kPM_PATH_BUY                    = "/buy"
 
 
 let kPM_PATH_M_BADGE_S_BADGE        = "/numberofNewMessageAndNewSessionAndLeadAndComment"

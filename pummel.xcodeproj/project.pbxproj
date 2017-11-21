@@ -74,6 +74,7 @@
 		BA97D8411FA8379F00AFFF02 /* ProductPurchasedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA97D83F1FA8379F00AFFF02 /* ProductPurchasedCell.swift */; };
 		BA97D8421FA8379F00AFFF02 /* ProductPurchasedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA97D8401FA8379F00AFFF02 /* ProductPurchasedCell.xib */; };
 		BA9881011F85F39B00DBF527 /* SessionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9881001F85F39B00DBF527 /* SessionRouter.swift */; };
+		BA9EAF591FC2987B00DB8F0D /* InputVisaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9EAF581FC2987B00DB8F0D /* InputVisaViewController.swift */; };
 		BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA439561F0DE8CC001D122A /* NumberConstant.swift */; };
 		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
 		BABA7C6C1FA2F53B00B2965D /* ProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABA7C6B1FA2F53B00B2965D /* ProductModel.swift */; };
@@ -304,6 +305,7 @@
 		BA97D83F1FA8379F00AFFF02 /* ProductPurchasedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductPurchasedCell.swift; sourceTree = "<group>"; };
 		BA97D8401FA8379F00AFFF02 /* ProductPurchasedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProductPurchasedCell.xib; sourceTree = "<group>"; };
 		BA9881001F85F39B00DBF527 /* SessionRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRouter.swift; sourceTree = "<group>"; };
+		BA9EAF581FC2987B00DB8F0D /* InputVisaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputVisaViewController.swift; sourceTree = "<group>"; };
 		BAA439561F0DE8CC001D122A /* NumberConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberConstant.swift; sourceTree = "<group>"; };
 		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
 		BABA7C6B1FA2F53B00B2965D /* ProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModel.swift; sourceTree = "<group>"; };
@@ -600,6 +602,7 @@
 				BA38FBEF1F9F32B30004330A /* Cell */,
 				BA38FBED1F9F32790004330A /* BookAndBuyViewController.swift */,
 				BABA7C711FA333FD00B2965D /* ProductDetailViewController.swift */,
+				BA9EAF581FC2987B00DB8F0D /* InputVisaViewController.swift */,
 			);
 			path = BookAndBuy;
 			sourceTree = "<group>";
@@ -1271,6 +1274,7 @@
 				E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
 				BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */,
+				BA9EAF591FC2987B00DB8F0D /* InputVisaViewController.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				BABA7C6C1FA2F53B00B2965D /* ProductModel.swift in Sources */,
 				E81675861DFF0E9000BC9CC9 /* HRToast+UIView.swift in Sources */,
@@ -1589,7 +1593,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pum.pummelTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pummel.app/pummel";
 			};
 			name = Debug;
@@ -1602,7 +1606,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pum.pummelTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pummel.app/pummel";
 			};
 			name = Release;
@@ -1614,7 +1618,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pum.pummelUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = pummel;
 				USES_XCTRUNNER = YES;
 			};
@@ -1627,7 +1631,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pum.pummelUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = pummel;
 				USES_XCTRUNNER = YES;
 			};

@@ -70,6 +70,13 @@
 				<key>NSIncludesSubdomains</key>
 				<true/>
 			</dict>
+			<key>api.stripe.com</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>facebook.com</key>
 			<dict>
 				<key>NSExceptionRequiresForwardSecrecy</key>

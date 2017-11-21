@@ -59,6 +59,15 @@ class ProductDetailViewController: BaseViewController {
         self.borderView.layer.masksToBounds = true
         
         self.payNowButton.isHidden = (self.product?.isBought)!
+        
+        self.qualityTextField.addTarget(self.qualityTextField, action: #selector(self.qualityTextField.reformatAsNumber), for: .editingChanged)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dissmissKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    func dissmissKeyboard() {
+        self.qualityTextField.resignFirstResponder()
     }
     
     func leftBarButtonClicked(_ sender: Any) {
@@ -93,7 +102,18 @@ class ProductDetailViewController: BaseViewController {
 
     @IBAction func payNowButtonClicked(_ sender: Any) {
         // TODO: Call pay API and dissmiss view
-        self.dismiss(animated: true, completion: nil)
+        self.performSegue(withIdentifier: "goPurchase", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "goPurchase") {
+            let destination = segue.destination as! InputVisaViewController
+            
+            let totalMoneyText = self.totalMoneyLabel.text?.removeNonDigits()
+            let totalMoney = Int(totalMoneyText!)
+            destination.totalMoney = totalMoney!
+            destination.product = self.product
+        }
     }
 }
 
@@ -102,41 +122,14 @@ extension ProductDetailViewController: UITextFieldDelegate {
         return ((self.product?.isBought)! == false)
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let canInput = string.isNumber()
-        
-        if (canInput == true) {
-            let oldString = textField.text! as NSString
-            let qtyString = oldString.replacingCharacters(in: range, with: string)
-            
-            let qty = Double(qtyString)
-            if (qty != nil) {
-                var quality = Int(qty!)
-                
-                if (quality >= 1000) {
-                    quality = 999
-                }
-                
-                self.updatePrice(quality: quality)
-            } else {
-                self.updatePrice(quality: 0)
-            }
-        }
-        
-        return canInput
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let quality = Int(textField.text!)
+        self.updatePrice(quality: quality!)
     }
     
     func updatePrice(quality: Int) {
-        let numberFormat = NumberFormatter()
-        numberFormat.currencySymbol = "$"
-        numberFormat.numberStyle = .currency
-        numberFormat.formatWidth = 3
-        numberFormat.generatesDecimalNumbers = true
-        numberFormat.alwaysShowsDecimalSeparator = false
-        
         let totalMoney = Double((self.product?.amount)!) * Double(quality)
-        let moneyString = numberFormat.string(from: NSNumber(value: totalMoney))
         
-        self.totalMoneyLabel.text = moneyString
+        self.totalMoneyLabel.text = totalMoney.toCurrency(withSymbol: "$")
     }
 }

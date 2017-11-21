@@ -250,6 +250,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     func afterFirstLogin() {
         if (self.profileStyle == .currentUser) {
             self.isCoach = self.userDefaults.bool(forKey: k_PM_IS_COACH)
+            self.setupUI()
         }
     }
     

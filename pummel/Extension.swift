@@ -169,13 +169,145 @@ extension String {
             return false
         }
     }
+    
+    func removeNonDigits() -> String{
+        var i = 0
+        var numberText = ""
+        
+        while (i < self.count) {
+            let start = self.index(self.startIndex, offsetBy: i )
+            var checkString = self.substring(from: start)
+            
+            let end = checkString.index(checkString.startIndex, offsetBy: 1)
+            checkString = checkString.substring(to: end)
+            if (checkString.isNumber() == true) {
+                numberText = numberText + checkString
+            }
+            
+            i = i + 1
+        }
+        
+        return numberText
+    }
+    
+    func insertSpacesEveryFourDigitsIntoString() -> String {
+        var newString = ""
+        
+        var i = 0
+        while (i <= (self.count / 4)) {
+            let start = self.index(self.startIndex, offsetBy: i * 4)
+            var s = self.substring(from: start)
+            
+            let endIndex = s.count > 4 ? 4 : s.count
+            let end = s.index(s.startIndex, offsetBy: endIndex)
+            s = s.substring(to: end)
+            
+            if (i == 0) {
+                newString = s
+            } else {
+                newString = newString + " " + s
+            }
+            
+            i = i + 1
+        }
+        
+        return newString
+    }
+    
+    func insertSlashEveryTwoDigitsIntoString() -> String {
+        var newString = ""
+        
+        var i = 0
+        while (i <= (self.count / 2)) {
+            let start = self.index(self.startIndex, offsetBy: i * 2)
+            var s = self.substring(from: start)
+            
+            let endIndex = s.count > 2 ? 2 : s.count
+            let end = s.index(s.startIndex, offsetBy: endIndex)
+            s = s.substring(to: end)
+            
+            if (i == 0) {
+                newString = s
+            } else {
+                newString = newString + " " + s
+            }
+            
+            i = i + 1
+        }
+        
+        return newString
+    }
+    
+    func insert(inserString: String, afterNumberChar numberChar: Int) -> String {
+        var newString = ""
+        
+        var i = 0
+        while (i <= (self.count / numberChar)) {
+            let start = self.index(self.startIndex, offsetBy: i * numberChar)
+            var s = self.substring(from: start)
+            
+            let endIndex = s.count > numberChar ? numberChar : s.count
+            let end = s.index(s.startIndex, offsetBy: endIndex)
+            s = s.substring(to: end)
+            
+            if (i == 0) {
+                newString = s
+            } else if (i * numberChar == self.count) {
+                newString = newString + s
+            } else {
+                newString = newString + inserString + s
+            }
+            
+            i = i + 1
+        }
+        
+        return newString
+    }
+    
 }
 
 extension CGFloat {
-    static func from(string: String) -> CGFloat? {
-        guard let n = NumberFormatter().number(from: string) else { return nil}
+    func toCurrency(withSymbol symbol: String) -> String? {
+        let numberFormat = NumberFormatter()
+        numberFormat.currencySymbol = symbol
+        numberFormat.numberStyle = .currency
+        numberFormat.formatWidth = 3
+        numberFormat.generatesDecimalNumbers = true
+        numberFormat.alwaysShowsDecimalSeparator = false
         
-        return CGFloat(n)
+        let moneyString = numberFormat.string(from: NSNumber(value: Double(self)))
+        
+        return moneyString
+    }
+}
+
+extension Int {
+    func toCurrency(withSymbol symbol: String) -> String? {
+        let numberFormat = NumberFormatter()
+        numberFormat.currencySymbol = symbol
+        numberFormat.numberStyle = .currency
+        numberFormat.formatWidth = 3
+        numberFormat.generatesDecimalNumbers = true
+        numberFormat.alwaysShowsDecimalSeparator = false
+        
+        let moneyString = numberFormat.string(from: NSNumber(value: self))
+        
+        return moneyString
+    }
+}
+
+extension Double {
+    func toCurrency(withSymbol symbol: String) -> String? {
+        let numberFormat = NumberFormatter()
+        numberFormat.currencySymbol = symbol
+        numberFormat.numberStyle = .currency
+        numberFormat.formatWidth = 3
+        numberFormat.generatesDecimalNumbers = true
+        numberFormat.alwaysShowsDecimalSeparator = false
+        
+        let moneyString = numberFormat.string(from: NSNumber(value: self))
+        
+        return moneyString
     }
 }
 
@@ -279,4 +411,61 @@ extension UITextView {
         
         return height
     }
+}
+
+extension UITextField {
+    func reformatAsCardNumber() {
+        var textWithoutSpace = self.text?.removeNonDigits()
+        
+        // 19 is maximum visa number
+        let maxChar = 19
+        if (textWithoutSpace!.count > maxChar) {
+            let end = textWithoutSpace?.index(textWithoutSpace!.startIndex, offsetBy: maxChar)
+            textWithoutSpace = textWithoutSpace!.substring(to: end!)
+        }
+        
+        let textWithSpace = textWithoutSpace!.insert(inserString: " ", afterNumberChar: 4)
+        
+        self.text = textWithSpace
+    }
+    
+    func reformatAsExpireMonth() {
+        var textWithoutSlash = self.text?.removeNonDigits()
+        
+        // 4 is maximum expire number
+        let maxChar = 4
+        if (textWithoutSlash!.count > maxChar) {
+            let end = textWithoutSlash!.index(textWithoutSlash!.startIndex, offsetBy: maxChar)
+            textWithoutSlash = textWithoutSlash!.substring(to: end)
+        }
+        
+        let textWithSlash = textWithoutSlash!.insert(inserString: "/", afterNumberChar: 2)
+        
+        self.text = textWithSlash
+    }
+    
+    func reformatAsCVC() {
+        var text = self.text?.removeNonDigits()
+        
+        // 3 is maximum CVC number
+        let maxChar = 3
+        if (text!.count > maxChar) {
+            let end = text!.index(text!.startIndex, offsetBy: maxChar)
+            text = text!.substring(to: end)
+        }
+        
+        self.text = text
+    }
+    
+    func reformatAsNumber() {
+        let text = self.text?.removeNonDigits()
+        
+        let maxNumber = 1000
+        if (Int(text!)! > maxNumber) {
+            self.text = "\(maxNumber)"
+        } else {
+            self.text = text
+        }
+    }
+    
 }

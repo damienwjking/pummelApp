@@ -14,6 +14,7 @@ enum ProductRouter: URLRequestConvertible {
     case getProductList(userID: String, offset: Int, completed: CompletionBlock)
     case getPurchaseProduct(offset: Int, completed: CompletionBlock)
     case checkBought(productID: String, completed: CompletionBlock)
+    case buyProduct(productID: String, amount: Int, token: String, completed: CompletionBlock)
     
     var comletedBlock: CompletionBlock {
         switch self {
@@ -24,6 +25,9 @@ enum ProductRouter: URLRequestConvertible {
             return completed
             
         case .checkBought(_, let completed):
+            return completed
+            
+        case .buyProduct(_, _, _, let completed):
             return completed
             
         }
@@ -38,6 +42,9 @@ enum ProductRouter: URLRequestConvertible {
             return .get
             
         case .checkBought:
+            return .post
+            
+        case .buyProduct:
             return .post
             
         }
@@ -56,6 +63,9 @@ enum ProductRouter: URLRequestConvertible {
             
         case .checkBought(let productID, _):
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_PRODUCT + "/" + productID + kPM_PATH_CHECK_BOUGHT
+            
+        case .buyProduct(let productID, _, _, _):
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_PRODUCT + "/" + productID + kPM_PATH_BUY
             
         }
         
@@ -80,6 +90,12 @@ enum ProductRouter: URLRequestConvertible {
         case .checkBought(let productID, _):
             param?[kUserId] = currentUserID
             param?["productId"] = productID
+            
+        case .buyProduct(let productID, let amount, let token, _):
+            param?[kUserId] = currentUserID
+            param?["productId"] = productID
+            param?["amount"] = amount
+            param?["token"] = token
             
         }
         
@@ -175,7 +191,25 @@ enum ProductRouter: URLRequestConvertible {
                 }
             })
             
-            
+        case .buyProduct:
+            Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
+                print("PM: ProductRouter buy_product")
+                
+                switch response.result {
+                case .success(let JSON):
+                    if response.response?.statusCode == 200 {
+                        let resultDetail = JSON as! NSDictionary
+                        
+                        self.comletedBlock(resultDetail as AnyObject, nil)
+                    }
+                case .failure(let error):
+                    if (response.response?.statusCode == 401) {
+                        PMHelper.showLogoutAlert()
+                    } else {
+                        self.comletedBlock(nil, error as NSError)
+                    }
+                }
+            })
             
         }
     }

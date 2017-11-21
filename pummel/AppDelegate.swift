@@ -11,6 +11,7 @@
 
 
 import UIKit
+import Stripe
 import Firebase
 import Mixpanel
 import Alamofire
@@ -39,7 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let token = "9007be62479ca54acb05b03991f1e56e"
         _ = Mixpanel.sharedInstance(withToken: token)
         
-       
         FirebaseApp.configure()
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)

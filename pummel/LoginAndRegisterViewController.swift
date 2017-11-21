@@ -16,6 +16,7 @@ class LoginAndRegisterViewController: UIViewController {
     var signupVC : SignupViewController = SignupViewController(nibName: "SignupViewController", bundle: nil)
     var isShowLogin = true
     
+    @IBOutlet weak var containtView: UIView!
     @IBOutlet var underLineView: UIView!
     @IBOutlet weak var underLineViewLeadingContraint: NSLayoutConstraint!
     @IBOutlet var loginButton : UIButton!
@@ -36,16 +37,17 @@ class LoginAndRegisterViewController: UIViewController {
         self.setNeedsStatusBarAppearanceUpdate()
         
         // Add loginVC
-        self.addChildViewController(loginVC)
-        loginVC.didMove(toParentViewController: self)
-        loginVC.view.frame = CGRect(x: 0, y: 251, width: self.view.frame.size.width,  height: self.view.frame.size.height - 251)
-        self.view.addSubview(loginVC.view)
+        self.addChildViewController(self.loginVC)
+        self.loginVC.didMove(toParentViewController: self)
+        self.loginVC.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH,  height: SCREEN_HEIGHT - 251)
+        self.loginVC.view.clipsToBounds = true
+        self.containtView.addSubview(loginVC.view)
         
         // Add registerVC and hidden it for initial
-        self.addChildViewController(signupVC)
-        signupVC.didMove(toParentViewController: self)
-        signupVC.view.frame = CGRect(x: 0, y: 251, width: self.view.frame.size.width, height: self.view.frame.size.height - 251)
-        self.view.addSubview(signupVC.view)
+        self.addChildViewController(self.signupVC)
+        self.signupVC.didMove(toParentViewController: self)
+        self.signupVC.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 251)
+        self.containtView.addSubview(self.signupVC.view)
         
         self.updateLoginScreen()
         self.profileIMV.layer.cornerRadius = 45
