@@ -544,6 +544,13 @@ extension FindViewController: UserModelDelegate {
     }
 }
 
+// MARK: - ProductDelegate
+extension FindViewController: ProductDelegate {
+    func productSynsCompleted(product: ProductModel) {
+        self.secondCollectionView.reloadData()
+    }
+}
+
 // MARK: - CardViewCellDelegate
 extension FindViewController: CardViewCellDelegate {
     func cardViewCellTagClicked(cell: CardViewCell) {

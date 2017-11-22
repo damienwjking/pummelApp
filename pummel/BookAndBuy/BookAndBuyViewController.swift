@@ -84,6 +84,7 @@ class BookAndBuyViewController: BaseViewController {
                     } else {
                         for product in productList {
                             if (product.existInList(productList: self.productList) == false) {
+                                product.delegate = self
                                 product.checkIsPurchase()
                                 
                                 self.productList.append(product)
@@ -111,6 +112,13 @@ class BookAndBuyViewController: BaseViewController {
         }
     }
     
+}
+
+// MARK: - ProductDelegate
+extension BookAndBuyViewController: ProductDelegate {
+    func productSynsCompleted(product: ProductModel) {
+        self.tableView.reloadData()
+    }
 }
 
 // MARK: - UITableViewDelegate

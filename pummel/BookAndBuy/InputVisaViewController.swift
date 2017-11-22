@@ -103,7 +103,7 @@ class InputVisaViewController: UIViewController {
                         let tokenString = token?.description
                         ProductRouter.buyProduct(productID: (self.product?.id)!, amount: self.totalMoney, token: tokenString!, completed: { (result, error) in
                             if (error == nil) {
-                                
+                                self.navigationController?.popViewController(animated: true)
                             } else {
                                 print("Request failed with error: \(String(describing: error))")
                             }

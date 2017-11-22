@@ -53,6 +53,12 @@ class BookAndBuyCell: UITableViewCell {
                 }
             }).fetchdata()
         }
+        
+        if (product.isBought == false) {
+            self.buyNowButton.setTitle("BUY NOW", for: .normal)
+        } else {
+            self.buyNowButton.setTitle("VIEW NOW", for: .normal)
+        }
     }
     
     @IBAction func buyNowButtonClicked(_ sender: Any) {

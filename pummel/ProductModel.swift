@@ -9,7 +9,13 @@
 import UIKit
 import Foundation
 
+protocol ProductDelegate {
+    func productSynsCompleted(product: ProductModel)
+}
+
 class ProductModel: NSObject {
+    var delegate: ProductDelegate? = nil
+    
     var id = ""
     var userId = ""
     
@@ -104,9 +110,18 @@ class ProductModel: NSObject {
         return false
     }
     
+    func callDelegate() {
+        if (self.delegate != nil) {
+            self.delegate?.productSynsCompleted(product: self)
+        }
+    }
+    
     func checkIsPurchase() {
         ProductRouter.checkBought(productID: self.id) { (result, error) in
-            print(result)
+            let isBought = result as! Bool
+            self.isBought = isBought
+            
+            self.callDelegate()
         }.fetchdata()
     }
 }

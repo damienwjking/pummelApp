@@ -175,19 +175,12 @@ enum ProductRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: ProductRouter check_bought")
                 
-                switch response.result {
-                case .success(let JSON):
-                    if response.response?.statusCode == 200 {
-                        let resultDetail = JSON as! NSDictionary
-                        
-                        self.comletedBlock(resultDetail as AnyObject, nil)
-                    }
-                case .failure(let error):
-                    if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        self.comletedBlock(nil, error as NSError)
-                    }
+                if response.response?.statusCode == 200 {
+                    self.comletedBlock(true, nil)
+                } else if (response.response?.statusCode == 401) {
+                    PMHelper.showLogoutAlert()
+                } else {
+                    self.comletedBlock(false, nil)
                 }
             })
             
