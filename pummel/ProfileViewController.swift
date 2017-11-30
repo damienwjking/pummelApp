@@ -239,13 +239,13 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         return .lightContent
     }
     
-    override var prefersStatusBarHidden: Bool {
-        if (self.profileStyle == .currentUser) {
-            return false
-        } else {
-            return true // Hide status bar
-        }
-    }
+//    override var prefersStatusBarHidden: Bool {
+//        if (self.profileStyle == .currentUser) {
+//            return false
+//        } else {
+//            return true // Hide status bar
+//        }
+//    }
     
     func afterFirstLogin() {
         if (self.profileStyle == .currentUser) {

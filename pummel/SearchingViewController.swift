@@ -38,6 +38,10 @@ class SearchingViewController: BaseViewController, MKMapViewDelegate, CLLocation
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterSearch), name: NSNotification.Name(rawValue: "AFTER_SEARCH_PAGE"), object: nil)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     func animationIndicator() {
         self.smallIndicatorView.isHidden = false
         

@@ -352,7 +352,10 @@ class SettingsViewController: BaseViewController {
                 }
                 UserDefaults.standard.synchronize()
                 
-                self.performSegue(withIdentifier: "backToRegister", sender: nil)
+//                self.performSegue(withIdentifier: "backToRegister", sender: nil)
+                self.dismiss(animated: true, completion: {
+                    // Do nothing
+                })
             } else {
                 PMHelper.showDoAgainAlert()
             }
@@ -800,7 +803,10 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
                 messageCompose.body = kMessageInviteContactSetting
                 
                 messageCompose.messageComposeDelegate = self
-                self.present(messageCompose, animated: true, completion: nil)
+                self.present(messageCompose, animated: true, completion: {
+                
+                print(messageCompose)
+                })
             }
         }
         

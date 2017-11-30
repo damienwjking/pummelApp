@@ -28,6 +28,10 @@ class GetStarted3ViewController: UIViewController {
         self.letSetItBT.layer.borderColor = UIColor.white.cgColor
         self.letSetItBT.titleLabel?.font = .pmmMonReg13()
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     // Button Action
     @IBAction func buttonAction(_ sender: Any) {

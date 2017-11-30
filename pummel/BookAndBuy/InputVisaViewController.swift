@@ -111,7 +111,7 @@ class InputVisaViewController: UIViewController {
                         
                     } else {
                         print(error!)
-                        PMHelper.showDoAgainAlert()
+                        PMHelper.showNoticeAlert(message: "Card is illegal\nPlease check it again.")
                     }
                 }
             } else {

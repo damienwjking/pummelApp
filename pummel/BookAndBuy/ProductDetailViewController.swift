@@ -60,7 +60,7 @@ class ProductDetailViewController: BaseViewController {
         
         self.payNowButton.isHidden = (self.product?.isBought)!
         
-        self.qualityTextField.addTarget(self.qualityTextField, action: #selector(self.qualityTextField.reformatAsNumber), for: .editingChanged)
+        self.qualityTextField.addTarget(self, action: #selector(self.qualityTextFieldDidChange), for: .editingChanged)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dissmissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
@@ -124,6 +124,27 @@ extension ProductDetailViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         let quality = Int(textField.text!)
+        self.updatePrice(quality: quality!)
+    }
+    
+    func qualityTextFieldDidChange() {
+        var text = self.qualityTextField.text?.removeNonDigits()
+        
+        if (text?.isEmpty == true) {
+            text = "0"
+        } else {
+            let maxNumber = 1000
+            
+            if (Int(text!)! > maxNumber) {
+                text = "\(maxNumber)"
+            }
+            
+            let intText = Int(text!)!
+            text = "\(intText)" // Remove first 0
+        }
+        self.qualityTextField.text = text
+        
+        let quality = Int(text!)
         self.updatePrice(quality: quality!)
     }
     

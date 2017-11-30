@@ -20,23 +20,34 @@ class ProductUserCell: UITableViewCell {
         self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.width / 2
         self.avatarImageView.layer.masksToBounds = true
         self.avatarImageView.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
-        
-        self.setupData()
     }
 
-    func setupData() {
-        ImageVideoRouter.getCurrentUserAvatar(sizeString: widthHeight100) { (result, error) in
+    func setupData(userID: String) {
+        UserRouter.getUserInfo(userID: userID) { (result, error) in
             if (error == nil) {
-                let imageRes = result as! UIImage
+                let userInfo = result as! NSDictionary
                 
-                self.avatarImageView.image = imageRes
+                let userFirstName = userInfo[kFirstname] as! String
+                self.nameAndTitleLabel.text = userFirstName + " can offer the following:"
+                
+                let avatarImageURL = userInfo[kImageUrl] as? String
+                if (avatarImageURL != nil && avatarImageURL?.isEmpty == false) {
+                    ImageVideoRouter.getImage(imageURLString: avatarImageURL!, sizeString: widthHeight100, completed: { (result, error) in
+                        if (error == nil) {
+                            let imageRes = result as! UIImage
+                            
+                            self.avatarImageView.image = imageRes
+                        } else {
+                            print("Request failed with error: \(String(describing: error))")
+                        }
+                    }).fetchdata()
+                }
             } else {
                 print("Request failed with error: \(String(describing: error))")
             }
         }.fetchdata()
         
-        let currentUserID = PMHelper.getCurrentID()
-        UserRouter.checkCoachOfUser(userID: currentUserID) { (result, error) in
+        UserRouter.checkCoachOfUser(userID: userID) { (result, error) in
             let isCoach = result as! Bool
             
             if (isCoach == true) {
@@ -44,8 +55,5 @@ class ProductUserCell: UITableViewCell {
             }
             
         }.fetchdata()
-        
-        let userFirstName = PMHelper.getCurrentFirstName()
-        self.nameAndTitleLabel.text = userFirstName + " can offer the following:"
     }
 }

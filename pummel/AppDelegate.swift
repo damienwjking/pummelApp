@@ -30,7 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var searchDetail: NSDictionary!
     var notificationText = "" // Only for notification
     
-    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        
         // Override point for customization after application launch.
     //    Mixpanel.initialize(token: "9007be62479ca54acb05b03991f1e56e")
         
@@ -38,8 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         UIApplication.shared.applicationIconBadgeNumber = 0;
         let token = "9007be62479ca54acb05b03991f1e56e"
-        _ = Mixpanel.sharedInstance(withToken: token)
+        let mixpanel = Mixpanel.sharedInstance(withToken: token)
         
+        print(mixpanel)
         FirebaseApp.configure()
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)

@@ -17,19 +17,19 @@ target ‘pummel’ do
 #    pod 'UIColor+FlatColors'               , '0.0.2'
 
     # Swift 3
-        pod 'Alamofire'                        , '~>4.5.1'
-        pod 'AlamofireImage'                   , '~>3.3.0'
-        pod 'Branch'                           , '~>0.18.8'
-        pod 'CVCalendar'                       , '~>1.5.2'
-        pod 'Cartography'                      , '~>2.0.0'
-        pod 'Firebase'                         , '~>4.2.0'
-        pod 'LocationPicker'                   , '~>1.0.3'
-        pod 'Mixpanel'                         , '~>3.2.1'
-#        pod 'RSKGrowingTextView'               , '~>3.0.0'
-        #    pod 'ReactiveUI'                       , '0.0.3'
-        pod 'SwiftMessages'                    , '3.3.3'
-        pod 'UIColor+FlatColors'               , '~>0.0.2'
-    
+    pod 'Alamofire'                        , '~>4.5.1'
+    pod 'AlamofireImage'                   , '~>3.3.0'
+    pod 'Branch'                           , '~>0.18.8'
+    pod 'CVCalendar'                       , '~>1.5.2'
+    pod 'Cartography'                      , '~>2.0.0'
+    pod 'Firebase'                         , '~>4.2.0'
+    pod 'LocationPicker'                   , '~>1.0.3'
+    pod 'Mixpanel'                         , '~>3.2.1'
+    #    pod 'RSKGrowingTextView'               , '~>3.0.0'
+    #    pod 'ReactiveUI'                       , '0.0.3'
+    pod 'SwiftMessages'                    , '3.3.3'
+    pod 'UIColor+FlatColors'               , '~>0.0.2'
+    pod 'Stripe'                           , '11.3.0'
     
     # Swift 4
     

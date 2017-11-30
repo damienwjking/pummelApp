@@ -31,6 +31,7 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - Stripe (11.5.0)
   - SwiftMessages (3.3.3)
   - UIColor+FlatColors (0.0.2)
 
@@ -43,6 +44,7 @@ DEPENDENCIES:
   - Firebase (~> 4.2.0)
   - LocationPicker (~> 1.0.3)
   - Mixpanel (~> 3.2.1)
+  - Stripe
   - SwiftMessages (= 3.3.3)
   - UIColor+FlatColors (~> 0.0.2)
 
@@ -60,9 +62,10 @@ SPEC CHECKSUMS:
   LocationPicker: d54d59c9d14d52496e3e8167e67f13440d6bcf1e
   Mixpanel: 524c6880d45d71faa7d0dcd10f52221c99b6d820
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  Stripe: 10761682d20dc491c52287393c800db056c9748d
   SwiftMessages: 09cea3336e3fb63c3578983c8aac65acaa6d884a
   UIColor+FlatColors: 6c699df7a575281794c688c64cee6c44fd1f93b4
 
-PODFILE CHECKSUM: da59dc29495fb19cb4b72e0ccb6e2934e1775df3
+PODFILE CHECKSUM: 06422ccee5b9359c06f582d20c54e2dda2230309
 
 COCOAPODS: 1.2.1

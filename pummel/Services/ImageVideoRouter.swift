@@ -6,7 +6,6 @@
 //  Copyright © 2017 pummel. All rights reserved.
 //
 
-import Mixpanel
 import Alamofire
 import Foundation
 import AlamofireImage

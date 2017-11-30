@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cAI-GB-clN">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -96,15 +96,15 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Messages" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lMi-Iy-Ren">
-                                                                <rect key="frame" x="20.5" y="0.0" width="85" height="0.0"/>
-                                                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="15"/>
+                                                                <rect key="frame" x="30.5" y="0.0" width="65" height="0.0"/>
+                                                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="13"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
-                                                            <constraint firstItem="lMi-Iy-Ren" firstAttribute="width" secondItem="5oM-ud-mzY" secondAttribute="width" id="1sK-iP-MMQ"/>
+                                                            <constraint firstItem="lMi-Iy-Ren" firstAttribute="width" secondItem="5oM-ud-mzY" secondAttribute="width" constant="-20" id="1sK-iP-MMQ"/>
                                                             <constraint firstItem="5oM-ud-mzY" firstAttribute="centerX" secondItem="GKs-Vx-6Ut" secondAttribute="centerX" id="5Bh-JX-r7n"/>
                                                             <constraint firstItem="lMi-Iy-Ren" firstAttribute="centerX" secondItem="GKs-Vx-6Ut" secondAttribute="centerX" id="Hmt-ai-ZaN"/>
                                                             <constraint firstItem="5oM-ud-mzY" firstAttribute="height" secondItem="lMi-Iy-Ren" secondAttribute="height" id="QIR-8N-T8M"/>
@@ -124,8 +124,8 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Social Clicks" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aIe-uV-AJA">
-                                                                <rect key="frame" x="20" y="0.0" width="85" height="0.0"/>
-                                                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="15"/>
+                                                                <rect key="frame" x="30" y="0.0" width="65" height="0.0"/>
+                                                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="13"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
@@ -134,7 +134,7 @@
                                                         <constraints>
                                                             <constraint firstItem="aIe-uV-AJA" firstAttribute="top" secondItem="NnH-5b-eYX" secondAttribute="bottom" id="01b-ei-MGQ"/>
                                                             <constraint firstItem="NnH-5b-eYX" firstAttribute="centerX" secondItem="0s3-HR-oFV" secondAttribute="centerX" id="J3W-rr-B3Y"/>
-                                                            <constraint firstItem="aIe-uV-AJA" firstAttribute="width" secondItem="NnH-5b-eYX" secondAttribute="width" id="KlU-p2-78M"/>
+                                                            <constraint firstItem="aIe-uV-AJA" firstAttribute="width" secondItem="NnH-5b-eYX" secondAttribute="width" constant="-20" id="KlU-p2-78M"/>
                                                             <constraint firstItem="NnH-5b-eYX" firstAttribute="height" secondItem="aIe-uV-AJA" secondAttribute="height" id="QFi-Cy-pvB"/>
                                                             <constraint firstAttribute="bottom" secondItem="aIe-uV-AJA" secondAttribute="bottom" id="qcE-Kb-7Sk"/>
                                                             <constraint firstItem="aIe-uV-AJA" firstAttribute="centerX" secondItem="0s3-HR-oFV" secondAttribute="centerX" id="rhf-Kb-60R"/>
@@ -151,15 +151,15 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile Views" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8FQ-dO-rSR">
-                                                                <rect key="frame" x="20" y="0.0" width="85" height="0.0"/>
-                                                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="15"/>
+                                                                <rect key="frame" x="30" y="0.0" width="65" height="0.0"/>
+                                                                <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="13"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
-                                                            <constraint firstItem="8FQ-dO-rSR" firstAttribute="width" secondItem="G88-3T-zcf" secondAttribute="width" id="0am-9l-5F0"/>
+                                                            <constraint firstItem="8FQ-dO-rSR" firstAttribute="width" secondItem="G88-3T-zcf" secondAttribute="width" constant="-20" id="0am-9l-5F0"/>
                                                             <constraint firstAttribute="bottom" secondItem="8FQ-dO-rSR" secondAttribute="bottom" id="0wd-ab-njI"/>
                                                             <constraint firstItem="G88-3T-zcf" firstAttribute="height" secondItem="8FQ-dO-rSR" secondAttribute="height" id="8wL-HZ-vzO"/>
                                                             <constraint firstItem="8FQ-dO-rSR" firstAttribute="centerX" secondItem="s1l-z9-7Mt" secondAttribute="centerX" id="M7S-yn-Rfn"/>

@@ -457,15 +457,4 @@ extension UITextField {
         self.text = text
     }
     
-    func reformatAsNumber() {
-        let text = self.text?.removeNonDigits()
-        
-        let maxNumber = 1000
-        if (Int(text!)! > maxNumber) {
-            self.text = "\(maxNumber)"
-        } else {
-            self.text = text
-        }
-    }
-    
 }

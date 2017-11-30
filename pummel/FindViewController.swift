@@ -490,7 +490,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         }
         
         if (self.totalLead > 0 || self.totalFollowCoach > 0) {
-            self.firstCollectionView.reloadData()
+            if (self.firstViewHeightConstraint.constant == 0) {
+                self.firstCollectionView.reloadData()
+            }
+            
             self.firstViewHeightConstraint.constant = 145
         } else {
             self.firstViewHeightConstraint.constant = 0
@@ -510,7 +513,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         // Second view: product view
         self.secondTitleLabel.text = "PURCHASES (\(self.totalPurchaseProduct))"
         if (self.totalPurchaseProduct > 0) {
-            self.secondCollectionView.reloadData()
+            if (self.secondViewHeightConstraint.constant == 0) {
+                self.secondCollectionView.reloadData()
+            }
+            
             self.secondViewHeightConstraint.constant = 145
         } else {
             self.secondViewHeightConstraint.constant = 0

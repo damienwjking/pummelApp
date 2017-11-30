@@ -30,6 +30,10 @@ class GetStarted2ViewController: UIViewController {
         self.imInBT.titleLabel?.font = .pmmMonReg13()
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     @IBAction func backToFirstScreenTour(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }

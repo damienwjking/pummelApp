@@ -41,13 +41,15 @@ class LoginAndRegisterViewController: UIViewController {
         self.loginVC.didMove(toParentViewController: self)
         self.loginVC.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH,  height: SCREEN_HEIGHT - 251)
         self.loginVC.view.clipsToBounds = true
-        self.containtView.addSubview(loginVC.view)
+        self.containtView.addSubview(self.loginVC.view)
+        self.addContentLayoutForView(view: self.loginVC.view)
         
         // Add registerVC and hidden it for initial
         self.addChildViewController(self.signupVC)
         self.signupVC.didMove(toParentViewController: self)
         self.signupVC.view.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT - 251)
         self.containtView.addSubview(self.signupVC.view)
+        self.addContentLayoutForView(view: self.signupVC.view)
         
         self.updateLoginScreen()
         self.profileIMV.layer.cornerRadius = 45
@@ -64,6 +66,16 @@ class LoginAndRegisterViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.signupSuccessAction), name: NSNotification.Name(rawValue: "SIGNUPSUCCESSNOTIFICATION"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.forgotPasswordAction), name: NSNotification.Name(rawValue: "FORGOTPASSWORDNOTIFICATION"), object: nil)
+    }
+    
+    func addContentLayoutForView(view: UIView) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: self.containtView, attribute: .width, multiplier: 1, constant: 0)
+        let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: self.containtView, attribute: .height, multiplier: 1, constant: 0)
+        let centerXConstraint = NSLayoutConstraint(item: view, attribute: .centerX, relatedBy: .equal, toItem: self.containtView, attribute: .centerX, multiplier: 1, constant: 0)
+        let centerYConstraint = NSLayoutConstraint(item: view, attribute: .centerY, relatedBy: .equal, toItem: self.containtView, attribute: .centerY, multiplier: 1, constant: 0)
+        
+        self.containtView.addConstraints([widthConstraint, heightConstraint, centerXConstraint, centerYConstraint])
     }
     
     override func viewWillAppear(_ animated: Bool) {

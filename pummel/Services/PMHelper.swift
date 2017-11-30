@@ -174,40 +174,6 @@ class PMHelper {
                             } else {
                                 topController.present(coachProfileVC, animated: true, completion: nil)
                             }
-                            
-                            
-//                            if (isCoach == true) {
-//                                //                            let coachProfileVC = UIStoryboard(name: "CoachProfile", bundle: nil).instantiateInitialViewController() as! CoachProfileViewController
-//                                
-//                                let coachProfileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileViewController
-//                                
-//                                coachProfileVC.isCoach = true
-//                                coachProfileVC.userID = userID
-//                                coachProfileVC.coachDetail = userInfo
-//                                coachProfileVC.profileStyle = .otherUser
-//                                coachProfileVC.isFromChat = isFromChat
-//                                
-//                                if (showTestimonial == true) {
-//                                    topController.present(coachProfileVC, animated: true, completion: {
-//                                        coachProfileVC.showPostTestimonialViewController()
-//                                    })
-//                                } else {
-//                                    topController.present(coachProfileVC, animated: true, completion: nil)
-//                                }
-//                            } else {
-//                                let userProfileVC = UIStoryboard(name: "UserProfile", bundle: nil).instantiateInitialViewController() as! UserProfileViewController
-//                                
-//                                userProfileVC.userDetail = userInfo
-//                                userProfileVC.userId = userID
-//                                
-//                                if (showTestimonial == true) {
-//                                    topController.present(userProfileVC, animated: true, completion: {
-//                                        userProfileVC.showPostTestimonialViewController()
-//                                    })
-//                                } else {
-//                                    topController.present(userProfileVC, animated: true, completion: nil)
-//                                }
-//                            }
                             }.fetchdata()
                     } else {
                         print("Request failed with error: \(String(describing: error))")

@@ -135,6 +135,8 @@ extension BookAndBuyViewController: UITableViewDelegate, UITableViewDataSource {
         if (indexPath.row == 0) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ProductUserCell") as! ProductUserCell
             
+            cell.setupData(userID: self.coachID)
+            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "BookAndBuyCell") as! BookAndBuyCell

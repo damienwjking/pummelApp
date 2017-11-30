@@ -35,6 +35,8 @@ class SigninViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.view.layoutIfNeeded()
     }
 
     override func viewDidAppear(_ animated: Bool) {

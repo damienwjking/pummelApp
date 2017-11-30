@@ -36,19 +36,11 @@ class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.letUsHelpTF.font = .pmmPlayFairReg33()
-        self.letUsHelpDetailTF.font = .pmmPlayFairReg15()
-        self.genderTF.font = .pmmMonReg11()
-        self.genderResultTF.font = .pmmMonReg11()
-        self.locationTF.font = .pmmMonReg11()
-        self.locationResultTF.font = .pmmMonReg11()
         self.helpMeReachTheCoachBT.layer.cornerRadius = 2
         self.helpMeReachTheCoachBT.layer.borderWidth = 0.5
-        self.helpMeReachTheCoachBT.titleLabel?.font = .pmmMonReg11()
-        self.helpMeReachTheCoachBT.setTitleColor(UIColor.white, for: .normal)
-        self.helpMeReachTheCoachBT.backgroundColor = .pmmBrightOrangeColor()
         let cellNib = UINib(nibName: kTagCell, bundle: nil)
         self.collectionView.register(cellNib, forCellWithReuseIdentifier: kTagCell)
+        
         self.collectionView.backgroundColor = UIColor.clear
         self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
         self.sizingCell?.isSearch = true
@@ -157,13 +149,13 @@ class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
         mixpanel?.track("IOS.FindATrainer", properties: properties)
     }
     
-    private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if (status == .authorizedWhenInUse) {
              performSegue(withIdentifier: "searching", sender: nil)
         } 
     }
     
-    @IBAction func clickOnGender(sender: UIButton) {
+    @IBAction func genderButtonClicked(_ sender: Any) {
         let selectMale = { (action:UIAlertAction!) -> Void in
             self.genderResultTF.text = kMALEU
             // Tracker mixpanel
@@ -189,7 +181,7 @@ class LetUsHelpViewController: BaseViewController, CLLocationManagerDelegate {
         self.present(alertController, animated: true) { }
     }
     
-    @IBAction func clickOnLocation(sender: UIButton) {
+    @IBAction func locationButtonClicked(_ sender: Any) {
         let mixpanel = Mixpanel.sharedInstance()
         let selectGym = { (action:UIAlertAction!) -> Void in
             let properties = ["Name": "Search - Select Location", "Label":"Select Gym"]

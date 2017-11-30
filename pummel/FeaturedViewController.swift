@@ -111,7 +111,7 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         self.coordinate = location.coordinate
     }
     
-    private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch(status) {
         case .restricted, .denied:
             self.getDiscountList()
