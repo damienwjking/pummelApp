@@ -132,7 +132,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     var facebookLink: String? = ""
     
     var tags = [TagModel]()
-    var photoArray: [PhotoModel] = []
+    var photoList: [PhotoModel] = []
     var testimonialArray = [TestimonialModel]()
     var offset: Int = 0
     var testimonialOffset = 0
@@ -176,13 +176,10 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.setupUI()
         self.setupCollectionView()
         
         // Add notification for update video url
         NotificationCenter.default.addObserver(self, selector: #selector(self.profileGetNewDetail), name: NSNotification.Name(rawValue: "PROFILE_GET_DETAIL"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.uploadVideoWithNotification), name: NSNotification.Name(rawValue: "PROFILE_UPLOAD_VIDEO"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.afterFirstLogin), name: NSNotification.Name(rawValue: "AFTER_FIRST_LOGIN"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -196,22 +193,13 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         let selectedImage = UIImage(named: "profilePressed")
         self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         
-        self.setupUIForProfileStyle()
+        self.setupUI()
+        self.updateUIForProfileStyle()
         
         self.getDetail()
         self.getConnectStatus()
         
         self.playVideoButton.setImage(nil, for: .normal)
-        
-        if (self.isCoach == true) {
-            self.cameraButton.alpha = 1
-            self.cameraButton.isUserInteractionEnabled = true
-            self.avatarIMV.layer.borderWidth = 3
-        } else {
-            self.cameraButton.alpha = 0
-            self.cameraButton.isUserInteractionEnabled = false
-            self.avatarIMV.layer.borderWidth = 0
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -239,21 +227,6 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         return .lightContent
     }
     
-//    override var prefersStatusBarHidden: Bool {
-//        if (self.profileStyle == .currentUser) {
-//            return false
-//        } else {
-//            return true // Hide status bar
-//        }
-//    }
-    
-    func afterFirstLogin() {
-        if (self.profileStyle == .currentUser) {
-            self.isCoach = self.userDefaults.bool(forKey: k_PM_IS_COACH)
-            self.setupUI()
-        }
-    }
-    
     func setupUI() {
         self.bigBigIndicatorView.layer.cornerRadius = 374/2
         self.bigIndicatorView.layer.cornerRadius = 312/2
@@ -278,6 +251,16 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.avatarIMV.clipsToBounds = true
         self.avatarIMV.layer.cornerRadius = 125/2
         self.avatarIMV.layer.borderColor = UIColor.pmmBrightOrangeColor().cgColor
+        
+        if (self.isCoach == true) {
+            self.cameraButton.alpha = 1
+            self.cameraButton.isUserInteractionEnabled = true
+            self.avatarIMV.layer.borderWidth = 3
+        } else {
+            self.cameraButton.alpha = 0
+            self.cameraButton.isUserInteractionEnabled = false
+            self.avatarIMV.layer.borderWidth = 0
+        }
         
         self.scrollView.scrollsToTop = false
         
@@ -309,7 +292,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.testimonialCollectionView.register(testimonialXib, forCellWithReuseIdentifier: kTestimonialCell)
     }
     
-    func setupUIForProfileStyle() {
+    func updateUIForProfileStyle() {
         self.testimonialInviteButton.isHidden = true
         
         if (self.profileStyle == .currentUser) {
@@ -415,6 +398,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 }
                 
                 self.setAvatar()
+                
                 if (self.isCoach == true) {
                     self.getBusinessImage()
                     self.getListTag()
@@ -423,7 +407,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.updateUIUser()
                 }
                 
-                self.getListImage()
+                self.getPhotoList()
                 
                 // check Video URL
                 let videoURL = self.coachDetail[kVideoURL] as? String
@@ -493,7 +477,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         }
     }
     
-    func getListImage() {
+    func getPhotoList() {
         if (self.isStopGetListPhotos == false) {
             UserRouter.getPhotoList(userID: self.userID, offset: self.offset, completed: { (result, error) in
                 
@@ -506,11 +490,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                         self.offset += 10
                         
                         for photo in arrayphoto {
-                            if (photo.existInList(photoList: self.photoArray) == false) {
+                            if (photo.existInList(photoList: self.photoList) == false) {
                                 photo.delegate = self
                                 photo.synsImage()
                                 
-                                self.photoArray.append(photo)
+                                self.photoList.append(photo)
                             }
                         }
                     }
@@ -830,7 +814,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         // Photo list
         self.postCollectionView.reloadData(completion: {
-            if (self.photoArray.count == 0) {
+            if (self.photoList.count == 0) {
                 self.postViewHeightConstraint.constant = 0
             } else {
                 self.postCollectionViewHeightConstraint.constant = self.postCollectionView.collectionViewLayout.collectionViewContentSize.height
@@ -849,6 +833,7 @@ extension ProfileViewController {
         } else {
             performSegue(withIdentifier: "goEditCoach", sender: nil)
         }
+        
         // Tracker mixpanel
         let mixpanel = Mixpanel.sharedInstance()
         let properties = ["Name": "Navigation Click", "Label":"Go Edit Profile"]
@@ -1071,7 +1056,7 @@ extension ProfileViewController {
         let margin: CGFloat = 15.0
         var topMargin: CGFloat = 15.0
         if (self.profileStyle == .otherUser) {
-            topMargin = 55.0
+            topMargin = 65.0
         }
         
         self.avatarIMVCenterXConstraint.constant = -(self.detailV.frame.width - newAvatarSize)/2 + margin
@@ -1236,6 +1221,15 @@ extension ProfileViewController: TestimonialDelegate {
 // MARK: - PhotoDelegate
 extension ProfileViewController: PhotoDelegate {
     func photoSynsDataCompleted(photo: PhotoModel) {
+        // Remove photo cannot get image
+        if (photo.imageCache == nil) {
+            let index = self.photoList.index(of: photo)
+            
+            if (index != nil && index! >= 0 && index! < self.photoList.count) {
+                self.photoList.remove(at: index!)
+            }
+        }
+        
         self.postCollectionView.reloadData()
     }
 }
@@ -1295,7 +1289,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             
             return self.testimonialArray.count
         } else {
-            return photoArray.count
+            return photoList.count
         }
     }
     
@@ -1321,11 +1315,11 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kAboutCollectionViewCell, for: indexPath) as! AboutCollectionViewCell
             
-            if indexPath.row == self.photoArray.count - 1 {
-                self.getListImage()
+            if indexPath.row == self.photoList.count - 1 {
+                self.getPhotoList()
             }
             
-            let photo = self.photoArray[indexPath.row]
+            let photo = self.photoList[indexPath.row]
             cell.setupData(photo: photo)
             
             return cell
@@ -1359,7 +1353,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         } else if (collectionView == self.testimonialCollectionView) {
             // Do nothing
         } else {
-            let photo = self.photoArray[indexPath.row]
+            let photo = self.photoList[indexPath.row]
             
             self.view.makeToastActivity()
             FeedRouter.getPhotoPost(photoID: photo.uploadId, completed: { (result, error) in

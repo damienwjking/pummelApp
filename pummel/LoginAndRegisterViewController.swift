@@ -27,7 +27,7 @@ class LoginAndRegisterViewController: UIViewController {
     @IBOutlet var addProfileIconIMV : UIImageView!
     @IBOutlet var cameraProfileIconIMV : UIImageView!
     @IBOutlet var addProfilePhototLB : UILabel!
-    var imageData : NSData!
+    var imageData : NSData! = NSData()
     let imagePicker = UIImagePickerController()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,7 +92,9 @@ class LoginAndRegisterViewController: UIViewController {
     }
     
     func loginSuccessAction() {
-        self.performSegue(withIdentifier: "showClientSegue", sender: nil)
+        PMHelper.actionWithDelaytime(delayTime: 0.5) {
+            self.performSegue(withIdentifier: "showClientSegue", sender: nil)
+        }
     }
     
     func forgotPasswordAction() {
@@ -102,10 +104,10 @@ class LoginAndRegisterViewController: UIViewController {
     func signupSuccessAction() {
         self.view.makeToastActivity()
         
-        if (self.imageData == nil) {
-            let noImage = UIImage(named: "display-empty.jpg")
-            self.imageData = UIImageJPEGRepresentation(noImage!, 0.5)! as NSData
-        }
+//        if (self.imageData == nil) {
+//            let noImage = UIImage(named: "display-empty.jpg")
+//            self.imageData = UIImageJPEGRepresentation(noImage!, 0.5)! as NSData
+//        }
         
         ImageVideoRouter.uploadPhoto(posfix: kPM_PATH_PHOTO_PROFILE, imageData: self.imageData as Data, textPost: "") { (result, error) in
             self.view.hideToastActivity()

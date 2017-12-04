@@ -79,11 +79,13 @@ class PhotoModel: NSObject {
                 if (error == nil) {
                     let imageRes = result as! UIImage
                     self.imageCache = imageRes
-                    
-                    self.callDelegate()
                 } else {
                     print("Request failed with error: \(String(describing: error))")
+                    
+                    self.imageCache = nil
                 }
+                
+                self.callDelegate()
             }).fetchdata()
         }
     }

@@ -66,11 +66,6 @@ class DetailSessionViewController: BaseViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateSession(notification:)), name: NSNotification.Name(rawValue: k_PM_UPDATE_SESSION_NOTIFICATION), object: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -81,13 +76,9 @@ class DetailSessionViewController: BaseViewController {
         
         self.setUserAvatar()
         
-        if self.session.imageUrl?.isEmpty == false {
-            self.setSessionImage()
-        } else {
-            self.sessionIMV.backgroundColor = UIColor.init(hexString: self.sessionTagColorString)
-        }
+        self.setSessionImage()
         
-        if self.session.coachId == 0 {
+        if self.session.coachId != 0 {
             self.setCoachAvatar()
             self.coachIMVWidthConstraint.constant = 40
             self.coachIMVLeadingConstraint.constant = 8;
@@ -227,6 +218,8 @@ class DetailSessionViewController: BaseViewController {
     }
     
     func setSessionImage() {
+        self.sessionIMV.backgroundColor = UIColor.init(hexString: self.sessionTagColorString)
+        
         if self.session.imageUrl?.isEmpty == false {
             let imageLink = self.session.imageUrl
             

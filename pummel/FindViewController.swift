@@ -190,7 +190,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         // Cell size
         self.widthCell = (SCREEN_WIDTH - 30)
-        self.searchCollectionViewLayout.itemSize = CGSize(width: (SCREEN_WIDTH - 40), height: (SCREEN_HEIGHT - 160))
+        let heightCell = ((self.widthCell * 1920) / 1080) - 100// 1920:1080 : resolution of iphone +
+        self.searchCollectionViewLayout.itemSize = CGSize(width: (SCREEN_WIDTH - 40), height: heightCell)
         self.searchCollectionViewLayout.sectionInset = UIEdgeInsetsMake(-40, 20, 0, 0)
         self.searchCollectionViewLayout.minimumLineSpacing = 10
     }
@@ -336,6 +337,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                         }
                     }
                     
+                    self.firstCollectionView.reloadData()
+                    
                     self.updateLayout()
                     self.followCoachOffset = self.followCoachOffset + 20
                 } else {
@@ -381,10 +384,13 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                         
                         if (product.existInList(productList: self.purchaseProductList) == false) {
                             product.isBought = true
+                            product.delegate = self
                             
                             self.purchaseProductList.append(product)
                         }
                     }
+                    
+                    self.secondCollectionView.reloadData()
                     
                     self.updateLayout()
                     self.purchaseProductOffset = self.purchaseProductOffset + 20

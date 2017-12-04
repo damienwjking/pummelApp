@@ -146,10 +146,11 @@ class NewPostViewController: BaseViewController {
                 self.view.hideToastActivity()
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 
-                let isUploadSuccess = result as! Bool
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "addNewPostNotification"), object: nil)
                 
+                let isUploadSuccess = result as! Bool
                 if (isUploadSuccess == true) {
-                    self.navigationController?.popViewController(animated: true)
+                   self.navigationController?.popViewController(animated: true)
                 } else {
                     PMHelper.showDoAgainAlert()
                 }

@@ -1036,8 +1036,6 @@ enum UserRouter: URLRequestConvertible {
             
             defaults.set(isCoach, forKey: k_PM_IS_COACH)
             defaults.synchronize()
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AFTER_FIRST_LOGIN"), object: nil)
             }.fetchdata()
         
         

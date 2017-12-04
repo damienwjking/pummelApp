@@ -64,9 +64,12 @@ class FeedViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)
             ), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
         self.listComment.removeAll()
         self.stopGetListComment = false
         self.offset = 0

@@ -215,7 +215,6 @@ enum TagRouter: URLRequestConvertible {
     }
     
     static func getRandomColorString() -> String {
-        
         let randomRed: CGFloat = CGFloat(drand48())
         let randomGreen: CGFloat = CGFloat(drand48())
         let randomBlue: CGFloat = CGFloat(drand48())

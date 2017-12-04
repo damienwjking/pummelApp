@@ -65,7 +65,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7n5-3f-2LV">
-                                <rect key="frame" x="-0.5" y="32" width="375" height="667"/>
+                                <rect key="frame" x="-0.5" y="64" width="375" height="543"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0hf-lY-sTo">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="288"/>
@@ -218,12 +218,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="7n5-3f-2LV" firstAttribute="centerY" secondItem="wle-4t-BCh" secondAttribute="centerY" id="2FO-Pc-Vl0"/>
-                            <constraint firstItem="7n5-3f-2LV" firstAttribute="height" secondItem="uxa-hR-HNv" secondAttribute="height" id="Da6-ys-KNs"/>
+                            <constraint firstItem="Nmt-Qp-tCm" firstAttribute="top" secondItem="7n5-3f-2LV" secondAttribute="bottom" id="1xc-ee-FBh"/>
                             <constraint firstItem="7n5-3f-2LV" firstAttribute="centerX" secondItem="wle-4t-BCh" secondAttribute="centerX" id="T6s-lS-OhB"/>
                             <constraint firstItem="7n5-3f-2LV" firstAttribute="width" secondItem="uxa-hR-HNv" secondAttribute="width" id="X4r-sk-DyI"/>
                             <constraint firstItem="Nmt-Qp-tCm" firstAttribute="centerX" secondItem="wle-4t-BCh" secondAttribute="centerX" id="bDh-h6-0lK"/>
                             <constraint firstItem="wle-4t-BCh" firstAttribute="bottom" secondItem="Nmt-Qp-tCm" secondAttribute="bottom" id="fUL-ZM-0qQ"/>
+                            <constraint firstItem="wle-4t-BCh" firstAttribute="top" secondItem="7n5-3f-2LV" secondAttribute="top" id="iGd-YM-pw2"/>
                             <constraint firstItem="Nmt-Qp-tCm" firstAttribute="width" secondItem="uxa-hR-HNv" secondAttribute="width" id="jTT-7w-Bde"/>
                             <constraint firstItem="0hf-lY-sTo" firstAttribute="width" secondItem="uxa-hR-HNv" secondAttribute="width" id="lGS-DF-3aZ"/>
                         </constraints>
@@ -233,8 +233,10 @@
                         <outlet property="borderView" destination="bzn-qO-P8b" id="Rhx-tr-Opr"/>
                         <outlet property="descriptionLabel" destination="3b6-qD-LZ9" id="awa-5L-L6t"/>
                         <outlet property="payNowButton" destination="Nmt-Qp-tCm" id="vnv-m9-3zW"/>
+                        <outlet property="payNowButtonBottomConstraint" destination="fUL-ZM-0qQ" id="Yz5-zE-jRf"/>
                         <outlet property="productImageView" destination="CIL-4W-9tW" id="zcE-9u-aUv"/>
                         <outlet property="qualityTextField" destination="Guj-VX-uFL" id="zrW-xt-Y4U"/>
+                        <outlet property="scrollView" destination="7n5-3f-2LV" id="1Up-7V-ZSp"/>
                         <outlet property="subTitleLabel" destination="xBV-aa-fDq" id="DDX-va-q74"/>
                         <outlet property="titleLabel" destination="Jl3-13-SxM" id="Hlx-pz-tLx"/>
                         <outlet property="totalMoneyLabel" destination="SAt-Cm-vUB" id="Oh9-Rj-0Fs"/>
@@ -464,6 +466,8 @@
                         <outlet property="cvcTextField" destination="B9g-Uw-GdE" id="0ej-yI-nGW"/>
                         <outlet property="expireTimeTextField" destination="y37-1f-kqR" id="xWw-uo-YeS"/>
                         <outlet property="moneyTextField" destination="5Y5-fQ-Uft" id="DJk-mW-vxE"/>
+                        <outlet property="payNowButton" destination="od2-lO-84c" id="le9-85-Un4"/>
+                        <outlet property="payNowButtonBottomConstraint" destination="6lZ-22-UuY" id="l2f-Cy-aPt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OCD-BO-0ra" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -117,7 +117,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="db4-N2-14n">
-                                                <rect key="frame" x="538" y="2" width="60" height="60"/>
+                                                <rect key="frame" x="538" y="12" width="60" height="60"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="60" id="DSR-wn-CXo"/>
                                                     <constraint firstAttribute="width" secondItem="db4-N2-14n" secondAttribute="height" multiplier="1:1" id="f8s-xx-kmE"/>
@@ -129,13 +129,13 @@
                                                 </connections>
                                             </button>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QAR-l9-0fJ">
-                                                <rect key="frame" x="588" y="32" width="0.0" height="0.0"/>
+                                                <rect key="frame" x="588" y="42" width="0.0" height="0.0"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Light" family="Montserrat" pointSize="13"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Khe-Fh-MlV">
-                                                <rect key="frame" x="0.0" y="20" width="60" height="30"/>
+                                                <rect key="frame" x="0.0" y="30" width="60" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="60" id="nGK-Sg-8Aj"/>
                                                     <constraint firstAttribute="height" constant="30" id="rJU-nm-xaS"/>
@@ -146,7 +146,7 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="13q-KO-Xyf">
-                                                <rect key="frame" x="75" y="35" width="450" height="0.0"/>
+                                                <rect key="frame" x="75" y="45" width="450" height="0.0"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="13"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -154,7 +154,7 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.25882352939999997" green="0.18823529410000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="db4-N2-14n" firstAttribute="top" secondItem="dUz-At-R3A" secondAttribute="top" constant="2" id="0v1-75-o4I"/>
+                                            <constraint firstItem="db4-N2-14n" firstAttribute="top" secondItem="dUz-At-R3A" secondAttribute="top" constant="12" id="0v1-75-o4I"/>
                                             <constraint firstItem="dwI-Ae-AUK" firstAttribute="centerY" secondItem="U88-8Z-7He" secondAttribute="centerY" id="1zB-zx-peJ"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerX" secondItem="2Qg-F7-KVb" secondAttribute="centerX" id="7Nb-vm-r9A"/>
                                             <constraint firstItem="dwI-Ae-AUK" firstAttribute="centerX" secondItem="U88-8Z-7He" secondAttribute="centerX" id="8qn-f8-Mbx"/>
@@ -166,6 +166,7 @@
                                             <constraint firstItem="H39-IH-xZm" firstAttribute="centerY" secondItem="dwI-Ae-AUK" secondAttribute="centerY" id="T74-gU-6qN"/>
                                             <constraint firstAttribute="trailing" secondItem="QAR-l9-0fJ" secondAttribute="trailing" constant="12" id="T9z-kT-cLA"/>
                                             <constraint firstItem="13q-KO-Xyf" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="WDY-bd-EHm"/>
+                                            <constraint firstItem="Khe-Fh-MlV" firstAttribute="top" secondItem="dUz-At-R3A" secondAttribute="top" constant="30" id="WcW-6N-gFt"/>
                                             <constraint firstItem="51y-60-mKL" firstAttribute="height" secondItem="dUz-At-R3A" secondAttribute="height" id="Yrl-Bp-K2r"/>
                                             <constraint firstItem="Pss-Fx-2Jc" firstAttribute="centerX" secondItem="H39-IH-xZm" secondAttribute="centerX" id="b27-Sf-Hin"/>
                                             <constraint firstItem="H39-IH-xZm" firstAttribute="centerX" secondItem="dwI-Ae-AUK" secondAttribute="centerX" id="eLW-zF-2qm"/>
@@ -175,7 +176,6 @@
                                             <constraint firstItem="13q-KO-Xyf" firstAttribute="centerY" secondItem="Khe-Fh-MlV" secondAttribute="centerY" id="l9i-CZ-Tdt"/>
                                             <constraint firstItem="51y-60-mKL" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="oos-B3-R9x"/>
                                             <constraint firstAttribute="bottom" secondItem="897-JI-yRT" secondAttribute="bottom" constant="40" id="pe0-4A-TgH"/>
-                                            <constraint firstItem="Khe-Fh-MlV" firstAttribute="top" secondItem="dUz-At-R3A" secondAttribute="top" constant="20" id="ql0-yU-fFP"/>
                                             <constraint firstAttribute="height" constant="300" id="rus-GV-gMl"/>
                                             <constraint firstItem="U88-8Z-7He" firstAttribute="centerX" secondItem="dUz-At-R3A" secondAttribute="centerX" id="sW0-3i-KJg"/>
                                             <constraint firstAttribute="trailing" secondItem="db4-N2-14n" secondAttribute="trailing" constant="2" id="twW-ZC-0AD"/>
@@ -358,7 +358,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9L0-4i-uS6">
-                                                <rect key="frame" x="550" y="17" width="34" height="25"/>
+                                                <rect key="frame" x="550" y="17.5" width="34" height="25"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="11"/>
                                                 <state key="normal" title="INVITE">
                                                     <color key="titleColor" red="1" green="0.35686274509999999" blue="0.062745098040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -135,11 +135,15 @@ class SignupViewController: UIViewController {
             let properties = ["Name": "Navigation Click", "Label":"Register"]
             mixpanel?.track("IOS.Register", properties: properties)
             
-            
             self.view.makeToastActivity(message: "Loading")
             
-            UserRouter.signup(firstName: firstname, email: userEmail!, password: userPassword!, gender: gender!, completed: { (result, error) in
-                self.view.hideToastActivity()
+            UserRouter.signup(firstName: firstname,
+                              email: userEmail!,
+                              password: userPassword!,
+                              gender: gender!, completed: { (result, error) in
+                PMHelper.actionWithDelaytime(delayTime: 0.5) {
+                    self.view.hideToastActivity()
+                }
                 
                 if (error == nil) {
                     let isSigninSuccess = result as! Bool
@@ -276,6 +280,8 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
         } else {
             print("login success")
             
+            self.view.makeToastActivity(message: "Loading")
+            
             let req = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,birthday,cover,picture.type(large)"], tokenString: FBSDKAccessToken.current().tokenString, version: nil, httpMethod: "GET")
             
             // For warning
@@ -301,10 +307,15 @@ extension SignupViewController : FBSDKLoginButtonDelegate {
                     }
                     
                     UserRouter.authenticateFacebook(fbID: fbID, email: email, firstName: firstName, lastName: lastName, avatarURL: pictureURL, gender: gender, completed: { (result, error) in
+                        PMHelper.actionWithDelaytime(delayTime: 0.5) {
+                            self.view.hideToastActivity()
+                        }
+                        
                         if (error == nil) {
                             let successLogin = result as! Bool
                             
                             if (successLogin == true) {
+                                UserDefaults.standard.set(true, forKey: "SHOW_SEARCH_AFTER_REGISTER")
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "LOGINSUCCESSNOTIFICATION"), object: nil)
                             }
                         } else {

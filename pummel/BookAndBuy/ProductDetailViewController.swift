@@ -9,6 +9,7 @@
 import UIKit
 
 class ProductDetailViewController: BaseViewController {
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var borderView: UIView!
     
     @IBOutlet weak var productImageView: UIImageView!
@@ -20,6 +21,7 @@ class ProductDetailViewController: BaseViewController {
     @IBOutlet weak var totalMoneyLabel: UILabel!
     
     @IBOutlet weak var payNowButton: UIButton!
+    @IBOutlet weak var payNowButtonBottomConstraint: NSLayoutConstraint!
     
     var product: ProductModel? = nil
     
@@ -28,12 +30,46 @@ class ProductDetailViewController: BaseViewController {
 
         self.setupLayout()
         self.setupNavigationBar()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)
+            ), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.fillData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.keyboardWillHide(notification: NSNotification(name: NSNotification.Name.UIKeyboardWillHide, object: nil))
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        
+        self.payNowButtonBottomConstraint.constant = keyboardHeight
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.payNowButton.layoutIfNeeded()
+        }) { (animated) in
+            let contentOffset = CGPoint(x: 0, y: self.scrollView.contentSize.height - self.scrollView.frame.size.height)
+            self.scrollView.setContentOffset(contentOffset, animated: true)
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        self.payNowButtonBottomConstraint.constant = 0
+        
+        UIView.animate(withDuration: 0.3) {
+            self.payNowButton.layoutIfNeeded()
+        }
     }
     
     func setupNavigationBar() {

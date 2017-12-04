@@ -40,6 +40,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
         
         let cellNib = UINib(nibName: "FeaturedFeedTableViewCell", bundle: nil)
         self.tableFeed.register(cellNib, forCellReuseIdentifier: "FeaturedFeedTableViewCell")
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refresh), name: NSNotification.Name(rawValue: "addNewPostNotification"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {

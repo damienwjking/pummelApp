@@ -15,6 +15,9 @@ class InputVisaViewController: UIViewController {
     @IBOutlet weak var cvcTextField: UITextField!
     @IBOutlet weak var moneyTextField: UITextField!
     
+    @IBOutlet weak var payNowButton: UIButton!
+    @IBOutlet weak var payNowButtonBottomConstraint: NSLayoutConstraint!
+    
     var totalMoney: Int = 0
     var product: ProductModel? = nil
     
@@ -25,12 +28,37 @@ class InputVisaViewController: UIViewController {
         
         self.setupLayout()
         self.setupNavigationBar()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)
+            ), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.updateLayout()
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIKeyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        
+        self.payNowButtonBottomConstraint.constant = keyboardHeight
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.payNowButton.layoutIfNeeded()
+        })
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        self.payNowButtonBottomConstraint.constant = 0
+        
+        UIView.animate(withDuration: 0.3) {
+            self.payNowButton.layoutIfNeeded()
+        }
     }
     
     func setupNavigationBar() {
@@ -103,7 +131,17 @@ class InputVisaViewController: UIViewController {
                         let tokenString = token?.description
                         ProductRouter.buyProduct(productID: (self.product?.id)!, amount: self.totalMoney, token: tokenString!, completed: { (result, error) in
                             if (error == nil) {
-                                self.navigationController?.popViewController(animated: true)
+                                NotificationCenter.default.post(name: NSNotification.Name("updateLeadProduct"), object: nil)
+                                
+                                let alertController = UIAlertController(title: "Pummel", message: "You have just paid successfully", preferredStyle: .alert)
+                                
+                                let okAction = UIAlertAction(title: kOk, style: .cancel, handler: { (_) in
+                                    self.dismiss(animated: true, completion: nil)
+                                })
+                                
+                                alertController.addAction(okAction)
+                                
+                                self.present(alertController, animated: true, completion: nil)
                             } else {
                                 print("Request failed with error: \(String(describing: error))")
                             }

@@ -67,4 +67,9 @@ class BookAndBuyCell: UITableViewCell {
         }
     }
     
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        if (self.delegate != nil) {
+            self.delegate?.bookAndBuyBuyNowButtonClicked(cell: self)
+        }
+    }
 }
