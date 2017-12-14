@@ -97,7 +97,7 @@ enum SessionRouter: URLRequestConvertible {
             }
             
         case .editLogSession(let sessionID, _, _, _, _, _, _, _):
-            prefix = kPMAPIACTIVITY + sessionID
+            prefix = kPMAPIACTIVITY + sessionID + kPM_PATH_UPDATE
             
         case .postBookSession(let userID, _, _, _, _, _, _):
             prefix = kPMAPICOACHES + userID + kPMAPICOACH_BOOK
@@ -294,17 +294,12 @@ enum SessionRouter: URLRequestConvertible {
             Alamofire.request(self.path, method: self.method, parameters: self.param).responseJSON(completionHandler: { (response) in
                 print("PM: SessionRouter edit_log")
                 
-                switch response.result {
-                case .success(_):
-                    if response.response?.statusCode == 200 {
-                        self.comletedBlock(true, nil)
-                    }
-                case .failure(let error):
-                    if (response.response?.statusCode == 401) {
-                        PMHelper.showLogoutAlert()
-                    } else {
-                        self.comletedBlock(false, error as NSError)
-                    }
+                if response.response?.statusCode == 200 {
+                    self.comletedBlock(true, nil)
+                } else if (response.response?.statusCode == 401) {
+                    PMHelper.showLogoutAlert()
+                } else {
+                    self.comletedBlock(false, nil)
                 }
             })
             

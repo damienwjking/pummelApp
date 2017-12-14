@@ -69,6 +69,7 @@ let kPM_PATH_CONVERSATION_OFFSET_V3 = "/conversationsVersion3?offset="
 //let kPM_PATH_CONVERSATION_OFFSET    = "/conversations?offset="    // No use
 let kPM_PATH_DELETEACTIVITY         = "/activities/deleteActivity"
 let kPM_PATH_DEVICES                = "/devices"
+let kPM_PATH_UPDATE                 = "/update"
 let kPM_PARTH_MESSAGE               = "/messages"
 let kPM_PARTH_MESSAGE_V2            = "/messagesV2"
 let kPM_PATH_LIKE                   = "/likes"
