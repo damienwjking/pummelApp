@@ -311,6 +311,7 @@
                         <outlet property="firstTitleLabel" destination="ieO-FJ-gPB" id="lvE-sZ-RE0"/>
                         <outlet property="firstView" destination="Y0b-AL-x5a" id="GkQ-ZW-I4L"/>
                         <outlet property="firstViewHeightConstraint" destination="ahZ-eZ-Etz" id="mD6-vk-jsR"/>
+                        <outlet property="scrollView" destination="yKB-kt-mrT" id="13y-k3-Chj"/>
                         <outlet property="searchCollectionView" destination="8Iv-Bk-Q2r" id="Ga3-s1-Zay"/>
                         <outlet property="searchCollectionViewLayout" destination="tSp-Gp-9J1" id="TLi-X3-s3v"/>
                         <outlet property="secondCollectionView" destination="641-Sw-itJ" id="LM2-AR-6Qn"/>

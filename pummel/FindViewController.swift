@@ -49,7 +49,10 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
     
     let defaults = UserDefaults.standard
     
-    // Name is bullshit, please don't f**k me
+    let refreshControl = UIRefreshControl()
+    @IBOutlet weak var scrollView: UIScrollView!
+    
+    // I know name is bullshit, please don't f**k me
     @IBOutlet weak var firstView: UIView!
     @IBOutlet weak var firstTitleLabel: UILabel!
     @IBOutlet weak var firstCollectionView: UICollectionView!
@@ -89,6 +92,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         
         self.setupTabNavigationBar()
         
+        self.refeshData()
+        
         let showSeachViewController = self.defaults.bool(forKey: "SHOW_SEARCH_AFTER_REGISTER")
         if (showSeachViewController == true) {
             self.defaults.set(false, forKey: "SHOW_SEARCH_AFTER_REGISTER")
@@ -112,20 +117,6 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         } else if moveScreenType == k_PM_MOVE_SCREEN_DEEPLINK_SEARCH {
             self.defaults.set(k_PM_MOVE_SCREEN_NO_MOVE, forKey: k_PM_MOVE_SCREEN)
         }
-        
-        if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
-            self.leadOffset = 0
-            self.isStopGetLead = false
-            
-            self.getTotalLead()
-            self.getCoachTrackInfo()
-        } else {
-            self.followCoachOffset = 0
-            self.isStopGetFollowCoach = false
-            
-            self.getFollowCoach()
-        }
-        self.getPurchaseProduct()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -164,7 +155,36 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.tabBarController?.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
+    func refeshData() {
+        // First collection view
+        // Tracking view
+        self.leadList.removeAll()
+        self.followCoachList.removeAll()
+        
+        if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
+            self.leadOffset = 0
+            self.isStopGetLead = false
+            self.getTotalLead()
+            
+            self.getCoachTrackInfo()
+        } else {
+            self.followCoachOffset = 0
+            self.isStopGetFollowCoach = false
+            self.getFollowCoach()
+        }
+        
+        // Second collection view
+        self.purchaseProductOffset = 0
+        self.isStopGetPurchaseProduct = false
+        self.purchaseProductList.removeAll()
+        self.getPurchaseProduct()
+    }
+    
     func setupCollectionView() {
+        // Setup scrollview
+        self.refreshControl.addTarget(self, action: #selector(self.refeshData), for: .valueChanged)
+        self.scrollView.addSubview(self.refreshControl)
+        
         // First collection view
         let leadNib = UINib(nibName: "LeadCollectionViewCell", bundle: nil)
         self.firstCollectionView.register(leadNib, forCellWithReuseIdentifier: "LeadCollectionViewCell")
@@ -288,7 +308,7 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     } else {
                         for leadDetail in leadDetails {
                             let user = UserModel()
-                            user.id = leadDetail[kCoachId] as! Int
+                            user.id = leadDetail[kUserId] as! Int
                             
                             if (user.existInList(userList: self.leadList) == false) {
                                 user.delegate = self
@@ -399,6 +419,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
                     
                     self.isStopGetPurchaseProduct = true
                 }
+                
+                self.refreshControl.endRefreshing()
                 }.fetchdata()
         }
     }

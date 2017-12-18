@@ -393,8 +393,11 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                     self.userDefaults.synchronize()
                 }
                 
-                if let val = self.coachDetail[kId] as? Int {
-                    TrackingPMAPI.sharedInstance.trackingProfileViewed(coachId: "\(val)")
+                let userID = self.coachDetail[kId] as? Int
+                if (userID != nil) {
+                    if (self.profileStyle == .otherUser) {
+                        TrackingPMAPI.sharedInstance.trackingProfileViewed(coachId: "\(userID)")
+                    }
                 }
                 
                 self.setAvatar()
@@ -549,14 +552,15 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 let coachInformationTotal = result as! NSDictionary
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
                 
-                let totalProduct = coachInformationTotal["nProduct"] as? Int
+                var totalProduct = coachInformationTotal["nProduct"] as? Int
+                totalProduct = 0 // Henry
                 if (self.profileStyle == .otherUser && totalProduct != nil && totalProduct! > 0) {
                     self.bookAndBuyButton.isHidden = false
                     self.bookAndBuyViewHeightConstraint.constant = 60 - 1 // -1 for button over view
                 } else {
                     self.bookAndBuyButton.isHidden = true
-                    self.bookAndBuyViewHeightConstraint.constant = 0                }
-                
+                    self.bookAndBuyViewHeightConstraint.constant = 0
+                }
                 
                 // Testimonial
                 let totalTestimonial = coachInformationTotal[kTotalTestimonial] as? Int
