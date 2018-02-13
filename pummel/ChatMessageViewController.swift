@@ -35,6 +35,7 @@ class ChatMessageViewController : BaseViewController {
     var isSendMessage = false
     var needOpenKeyboard = false
     var isStopGetChat = false
+    var isNeedDissmissExist = false
     
     let defaults = UserDefaults.standard
     
@@ -194,11 +195,15 @@ class ChatMessageViewController : BaseViewController {
     
     // MARK: Outlet function
     func cancel() {
-        if self.isSendMessage {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SEND_CHAT_MESSAGE"), object: nil)
+        if (self.isNeedDissmissExist == true) {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            if self.isSendMessage {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SEND_CHAT_MESSAGE"), object: nil)
+            }
+            
+            self.navigationController?.popViewController(animated: true)
         }
-        
-        self.navigationController?.popViewController(animated: true)
     }
     
     func avatarClicked() {

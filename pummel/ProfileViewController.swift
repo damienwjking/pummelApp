@@ -553,7 +553,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
                 let coachInformation = coachInformationTotal[kUser] as! NSDictionary
                 
                 var totalProduct = coachInformationTotal["nProduct"] as? Int
-                totalProduct = 0 // Henry
+//                totalProduct = 0 // Henry
                 if (self.profileStyle == .otherUser && totalProduct != nil && totalProduct! > 0) {
                     self.bookAndBuyButton.isHidden = false
                     self.bookAndBuyViewHeightConstraint.constant = 60 - 1 // -1 for button over view

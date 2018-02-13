@@ -412,8 +412,8 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
             let feed = sender as! FeedModel
             destination.feedDetail = feed
         } else if (segue.identifier == kClickURLLink) {
-            let destination = segue.destination as! FeedWebViewController
-            destination.URL = sender as? NSURL
+            let destination = segue.destination as! PummelWebViewController
+            destination.URL = sender as! URL
         } else if segue.identifier == kGoDiscount {
             let destination = segue.destination as! DiscountDetailVC
             if let dic = sender as? DiscountModel {

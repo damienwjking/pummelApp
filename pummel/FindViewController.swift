@@ -178,6 +178,8 @@ class FindViewController: BaseViewController, UIScrollViewDelegate, UICollection
         self.isStopGetPurchaseProduct = false
         self.purchaseProductList.removeAll()
         self.getPurchaseProduct()
+        
+        self.updateLayout()
     }
     
     func setupCollectionView() {

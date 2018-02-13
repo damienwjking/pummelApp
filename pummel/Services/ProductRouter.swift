@@ -55,8 +55,8 @@ enum ProductRouter: URLRequestConvertible {
         
         var prefix = ""
         switch self {
-        case .getProductList(let userID, _, _):
-            prefix = kPMAPIUSER + userID + kPM_PATH_PRODUCT
+        case .getProductList:
+            prefix = kPMAPIUSER + currentUserID + kPM_PATH_PRODUCT
             
         case .getPurchaseProduct:
             prefix = kPMAPIUSER + currentUserID + kPM_PATH_PURCHASE_PRODUCT

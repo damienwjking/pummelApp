@@ -1,5 +1,5 @@
 //
-//  FeedWebViewController.swift
+//  PummelWebViewController.swift
 //  pummel
 //
 //  Created by Nguyễn Tấn Phúc on 3/13/17.
@@ -8,8 +8,9 @@
 
 import UIKit
 
-class FeedWebViewController: UIViewController, UIWebViewDelegate {
-    var URL : NSURL? = nil
+class PummelWebViewController: UIViewController, UIWebViewDelegate {
+    var URL : URL? = nil
+    var isShowProduct = false
     var closeButton:UIButton? = nil
     
     @IBOutlet weak var webView: UIWebView!
@@ -18,6 +19,9 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
     // MARK: - Life Circle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -28,36 +32,21 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
         self.activityIndicator.startAnimating()
         self.activityIndicator.isHidden = false
         
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"BACK", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.backButtonClicked))
-//        self.navigationItem.leftBarButtonItem?.setAttributeForAllStage()
-        
-        
-        
-        
         // Title
-        self.title = kNavFeed
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+        if (self.isShowProduct == true) {
+            self.title = ""
+        } else {
+            self.title = kNavFeed
+        }
         
         // Left button
         let image = UIImage(named: "back")!.withRenderingMode(.alwaysTemplate)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.plain, target: self, action:#selector(self.backButtonClicked))
-        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.pmmBrightOrangeColor()
+        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.black
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-//        let closeImage = UIImage(named: "closewhite")
-        
-//        self.closeButton = UIButton(type: UIButtonType.Custom)
-//        self.closeButton!.frame = CGRect(x: 0, 20, 40, 40)
-//        self.closeButton?.setImage(closeImage, for: .normal)
-//        self.closeButton?.tintColor = UIColor.pmmBrightOrangeColor()
-//        self.closeButton!.addTarget(self, action: #selector(self.backButtonClicked), for: .touchUpInside)
-//        
-//        
-//        self.webView.scrollView.addSubview(self.closeButton!)
     }
     
     func loadWeb() {
@@ -68,7 +57,11 @@ class FeedWebViewController: UIViewController, UIWebViewDelegate {
     }
     
     func backButtonClicked() {
-        self.navigationController?.popViewController(animated: true)
+        if (self.isShowProduct == true) {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {

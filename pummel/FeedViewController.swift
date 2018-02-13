@@ -240,8 +240,8 @@ class FeedViewController: BaseViewController {
             let destination = segue.destination as! NewCommentImageViewController
             destination.postId = String(format:"%ld", self.feedDetail.id)
         } else if (segue.identifier == kClickURLLink) {
-            let destination = segue.destination as! FeedWebViewController
-            destination.URL = sender as? NSURL
+            let destination = segue.destination as! PummelWebViewController
+            destination.URL = sender as! URL
         }
     }
 }

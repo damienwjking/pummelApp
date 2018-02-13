@@ -31,7 +31,15 @@ class BookAndBuyViewController: BaseViewController {
         if (self.productBought == nil) {
             self.getProduct()
         } else {
-            self.performSegue(withIdentifier: "goPurchaseDetail", sender: self.productBought)
+            if (self.productBought?.isBought == true) {
+                if (self.productBought?.type == 0) {
+                    self.performSegue(withIdentifier: "showURL", sender: self.productBought?.productUrl)
+                } else {
+                    self.performSegue(withIdentifier: kSendMessageConnection, sender: self.productBought?.userId)
+                }
+            } else {
+                self.performSegue(withIdentifier: "goPurchaseDetail", sender: self.productBought)
+            }
         }
     }
     
@@ -109,6 +117,22 @@ class BookAndBuyViewController: BaseViewController {
             let destination = segue.destination as! ProductDetailViewController
             
             destination.product = product
+        } else if (segue.identifier == kSendMessageConnection) {
+            let destination = segue.destination as! ChatMessageViewController
+            let userTargetID = sender as! String
+            
+            destination.userIdTarget = userTargetID
+            destination.isNeedDissmissExist = true
+        } else if (segue.identifier == "showURL") {
+            let destination = segue.destination as! PummelWebViewController
+            
+            if (self.productBought?.productUrl.isEmpty == false) {
+                let urlString = sender as! String
+                let url = URL(string: urlString)
+                
+                destination.URL = url
+                destination.isShowProduct = true
+            }
         }
     }
     

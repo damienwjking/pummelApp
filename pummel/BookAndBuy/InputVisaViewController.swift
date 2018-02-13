@@ -144,6 +144,8 @@ class InputVisaViewController: UIViewController {
                                 self.present(alertController, animated: true, completion: nil)
                             } else {
                                 print("Request failed with error: \(String(describing: error))")
+                                
+                                PMHelper.showDoAgainAlert()
                             }
                         }).fetchdata()
                         

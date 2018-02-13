@@ -119,7 +119,7 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
     
     func openWebview() {
         if (self.discount.website.isEmpty == false) {
-            let urlWeb = NSURL(string: self.discount.website)
+            let urlWeb = URL(string: self.discount.website)
             if urlWeb != nil {
                 self.performSegue(withIdentifier: kClickURLLink, sender: urlWeb)
             }
@@ -136,8 +136,8 @@ class DiscountDetailVC: UIViewController, UITextViewDelegate {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == kClickURLLink) {
-            let destination = segue.destination as! FeedWebViewController
-            destination.URL = sender as? NSURL
+            let destination = segue.destination as! PummelWebViewController
+            destination.URL = sender as! URL
         }
     }
     

@@ -76,7 +76,7 @@
 		BA9881011F85F39B00DBF527 /* SessionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9881001F85F39B00DBF527 /* SessionRouter.swift */; };
 		BA9EAF591FC2987B00DB8F0D /* InputVisaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9EAF581FC2987B00DB8F0D /* InputVisaViewController.swift */; };
 		BAA439571F0DE8CC001D122A /* NumberConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA439561F0DE8CC001D122A /* NumberConstant.swift */; };
-		BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */; };
+		BAB0F2DF1E7649D6001E371F /* PummelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB0F2DE1E7649D6001E371F /* PummelWebViewController.swift */; };
 		BABA7C6C1FA2F53B00B2965D /* ProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABA7C6B1FA2F53B00B2965D /* ProductModel.swift */; };
 		BABA7C6F1FA3272600B2965D /* ProductUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABA7C6D1FA3272600B2965D /* ProductUserCell.swift */; };
 		BABA7C701FA3272600B2965D /* ProductUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BABA7C6E1FA3272600B2965D /* ProductUserCell.xib */; };
@@ -307,7 +307,7 @@
 		BA9881001F85F39B00DBF527 /* SessionRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionRouter.swift; sourceTree = "<group>"; };
 		BA9EAF581FC2987B00DB8F0D /* InputVisaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputVisaViewController.swift; sourceTree = "<group>"; };
 		BAA439561F0DE8CC001D122A /* NumberConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberConstant.swift; sourceTree = "<group>"; };
-		BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedWebViewController.swift; sourceTree = "<group>"; };
+		BAB0F2DE1E7649D6001E371F /* PummelWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PummelWebViewController.swift; sourceTree = "<group>"; };
 		BABA7C6B1FA2F53B00B2965D /* ProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModel.swift; sourceTree = "<group>"; };
 		BABA7C6D1FA3272600B2965D /* ProductUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductUserCell.swift; sourceTree = "<group>"; };
 		BABA7C6E1FA3272600B2965D /* ProductUserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProductUserCell.xib; sourceTree = "<group>"; };
@@ -936,7 +936,7 @@
 				F90634321D7F2C5800105B97 /* FeedViewController.swift */,
 				F9CF54E01D7F9BFD00BE144F /* NewPostViewController.swift */,
 				F977EC0C1DAD442F007024EB /* NewCommentImageViewController.swift */,
-				BAB0F2DE1E7649D6001E371F /* FeedWebViewController.swift */,
+				BAB0F2DE1E7649D6001E371F /* PummelWebViewController.swift */,
 				E8499E6F1EEFBDE7008A65C2 /* DiscountDetailVC.swift */,
 			);
 			name = Feed;
@@ -1273,7 +1273,7 @@
 				F9ABEADD1DC34F250084B70E /* ColorConstant.swift in Sources */,
 				E8D778E51E0AF6A50011E164 /* LeadCollectionViewCell.swift in Sources */,
 				F9F3CC411CE221F8007F68A5 /* UserTableViewCell.swift in Sources */,
-				BAB0F2DF1E7649D6001E371F /* FeedWebViewController.swift in Sources */,
+				BAB0F2DF1E7649D6001E371F /* PummelWebViewController.swift in Sources */,
 				BA9EAF591FC2987B00DB8F0D /* InputVisaViewController.swift in Sources */,
 				F983C2A21CFF952B002DA578 /* BaseTabBarController.swift in Sources */,
 				BABA7C6C1FA2F53B00B2965D /* ProductModel.swift in Sources */,

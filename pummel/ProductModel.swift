@@ -31,6 +31,7 @@ class ProductModel: NSObject {
     
     var amount: CGFloat = 0.0
     var status = 0
+    var type = 0
     
     var isBought = false // 
     
@@ -88,6 +89,11 @@ class ProductModel: NSObject {
         let status = data["status"] as? Int
         if (status != nil) {
             self.status = status!
+        }
+        
+        let type = data["type"] as? Int
+        if (type != nil) {
+            self.type = type!
         }
         
     }
