@@ -188,8 +188,14 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.title = kNavProfile
         self.tabBarController?.navigationController?.navigationBar.barTintColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
-//        self.navigationController!.navigationBar.isTranslucent = false;
+        
+        if (self.navigationController != nil) {
+            self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName:UIFont.pmmMonReg13()]
+            self.navigationController!.navigationBar.isTranslucent = false;
+        } else {
+            
+        }
+        
         let selectedImage = UIImage(named: "profilePressed")
         self.tabBarItem.selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
         
@@ -224,7 +230,7 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        return UIStatusBarStyle.default
     }
     
     func setupUI() {

@@ -426,7 +426,9 @@ class FeaturedViewController: BaseViewController, UICollectionViewDataSource, UI
 // MARK: - DiscountModelDelegate
 extension FeaturedViewController: DiscountDelegate {
     func discountSynsDataCompleted(discount: DiscountModel) {
-        self.headerDiscount.cv.reloadData()
+        if (self.headerDiscount != nil) {
+            self.headerDiscount.cv.reloadData()
+        }
     }
 }
 

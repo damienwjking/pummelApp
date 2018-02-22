@@ -150,8 +150,9 @@ class InputVisaViewController: UIViewController {
                         }).fetchdata()
                         
                     } else {
+                        
                         print(error!)
-                        PMHelper.showNoticeAlert(message: "Card is illegal\nPlease check it again.")
+                        PMHelper.showNoticeAlert(message: "This card seems to be invalid\nCan you please try again")
                     }
                 }
             } else {

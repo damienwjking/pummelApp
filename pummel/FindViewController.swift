@@ -737,20 +737,25 @@ extension FindViewController : UICollectionViewDataSource, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if (collectionView == self.firstCollectionView) {
             var leadUser: UserModel
-            if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
-                leadUser = self.leadList[indexPath.row]
-            } else {
-                leadUser = self.followCoachList[indexPath.row]
-            }
             
-            self.showLeadOption(leadUser: leadUser)
+            if (indexPath.row < self.leadList.count) {
+                if (self.defaults.bool(forKey: k_PM_IS_COACH) == true) {
+                    leadUser = self.leadList[indexPath.row]
+                } else {
+                    leadUser = self.followCoachList[indexPath.row]
+                }
+                
+                self.showLeadOption(leadUser: leadUser)
+            }
         } else if (collectionView == self.secondCollectionView) {
             // Show product detail
-            let product = self.purchaseProductList[indexPath.row]
-            
-            self.performSegue(withIdentifier: "goBookAndBuy", sender: product)
+            if (indexPath.row < self.purchaseProductList.count) {
+                let product = self.purchaseProductList[indexPath.row]
+                
+                self.performSegue(withIdentifier: "goBookAndBuy", sender: product)
+            }
         } else if (collectionView == self.searchCollectionView) {
-            if indexPath.row < self.arrayResult.count {
+            if (indexPath.row < self.arrayResult.count) {
                 let cellIndex = indexPath.row
                 let userID = self.arrayResult[cellIndex][kUserId] as! Int
                 let userIDString = String(format: "%ld", userID)
