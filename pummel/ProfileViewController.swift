@@ -180,6 +180,8 @@ class ProfileViewController:  BaseViewController, UITextViewDelegate {
         
         // Add notification for update video url
         NotificationCenter.default.addObserver(self, selector: #selector(self.profileGetNewDetail), name: NSNotification.Name(rawValue: "PROFILE_GET_DETAIL"), object: nil)
+        // Add notification for update video url
+        NotificationCenter.default.addObserver(self, selector: #selector(self.uploadVideoWithNotification(notification:)), name: NSNotification.Name(rawValue: "PROFILE_UPLOAD_VIDEO"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
